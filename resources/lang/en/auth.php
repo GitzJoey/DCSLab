@@ -18,7 +18,7 @@ return [
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
     'register' => [
-        'title' => '',
+        'title' => 'Register',
         'name' => 'Full name',
         'email' => 'Email',
         'password' => 'Password',
@@ -27,5 +27,18 @@ return [
         'agree_2' => '& conditions',
         'already_member' => 'I already have a membership',
         'terms_and_cond' => 'Terms & Condition',
+    ],
+
+    'login' => [
+        'title' => 'Login',
+        'email' => 'Email',
+        'password' => 'Password',
+        'remember_me' => 'Remember Me',
+        'forgot_pass' => 'Forgot Password',
+    ],
+
+    'reset_password' => [
+        'title' => 'Reset Password',
+        'email' => 'Email',
     ]
 ];

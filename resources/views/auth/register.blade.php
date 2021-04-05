@@ -1,5 +1,9 @@
 @extends('layouts.codebase.simple')
 
+@section('title')
+    {{ __('auth.register.title') }}
+@endsection
+
 @section('content')
 <div class="bg-image" style="background-image: url('{{ asset('images/bg1.jpg') }}');">
     <div class="row mx-0 bg-earth-op">
