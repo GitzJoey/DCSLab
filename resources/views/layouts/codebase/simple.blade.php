@@ -35,6 +35,8 @@
             </main>
         </div>
 
+        @yield('custom_content')
+
         @yield('js_before')
 
         <script src="{{ mix('js/codebase/codebase.app.js') }}"></script>

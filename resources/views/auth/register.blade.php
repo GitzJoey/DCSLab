@@ -33,34 +33,43 @@
                         <div class="col-12">
                             <div class="form-material floating">
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
-                                <label for="name"> {{ __('name') }}</label>
+                                <label for="name"> {{ __('auth.register.name') }}</label>
                                 @error('name')
-                                    <div class="invalid-feedback animated fadeInDown">Please enter a name</div>
+                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('name') }}</div>
                                 @enderror
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row @error('email') is-invalid @enderror">
                         <div class="col-12">
                             <div class="form-material floating">
-                                <input type="email" class="form-control" id="email" name="email">
-                                <label for="signup-email">{{ __('email') }}</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
+                                <label for="email">{{ __('auth.register.email') }}</label>
+                                @error('email')
+                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('email') }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row @error('password') is-invalid @enderror">
                         <div class="col-12">
                             <div class="form-material floating">
                                 <input type="password" class="form-control" id="password" name="password">
-                                <label for="password">{{ __('password') }}</label>
+                                <label for="password">{{ __('auth.register.password') }}</label>
+                                @error('password')
+                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('password') }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row @error('password') is-invalid @enderror">
                         <div class="col-12">
                             <div class="form-material floating">
                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-                                <label for="signup-password-confirm">{{ __('Confirm Password') }}</label>
+                                <label for="password_confirmation">{{ __('auth.register.password_confirmation') }}</label>
+                                @error('password')
+                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('password') }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -80,7 +89,7 @@
                             <a class="link-effect text-muted mr-10 mb-5 d-inline-block" href="#" data-toggle="modal" data-target="#modal-terms">
                                 <i class="fa fa-book text-muted mr-5"></i> Read Terms
                             </a>
-                            <a class="link-effect text-muted mr-10 mb-5 d-inline-block" href="op_auth_signin2.html">
+                            <a class="link-effect text-muted mr-10 mb-5 d-inline-block" href="{{ route('login') }}">
                                 <i class="fa fa-user text-muted mr-5"></i> Sign In
                             </a>
                         </div>
@@ -92,76 +101,28 @@
 </div>
 @endsection
 
-@section('content1')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
-
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+@section('custom_content')
+<div class="modal fade" id="modal-terms" tabindex="-1" role="dialog" aria-labelledby="modal-terms" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-slidedown" role="document">
+        <div class="modal-content">
+            <div class="block block-themed block-transparent mb-0">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title">Terms &amp; Conditions</h3>
+                    <div class="block-options">
+                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
+                            <i class="si si-close"></i>
+                        </button>
+                    </div>
                 </div>
+                <div class="block-content">
+                    <p>Content...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-alt-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-alt-success" data-dismiss="modal">
+                    <i class="fa fa-check"></i> Perfect
+                </button>
             </div>
         </div>
     </div>
