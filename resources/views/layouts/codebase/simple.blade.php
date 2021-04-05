@@ -18,7 +18,7 @@
 
         @yield('css_before')
 
-        <link rel="stylesheet" id="css-main" href="{{ mix('/css/codebase.css') }}">
+        <link rel="stylesheet" id="css-main" href="{{ mix('/css/codebase/codebase.css') }}">
 
         <!--<link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/corporate.css') }}">-->
         <!--<link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/earth.css') }}">-->
@@ -37,7 +37,7 @@
 
         @yield('js_before')
 
-        <script src="{{ mix('js/codebase.app.js') }}"></script>
+        <script src="{{ mix('js/codebase/codebase.app.js') }}"></script>
 
         @yield('js_after')
     </body>
