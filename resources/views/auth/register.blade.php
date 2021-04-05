@@ -73,24 +73,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row @error('password') is-invalid @enderror">
                         <div class="col-12">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="signup-terms" name="signup-terms">
-                                <label class="custom-control-label" for="signup-terms">I agree to Terms &amp; Conditions</label>
+                                <input type="checkbox" class="custom-control-input" id="terms" name="terms">
+                                <label class="custom-control-label" for="terms">{{ __('auth.register.agree_1').__('auth.register.agree_2') }}</label>
+                                @error('terms')
+                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('terms') }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-sm btn-hero btn-alt-success">
-                            <i class="fa fa-plus mr-10"></i> Create Account
+                            {{ __('buttons.login') }}
                         </button>
                         <div class="mt-30">
                             <a class="link-effect text-muted mr-10 mb-5 d-inline-block" href="#" data-toggle="modal" data-target="#modal-terms">
-                                <i class="fa fa-book text-muted mr-5"></i> Read Terms
+                                <i class="fa fa-book text-muted mr-5"></i> {{ __('buttons.read_term') }}
                             </a>
                             <a class="link-effect text-muted mr-10 mb-5 d-inline-block" href="{{ route('login') }}">
-                                <i class="fa fa-user text-muted mr-5"></i> Sign In
+                                <i class="fa fa-user text-muted mr-5"></i> {{ __('buttons.login') }}
                             </a>
                         </div>
                     </div>

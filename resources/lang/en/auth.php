@@ -23,8 +23,8 @@ return [
         'email' => 'Email',
         'password' => 'Password',
         'password_confirmation' => 'Confirm password',
-        'agree_1' => 'I agree to the ',
-        'agree_2' => 'terms',
+        'agree_1' => 'I agree to terms ',
+        'agree_2' => '& conditions',
         'already_member' => 'I already have a membership',
         'terms_and_cond' => 'Terms & Condition',
     ]
