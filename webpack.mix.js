@@ -2,10 +2,6 @@ const mix = require('laravel-mix');
 
 mix.disableNotifications();
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css')
-    .sourceMaps();
-
 mix
     .sass('resources/sass/codebase/main.scss', 'public/css/codebase/codebase.css')
     .sass('resources/sass/codebase/codebase/themes/corporate.scss', 'public/css/codebase/themes/')
