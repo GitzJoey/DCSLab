@@ -1,0 +1,136 @@
+//
+// Codebase UI Framework
+// --------------------------------------------------
+
+// Bootstrap functions (original)
+@import '~bootstrap/scss/functions';
+
+// User variables (your own variable overrides)
+@import 'custom/variables';
+
+// Codebase variables and Bootstrap variable overrides
+@import 'codebase/variables';
+@import 'codebase/variables-themes';
+@import 'codebase/variables-bootstrap';
+
+// Bootstrap variables and mixins (original)
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+// Codebase mixins and Bootstrap overrides
+@import 'codebase/mixins';
+
+// Bootstrap components (original)
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/type';
+@import '~bootstrap/scss/images';
+@import '~bootstrap/scss/code';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/transitions';
+@import '~bootstrap/scss/dropdown';
+@import '~bootstrap/scss/button-group';
+@import '~bootstrap/scss/input-group';
+@import '~bootstrap/scss/custom-forms';
+@import '~bootstrap/scss/nav';
+//@import '~bootstrap/scss/navbar';
+@import '~bootstrap/scss/card';
+@import '~bootstrap/scss/breadcrumb';
+@import '~bootstrap/scss/pagination';
+@import '~bootstrap/scss/badge';
+//@import '~bootstrap/scss/jumbotron';
+@import '~bootstrap/scss/alert';
+@import '~bootstrap/scss/progress';
+@import '~bootstrap/scss/media';
+@import '~bootstrap/scss/list-group';
+@import '~bootstrap/scss/close';
+@import '~bootstrap/scss/toasts';
+@import '~bootstrap/scss/modal';
+@import '~bootstrap/scss/tooltip';
+@import '~bootstrap/scss/popover';
+//@import '~bootstrap/scss/carousel';
+@import '~bootstrap/scss/spinners';
+@import '~bootstrap/scss/utilities';
+@import '~bootstrap/scss/print';
+
+// Extend Bootstrap styles and override the ones..
+// ..we can't alter with the provided variables
+@import 'codebase/reboot';
+@import 'codebase/type';
+@import 'codebase/grid';
+@import 'codebase/tables';
+@import 'codebase/forms';
+@import 'codebase/buttons';
+@import 'codebase/transitions';
+@import 'codebase/dropdown';
+@import 'codebase/custom-forms';
+@import 'codebase/nav';
+@import 'codebase/breadcrumb';
+@import 'codebase/pagination';
+@import 'codebase/badge';
+@import 'codebase/modal';
+@import 'codebase/popover';
+
+// Codebase layout
+@import 'codebase/layout';
+@import 'codebase/header';
+@import 'codebase/sidebar';
+@import 'codebase/side-overlay';
+@import 'codebase/layout-variations';
+@import 'codebase/hero';
+@import 'codebase/block';
+
+// Codebase components
+@import 'codebase/page-loader';
+@import 'codebase/nav-main';
+@import 'codebase/forms-material';
+@import 'codebase/images';
+@import 'codebase/lists';
+@import 'codebase/item';
+@import 'codebase/ribbon';
+@import 'codebase/options-overlay';
+@import 'codebase/scrumboard';
+
+// Print, utilities and themes
+@import 'codebase/print';
+@import 'codebase/utilities';
+@import 'codebase/themes';
+
+// Third party components
+@import '~animate.css/animate.min.css';
+@import '~simple-line-icons/scss/simple-line-icons';
+@import '~font-awesome/scss/font-awesome';
+
+
+/*
+// Third party plugins (style overrides)
+@import 'vendor/bootstrap-datepicker';
+@import 'vendor/ckeditor';
+@import 'vendor/dropzonejs';
+@import 'vendor/datatables';
+@import 'vendor/easy-pie-chart';
+@import 'vendor/flot-charts';
+@import 'vendor/fullcalendar';
+@import 'vendor/highlightjs';
+@import 'vendor/ion-range-slider';
+@import 'vendor/jquery-autocomplete';
+@import 'vendor/jquery-sparkline';
+@import 'vendor/jquery-tags-input';
+@import 'vendor/jqueryui-draggable';
+@import 'vendor/jvector-map';
+@import 'vendor/select2';
+@import 'vendor/simplemde';
+@import 'vendor/slick';
+@import 'vendor/simplebar';
+@import 'vendor/summernote';
+@import 'vendor/pwstrength';
+@import 'vendor/nestable2';
+@import 'vendor/flatpickr';
+*/
+// RTL Support
+@import 'codebase/rtl-support';
+
+// User styles (your own styles/overrides)
+@import 'custom/main';

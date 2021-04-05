@@ -1,0 +1,91 @@
+//
+// Hero
+// --------------------------------------------------
+
+.hero {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    min-height: 500px;
+
+    &.hero-sm {
+        min-height: 300px;
+    }
+
+    &.hero-lg {
+        min-height: 800px;
+    }
+
+    &-inner {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+}
+
+.hero-static {
+    min-height: 100vh;
+}
+
+.hero-promo {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        position: absolute;
+        right: -500px;
+        bottom: -500px;
+        left: 0;
+        height: 640px;
+        content: '';
+        background: rgba(255,255,255,.2);
+        transform: skewY(-20deg);
+        z-index: 0;
+    }
+}
+
+.hero-bubbles {
+    position: relative;
+    overflow: hidden;
+
+    .hero-bubble {
+        position: absolute;
+        display: inline-block;
+        border-radius: 100%;
+        opacity: .2;
+        z-index: 0;
+
+        &:nth-child(odd) {
+            animation: hero-bubble 15s infinite ease-in;
+        }
+
+        &:nth-child(even) {
+            animation: hero-bubble 15s infinite ease-in reverse;
+        }
+    }
+}
+
+@keyframes hero-bubble {
+    0% {
+        transform: scale(1);
+    }
+
+    33% {
+        transform: scale(1.5) translateY(1rem);
+    }
+
+    50% {
+        opacity: .5;
+    }
+
+    66% {
+        transform: scale(.5) translateY(0);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: .2;
+    }
+}
