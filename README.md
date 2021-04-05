@@ -14,7 +14,7 @@ Doctor Computer SG Lab
 
 Clone Repository
 
-`$ git clone https://github.com/GitzJoey/DCSLab.git`
+`$ git clone https://github.com/GitzJoey/DCSLab.git DCSLab`
 
 Run the composer
 
