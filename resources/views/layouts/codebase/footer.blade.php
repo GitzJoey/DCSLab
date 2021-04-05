@@ -1,12 +1,10 @@
-<!-- Footer -->
 <footer id="page-footer">
     <div class="content py-20 font-size-sm clearfix">
         <div class="float-right">
-            Crafted with <i class="fa fa-heart text-pulse"></i> by <a class="font-w600" href="https://1.envato.market/ydb" target="_blank">pixelcave</a>
+            <a href="#" target="_blank"><span class="fa fa-code fa-fw"></span> <small>{{ round(microtime(true) - LARAVEL_START, 2) }}s</small></a>
         </div>
         <div class="float-left">
-            <a class="font-w600" href="https://1.envato.market/95j" target="_blank">Codebase</a> &copy; <span class="js-year-copy"></span>
+            <strong>Copyright &copy; {{ \Carbon\Carbon::today()->format('Y') }} <a href="https://www.github.com/GitzJoey">GitzJoey</a>&nbsp;&amp;&nbsp;<a href="#">Contributors</a>.</strong> All rights reserved. Powered By Coffee &amp; Curiosity.
         </div>
     </div>
 </footer>
-<!-- END Footer -->

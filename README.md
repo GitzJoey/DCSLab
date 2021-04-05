@@ -10,7 +10,7 @@ Doctor Computer SG Lab
 * [NodeJS/NPM](https://nodejs.org/en/download/) (14.16.0/6.14.6)
 * [Composer](https://getcomposer.org/download/) (2.0.11)
 
-### Requirement
+### Installation
 
 Clone Repository
 

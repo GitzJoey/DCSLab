@@ -27,3 +27,5 @@ mix
     .sass('resources/sass/codebase/codebase/themes/pulse.scss', 'public/css/codebase/themes/')
     .js('resources/js/codebase/app.js', 'public/js/codebase/codebase.app.js')
 ;
+
+mix.copy('resources/fonts/Nunito_Sans/NunitoSans-Regular.ttf', 'public/fonts');
