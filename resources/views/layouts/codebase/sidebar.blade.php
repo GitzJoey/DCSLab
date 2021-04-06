@@ -28,21 +28,21 @@
                 </div>
 
                 <div class="sidebar-mini-hidden-b text-center">
-                    <a class="img-link" href="javascript:void(0)">
+                    <a class="img-link" href="#">
                         <img class="img-avatar" src="{{ asset('images/def-user.png') }}" alt="">
                     </a>
                     <ul class="list-inline mt-10">
                         <li class="list-inline-item">
-                            <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="javascript:void(0)">J. Smith</a>
+                            <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="#">{{ Auth::user()->name }}</a>
                         </li>
                         <li class="list-inline-item">
                             <a class="link-effect text-dual-primary-dark" data-toggle="layout" data-action="sidebar_style_inverse_toggle" href="javascript:void(0)">
-                                <i class="si si-drop"></i>
+                                <i class="icon icon-drop"></i>
                             </a>
                         </li>
                         <li class="list-inline-item">
-                            <a class="link-effect text-dual-primary-dark" href="javascript:void(0)">
-                                <i class="si si-logout"></i>
+                            <a class="link-effect text-dual-primary-dark" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="icon icon-logout"></i>
                             </a>
                         </li>
                     </ul>

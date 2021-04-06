@@ -102,5 +102,7 @@ class RegisterController extends Controller
         $user_role = Role::where('name', 'user')->first();
 
         $usr->attachRole($user_role);
+
+        return $usr;
     }
 }
