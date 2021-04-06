@@ -100,9 +100,10 @@
                     </a>
 
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="si si-logout mr-5"></i> Sign Out
+                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="si si-logout mr-5"></i> {{ __('buttons.logout') }}
                     </a>
+                    <form id="logout-form" action="{{ url('/logout') }}" method="POST">{{ csrf_field() }}</form>
                 </div>
             </div>
 

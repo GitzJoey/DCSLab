@@ -39,6 +39,8 @@ return [
 
     'reset_password' => [
         'title' => 'Reset Password',
+        'page_title' => 'Reset Password',
+        'page_title_desc' => 'Silahkan masukan Email',
         'email' => 'Email',
     ]
 ];

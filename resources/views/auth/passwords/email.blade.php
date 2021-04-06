@@ -20,12 +20,12 @@
         <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible" data-toggle="appear" data-class="animated fadeInRight">
             <div class="content content-full">
                 <div class="px-30 py-10">
-                    <a class="link-effect font-w700" href="index.html">
+                    <a class="link-effect font-w700" href="#">
                         <i class="si si-fire"></i>
                         <span class="font-size-xl text-primary-dark">DCS</span><span class="font-size-xl">Lab</span>
                     </a>
-                    <h1 class="h3 font-w700 mt-30 mb-10">Reset Password</h1>
-                    <h2 class="h5 font-w400 text-muted mb-0">Please enter your email</h2>
+                    <h1 class="h3 font-w700 mt-30 mb-10">{{ __('auth.reset_password.page_title') }}</h1>
+                    <h2 class="h5 font-w400 text-muted mb-0">{{ __('auth.reset_password.page_title_desc') }}</h2>
                 </div>
 
                 <form class="js-validation-signin px-30" action="{{ route('password.email') }}" method="post">

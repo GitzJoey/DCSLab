@@ -1,23 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.codebase.simple')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    {{ __('You are logged in!') }}
+@endsection
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@section('js_after')
+    <script>
+        setTimeout(function(){
+            window.location.href = '{{ route('dashboard') }}';
+        }, 1000);
+    </script>
 @endsection
