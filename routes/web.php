@@ -24,4 +24,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['prefix' => 'dashboard'],function() {
     Route::get('', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('profile', [DashboardController::class, 'profile'])->name('profile');
+
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
 });
