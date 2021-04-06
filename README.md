@@ -20,9 +20,6 @@ Run the composer
 
 `$ composer install`
 
-Run the NPM
+Run the installation scripts
 
-`$ npm install`
-
-`$ npm run dev`
-
+`$ php artisan app:install`
