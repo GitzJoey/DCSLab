@@ -2,4 +2,5 @@
 
 return [
     'title' => 'Dashboard',
+    'profile' => 'Profile'
 ];

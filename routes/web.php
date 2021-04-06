@@ -21,5 +21,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/dashboard/index', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
+Route::group(['prefix' => 'dashboard'],function() {
+    Route::get('', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('profile', [DashboardController::class, 'profile'])->name('profile');
+});
