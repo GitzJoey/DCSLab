@@ -76,6 +76,8 @@ class RegisterController extends Controller
         $usr->created_at = Carbon::now();
         $usr->updated_at = Carbon::now();
 
+        $usr->save();
+
         $profile = new Profile();
         if ($data['name'] == trim($data['name']) && strpos($data['name'], ' ') !== false) {
             $pieces = explode(" ", $data['name']);
@@ -97,7 +99,7 @@ class RegisterController extends Controller
 
         $usr->settings()->save($setting);
 
-        $user_role = Role::where('name', 'user');
+        $user_role = Role::where('name', 'user')->first();
 
         $usr->attachRole($user_role);
     }

@@ -19,9 +19,6 @@ class CreateSettingsTable extends Migration
             $table->string('type');
             $table->string('key');
             $table->string('value');
-            $table->bigInteger('created_by');
-            $table->bigInteger('updated_by');
-            $table->bigInteger('deleted_by');
             $table->timestamps();
             $table->softDeletes();
         });

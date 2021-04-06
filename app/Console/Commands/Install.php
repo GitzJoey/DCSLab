@@ -54,18 +54,21 @@ class Install extends Command
 
         $this->info('Generating App Key...');
         Artisan::call('key:generate');
-        $this->info('Database Migrating...');
+
         if (App::environment('prod', 'production')) {
+            $this->info('[PROD] Database Migrating...');
             Artisan::call('migrate', ['--force' => true,]);
         } else {
+            $this->info('Database Migrating...');
             Artisan::call('migrate');
         }
 
-        $this->info('Seeding ...');
         if (App::environment('prod', 'production')) {
-            Artisan::call('db:seed', ['--force' => true,]);
+            $this->info('[PROD] Seeding ...');
+            exec('php artisan db:seed --force=true');
         } else {
-            Artisan::call('db:seed');
+            $this->info('Seeding ...');
+            exec('php artisan db:seed');
         }
 
         $this->info('Storage Linking ...');
