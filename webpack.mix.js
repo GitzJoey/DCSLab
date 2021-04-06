@@ -13,3 +13,8 @@ mix
 ;
 
 mix.copy('resources/fonts/Nunito_Sans/NunitoSans-Regular.ttf', 'public/fonts');
+
+mix.copy('resources/css/start', 'public/css/start')
+    .copy('resources/js/start', 'public/js/start')
+    .copy('resources/fonts/LineIcons', 'public/fonts')
+;
