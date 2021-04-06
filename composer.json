@@ -1,5 +1,5 @@
 {
-    "name": "DCSLab",
+    "name": "gitzjoey/dcslab",
     "type": "project",
     "description": "The DCSLab Framework.",
     "keywords": ["framework", "laravel", "dcslab"],
