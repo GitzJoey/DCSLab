@@ -8,7 +8,7 @@
 
         <title>{{ __('front.title') }}</title>
 
-        <link rel="shortcut icon" href="assets/images/favicon.png" type="image/png">
+        <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/ico">
 
         <link rel="stylesheet" href="{{ mix('css/start/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ mix('css/start/LineIcons.css') }}">
@@ -25,7 +25,7 @@
                         <div class="col-lg-12">
                             <nav class="navbar navbar-expand-lg">
                                 <a class="navbar-brand" href="#">
-                                    <img src="assets/images/logo.svg" alt="Logo">
+                                    <img src="{{ asset('images/g_logo.png') }}" alt="Logo" width="50px" height="50px">
                                 </a>
 
                                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarOne" aria-controls="navbarOne" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,9 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="page-scroll" href="#contact">CONTACT</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="page-scroll" href="{{ route('login') }}">LOGIN</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -71,18 +74,18 @@
                     <div class="row justify-content-center">
                         <div class="col-xl-8 col-lg-10">
                             <div class="header-content text-center">
-                                <h3 class="header-title">Handcrafted Landing Page for Startups and SaaS Businesses</h3>
-                                <p class="text">A simple, customizable, and, beautiful SaaS business focused landing page to make your project closer to launch!</p>
+                                <h3 class="header-title">DCSLab</h3>
+                                <p class="text">A simple, customizable, and, beautiful SaaS business enabler!</p>
                                 <ul class="header-btn">
                                     <li><a class="main-btn btn-one" href="#">GET IN TOUCH</a></li>
-                                    <li><a class="main-btn btn-two video-popup" href="https://www.youtube.com/watch?v=r44RKWyfcFw">WATCH THE VIDEO <i class="lni-play"></i></a></li>
+                                    <li><a class="main-btn btn-two video-popup" href="#">WATCH THE VIDEO <i class="lni-play"></i></a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="header-shape">
-                    <img src="assets/images/header-shape.svg" alt="shape">
+                    <img src="{{ asset('images/header-shape.svg') }}" alt="shape">
                 </div>
             </div>
         </header>
@@ -150,7 +153,7 @@
             </div>
             <div class="services-image d-lg-flex align-items-center">
                 <div class="image">
-                    <img src="assets/images/services.png" alt="Services">
+                    <img src="{{ asset('images/bg4.jpg') }}" alt="Services">
                 </div>
             </div>
         </section>
@@ -220,7 +223,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="single-pricing enterprise mt-40">
                             <div class="pricing-flower">
-                                <img src="assets/images/flower.svg" alt="flower">
+                                <img src="{{ asset('images/flower.svg') }}" alt="flower">
                             </div>
                             <div class="pricing-header text-right">
                                 <h5 class="sub-title">Enterprise</h5>
@@ -249,7 +252,7 @@
 
         <section id="call-to-action" class="call-to-action">
             <div class="call-action-image">
-                <img src="assets/images/call-to-action.png" alt="call-to-action">
+                <img src="{{ asset('images/bg2.jpg') }}" alt="call-to-action">
             </div>
 
             <div class="container-fluid">
@@ -335,8 +338,7 @@
                         <div class="col-lg-12">
                             <div class="footer-logo-support d-md-flex align-items-end justify-content-between">
                                 <div class="footer-logo d-flex align-items-end">
-                                    <a class="mt-30" href="index.html"><img src="assets/images/logo.svg" alt="Logo"></a>
-
+                                    <a class="mt-30" href="index.html"><img src="{{ asset('images/g_logo.png') }}" alt="Logo" width="35px" height="35px"></a>
                                     <ul class="social mt-30">
                                         <li><a href="#"><i class="lni-facebook-filled"></i></a></li>
                                         <li><a href="#"><i class="lni-twitter-original"></i></a></li>
@@ -344,7 +346,6 @@
                                         <li><a href="#"><i class="lni-linkedin-original"></i></a></li>
                                     </ul>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -356,7 +357,6 @@
                                     <li><a href="#">About</a></li>
                                     <li><a href="#">Contact</a></li>
                                     <li><a href="#">Career</a></li>
-
                                 </ul>
                             </div>
                         </div>
@@ -401,7 +401,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="copyright text-center">
-                                <p class="text">Template Crafted by <a rel="nofollow" href="https://uideck.com">UIdeck</a> - UI Powered by <a el="nofollow" href="https://rebrand.ly/ayroui">AyroUI</a></p>
+                                <p class="text">
+                                    <img class="img-thumbnail" src="{{ asset('images/g.jpg') }}" alt="G">
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -411,17 +413,17 @@
 
         <a class="back-to-top" href="#"><i class="lni-chevron-up"></i></a>
 
-        <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
-        <script src="assets/js/vendor/jquery-1.12.4.min.js"></script>
+        <script src="{{ asset('js/start/vendor/modernizr-3.6.0.min.js') }}"></script>
+        <script src="{{ asset('js/start/vendor/jquery-1.12.4.min.js') }}"></script>
 
-        <script src="assets/js/bootstrap.min.js"></script>
-        <script src="assets/js/popper.min.js"></script>
+        <script src="{{ asset('js/start/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/start/popper.min.js') }}"></script>
 
-        <script src="assets/js/jquery.easing.min.js"></script>
-        <script src="assets/js/scrolling-nav.js"></script>
+        <script src="{{ asset('js/start/jquery.easing.min.js') }}"></script>
+        <script src="{{ asset('js/start/scrolling-nav.js') }}"></script>
 
-        <script src="assets/js/jquery.magnific-popup.min.js"></script>
+        <script src="{{ asset('js/start/jquery.magnific-popup.min.js') }}"></script>
 
-        <script src="assets/js/main.js"></script>
+        <script src="{{ asset('js/start/main.js') }}"></script>
     </body>
 </html>

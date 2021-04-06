@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'LineIcons';
-  src:  url('../fonts/LineIcons.eot?y2l643');
-  src:  url('../fonts/LineIcons.eot?y2l643#iefix') format('embedded-opentype'),
-    url('../fonts/LineIcons.ttf?y2l643') format('truetype'),
-    url('../fonts/LineIcons.woff?y2l643') format('woff'),
-    url('../fonts/LineIcons.svg?y2l643#LineIcons') format('svg');
+  src:  url('../../fonts/LineIcons.eot?y2l643');
+  src:  url('../../fonts/LineIcons.eot?y2l643#iefix') format('embedded-opentype'),
+        url('../../fonts/LineIcons.ttf?y2l643') format('truetype'),
+        url('../../fonts/LineIcons.woff?y2l643') format('woff'),
+        url('../../fonts/LineIcons.svg?y2l643#LineIcons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
