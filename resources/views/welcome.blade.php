@@ -153,7 +153,7 @@
             </div>
             <div class="services-image d-lg-flex align-items-center">
                 <div class="image">
-                    <img src="{{ asset('images/bg4.jpg') }}" alt="Services">
+                    <img src="{{ asset('images/comp.jpeg') }}" alt="Services">
                 </div>
             </div>
         </section>
@@ -196,7 +196,7 @@
                     <div class="col-lg-4 col-md-7 col-sm-9">
                         <div class="single-pricing pro mt-40">
                             <div class="pricing-baloon">
-                                <img src="assets/images/baloon.svg" alt="baloon">
+                                <img src="{{ asset('images/baloon.svg') }}" alt="baloon">
                             </div>
                             <div class="pricing-header">
                                 <h5 class="sub-title">Pro</h5>
