@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
+use App\Models\Role;
+use App\Models\Setting;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -64,10 +68,37 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $usr = new User();
+        $usr->name = $data['name'];
+        $usr->email = $data['email'];
+        $usr->password = Hash::make($data['password']);
+
+        $usr->created_at = Carbon::now();
+        $usr->updated_at = Carbon::now();
+
+        $profile = new Profile();
+        if ($data['name'] == trim($data['name']) && strpos($data['name'], ' ') !== false) {
+            $pieces = explode(" ", $data['name']);
+            $profile->first_name = $pieces[0];
+            $profile->last_name = $pieces[1];
+        } else {
+            $profile->first_name = $data['name'];
+        }
+
+        $profile->created_at = Carbon::now();
+        $profile->updated_at = Carbon::now();
+
+        $usr->profile()->save($profile);
+
+        $setting = new Setting();
+        $setting->type = 'KEY_VALUE';
+        $setting->key = 'THEMES.CODEBASE';
+        $setting->value = 'corporate';
+
+        $usr->settings()->save($setting);
+
+        $user_role = Role::where('name', 'user');
+
+        $usr->attachRole($user_role);
     }
 }
