@@ -13,6 +13,7 @@ mix
 ;
 
 mix.copy('resources/fonts/Nunito_Sans/NunitoSans-Regular.ttf', 'public/fonts');
+mix.copy('node_modules/simplebar/dist/simplebar.esm.js.map', 'public/js/codebase');
 
 mix.copy('resources/css/start', 'public/css/start')
     .copy('resources/js/start', 'public/js/start')

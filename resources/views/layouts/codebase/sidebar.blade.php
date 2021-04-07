@@ -51,42 +51,65 @@
 
             <div class="content-side content-side-full">
                 <ul class="nav-main">
+                    <li class="nav-main-heading">
+                        <span class="sidebar-mini-visible">DB</span><span class="sidebar-mini-hidden">{{ __('sidebar.header.dashboard') }}</span>
+                    </li>
                     <li>
-                        <a class="active" href="#">
-                            <i class="si si-cup"></i><span class="sidebar-mini-hide">Dashboard</span>
+                        <a class="{{ active_class(if_route_pattern('db')) }}" href="{{ route('db') }}">
+                            <i class="icon icon-cup"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.dashboard.dashboard') }}</span>
                         </a>
                     </li>
-                    <li class="nav-main-heading">
-                        <span class="sidebar-mini-visible">VR</span><span class="sidebar-mini-hidden">DEV</span>
-                    </li>
-                    <li class="">
-                        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="si si-bulb"></i><span class="sidebar-mini-hide">Tools</span></a>
-                        <ul>
-                            <li>
-                                <a class="{{ request()->is('pages/datatables') ? ' active' : '' }}" href="/pages/datatables">DataTables</a>
-                            </li>
-                            <li>
-                                <a class="{{ request()->is('pages/slick') ? ' active' : '' }}" href="/pages/slick">Slick Slider</a>
-                            </li>
-                            <li>
-                                <a class="{{ request()->is('pages/blank') ? ' active' : '' }}" href="/pages/blank">Blank</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="">
-                        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="si si-bulb"></i><span class="sidebar-mini-hide">Examples</span></a>
-                        <ul>
-                            <li>
-                                <a class="{{ request()->is('pages/datatables') ? ' active' : '' }}" href="/pages/datatables">DataTables</a>
-                            </li>
-                            <li>
-                                <a class="{{ request()->is('pages/slick') ? ' active' : '' }}" href="/pages/slick">Slick Slider</a>
-                            </li>
-                            <li>
-                                <a class="{{ request()->is('pages/blank') ? ' active' : '' }}" href="/pages/blank">Blank</a>
-                            </li>
-                        </ul>
-                    </li>
+
+                    @include('layouts.codebase.sidebar-ext')
+                    @role('administrator|dev')
+                        <li class="nav-main-heading">
+                            <span class="sidebar-mini-visible">AD</span><span class="sidebar-mini-hidden">{{ __('sidebar.header.adm') }}</span>
+                        </li>
+                        <li class="{{ active_class(if_route_pattern('db.admin.users.*'), 'open') }}">
+                            <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-people"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.adm.users') }}</span></a>
+                            <ul>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.admin.users.users')) }}" href="{{ route('db.admin.users.users') }}">{{ __('sidebar.item.adm.users.users') }}</a>
+                                </li>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.admin.users.roles')) }}" href="{{ route('db.admin.users.roles') }}">{{ __('sidebar.item.adm.users.roles') }}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endrole
+                    @role('dev')
+                        <li class="nav-main-heading">
+                            <span class="sidebar-mini-visible">DV</span><span class="sidebar-mini-hidden">{{ __('sidebar.header.dev') }}</span>
+                        </li>
+                        <li class="{{ active_class(if_route_pattern('db.dev.tools.*'), 'open') }}">
+                            <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-wrench"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.dev.dev_tools') }}</span></a>
+                            <ul>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.dev.tools.db_backup')) }}" href="{{ route('db.dev.tools.db_backup') }}">{{ __('sidebar.item.dev.dev_tools.db_backup') }}</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="{{ active_class(if_route_pattern('db.dev.examples.*'), 'open') }}">
+                            <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-book-open"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.dev.examples') }}</span></a>
+                            <ul>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.dev.examples.ex1')) }}" href="{{ route('db.dev.examples.ex1') }}">{{ __('sidebar.item.dev.examples.ex_1') }}</a>
+                                </li>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.dev.examples.ex2')) }}" href="{{ route('db.dev.examples.ex2') }}">{{ __('sidebar.item.dev.examples.ex_2') }}</a>
+                                </li>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.dev.examples.ex3')) }}" href="{{ route('db.dev.examples.ex3') }}">{{ __('sidebar.item.dev.examples.ex_3') }}</a>
+                                </li>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.dev.examples.ex4')) }}" href="{{ route('db.dev.examples.ex4') }}">{{ __('sidebar.item.dev.examples.ex_4') }}</a>
+                                </li>
+                                <li>
+                                    <a class="{{ active_class(if_route_pattern('db.dev.examples.ex5')) }}" href="{{ route('db.dev.examples.ex5') }}">{{ __('sidebar.item.dev.examples.ex_5') }}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    @endrole
                 </ul>
             </div>
         </div>
