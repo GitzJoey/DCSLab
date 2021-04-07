@@ -183,7 +183,7 @@ export default class Template {
                 link.closest('ul').children('li').removeClass('open');
                 parentLi.addClass('open');
             }
-            
+
             // Remove focus from submenu link
             link.trigger('blur');
 
@@ -528,10 +528,10 @@ export default class Template {
         let elBlock, btnFullscreen, btnContentToggle;
 
         // Set default icons for fullscreen and content toggle buttons
-        let iconFullscreen         = 'si si-size-fullscreen';
-        let iconFullscreenActive   = 'si si-size-actual';
-        let iconContent            = 'si si-arrow-up';
-        let iconContentActive      = 'si si-arrow-down';
+        let iconFullscreen         = 'icon icon-size-fullscreen';
+        let iconFullscreenActive   = 'icon icon-size-actual';
+        let iconContent            = 'icon icon-arrow-up';
+        let iconContentActive      = 'icon icon-arrow-down';
 
         // API with object literals
         let blockAPI = {

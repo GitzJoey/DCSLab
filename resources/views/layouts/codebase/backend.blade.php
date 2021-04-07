@@ -27,7 +27,7 @@
         @yield('css_after')
     </head>
     <body>
-        <div id="page-container" class="sidebar-o enable-page-overlay side-scroll page-header-modern main-content-boxed">
+        <div id="page-container" class="sidebar-o sidebar-inverse enable-page-overlay side-scroll page-header-modern main-content-boxed">
             @include('layouts.codebase.side-overlay')
 
             @include('layouts.codebase.sidebar')
@@ -37,6 +37,8 @@
             <main id="main-container">
                 @yield('content')
             </main>
+
+            @yield('custom_content')
 
             @include('layouts.codebase.footer')
         </div>

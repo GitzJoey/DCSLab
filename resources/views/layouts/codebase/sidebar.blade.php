@@ -55,24 +55,24 @@
                         <span class="sidebar-mini-visible">DB</span><span class="sidebar-mini-hidden">{{ __('sidebar.header.dashboard') }}</span>
                     </li>
                     <li>
-                        <a class="active" href="#">
+                        <a class="{{ active_class(if_route_pattern('db')) }}" href="{{ route('db') }}">
                             <i class="icon icon-cup"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.dashboard.dashboard') }}</span>
                         </a>
                     </li>
 
                     @include('layouts.codebase.sidebar-ext')
-                    @role('administrator')
+                    @role('administrator|dev')
                         <li class="nav-main-heading">
                             <span class="sidebar-mini-visible">AD</span><span class="sidebar-mini-hidden">{{ __('sidebar.header.adm') }}</span>
                         </li>
-                        <li class="">
+                        <li class="{{ active_class(if_route_pattern('db.admin.users.*'), 'open') }}">
                             <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-people"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.adm.users') }}</span></a>
                             <ul>
                                 <li>
-                                    <a class="{{ request()->is('pages/datatables') ? ' active' : '' }}" href="#">{{ __('sidebar.item.adm.users.users') }}</a>
+                                    <a class="{{ active_class(if_route_pattern('db.admin.users.users')) }}" href="{{ route('db.admin.users.users') }}">{{ __('sidebar.item.adm.users.users') }}</a>
                                 </li>
                                 <li>
-                                    <a class="{{ request()->is('pages/slick') ? ' active' : '' }}" href="#">{{ __('sidebar.item.adm.users.roles') }}</a>
+                                    <a class="{{ active_class(if_route_pattern('db.admin.users.roles')) }}" href="{{ route('db.admin.users.roles') }}">{{ __('sidebar.item.adm.users.roles') }}</a>
                                 </li>
                             </ul>
                         </li>
@@ -81,7 +81,7 @@
                         <li class="nav-main-heading">
                             <span class="sidebar-mini-visible">DV</span><span class="sidebar-mini-hidden">{{ __('sidebar.header.dev') }}</span>
                         </li>
-                        <li class="">
+                        <li class="{{ active_class(if_route_pattern('db.dev.tools.*'), 'open') }}">
                             <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-wrench"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.dev.dev_tools') }}</span></a>
                             <ul>
                                 <li>
@@ -89,7 +89,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="">
+                        <li class="{{ active_class(if_route_pattern('db.dev.examples.*'), 'open') }}">
                             <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-book-open"></i><span class="sidebar-mini-hide">{{ __('sidebar.item.dev.examples') }}</span></a>
                             <ul>
                                 <li>
