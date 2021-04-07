@@ -48,7 +48,7 @@ Recompile
 
 ## History
 
-* ###2021-04-05
+* **2021-04-05**
     * Reboot from [TKBARUSPA](https://www.github.com/gitzjoey/TKBARUSPA)
     * Officially using [CodeBase template](https://themeforest.net/item/codebase-bootstrap-4-admin-dashboard-template-ui-framework/20289243)
     
