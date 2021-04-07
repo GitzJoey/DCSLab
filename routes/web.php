@@ -19,6 +19,14 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::bind('id', function ($id) {
+    if (!is_numeric($id)) {
+        return \Vinkla\Hashids\Facades\Hashids::decode($id)[0];
+    } else {
+        return $id;
+    }
+});
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['prefix' => 'dashboard'],function() {

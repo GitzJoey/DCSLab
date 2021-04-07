@@ -252,7 +252,7 @@
 
         <section id="call-to-action" class="call-to-action">
             <div class="call-action-image">
-                <img src="{{ asset('images/bg2.jpg') }}" alt="call-to-action">
+                <img src="{{ asset('images/bg6.jpg') }}" alt="call-to-action">
             </div>
 
             <div class="container-fluid">

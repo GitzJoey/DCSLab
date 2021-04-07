@@ -2,6 +2,8 @@
 
 Doctor Computer SG Lab
 
+This project is inspired by the desire to create an up to date web app boilerplate and keep evolving.
+
 ## Requirement
 * [PHP](https://www.php.net/downloads.php) (8.0.2)
 * [Laravel](https://laravel.com/) (8.5.15)
