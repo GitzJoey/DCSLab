@@ -52,6 +52,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
+            <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple">{{ __('buttons.create_new') }}</button>
+        </div>
     </div>
 
     <div class="block block-bordered block-themed" id="crud">
@@ -76,8 +79,26 @@
                 </div>
             </form>
         </div>
+        <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
+            <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple">{{ __('buttons.submit') }}</button>&nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple">{{ __('buttons.reset') }}</button>
+        </div>
     </div>
 </div>
 @endsection
 
-
+@section('js_after')
+    <script type="text/javascript">
+        const roleComponent = {
+            data() {
+                return {
+                    counter: 0,
+                }
+            },
+            mounted() {
+                console.log('aa');
+            }
+        }
+        const roleApp = Vue.createApp(roleComponent).mount('#roleVue');
+    </script>
+@endsection
