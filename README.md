@@ -1,8 +1,8 @@
-## DCSLab
+# DCSLab
 
 Doctor Computer SG Lab
 
-### Requirement
+## Requirement
 * [PHP](https://www.php.net/downloads.php) (8.0.2)
 * [Laravel](https://laravel.com/) (8.5.15)
 * [MySQL](https://www.mysql.com/downloads/) (8.0.21)
@@ -10,7 +10,7 @@ Doctor Computer SG Lab
 * [NodeJS/NPM](https://nodejs.org/en/download/) (14.16.0/6.14.6)
 * [Composer](https://getcomposer.org/download/) (2.0.11)
 
-### Installation
+## Installation
 
 Clone Repository
 
@@ -33,3 +33,22 @@ eg database config:
 Run the installation scripts
 
 >`$ php artisan app:install`
+
+## Updates
+
+Upon available updates, pull the project to the latest
+
+>`$ git pull`
+
+Recompile
+
+>`$ composer update`  
+>`$ npm update`  
+>`$ npm run dev`
+
+## History
+
+* ###2021-04-05
+    * Reboot from [TKBARUSPA](https://www.github.com/gitzjoey/TKBARUSPA)
+    * Officially using [CodeBase template](https://themeforest.net/item/codebase-bootstrap-4-admin-dashboard-template-ui-framework/20289243)
+    
