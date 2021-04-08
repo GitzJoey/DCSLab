@@ -6,6 +6,12 @@
 
 @section('content')
 <div id="roleVue">
+    <ul id="array-rendering">
+        <li v-for="item in items">
+            @{{ item.message }}
+        </li>
+    </ul>
+
     <div class="block block-bordered block-themed" id="list">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title"><strong>{{ __('role.table_title') }}</strong></h3>
@@ -86,20 +92,10 @@
 @section('js_after')
     <script type="text/javascript">
         const roleApp = Vue.createApp({
-            setup() {
-                let roleList = [];
-
-                let config = {
-                    Authorization: 'brearer 551ab3e7be586d041ab301c665f4028a1c01cb37fb75e896464422d6e178f5ccd406ba7fcd11463b'
+            data() {
+                return {
+                    items: [{ message: 'Foo' }, { message: 'Bar' }]
                 }
-
-                axios.get('http://localhost:8000/api/get/role/read').then(response => {
-                    this.roleList = response.data;
-                }).catch(e => {
-                    console.log(e);
-                });
-
-                return { roleList }
             }
         }).mount('#roleVue');
     </script>
