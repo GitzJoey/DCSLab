@@ -75,7 +75,7 @@
                         <div class="col-xl-8 col-lg-10">
                             <div class="header-content text-center">
                                 <h3 class="header-title">DCSLab</h3>
-                                <p class="text">A simple, customizable, and, beautiful SaaS business enabler!</p>
+                                <p class="text">dicobaaaaaa</p>
                                 <ul class="header-btn">
                                     <li><a class="main-btn btn-one" href="#">GET IN TOUCH</a></li>
                                     <li><a class="main-btn btn-two video-popup" href="#">WATCH THE VIDEO <i class="lni-play"></i></a></li>
