@@ -29,15 +29,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Thomas Riley</td>
-                        <td>
-                            asdada
-                        </td>
-                        <td>
-                            asdada
-                        </td>
+                    <tr v-for="(u, uIdx) in roleList">
+                        <td>@{{ u.name }}</td>
+                        <td>@{{ u.display_name }}</td>
+                        <td>@{{ u.description }}</td>
+                        <td></td>
                         <td class="text-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Edit">
@@ -89,16 +85,22 @@
 
 @section('js_after')
     <script type="text/javascript">
-        const roleComponent = {
-            data() {
-                return {
-                    counter: 0,
+        const roleApp = Vue.createApp({
+            setup() {
+                let roleList = [];
+
+                let config = {
+                    Authorization: 'brearer 551ab3e7be586d041ab301c665f4028a1c01cb37fb75e896464422d6e178f5ccd406ba7fcd11463b'
                 }
-            },
-            mounted() {
-                console.log('aa');
+
+                axios.get('http://localhost:8000/api/get/role/read').then(response => {
+                    this.roleList = response.data;
+                }).catch(e => {
+                    console.log(e);
+                });
+
+                return { roleList }
             }
-        }
-        const roleApp = Vue.createApp(roleComponent).mount('#roleVue');
+        }).mount('#roleVue');
     </script>
 @endsection
