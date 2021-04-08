@@ -6,6 +6,12 @@
 
 @section('content')
 <div id="roleVue">
+    <ul id="array-rendering">
+        <li v-for="item in items">
+            @{{ item.message }}
+        </li>
+    </ul>
+
     <div class="block block-bordered block-themed" id="list">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title"><strong>{{ __('role.table_title') }}</strong></h3>
@@ -29,15 +35,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Thomas Riley</td>
-                        <td>
-                            asdada
-                        </td>
-                        <td>
-                            asdada
-                        </td>
+                    <tr v-for="(u, uIdx) in roleList">
+                        <td>@{{ u.name }}</td>
+                        <td>@{{ u.display_name }}</td>
+                        <td>@{{ u.description }}</td>
+                        <td></td>
                         <td class="text-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Edit">
@@ -89,16 +91,12 @@
 
 @section('js_after')
     <script type="text/javascript">
-        const roleComponent = {
+        const roleApp = Vue.createApp({
             data() {
                 return {
-                    counter: 0,
+                    items: [{ message: 'Foo' }, { message: 'Bar' }]
                 }
-            },
-            mounted() {
-                console.log('aa');
             }
-        }
-        const roleApp = Vue.createApp(roleComponent).mount('#roleVue');
+        }).mount('#roleVue');
     </script>
 @endsection
