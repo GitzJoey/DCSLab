@@ -8,70 +8,6 @@
             <button type="button" class="btn btn-circle btn-dual-secondary" data-toggle="layout" data-action="header_search_on">
                 <i class="fa fa-search"></i>
             </button>
-
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-circle btn-dual-secondary" id="page-header-options-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-wrench"></i>
-                </button>
-                <div class="dropdown-menu min-width-300" aria-labelledby="page-header-options-dropdown">
-                    <h5 class="h6 text-center py-10 mb-10 border-b text-uppercase">Settings</h5>
-                    <h6 class="dropdown-header">Color Themes</h6>
-                    <div class="row no-gutters text-center mb-5">
-                        <div class="col-2 mb-5">
-                            <a class="text-default" data-toggle="theme" data-theme="default" href="javascript:void(0)">
-                                <i class="fa fa-2x fa-circle"></i>
-                            </a>
-                        </div>
-                        <div class="col-2 mb-5">
-                            <a class="text-elegance" data-toggle="theme" data-theme="{{ mix('/css/codebase/themes/elegance.css') }}" href="javascript:void(0)">
-                                <i class="fa fa-2x fa-circle"></i>
-                            </a>
-                        </div>
-                        <div class="col-2 mb-5">
-                            <a class="text-pulse" data-toggle="theme" data-theme="{{ mix('/css/codebase/themes/pulse.css') }}" href="javascript:void(0)">
-                                <i class="fa fa-2x fa-circle"></i>
-                            </a>
-                        </div>
-                        <div class="col-2 mb-5">
-                            <a class="text-flat" data-toggle="theme" data-theme="{{ mix('/css/codebase/themes/flat.css') }}" href="javascript:void(0)">
-                                <i class="fa fa-2x fa-circle"></i>
-                            </a>
-                        </div>
-                        <div class="col-2 mb-5">
-                            <a class="text-corporate" data-toggle="theme" data-theme="{{ mix('/css/codebase/themes/corporate.css') }}" href="javascript:void(0)">
-                                <i class="fa fa-2x fa-circle"></i>
-                            </a>
-                        </div>
-                        <div class="col-2 mb-5">
-                            <a class="text-earth" data-toggle="theme" data-theme="{{ mix('/css/codebase/themes/earth.css') }}" href="javascript:void(0)">
-                                <i class="fa fa-2x fa-circle"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <h6 class="dropdown-header">Header</h6>
-                    <div class="row gutters-tiny text-center mb-5">
-                        <div class="col-6">
-                            <button type="button" class="btn btn-sm btn-block btn-alt-secondary" data-toggle="layout" data-action="header_fixed_toggle">Fixed Mode</button>
-                        </div>
-                        <div class="col-6">
-                            <button type="button" class="btn btn-sm btn-block btn-alt-secondary d-none d-lg-block mb-10" data-toggle="layout" data-action="header_style_classic">Classic Style</button>
-                        </div>
-                    </div>
-                    <h6 class="dropdown-header">Sidebar</h6>
-                    <div class="row gutters-tiny text-center mb-5">
-                        <div class="col-6">
-                            <button type="button" class="btn btn-sm btn-block btn-alt-secondary mb-10" data-toggle="layout" data-action="sidebar_style_inverse_off">Light</button>
-                        </div>
-                        <div class="col-6">
-                            <button type="button" class="btn btn-sm btn-block btn-alt-secondary mb-10" data-toggle="layout" data-action="sidebar_style_inverse_on">Dark</button>
-                        </div>
-                    </div>
-                    <div class="d-none d-xl-block">
-                        <h6 class="dropdown-header">Main Content</h6>
-                        <button type="button" class="btn btn-sm btn-block btn-alt-secondary mb-10" data-toggle="layout" data-action="content_layout_toggle">Toggle Layout</button>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="content-header-section">
@@ -84,37 +20,48 @@
                 <div class="dropdown-menu dropdown-menu-right min-width-200" aria-labelledby="page-header-user-dropdown">
                     <h5 class="h6 text-center py-10 mb-5 border-b text-uppercase">{{ Auth::user()->roles()->first()->name }}</h5>
                     <a class="dropdown-item" href="{{ route('db.profile') }}">
-                        <i class="si si-user mr-5"></i> {{ __('dashboard.profile') }}
+                        <i class="icon icon-user mr-5"></i> {{ __('dashboard.profile') }}
                     </a>
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                        <span><i class="si si-envelope-open mr-5"></i> Inbox</span>
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
+                        <span><i class="icon icon-envelope-open mr-5"></i> {{ __('dashboard.inbox') }}</span>
                         <span class="badge badge-primary">3</span>
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)">
-                        <i class="si si-note mr-5"></i> Invoices
-                    </a>
-                    <div class="dropdown-divider"></div>
-
-                    <a class="dropdown-item" href="javascript:void(0)" data-toggle="layout" data-action="side_overlay_toggle">
-                        <i class="si si-wrench mr-5"></i> Settings
+                    <a class="dropdown-item" href="#" data-toggle="layout" data-action="side_overlay_toggle">
+                        <i class="icon icon-wrench mr-5"></i> {{ __('dashboard.settings') }}
                     </a>
 
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="si si-logout mr-5"></i> {{ __('buttons.logout') }}
+                        <i class="icon icon-logout mr-5"></i> {{ __('buttons.logout') }}
                     </a>
                     <form id="logout-form" action="{{ url('/logout') }}" method="POST">{{ csrf_field() }}</form>
                 </div>
             </div>
 
-            <!-- Notifications -->
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-rounded btn-dual-secondary" id="page-header-language-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-globe"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right min-width-150" aria-labelledby="page-header-language-dropdown">
+                    @foreach(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                        <a class="dropdown-item" hreflang="{{$localeCode}}" href="{{ \Mcamara\LaravelLocalization\Facades\LaravelLocalization::getLocalizedURL($localeCode) }}">
+                            @if (App::getLocale() == $localeCode)
+                                <strong>{{ $properties['native'] }}</strong>
+                            @else
+                                {{ $properties['native'] }}
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-rounded btn-dual-secondary" id="page-header-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-flag"></i>
                     <span class="badge badge-primary badge-pill">5</span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right min-width-300" aria-labelledby="page-header-notifications">
-                    <h5 class="h6 text-center py-10 mb-0 border-b text-uppercase">Notifications</h5>
+                    <h5 class="h6 text-center py-10 mb-0 border-b text-uppercase">{{ __('dashboard.notifications') }}</h5>
                     <ul class="list-unstyled my-20">
                         <li>
                             <a class="text-body-color-dark media mb-15" href="javascript:void(0)">
@@ -187,7 +134,7 @@
 
     <div id="page-header-search" class="overlay-header">
         <div class="content-header content-header-fullrow">
-            <form action="/dashboard" method="POST">
+            <form action="#" method="POST">
                 @csrf
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -195,7 +142,7 @@
                             <i class="fa fa-times"></i>
                         </button>
                     </div>
-                    <input type="text" class="form-control" placeholder="Search or hit ESC.." id="page-header-search-input" name="page-header-search-input">
+                    <input type="text" class="form-control" placeholder="{{ __('dashboard.search_placeholder') }}" id="page-header-search-input" name="page-header-search-input">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-secondary">
                             <i class="fa fa-search"></i>

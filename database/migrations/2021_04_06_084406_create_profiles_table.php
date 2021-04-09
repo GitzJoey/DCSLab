@@ -18,8 +18,15 @@ class CreateProfilesTable extends Migration
             $table->bigInteger('user_id');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('country')->nullable();
+            $table->string('tax_id')->nullable();
             $table->string('ic_number')->nullable();
             $table->string('img_path')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

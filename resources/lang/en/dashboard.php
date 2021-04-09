@@ -2,5 +2,9 @@
 
 return [
     'title' => 'Dashboard',
-    'profile' => 'Profile'
+    'profile' => 'Profile',
+    'inbox' => 'Inbox',
+    'settings' => 'Settings',
+    'notifications' => 'Notifications',
+    'search_pladeholder' => 'Search or hit ESC..',
 ];

@@ -6,12 +6,6 @@
 
 @section('content')
 <div id="roleVue">
-    <ul id="array-rendering">
-        <li v-for="item in items">
-            @{{ item.message }}
-        </li>
-    </ul>
-
     <div class="block block-bordered block-themed" id="list">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title"><strong>{{ __('role.table_title') }}</strong></h3>
@@ -79,6 +73,25 @@
                         <input id="inputName" name="name" type="text" class="form-control" placeholder="{{ __('role.fields.name') }}">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="inputName" class="col-2 col-form-label">{{ __('role.fields.name') }}</label>
+                    <div class="col-md-10">
+                        <input id="inputName" name="name" type="text" class="form-control" placeholder="{{ __('role.fields.name') }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputName" class="col-2 col-form-label">{{ __('role.fields.name') }}</label>
+                    <div class="col-md-10">
+                        <input id="inputName" name="name" type="text" class="form-control" placeholder="{{ __('role.fields.name') }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputName" class="col-2 col-form-label">{{ __('role.fields.name') }}</label>
+                    <div class="col-md-10">
+                        <input id="inputName" name="name" type="text" class="form-control" placeholder="{{ __('role.fields.name') }}">
+                    </div>
+                </div>
+
             </form>
         </div>
         <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
@@ -91,12 +104,5 @@
 
 @section('js_after')
     <script type="text/javascript">
-        const roleApp = Vue.createApp({
-            data() {
-                return {
-                    items: [{ message: 'Foo' }, { message: 'Bar' }]
-                }
-            }
-        }).mount('#roleVue');
     </script>
 @endsection
