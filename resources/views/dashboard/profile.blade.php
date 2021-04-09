@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<div class="bg-image bg-image-bottom" style="background-image: url('{{ asset('images/bg6.jpg') }}');">
+<div class="bg-image bg-image-bottom" style="background-image: url('{{ asset('images/bg7.jpg') }}');">
     <div class="bg-black-op-75 py-30">
         <div class="content content-full text-center">
             <div class="mb-15">
@@ -28,8 +28,13 @@
             <button type="button" class="btn btn-rounded btn-hero btn-sm btn-alt-primary mb-5">
                 {{ __('dashboard.inbox') }}
             </button>
+            &nbsp;
             <button type="button" class="btn btn-rounded btn-hero btn-sm btn-alt-primary mb-5">
                 {{ __('dashboard.settings') }}
+            </button>
+            &nbsp;
+            <button type="button" class="btn btn-rounded btn-hero btn-sm btn-alt-primary mb-5">
+                <i class="fa fa-home"></i>
             </button>
         </div>
     </div>

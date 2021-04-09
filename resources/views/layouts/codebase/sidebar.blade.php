@@ -13,7 +13,7 @@
                 </button>
 
                 <div class="content-header-item">
-                    <a class="link-effect font-w700" href="/">
+                    <a class="link-effect font-w700" href="{{ route('db') }}">
                         <i class="si si-fire text-primary"></i>
                         <span class="font-size-xl text-dual-primary-dark">DCS</span><span class="font-size-xl text-primary">Lab</span>
                     </a>
@@ -28,12 +28,12 @@
                 </div>
 
                 <div class="sidebar-mini-hidden-b text-center">
-                    <a class="img-link" href="#">
+                    <a class="img-link" href="{{ route('db.profile') }}">
                         <img class="img-avatar" src="{{ asset('images/def-user.png') }}" alt="">
                     </a>
                     <ul class="list-inline mt-10">
                         <li class="list-inline-item">
-                            <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="#">{{ Auth::user()->name }}</a>
+                            <a class="link-effect text-dual-primary-dark font-size-sm font-w600 text-uppercase" href="{{ route('db.profile') }}">{{ Auth::user()->name }}</a>
                         </li>
                         <li class="list-inline-item">
                             <a class="link-effect text-dual-primary-dark" data-toggle="layout" data-action="sidebar_style_inverse_toggle" href="javascript:void(0)">
