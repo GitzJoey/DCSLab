@@ -10,7 +10,9 @@ interface RoleService
         $description,
         $permission
     );
+
     public function read();
+
     public function update(
         $id,
         $name,
