@@ -11,6 +11,7 @@ mix
     .sass('resources/sass/codebase/codebase/themes/flat.scss', 'public/css/codebase/themes/')
     .sass('resources/sass/codebase/codebase/themes/pulse.scss', 'public/css/codebase/themes/')
     .js('resources/js/codebase/app.js', 'public/js/codebase/codebase.app.js')
+    .js('resources/js/apps/role.js', 'public/js/apps/role.js')
     .webpackConfig ({
         plugins: [
             new webpack.DefinePlugin({

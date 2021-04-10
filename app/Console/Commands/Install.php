@@ -92,7 +92,8 @@ class Install extends Command
             exec('npm run dev');
         }
 
-        $this->info('Creating Dev Account ...');
+        $this->info('Creating Admin Account ...');
+
         $userName = 'GitzJoey';
         $userEmail = 'gitzjoey@yahoo.com';
         $userPassword = 'thepassword';

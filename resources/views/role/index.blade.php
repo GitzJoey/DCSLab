@@ -6,6 +6,7 @@
 
 @section('content')
 <div id="roleVue">
+    @{{ test }}
     <div class="block block-bordered block-themed" id="list">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title"><strong>{{ __('role.table_title') }}</strong></h3>
@@ -29,10 +30,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(u, uIdx) in roleList">
-                        <td>@{{ u.name }}</td>
-                        <td>@{{ u.display_name }}</td>
-                        <td>@{{ u.description }}</td>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td class="text-center">
                             <div class="btn-group">
@@ -103,6 +104,5 @@
 @endsection
 
 @section('js_after')
-    <script type="text/javascript">
-    </script>
+    <script src="{{ mix('js/apps/role.js') }}"
 @endsection
