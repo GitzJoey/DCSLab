@@ -7,7 +7,6 @@ import 'jquery.appear';
 import 'jquery-scroll-lock';
 import 'jquery-countto';
 
-// ..and assign to window the ones that need it
 window.$ = window.jQuery    = jQuery;
 window.SimpleBar            = SimpleBar;
 window.Cookies              = Cookies;
@@ -25,6 +24,12 @@ if (token) {
     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
+
+if (language) {
+    window.axios.defaults.headers.common['X-localization'] = language;
+} else {
+    console.error('X-localization not found.');
 }
 
 window.Vue = require('vue/dist/vue.esm-bundler');

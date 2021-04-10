@@ -92,7 +92,8 @@ class Install extends Command
             exec('npm run dev');
         }
 
-        $this->info('Creating Admin ...');
+        $this->info('Creating Admin Account ...');
+
         $userName = 'GitzJoey';
         $userEmail = 'gitzjoey@yahoo.com';
         $userPassword = 'thepassword';
@@ -129,6 +130,8 @@ class Install extends Command
             $this->error('Aborted');
             return false;
         }
+
+
 
         sleep(3);
 

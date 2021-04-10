@@ -9,14 +9,13 @@
                 <a class="img-link mr-5" href="#">
                     <img class="img-avatar img-avatar32" src="{{ asset('images/def-user.png') }}" alt="">
                 </a>
-                <a class="align-middle link-effect text-primary-dark font-w600" href="javascript:void(0)">John Smith</a>
+                <a class="align-middle link-effect text-primary-dark font-w600" href="{{ route('db.profile') }}">{{ Auth::user()->name }}</a>
             </div>
         </div>
     </div>
 
     <div class="content-side">
-        <p>
-            Content..
-        </p>
+        <hr />
+        @include('layouts.codebase.side-overlay-ext')
     </div>
 </aside>

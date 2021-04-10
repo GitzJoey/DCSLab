@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -99,7 +100,7 @@ class RegisterController extends Controller
 
         $usr->settings()->save($setting);
 
-        $user_role = Role::where('name', 'user')->first();
+        $user_role = Role::where('name', Config::get('const.DEFAULT.ROLE.DEV'))->first();
 
         $usr->attachRole($user_role);
 
