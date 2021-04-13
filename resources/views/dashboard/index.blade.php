@@ -5,18 +5,22 @@
 @endsection
 
 @section('content')
-    <div id="test">
-        <Test/>
+    <div id="app">
+        @{{msg}}
     </div>
 @endsection
 
 @section('js_after')
-    <script src="{{ mix('js/apps/main.app.js') }}"></script>
-    <script type="text/javascript">
-        const app = createApp({
-            components: {
-                Test
-            }
-        });
-    </script>
+<script src="https://unpkg.com/vue@3.0.11/dist/vue.global.prod.js"></script>
+
+<script>
+const app = Vue.createApp({
+    data() {
+        return {
+            msg: 'I love Vue <3',
+        }
+    },
+})
+app.mount('#app')
+</script>
 @endsection

@@ -22,7 +22,7 @@
 
             <h1 class="h3 text-white font-w700 mb-10">{{ Auth::user()->name }}</h1>
             <h2 class="h5 text-white-op">
-                <span class="text-uppercase">{{ Auth::user()->roles()->first()->name }}</span>
+                <span class="text-uppercase">{{ Auth::user()->roles()->exists() ? Auth::user()->roles()->first()->name : 'No Role' }}</span>
             </h2>
 
             <button type="button" class="btn btn-rounded btn-hero btn-sm btn-alt-primary mb-5">
