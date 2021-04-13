@@ -34,3 +34,7 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:api'], function () {
         Route::get('permission/read', [RoleController::class, 'getAllPermissions'])->name('api.get.role.permission.read');
     });
 });
+
+Route::group(['prefix' => 'post', 'middleware' => 'auth:api'], function () {
+
+});

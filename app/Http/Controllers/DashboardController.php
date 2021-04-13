@@ -20,4 +20,9 @@ class DashboardController extends Controller
     {
         return view('dashboard.profile');
     }
+
+    public function settings()
+    {
+        return view('dashboard.settings');
+    }
 }

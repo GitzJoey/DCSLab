@@ -32,4 +32,5 @@ return [
     'ok' => 'OK',
     'resend' => 'Resend',
     'read_term' => 'Read Terms',
+    'accept' => 'Accept',
 ];

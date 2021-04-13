@@ -2,6 +2,11 @@
 
 namespace App\Services\Impls;
 
+use Exception;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\Role;
 use App\Models\Permission;
 
@@ -16,7 +21,6 @@ class RoleServiceImpl implements RoleService
         $permission
     )
     {
-        /*
         DB::beginTransaction();
 
         try {
@@ -31,11 +35,13 @@ class RoleServiceImpl implements RoleService
             }
 
             DB::commit();
+
+            return $role->hId();
         } catch (Exception $e) {
             DB::rollBack();
-            throw $e;
-        };
-        */
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
     }
 
     public function read()
@@ -52,7 +58,6 @@ class RoleServiceImpl implements RoleService
         $inputtedPermission
     )
     {
-        /*
         DB::beginTransaction();
 
         try {
@@ -61,22 +66,23 @@ class RoleServiceImpl implements RoleService
 
             $role->syncPermissions($pl);
 
-            $role->update([
+            $retval = $role->update([
                 'name' => $name,
                 'display_name' => $display_name,
                 'description' => $description,
             ]);
             DB::commit();
+
+            return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            throw $e;
-        };
-        */
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
     }
 
     public function delete($id)
     {
-        /*
         DB::beginTransaction();
 
         try {
@@ -84,18 +90,20 @@ class RoleServiceImpl implements RoleService
 
             $role->detachPermissions($role->getSelectedPermissionIdsAttribute());
 
-            $role->delete();
+            $retval = $role->delete();
 
             DB::commit();
+
+            return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            throw $e;
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
         }
-        */
     }
 
     public function getAllPermissions()
     {
-        return '';//Permission::get();
+        return Permission::get();
     }
 }

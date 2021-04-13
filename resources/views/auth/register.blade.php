@@ -77,7 +77,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row @error('password') is-invalid @enderror">
+                    <div class="form-group row @error('terms') is-invalid @enderror">
                         <div class="col-12">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="terms" name="terms">
@@ -114,7 +114,7 @@
         <div class="modal-content">
             <div class="block block-themed block-transparent mb-0">
                 <div class="block-header bg-primary-dark">
-                    <h3 class="block-title">Terms &amp; Conditions</h3>
+                    <h3 class="block-title">{{ __('auth.register.terms_and_cond') }}</h3>
                     <div class="block-options">
                         <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
                             <i class="si si-close"></i>
@@ -122,13 +122,13 @@
                     </div>
                 </div>
                 <div class="block-content">
-                    <p>Content...</p>
+                    <p>&nbsp;</p>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-alt-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-alt-success" data-dismiss="modal">
-                    <i class="fa fa-check"></i> Perfect
+                    <i class="fa fa-check"></i> {{ __('buttons.accept') }}
                 </button>
             </div>
         </div>

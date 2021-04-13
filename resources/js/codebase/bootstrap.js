@@ -31,5 +31,3 @@ if (language) {
 } else {
     console.error('X-localization not found.');
 }
-
-window.Vue = require('vue/dist/vue.esm-bundler');

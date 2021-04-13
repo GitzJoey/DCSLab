@@ -58,6 +58,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'terms' => ['required', 'string'],
         ]);
     }
 
@@ -100,7 +101,7 @@ class RegisterController extends Controller
 
         $usr->settings()->save($setting);
 
-        $user_role = Role::where('name', Config::get('const.DEFAULT.ROLE.DEV'))->first();
+        $user_role = Role::where('name', Config::get('const.DEFAULT.ROLE.USER'))->first();
 
         $usr->attachRole($user_role);
 

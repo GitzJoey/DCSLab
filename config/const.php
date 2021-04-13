@@ -7,5 +7,7 @@ return [
             'ADMIN' => 'administrator',
             'USER' => 'user'
         ]
-    ]
+    ],
+
+    'ERROR_RETURN_VALUE' => 0,
 ];
