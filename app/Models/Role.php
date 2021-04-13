@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laratrust\Models\LaratrustRole;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Role extends LaratrustRole
 {
@@ -12,7 +13,12 @@ class Role extends LaratrustRole
     public $guarded = [];
 
     protected $hidden = [
+        'id',
         'created_at',
         'updated_at',
     ];
+
+    public function hId() {
+        return HashIds::encode($this->attributes['id']);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Profile extends Model
 {
@@ -19,6 +20,7 @@ class Profile extends Model
     ];
 
     protected $hidden = [
+        'id',
         'created_by',
         'created_at',
         'updated_by',
@@ -30,5 +32,9 @@ class Profile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function hId() {
+        return HashIds::encode($this->attributes['id']);
     }
 }

@@ -26,7 +26,7 @@
                         <span><i class="icon icon-envelope-open mr-5"></i> {{ __('dashboard.inbox') }}</span>
                         <span class="badge badge-primary">3</span>
                     </a>
-                    <a class="dropdown-item" href="#" data-toggle="layout" data-action="side_overlay_toggle">
+                    <a class="dropdown-item" href="{{ route('db.settings') }}">
                         <i class="icon icon-wrench mr-5"></i> {{ __('dashboard.settings') }}
                     </a>
 

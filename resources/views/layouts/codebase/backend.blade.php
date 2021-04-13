@@ -35,7 +35,9 @@
             @include('layouts.codebase.header')
 
             <main id="main-container">
-                @yield('content')
+                <div class="content">
+                    @yield('content')
+                </div>
             </main>
 
             @yield('custom_content')
