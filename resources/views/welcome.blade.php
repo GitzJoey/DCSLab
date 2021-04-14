@@ -18,13 +18,6 @@
     </head>
 
     <body>
-
-        <div id="app">
-            Edit Here
-        </div>
-
-
-
         <header class="header-area">
             <div class="navgition navgition-transparent">
                 <div class="container">
@@ -432,6 +425,5 @@
         <script src="{{ asset('js/start/jquery.magnific-popup.min.js') }}"></script>
 
         <script src="{{ asset('js/start/main.js') }}"></script>
-        <script src="{{ asset('js/apps/main.js') }}"></script>
     </body>
 </html>

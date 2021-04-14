@@ -6,21 +6,10 @@
 
 @section('content')
     <div id="app">
-        @{{msg}}
+        {{-- Dynamic Template will generate here --}}
     </div>
 @endsection
 
 @section('js_after')
-<script src="https://unpkg.com/vue@3.0.11/dist/vue.global.prod.js"></script>
-
-<script>
-const app = Vue.createApp({
-    data() {
-        return {
-            msg: 'I love Vue <3',
-        }
-    },
-})
-app.mount('#app')
-</script>
+<script src="{{ asset('js/apps/main.js') }}"></script>
 @endsection
