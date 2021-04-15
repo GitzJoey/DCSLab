@@ -23,11 +23,11 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/home', function() {
     return view('home');
-});
+})->name('home');
 
 Route::bind('id', function ($id) {
     if (!is_numeric($id)) {

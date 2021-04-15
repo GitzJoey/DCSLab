@@ -38,9 +38,19 @@ return [
     ],
 
     'reset_password' => [
-        'title' => 'Reset Password',
-        'page_title' => 'Reset Password',
-        'page_title_desc' => 'Please enter your email',
-        'email' => 'Email',
+        'email' => [
+            'title' => 'Reset Password',
+            'page_title' => 'Reset Password',
+            'page_title_desc' => 'Please enter your email',
+            'email' => 'Email',
+        ],
+        'reset' => [
+            'title' => 'Reset Password',
+            'page_title' => 'Reset Password',
+            'page_title_desc' => 'Please enter your new password',
+            'email' => 'Email',
+            'password' => 'Password',
+            'password_confirmation' => 'Confirm password',
+        ],
     ]
 ];
