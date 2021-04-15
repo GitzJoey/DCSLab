@@ -55,4 +55,4 @@ Recompile
     * Officially using [CodeBase template](https://themeforest.net/item/codebase-bootstrap-4-admin-dashboard-template-ui-framework/20289243)
 
 * **2021-04-15**
-    * Using new laravel/fortify and laravel sanctum
+    * Using new laravel/fortify and laravel/sanctum
