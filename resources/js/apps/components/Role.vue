@@ -1,7 +1,7 @@
 <template>
     <div class="block block-bordered block-themed" id="list">
         <div class="block-header bg-gray-dark">
-            <h3 class="block-title"><strong></strong></h3>
+            <h3 class="block-title"><strong>{{ $t('table.title') }}</strong></h3>
             <div class="block-options">
                 <button type="button" class="btn-block-option" data-toggle="block-option" data-action="fullscreen_toggle"></button>
                 <button type="button" class="btn-block-option" data-toggle="block-option" data-action="pinned_toggle">
@@ -14,7 +14,7 @@
             <table class="table table-vcenter">
                 <thead class="thead-light">
                 <tr>
-                    <th></th>
+                    <th>{{ $t("table.cols.name") }}</th>
                     <th></th>
                     <th></th>
                     <th></th>
