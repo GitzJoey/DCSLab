@@ -40,5 +40,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get('', [DashboardController::class, 'index'])->name('db');
         Route::get('profile', [DashboardController::class, 'profile'])->name('db.profile');
         Route::get('settings', [DashboardController::class, 'settings'])->name('db.settings');
+
+        Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('db.logs');
+
     });
 });
