@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use App\Services\RoleService;
+use App\Services\Impls\RoleServiceImpl;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -13,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(RoleService::class, function (){
+            return new RoleServiceImpl();
+        });
     }
 
     /**
@@ -23,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        return [
+            'App\Services\RolesService',
+        ];
     }
 }
