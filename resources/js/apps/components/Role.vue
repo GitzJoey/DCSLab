@@ -1,5 +1,5 @@
 <template>
-    <div class="block block-bordered block-themed" id="list">
+    <div class="block block-bordered block-themed block-mode-loading-refresh" id="list" v-if="getMode == 'list'">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title"><strong>{{ $t('table.title') }}</strong></h3>
             <div class="block-options">
@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <div class="block block-bordered block-themed" id="crud">
+    <div class="block block-bordered block-themed block-mode-loading-refresh" id="crud" v-if="getMode != 'list'">
         <div class="block-header block-header-default bg-gray-dark">
             <h3 class="block-title"><strong></strong></h3>
             <div class="block-options">
@@ -77,6 +77,27 @@
 
 <script>
 export default {
+    data() {
+        return {
+            mode: '',
+            roleList: [],
+            permissionsDDL: [],
+            role: { }
+        }
+    },
+    mounted() {
+        this.mode = 'list';
+        this.getAllRole();
+    },
+    methods: {
+        getAllRole() {
 
+        }
+    },
+    computed: {
+        getMode() {
+            return this.mode;
+        }
+    }
 };
 </script>
