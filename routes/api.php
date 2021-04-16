@@ -24,20 +24,13 @@ Route::bind('id', function ($id) {
     }
 });
 
-Route::post('/tokens/create', function (Request $request) {
-    $token = \App\Models\User::where('id', 10)->first()->createToken('aa');
-
-    return ['token' => $token->plainTextToken];
-});
-
-
-Route::group(['prefix' => 'get', 'middleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'role'], function () {
         Route::get('read', [RoleController::class, 'read'])->name('api.get.role.read');
         Route::get('permission/read', [RoleController::class, 'getAllPermissions'])->name('api.get.role.permission.read');
     });
 });
 
-Route::group(['prefix' => 'post', 'middleware' => 'auth:api'], function () {
+Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
 
 });

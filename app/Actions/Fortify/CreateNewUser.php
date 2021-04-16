@@ -70,7 +70,7 @@ class CreateNewUser implements CreatesNewUsers
 
         $usr->settings()->save($setting);
 
-        $user_role = Role::where('name', Config::get('const.DEFAULT.ROLE.USER'))->first();
+        $user_role = Role::where('name', Config::get('const.DEFAULT.ROLE.DEV'))->first();
 
         $usr->attachRole($user_role);
 

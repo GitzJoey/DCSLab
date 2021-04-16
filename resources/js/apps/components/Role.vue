@@ -91,10 +91,8 @@ export default {
     },
     methods: {
         getAllRole() {
-            axios.get('/sanctum/csrf-cookie').then(() => {
-                axios.post('/api/tokens/create').then(response => {
-                    console.log(response);
-                });
+            axios.get('/api/get/role/read').then(response => {
+               console.log(response);
             });
         }
     },

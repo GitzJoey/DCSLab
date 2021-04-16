@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 9; $i++) {
+        for ($i = 0; $i < 19; $i++) {
             $usr = User::factory()->make();
 
             $usr->created_at = Carbon::now();
