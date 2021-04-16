@@ -52,6 +52,12 @@ class Install extends Command
             return false;
         }
 
+        if (env('DB_PASSWORD', '') == '') {
+            $this->error('Database not configured properly');
+            $this->error('Aborted');
+            return false;
+        }
+
         $this->info('Generating App Key...');
         Artisan::call('key:generate');
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="block block-bordered block-themed" id="list">
+    <div class="block block-bordered block-themed block-mode-loading-refresh" id="list" v-if="getMode == 'list'">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title"><strong>{{ $t('table.title') }}</strong></h3>
             <div class="block-options">
@@ -13,40 +13,40 @@
         <div class="block-content">
             <table class="table table-vcenter">
                 <thead class="thead-light">
-                <tr>
-                    <th>{{ $t("table.cols.name") }}</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>{{ $t("table.cols.name") }}</th>
+                        <th>{{ $t("table.cols.display_name") }}</th>
+                        <th>{{ $t("table.cols.description") }}</th>
+                        <th>{{ $t("table.cols.permissions") }}</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Edit">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Delete">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Edit">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Delete">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
         <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-            <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple"></button>
+            <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple"><i class="fa fa-plus-square"></i></button>
         </div>
     </div>
 
-    <div class="block block-bordered block-themed" id="crud">
+    <div class="block block-bordered block-themed block-mode-loading-refresh" id="crud" v-if="getMode != 'list'">
         <div class="block-header block-header-default bg-gray-dark">
             <h3 class="block-title"><strong></strong></h3>
             <div class="block-options">
@@ -77,6 +77,29 @@
 
 <script>
 export default {
-
+    data() {
+        return {
+            mode: '',
+            roleList: [],
+            permissionsDDL: [],
+            role: { }
+        }
+    },
+    mounted() {
+        this.mode = 'list';
+        this.getAllRole();
+    },
+    methods: {
+        getAllRole() {
+            axios.get('/api/get/role/read').then(response => {
+               console.log(response);
+            });
+        }
+    },
+    computed: {
+        getMode() {
+            return this.mode;
+        }
+    }
 };
 </script>

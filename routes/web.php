@@ -23,11 +23,11 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/home', function() {
     return view('home');
-});
+})->name('home');
 
 Route::bind('id', function ($id) {
     if (!is_numeric($id)) {
@@ -43,16 +43,16 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get('profile', [DashboardController::class, 'profile'])->name('db.profile');
         Route::get('settings', [DashboardController::class, 'settings'])->name('db.settings');
 
-        Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('db.logs');
+        Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');
 
-        Route::group(['prefix' => 'admin'],function() {
+        Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|dev']],function() {
             Route::group(['prefix' => 'users'],function() {
                 Route::get('users', [UserController::class, 'index'])->name('db.admin.users.users');
                 Route::get('roles', [RoleController::class, 'index'])->name('db.admin.users.roles');
             });
         });
 
-        Route::group(['prefix' => 'dev'],function() {
+        Route::group(['prefix' => 'dev', 'middleware' => ['role:dev']],function() {
             Route::group(['prefix' => 'tools'],function() {
                 Route::get('db_backup', [DevController::class, 'db_backup'])->name('db.dev.tools.db_backup');
             });

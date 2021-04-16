@@ -90,7 +90,7 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-sm btn-hero btn-alt-success">
-                            {{ __('buttons.login') }}
+                            {{ __('buttons.submit') }}
                         </button>
                         <div class="mt-30">
                             <a class="link-effect text-muted mr-10 mb-5 d-inline-block" href="#" data-toggle="modal" data-target="#modal-terms">
