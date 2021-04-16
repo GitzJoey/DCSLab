@@ -74,6 +74,8 @@ class CreateNewUser implements CreatesNewUsers
 
         $usr->attachRole($user_role);
 
+        $usr->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'));
+
         return $usr;
     }
 }

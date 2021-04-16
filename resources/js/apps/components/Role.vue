@@ -91,7 +91,11 @@ export default {
     },
     methods: {
         getAllRole() {
-            console.log('adsf');
+            axios.get('/sanctum/csrf-cookie').then(() => {
+                axios.post('/api/tokens/create').then(response => {
+                    console.log(response);
+                });
+            });
         }
     },
     computed: {

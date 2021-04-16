@@ -47,8 +47,6 @@
 
         @yield('js_before')
 
-        @yield('ziggy')
-
         <script src="{{ mix('js/codebase/codebase.app.js') }}"></script>
 
         @yield('js_after')
