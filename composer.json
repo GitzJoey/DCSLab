@@ -18,7 +18,6 @@
         "mcamara/laravel-localization": "^1.6",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "santigarcor/laratrust": "^6.3",
-        "tightenco/ziggy": "^1.1",
         "vinkla/hashids": "^9.1"
     },
     "require-dev": {
