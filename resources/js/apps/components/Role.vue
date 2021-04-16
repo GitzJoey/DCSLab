@@ -13,36 +13,36 @@
         <div class="block-content">
             <table class="table table-vcenter">
                 <thead class="thead-light">
-                <tr>
-                    <th>{{ $t("table.cols.name") }}</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>{{ $t("table.cols.name") }}</th>
+                        <th>{{ $t("table.cols.display_name") }}</th>
+                        <th>{{ $t("table.cols.description") }}</th>
+                        <th>{{ $t("table.cols.permissions") }}</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-center">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Edit">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Delete">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Edit">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Delete">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
         <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-            <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple"></button>
+            <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple"><i class="fa fa-plus-square"></i></button>
         </div>
     </div>
 
@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         getAllRole() {
-
+            
         }
     },
     computed: {

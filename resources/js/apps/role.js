@@ -9,7 +9,10 @@ const messages = {
         table: {
             title: 'Role Lists',
             cols: {
-                name: 'Name'
+                name: 'Name',
+                display_name: 'Display Name',
+                description: 'Description',
+                permissions: 'Permissions',
             }
         }
     },
@@ -17,7 +20,10 @@ const messages = {
         table: {
             title: 'Daftar Peran',
             cols: {
-                name: 'Nama'
+                name: 'Nama',
+                display_name: 'Tampilan',
+                description: 'Deskripsi',
+                permission: 'Izin',
             }
         }
     }

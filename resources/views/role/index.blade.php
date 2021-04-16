@@ -10,6 +10,10 @@
     </div>
 @endsection
 
+@section('ziggy')
+    @routes('role')
+@endsection
+
 @section('js_after')
     <script src="{{ mix('js/apps/role.js') }}"></script>
 @endsection
