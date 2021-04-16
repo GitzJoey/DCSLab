@@ -91,7 +91,7 @@ export default {
     },
     methods: {
         getAllRole() {
-            
+            console.log('adsf');
         }
     },
     computed: {
