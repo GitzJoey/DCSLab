@@ -39,13 +39,13 @@ return [
 
         'main' => [
             'salt' => '@PqgMPN$kX!7FPqxFbFA^*BExR#SospprRF@VQLJs*xJ99FeP#',
-            'length' => '5',
+            'length' => '12',
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 
         'alternative' => [
             'salt' => 'RFgJSaP2A!7rxTxDspT4iuxt2t5KPZPch^^5^ZKZ6^@oy#kBJB',
-            'length' => '8',
+            'length' => '18',
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 

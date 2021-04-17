@@ -18,7 +18,7 @@ class RoleServiceImpl implements RoleService
         $name,
         $display_name,
         $description,
-        $permission
+        $permissions
     )
     {
         DB::beginTransaction();
@@ -30,7 +30,7 @@ class RoleServiceImpl implements RoleService
             $role->description = $description;
             $role->save();
 
-            foreach ($permission as $pl) {
+            foreach ($permissions as $pl) {
                 $role->permissions()->attach($pl);
             }
 
@@ -54,15 +54,15 @@ class RoleServiceImpl implements RoleService
         $name,
         $display_name,
         $description,
-        $permission,
-        $inputtedPermission
+        $permissions,
+        $inputtedPermissions
     )
     {
         DB::beginTransaction();
 
         try {
             $role = Role::with('permissions')->where('id', '=', $id)->first();
-            $pl = Permission::whereIn('id', $permission)->get();
+            $pl = Permission::whereIn('id', $permissions)->get();
 
             $role->syncPermissions($pl);
 

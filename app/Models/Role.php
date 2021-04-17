@@ -18,7 +18,10 @@ class Role extends LaratrustRole
         'updated_at',
     ];
 
-    public function hId() {
+    protected $appends = ['hId'];
+
+    public function getHIdAttribute() : string
+    {
         return HashIds::encode($this->attributes['id']);
     }
 }

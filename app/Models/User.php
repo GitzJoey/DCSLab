@@ -33,6 +33,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
+        'id',
         'password',
         'remember_token',
     ];
@@ -46,7 +47,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function hId() {
+    protected $appends = ['hId'];
+
+    public function getHIdAttribute() : string
+    {
         return HashIds::encode($this->attributes['id']);
     }
 
