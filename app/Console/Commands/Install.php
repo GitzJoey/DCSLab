@@ -84,9 +84,6 @@ class Install extends Command
             Artisan::call('storage:link');
         }
 
-        $this->info('Laravel Passport ...');
-        exec('php artisan passport:install');
-
         $this->info('Starting NPM Install');
         exec('npm install');
 

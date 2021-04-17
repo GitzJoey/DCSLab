@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
 class AppHelper extends Command
 {
@@ -39,6 +40,12 @@ class AppHelper extends Command
      */
     public function handle()
     {
+        if (!File::exists('.env')) {
+            $this->error('File Not Found: .env');
+            $this->error('Aborted');
+            return false;
+        }
+
         $this->info('Available Helper:');
         $this->info('[1] Truncate All Master Data');
         $this->info('[2] Truncate All Transactions');
@@ -56,10 +63,8 @@ class AppHelper extends Command
             case 3:
                 $this->updateComposerAndNPM();
                 break;
-            case 3:
-                $this->clearCache();
-                break;
             case 4:
+                $this->clearCache();
                 break;
             case 5:
                 break;
