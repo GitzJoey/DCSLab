@@ -12,7 +12,6 @@ const messages = {
                 name: 'Name',
                 display_name: 'Display Name',
                 description: 'Description',
-                permissions: 'Permissions',
             }
         }
     },
@@ -23,7 +22,6 @@ const messages = {
                 name: 'Nama',
                 display_name: 'Tampilan',
                 description: 'Deskripsi',
-                permission: 'Izin',
             }
         }
     }

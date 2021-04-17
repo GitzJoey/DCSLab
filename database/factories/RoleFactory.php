@@ -23,7 +23,7 @@ class RoleFactory extends Factory
     {
         $text = str_replace(' ', '_', $this->faker->jobTitle());
         return [
-            'name' => $text,
+            'name' => strtolower($text),
             'display_name' => $text,
             'description' => $this->faker->catchPhrase()
         ];
