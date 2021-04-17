@@ -44,9 +44,8 @@ Upon available updates, pull the project to the latest
 
 Recompile
 
->`$ composer update`  
->`$ npm update`  
->`$ npm run dev`
+>`$ php artisan app:helper`  
+>`<choose option 3>`
 
 ## History
 
