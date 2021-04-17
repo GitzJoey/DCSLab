@@ -27,7 +27,7 @@ Route::bind('id', function ($id) {
 Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'role'], function () {
         Route::get('read', [RoleController::class, 'read'])->name('api.get.role.read');
-        Route::get('permission/read', [RoleController::class, 'getAllPermissions'])->name('api.get.role.permission.read');
+        Route::get('permissions/read', [RoleController::class, 'getAllPermissions'])->name('api.get.role.permissions.read');
     });
 });
 

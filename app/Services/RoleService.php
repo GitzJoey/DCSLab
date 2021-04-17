@@ -8,7 +8,7 @@ interface RoleService
         $name,
         $display_name,
         $description,
-        $permission
+        $permissions
     );
 
     public function read();
@@ -18,8 +18,8 @@ interface RoleService
         $name,
         $display_name,
         $description,
-        $permission,
-        $inputtedPermission
+        $permissions,
+        $inputtedPermissions
     );
     public function delete($id);
 

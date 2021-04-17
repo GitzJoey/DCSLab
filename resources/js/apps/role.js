@@ -13,6 +13,23 @@ const messages = {
                 display_name: 'Display Name',
                 description: 'Description',
             }
+        },
+        buttons: {
+            submit: 'Submit',
+            reset: 'Reset',
+            back: 'Back',
+        },
+        actions: {
+            create: 'Create Role',
+            edit: 'Edit Role',
+            show: 'Show Role',
+            delete: 'Delete Role',
+        },
+        fields: {
+            name: 'Name',
+            display_name: 'Display Name',
+            description: 'Description',
+            permissions: 'Permissions',
         }
     },
     id: {
@@ -23,6 +40,23 @@ const messages = {
                 display_name: 'Tampilan',
                 description: 'Deskripsi',
             }
+        },
+        buttons: {
+            submit: 'Kirim',
+            reset: 'Reset',
+            back: 'Kembali',
+        },
+        actions: {
+            create: 'Tambah Peran',
+            edit: 'Ubah Peran',
+            show: 'Tampilkan Peran',
+            delete: 'Hapus Peran',
+        },
+        fields: {
+            name: 'Nama',
+            display_name: 'Nama Tampilan',
+            description: 'Deskripsi',
+            permissions: 'Izin',
         }
     }
 };

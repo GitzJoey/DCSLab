@@ -25,4 +25,9 @@ class RoleController extends Controller
     {
         return $this->roleService->read();
     }
+
+    public function getAllPermissions()
+    {
+        return $this->roleService->getAllPermissions();
+    }
 }
