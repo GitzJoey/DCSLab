@@ -46,7 +46,7 @@ class RoleServiceImpl implements RoleService
 
     public function read()
     {
-        return Role::with('permissions')->get();
+        return Role::with('permissions')->paginate(Config::get('const.DEFAULT.PAGINATION_LIMIT'));
     }
 
     public function update(

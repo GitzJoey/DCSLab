@@ -17,16 +17,14 @@
                         <th>{{ $t("table.cols.name") }}</th>
                         <th>{{ $t("table.cols.display_name") }}</th>
                         <th>{{ $t("table.cols.description") }}</th>
-                        <th>{{ $t("table.cols.permissions") }}</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    <tr v-for="r in roleList" :key="r.hId">
+                        <td>{{ r.name }}</td>
+                        <td>{{ r.display_name }}</td>
+                        <td>{{ r.description }}</td>
                         <td class="text-center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="Edit">
@@ -92,7 +90,7 @@ export default {
     methods: {
         getAllRole() {
             axios.get('/api/get/role/read').then(response => {
-               console.log(response);
+                this.roleList = response.data.data;
             });
         }
     },
