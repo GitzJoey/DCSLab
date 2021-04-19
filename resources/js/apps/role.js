@@ -30,6 +30,9 @@ const messages = {
             display_name: 'Display Name',
             description: 'Description',
             permissions: 'Permissions',
+        },
+        errors: {
+            warning: 'Warning',
         }
     },
     id: {
@@ -57,6 +60,9 @@ const messages = {
             display_name: 'Nama Tampilan',
             description: 'Deskripsi',
             permissions: 'Izin',
+        },
+        errors: {
+            warning: 'Peringatan',
         }
     }
 };
