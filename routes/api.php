@@ -32,5 +32,9 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 });
 
 Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
-
+    Route::group(['prefix' => 'role'], function () {
+        Route::post('save', [RoleController::class, 'store'])->name('api.post.role.save');
+        Route::post('edit/{id}', [RoleController::class, 'update'])->name('api.post.role.edit');
+        Route::post('delete/{id}', [RoleController::class, 'delete'])->name('api.post.role.delete');
+    });
 });
