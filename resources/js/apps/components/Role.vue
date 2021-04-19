@@ -21,6 +21,8 @@
         </div>
         <div class="block-content">
             <transition name="fade">
+            </transition>
+            <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
                     <table class="table table-vcenter">
                         <thead class="thead-light">
@@ -76,7 +78,15 @@
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
                     <Form id="roleForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                        <input type="hidden" name="hId" value=""/>
+                        <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                            <ul>
+                                <li v-for="e in errors">{{ e }}</li>
+                            </ul>
+                        </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">

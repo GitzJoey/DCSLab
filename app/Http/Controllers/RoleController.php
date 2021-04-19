@@ -38,46 +38,48 @@ class RoleController extends Controller
             'display_name' => 'required|max:255'
         ]);
 
-        $rolePermission = [];
+        $rolePermissions = [];
         for($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($rolePermission, array (
+            array_push($rolePermissions, array (
                 'id' => $request['permissions'][$i]
             ));
         }
 
-        /*
         $result = $this->roleService->create(
             $request['name'],
             $request['display_name'],
             $request['description'],
-            $rolePermission
+            $rolePermissions
         );
-        */
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json();
+        }
     }
 
     public function update($id, Request $request)
     {
-        $rolePermission = [];
-        $inputtedRolePermission = [];
-        for ($i = 0; $i < count($request['permission']); $i++) {
-            array_push($rolePermission, array(
-                'id' => $request['permission'][$i]
+        $rolePermissions = [];
+        $inputtedRolePermissions = [];
+        for ($i = 0; $i < count($request['permissions']); $i++) {
+            array_push($rolePermissions, array(
+                'id' => $request['permissions'][$i]
             ));
-            array_push($inputtedRolePermission, $request['permission'][$i]);
+            array_push($inputtedRolePermissions, $request['permissions'][$i]);
         }
 
-        /*
         $result = $this->roleService->update(
             $id,
             $request['name'],
             $request['display_name'],
             $request['description'],
-            $rolePermission,
-            $inputtedRolePermission
+            $rolePermissions,
+            $inputtedRolePermissions
         );
-        */
 
         return response()->json();
     }
