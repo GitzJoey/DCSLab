@@ -48,6 +48,10 @@ Recompile
 >`<choose option 3>`
 
 ## History
+* **2014-11-04**
+    * 1st concept of POS materialize in [GitHub](https://github.com/GitzJoey/TKBARUJAVA)
+    * more clearer concept of 'always update always evolving' in [PHP](https://github.com/GitzJoey/TKBARUPHP)
+    * update the [PHP project](https://github.com/GitzJoey/TKBARUPHP) to [SPA/PWA](https://github.com/GitzJoey/TKBARUSPA)
 
 * **2021-04-05**
     * Reboot from [TKBARUSPA](https://www.github.com/gitzjoey/TKBARUSPA)
@@ -55,3 +59,4 @@ Recompile
 
 * **2021-04-15**
     * Using new laravel/fortify and laravel/sanctum
+    * Fully utilize VueJS 3 as components

@@ -75,26 +75,28 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
-                    <form id="roleForm" method="post">
+                    <Form id="roleForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <input type="hidden" name="hId" value=""/>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <input id="inputName" name="name" type="text" class="form-control" v-model="role.name" :placeholder="$t('fields.name')" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="role.name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ role.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputDisplayName" class="col-2 col-form-label">{{ $t('fields.display_name') }}</label>
                             <div class="col-md-10">
-                                <input id="inputDisplayName" name="display_name" type="text" class="form-control" v-model="role.display_name" :placeholder="$t('fields.display_name')" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                <Field id="inputDisplayName" name="display_name" as="input" :class="{'form-control':true, 'is-invalid': errors['display_name']}" v-model="role.display_name" :placeholder="$t('fields.display_name')" :label="$t('fields.display_name')" v-if="this.mode === 'create' || this.mode === 'edit'" />
+                                <ErrorMessage name="display_name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ role.display_name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputDescription" class="col-2 col-form-label">{{ $t('fields.description') }}</label>
                             <div class="col-md-10">
-                                <input id="inputDescription" name="description" type="text" class="form-control" v-model="role.description" :placeholder="$t('fields.description')" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                <input id="inputDescription" name="description" type="text" class="form-control" v-model="role.description" :placeholder="$t('fields.description')" v-if="this.mode === 'create' || this.mode === 'edit'" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{role.description }}</div>
                             </div>
                         </div>
@@ -106,7 +108,16 @@
                                 </select>
                             </div>
                         </div>
-                    </form>
+                        <div class="form-group row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-md-10">
+                                <div v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <button type="submit" class="btn btn-primary min-width-125" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </Form>
                 </div>
             </transition>
         </div>
@@ -114,11 +125,7 @@
             <div v-if="this.mode === 'list'">
                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNew"><i class="fa fa-plus-square"></i></button>
             </div>
-            <div v-if="this.mode === 'create' || this.mode === 'edit'">
-                <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
-                <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="backToList">{{ $t("buttons.reset") }}</button>
-            </div>
-            <div v-if="this.mode === 'show'">
+            <div v-if="this.mode !== 'list'">
                 <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="backToList">{{ $t("buttons.back") }}</button>
             </div>
         </div>
@@ -126,7 +133,35 @@
 </template>
 
 <script>
+import { Form, Field, ErrorMessage, defineRule, configure } from "vee-validate";
+import { required } from '@vee-validate/rules';
+import { localize, setLocale } from '@vee-validate/i18n';
+import en from '@vee-validate/i18n/dist/locale/en.json';
+import id from '@vee-validate/i18n/dist/locale/id.json';
+
+configure({
+    validateOnInput: true,
+    generateMessage: localize({ en, id }),
+})
+
+setLocale(document.documentElement.lang);
+
+defineRule('required', required);
+
 export default {
+    components: {
+        Form, Field, ErrorMessage,
+    },
+    setup() {
+        const schema = {
+            name: 'required',
+            display_name: 'required',
+        };
+
+        return {
+            schema
+        };
+    },
     data() {
         return {
             mode: '',
@@ -180,7 +215,24 @@ export default {
             this.role.selectedPermissionIds = _.map(this.roleList.data[idx].permissions, 'hId');
         },
         deleteSelected(idx) {
-
+            axios.post('/api/post/role/delete/' + this.roleList.data[idx].hId).then(response => {
+                this.backToList();
+            }).catch(e => { console.log(e) });
+        },
+        onSubmit(values, actions) {
+            if (this.mode === 'create') {
+                axios.post('/api/post/role/save', new FormData($('#roleForm')[0])).then(response => {
+                    this.backToList();
+                }).catch(e => {
+                    console.log(e);
+                });
+            } else if (this.mode === 'edit') {
+                axios.post('/api/post/role/edit/' + this.role.hId, new FormData($('#roleForm')[0])).then(response => {
+                    this.backToList();
+                }).catch(e => {
+                    console.log(e);
+                });
+            } else { }
         },
         backToList() {
             this.mode = 'list';

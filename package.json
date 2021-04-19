@@ -22,6 +22,8 @@
         "sass-loader": "^8.0.0"
     },
     "dependencies": {
+        "@vee-validate/i18n": "^4.1.20",
+        "@vee-validate/rules": "^4.1.20",
         "@vue/compiler-sfc": "^3.0.11",
         "animate.css": "^4.1.1",
         "font-awesome": "^4.7.0",
