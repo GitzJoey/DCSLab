@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Exception;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
@@ -19,19 +20,23 @@ class UserSeeder extends Seeder
     public function run()
     {
         for ($i = 0; $i < 19; $i++) {
-            $usr = User::factory()->make();
+            try {
+                $usr = User::factory()->make();
 
-            $usr->created_at = Carbon::now();
-            $usr->updated_at = Carbon::now();
+                $usr->created_at = Carbon::now();
+                $usr->updated_at = Carbon::now();
 
-            $usr->save();
+                $usr->save();
 
-            $profile = Profile::factory()->setFirstName($usr->name);
+                $profile = Profile::factory()->setFirstName($usr->name);
 
-            $profile->created_at = Carbon::now();
-            $profile->updated_at = Carbon::now();
+                $profile->created_at = Carbon::now();
+                $profile->updated_at = Carbon::now();
 
-            $usr->profile()->save($profile);
+                $usr->profile()->save($profile);
+            } catch (Exception $e) {
+
+            }
         }
     }
 }

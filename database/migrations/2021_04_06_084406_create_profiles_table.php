@@ -29,8 +29,8 @@ class CreateProfilesTable extends Migration
             $table->string('remarks')->nullable();
             $table->boolean('is_banned')->nullable();
             $table->string('banned_reason')->nullable();
-            $table->dateTime('banned_at');
-            $table->bigInteger('banned_by');
+            $table->dateTime('banned_at')->nullable();
+            $table->bigInteger('banned_by')->nullable();
             $table->timestamps();
         });
     }

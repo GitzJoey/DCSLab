@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Setting::class);
     }
+
+    public function getSetting($key)
+    {
+        return $this->settings()->where('key', $key)->first()->pluck('value');
+    }
 }

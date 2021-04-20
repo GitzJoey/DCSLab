@@ -18,11 +18,7 @@
 
         <link rel="stylesheet" id="css-main" href="{{ mix('/css/codebase/codebase.css') }}">
 
-        <!--<link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/corporate.css') }}">-->
-        <!--<link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/earth.css') }}">-->
-        <!--<link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/elegance.css') }}">-->
-        <!--<link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/flat.css') }}">-->
-        <!--<link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/pulse.css') }}">-->
+        <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/corporate.css') }}">
 
         @yield('css_after')
     </head>

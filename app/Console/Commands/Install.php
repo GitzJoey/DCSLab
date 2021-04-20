@@ -2,8 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\Fortify\CreateNewUser;
+
+use GuzzleHttp\Promise\Create;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
@@ -95,7 +99,8 @@ class Install extends Command
             exec('npm run dev');
         }
 
-        $this->info('Creating Admin Account ...');
+        $this->info('Creating Admin/Dev Account ...');
+        $is_dev = $this->confirm("Are you a developer?", false);
 
         $userName = 'GitzJoey';
         $userEmail = 'gitzjoey@yahoo.com';
@@ -134,11 +139,17 @@ class Install extends Command
             return false;
         }
 
-
+        $c = new CreateNewUser();
+        $c->create([
+            'name' => $userName,
+            'email' => $userEmail,
+            'password' => $userPassword,
+            'password_confirmation' => $userPassword,
+            'terms' => 'on',
+            'roles' => $is_dev ? Config::get('const.DEFAULT.ROLE.DEV') : Config::get('const.DEFAULT.ROLE.ADMIN'),
+        ]);
 
         sleep(3);
-
-
 
         $this->info('Done!');
     }
