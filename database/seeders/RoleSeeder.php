@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Exception;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +16,11 @@ class RoleSeeder extends Seeder
     public function run()
     {
         for ($i = 0; $i < 19; $i++) {
-            $role = Role::factory()->create();
+            try {
+                $role = Role::factory()->create();
+            } catch(Exception $e) {
+
+            }
         }
     }
 }

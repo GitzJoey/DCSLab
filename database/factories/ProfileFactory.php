@@ -32,6 +32,9 @@ class ProfileFactory extends Factory
             'tax_id' => $this->faker->randomDigit(),
             'ic_number' => $this->faker->randomDigit(),
             'img_path' => '',
+            'is_banned' => false,
+            'banned_reason' => null,
+            'banned_at' => null,
             'remarks' => $this->faker->catchPhrase(),
         ];
     }
@@ -50,6 +53,9 @@ class ProfileFactory extends Factory
         $profile->tax_id = $this->faker->randomDigit();
         $profile->ic_number = $this->faker->randomDigit();
         $profile->img_path = '';
+        $profile->is_banned = false;
+        $profile->banned_reason = null;
+        $profile->banned_at = null;
         $profile->remarks = $this->faker->catchPhrase();
 
         return $profile;

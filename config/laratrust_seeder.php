@@ -13,23 +13,23 @@ return [
 
     'roles_structure' => [
         'dev' => [
-            'profile' => 'c,r,u,d',
+            'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
-            'settings' => 'c,r,u,d',
-            'users' => 'c,r,u,d',
-            'roles' => 'c,r,u,d',
+            'settings' => 'r,u',
+            'users' => 'c,r,u',
+            'roles' => 'c,r,u',
         ],
         'administrator' => [
-            'profile' => 'c,r,u,d',
+            'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
-            'settings' => 'c,r,u,d',
-            'users' => 'c,r,u,d',
-            'roles' => 'c,r,u,d',
+            'settings' => 'r,u',
+            'users' => 'c,r,u',
+            'roles' => 'c,r,u',
         ],
         'user' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
-            'settings' => 'c,r,u,d',
+            'settings' => 'r,u',
         ]
     ],
 

@@ -29,6 +29,7 @@ mix
             })
         ]
     })
+    .js('resources/js/apps/profile.js','public/js/apps/profile.js')
     .js('resources/js/apps/role.js','public/js/apps/role.js')
     .vue()
     .version()

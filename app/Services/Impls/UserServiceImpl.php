@@ -62,6 +62,11 @@ class UserServiceImpl implements UserService
         return User::with('profile', 'settings', 'roles')->where('created_by', $id)->paginate(Config::get('const.PAGINATION_LIMIT'));
     }
 
+    public function getMyProfile($id)
+    {
+        return User::with('profile', 'settings', 'roles')->where('id', $id);
+    }
+
     public function update($id, $name, $email, $password, $rolesId, $profile, $settings)
     {
         DB::beginTransaction();

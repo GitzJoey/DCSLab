@@ -6,7 +6,10 @@
 /public/imgs
 /public/fonts
 /storage/*.key
+/public
+/storage
 /vendor
+/.idea
 .env
 .env.backup
 .phpunit.result.cache
