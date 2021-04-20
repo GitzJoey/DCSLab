@@ -14,13 +14,12 @@ use App\Models\Role;
 use App\Models\Profile;
 use App\Models\Setting;
 
-=======
 use App\Services\UserService;
 
 class UserServiceImpl implements UserService
 {
 
-    public function create($name, $email, $password, $rolesId, $profile, $settings)
+    public function create($name, $email, $password, $rolesId, $profile, $setting)
     {
         DB::beginTransaction();
 
@@ -44,6 +43,8 @@ class UserServiceImpl implements UserService
             $usr->profile()->save($pa);
 
             $usr->attachRole(Role::where('name', $rolesId)->first());
+
+            return $usr->hId;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -53,7 +54,12 @@ class UserServiceImpl implements UserService
 
     public function read()
     {
-        return User::with('profile', 'settings', 'roles')->get();
+        return User::with('profile', 'settings', 'roles')->paginate(Config::get('const.PAGINATION_LIMIT'));
+    }
+
+    public function readCreatedById($id)
+    {
+        return User::with('profile', 'settings', 'roles')->where('created_by', $id)->paginate(Config::get('const.PAGINATION_LIMIT'));
     }
 
     public function update($id, $name, $email, $password, $rolesId, $profile, $settings)
@@ -74,21 +80,13 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function delete($id)
+    public function ban($id, $reason)
     {
-        DB::beginTransaction();
 
-        try {
+    }
 
-            $retval = '';
+    public function createDefaultSetting()
+    {
 
-            DB::commit();
-
-            return $retval;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        }
     }
 }

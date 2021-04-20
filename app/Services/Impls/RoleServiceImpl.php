@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,10 @@ class RoleServiceImpl implements RoleService
             $role->name = $name;
             $role->display_name = $display_name;
             $role->description = $description;
+
+            $role->setCreatedAt(Carbon::now());
+            $role->setUpdatedAt(Carbon::now());
+
             $role->save();
 
             foreach ($permissions as $pl) {
@@ -54,7 +59,6 @@ class RoleServiceImpl implements RoleService
         $name,
         $display_name,
         $description,
-        $permissions,
         $inputtedPermissions
     )
     {
@@ -62,7 +66,7 @@ class RoleServiceImpl implements RoleService
 
         try {
             $role = Role::with('permissions')->where('id', '=', $id)->first();
-            $pl = Permission::whereIn('id', $permissions)->get();
+            $pl = Permission::whereIn('id', $inputtedPermissions)->get();
 
             $role->syncPermissions($pl);
 
@@ -71,26 +75,6 @@ class RoleServiceImpl implements RoleService
                 'display_name' => $display_name,
                 'description' => $description,
             ]);
-            DB::commit();
-
-            return $retval;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        }
-    }
-
-    public function delete($id)
-    {
-        DB::beginTransaction();
-
-        try {
-            $role = Role::with('permissions')->find($id);
-
-            $role->detachPermissions($role->getSelectedPermissionIdsAttribute());
-
-            $retval = $role->delete();
 
             DB::commit();
 
@@ -101,7 +85,7 @@ class RoleServiceImpl implements RoleService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-
+    
     public function getAllPermissions()
     {
         return Permission::get();

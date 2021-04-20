@@ -23,7 +23,6 @@ const messages = {
             create: 'Create Role',
             edit: 'Edit Role',
             show: 'Show Role',
-            delete: 'Delete Role',
         },
         fields: {
             name: 'Name',
@@ -53,7 +52,6 @@ const messages = {
             create: 'Tambah Peran',
             edit: 'Ubah Peran',
             show: 'Tampilkan Peran',
-            delete: 'Hapus Peran',
         },
         fields: {
             name: 'Nama',

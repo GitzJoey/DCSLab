@@ -27,8 +27,11 @@ class CreateProfilesTable extends Migration
             $table->string('ic_number')->nullable();
             $table->string('img_path')->nullable();
             $table->string('remarks')->nullable();
+            $table->boolean('is_banned')->nullable();
+            $table->string('banned_reason')->nullable();
+            $table->dateTime('banned_at');
+            $table->bigInteger('banned_by');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
