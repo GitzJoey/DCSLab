@@ -18,10 +18,8 @@ interface RoleService
         $name,
         $display_name,
         $description,
-        $permissions,
         $inputtedPermissions
     );
-    public function delete($id);
 
     public function getAllPermissions();
 }

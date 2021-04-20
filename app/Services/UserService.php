@@ -10,10 +10,12 @@ interface UserService
         $password,
         $rolesId,
         $profile,
-        $settings
+        $setting
     );
 
     public function read();
+
+    public function readCreatedById($id);
 
     public function update(
         $id,
@@ -22,8 +24,10 @@ interface UserService
         $password,
         $rolesId,
         $profile,
-        $settings
+        $setting
     );
 
-    public function delete($id);
+    public function ban($id, $reason);
+
+    public function createDefaultSetting();
 }

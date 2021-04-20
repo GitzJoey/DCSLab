@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Services\RoleService;
+use Vinkla\Hashids\Facades\Hashids;
 
 class RoleController extends Controller
 {
@@ -41,7 +42,7 @@ class RoleController extends Controller
         $rolePermissions = [];
         for($i = 0; $i < count($request['permissions']); $i++) {
             array_push($rolePermissions, array (
-                'id' => $request['permissions'][$i]
+                'id' => Hashids::decode($request['permissions'][$i])[0]
             ));
         }
 
@@ -57,19 +58,19 @@ class RoleController extends Controller
                 'message' => ''
             ],500);
         } else {
-            return response()->json();
+            return response()->json([
+                'message' => ''
+            ],200);
         }
     }
 
     public function update($id, Request $request)
     {
-        $rolePermissions = [];
         $inputtedRolePermissions = [];
         for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($rolePermissions, array(
-                'id' => $request['permissions'][$i]
+            array_push($inputtedRolePermissions, array(
+                'id' => Hashids::decode($request['permissions'][$i])[0]
             ));
-            array_push($inputtedRolePermissions, $request['permissions'][$i]);
         }
 
         $result = $this->roleService->update(
@@ -77,7 +78,6 @@ class RoleController extends Controller
             $request['name'],
             $request['display_name'],
             $request['description'],
-            $rolePermissions,
             $inputtedRolePermissions
         );
 
@@ -86,9 +86,7 @@ class RoleController extends Controller
 
     public function delete($id)
     {
-        /*
         $this->roleService->delete($id);
-        */
 
         return response()->json();
     }

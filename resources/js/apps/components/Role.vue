@@ -46,9 +46,6 @@
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(rIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(rIdx)">
-                                            <i class="fa fa-times"></i>
-                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -224,12 +221,8 @@ export default {
             this.role = this.roleList.data[idx];
             this.role.selectedPermissionIds = _.map(this.roleList.data[idx].permissions, 'hId');
         },
-        deleteSelected(idx) {
-            axios.post('/api/post/role/delete/' + this.roleList.data[idx].hId).then(response => {
-                this.backToList();
-            }).catch(e => { console.log(e) });
-        },
         onSubmit(values, actions) {
+            this.loading = true;
             if (this.mode === 'create') {
                 axios.post('/api/post/role/save', new FormData($('#roleForm')[0])).then(response => {
                     this.backToList();
