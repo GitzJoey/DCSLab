@@ -11,6 +11,7 @@ Setting Abis Instalasi
 
 + Pull DCSLab ke local
 + copy .env.example .env
++ isi constr di .env
 + buka cmd masuk ke folder dcslab yang di local 
   - composer install
   - npm install
