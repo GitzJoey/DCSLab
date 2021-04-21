@@ -5,9 +5,7 @@
 @endsection
 
 @section('content')
-    <div id="roleVue">
-
-    </div>
+    <div id="roleVue"></div>
 @endsection
 
 @section('js_after')

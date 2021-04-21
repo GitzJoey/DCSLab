@@ -17,6 +17,7 @@ mix
     .sass('resources/sass/codebase/codebase/themes/flat.scss', 'public/css/codebase/themes/')
     .sass('resources/sass/codebase/codebase/themes/pulse.scss', 'public/css/codebase/themes/')
     .js('resources/js/codebase/app.js', 'public/js/codebase/codebase.app.js')
+    .copy('node_modules/simplebar/dist/simplebar.esm.js.map', 'public/js/codebase')
     .version()
 ;
 
@@ -31,6 +32,7 @@ mix
     })
     .js('resources/js/apps/profile.js','public/js/apps/profile.js')
     .js('resources/js/apps/role.js','public/js/apps/role.js')
+    .js('resources/js/apps/user.js','public/js/apps/user.js')
     .vue()
     .version()
 ;

@@ -54,7 +54,7 @@ class UserServiceImpl implements UserService
 
     public function read()
     {
-        return User::with('profile', 'settings', 'roles')->paginate(Config::get('const.PAGINATION_LIMIT'));
+        return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
     }
 
     public function readCreatedById($id)
@@ -90,8 +90,21 @@ class UserServiceImpl implements UserService
 
     }
 
-    public function createDefaultSetting()
+    public function unban($id)
     {
 
+    }
+
+    public function createDefaultSetting()
+    {
+        $list = [
+            [
+                'type' => 'KEY_VALUE',
+                'key' => 'THEME.CODEBASE',
+                'value' => 'corporate',
+            ],
+        ];
+
+        return $list;
     }
 }
