@@ -6,6 +6,7 @@ use App\Http\Controllers\DevController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Product_GroupsController;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -43,6 +44,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get('profile', [DashboardController::class, 'profile'])->name('db.profile');
         Route::get('settings', [DashboardController::class, 'settings'])->name('db.settings');
 
+        Route::get('product_groups', [Product_GroupsController::class, 'index'])->name('db.product_groups');
+
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');
 
         Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|dev']],function() {
@@ -65,5 +68,5 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
                 Route::get('ex5', [DevController::class, 'ex5'])->name('db.dev.examples.ex5');
             });
         });
-    });
+    });   
 });
