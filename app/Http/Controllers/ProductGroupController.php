@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RoleService;
 use Illuminate\Http\Request;
 
-class Product_GroupsController extends Controller
+class ProductGroupController extends Controller
 {
     public function __construct()
     {
