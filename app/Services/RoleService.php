@@ -13,6 +13,8 @@ interface RoleService
 
     public function read();
 
+    public function readRoles($withDefaultRole);
+
     public function update(
         $id,
         $name,

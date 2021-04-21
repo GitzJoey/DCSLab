@@ -31,5 +31,7 @@ interface UserService
 
     public function ban($id, $reason);
 
+    public function unban($id);
+
     public function createDefaultSetting();
 }

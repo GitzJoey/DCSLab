@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(RoleService::class, function (){
             return new RoleServiceImpl();
         });
+
+        $this->app->singleton(UserService::class, function (){
+            return new UserServiceImpl();
+        });
     }
 
     /**
@@ -28,8 +34,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        return [
-            'App\Services\RolesService',
-        ];
+        //
     }
 }

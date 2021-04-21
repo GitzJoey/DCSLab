@@ -54,6 +54,16 @@ class RoleServiceImpl implements RoleService
         return Role::with('permissions')->paginate(Config::get('const.DEFAULT.PAGINATION_LIMIT'));
     }
 
+    public function readRoles($withDefaultRole)
+    {
+        if ($withDefaultRole)
+        {
+            return Role::all()->pluck('display_name', 'hId');
+        } else {
+            return Role::whereNotIn('name', ['dev','administrator'])->get()->pluck('display_name', 'hId');
+        }
+    }
+
     public function update(
         $id,
         $name,
@@ -85,7 +95,7 @@ class RoleServiceImpl implements RoleService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-    
+
     public function getAllPermissions()
     {
         return Permission::get();
