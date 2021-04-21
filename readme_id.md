@@ -18,3 +18,4 @@ Setting Abis Instalasi
   - npm run dev
   - php artisan key:generate
   - php artisan serve
+  - php app:install
