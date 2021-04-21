@@ -5,5 +5,9 @@
 @endsection
 
 @section('content')
+    <div id="userVue"></div>
+@endsection
 
+@section('js_after')
+    <script src="{{ mix('js/apps/user.js') }}"></script>
 @endsection

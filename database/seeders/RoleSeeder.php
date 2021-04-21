@@ -15,7 +15,7 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 19; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             try {
                 $role = Role::factory()->create();
             } catch(Exception $e) {

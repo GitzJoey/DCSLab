@@ -21,8 +21,6 @@
         </div>
         <div class="block-content">
             <transition name="fade">
-            </transition>
-            <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
                     <table class="table table-vcenter">
                         <thead class="thead-light">
@@ -76,7 +74,7 @@
                 <div id="crud" v-if="this.mode !== 'list'">
                     <Form id="roleForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
@@ -172,12 +170,14 @@ export default {
     data() {
         return {
             mode: '',
-            roleList: { },
-            permissionsDDL: [],
-            role: { },
             loading: false,
             fullscreen: false,
             contentHidden: false,
+            role: {
+                selectedPermissionIds: []
+            },
+            roleList: { },
+            permissionsDDL: [],
         }
     },
     mounted() {
@@ -188,13 +188,13 @@ export default {
     methods: {
         getAllRole(page) {
             this.loading = true;
-            axios.get('/api/get/role/read?page=' + page).then(response => {
+            axios.get('/api/get/admin/role/read?page=' + page).then(response => {
                 this.roleList = response.data;
                 this.loading = false;
             });
         },
         getPermissions() {
-            axios.get('/api/get/role/permissions/read').then(response => {
+            axios.get('/api/get/admin/role/permissions/read').then(response => {
                 this.permissionsDDL = response.data;
             });
         },
@@ -209,7 +209,6 @@ export default {
         },
         createNew() {
             this.mode = 'create';
-            this.role = this.emptyRole();
         },
         editSelected(idx) {
             this.mode = 'edit';
@@ -224,13 +223,13 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/role/save', new FormData($('#roleForm')[0])).then(response => {
+                axios.post('/api/post/admin/role/save', new FormData($('#roleForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     console.log(e);
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/role/edit/' + this.role.hId, new FormData($('#roleForm')[0])).then(response => {
+                axios.post('/api/post/admin/role/edit/' + this.role.hId, new FormData($('#roleForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     console.log(e);
@@ -249,21 +248,11 @@ export default {
         },
         refreshList() {
             this.getAllRole(this.roleList.current_page);
-        },
-        emptyRole() {
-            return {
-                hId: '',
-                name: '',
-                display_name: '',
-                description: '',
-                permissions: [],
-                selectedPermissionIds: []
-            }
-        },
+        }
     },
     computed: {
         getPages() {
-            if (this.roleList.current_page == null) return [];
+            if (this.roleList.current_page == null) return 0;
 
             return Math.ceil(this.roleList.total / this.roleList.per_page);
         }
