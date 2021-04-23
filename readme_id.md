@@ -7,6 +7,8 @@ Instalasi
 
 + Download & Install Composer, NPM / NodeJS
 
++ Download & Install VS Code
+
 Setting Abis Instalasi
 
 + Pull DCSLab ke local
