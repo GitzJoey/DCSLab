@@ -1,5 +1,5 @@
 Instalasi
-+ Download & Install Git, Tortuise Git
++ Download & Install Git, Tortoise Git
 
 + Download & Extract PHP ke C:/php
 + Copy php.ini-development trus rename hasil copynya jadi php.ini
