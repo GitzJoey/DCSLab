@@ -19,3 +19,8 @@ Setting Abis Instalasi
   - php artisan key:generate
   - php artisan serve
   - php artisan app:install
+
+FAQ :
++ Bikin migration,  php artisan make:migration create_products_table
++ Bikin controller, php artisan make:controller ProductController
++ Bikin model,      php artisan make:model Product
