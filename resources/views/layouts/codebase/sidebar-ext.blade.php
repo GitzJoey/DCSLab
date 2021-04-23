@@ -5,10 +5,10 @@
             <a href="{{route('db.product_groups')}}">Groups</a>
         </li>
         <li>
-            <a href="">Brands</a>
+            <a href="{{route('db.product_brands')}}">Brands</a>
         </li>
         <li>
-            <a href="">Units</a>
+            <a href="{{route('db.product_units')}}">Units</a>
         </li>
         <li>
             <a href="">Products</a>
