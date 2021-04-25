@@ -26,4 +26,5 @@ FAQ :
 + Bikin migration,  php artisan make:migration create_products_table
 + Bikin controller, php artisan make:controller ProductController
 + Bikin model,      php artisan make:model Product
++ Bikin service     manual klik kanan add
 + Update table,     php artisan migrate
