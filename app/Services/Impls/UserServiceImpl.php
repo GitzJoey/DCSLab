@@ -35,10 +35,10 @@ class UserServiceImpl implements UserService
             $usr->save();
 
             $pa = new Profile();
-            $pa->first_name = $profile[0]['first_name'];
-            $pa->last_name = $profile[0]['last_name'];
-            $pa->address = $profile[0]['address'];
-            $pa->ic_num = $profile[0]['ic_num'];
+            $pa->first_name = $profile['first_name'];
+            $pa->last_name = $profile['last_name'];
+            $pa->address = $profile['address'];
+            $pa->ic_num = $profile['ic_num'];
 
             $usr->profile()->save($pa);
 

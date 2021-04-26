@@ -10,7 +10,7 @@
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
                     <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
                 </button>
-                <button type="button" class="btn-block-option" v-on:click="refreshList">
+                <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list'">
                     <i class="icon icon-refresh"></i>
                 </button>
                 <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
@@ -113,8 +113,8 @@
                         <div class="form-group row">
                             <label for="inputImg" class="col-2 col-form-label"></label>
                             <div class="col-md-10">
+                                <img class="img" src="/images/def-user.png"/>
                                 <div class="custom-file">
-                                    <img class="img" src="/public/images/def-user.png"/>
                                     <input type="file" class="custom-file-input js-custom-file-input-enabled" id="inputImg" name="img_path" data-toggle="custom-file-input" v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <label class="custom-file-label" for="inputImg">Choose file</label>
                                 </div>
@@ -211,13 +211,15 @@
                         <hr/>
                         <div class="form-group row">
                             <label for="inputIsBanned" class="col-2 col-form-label">{{ $t('fields.banned') }}</label>
-                            <div class="col-md-10">
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" name="is_banned" id="inputIsBanned" value="yes" checked="">
-                                    <label class="custom-control-label" for="inputIsBanned">Option 1</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <div>
+                                    <select multiple class="form-control" id="inputIsBanned" name="is_banned" v-model="user.is_banned" :readonly="this.mode === 'show'">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                    <ErrorMessage name="is_banned" class="invalid-feedback" />
+                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.is_banned }}</div>
                                 </div>
-                                <ErrorMessage name="is_banned" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.is_banned }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -337,13 +339,13 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/user/save', new FormData($('#roleForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/save', new FormData($('#useForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     console.log(e);
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/user/edit/' + this.role.hId, new FormData($('#roleForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/edit/' + this.role.hId, new FormData($('#userForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     console.log(e);
