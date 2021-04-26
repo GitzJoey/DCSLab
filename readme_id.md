@@ -24,6 +24,13 @@ Setting Abis Instalasi
 
 FAQ :
 + Bikin migration,  php artisan make:migration create_products_table
-+ Bikin controller, php artisan make:controller ProductController
-+ Bikin model,      php artisan make:model Product
+
++ Sebuah halaman terdiri dari :
+  - Controller,         php artisan make:controller ProductGroupController
+  - Model,              php artisan make:model ProductGroup
+  - Service,            manual 
+  - Service Impl,       manual
+  - Service Provider    manual
+  - View,               php artisan make:view product.group.index
+    
 + Update table,     php artisan migrate
