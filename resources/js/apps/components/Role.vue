@@ -10,7 +10,7 @@
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
                     <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
                 </button>
-                <button type="button" class="btn-block-option" v-on:click="refreshList">
+                <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list'">
                     <i class="icon icon-refresh"></i>
                 </button>
                 <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
