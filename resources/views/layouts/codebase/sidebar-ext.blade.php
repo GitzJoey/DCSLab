@@ -2,7 +2,7 @@
     <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup" class="si si-moustache"></i><span class="">Finance</span></a>
     <ul>
         <li>
-            <a href="">Cash</a>
+            <a href="{{route('db.finance_cashs')}}">Cashes</a>
         </li>
     </ul>
 </li>
