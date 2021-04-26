@@ -34,3 +34,11 @@ FAQ :
   - View,               php artisan make:view product.group.index
     
 + Update table,     php artisan migrate
+
+
+.....
+controler
+bikin view / tapi masi kosong
+bikin model dengan asumsi database migrationnya dah dibuat
+bikin service, service imp
+bikin service provider
