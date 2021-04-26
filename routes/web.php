@@ -6,6 +6,7 @@ use App\Http\Controllers\DevController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FinanceCashController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductUnitController;
@@ -51,7 +52,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product_groups');
             Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product_brands');
             Route::get('unit', [ProductUnitController::class, 'index'])->name('db.product_units');
+        });
 
+        Route::group(['prefix' => 'finance'], function () {
+            Route::get('cashs', [FinanceCashController::class, 'index'])->name('db.finance_cashs');
         });
         
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');

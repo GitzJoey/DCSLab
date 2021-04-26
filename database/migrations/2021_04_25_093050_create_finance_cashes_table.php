@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFinanceCashsTable extends Migration
+class CreateFinanceCashesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateFinanceCashsTable extends Migration
      */
     public function up()
     {
-        Schema::create('finance_cashs', function (Blueprint $table) {
+        Schema::create('finance_cashes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code');
             $table->string('name')->nullable();
@@ -34,6 +34,6 @@ class CreateFinanceCashsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('finance_cashs');
+        Schema::dropIfExists('finance_cashes');
     }
 }
