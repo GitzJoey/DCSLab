@@ -24,4 +24,6 @@ interface RoleService
     );
 
     public function getAllPermissions();
+
+    public function getRoleByName($name);
 }

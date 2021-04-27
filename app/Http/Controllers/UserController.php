@@ -55,8 +55,6 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|max:255|unique:users',
-            'first_name' => 'required',
-            'last_name' => 'required',
             'company_name' => 'required|max:255',
             'roles' => 'required',
             'tax_id' => 'required',
@@ -78,18 +76,28 @@ class UserController extends Controller
 
         $setting = $this->userService->createDefaultSetting();
 
+        $rolesId = [];
         foreach ($request['roles'] as $r) {
             array_push($rolesId, Hashids::decode($r)[0]);
         }
 
-        $this->userService->create(
+        $result = $this->userService->create(
             $request['name'],
             $request['email'],
             $request['password'],
             $rolesId,
-            $profile,
-            $setting
+            $profile
         );
+
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function update($id, Request $request)

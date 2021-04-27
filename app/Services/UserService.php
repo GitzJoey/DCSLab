@@ -4,13 +4,19 @@ namespace App\Services;
 
 interface UserService
 {
+    public function register(
+        $name,
+        $email,
+        $password,
+        $terms
+    );
+
     public function create(
         $name,
         $email,
         $password,
         $rolesId,
-        $profile,
-        $setting
+        $profile
     );
 
     public function read();
@@ -22,16 +28,14 @@ interface UserService
     public function update(
         $id,
         $name,
-        $email,
-        $password,
         $rolesId,
         $profile,
-        $setting
+        $settings
     );
 
-    public function ban($id, $reason);
+    public function resetPassword($id);
 
-    public function unban($id);
+    public function resetToken($id, $tokenType);
 
     public function createDefaultSetting();
 }

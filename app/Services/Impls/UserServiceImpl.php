@@ -4,6 +4,7 @@ namespace App\Services\Impls;
 
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -18,8 +19,47 @@ use App\Services\UserService;
 
 class UserServiceImpl implements UserService
 {
+    public function register($name, $email, $password, $terms)
+    {
+        $usr = new User();
+        $usr->name = $name;
+        $usr->email = $email;
+        $usr->password = Hash::make($password);
 
-    public function create($name, $email, $password, $rolesId, $profile, $setting)
+        $usr->created_at = Carbon::now();
+        $usr->updated_at = Carbon::now();
+
+        $usr->save();
+
+        $profile = new Profile();
+        if ($name == trim($name) && strpos($name, ' ') !== false) {
+            $pieces = explode(" ", $name);
+            $profile->first_name = $pieces[0];
+            $profile->last_name = $pieces[1];
+            $profile->status = 'ACTIVE';
+        } else {
+            $profile->first_name = $name;
+        }
+
+        $profile->created_at = Carbon::now();
+        $profile->updated_at = Carbon::now();
+
+        $usr->profile()->save($profile);
+
+        $settings = $this->createDefaultSetting();
+
+        $usr->settings()->saveMany($settings);
+
+        $user_role = Role::where('name', Config::get('const.DEFAULT.ROLE.USER'))->first();
+
+        $usr->attachRole($user_role);
+
+        $usr->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'));
+
+        return $usr;
+    }
+
+    public function create($name, $email, $password, $rolesId, $profile)
     {
         DB::beginTransaction();
 
@@ -35,14 +75,29 @@ class UserServiceImpl implements UserService
             $usr->save();
 
             $pa = new Profile();
-            $pa->first_name = $profile['first_name'];
-            $pa->last_name = $profile['last_name'];
-            $pa->address = $profile['address'];
-            $pa->ic_num = $profile['ic_num'];
+            $pa->status = 'ACTIVE';
+
+            $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:'';
+            $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:'';
+            $pa->company_name = array_key_exists('company_name', $profile) ? $profile['company_name']:'';
+            $pa->address = array_key_exists('address', $profile) ? $profile['address']:'';
+            $pa->city = array_key_exists('city', $profile) ? $profile['city']:'';
+            $pa->postal_code = array_key_exists('postal_code', $profile) ? $profile['postal_code']:'';
+            $pa->country = array_key_exists('country', $profile) ? $profile['country']:'';
+            $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:'';
+            $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:'';
+            $pa->remarks = array_key_exists('remarks', $profile) ? $profile['remarks']:'';
 
             $usr->profile()->save($pa);
 
-            $usr->attachRole(Role::where('name', $rolesId)->first());
+            $settings = $this->createDefaultSetting();
+            $usr->settings()->saveMany($settings);
+
+            $usr->attachRoles($rolesId);
+
+            $usr->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'));
+
+            DB::commit();
 
             return $usr->hId;
         } catch (Exception $e) {
@@ -67,13 +122,48 @@ class UserServiceImpl implements UserService
         return User::with('profile', 'settings', 'roles')->where('id', $id);
     }
 
-    public function update($id, $name, $email, $password, $rolesId, $profile, $settings)
+    public function update($id, $name, $rolesId, $profile, $settings)
     {
         DB::beginTransaction();
 
         try {
+            $retval = 0;
 
-            $retval = '';
+            $usr = User::find($id);
+            $retval += $usr->update([
+                'name' => $name,
+                'updated_at' => Carbon::now()
+            ]);
+
+            if ($profile != null) {
+                $pa = $usr->profile()->first();
+
+                $retval += $pa->update([
+                    'first_name' => $profile['first_name'],
+                    'last_name' => $profile['last_name'],
+                    'company_name' => $profile['company_name'],
+                    'address' => $profile['address'],
+                    'city' => $profile['city'],
+                    'postal_code' => $profile['postal_code'],
+                    'country' => $profile['country'],
+                    'status' => $profile['status'],
+                    'tax_id' => $profile['tax_id'],
+                    'ic_num' => $profile['ic_num'],
+                    'remarks' => $profile['remarks']
+                ]);
+            }
+
+            $usr->syncRoles($rolesId);
+
+            foreach ($settings as $s) {
+                $setting = $usr->settings()->where('key', $s['key'])->first();
+                if ($setting->value != $s->value) {
+                    $retval += $setting->update([
+                        'value' => $s->value,
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }
 
             DB::commit();
 
@@ -85,25 +175,35 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function ban($id, $reason)
+    public function resetPassword($id)
     {
 
     }
 
-    public function unban($id)
+    public function resetToken($id, $tokenType)
     {
 
     }
 
     public function createDefaultSetting()
     {
-        $list = [
-            [
+        $list = array (
+            new Setting(array(
                 'type' => 'KEY_VALUE',
                 'key' => 'THEME.CODEBASE',
                 'value' => 'corporate',
-            ],
-        ];
+            )),
+            new Setting(array(
+                'type' => 'KEY_VALUE',
+                'key' => 'PREFS.DATE_FORMAT',
+                'value' => 'dd MM yyyy',
+            )),
+            new Setting(array(
+                'type' => 'KEY_VALUE',
+                'key' => 'PREFS.TIME_FORMAT',
+                'value' => 'hh:mm:ss',
+            )),
+        );
 
         return $list;
     }
