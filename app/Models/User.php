@@ -66,6 +66,6 @@ class User extends Authenticatable
 
     public function getSetting($key)
     {
-        return $this->settings()->where('key', $key)->first()->pluck('value');
+        return $this->settings()->where('key', $key)->pluck('value')->first();
     }
 }

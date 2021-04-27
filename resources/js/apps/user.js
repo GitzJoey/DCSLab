@@ -38,17 +38,20 @@ const messages = {
             company_name: 'Company Name',
             country: 'Country',
             remarks: 'Remarks',
-            banned: 'Banned',
+            status: 'Status',
             tax_id: 'Tax ID',
             postal_code: 'Postal Code',
             city: 'City',
-            banned_reason: 'Banned Reason',
         },
         errors: {
             warning: 'Warning',
         },
         placeholder: {
             please_select: 'Please Select',
+        },
+        statusDDL: {
+            active: 'Active',
+            inactive: 'Inactive',
         }
     },
     id: {
@@ -84,17 +87,20 @@ const messages = {
             company_name: 'Nama Perusahaan',
             country: 'Negara',
             remarks: 'Deskripsi',
-            banned: 'Terlarang',
+            status: 'Status',
             tax_id: 'No NPWP',
             postal_code: 'Kode Pos',
             city: 'Kota',
-            banned_reason: 'Alasan',
         },
         errors: {
             warning: 'Peringatan',
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        statusDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         }
     }
 };

@@ -100,4 +100,9 @@ class RoleServiceImpl implements RoleService
     {
         return Permission::get();
     }
+
+    public function getRoleByName($name)
+    {
+        return Role::where('name', $name)->first();
+    }
 }
