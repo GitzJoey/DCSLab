@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
+
+use Illuminate\Mail\Message;
 
 use App\Models\User;
 use App\Models\Role;
@@ -175,9 +178,11 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function resetPassword($id)
+    public function resetPassword($email)
     {
-
+        $response = Password::sendResetLink(['email' => $email], function (Message $message) {
+            $message->subject('Reset Password');
+        });
     }
 
     public function resetToken($id, $tokenType)
@@ -206,5 +211,10 @@ class UserServiceImpl implements UserService
         );
 
         return $list;
+    }
+
+    public function getUserById($id)
+    {
+        return User::find($id);
     }
 }

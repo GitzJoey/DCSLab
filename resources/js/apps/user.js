@@ -1,8 +1,14 @@
 import { createApp } from 'vue';
-import { createI18n }from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 import User from './components/User';
 
-let lang = document.documentElement.lang;
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["Accept"] = "application/json"
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
+
+let language = document.documentElement.lang;
+window.axios.defaults.headers.common['X-localization'] = language;
 
 const messages = {
     en: {
@@ -12,7 +18,7 @@ const messages = {
                 name: 'Name',
                 email: 'Email',
                 roles: 'Roles',
-                banned: 'Banned',
+                company_name: 'Company',
             }
         },
         buttons: {
@@ -24,8 +30,7 @@ const messages = {
             create: 'Create User',
             edit: 'Edit User',
             show: 'Show User',
-            ban: 'Ban User',
-            unban: 'Unban User',
+            reset_password: 'Reset Password',
         },
         fields: {
             name: 'Name',
@@ -61,7 +66,7 @@ const messages = {
                 name: 'Nama',
                 email: 'Email',
                 roles: 'Peran',
-                banned: 'Terlarang',
+                company_name: 'Perusahaan',
             }
         },
         buttons: {
@@ -73,8 +78,7 @@ const messages = {
             create: 'Tambah Pengguna',
             edit: 'Ubah Pengguna',
             show: 'Tampilkan Pengguna',
-            ban: 'Larang Pengguna',
-            unban: 'Batalkan Larangan',
+            reset_password: 'Reset Password',
         },
         fields: {
             name: 'Nama',
@@ -106,7 +110,7 @@ const messages = {
 };
 
 const i18n = createI18n({
-    locale: lang,
+    locale: language,
     fallbackLocale: 'en',
     messages,
 });

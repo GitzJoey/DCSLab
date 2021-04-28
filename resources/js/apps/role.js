@@ -2,7 +2,13 @@ import { createApp } from 'vue';
 import { createI18n }from 'vue-i18n';
 import Role from './components/Role';
 
-let lang = document.documentElement.lang;
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["Accept"] = "application/json"
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
+
+let language = document.documentElement.lang;
+window.axios.defaults.headers.common['X-localization'] = language;
 
 const messages = {
     en: {
@@ -66,7 +72,7 @@ const messages = {
 };
 
 const i18n = createI18n({
-    locale: lang,
+    locale: language,
     fallbackLocale: 'en',
     messages,
 });

@@ -47,11 +47,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['hId'];
+    protected $appends = ['hId', 'selectedRoles'];
 
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
+    }
+
+    public function getSelectedRolesAttribute()
+    {
+        return $this->roles()->get()->pluck('hId');
     }
 
     public function profile()
