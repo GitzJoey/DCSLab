@@ -33,9 +33,11 @@ interface UserService
         $settings
     );
 
-    public function resetPassword($id);
+    public function resetPassword($email);
 
     public function resetToken($id, $tokenType);
 
     public function createDefaultSetting();
+
+    public function getUserById($id);
 }

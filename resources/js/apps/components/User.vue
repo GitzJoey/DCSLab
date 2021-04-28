@@ -27,8 +27,8 @@
                             <tr>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.email") }}</th>
+                                <th>{{ $t("table.cols.company_name") }}</th>
                                 <th>{{ $t("table.cols.roles") }}</th>
-                                <th>{{ $t("table.cols.banned") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -36,16 +36,9 @@
                             <tr v-for="(u, uIdx) in userList.data">
                                 <td>{{ u.name }}</td>
                                 <td>{{ u.email }}</td>
+                                <td>{{ u.profile.company_name }}</td>
                                 <td>
                                     <span v-for="(r, rIdx) in u.roles">{{ r.display_name }}</span><br/>
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.ban')">
-                                        <i class="fa fa-check-circle"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.unban')">
-                                        <i class="fa fa-xing-square"></i>
-                                    </button>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -54,6 +47,12 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(uIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        &nbsp;
+                                        &nbsp;
+                                        &nbsp;
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.reset_password')" v-on:click="resetPassword(u.email)">
+                                            <i class="fa fa-ticket"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -104,7 +103,7 @@
                         <div class="form-group row">
                             <label for="inputEmail" class="col-2 col-form-label">{{ $t('fields.email') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'is-invalid': errors['email']}" :placeholder="$t('fields.email')" :label="$t('fields.email')" v-model="user.email" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'is-invalid': errors['email']}" :placeholder="$t('fields.email')" :label="$t('fields.email')" v-model="user.email" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
                                 <ErrorMessage name="email" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.email }}</div>
                             </div>
@@ -193,8 +192,8 @@
                         <div class="form-group row">
                             <label for="inputRoles" class="col-2 col-form-label">{{ $t('fields.roles') }}</label>
                             <div class="col-md-10">
-                                <select multiple :class="{'form-control':true}" id="inputRoles" name="roles[]" size="6" v-model="user.roles" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                    <option v-for="(r, rIdx) in rolesDDL" v-bind:value="rIdx">{{ r }}</option>
+                                <select multiple :class="{'form-control':true, 'is-invalid':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <option v-for="(r, rIdx) in rolesDDL" :value="rIdx">{{ r }}</option>
                                 </select>
                                 <ErrorMessage name="roles" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">
@@ -255,6 +254,7 @@ import { required, email } from '@vee-validate/rules';
 import { localize, setLocale } from '@vee-validate/i18n';
 import en from '@vee-validate/i18n/dist/locale/en.json';
 import id from '@vee-validate/i18n/dist/locale/id.json';
+import { find } from 'lodash';
 
 configure({
     validateOnInput: true,
@@ -292,6 +292,7 @@ export default {
             userList: { },
             user: {
                 roles: [],
+                selectedRoles: [],
                 profile: {
                     country: '',
                     status: 'ACTIVE',
@@ -324,8 +325,19 @@ export default {
                 this.getAllUser(page);
             }
         },
+        emptyUser() {
+            return {
+                roles: [],
+                selectedRoles: [],
+                profile: {
+                    country: '',
+                    status: 'ACTIVE',
+                }
+            }
+        },
         createNew() {
             this.mode = 'create';
+            this.user = this.emptyUser();
         },
         editSelected(idx) {
             this.mode = 'edit';
@@ -341,19 +353,35 @@ export default {
                 axios.post('/api/post/admin/user/save', new FormData($('#userForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
-                    console.log(e);
+                    this.handleError(e, actions);
+                    this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/user/edit/' + this.role.hId, new FormData($('#userForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/edit/' + this.user.hId, new FormData($('#userForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
-                    console.log(e);
+                    this.handleError(e, actions);
+                    this.loading = false;
                 });
             } else { }
+        },
+        handleError(e, actions) {
+            //Laravel Validations
+            if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
+                for (var key in e.response.data.errors) {
+                    for (var i = 0; i < e.response.data.errors[key].length; i++) {
+                        actions.setFieldError(key, e.response.data.errors[key][i]);
+                    }
+                }
+            } else {
+                //Catch From Controller
+                actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
+            }
         },
         backToList() {
             this.mode = 'list';
             this.getAllUser(this.userList.current_page);
+            this.user = this.emptyUser();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -377,6 +405,9 @@ export default {
             }).catch(e => {
                 console.log(e);
             });
+        },
+        resetPassword(email) {
+
         }
     },
     computed: {

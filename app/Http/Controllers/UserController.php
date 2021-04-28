@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\sameEmail;
 use Illuminate\Http\Request;
 
 use App\Services\UserService;
@@ -104,9 +105,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|max:255|unique:users',
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'email' => new sameEmail($id),
             'company_name' => 'required|max:255',
             'roles' => 'required',
             'tax_id' => 'required',
@@ -125,9 +124,11 @@ class UserController extends Controller
             'country' => $request['country'],
             'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
+            'status' => $request['status'],
             'remarks' => $request['remarks'],
         );
 
+        $rolesId = [];
         foreach ($request['roles'] as $r) {
             array_push($rolesId, Hashids::decode($r)[0]);
         }
@@ -135,11 +136,16 @@ class UserController extends Controller
         $this->userService->update(
             $id,
             $request['name'],
-            $request['email'],
-            $request['password'],
             $rolesId,
             $profile,
             $setting
         );
+    }
+
+    public function resetPassword($id)
+    {
+        $usr = $this->userService->getUserById($id);
+
+        $this->userService->resetPassword($usr['email']);
     }
 }
