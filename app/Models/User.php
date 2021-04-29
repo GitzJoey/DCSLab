@@ -47,7 +47,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['hId', 'selectedRoles'];
+    protected $appends = ['hId', 'selectedRoles', 'selectedSettings'];
 
     public function getHIdAttribute() : string
     {
@@ -57,6 +57,29 @@ class User extends Authenticatable
     public function getSelectedRolesAttribute()
     {
         return $this->roles()->get()->pluck('hId');
+    }
+
+    public function getSelectedSettingsAttribute()
+    {
+        $settings = array();
+        foreach ($this->settings as $s) {
+            $skey = '';
+            switch ($s->key) {
+                case 'THEME.CODEBASE':
+                    $skey = 'theme';
+                    break;
+                case 'PREFS.DATE_FORMAT':
+                    $skey = 'dateFormat';
+                    break;
+                case 'PREFS.TIME_FORMAT':
+                    $skey = 'timeFormat';
+                    break;
+                default:
+                    break;
+            }
+            $settings[$skey] = $s->value;
+        }
+        return $settings;
     }
 
     public function profile()

@@ -189,6 +189,7 @@
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.ic_num }}</div>
                             </div>
                         </div>
+                        <hr/>
                         <div class="form-group row">
                             <label for="inputRoles" class="col-2 col-form-label">{{ $t('fields.roles') }}</label>
                             <div class="col-md-10">
@@ -202,15 +203,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
-                            <div class="col-md-10">
-                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="user.profile.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.remarks }}</div>
-                            </div>
-                        </div>
-                        <hr/>
-                        <div class="form-group row">
                             <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <div>
@@ -221,6 +213,54 @@
                                     <div class="form-control-plaintext" v-if="this.mode === 'show'">
                                         <span v-if="user.profile.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
                                         <span v-if="user.profile.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
+                            <div class="col-md-10">
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="user.profile.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <ErrorMessage name="remarks" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.remarks }}</div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="form-group row">
+                            <label for="inputSettings" class="col-2 col-form-label">{{ $t('fields.settings.settings') }}</label>
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>{{ $t('fields.settings.theme') }}</span>
+                                        <select id="selectTheme" class="form-control" name="theme" v-model="user.selectedSettings.theme">
+                                            <option value="corporate">Corporate</option>
+                                            <option value="earth">Earth</option>
+                                            <option value="elegance">Elegance</option>
+                                            <option value="flat">Flat</option>
+                                            <option value="pulse">Pulse</option>
+                                        </select>
+                                        <br/>
+                                    </div>
+                                    <div class="col-6">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>{{ $t('fields.settings.dateFormat') }}</span>
+                                        <select id="selectDate" class="form-control" name="dateFormat" v-model="user.selectedSettings.dateFormat">
+                                            <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-d') }}</option>
+                                            <option value="dd_MM_yyy">{{ moment(new Date()).format('d-MMM-yyyy') }}</option>
+                                        </select>
+                                        <br/>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>{{ $t('fields.settings.timeFormat') }}</span>
+                                        <select id="selectTime" class="form-control">
+                                            <option value="hh_mm_ss">{{ moment(new Date()).format('HH:mm:ss') }}</option>
+                                            <option value="h_m A">{{ moment(new Date()).format('h:m A') }}</option>
+                                        </select>
+                                        <br/>
                                     </div>
                                 </div>
                             </div>
@@ -255,6 +295,7 @@ import { localize, setLocale } from '@vee-validate/i18n';
 import en from '@vee-validate/i18n/dist/locale/en.json';
 import id from '@vee-validate/i18n/dist/locale/id.json';
 import { find } from 'lodash';
+import moment from 'moment';
 
 configure({
     validateOnInput: true,
@@ -296,11 +337,19 @@ export default {
                 profile: {
                     country: '',
                     status: 'ACTIVE',
+                },
+                selectedSettings: {
+                    theme: 'corporate',
+                    dateFormat: '',
+                    timeFormat: ''
                 }
             },
             countriesDDL: [],
             rolesDDL: [],
         }
+    },
+    created() {
+        this.moment = moment;
     },
     mounted() {
         this.mode = 'list';
@@ -332,6 +381,11 @@ export default {
                 profile: {
                     country: '',
                     status: 'ACTIVE',
+                },
+                selectedSettings: {
+                    theme: 'corporate',
+                    dateFormat: '',
+                    timeFormat: ''
                 }
             }
         },
@@ -342,10 +396,12 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.user = this.userList.data[idx];
+            this.setSettings();
         },
         showSelected(idx) {
             this.mode = 'show';
             this.user = this.userList.data[idx];
+            this.setSettings()
         },
         onSubmit(values, actions) {
             this.loading = true;
@@ -403,7 +459,7 @@ export default {
             axios.get('/api/get/common/countries/read').then(response => {
                 this.countriesDDL = response.data;
             }).catch(e => {
-                console.log(e);
+                console.log(e.message);
             });
         },
         resetPassword(email) {

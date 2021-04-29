@@ -201,12 +201,12 @@ class UserServiceImpl implements UserService
             new Setting(array(
                 'type' => 'KEY_VALUE',
                 'key' => 'PREFS.DATE_FORMAT',
-                'value' => 'dd MM yyyy',
+                'value' => 'yyyy_MM_dd',
             )),
             new Setting(array(
                 'type' => 'KEY_VALUE',
                 'key' => 'PREFS.TIME_FORMAT',
-                'value' => 'hh:mm:ss',
+                'value' => 'hh_mm_ss',
             )),
         );
 
@@ -216,5 +216,10 @@ class UserServiceImpl implements UserService
     public function getUserById($id)
     {
         return User::find($id);
+    }
+
+    public function getUserByEmail($email)
+    {
+        return User::where('email', '=', $email)->first();
     }
 }

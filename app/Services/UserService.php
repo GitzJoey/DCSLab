@@ -40,4 +40,6 @@ interface UserService
     public function createDefaultSetting();
 
     public function getUserById($id);
+
+    public function getUserByEmail($email);
 }

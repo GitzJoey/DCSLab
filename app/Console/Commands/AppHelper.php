@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Services\RoleService;
+use App\Services\UserService;
 use Illuminate\Console\Command;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -51,7 +54,7 @@ class AppHelper extends Command
         $this->info('[2] Truncate All Transactions');
         $this->info('[3] Update Composer And NPM');
         $this->info('[4] Clear All Cache');
-        $this->info('[5] ...');
+        $this->info('[5] Change User Roles');
 
         $choose = $this->ask('Choose Helper');
 
@@ -67,6 +70,7 @@ class AppHelper extends Command
                 $this->clearCache();
                 break;
             case 5:
+                $this->changeUserRoles();
                 break;
             default:
                 break;
@@ -74,6 +78,66 @@ class AppHelper extends Command
 
         sleep(3);
         $this->info('Done!');
+    }
+
+    private function changeUserRoles()
+    {
+        $container = Container::getInstance();
+        $userService = $container->make(UserService::class);
+        $roleService = $container->make(RoleService::class);
+
+        $valid = false;
+
+        $email = '';
+
+        while (!$valid) {
+            $email = $this->ask('Email:', $email);
+
+            $usr = $userService->getUserByEmail($email);
+
+            if ($usr) {
+                $this->info('User Name: '.$usr->name.'. Current Roles: '.$usr->roles()->pluck('display_name'));
+
+                $mode = $this->choice('Do you want to attach or remove?', ['Attach', 'Remove']);
+
+                $this->info('Available Roles: '.$roleService->read()->pluck('display_name'));
+                $roleDisplayName = $this->ask('Please Select From Available Roles: ');
+
+                $role = $roleService->getRoleByDisplayName($roleDisplayName, false);
+
+                if (!$role) {
+                    $this->error('Invalid Role');
+                    return false;
+                }
+
+                $confirmed = $this->confirm("Proceed to $mode Role $role->display_name to $usr->name?", true);
+
+                if (!$confirmed) {
+                    $this->error('Aborted');
+                    return false;
+                }
+
+                if ($mode == 'Attach') {
+                    $usr->attachRole($role);
+                } else if ($mode == 'Remove') {
+                    $usr->detachRole($role);
+                } else {
+
+                }
+
+                $this->info('Done');
+                $this->info('User Name: '.$usr->name.'. Current Roles: '.$usr->roles()->pluck('display_name'));
+
+                sleep(3);
+
+                $confirmedExit = $this->confirm("Do you want to attach/remove another role?", false);
+
+                if (!$confirmedExit) {
+                    $this->error('Exiting');
+                    return false;
+                }
+            }
+        }
     }
 
     private function clearCache()
