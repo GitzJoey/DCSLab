@@ -105,4 +105,13 @@ class RoleServiceImpl implements RoleService
     {
         return Role::where('name', $name)->first();
     }
+
+    public function getRoleByDisplayName($name, $caseSensitive)
+    {
+        if ($caseSensitive) {
+            return Role::where('display_name', $name)->first();
+        } else {
+            return Role::whereRaw("UPPER(display_name) = '".strtoupper($name)."'")->first();
+        }
+    }
 }

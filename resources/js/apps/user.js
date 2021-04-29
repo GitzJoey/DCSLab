@@ -47,6 +47,12 @@ const messages = {
             tax_id: 'Tax ID',
             postal_code: 'Postal Code',
             city: 'City',
+            settings: {
+                settings: 'Settings',
+                theme: 'Themes',
+                dateFormat: 'Date Format',
+                timeFormat: 'Time Format',
+            },
         },
         errors: {
             warning: 'Warning',
@@ -95,6 +101,12 @@ const messages = {
             tax_id: 'No NPWP',
             postal_code: 'Kode Pos',
             city: 'Kota',
+            settings: {
+                settings: 'Pengaturan',
+                theme: 'Tema',
+                dateFormat: 'Format Tanggal',
+                timeFormat: 'Format Waktu',
+            },
         },
         errors: {
             warning: 'Peringatan',
