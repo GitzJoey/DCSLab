@@ -16,10 +16,10 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
 			$table->string('code')->nullable();
-			$table->integer('group_id')->nullable();
-			$table->integer('brand_id')->nullable();
-			$table->string('name')->nullable();	
-			$table->integer('unit_id')->nullable();
+			$table->foreignId('group_id')->references('id')->on('product_groups')->onUpdate('cascade')->onDelete('restrict');;
+            $table->foreignId('brand_id')->references('id')->on('product_brands')->onUpdate('cascade')->onDelete('restrict');;
+            $table->string('name')->nullable();	
+            $table->foreignId('unit_id')->references('id')->on('product_units')->onUpdate('cascade')->onDelete('restrict');;
 			$table->decimal('price', 19, 8)->default(0);
 			$table->integer('tax')->nullable();
             $table->string('information')->nullable();	
