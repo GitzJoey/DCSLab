@@ -7,7 +7,6 @@ return [
         'name' => 'Nama',
         'first_name' => 'Nama Depan',
         'last_name' => 'Nama Keluarga',
-        'company_name' => 'Nama Perusahaan',
         'address' => 'Alamat',
         'city' => 'Kota',
         'postal_code' => 'Kode Pos',

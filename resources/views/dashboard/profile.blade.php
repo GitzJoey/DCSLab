@@ -30,7 +30,7 @@
             </button>
             &nbsp;
             <button type="button" class="btn btn-rounded btn-hero btn-sm btn-alt-primary mb-5">
-                {{ __('dashboard.settings') }}
+                {{ __('dashboard.activity') }}
             </button>
             &nbsp;
             <button type="button" class="btn btn-rounded btn-hero btn-sm btn-alt-primary mb-5">
@@ -59,12 +59,6 @@
                         <div class="col-12">
                             <label for="name">{{ __('profile.fields.name') }}</label>
                             <input type="text" class="form-control form-control-lg" id="name" name="name" value="">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <label for="email">{{ __('profile.fields.company_name') }}</label>
-                            <input type="email" class="form-control form-control-lg" id="company_name" name="company_name">
                         </div>
                     </div>
                     <div class="form-group row">
