@@ -27,8 +27,8 @@
                             <tr>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.email") }}</th>
-                                <th>{{ $t("table.cols.company_name") }}</th>
                                 <th>{{ $t("table.cols.roles") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -36,10 +36,10 @@
                             <tr v-for="(u, uIdx) in userList.data">
                                 <td>{{ u.name }}</td>
                                 <td>{{ u.email }}</td>
-                                <td>{{ u.profile.company_name }}</td>
                                 <td>
                                     <span v-for="(r, rIdx) in u.roles">{{ r.display_name }}</span><br/>
                                 </td>
+                                <td>{{ u.profile.status }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(uIdx)">
@@ -132,14 +132,6 @@
                             <div class="col-md-10">
                                 <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="$t('fields.last_name')" v-model="user.profile.last_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.last_name }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputCompanyName" class="col-2 col-form-label">{{ $t('fields.company_name') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputCompanyName" name="company_name" as="input" :class="{'form-control':true, 'is-invalid': errors['company_name']}" :placeholder="$t('fields.company_name')" :label="$t('fields.company_name')" v-model="user.profile.company_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="company_name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.company_name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -256,7 +248,7 @@
                                     </div>
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.timeFormat') }}</span>
-                                        <select id="selectTime" class="form-control">
+                                        <select id="selectTime" class="form-control" name="timeFormat" v-model="user.selectedSettings.timeFormat">
                                             <option value="hh_mm_ss">{{ moment(new Date()).format('HH:mm:ss') }}</option>
                                             <option value="h_m A">{{ moment(new Date()).format('h:m A') }}</option>
                                         </select>
@@ -315,7 +307,6 @@ export default {
         const schema = {
             name: 'required',
             email: 'required|email',
-            company_name: 'required',
             tax_id: 'required',
             ic_num: 'required',
         };
@@ -396,12 +387,10 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.user = this.userList.data[idx];
-            this.setSettings();
         },
         showSelected(idx) {
             this.mode = 'show';
             this.user = this.userList.data[idx];
-            this.setSettings()
         },
         onSubmit(values, actions) {
             this.loading = true;

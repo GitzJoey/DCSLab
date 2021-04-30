@@ -56,7 +56,6 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|max:255|unique:users',
-            'company_name' => 'required|max:255',
             'roles' => 'required',
             'tax_id' => 'required',
             'ic_num' => 'required',
@@ -65,7 +64,6 @@ class UserController extends Controller
         $profile = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
-            'company_name' => $request['company_name'],
             'address' => $request['address'],
             'city' => $request['city'],
             'postal_code' => $request['postal_code'],
@@ -106,7 +104,6 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => new sameEmail($id),
-            'company_name' => 'required|max:255',
             'roles' => 'required',
             'tax_id' => 'required',
             'ic_num' => 'required',
@@ -117,7 +114,6 @@ class UserController extends Controller
         $profile = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
-            'company_name' => $request['company_name'],
             'address' => $request['address'],
             'city' => $request['city'],
             'postal_code' => $request['postal_code'],
@@ -133,13 +129,29 @@ class UserController extends Controller
             array_push($rolesId, Hashids::decode($r)[0]);
         }
 
-        $this->userService->update(
+        $settings = [
+            'THEME.CODEBASE' => $request['theme'],
+            'PREFS.DATE_FORMAT' => $request['dateFormat'],
+            'PREFS.TIME_FORMAT' => $request['timeFormat'],
+        ];
+
+        $result = $this->userService->update(
             $id,
             $request['name'],
             $rolesId,
             $profile,
-            $setting
+            $settings
         );
+
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function resetPassword($id)

@@ -39,10 +39,11 @@ class UserServiceImpl implements UserService
             $pieces = explode(" ", $name);
             $profile->first_name = $pieces[0];
             $profile->last_name = $pieces[1];
-            $profile->status = 'ACTIVE';
         } else {
             $profile->first_name = $name;
         }
+
+        $profile->status = 'ACTIVE';
 
         $profile->created_at = Carbon::now();
         $profile->updated_at = Carbon::now();
@@ -82,7 +83,6 @@ class UserServiceImpl implements UserService
 
             $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:'';
             $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:'';
-            $pa->company_name = array_key_exists('company_name', $profile) ? $profile['company_name']:'';
             $pa->address = array_key_exists('address', $profile) ? $profile['address']:'';
             $pa->city = array_key_exists('city', $profile) ? $profile['city']:'';
             $pa->postal_code = array_key_exists('postal_code', $profile) ? $profile['postal_code']:'';
@@ -144,7 +144,6 @@ class UserServiceImpl implements UserService
                 $retval += $pa->update([
                     'first_name' => $profile['first_name'],
                     'last_name' => $profile['last_name'],
-                    'company_name' => $profile['company_name'],
                     'address' => $profile['address'],
                     'city' => $profile['city'],
                     'postal_code' => $profile['postal_code'],
@@ -158,11 +157,12 @@ class UserServiceImpl implements UserService
 
             $usr->syncRoles($rolesId);
 
-            foreach ($settings as $s) {
-                $setting = $usr->settings()->where('key', $s['key'])->first();
-                if ($setting->value != $s->value) {
+            foreach ($settings as $key => $value) {
+                $setting = $usr->settings()->where('key', $key)->first();
+                if (!$setting || $value == null) continue;
+                if ($setting->value != $value) {
                     $retval += $setting->update([
-                        'value' => $s->value,
+                        'value' => $value,
                         'updated_at' => Carbon::now()
                     ]);
                 }

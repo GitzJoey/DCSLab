@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-
 @endsection
 
 @section('js_after')

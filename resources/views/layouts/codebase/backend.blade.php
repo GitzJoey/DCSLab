@@ -18,15 +18,15 @@
 
         <link rel="stylesheet" id="css-main" href="{{ mix('/css/codebase/codebase.css') }}">
 
-        @if (\Illuminate\Support\Facades\Auth::user()->getSetting('THEMES.CODEBASE') == 'corporate')
+        @if (\Illuminate\Support\Facades\Auth::user()->getSetting('THEME.CODEBASE') == 'corporate')
             <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/corporate.css') }}">
-        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEMES.CODEBASE') == 'earth')
+        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEME.CODEBASE') == 'earth')
             <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/earth.css') }}">
-        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEMES.CODEBASE') == 'elegance')
+        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEME.CODEBASE') == 'elegance')
             <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/elegance.css') }}">
-        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEMES.CODEBASE') == 'flat')
+        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEME.CODEBASE') == 'flat')
             <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/flat.css') }}">
-        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEMES.CODEBASE') == 'pulse')
+        @elseif (\Illuminate\Support\Facades\Auth::user()->getSetting('THEME.CODEBASE') == 'pulse')
             <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/pulse.css') }}">
         @else
             <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/corporate.css') }}">

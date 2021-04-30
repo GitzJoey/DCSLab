@@ -18,7 +18,6 @@ class CreateProfilesTable extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('company_name')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('postal_code')->nullable();

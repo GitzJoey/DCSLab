@@ -18,7 +18,7 @@ const messages = {
                 name: 'Name',
                 email: 'Email',
                 roles: 'Roles',
-                company_name: 'Company',
+                status: 'Status',
             }
         },
         buttons: {
@@ -40,7 +40,6 @@ const messages = {
             last_name: 'Last Name',
             address: 'Address',
             ic_num: 'IC Number',
-            company_name: 'Company Name',
             country: 'Country',
             remarks: 'Remarks',
             status: 'Status',
@@ -72,7 +71,7 @@ const messages = {
                 name: 'Nama',
                 email: 'Email',
                 roles: 'Peran',
-                company_name: 'Perusahaan',
+                status: 'Status',
             }
         },
         buttons: {
@@ -94,7 +93,6 @@ const messages = {
             last_name: 'Nama Belakang',
             address: 'Alamat',
             ic_num: 'Nomor KTP',
-            company_name: 'Nama Perusahaan',
             country: 'Negara',
             remarks: 'Deskripsi',
             status: 'Status',
