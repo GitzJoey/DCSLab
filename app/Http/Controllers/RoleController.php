@@ -88,6 +88,14 @@ class RoleController extends Controller
             $inputtedRolePermissions
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 }
