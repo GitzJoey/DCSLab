@@ -1,5 +1,9 @@
 @extends('layouts.codebase.backend')
 
+@section('title')
+    {{ __('finance_cashes.title') }}
+@endsection
+
 @section('content')
 
 {{ $test }}
@@ -27,6 +31,41 @@
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
            
+            <div class="form-group row">
+    <label class="col-12">Checkboxes</label>
+    <div class="col-12">
+        <div class="custom-control custom-checkbox mb-5">
+            <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1" checked>
+            <label class="custom-control-label" for="example-checkbox1">Option 1</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-5">
+            <input class="custom-control-input" type="checkbox" name="example-checkbox2" id="example-checkbox2" value="option2">
+            <label class="custom-control-label" for="example-checkbox2">Option 2</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-5">
+            <input class="custom-control-input" type="checkbox" name="example-checkbox3" id="example-checkbox3" value="option3">
+            <label class="custom-control-label" for="example-checkbox3">Option 3</label>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label class="col-12">Inline Checkboxes</label>
+    <div class="col-12">
+        <div class="custom-control custom-checkbox custom-control-inline mb-5">
+            <input class="custom-control-input" type="checkbox" name="example-inline-checkbox1" id="example-inline-checkbox1" value="option1" checked>
+            <label class="custom-control-label" for="example-inline-checkbox1">Option 1</label>
+        </div>
+        <div class="custom-control custom-checkbox custom-control-inline mb-5">
+            <input class="custom-control-input" type="checkbox" name="example-inline-checkbox2" id="example-inline-checkbox2" value="option2">
+            <label class="custom-control-label" for="example-inline-checkbox2">Option 2</label>
+        </div>
+        <div class="custom-control custom-checkbox custom-control-inline mb-5">
+            <input class="custom-control-input" type="checkbox" name="example-inline-checkbox3" id="example-inline-checkbox3" value="option3">
+            <label class="custom-control-label" for="example-inline-checkbox3">Option 3</label>
+        </div>
+    </div>
+</div>
+
             <div class="form-group">
                 <button type="submit" class="btn btn-alt-primary">Save</button>
             </div>
@@ -102,5 +141,7 @@
     </div>
 </div>
 <!-- END Striped Table -->
+
+
 
 @endsection

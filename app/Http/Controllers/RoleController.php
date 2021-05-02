@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 
-use App\Services\RoleService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class RoleController extends Controller

@@ -2,6 +2,8 @@
 
 @section('content')
 
+{{ $test }}
+
 <!-- Normal Form -->
 <div class="block">
     <div class="block-header block-header-default">

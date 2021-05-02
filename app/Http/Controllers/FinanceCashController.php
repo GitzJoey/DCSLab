@@ -2,38 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ProductBrandService;
+use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class ProductBrandController extends Controller
+class FinanceCashController extends Controller
 {
-    private $productBrandService;
+    private $financeCashService;
 
-    public function __construct(ProductBrandService $productBrandService)
+    public function __construct(FinanceCashService $financeCashService)
     {
         $this->middleware('auth');
-        $this->productBrandService = $productBrandService;
+        $this->financeCashService = $financeCashService;
     }
 
     public function index()
     {
         $test = $this->read();
-        
-        return view('product.brands.index', compact('test'));
+
+        return view('finance.cashs.index', compact('test'));
     }
 
     public function read()
     {
-        return $this->productBrandService->read();
+        return $this->financeCashService->read();
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'code' => 'required|max:255',
-            'name' => 'required|max:255'
+            'name' => 'required|max:255',
+            'is_bank' => 'required',
+            'is_active' => 'required'
         ]);
 
         $rolePermissions = [];
@@ -43,9 +45,11 @@ class ProductBrandController extends Controller
             ));
         }
 
-        $result = $this->productBrandService->create(
+        $result = $this->financeCashService->create(
             $request['code'],
             $request['name'],
+            $request['is_bank'],
+            $request['is_active'],
             $rolePermissions
         );
 
@@ -69,10 +73,12 @@ class ProductBrandController extends Controller
             ));
         }
 
-        $result = $this->productBrandService->update(
+        $result = $this->financeCashService->update(
             $id,
             $request['code'],
             $request['name'],
+            $request['is_bank'],
+            $request['is_active'],
             $inputtedRolePermissions
         );
 
@@ -81,7 +87,7 @@ class ProductBrandController extends Controller
 
     public function delete($id)
     {
-        $this->productBrandService->delete($id);
+        $this->financeCashService->delete($id);
 
         return response()->json();
     }

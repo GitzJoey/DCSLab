@@ -1,11 +1,13 @@
 Instalasi
-+ Download & Install Git, Tortuise Git
++ Download & Install Git, Tortoise Git
 
 + Download & Extract PHP ke C:/php
 + Copy php.ini-development trus rename hasil copynya jadi php.ini
 + edit php.ini ilangin quotes bagian extension
 
 + Download & Install Composer, NPM / NodeJS
+
++ Download & Install VS Code
 
 Setting Abis Instalasi
 
@@ -22,6 +24,21 @@ Setting Abis Instalasi
 
 FAQ :
 + Bikin migration,  php artisan make:migration create_products_table
-+ Bikin controller, php artisan make:controller ProductController
-+ Bikin model,      php artisan make:model Product
+
++ Sebuah halaman terdiri dari :
+  - Controller,         php artisan make:controller ProductGroupController
+  - Model,              php artisan make:model ProductGroup
+  - Service,            manual 
+  - Service Impl,       manual
+  - Service Provider    manual
+  - View,               manual, contoh: product.group.index
+    
 + Update table,     php artisan migrate
+
+
+.....
+controler
+bikin view / tapi masi kosong
+bikin model dengan asumsi database migrationnya dah dibuat
+bikin service, service imp
+bikin service provider
