@@ -15,17 +15,15 @@ class CreateBranchesTable extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');;
             $table->string('code');
-            $table->string('name')->nullable();
-
-            $table->integer('term');
+            $table->string('name')->nullable();           
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('contact')->nullable();
-            $table->string('tax_id')->nullable();
-
             $table->string('remarks')->nullable();
 			$table->integer('is_active')->nullable();
+
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
