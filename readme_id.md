@@ -31,7 +31,7 @@ FAQ :
   - Service,            manual 
   - Service Impl,       manual
   - Service Provider    manual
-  - View,               php artisan make:view product.group.index
+  - View,               manual, contoh: product.group.index
     
 + Update table,     php artisan migrate
 

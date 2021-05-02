@@ -15,8 +15,16 @@ class Profile extends Model
     protected $fillable = [
         'first_name',
         'last_name',
+        'company_name',
+        'address',
+        'city',
+        'postal_code',
+        'country',
+        'status',
+        'tax_id',
         'ic_number',
         'img_path',
+        'remarks',
     ];
 
     protected $hidden = [
