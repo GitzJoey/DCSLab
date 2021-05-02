@@ -10,7 +10,7 @@
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
                     <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
                 </button>
-                <button type="button" class="btn-block-option" v-on:click="refreshList">
+                <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list'">
                     <i class="icon icon-refresh"></i>
                 </button>
                 <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
@@ -27,8 +27,8 @@
                             <tr>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.email") }}</th>
+                                <th>{{ $t("table.cols.company_name") }}</th>
                                 <th>{{ $t("table.cols.roles") }}</th>
-                                <th>{{ $t("table.cols.banned") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -36,16 +36,9 @@
                             <tr v-for="(u, uIdx) in userList.data">
                                 <td>{{ u.name }}</td>
                                 <td>{{ u.email }}</td>
+                                <td>{{ u.profile.company_name }}</td>
                                 <td>
-                                    <span v-for="(r, rIdx) in u.roles">{{ r.display_name }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.ban')">
-                                        <i class="fa fa-check-circle"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.unban')">
-                                        <i class="fa fa-xing-square"></i>
-                                    </button>
+                                    <span v-for="(r, rIdx) in u.roles">{{ r.display_name }}</span><br/>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -54,6 +47,12 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(uIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        &nbsp;
+                                        &nbsp;
+                                        &nbsp;
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.reset_password')" v-on:click="resetPassword(u.email)">
+                                            <i class="fa fa-ticket"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -104,7 +103,7 @@
                         <div class="form-group row">
                             <label for="inputEmail" class="col-2 col-form-label">{{ $t('fields.email') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'is-invalid': errors['email']}" :placeholder="$t('fields.email')" :label="$t('fields.email')" v-model="user.email" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'is-invalid': errors['email']}" :placeholder="$t('fields.email')" :label="$t('fields.email')" v-model="user.email" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
                                 <ErrorMessage name="email" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.email }}</div>
                             </div>
@@ -113,8 +112,8 @@
                         <div class="form-group row">
                             <label for="inputImg" class="col-2 col-form-label"></label>
                             <div class="col-md-10">
+                                <img class="img" src="/images/def-user.png"/>
                                 <div class="custom-file">
-                                    <img class="img" src="/public/images/def-user.png"/>
                                     <input type="file" class="custom-file-input js-custom-file-input-enabled" id="inputImg" name="img_path" data-toggle="custom-file-input" v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <label class="custom-file-label" for="inputImg">Choose file</label>
                                 </div>
@@ -124,108 +123,146 @@
                         <div class="form-group row">
                             <label for="inputFirstName" class="col-2 col-form-label">{{ $t('fields.first_name') }}</label>
                             <div class="col-md-10">
-                                <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="$t('fields.first_name')" v-model="user.first_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.first_name }}</div>
+                                <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="$t('fields.first_name')" v-model="user.profile.first_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.first_name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputLastName" class="col-2 col-form-label">{{ $t('fields.last_name') }}</label>
                             <div class="col-md-10">
-                                <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="$t('fields.last_name')" v-model="user.last_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.last_name }}</div>
+                                <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="$t('fields.last_name')" v-model="user.profile.last_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.last_name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCompanyName" class="col-2 col-form-label">{{ $t('fields.company_name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCompanyName" name="company_name" as="input" :class="{'form-control':true, 'is-invalid': errors['company_name']}" :placeholder="$t('fields.company_name')" :label="$t('fields.company_name')" v-model="user.email" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCompanyName" name="company_name" as="input" :class="{'form-control':true, 'is-invalid': errors['company_name']}" :placeholder="$t('fields.company_name')" :label="$t('fields.company_name')" v-model="user.profile.company_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="company_name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.company_name }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.company_name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
-                                <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="user.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.address }}</div>
+                                <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="user.profile.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.address }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
-                                <input id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="user.city" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.city }}</div>
+                                <input id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="user.profile.city" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.city }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputPostalCode" class="col-2 col-form-label">{{ $t('fields.postal_code') }}</label>
                             <div class="col-md-10">
-                                <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="$t('fields.postal_code')" v-model="user.postal_code" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.postal_code }}</div>
+                                <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="$t('fields.postal_code')" v-model="user.profile.postal_code" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.postal_code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCountry" class="col-2 col-form-label">{{ $t('fields.country') }}</label>
                             <div class="col-md-10">
-                                <select id="inputCountry" name="country" class="form-control" v-model="user.country" :placeholder="$t('fields.country')">
+                                <select id="inputCountry" name="country" class="form-control" v-model="user.profile.country" :placeholder="$t('fields.country')">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
                                     <option v-for="c in countriesDDL" :key="c.name">{{ c.name }}</option>
                                 </select>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.country }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.country }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputTaxId" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_id']}" :placeholder="$t('fields.tax_id')" :label="$t('fields.tax_id')" v-model="user.tax_id" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_id']}" :placeholder="$t('fields.tax_id')" :label="$t('fields.tax_id')" v-model="user.profile.tax_id" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="tax_id" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.tax_id }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.tax_id }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputICNum" class="col-2 col-form-label">{{ $t('fields.ic_num') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputICNum" name="ic_num" as="input" :class="{'form-control':true, 'is-invalid': errors['ic_num']}" :placeholder="$t('fields.ic_num')" :label="$t('fields.ic_num')" v-model="user.ic_num" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputICNum" name="ic_num" as="input" :class="{'form-control':true, 'is-invalid': errors['ic_num']}" :placeholder="$t('fields.ic_num')" :label="$t('fields.ic_num')" v-model="user.profile.ic_num" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="ic_num" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.ic_num }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.ic_num }}</div>
                             </div>
                         </div>
+                        <hr/>
                         <div class="form-group row">
                             <label for="inputRoles" class="col-2 col-form-label">{{ $t('fields.roles') }}</label>
                             <div class="col-md-10">
-                                <select multiple class="form-control" id="inputRoles" name="roles[]" size="6" v-model="user.roles" :readonly="this.mode === 'show'">
-                                    <option v-for="(r, rIdx) in rolesDDL" v-bind:value="rIdx">{{ r }}</option>
+                                <select multiple :class="{'form-control':true, 'is-invalid':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <option v-for="(r, rIdx) in rolesDDL" :value="rIdx">{{ r }}</option>
                                 </select>
                                 <ErrorMessage name="roles" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.roles }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                    <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <div>
+                                    <select class="form-control" id="inputStatus" name="status" v-model="user.profile.status" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
+                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
+                                    </select>
+                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                        <span v-if="user.profile.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
+                                        <span v-if="user.profile.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
-                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="user.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="user.profile.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
                                 <ErrorMessage name="remarks" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.remarks }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.remarks }}</div>
                             </div>
                         </div>
                         <hr/>
                         <div class="form-group row">
-                            <label for="inputIsBanned" class="col-2 col-form-label">{{ $t('fields.banned') }}</label>
+                            <label for="inputSettings" class="col-2 col-form-label">{{ $t('fields.settings.settings') }}</label>
                             <div class="col-md-10">
-                                <div class="custom-control custom-radio">
-                                    <input class="custom-control-input" type="radio" name="is_banned" id="inputIsBanned" value="yes" checked="">
-                                    <label class="custom-control-label" for="inputIsBanned">Option 1</label>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>{{ $t('fields.settings.theme') }}</span>
+                                        <select id="selectTheme" class="form-control" name="theme" v-model="user.selectedSettings.theme">
+                                            <option value="corporate">Corporate</option>
+                                            <option value="earth">Earth</option>
+                                            <option value="elegance">Elegance</option>
+                                            <option value="flat">Flat</option>
+                                            <option value="pulse">Pulse</option>
+                                        </select>
+                                        <br/>
+                                    </div>
+                                    <div class="col-6">
+                                        &nbsp;
+                                    </div>
                                 </div>
-                                <ErrorMessage name="is_banned" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.is_banned }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputBannedReason" class="col-2 col-form-label">{{ $t('fields.banned_reason') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputBannedReason" name="banned_reason" as="input" :class="{'form-control':true, 'is-invalid': errors['banned_reason']}" :placeholder="$t('fields.banned_reason')" :label="$t('fields.banned_reason')" v-model="user.banned_reason" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="banned_reason" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.banned_reason }}</div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>{{ $t('fields.settings.dateFormat') }}</span>
+                                        <select id="selectDate" class="form-control" name="dateFormat" v-model="user.selectedSettings.dateFormat">
+                                            <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-d') }}</option>
+                                            <option value="dd_MM_yyy">{{ moment(new Date()).format('d-MMM-yyyy') }}</option>
+                                        </select>
+                                        <br/>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>{{ $t('fields.settings.timeFormat') }}</span>
+                                        <select id="selectTime" class="form-control">
+                                            <option value="hh_mm_ss">{{ moment(new Date()).format('HH:mm:ss') }}</option>
+                                            <option value="h_m A">{{ moment(new Date()).format('h:m A') }}</option>
+                                        </select>
+                                        <br/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -253,11 +290,12 @@
 </template>
 <script>
 import { Form, Field, ErrorMessage, defineRule, configure } from "vee-validate";
-import { required } from '@vee-validate/rules';
+import { required, email } from '@vee-validate/rules';
 import { localize, setLocale } from '@vee-validate/i18n';
 import en from '@vee-validate/i18n/dist/locale/en.json';
 import id from '@vee-validate/i18n/dist/locale/id.json';
-
+import { find } from 'lodash';
+import moment from 'moment';
 
 configure({
     validateOnInput: true,
@@ -267,6 +305,7 @@ configure({
 setLocale(document.documentElement.lang);
 
 defineRule('required', required);
+defineRule('email', email);
 
 export default {
     components: {
@@ -275,7 +314,7 @@ export default {
     setup() {
         const schema = {
             name: 'required',
-            email: 'required',
+            email: 'required|email',
             company_name: 'required',
             tax_id: 'required',
             ic_num: 'required',
@@ -294,11 +333,23 @@ export default {
             userList: { },
             user: {
                 roles: [],
-                country: ''
+                selectedRoles: [],
+                profile: {
+                    country: '',
+                    status: 'ACTIVE',
+                },
+                selectedSettings: {
+                    theme: 'corporate',
+                    dateFormat: '',
+                    timeFormat: ''
+                }
             },
             countriesDDL: [],
             rolesDDL: [],
         }
+    },
+    created() {
+        this.moment = moment;
     },
     mounted() {
         this.mode = 'list';
@@ -323,36 +374,70 @@ export default {
                 this.getAllUser(page);
             }
         },
+        emptyUser() {
+            return {
+                roles: [],
+                selectedRoles: [],
+                profile: {
+                    country: '',
+                    status: 'ACTIVE',
+                },
+                selectedSettings: {
+                    theme: 'corporate',
+                    dateFormat: '',
+                    timeFormat: ''
+                }
+            }
+        },
         createNew() {
             this.mode = 'create';
+            this.user = this.emptyUser();
         },
         editSelected(idx) {
             this.mode = 'edit';
             this.user = this.userList.data[idx];
+            this.setSettings();
         },
         showSelected(idx) {
             this.mode = 'show';
             this.user = this.userList.data[idx];
+            this.setSettings()
         },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/user/save', new FormData($('#roleForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/save', new FormData($('#userForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
-                    console.log(e);
+                    this.handleError(e, actions);
+                    this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/user/edit/' + this.role.hId, new FormData($('#roleForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/edit/' + this.user.hId, new FormData($('#userForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
-                    console.log(e);
+                    this.handleError(e, actions);
+                    this.loading = false;
                 });
             } else { }
+        },
+        handleError(e, actions) {
+            //Laravel Validations
+            if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
+                for (var key in e.response.data.errors) {
+                    for (var i = 0; i < e.response.data.errors[key].length; i++) {
+                        actions.setFieldError(key, e.response.data.errors[key][i]);
+                    }
+                }
+            } else {
+                //Catch From Controller
+                actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
+            }
         },
         backToList() {
             this.mode = 'list';
             this.getAllUser(this.userList.current_page);
+            this.user = this.emptyUser();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -374,8 +459,11 @@ export default {
             axios.get('/api/get/common/countries/read').then(response => {
                 this.countriesDDL = response.data;
             }).catch(e => {
-                console.log(e);
+                console.log(e.message);
             });
+        },
+        resetPassword(email) {
+
         }
     },
     computed: {

@@ -34,9 +34,16 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
+        //throw New \Exception('Test Exception From Controller');
+
+        //return response()->json([
+        //    'message' => 'Test error from JSON HTTP Status 500'
+        //], 500);
+
         $request->validate([
             'name' => 'required|max:255',
-            'display_name' => 'required|max:255'
+            'display_name' => 'required|max:255',
+            'permissions' => 'required',
         ]);
 
         $rolePermissions = [];
@@ -80,13 +87,6 @@ class RoleController extends Controller
             $request['description'],
             $inputtedRolePermissions
         );
-
-        return response()->json();
-    }
-
-    public function delete($id)
-    {
-        $this->roleService->delete($id);
 
         return response()->json();
     }

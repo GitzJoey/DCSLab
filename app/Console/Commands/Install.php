@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\Fortify\CreateNewUser;
+use App\Services\UserService;
+use App\Services\RoleService;
 
-use GuzzleHttp\Promise\Create;
 use Illuminate\Console\Command;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -139,15 +140,29 @@ class Install extends Command
             return false;
         }
 
-        $c = new CreateNewUser();
-        $c->create([
-            'name' => $userName,
-            'email' => $userEmail,
-            'password' => $userPassword,
-            'password_confirmation' => $userPassword,
-            'terms' => 'on',
-            'roles' => $is_dev ? Config::get('const.DEFAULT.ROLE.DEV') : Config::get('const.DEFAULT.ROLE.ADMIN'),
-        ]);
+        $container = Container::getInstance();
+
+        $userService = $container->make(UserService::class);
+        $roleService = $container->make(RoleService::class);
+
+        $rolesId = [];
+        if ($is_dev) {
+            array_push($rolesId, $roleService->getRoleByName(Config::get('const.DEFAULT.ROLE.DEV'))->id);
+        } else {
+            array_push($rolesId, $roleService->getRoleByName(Config::get('const.DEFAULT.ROLE.ADMIN'))->id);
+        }
+
+        $profile = [
+            'first_name' => $userName
+        ];
+
+        $userService->create(
+            $userName,
+            $userEmail,
+            $userPassword,
+            $rolesId,
+            $profile,
+        );
 
         sleep(3);
 

@@ -1,8 +1,14 @@
 import { createApp } from 'vue';
-import { createI18n }from 'vue-i18n';
+import { createI18n } from 'vue-i18n';
 import User from './components/User';
 
-let lang = document.documentElement.lang;
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["Accept"] = "application/json"
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
+
+let language = document.documentElement.lang;
+window.axios.defaults.headers.common['X-localization'] = language;
 
 const messages = {
     en: {
@@ -12,7 +18,7 @@ const messages = {
                 name: 'Name',
                 email: 'Email',
                 roles: 'Roles',
-                banned: 'Banned',
+                company_name: 'Company',
             }
         },
         buttons: {
@@ -24,8 +30,7 @@ const messages = {
             create: 'Create User',
             edit: 'Edit User',
             show: 'Show User',
-            ban: 'Ban User',
-            unban: 'Unban User',
+            reset_password: 'Reset Password',
         },
         fields: {
             name: 'Name',
@@ -38,17 +43,26 @@ const messages = {
             company_name: 'Company Name',
             country: 'Country',
             remarks: 'Remarks',
-            banned: 'Banned',
+            status: 'Status',
             tax_id: 'Tax ID',
             postal_code: 'Postal Code',
             city: 'City',
-            banned_reason: 'Banned Reason',
+            settings: {
+                settings: 'Settings',
+                theme: 'Themes',
+                dateFormat: 'Date Format',
+                timeFormat: 'Time Format',
+            },
         },
         errors: {
             warning: 'Warning',
         },
         placeholder: {
             please_select: 'Please Select',
+        },
+        statusDDL: {
+            active: 'Active',
+            inactive: 'Inactive',
         }
     },
     id: {
@@ -58,7 +72,7 @@ const messages = {
                 name: 'Nama',
                 email: 'Email',
                 roles: 'Peran',
-                banned: 'Terlarang',
+                company_name: 'Perusahaan',
             }
         },
         buttons: {
@@ -70,8 +84,7 @@ const messages = {
             create: 'Tambah Pengguna',
             edit: 'Ubah Pengguna',
             show: 'Tampilkan Pengguna',
-            ban: 'Larang Pengguna',
-            unban: 'Batalkan Larangan',
+            reset_password: 'Reset Password',
         },
         fields: {
             name: 'Nama',
@@ -84,23 +97,32 @@ const messages = {
             company_name: 'Nama Perusahaan',
             country: 'Negara',
             remarks: 'Deskripsi',
-            banned: 'Terlarang',
+            status: 'Status',
             tax_id: 'No NPWP',
             postal_code: 'Kode Pos',
             city: 'Kota',
-            banned_reason: 'Alasan',
+            settings: {
+                settings: 'Pengaturan',
+                theme: 'Tema',
+                dateFormat: 'Format Tanggal',
+                timeFormat: 'Format Waktu',
+            },
         },
         errors: {
             warning: 'Peringatan',
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        statusDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         }
     }
 };
 
 const i18n = createI18n({
-    locale: lang,
+    locale: language,
     fallbackLocale: 'en',
     messages,
 });
