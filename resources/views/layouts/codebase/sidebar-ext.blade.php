@@ -1,4 +1,19 @@
 <li class="{{ active_class(if_route_pattern('db.admin.users.*'), 'open') }}">
+    <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup" class="si si-moustache"></i><span class="">Company</span></a>
+    <ul>
+        <li>
+            <a href="">Companies</a>
+        </li>
+        <li>
+            <a href="">Branches</a>
+        </li>
+        <li>
+            <a href="">Warehouses</a>
+        </li>
+    </ul>
+</li>
+
+<li class="{{ active_class(if_route_pattern('db.admin.users.*'), 'open') }}">
     <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup" class="si si-moustache"></i><span class="">Finance</span></a>
     <ul>
         <li>
