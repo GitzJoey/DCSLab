@@ -55,7 +55,7 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'user'], function () {
             Route::post('save', [UserController::class, 'store'])->name('api.post.admin.user.save');
             Route::post('edit/{id}', [UserController::class, 'update'])->name('api.post.admin.user.edit');
-            Route::post('ban/{id}', [UserController::class, 'ban'])->name('api.post.admin.user.ban');
+            Route::post('reset/pswd/{id}', [UserController::class, 'resetPassword'])->name('api.post.admin.user.reset_pwd');
         });
     });
 });

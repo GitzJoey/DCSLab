@@ -42,7 +42,7 @@ class CreateSalesCustomerGroupsTable extends Migration
             $table->integer('round_digit')->nullable();
             $table->string('remarks')->nullable();
 
-            $table->integer('finance_cash_id')->nullable();
+			$table->foreignId('finance_cash_id')->references('id')->on('finance_cashes')->onUpdate('cascade')->onDelete('restrict');;
 
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);

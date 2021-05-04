@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\sameEmail;
 use Illuminate\Http\Request;
 
 use App\Services\UserService;
 use App\Services\RoleService;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Vinkla\Hashids\Facades\Hashids;
 
 class UserController extends Controller
 {
@@ -37,94 +42,110 @@ class UserController extends Controller
 
     public function getAllRoles()
     {
-        $roles = $this->roleService->readRoles(false);
+        $withDefaultRole = Auth::user()->hasRole([
+            Config::get('const.DEFAULT.ROLE.ADMIN'),
+            Config::get('const.DEFAULT.ROLE.DEV')
+        ]);
+
+        $roles = $this->roleService->readRoles($withDefaultRole);
         return $roles;
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'company_name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
             'name' => 'required',
+            'email' => 'required|email|max:255|unique:users',
+            'company_name' => 'required|max:255',
             'roles' => 'required',
             'tax_id' => 'required',
             'ic_num' => 'required',
         ]);
 
-        $name = trim($request['first_name'] . ' ' . $request['last_name'], " ");
-        $profile = [];
-        $pic_phone = [];
-
-        for ($j = 0; $j < count($request['phone_provider_id']); $j++) {
-            array_push($pic_phone, array(
-                'phone_provider_id' => Hashids::decode($request['phone_provider_id'][$j])[0],
-                'number' => $request['phone_number'][$j],
-                'remarks' => $request['remarks'][$j]
-            ));
-        }
-
-        array_push($profile, array (
+        $profile = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
+            'company_name' => $request['company_name'],
             'address' => $request['address'],
+            'city' => $request['city'],
+            'postal_code' => $request['postal_code'],
+            'country' => $request['country'],
+            'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
-            'phone_numbers' => $pic_phone
-        ));
+            'remarks' => $request['remarks'],
+        );
 
-        $rolesId = Hashids::decode($request['roles'])[0];
+        $setting = $this->userService->createDefaultSetting();
 
-        $this->userService->create(
-            $name,
+        $rolesId = [];
+        foreach ($request['roles'] as $r) {
+            array_push($rolesId, Hashids::decode($r)[0]);
+        }
+
+        $result = $this->userService->create(
+            $request['name'],
             $request['email'],
             $request['password'],
             $rolesId,
-            Auth::user()->company->id,
-            $request['active'],
             $profile
         );
+
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function update($id, Request $request)
     {
         $request->validate([
-            'first_name' => 'required|max:255',
-            'email' => 'required|email|max:255',
+            'name' => 'required',
+            'email' => new sameEmail($id),
+            'company_name' => 'required|max:255',
             'roles' => 'required',
-            'company' => 'required',
+            'tax_id' => 'required',
+            'ic_num' => 'required',
         ]);
 
-        $name = trim($request['first_name'] . ' ' . $request['last_name'], " ");
-        $profile = [];
-        $pic_phone = [];
+        $setting = [];
 
-        for ($j = 0; $j < count($request['phone_provider_id']); $j++) {
-            array_push($pic_phone, array(
-                'phone_provider_id' => Hashids::decode($request['phone_provider_id'][$j])[0],
-                'number' => $request['phone_number'][$j],
-                'remarks' => $request['remarks'][$j]
-            ));
-        }
-
-        array_push($profile, array (
+        $profile = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
+            'company_name' => $request['company_name'],
             'address' => $request['address'],
+            'city' => $request['city'],
+            'postal_code' => $request['postal_code'],
+            'country' => $request['country'],
+            'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
-            'phone_numbers' => $pic_phone
-        ));
+            'status' => $request['status'],
+            'remarks' => $request['remarks'],
+        );
 
-        $rolesId = Hashids::decode($request['roles'])[0];
+        $rolesId = [];
+        foreach ($request['roles'] as $r) {
+            array_push($rolesId, Hashids::decode($r)[0]);
+        }
 
         $this->userService->update(
             $id,
-            $name,
-            $request['email'],
-            $request['password'],
+            $request['name'],
             $rolesId,
-            $request['active'],
-            Auth::user()->company->id,
-            $profile
+            $profile,
+            $setting
         );
+    }
+
+    public function resetPassword($id)
+    {
+        $usr = $this->userService->getUserById($id);
+
+        $this->userService->resetPassword($usr['email']);
     }
 }

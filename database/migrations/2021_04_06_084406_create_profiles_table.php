@@ -15,7 +15,7 @@ class CreateProfilesTable extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('company_name')->nullable();
@@ -24,13 +24,10 @@ class CreateProfilesTable extends Migration
             $table->string('postal_code')->nullable();
             $table->string('country')->nullable();
             $table->string('tax_id')->nullable();
-            $table->string('ic_number')->nullable();
+            $table->string('ic_num')->nullable();
             $table->string('img_path')->nullable();
+            $table->string('status')->nullable();
             $table->string('remarks')->nullable();
-            $table->boolean('is_banned')->nullable();
-            $table->string('banned_reason')->nullable();
-            $table->dateTime('banned_at')->nullable();
-            $table->bigInteger('banned_by')->nullable();
             $table->timestamps();
         });
     }
