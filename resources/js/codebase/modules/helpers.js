@@ -668,6 +668,7 @@ export default class Helpers {
      * Please check out the Gallery page in Components for complete markup examples
      *
      */
+    /*
     static magnific() {
         // Gallery init (with .js-gallery class)
         jQuery('.js-gallery:not(.js-gallery-enabled)').each((index, element) => {
@@ -681,7 +682,7 @@ export default class Helpers {
             });
         });
     }
-
+    */
     /*
      * Summernote init, for more examples you can check out https://summernote.org/
      *
@@ -759,6 +760,7 @@ export default class Helpers {
      * <div id="js-ckeditor5-inline">Hello inline CKEditor 5!</div>
      *
      */
+
     static ckeditor5() {
         // Init inline text editor
         if (jQuery('#js-ckeditor5-inline:not(.js-ckeditor5-inline-enabled)').length) {
@@ -801,6 +803,7 @@ export default class Helpers {
      * <textarea class="js-simplemde" id="simplemde" name="simplemde">Hello SimpleMDE!</textarea>
      *
      */
+    /*
     static simpleMDE() {
         // Init markdown editor (with .js-simplemde class)
         jQuery('.js-simplemde:not(.js-simplemde-enabled)').each((index, element) => {
@@ -813,6 +816,7 @@ export default class Helpers {
             new SimpleMDE({ element: el[0], autoDownloadFontAwesome: false });
         });
     }
+    */
 
     /*
      * Slick init, for more examples you can check out http://kenwheeler.github.io/slick/
@@ -828,6 +832,7 @@ export default class Helpers {
      * </div>
      *
      */
+    /*
     static slick() {
         // Init slider (with .js-slider class)
         jQuery('.js-slider:not(.js-slider-enabled)').each((index, element) => {
@@ -846,6 +851,7 @@ export default class Helpers {
             });
         });
     }
+    */
 
     /*
      * Bootstrap Datepicker init, for more examples you can check out https://github.com/eternicode/bootstrap-datepicker
@@ -857,6 +863,7 @@ export default class Helpers {
      * <input type="text" class="js-datepicker form-control">
      *
      */
+    /*
     static datepicker() {
         // Init datepicker (with .js-datepicker and .input-daterange class)
         jQuery('.js-datepicker:not(.js-datepicker-enabled)').add('.input-daterange:not(.js-datepicker-enabled)').each((index, element) => {
@@ -871,6 +878,7 @@ export default class Helpers {
             });
         });
     }
+    */
 
     /*
      * Bootstrap Colorpicker init, for more examples you can check out https://github.com/itsjavi/bootstrap-colorpicker/
@@ -882,6 +890,7 @@ export default class Helpers {
      * <input type="text" class="js-colorpicker form-control" value="#db4a39">
      *
      */
+    /*
     static colorpicker() {
         // Init colorpicker (with .js-colorpicker class)
         jQuery('.js-colorpicker:not(.js-colorpicker-enabled)').each((index, element) => {
@@ -889,7 +898,7 @@ export default class Helpers {
             jQuery(element).addClass('js-colorpicker-enabled').colorpicker();
         });
     }
-
+    */
     /*
      * Tags Inputs, for more examples you can check out https://github.com/xoxco/jQuery-Tags-Input
      *
@@ -900,6 +909,7 @@ export default class Helpers {
      * <input type="text" class="js-tags-input form-control" data-height="34px" value="tag1,tag2,tag3">
      *
      */
+    /*
     static tagsInputs() {
         // Init Tags Inputs (with .js-tags-input class)
         jQuery('.js-tags-input:not(.js-tags-input-enabled)').each((index, element) => {
@@ -915,7 +925,7 @@ export default class Helpers {
             });
         });
     }
-
+    */
     /*
      * Masked Inputs, for more examples you can check out https://github.com/digitalBush/jquery.maskedinput
      *
@@ -926,6 +936,7 @@ export default class Helpers {
      * Please check out the Form plugins page for complete markup examples
      *
      */
+    /*
     static maskedInputs() {
         // Init Masked Inputs
         // a - Represents an alpha character (A-Z,a-z)
@@ -950,6 +961,7 @@ export default class Helpers {
             .add('.js-masked-time')
             .addClass('js-masked-enabled');
     }
+    */
 
     /*
      * Select2, for more examples you can check out https://github.com/select2/select2
@@ -966,6 +978,7 @@ export default class Helpers {
      * </select>
      *
      */
+    /*
     static select2() {
         // Init Select2 (with .js-select2 class)
         jQuery('.js-select2:not(.js-select2-enabled)').each((index, element) => {
@@ -977,6 +990,7 @@ export default class Helpers {
             });
         });
     }
+    */
 
     /*
      * Highlight.js, for more examples you can check out https://highlightjs.org/usage/
@@ -1117,6 +1131,7 @@ export default class Helpers {
      * </div>
      *
      */
+    /*
     static easyPieChart() {
         // Init Easy Pie Charts (with .js-pie-chart class)
         jQuery('.js-pie-chart:not(.js-pie-chart-enabled)').each((index, element) => {
@@ -1133,6 +1148,7 @@ export default class Helpers {
             });
         });
     }
+    */
 
     /*
      * Bootstrap Maxlength, for more examples you can check out https://github.com/mimo84/bootstrap-maxlength
@@ -1173,6 +1189,7 @@ export default class Helpers {
      * <input type="text" class="js-rangeslider form-control" value="50">
      *
      */
+    /*
     static rangeslider() {
         // Init Ion Range Slider (with .js-rangeslider class)
         jQuery('.js-rangeslider:not(.js-rangeslider-enabled)').each((index, element) => {
@@ -1185,6 +1202,7 @@ export default class Helpers {
             });
         });
     }
+    */
 
     /*
      * Flatpickr init, for more examples you can check out https://github.com/flatpickr/flatpickr
@@ -1196,6 +1214,7 @@ export default class Helpers {
      * <input type="text" class="js-flatpickr form-control">
      *
      */
+    /*
     static flatpickr() {
         // Init Flatpickr (with .js-flatpickr class)
         jQuery('.js-flatpickr:not(.js-flatpickr-enabled)').each((index, element) => {
@@ -1208,4 +1227,5 @@ export default class Helpers {
             flatpickr(el, {});
         });
     }
+    */
 }

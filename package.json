@@ -33,6 +33,7 @@
         "jquery.appear": "^1.0.1",
         "js-cookie": "^2.2.1",
         "magnific-popup": "^1.1.0",
+        "moment": "^2.29.1",
         "simple-line-icons": "^2.5.5",
         "simplebar": "^5.3.2",
         "vee-validate": "^4.3.4",

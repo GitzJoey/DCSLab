@@ -18,7 +18,7 @@ class CreateSalesCustomersTable extends Migration
             $table->string('code');
             $table->string('name')->nullable();
 
-            $table->string('sales_customer_group_id')->nullable();
+            $table->foreignId('sales_customer_group_id')->references('id')->on('sales_customer_groups')->onUpdate('cascade')->onDelete('restrict');;
             $table->string('sales_territory')->nullable();
 
             $table->integer('use_limit_outstanding_notes')->nullable();

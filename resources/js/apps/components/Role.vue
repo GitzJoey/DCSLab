@@ -10,7 +10,7 @@
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
                     <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
                 </button>
-                <button type="button" class="btn-block-option" v-on:click="refreshList">
+                <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list'">
                     <i class="icon icon-refresh"></i>
                 </button>
                 <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
@@ -108,9 +108,10 @@
                         <div class="form-group row">
                             <label for="inputPermissions" class="col-2 col-form-label">{{ $t('fields.permissions') }}</label>
                             <div class="col-md-10">
-                                <select multiple class="form-control" id="inputPermissions" name="permissions[]" size="25" v-model="role.selectedPermissionIds" :readonly="this.mode === 'show'">
+                                <select multiple :class="{'form-control':true, 'is-invalid':errors['permissions']}" id="inputPermissions" name="permissions[]" size="25" v-model="role.selectedPermissionIds" :readonly="this.mode === 'show'">
                                     <option v-for="(p, pIdx) in permissionsDDL" v-bind:value="p.hId">{{ p.display_name }}</option>
                                 </select>
+                                <ErrorMessage name="permissions" class="invalid-feedback" />
                             </div>
                         </div>
                         <div class="form-group row">
@@ -143,6 +144,7 @@ import { required } from '@vee-validate/rules';
 import { localize, setLocale } from '@vee-validate/i18n';
 import en from '@vee-validate/i18n/dist/locale/en.json';
 import id from '@vee-validate/i18n/dist/locale/id.json';
+import { map } from 'lodash';
 
 configure({
     validateOnInput: true,
@@ -213,12 +215,12 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.role = this.roleList.data[idx];
-            this.role.selectedPermissionIds = _.map(this.roleList.data[idx].permissions, 'hId');
+            this.role.selectedPermissionIds = map(this.roleList.data[idx].permissions, 'hId');
         },
         showSelected(idx) {
             this.mode = 'show';
             this.role = this.roleList.data[idx];
-            this.role.selectedPermissionIds = _.map(this.roleList.data[idx].permissions, 'hId');
+            this.role.selectedPermissionIds = map(this.roleList.data[idx].permissions, 'hId');
         },
         onSubmit(values, actions) {
             this.loading = true;
@@ -226,15 +228,30 @@ export default {
                 axios.post('/api/post/admin/role/save', new FormData($('#roleForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
-                    console.log(e);
+                    this.handleError(e, actions);
+                    this.loading = false;
                 });
             } else if (this.mode === 'edit') {
                 axios.post('/api/post/admin/role/edit/' + this.role.hId, new FormData($('#roleForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
-                    console.log(e);
+                    this.handleError(e, actions);
+                    this.loading = false;
                 });
             } else { }
+        },
+        handleError(e, actions) {
+            //Laravel Validations
+            if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
+                for (var key in e.response.data.errors) {
+                    for (var i = 0; i < e.response.data.errors[key].length; i++) {
+                        actions.setFieldError(key, e.response.data.errors[key][i]);
+                    }
+                }
+            } else {
+                //Catch From Controller
+                actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
+            }
         },
         backToList() {
             this.mode = 'list';

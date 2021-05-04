@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateWarehousesTable extends Migration
+class CreateBranchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,17 @@ class CreateWarehousesTable extends Migration
      */
     public function up()
     {
-        Schema::create('warehouses', function (Blueprint $table) {
+        Schema::create('branches', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('company_id')->default(0);
-            $table->string('name')->nullable();
+            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');;
+            $table->string('code');
+            $table->string('name')->nullable();           
             $table->string('address')->nullable();
-            $table->string('phone_num')->nullable();
-            $table->string('status')->nullable();
+            $table->string('city')->nullable();
+            $table->string('contact')->nullable();
             $table->string('remarks')->nullable();
+			$table->integer('is_active')->nullable();
+
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
@@ -36,6 +39,6 @@ class CreateWarehousesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('warehouses');
+        Schema::dropIfExists('branches');
     }
 }
