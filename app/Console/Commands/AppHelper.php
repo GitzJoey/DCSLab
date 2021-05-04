@@ -49,35 +49,47 @@ class AppHelper extends Command
             return false;
         }
 
-        $this->info('Available Helper:');
-        $this->info('[1] Truncate All Master Data');
-        $this->info('[2] Truncate All Transactions');
-        $this->info('[3] Update Composer And NPM');
-        $this->info('[4] Clear All Cache');
-        $this->info('[5] Change User Roles');
+        $loop = true;
 
-        $choose = $this->ask('Choose Helper');
+        while($loop)
+        {
+            $this->info('Available Helper:');
+            $this->info('[1] Truncate All Master Data');
+            $this->info('[2] Truncate All Transactions');
+            $this->info('[3] Update Composer And NPM');
+            $this->info('[4] Clear All Cache');
+            $this->info('[5] Change User Roles');
+            $this->info('[X] Exit');
 
-        switch ($choose) {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                $this->updateComposerAndNPM();
-                break;
-            case 4:
-                $this->clearCache();
-                break;
-            case 5:
-                $this->changeUserRoles();
-                break;
-            default:
-                break;
+            $choose = $this->ask('Choose Helper','X');
+
+            switch (strtoupper($choose)) {
+                case 1:
+                    $this->info('Done!');
+                    break;
+                case 2:
+                    $this->info('Done!');
+                    break;
+                case 3:
+                    $this->updateComposerAndNPM();
+                    $this->info('Done!');
+                    break;
+                case 4:
+                    $this->clearCache();
+                    $this->info('Done!');
+                    break;
+                case 5:
+                    $this->changeUserRoles();
+                    $this->info('Done!');
+                    break;
+                case 'X':
+                default:
+                    $loop = false;
+                    break;
+            }
+            sleep(3);
         }
-
-        sleep(3);
-        $this->info('Done!');
+        $this->info('Bye!');
     }
 
     private function changeUserRoles()

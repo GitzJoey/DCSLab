@@ -2,24 +2,54 @@ import { createApp } from 'vue';
 import { createI18n }from 'vue-i18n';
 import Profile from './components/Profile';
 
-let lang = document.documentElement.lang;
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["Accept"] = "application/json"
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
+
+let language = document.documentElement.lang;
+window.axios.defaults.headers.common['X-localization'] = language;
 
 const messages = {
     en: {
+        title: 'Your Profile',
         buttons: {
             update: 'Update',
         },
         fields: {
+            name: 'Name',
+            first_name: 'First Name',
+            last_name: 'Last Name',
+            address: 'Address',
+            city: 'City',
+            postal_code: 'Postal Code',
+            country: 'Country',
+            tax_id: 'Tax ID',
+            remarks: 'Remarks',
+            email: 'Email',
+            ic_num: 'IC No.',
         },
         errors: {
             warning: 'Warning',
         }
     },
     id: {
+        title: 'Profil Kamu',
         buttons: {
             update: 'Update',
         },
         fields: {
+            name: 'Nama',
+            first_name: 'Nama Depan',
+            last_name: 'Nama Keluarga',
+            address: 'Alamat',
+            city: 'Kota',
+            postal_code: 'Kode Pos',
+            country: 'Negara',
+            tax_id: 'NPWP',
+            remarks: 'Keterangan',
+            email: 'Email',
+            ic_num: 'KTP',
         },
         errors: {
             warning: 'Peringatan',
@@ -28,11 +58,11 @@ const messages = {
 };
 
 const i18n = createI18n({
-    locale: lang,
+    locale: language,
     fallbackLocale: 'en',
     messages,
 });
 
 createApp(Profile)
     .use(i18n)
-    .mount('#roleVue')
+    .mount('#profileVue')

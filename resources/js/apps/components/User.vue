@@ -112,9 +112,11 @@
                         <div class="form-group row">
                             <label for="inputImg" class="col-2 col-form-label"></label>
                             <div class="col-md-10">
-                                <img class="img" src="/images/def-user.png"/>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input js-custom-file-input-enabled" id="inputImg" name="img_path" data-toggle="custom-file-input" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                <div class="push">
+                                    <img class="img-avatar" :src="retrieveImage">
+                                </div>
+                                <div :class="{'custom-file':true, 'd-none':this.mode === 'show'}">
+                                    <input type="file" class="custom-file-input" id="inputImg" name="img_path" data-toggle="custom-file-input" v-if="this.mode === 'create' || this.mode === 'edit'" v-on:change="handleUpload">
                                     <label class="custom-file-label" for="inputImg">Choose file</label>
                                 </div>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.first_name }}</div>
@@ -166,7 +168,7 @@
                         <div class="form-group row">
                             <label for="inputCountry" class="col-2 col-form-label">{{ $t('fields.country') }}</label>
                             <div class="col-md-10">
-                                <select id="inputCountry" name="country" class="form-control" v-model="user.profile.country" :placeholder="$t('fields.country')">
+                                <select id="inputCountry" name="country" class="form-control" v-model="user.profile.country" :placeholder="$t('fields.country')" v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
                                     <option v-for="c in countriesDDL" :key="c.name">{{ c.name }}</option>
                                 </select>
@@ -249,8 +251,8 @@
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.dateFormat') }}</span>
                                         <select id="selectDate" class="form-control" name="dateFormat" v-model="user.selectedSettings.dateFormat">
-                                            <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-d') }}</option>
-                                            <option value="dd_MM_yyy">{{ moment(new Date()).format('d-MMM-yyyy') }}</option>
+                                            <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-DD') }}</option>
+                                            <option value="dd_MMM_yyyy">{{ moment(new Date()).format('DD-MMM-yyyy') }}</option>
                                         </select>
                                         <br/>
                                     </div>
@@ -379,13 +381,14 @@ export default {
                 roles: [],
                 selectedRoles: [],
                 profile: {
+                    img_path: '',
                     country: '',
                     status: 'ACTIVE',
                 },
                 selectedSettings: {
                     theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
+                    dateFormat: 'yyyy_MM_dd',
+                    timeFormat: 'hh_mm_ss'
                 }
             }
         },
@@ -406,14 +409,22 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/user/save', new FormData($('#userForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/save', new FormData($('#userForm')[0]), {
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                }).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/user/edit/' + this.user.hId, new FormData($('#userForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/edit/' + this.user.hId, new FormData($('#userForm')[0]), {
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                }).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -433,6 +444,17 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
+        },
+        handleUpload(e) {
+            const files = e.target.files;
+
+            let filename = files[0].name;
+
+            const fileReader = new FileReader()
+            fileReader.addEventListener('load', () => {
+                this.user.profile.img_path = fileReader.result
+            })
+            fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
@@ -471,6 +493,18 @@ export default {
             if (this.userList.current_page == null) return 0;
 
             return Math.ceil(this.userList.total / this.userList.per_page);
+        },
+        retrieveImage()
+        {
+            if (this.user.profile.img_path && this.user.profile.img_path !== '') {
+                if (this.user.profile.img_path.includes('data:image')) {
+                    return this.user.profile.img_path;
+                } else {
+                    return '/storage/' + this.user.profile.img_path;
+                }
+            } else {
+                return '/images/def-user.png';
+            }
         }
     }
 }

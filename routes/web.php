@@ -46,7 +46,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('', [DashboardController::class, 'index'])->name('db');
         Route::get('profile', [DashboardController::class, 'profile'])->name('db.profile');
-        Route::get('settings', [DashboardController::class, 'settings'])->name('db.settings');
+        Route::get('inbox', [DashboardController::class, 'inbox'])->name('db.inbox');
+        Route::get('activity', [DashboardController::class, 'activity'])->name('db.activity');
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product_groups');
@@ -57,7 +58,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::group(['prefix' => 'finance'], function () {
             Route::get('cashs', [FinanceCashController::class, 'index'])->name('db.finance_cashs');
         });
-        
+
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');
 
         Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|dev']],function() {
@@ -80,5 +81,5 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
                 Route::get('ex5', [DevController::class, 'ex5'])->name('db.dev.examples.ex5');
             });
         });
-    });   
+    });
 });

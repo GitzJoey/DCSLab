@@ -24,17 +24,14 @@ class ProfileFactory extends Factory
         return [
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
-            'company_name' => $this->faker->company(),
             'address' => $this->faker->address(),
             'city' => $this->faker->city(),
             'postal_code' => $this->faker->postcode(),
             'country' => $this->faker->country(),
             'tax_id' => $this->faker->randomDigit(),
-            'ic_number' => $this->faker->randomDigit(),
+            'ic_num' => $this->faker->randomDigit(),
             'img_path' => '',
-            'is_banned' => false,
-            'banned_reason' => null,
-            'banned_at' => null,
+            'status' => 'INACTIVE',
             'remarks' => $this->faker->catchPhrase(),
         ];
     }
@@ -45,17 +42,14 @@ class ProfileFactory extends Factory
 
         $profile->first_name = $first_name;
         $profile->last_name = $this->faker->lastName();
-        $profile->company_name = $this->faker->company();
         $profile->address = $this->faker->address();
         $profile->city = $this->faker->city();
         $profile->postal_code = $this->faker->postcode();
         $profile->country = $this->faker->country();
         $profile->tax_id = $this->faker->randomDigit();
-        $profile->ic_number = $this->faker->randomDigit();
+        $profile->ic_num = $this->faker->randomDigit();
         $profile->img_path = '';
-        $profile->is_banned = false;
-        $profile->banned_reason = null;
-        $profile->banned_at = null;
+        $profile->status = 'INACTIVE';
         $profile->remarks = $this->faker->catchPhrase();
 
         return $profile;
