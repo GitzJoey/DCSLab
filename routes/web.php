@@ -10,8 +10,7 @@ use App\Http\Controllers\FinanceCashController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductUnitController;
-
-
+use App\Http\Controllers\SalesCustomerGroupController;
 use Vinkla\Hashids\Facades\Hashids;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -55,7 +54,11 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         });
 
         Route::group(['prefix' => 'finance'], function () {
-            Route::get('cashs', [FinanceCashController::class, 'index'])->name('db.finance_cashs');
+            Route::get('cashes', [FinanceCashController::class, 'index'])->name('db.finance_cashes');
+        });
+
+        Route::group(['prefix' => 'sales'], function () {
+            Route::get('customer groups', [SalesCustomerGroupController::class, 'index'])->name('db.sales_customer_groups');
         });
         
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');

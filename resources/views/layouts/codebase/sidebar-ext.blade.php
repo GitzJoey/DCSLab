@@ -2,7 +2,7 @@
     <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup" class="si si-moustache"></i><span class="">Finance</span></a>
     <ul>
         <li>
-            <a href="{{route('db.finance_cashs')}}">Cashes</a>
+            <a href="{{route('db.finance_cashes')}}">Cashes</a>
         </li>
     </ul>
 </li>
@@ -29,10 +29,10 @@
     <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup" class="si si-moustache"></i><span class="">Sales</span></a>
     <ul>
         <li>
-            <a href="">Customer Group</a>
+            <a href="{{route('db.sales_customer_groups')}}">Customer Groups</a>
         </li>
         <li>
-            <a href="">Customer</a>
+            <a href="">Customers</a>
         </li>
     </ul>
 </li>

@@ -10,6 +10,8 @@ use App\Services\RoleService;
 use App\Services\FinanceCashService;
 use App\Services\ProductGroupService;
 use App\Services\ProductBrandService;
+use App\Services\SalesCustomerGroupService;
+
 
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
@@ -17,6 +19,7 @@ use App\Services\Impls\RoleServiceImpl;
 use App\Services\Impls\FinanceCashServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductBrandServiceImpl;
+use App\Services\Impls\SalesCustomerGroupServiceImpl;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,6 +48,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(FinanceCashService::class, function (){
             return new FinanceCashServiceImpl();
+        });
+
+        $this->app->singleton(SalesCustomerGroupService::class, function (){
+            return new SalesCustomerGroupServiceImpl();
         });
     }
 
