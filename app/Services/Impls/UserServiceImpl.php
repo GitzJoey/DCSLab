@@ -79,7 +79,6 @@ class UserServiceImpl implements UserService
             $usr->save();
 
             $pa = new Profile();
-            $pa->status = 'ACTIVE';
 
             $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:'';
             $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:'';
@@ -89,6 +88,8 @@ class UserServiceImpl implements UserService
             $pa->country = array_key_exists('country', $profile) ? $profile['country']:'';
             $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:'';
             $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:'';
+            $pa->status = array_key_exists('status', $profile) ? $profile['status']:'';
+            $pa->img_path = array_key_exists('img_path', $profile) ? $profile['img_path']:'';
             $pa->remarks = array_key_exists('remarks', $profile) ? $profile['remarks']:'';
 
             $usr->profile()->save($pa);
@@ -151,6 +152,7 @@ class UserServiceImpl implements UserService
                     'status' => $profile['status'],
                     'tax_id' => $profile['tax_id'],
                     'ic_num' => $profile['ic_num'],
+                    'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$pa->img_path,
                     'remarks' => $profile['remarks']
                 ]);
             }
@@ -177,6 +179,42 @@ class UserServiceImpl implements UserService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
+
+    public function updateProfile($id, $profile)
+    {
+        DB::beginTransaction();
+
+        try {
+            $retval = 0;
+
+            $usr = User::find($id);
+
+            if ($profile != null) {
+                $pa = $usr->profile()->first();
+
+                $retval += $pa->update([
+                    'first_name' => $profile['first_name'],
+                    'last_name' => $profile['last_name'],
+                    'address' => $profile['address'],
+                    'city' => $profile['city'],
+                    'postal_code' => $profile['postal_code'],
+                    'tax_id' => $profile['tax_id'],
+                    'ic_num' => $profile['ic_num'],
+                    'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$pa->img_path,
+                    'remarks' => $profile['remarks']
+                ]);
+            }
+
+            DB::commit();
+
+            return $retval;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
+    }
+
 
     public function resetPassword($email)
     {
@@ -215,7 +253,7 @@ class UserServiceImpl implements UserService
 
     public function getUserById($id)
     {
-        return User::find($id);
+        return User::with('profile')->find($id);
     }
 
     public function getUserByEmail($email)

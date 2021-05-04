@@ -1,7 +1,7 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('settings.title') }}
+    {{ __('activity.title') }}
 @endsection
 
 @section('content')

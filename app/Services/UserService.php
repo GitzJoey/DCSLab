@@ -33,6 +33,11 @@ interface UserService
         $settings
     );
 
+    public function updateProfile(
+        $id,
+        $profile
+    );
+
     public function resetPassword($email);
 
     public function resetToken($id, $tokenType);

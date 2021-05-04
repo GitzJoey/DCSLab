@@ -22,7 +22,7 @@ class Profile extends Model
         'country',
         'status',
         'tax_id',
-        'ic_number',
+        'ic_num',
         'img_path',
         'remarks',
     ];

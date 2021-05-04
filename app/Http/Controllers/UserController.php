@@ -70,10 +70,17 @@ class UserController extends Controller
             'country' => $request['country'],
             'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
+            'status' => $request['status'],
             'remarks' => $request['remarks'],
         );
 
-        $setting = $this->userService->createDefaultSetting();
+        if ($request->hasFile('img_path')) {
+            $image = $request->file('img_path');
+            $filename = time().".".$image->getClientOriginalExtension();
+
+            $file = $image->storePubliclyAs('usr', $filename, 'public');
+            $profile['img_path'] = $file;
+        }
 
         $rolesId = [];
         foreach ($request['roles'] as $r) {
@@ -109,8 +116,6 @@ class UserController extends Controller
             'ic_num' => 'required',
         ]);
 
-        $setting = [];
-
         $profile = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
@@ -134,6 +139,14 @@ class UserController extends Controller
             'PREFS.DATE_FORMAT' => $request['dateFormat'],
             'PREFS.TIME_FORMAT' => $request['timeFormat'],
         ];
+
+        if ($request->hasFile('img_path')) {
+            $image = $request->file('img_path');
+            $filename = time().".".$image->getClientOriginalExtension();
+
+            $file = $image->storePubliclyAs('usr', $filename, 'public');
+            $profile['img_path'] = $file;
+        }
 
         $result = $this->userService->update(
             $id,
