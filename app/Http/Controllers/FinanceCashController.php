@@ -21,7 +21,7 @@ class FinanceCashController extends Controller
     {
         $test = $this->read();
 
-        return view('finance.cashs.index', compact('test'));
+        return view('finance.cashes.index', compact('test'));
     }
 
     public function read()
