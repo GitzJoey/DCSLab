@@ -2,13 +2,13 @@
     <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup" class="si si-moustache"></i><span class="">Company</span></a>
     <ul>
         <li>
-            <a href="">Companies</a>
+            <a href="{{route('db.company_companies')}}">Companies</a>
         </li>
         <li>
-            <a href="">Branches</a>
+            <a href="{{route('db.company_branches')}}">Branches</a>
         </li>
         <li>
-            <a href="">Warehouses</a>
+            <a href="{{route('db.company_warehouses')}}">Warehouses</a>
         </li>
     </ul>
 </li>
