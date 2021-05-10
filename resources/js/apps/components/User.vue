@@ -226,13 +226,18 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.theme') }}</span>
-                                        <select id="selectTheme" class="form-control" name="theme" v-model="user.selectedSettings.theme">
+                                        <select id="selectTheme" class="form-control" name="theme" v-model="user.selectedSettings.theme" v-if="this.mode === 'create' || this.mode === 'edit'">
                                             <option value="corporate">Corporate</option>
                                             <option value="earth">Earth</option>
                                             <option value="elegance">Elegance</option>
                                             <option value="flat">Flat</option>
                                             <option value="pulse">Pulse</option>
                                         </select>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'corporate'">Corporate</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'earth'">Earth</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'elegance'">Elegance</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'flat'">Flat</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'pulse'">Pulse</div>
                                         <br/>
                                     </div>
                                     <div class="col-6">
@@ -242,18 +247,22 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.dateFormat') }}</span>
-                                        <select id="selectDate" class="form-control" name="dateFormat" v-model="user.selectedSettings.dateFormat">
+                                        <select id="selectDate" class="form-control" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-if="this.mode === 'create' || this.mode === 'edit'">
                                             <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-DD') }}</option>
                                             <option value="dd_MMM_yyyy">{{ moment(new Date()).format('DD-MMM-yyyy') }}</option>
                                         </select>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.dateFormat === 'yyyy_MM_dd'">{{ moment(new Date()).format('yyyy-MM-DD') }}</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.dateFormat === 'dd_MMM_yyyy'">{{ moment(new Date()).format('DD-MMM-yyyy') }}</div>
                                         <br/>
                                     </div>
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.timeFormat') }}</span>
-                                        <select id="selectTime" class="form-control" name="timeFormat" v-model="user.selectedSettings.timeFormat">
+                                        <select id="selectTime" class="form-control" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-if="this.mode === 'create' || this.mode === 'edit'">
                                             <option value="hh_mm_ss">{{ moment(new Date()).format('HH:mm:ss') }}</option>
-                                            <option value="h_m A">{{ moment(new Date()).format('h:m A') }}</option>
+                                            <option value="h_m_A">{{ moment(new Date()).format('h:m A') }}</option>
                                         </select>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.timeFormat === 'hh_mm_ss'">{{ moment(new Date()).format('HH:mm:ss') }}</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.timeFormat === 'h_m_A'">{{ moment(new Date()).format('h:m A') }}</div>
                                         <br/>
                                     </div>
                                 </div>

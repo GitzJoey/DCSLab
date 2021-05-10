@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class Profile extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table="profiles";
 
@@ -26,6 +27,23 @@ class Profile extends Model
         'img_path',
         'remarks',
     ];
+
+    protected static $logAttributes = [
+        'first_name',
+        'last_name',
+        'company_name',
+        'address',
+        'city',
+        'postal_code',
+        'country',
+        'status',
+        'tax_id',
+        'ic_num',
+        'img_path',
+        'remarks',
+    ];
+
+    protected static $logOnlyDirty = true;
 
     protected $hidden = [
         'id',

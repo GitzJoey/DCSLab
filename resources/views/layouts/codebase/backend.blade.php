@@ -16,7 +16,7 @@
 
         @yield('css_before')
 
-        <link rel="stylesheet" id="css-main" href="{{ mix('/css/codebase/codebase.css') }}">
+        <link rel="stylesheet" id="css-main" href="{{ mix('css/codebase/codebase.css') }}">
 
         @if (\Illuminate\Support\Facades\Auth::user()->getSetting('THEME.CODEBASE') == 'corporate')
             <link rel="stylesheet" id="css-theme" href="{{ asset('css/codebase/themes/corporate.css') }}">
