@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'same_email' => 'Email tidak dapat dirubah.'
+    'same_email' => 'Email tidak dapat dirubah.',
+    'unchanged_role_name' => 'Nama peran tidak dapat dirubah.',
 ];

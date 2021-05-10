@@ -25,6 +25,8 @@ interface RoleService
 
     public function getAllPermissions();
 
+    public function getRoleById($id);
+
     public function getRoleByName($name);
 
     public function getRoleByDisplayName($name, $caseSensitive);

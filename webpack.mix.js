@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
 const webpack = require('webpack')
+const tailwindcss = require("tailwindcss");
 
 mix.disableNotifications();
 
@@ -36,3 +37,28 @@ mix
     .vue()
     .version()
 ;
+
+mix
+    .sass('resources/sass/midone/app.scss', 'public/css/midone/midone.css')
+    .options({
+        processCssUrls: false,
+        postCss: [tailwindcss("./tailwind.config.js")],
+    })
+    .version()
+;
+
+/*
+mix
+    .webpackConfig({
+        plugins: [
+            new webpack.DefinePlugin({
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_DEVTOOLS__: false
+            })
+        ]
+    })
+    .js('resources/js/midone/main.js','public/js/midone/midone.js')
+    .vue()
+    .version()
+;
+*/

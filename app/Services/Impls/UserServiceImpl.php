@@ -3,8 +3,6 @@
 namespace App\Services\Impls;
 
 use Exception;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -29,9 +27,6 @@ class UserServiceImpl implements UserService
         $usr->email = $email;
         $usr->password = Hash::make($password);
 
-        $usr->created_at = Carbon::now();
-        $usr->updated_at = Carbon::now();
-
         $usr->save();
 
         $profile = new Profile();
@@ -39,13 +34,11 @@ class UserServiceImpl implements UserService
             $pieces = explode(" ", $name);
             $profile->first_name = $pieces[0];
             $profile->last_name = $pieces[1];
-            $profile->status = 'ACTIVE';
         } else {
             $profile->first_name = $name;
         }
 
-        $profile->created_at = Carbon::now();
-        $profile->updated_at = Carbon::now();
+        $profile->status = 'ACTIVE';
 
         $usr->profile()->save($profile);
 
@@ -72,25 +65,21 @@ class UserServiceImpl implements UserService
             $usr->email = $email;
             $usr->password = Hash::make($password);
 
-            $usr->created_at = Carbon::now();
-            $usr->updated_at = Carbon::now();
-
             $usr->save();
 
             $pa = new Profile();
 
-            $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:'';
-            $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:'';
-            $pa->company_name = array_key_exists('company_name', $profile) ? $profile['company_name']:'';
-            $pa->address = array_key_exists('address', $profile) ? $profile['address']:'';
-            $pa->city = array_key_exists('city', $profile) ? $profile['city']:'';
-            $pa->postal_code = array_key_exists('postal_code', $profile) ? $profile['postal_code']:'';
-            $pa->country = array_key_exists('country', $profile) ? $profile['country']:'';
-            $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:'';
-            $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:'';
-            $pa->status = array_key_exists('status', $profile) ? $profile['status']:'';
-            $pa->img_path = array_key_exists('img_path', $profile) ? $profile['img_path']:'';
-            $pa->remarks = array_key_exists('remarks', $profile) ? $profile['remarks']:'';
+            $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:null;
+            $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:null;
+            $pa->address = array_key_exists('address', $profile) ? $profile['address']:null;
+            $pa->city = array_key_exists('city', $profile) ? $profile['city']:null;
+            $pa->postal_code = array_key_exists('postal_code', $profile) ? $profile['postal_code']:null;
+            $pa->country = array_key_exists('country', $profile) ? $profile['country']:null;
+            $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:null;
+            $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:null;
+            $pa->status = array_key_exists('status', $profile) ? $profile['status']:null;
+            $pa->img_path = array_key_exists('img_path', $profile) ? $profile['img_path']:null;
+            $pa->remarks = array_key_exists('remarks', $profile) ? $profile['remarks']:null;
 
             $usr->profile()->save($pa);
 
@@ -136,7 +125,6 @@ class UserServiceImpl implements UserService
             $usr = User::find($id);
             $retval += $usr->update([
                 'name' => $name,
-                'updated_at' => Carbon::now()
             ]);
 
             if ($profile != null) {
@@ -145,7 +133,6 @@ class UserServiceImpl implements UserService
                 $retval += $pa->update([
                     'first_name' => $profile['first_name'],
                     'last_name' => $profile['last_name'],
-                    'company_name' => $profile['company_name'],
                     'address' => $profile['address'],
                     'city' => $profile['city'],
                     'postal_code' => $profile['postal_code'],
@@ -160,12 +147,12 @@ class UserServiceImpl implements UserService
 
             $usr->syncRoles($rolesId);
 
-            foreach ($settings as $s) {
-                $setting = $usr->settings()->where('key', $s['key'])->first();
-                if ($setting->value != $s->value) {
+            foreach ($settings as $key => $value) {
+                $setting = $usr->settings()->where('key', $key)->first();
+                if (!$setting || $value == null) continue;
+                if ($setting->value != $value) {
                     $retval += $setting->update([
-                        'value' => $s->value,
-                        'updated_at' => Carbon::now()
+                        'value' => $value,
                     ]);
                 }
             }

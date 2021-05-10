@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\RoleService;
+use App\Rules\unchangedRoleName;
 use Illuminate\Http\Request;
 
+use App\Services\RoleService;
 use Vinkla\Hashids\Facades\Hashids;
 
 class RoleController extends Controller
@@ -41,7 +42,7 @@ class RoleController extends Controller
         //], 500);
 
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => ['required', 'max:255', 'unique:App\Models\Role,name'],
             'display_name' => 'required|max:255',
             'permissions' => 'required',
         ]);
@@ -73,6 +74,12 @@ class RoleController extends Controller
 
     public function update($id, Request $request)
     {
+        $request->validate([
+            'name' => ['required', 'max:255', new unchangedRoleName($id)],
+            'display_name' => 'required|max:255',
+            'permissions' => 'required',
+        ]);
+
         $inputtedRolePermissions = [];
         for ($i = 0; $i < count($request['permissions']); $i++) {
             array_push($inputtedRolePermissions, array(
@@ -88,6 +95,14 @@ class RoleController extends Controller
             $inputtedRolePermissions
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 }
