@@ -11,7 +11,7 @@
 <!-- Normal Form -->
 <div class="block">
     <div class="block-header block-header-default">
-        <h3 class="block-title">Company Add</h3>
+        <h3 class="block-title">Branches Add</h3>
         <div class="block-options">
             <button type="button" class="btn-block-option">
                 <i class="si si-wrench"></i>
@@ -20,38 +20,14 @@
     </div>
     <div class="block-content">
         <form action="be_forms_elements_bootstrap.html" method="post" onsubmit="return false;">
-            <div class="form-group">
-                <label for="example-text-input">Company ID</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
-            </div>
 
             <div class="form-group">
                 <label for="example-text-input">Code</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
             <div class="form-group">
                 <label for="example-text-input">Name</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
-            </div>
-
-            <div class="form-group">
-                <label for="example-text-input">Address</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
-            </div>
-
-            <div class="form-group">
-                <label for="example-text-input">City</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
-            </div>
-
-            <div class="form-group">
-                <label for="example-text-input">Contact</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
-            </div>
-
-            <div class="form-group">
-                <label for="example-text-input">Remarks</label>
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
            

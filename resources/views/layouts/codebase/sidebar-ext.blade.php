@@ -35,7 +35,7 @@
             <a href="{{route('db.product_units')}}">Units</a>
         </li>
         <li>
-            <a href="">Products</a>
+            <a href="{{route('db.product_products')}}">Products</a>
         </li>
     </ul>
 </li>
@@ -47,7 +47,7 @@
             <a href="{{route('db.sales_customer_groups')}}">Customer Groups</a>
         </li>
         <li>
-            <a href="">Customers</a>
+            <a href="{{route('db.sales_customers')}}">Customers</a>
         </li>
     </ul>
 </li>

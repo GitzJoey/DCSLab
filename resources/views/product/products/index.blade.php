@@ -1,7 +1,7 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('company_warehouses.title') }}
+    {{ __('product_products.title') }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
 <!-- Normal Form -->
 <div class="block">
     <div class="block-header block-header-default">
-        <h3 class="block-title">Company Warehouses Add</h3>
+        <h3 class="block-title">Add New Product</h3>
         <div class="block-options">
             <button type="button" class="btn-block-option">
                 <i class="si si-wrench"></i>
@@ -21,20 +21,18 @@
     <div class="block-content">
         <form action="be_forms_elements_bootstrap.html" method="post" onsubmit="return false;">
 
-        <div class="form-group row">
-                <label class="col-12" for="example-select">Select Company ID</label>
-                <div class="col-md-12">
-                    <select class="form-control" id="example-select" name="example-select">
-                        <option value="0">Please select Company ID</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                    </select>             
-                </div>
+            <div class="form-group">
+                <label for="example-text-input">Code</label>
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
             <div class="form-group">
-                <label for="example-text-input">Code</label>
+                <label for="example-text-input">Group ID</label>
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="example-text-input">Brand ID</label>
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
@@ -44,34 +42,65 @@
             </div>
 
             <div class="form-group">
-                <label for="example-text-input">Address</label>
+                <label for="example-text-input">Unit ID</label>
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="example-text-input">Price</label>
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="example-text-input">Tax</label>
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="example-text-input">Information</label>
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
             <div class="form-group">
-                <label for="example-text-input">City</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+                <label for="example-text-input">Estimated Capital Price</label>
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
             <div class="form-group">
-                <label for="example-text-input">Contact</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+                <label for="example-text-input">Point</label>
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Remarks</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
-            </div>
-           
             <div class="form-group row">
-                <div class="col-12">
+                <label class="col-12">Select</label>                            
+                <div class="col-12">                            
                     <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1" checked>
-                        <label class="custom-control-label" for="example-checkbox1">Is Active</label>
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1">
+                        <label class="custom-control-label" for="example-checkbox1">Is Use Serial</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox2" id="example-checkbox2" value="option2">
+                        <label class="custom-control-label" for="example-checkbox2">is Buy</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox3" id="example-checkbox3" value="option3">
+                        <label class="custom-control-label" for="example-checkbox3">Is Production Materials</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox4" id="example-checkbox4" value="option4">
+                        <label class="custom-control-label" for="example-checkbox4">Is Production Result</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox5" id="example-checkbox5" value="option5">
+                        <label class="custom-control-label" for="example-checkbox5">Is Sell</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox6" id="example-checkbox6" value="option6">
+                        <label class="custom-control-label" for="example-checkbox6">Is Active</label>
                     </div>
                 </div>
             </div>
-
+                       
             <div class="form-group">
                 <button type="submit" class="btn btn-alt-primary">Save</button>
             </div>
@@ -83,7 +112,7 @@
 <!-- Striped Table -->
 <div class="block">
     <div class="block-header block-header-default">
-        <h3 class="block-title">Company Warehouses List</h3>
+        <h3 class="block-title">Products List</h3>
         <div class="block-options">
             <div class="block-options-item">
                 <code></code>

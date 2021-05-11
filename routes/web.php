@@ -13,6 +13,8 @@ use App\Http\Controllers\FinanceCashController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductUnitController;
+use App\Http\Controllers\ProductProductController;
+use App\Http\Controllers\SalesCustomerController;
 use App\Http\Controllers\SalesCustomerGroupController;
 use Vinkla\Hashids\Facades\Hashids;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -54,6 +56,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product_groups');
             Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product_brands');
             Route::get('unit', [ProductUnitController::class, 'index'])->name('db.product_units');
+            Route::get('products', [ProductProductController::class, 'index'])->name('db.product_products');
+
         });
 
         Route::group(['prefix' => 'company'], function () {
@@ -68,6 +72,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
         Route::group(['prefix' => 'sales'], function () {
             Route::get('customer groups', [SalesCustomerGroupController::class, 'index'])->name('db.sales_customer_groups');
+            Route::get('customers', [SalesCustomerController::class, 'index'])->name('db.sales_customers');
         });
         
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');

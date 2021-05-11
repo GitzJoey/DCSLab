@@ -30,22 +30,21 @@
                 <label for="example-text-input">Name</label>
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
-           
+
             <div class="form-group row">
+                <label class="col-12">Select</label>
                 <div class="col-12">
                     <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1" checked>
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1">
                         <label class="custom-control-label" for="example-checkbox1">Is Bank</label>
                     </div>
-                </div>
-                <div class="col-12">
                     <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1" checked>
-                        <label class="custom-control-label" for="example-checkbox1">Is Active</label>
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox2" id="example-checkbox2" value="option2">
+                        <label class="custom-control-label" for="example-checkbox2">Is Active</label>
                     </div>
                 </div>
             </div>
-
+           
             <div class="form-group">
                 <button type="submit" class="btn btn-alt-primary">Save</button>
             </div>
