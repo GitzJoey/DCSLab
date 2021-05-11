@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface CompanyCompanyService
+interface CompanyService
 {
     public function create(
         $code,

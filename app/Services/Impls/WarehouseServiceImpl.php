@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Impls;
 
-interface CompanyBranchService
+use App\Services\WarehouseService;
+use App\Models\Warehouse;
+
+class WarehouseServiceImpl implements WarehouseService
 {
     public function create(
         $company_id,
@@ -13,9 +16,17 @@ interface CompanyBranchService
         $contact,
         $remarks,
         $is_active
-    );
+    )
+    {
 
-    public function read();
+
+    }
+
+    public function read()
+    {
+        return Warehouse::get();
+    }
+
 
     public function update(
         $company_id,
@@ -26,7 +37,16 @@ interface CompanyBranchService
         $contact,
         $remarks,
         $is_active
-    );
+    )
+    {
 
-    public function delete($id);
+        
+    }
+
+
+    public function delete($id)
+    {
+
+        
+    }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('product_products.title') }}
+    {{ __('products.title') }}
 @endsection
 
 @section('content')
@@ -26,14 +26,28 @@
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Group ID</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <label class="col-12" for="example-select">Group Name</label>
+                <div class="col-md-12">
+                    <select class="form-control" id="example-select" name="example-select">
+                        <option value="0">Please select Group Name</option>
+                        <option value="1">Oil</option>
+                        <option value="2">Cigarrret</option>
+                        <option value="3">Rice</option>
+                    </select>             
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Brand ID</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <label class="col-12" for="example-select">Brand Name</label>
+                <div class="col-md-12">
+                    <select class="form-control" id="example-select" name="example-select">
+                        <option value="0">Please select Brand Name</option>
+                        <option value="1">Sampoerna</option>
+                        <option value="2">Rose Brand</option>
+                        <option value="3">Indomie</option>
+                    </select>             
+                </div>
             </div>
 
             <div class="form-group">
@@ -41,9 +55,16 @@
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Unit ID</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <label class="col-12" for="example-select">Unit Name</label>
+                <div class="col-md-12">
+                    <select class="form-control" id="example-select" name="example-select">
+                        <option value="0">Please select Unit Name</option>
+                        <option value="1">Pcs</option>
+                        <option value="2">Gr</option>
+                        <option value="3">Dozen</option>
+                    </select>             
+                </div>
             </div>
 
             <div class="form-group">
@@ -51,9 +72,16 @@
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Tax</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <label class="col-12" for="example-select">Tax</label>
+                <div class="col-md-12">
+                    <select class="form-control" id="example-select" name="example-select">
+                        <option value="0">Please select Tax</option>
+                        <option value="1">No Tax</option>
+                        <option value="2">Include Tax</option>
+                        <option value="3">Exclude Tax</option>
+                    </select>             
+                </div>
             </div>
 
             <div class="form-group">

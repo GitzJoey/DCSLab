@@ -1,7 +1,7 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('company_branches.title') }}
+    {{ __('branches.title') }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
 <!-- Normal Form -->
 <div class="block">
     <div class="block-header block-header-default">
-        <h3 class="block-title">Company Add</h3>
+        <h3 class="block-title">Branch Add</h3>
         <div class="block-options">
             <button type="button" class="btn-block-option">
                 <i class="si si-wrench"></i>
@@ -21,13 +21,13 @@
     <div class="block-content">
         <form action="be_forms_elements_bootstrap.html" method="post" onsubmit="return false;">
             <div class="form-group row">
-                <label class="col-12" for="example-select">Select Company ID</label>
+                <label class="col-12" for="example-select">Company Name</label>
                 <div class="col-md-12">
                     <select class="form-control" id="example-select" name="example-select">
-                        <option value="0">Please select Company ID</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
+                        <option value="0">Please select Company Name</option>
+                        <option value="1">PT. ABC</option>
+                        <option value="2">PT. DEF</option>
+                        <option value="3">PT. GHI</option>
                     </select>             
                 </div>
             </div>

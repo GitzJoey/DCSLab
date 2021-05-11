@@ -5,18 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CompanyBranch extends Model
+class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'company_id',
         'code',
+        'group_id',
+        'brand_id',
         'name',
-        'address',
-        'city',
-        'contact',
-        'remarks',
+        'unit_id',
+        'price',
+        'tax',
+        'information',
+        'estimated_capital_price',
+        'is_use_serial',
+        'is_buy',
+        'is_production_material',
+        'is_production_result',
+        'is_sell',
         'is_active'
     ];
 

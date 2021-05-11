@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CompanyWarehouseService;
+use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class CompanyWarehouseController extends Controller
+class WarehouseController extends Controller
 {
-    private $companyWarehouseService;
+    private $warehouseService;
 
-    public function __construct(CompanyWarehouseService $companyWarehouseService)
+    public function __construct(WarehouseService $warehouseService)
     {
         $this->middleware('auth');
-        $this->companyWarehouseService = $companyWarehouseService;
+        $this->warehouseService = $warehouseService;
     }
 
     public function index()
@@ -26,7 +26,7 @@ class CompanyWarehouseController extends Controller
 
     public function read()
     {
-        return $this->companyWarehouseService->read();
+        return $this->warehouseService->read();
     }
 
     public function store(Request $request)
@@ -49,7 +49,7 @@ class CompanyWarehouseController extends Controller
             ));
         }
 
-        $result = $this->companyWarehouseService->create(
+        $result = $this->warehouseService->create(
             $request['company_id'],
             $request['code'],
             $request['name'],
@@ -81,7 +81,7 @@ class CompanyWarehouseController extends Controller
             ));
         }
 
-        $result = $this->companyWarehouseService->update(
+        $result = $this->warehouseService->update(
             $id,
             $request['company_id'],
             $request['code'],
@@ -99,7 +99,7 @@ class CompanyWarehouseController extends Controller
 
     public function delete($id)
     {
-        $this->companyWarehouseService->delete($id);
+        $this->warehouseService->delete($id);
 
         return response()->json();
     }

@@ -2,10 +2,10 @@
 
 namespace App\Services\Impls;
 
-use App\Services\CompanyWarehouseService;
-use App\Models\CompanyWarehouse;
+use App\Services\BranchService;
+use App\Models\Branch;
 
-class CompanyWarehouseServiceImpl implements CompanyWarehouseService
+class BranchServiceImpl implements BranchService
 {
     public function create(
         $company_id,
@@ -24,7 +24,7 @@ class CompanyWarehouseServiceImpl implements CompanyWarehouseService
 
     public function read()
     {
-        return CompanyWarehouse::get();
+        return Branch::get();
     }
 
 

@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Services\Impls;
+namespace App\Services;
 
-use App\Services\CompanyBranchService;
-use App\Models\CompanyBranch;
-
-class CompanyBranchServiceImpl implements CompanyBranchService
+interface BranchService
 {
     public function create(
         $company_id,
@@ -16,17 +13,9 @@ class CompanyBranchServiceImpl implements CompanyBranchService
         $contact,
         $remarks,
         $is_active
-    )
-    {
+    );
 
-
-    }
-
-    public function read()
-    {
-        return CompanyBranch::get();
-    }
-
+    public function read();
 
     public function update(
         $company_id,
@@ -37,16 +26,7 @@ class CompanyBranchServiceImpl implements CompanyBranchService
         $contact,
         $remarks,
         $is_active
-    )
-    {
+    );
 
-        
-    }
-
-
-    public function delete($id)
-    {
-
-        
-    }
+    public function delete($id);
 }

@@ -31,9 +31,16 @@
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
            
-            <div class="form-group">
-                <label for="example-text-input">Sales Customer Group ID</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <label class="col-12" for="example-select">Sales Customer Group</label>
+                <div class="col-md-12">
+                    <select class="form-control" id="example-select" name="example-select">
+                        <option value="0">Sales Customer Group</option>
+                        <option value="1">Retail</option>
+                        <option value="2">Wholesale Price</option>
+                        <option value="3">Distributor</option>
+                    </select>             
+                </div>
             </div>
 
             <div class="form-group">
@@ -41,14 +48,41 @@
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1">
+                        <label class="custom-control-label" for="example-checkbox1">Use Limit Outstanding Notes</label>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="example-text-input">Limit Outstanding Notes</label>
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox2" id="example-checkbox2" value="option2">
+                        <label class="custom-control-label" for="example-checkbox2">Use Limit Payable Nominal</label>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="example-text-input">Limit Payable Nominal</label>
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox3" id="example-checkbox3" value="option3">
+                        <label class="custom-control-label" for="example-checkbox3">Use Limit Due Date</label>
+                    </div>
+                </div>
             </div>
 
              <div class="form-group">
@@ -82,20 +116,7 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-12">Select</label>                            
-                <div class="col-12">                            
-                    <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1">
-                        <label class="custom-control-label" for="example-checkbox1">Use Limit Outstanding Notes</label>
-                    </div>
-                    <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox2" id="example-checkbox2" value="option2">
-                        <label class="custom-control-label" for="example-checkbox2">Use Limit Payable Nominal</label>
-                    </div>
-                    <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox3" id="example-checkbox3" value="option3">
-                        <label class="custom-control-label" for="example-checkbox3">Use Limit Due Date</label>
-                    </div>
+                <div class="col-12">
                     <div class="custom-control custom-checkbox mb-5">
                         <input class="custom-control-input" type="checkbox" name="example-checkbox4" id="example-checkbox4" value="option4">
                         <label class="custom-control-label" for="example-checkbox4">Is Active</label>
@@ -103,7 +124,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+             <div class="form-group">
                 <button type="submit" class="btn btn-alt-primary">Save</button>
             </div>
         </form>

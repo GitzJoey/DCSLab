@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ProductProductService;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class ProductProductController extends Controller
+class ProductController extends Controller
 {
-    private $productProductService;
+    private $productService;
 
-    public function __construct(ProductProductService $productProductService)
+    public function __construct(ProductService $productService)
     {
         $this->middleware('auth');
-        $this->productProductService = $productProductService;
+        $this->productService = $productService;
     }
 
     public function index()
@@ -26,7 +26,7 @@ class ProductProductController extends Controller
 
     public function read()
     {
-        return $this->productProductService->read();
+        return $this->productService->read();
     }
 
     public function store(Request $request)
@@ -56,7 +56,7 @@ class ProductProductController extends Controller
             ));
         }
 
-        $result = $this->productProductService->create(
+        $result = $this->productService->create(
             $request['code'],
             $request['group_id'],
             $request['brand_id'],
@@ -95,7 +95,7 @@ class ProductProductController extends Controller
             ));
         }
 
-        $result = $this->productProductService->update(
+        $result = $this->productService->update(
             $id,
             $request['code'],
             $request['group_id'],
@@ -120,7 +120,7 @@ class ProductProductController extends Controller
 
     public function delete($id)
     {
-        $this->productProductService->delete($id);
+        $this->productService->delete($id);
 
         return response()->json();
     }
