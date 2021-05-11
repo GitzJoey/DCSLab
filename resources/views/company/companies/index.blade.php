@@ -1,7 +1,7 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('company_companies.title') }}
+    {{ __('companies.title') }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
 <!-- Normal Form -->
 <div class="block">
     <div class="block-header block-header-default">
-        <h3 class="block-title">Branches Add</h3>
+        <h3 class="block-title">Company Add</h3>
         <div class="block-options">
             <button type="button" class="btn-block-option">
                 <i class="si si-wrench"></i>

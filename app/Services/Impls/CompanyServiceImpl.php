@@ -2,10 +2,10 @@
 
 namespace App\Services\Impls;
 
-use App\Services\CompanyCompanyService;
-use App\Models\CompanyCompany;
+use App\Services\CompanyService;
+use App\Models\Company;
 
-class CompanyCompanyServiceImpl implements CompanyCompanyService
+class CompanyServiceImpl implements CompanyService
 {
     public function create(
         $code,
@@ -19,7 +19,7 @@ class CompanyCompanyServiceImpl implements CompanyCompanyService
 
     public function read()
     {
-        return CompanyCompany::get();
+        return Company::get();
     }
 
 

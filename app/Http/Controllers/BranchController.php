@@ -2,38 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CompanyCompanyService;
+use App\Services\BranchService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class CompanyCompanyController extends Controller
+class BranchController extends Controller
 {
-    private $companyCompanyService;
+    private $branchService;
 
-    public function __construct(CompanyCompanyService $companyCompanyService)
+    public function __construct(BranchService $branchService)
     {
         $this->middleware('auth');
-        $this->companyCompanyService = $companyCompanyService;
+        $this->branchService = $branchService;
     }
 
     public function index()
     {
         $test = $this->read();
 
-        return view('company.companies.index', compact('test'));
+        return view('company.branches.index', compact('test'));
     }
 
     public function read()
     {
-        return $this->companyCompanyService->read();
+        return $this->branchService->read();
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'company_id' => 'required|max:255',
             'code' => 'required|max:255',
             'name' => 'required|max:255',
+            'address' => 'required|max:255',
+            'city' => 'required|max:255',
+            'contact' => 'required|max:255',
+            'remarks' => 'required|max:255',
             'is_active' => 'required'
         ]);
 
@@ -44,9 +49,14 @@ class CompanyCompanyController extends Controller
             ));
         }
 
-        $result = $this->companyCompanyService->create(
+        $result = $this->branchService->create(
+            $request['company_id'],
             $request['code'],
             $request['name'],
+            $request['address'],
+            $request['city'],
+            $request['contact'],
+            $request['remarks'],
             $request['is_active'],
             $rolePermissions
         );
@@ -71,10 +81,15 @@ class CompanyCompanyController extends Controller
             ));
         }
 
-        $result = $this->companyCompanyService->update(
+        $result = $this->branchService->update(
             $id,
+            $request['company_id'],
             $request['code'],
             $request['name'],
+            $request['address'],
+            $request['city'],
+            $request['contact'],
+            $request['remarks'],
             $request['is_active'],
             $inputtedRolePermissions
         );
@@ -84,7 +99,7 @@ class CompanyCompanyController extends Controller
 
     public function delete($id)
     {
-        $this->companyCompanyService->delete($id);
+        $this->branchService->delete($id);
 
         return response()->json();
     }

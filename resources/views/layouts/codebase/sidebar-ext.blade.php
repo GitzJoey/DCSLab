@@ -2,13 +2,13 @@
     <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup" class="si si-moustache"></i><span class="">Company</span></a>
     <ul>
         <li>
-            <a href="{{route('db.company_companies')}}">Companies</a>
+            <a href="{{route('db.companies')}}">Companies</a>
         </li>
         <li>
-            <a href="{{route('db.company_branches')}}">Branches</a>
+            <a href="{{route('db.branches')}}">Branches</a>
         </li>
         <li>
-            <a href="{{route('db.company_warehouses')}}">Warehouses</a>
+            <a href="{{route('db.warehouses')}}">Warehouses</a>
         </li>
     </ul>
 </li>
@@ -35,7 +35,7 @@
             <a href="{{route('db.product_units')}}">Units</a>
         </li>
         <li>
-            <a href="{{route('db.product_products')}}">Products</a>
+            <a href="{{route('db.products')}}">Products</a>
         </li>
     </ul>
 </li>

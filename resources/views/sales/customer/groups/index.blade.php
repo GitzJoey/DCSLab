@@ -30,19 +30,14 @@
                 <label for="example-text-input">Name</label>
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
-           
+
             <div class="form-group row">
                 <div class="col-12">
                     <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1" checked>
-                        <label class="custom-control-label" for="example-checkbox1">Is Member Card</label>
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1">
+                        <label class="custom-control-label" for="example-checkbox1">Use Limit Outstanding Notes</label>
                     </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="example-text-input">Use Limit Outstanding Notes</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
             <div class="form-group">
@@ -50,9 +45,13 @@
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Use Limit Payable Nominal</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox2" id="example-checkbox2" value="option2">
+                        <label class="custom-control-label" for="example-checkbox2">Use Limit Payable Nominal</label>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -60,9 +59,13 @@
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Use Limit Due Date</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox3" id="example-checkbox3" value="option3">
+                        <label class="custom-control-label" for="example-checkbox3">Use Limit Due Date</label>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -110,6 +113,15 @@
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="custom-control custom-checkbox mb-5">
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox4" id="example-checkbox4" value="option4">
+                        <label class="custom-control-label" for="example-checkbox4">Is Rounding</label>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="example-text-input">Round On</label>
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
@@ -125,16 +137,23 @@
                 <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
-            <div class="form-group">
-                <label for="example-text-input">Finance Cash ID</label>
-                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            <div class="form-group row">
+                <label class="col-12" for="example-select">Default Cash Payment</label>
+                <div class="col-md-12">
+                    <select class="form-control" id="example-select" name="example-select">
+                        <option value="0">Please select Default Cash Payment</option>
+                        <option value="1">BCA</option>
+                        <option value="2">CIMB</option>
+                        <option value="3">Mandiri</option>
+                    </select>             
+                </div>
             </div>
 
             <div class="form-group row">
                 <div class="col-12">
                     <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1" checked>
-                        <label class="custom-control-label" for="example-checkbox1">Is Rounding</label>
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox5" id="example-checkbox5" value="option5">
+                        <label class="custom-control-label" for="example-checkbox5">Is Active</label>
                     </div>
                 </div>
             </div>

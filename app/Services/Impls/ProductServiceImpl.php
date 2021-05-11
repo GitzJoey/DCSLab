@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Impls;
 
-interface ProductProductService
+use App\Services\ProductService;
+use App\Models\Product;
+
+class ProductServiceImpl implements ProductService
 {
     public function create(
         $code,
@@ -20,10 +23,17 @@ interface ProductProductService
         $is_production_result,
         $is_sell,
         $is_active
+    )
+    {
 
-    );
 
-    public function read();
+    }
+
+    public function read()
+    {
+        return Product::get();
+    }
+
 
     public function update(
         $code,
@@ -41,7 +51,16 @@ interface ProductProductService
         $is_production_result,
         $is_sell,
         $is_active
-    );
+    )
+    {
 
-    public function delete($id);
+        
+    }
+
+
+    public function delete($id)
+    {
+
+        
+    }
 }

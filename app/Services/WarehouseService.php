@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface CompanyWarehouseService
+interface WarehouseService
 {
     public function create(
         $company_id,
