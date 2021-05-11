@@ -1,7 +1,7 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('finance_cashes.title') }}
+    {{ __('company_branches.title') }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
 <!-- Normal Form -->
 <div class="block">
     <div class="block-header block-header-default">
-        <h3 class="block-title">Finance Cash Add</h3>
+        <h3 class="block-title">Company Add</h3>
         <div class="block-options">
             <button type="button" class="btn-block-option">
                 <i class="si si-wrench"></i>
@@ -20,10 +20,21 @@
     </div>
     <div class="block-content">
         <form action="be_forms_elements_bootstrap.html" method="post" onsubmit="return false;">
+            <div class="form-group row">
+                <label class="col-12" for="example-select">Select Company ID</label>
+                <div class="col-md-12">
+                    <select class="form-control" id="example-select" name="example-select">
+                        <option value="0">Please select Company ID</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>             
+                </div>
+            </div>
 
             <div class="form-group">
                 <label for="example-text-input">Code</label>
-                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+                <input type="number" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
             <div class="form-group">
@@ -31,20 +42,35 @@
                 <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
             </div>
 
+            <div class="form-group">
+                <label for="example-text-input">Address</label>
+                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="example-text-input">City</label>
+                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="example-text-input">Contact</label>
+                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="example-text-input">Remarks</label>
+                <input type="text" class="form-control" id="example-text-input" name="example-text-input" placeholder="">
+            </div>
+           
             <div class="form-group row">
-                <label class="col-12">Select</label>
                 <div class="col-12">
                     <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1">
-                        <label class="custom-control-label" for="example-checkbox1">Is Bank</label>
-                    </div>
-                    <div class="custom-control custom-checkbox mb-5">
-                        <input class="custom-control-input" type="checkbox" name="example-checkbox2" id="example-checkbox2" value="option2">
-                        <label class="custom-control-label" for="example-checkbox2">Is Active</label>
+                        <input class="custom-control-input" type="checkbox" name="example-checkbox1" id="example-checkbox1" value="option1" checked>
+                        <label class="custom-control-label" for="example-checkbox1">Is Active</label>
                     </div>
                 </div>
             </div>
-           
+
             <div class="form-group">
                 <button type="submit" class="btn btn-alt-primary">Save</button>
             </div>
@@ -56,7 +82,7 @@
 <!-- Striped Table -->
 <div class="block">
     <div class="block-header block-header-default">
-        <h3 class="block-title">Finance Cash List</h3>
+        <h3 class="block-title">Branches List</h3>
         <div class="block-options">
             <div class="block-options-item">
                 <code></code>
