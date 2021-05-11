@@ -21,7 +21,7 @@ class SalesCustomerController extends Controller
     {
         $test = $this->read();
 
-        return view('sales.customers.index', compact('test'));
+        return view('sales.customer.customers.index', compact('test'));
     }
 
     public function read()
