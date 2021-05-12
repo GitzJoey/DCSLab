@@ -2,7 +2,6 @@
 
 namespace App\Services\Impls;
 
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -29,9 +28,6 @@ class RoleServiceImpl implements RoleService
             $role->name = $name;
             $role->display_name = $display_name;
             $role->description = $description;
-
-            $role->setCreatedAt(Carbon::now());
-            $role->setUpdatedAt(Carbon::now());
 
             $role->save();
 
@@ -99,6 +95,11 @@ class RoleServiceImpl implements RoleService
     public function getAllPermissions()
     {
         return Permission::get();
+    }
+
+    public function getRoleById($id)
+    {
+        return Role::find($id);
     }
 
     public function getRoleByName($name)

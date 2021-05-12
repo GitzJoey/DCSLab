@@ -27,8 +27,8 @@
                             <tr>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.email") }}</th>
-                                <th>{{ $t("table.cols.company_name") }}</th>
                                 <th>{{ $t("table.cols.roles") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -36,10 +36,10 @@
                             <tr v-for="(u, uIdx) in userList.data">
                                 <td>{{ u.name }}</td>
                                 <td>{{ u.email }}</td>
-                                <td>{{ u.profile.company_name }}</td>
                                 <td>
                                     <span v-for="(r, rIdx) in u.roles">{{ r.display_name }}</span><br/>
                                 </td>
+                                <td>{{ u.profile.status }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(uIdx)">
@@ -112,9 +112,11 @@
                         <div class="form-group row">
                             <label for="inputImg" class="col-2 col-form-label"></label>
                             <div class="col-md-10">
-                                <img class="img" src="/images/def-user.png"/>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input js-custom-file-input-enabled" id="inputImg" name="img_path" data-toggle="custom-file-input" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                <div class="push">
+                                    <img class="img-avatar" :src="retrieveImage">
+                                </div>
+                                <div :class="{'custom-file':true, 'd-none':this.mode === 'show'}">
+                                    <input type="file" class="custom-file-input" id="inputImg" name="img_path" data-toggle="custom-file-input" v-if="this.mode === 'create' || this.mode === 'edit'" v-on:change="handleUpload">
                                     <label class="custom-file-label" for="inputImg">Choose file</label>
                                 </div>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.first_name }}</div>
@@ -132,14 +134,6 @@
                             <div class="col-md-10">
                                 <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="$t('fields.last_name')" v-model="user.profile.last_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.last_name }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputCompanyName" class="col-2 col-form-label">{{ $t('fields.company_name') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputCompanyName" name="company_name" as="input" :class="{'form-control':true, 'is-invalid': errors['company_name']}" :placeholder="$t('fields.company_name')" :label="$t('fields.company_name')" v-model="user.profile.company_name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="company_name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ user.profile.company_name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -166,7 +160,7 @@
                         <div class="form-group row">
                             <label for="inputCountry" class="col-2 col-form-label">{{ $t('fields.country') }}</label>
                             <div class="col-md-10">
-                                <select id="inputCountry" name="country" class="form-control" v-model="user.profile.country" :placeholder="$t('fields.country')">
+                                <select id="inputCountry" name="country" class="form-control" v-model="user.profile.country" :placeholder="$t('fields.country')" v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
                                     <option v-for="c in countriesDDL" :key="c.name">{{ c.name }}</option>
                                 </select>
@@ -232,13 +226,18 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.theme') }}</span>
-                                        <select id="selectTheme" class="form-control" name="theme" v-model="user.selectedSettings.theme">
+                                        <select id="selectTheme" class="form-control" name="theme" v-model="user.selectedSettings.theme" v-if="this.mode === 'create' || this.mode === 'edit'">
                                             <option value="corporate">Corporate</option>
                                             <option value="earth">Earth</option>
                                             <option value="elegance">Elegance</option>
                                             <option value="flat">Flat</option>
                                             <option value="pulse">Pulse</option>
                                         </select>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'corporate'">Corporate</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'earth'">Earth</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'elegance'">Elegance</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'flat'">Flat</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.theme === 'pulse'">Pulse</div>
                                         <br/>
                                     </div>
                                     <div class="col-6">
@@ -248,18 +247,22 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.dateFormat') }}</span>
-                                        <select id="selectDate" class="form-control" name="dateFormat" v-model="user.selectedSettings.dateFormat">
-                                            <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-d') }}</option>
-                                            <option value="dd_MM_yyy">{{ moment(new Date()).format('d-MMM-yyyy') }}</option>
+                                        <select id="selectDate" class="form-control" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                            <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-DD') }}</option>
+                                            <option value="dd_MMM_yyyy">{{ moment(new Date()).format('DD-MMM-yyyy') }}</option>
                                         </select>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.dateFormat === 'yyyy_MM_dd'">{{ moment(new Date()).format('yyyy-MM-DD') }}</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.dateFormat === 'dd_MMM_yyyy'">{{ moment(new Date()).format('DD-MMM-yyyy') }}</div>
                                         <br/>
                                     </div>
                                     <div class="col-6">
                                         <span>{{ $t('fields.settings.timeFormat') }}</span>
-                                        <select id="selectTime" class="form-control">
+                                        <select id="selectTime" class="form-control" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-if="this.mode === 'create' || this.mode === 'edit'">
                                             <option value="hh_mm_ss">{{ moment(new Date()).format('HH:mm:ss') }}</option>
-                                            <option value="h_m A">{{ moment(new Date()).format('h:m A') }}</option>
+                                            <option value="h_m_A">{{ moment(new Date()).format('h:m A') }}</option>
                                         </select>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.timeFormat === 'hh_mm_ss'">{{ moment(new Date()).format('HH:mm:ss') }}</div>
+                                        <div class="form-control-plaintext" v-if="this.mode === 'show' && this.user.selectedSettings.timeFormat === 'h_m_A'">{{ moment(new Date()).format('h:m A') }}</div>
                                         <br/>
                                     </div>
                                 </div>
@@ -315,7 +318,6 @@ export default {
         const schema = {
             name: 'required',
             email: 'required|email',
-            company_name: 'required',
             tax_id: 'required',
             ic_num: 'required',
         };
@@ -379,13 +381,14 @@ export default {
                 roles: [],
                 selectedRoles: [],
                 profile: {
+                    img_path: '',
                     country: '',
                     status: 'ACTIVE',
                 },
                 selectedSettings: {
                     theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
+                    dateFormat: 'yyyy_MM_dd',
+                    timeFormat: 'hh_mm_ss'
                 }
             }
         },
@@ -396,24 +399,30 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.user = this.userList.data[idx];
-            this.setSettings();
         },
         showSelected(idx) {
             this.mode = 'show';
             this.user = this.userList.data[idx];
-            this.setSettings()
         },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/user/save', new FormData($('#userForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/save', new FormData($('#userForm')[0]), {
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                }).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/user/edit/' + this.user.hId, new FormData($('#userForm')[0])).then(response => {
+                axios.post('/api/post/admin/user/edit/' + this.user.hId, new FormData($('#userForm')[0]), {
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                }).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -433,6 +442,17 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
+        },
+        handleUpload(e) {
+            const files = e.target.files;
+
+            let filename = files[0].name;
+
+            const fileReader = new FileReader()
+            fileReader.addEventListener('load', () => {
+                this.user.profile.img_path = fileReader.result
+            })
+            fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
@@ -471,6 +491,18 @@ export default {
             if (this.userList.current_page == null) return 0;
 
             return Math.ceil(this.userList.total / this.userList.per_page);
+        },
+        retrieveImage()
+        {
+            if (this.user.profile.img_path && this.user.profile.img_path !== '') {
+                if (this.user.profile.img_path.includes('data:image')) {
+                    return this.user.profile.img_path;
+                } else {
+                    return '/storage/' + this.user.profile.img_path;
+                }
+            } else {
+                return '/images/def-user.png';
+            }
         }
     }
 }

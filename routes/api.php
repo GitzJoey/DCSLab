@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CommonController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,8 @@ Route::bind('id', function ($id) {
 });
 
 Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
+
     Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'role'], function () {
             Route::get('read', [RoleController::class, 'read'])->name('api.get.admin.role.read');
@@ -46,6 +49,8 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 });
 
 Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('profile/update', [DashboardController::class, 'updateProfile'])->name('api.post.profile.update');
+
     Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'role'], function () {
             Route::post('save', [RoleController::class, 'store'])->name('api.post.admin.role.save');

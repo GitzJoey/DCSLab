@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class Setting extends Model
 {
+    use LogsActivity;
+
     protected $table="settings";
 
     protected $fillable = [
@@ -14,6 +17,10 @@ class Setting extends Model
         'key',
         'value',
     ];
+
+    protected static $logAttributes = ['value'];
+
+    protected static $logOnlyDirty = true;
 
     protected $hidden = [
         'id',

@@ -22,12 +22,12 @@
                     <a class="dropdown-item" href="{{ route('db.profile') }}">
                         <i class="icon icon-user mr-5"></i> {{ __('dashboard.profile') }}
                     </a>
-                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="#">
+                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('db.inbox') }}">
                         <span><i class="icon icon-envelope-open mr-5"></i> {{ __('dashboard.inbox') }}</span>
                         <span class="badge badge-primary">3</span>
                     </a>
-                    <a class="dropdown-item" href="{{ route('db.settings') }}">
-                        <i class="icon icon-wrench mr-5"></i> {{ __('dashboard.settings') }}
+                    <a class="dropdown-item" href="{{ route('db.activity') }}">
+                        <i class="icon icon-hourglass mr-5"></i> {{ __('dashboard.activity') }}
                     </a>
 
                     <div class="dropdown-divider"></div>

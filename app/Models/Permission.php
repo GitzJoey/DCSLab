@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laratrust\Models\LaratrustPermission;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class Permission extends LaratrustPermission
