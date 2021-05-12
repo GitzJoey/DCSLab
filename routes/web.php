@@ -50,7 +50,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('', [DashboardController::class, 'index'])->name('db');
         Route::get('profile', [DashboardController::class, 'profile'])->name('db.profile');
-        Route::get('settings', [DashboardController::class, 'settings'])->name('db.settings');
+        Route::get('inbox', [DashboardController::class, 'inbox'])->name('db.inbox');
+        Route::get('activity', [DashboardController::class, 'activity'])->name('db.activity');        
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product_groups');
@@ -61,9 +62,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         });
 
         Route::group(['prefix' => 'company'], function () {
-            Route::get('companies', [CompanyController::class, 'index'])->name('db.companies');
-            Route::get('branches', [BranchController::class, 'index'])->name('db.branches');
-            Route::get('warehouses', [WarehouseController::class, 'index'])->name('db.warehouses');
+            Route::get('companies', [CompanyController::class, 'index'])->name('db.company.companies');
+            Route::get('branches', [BranchController::class, 'index'])->name('db.company.branches');
+            Route::get('warehouses', [WarehouseController::class, 'index'])->name('db.company.warehouses');
         });
 
         Route::group(['prefix' => 'finance'], function () {

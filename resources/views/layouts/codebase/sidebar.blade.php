@@ -29,7 +29,7 @@
 
                 <div class="sidebar-mini-hidden-b text-center">
                     <a class="img-link" href="{{ route('db.profile') }}">
-                        <img class="img-avatar" src="{{ asset('images/def-user.png') }}" alt="">
+                        <img class="img-avatar" src="{{ !is_null(\Illuminate\Support\Facades\Auth::user()->profile->img_path) ? asset('storage/'.\Illuminate\Support\Facades\Auth::user()->profile->img_path):asset('images/def-user.png') }}" alt="">
                     </a>
                     <ul class="list-inline mt-10">
                         <li class="list-inline-item">

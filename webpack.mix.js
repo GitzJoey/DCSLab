@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
 const webpack = require('webpack')
+const tailwindcss = require("tailwindcss");
 
 mix.disableNotifications();
 

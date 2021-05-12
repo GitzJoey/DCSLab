@@ -85,7 +85,7 @@
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="role.name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="role.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ role.name }}</div>
                             </div>
