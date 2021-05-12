@@ -2,39 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FinanceCashService;
+use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class FinanceCashController extends Controller
+class WarehouseController extends Controller
 {
-    private $financeCashService;
+    private $warehouseService;
 
-    public function __construct(FinanceCashService $financeCashService)
+    public function __construct(WarehouseService $warehouseService)
     {
         $this->middleware('auth');
-        $this->financeCashService = $financeCashService;
+        $this->warehouseService = $warehouseService;
     }
 
     public function index()
     {
         $test = $this->read();
 
-        return view('finance.cashes.index', compact('test'));
+        return view('company.warehouses.index', compact('test'));
     }
 
     public function read()
     {
-        return $this->financeCashService->read();
+        return $this->warehouseService->read();
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'company_id' => 'required|max:255',
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'is_bank' => 'required',
+            'address' => 'required|max:255',
+            'city' => 'required|max:255',
+            'contact' => 'required|max:255',
+            'remarks' => 'required|max:255',
             'is_active' => 'required'
         ]);
 
@@ -45,10 +49,14 @@ class FinanceCashController extends Controller
             ));
         }
 
-        $result = $this->financeCashService->create(
+        $result = $this->warehouseService->create(
+            $request['company_id'],
             $request['code'],
             $request['name'],
-            $request['is_bank'],
+            $request['address'],
+            $request['city'],
+            $request['contact'],
+            $request['remarks'],
             $request['is_active'],
             $rolePermissions
         );
@@ -73,11 +81,15 @@ class FinanceCashController extends Controller
             ));
         }
 
-        $result = $this->financeCashService->update(
+        $result = $this->warehouseService->update(
             $id,
+            $request['company_id'],
             $request['code'],
             $request['name'],
-            $request['is_bank'],
+            $request['address'],
+            $request['city'],
+            $request['contact'],
+            $request['remarks'],
             $request['is_active'],
             $inputtedRolePermissions
         );
@@ -87,7 +99,7 @@ class FinanceCashController extends Controller
 
     public function delete($id)
     {
-        $this->financeCashService->delete($id);
+        $this->warehouseService->delete($id);
 
         return response()->json();
     }
