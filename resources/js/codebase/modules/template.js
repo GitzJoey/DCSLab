@@ -1,30 +1,12 @@
-/*
- *  Document   : template.js
- *  Author     : pixelcave
- *  Description: UI Framework custom functionality
- *
- */
-
-// Import required modules
 import Tools from './tools';
 import Helpers from './helpers';
 
-// Template
 export default class Template {
-    /*
-     * Auto called when creating a new instance
-     *
-     */
     constructor() {
         this._uiInit();
     }
 
-    /*
-     * Init all vital functionality
-     *
-     */
     _uiInit() {
-        // Layout variables
         this._lHtml                 = jQuery('html');
         this._lBody                 = jQuery('body');
         this._lpageLoader           = jQuery('#page-loader');
@@ -39,23 +21,17 @@ export default class Template {
         this._lMain                 = jQuery('#main-container');
         this._lFooter               = jQuery('#page-footer');
 
-        // Helper variables
         this._lSidebarScroll        = false;
         this._lSideOverlayScroll    = false;
         this._windowW               = Tools.getWidth();
 
-        // Base UI Init
         this._uiHandleSidebars('init');
-        this._uiHandleHeader();
         this._uiHandleNav();
-        this._uiHandleForms();
-        this._uiHandleTheme();
+        this._uiHandleHeader();
 
-        // API Init
         this._uiApiLayout();
         this._uiApiBlocks();
 
-        // Core Helpers Init
         this.helpers([
             'core-tooltip',
             'core-popover',
@@ -69,67 +45,46 @@ export default class Template {
             'core-ripple'
         ]);
 
-        // Page Loader (hide it)
         this._uiHandlePageLoader();
     }
 
-    /*
-     * Handles sidebar and side overlay scrolling functionality/styles
-     *
-     */
     _uiHandleSidebars(mode) {
         let self = this;
 
         if (mode === 'init') {
-            // Add 'side-trans-enabled' class to #page-container (enables sidebar and side overlay transition on open/close)
-            // Fixes IE10, IE11 and Edge bug in which animation was executed on each page load - really annoying!
             self._lPage.addClass('side-trans-enabled');
 
-            // Init custom scrolling
             this._uiHandleSidebars();
         } else {
-            // If .side-scroll is added to #page-container enable custom scrolling
             if (self._lPage.hasClass('side-scroll')) {
-                // Init custom scrolling on Sidebar
                 if ((self._lSidebar.length > 0) && !self._lSidebarScroll) {
                     self._lSidebarScroll = new SimpleBar(self._lSidebarScrollCon[0]);
 
-                    // Enable scrolling lock
                     jQuery('.simplebar-content-wrapper', self._lSidebar).scrollLock('enable');
                 }
 
-                // Init custom scrolling on Side Overlay
                 if ((self._lSideOverlay.length > 0) && !self._lSideOverlayScroll) {
                     self._lSideOverlayScroll = new SimpleBar(self._lSideOverlay[0]);
 
-                    // Enable scrolling lock
                     jQuery('.simplebar-content-wrapper', self._lSideOverlay).scrollLock('enable');
                 }
             } else {
-                // If custom scrolling exists on Sidebar remove it
                 if (self._lSidebar && self._lSidebarScroll) {
-                    // Disable scrolling lock
                     jQuery('.simplebar-content-wrapper', self._lSidebar).scrollLock('disable');
 
-                    // Unmount Simplebar
                     self._lSidebarScroll.unMount();
                     self._lSidebarScroll = null;
 
-                    // Remove Simplebar leftovers
                     self._lSidebarScrollCon.removeAttr('data-simplebar')
                         .html(jQuery('.simplebar-content', self._lSidebar).html());
                 }
 
-                // If custom scrolling exists on Side Overlay remove it
                 if (self._lSideOverlay && self._lSideOverlayScroll) {
-                    // Disable scrolling lock
                     jQuery('.simplebar-content-wrapper', self._lSideOverlay).scrollLock('disable');
 
-                    // Unmount Simplebar
                     self._lSideOverlayScroll.unMount();
                     self._lSideOverlayScroll = null;
 
-                    // Remove Simplebar leftovers
                     self._lSideOverlay.removeAttr('data-simplebar')
                         .html(jQuery('.simplebar-content', self._lSideOverlay).html());
                 }
@@ -137,17 +92,11 @@ export default class Template {
         }
     }
 
-    /*
-     * Handles header related classes
-     *
-     */
     _uiHandleHeader() {
         let self = this;
 
-        // Unbind event in case it is already enabled
         jQuery(window).off('scroll.cb.header');
 
-        // If the header is fixed and has the glass style, add the related class on scrolling to add a background color to the header
         if (self._lPage.hasClass('page-header-glass') && self._lPage.hasClass('page-header-fixed')) {
             jQuery(window).on('scroll.cb.header', e => {
                 if (jQuery(e.currentTarget).scrollTop() > 60) {
@@ -159,42 +108,29 @@ export default class Template {
         }
     }
 
-    /*
-     * Toggle Submenu functionality
-     *
-     */
     _uiHandleNav() {
         let self = this;
 
-        // Unbind event in case it is already enabled
         self._lPage.off('click.cb.menu');
 
-        // When a submenu link is clicked
         self._lPage.on('click.cb.menu', '[data-toggle="nav-submenu"]', e => {
-            // Get link
             let link = jQuery(e.currentTarget);
 
-            // Get link's parent
             let parentLi = link.parent('li');
 
-            if (parentLi.hasClass('open')) { // If submenu is open, close it..
+            if (parentLi.hasClass('open')) {
                 parentLi.removeClass('open');
-            } else { // .. else if submenu is closed, close all other (same level) submenus first before open it
+            } else {
                 link.closest('ul').children('li').removeClass('open');
                 parentLi.addClass('open');
             }
 
-            // Remove focus from submenu link
             link.trigger('blur');
 
             return false;
         });
     }
 
-    /*
-     * Page loading screen functionality
-     *
-     */
     _uiHandlePageLoader(mode = 'hide', colorClass) {
         if (mode === 'show') {
             if (this._lpageLoader.length) {
@@ -213,104 +149,16 @@ export default class Template {
         }
     }
 
-    /*
-     * Material form inputs functionality
-     *
-     */
-    _uiHandleForms() {
-        jQuery('.form-material.floating > .form-control').each((index, element) => {
-            let input  = jQuery(element);
-            let parent = input.parent('.form-material');
-
-            setTimeout(e => {
-                if (input.val() ) {
-                    parent.addClass('open');
-                }
-            }, 150);
-
-            input.off('change.cb.inputs').on('change.cb.inputs', e => {
-                if (input.val()) {
-                    parent.addClass('open');
-                } else {
-                    parent.removeClass('open');
-                }
-            });
-        });
-    }
-
-    /*
-     * Set active color theme functionality
-     *
-     */
-    _uiHandleTheme() {
-        let themeEl = jQuery('#css-theme');
-        let cookies = this._lPage.hasClass('enable-cookies') ? true : false;
-
-        // If cookies are enabled
-        if (cookies) {
-            let themeName  = Cookies.get('cbThemeName') || false;
-
-            // Update color theme
-            if (themeName) {
-                Tools.updateTheme(themeEl, themeName);
-            }
-
-            // Update theme element
-            themeEl = jQuery('#css-theme');
-        }
-
-        // Set the active color theme link as active
-        jQuery('[data-toggle="theme"][data-theme="' + (themeEl.length ? themeEl.attr('href') : 'default') + '"]').parent('li').addClass('active');
-
-        // Unbind event in case it is already enabled
-        this._lPage.off('click.cb.themes');
-
-        // When a color theme link is clicked
-        this._lPage.on('click.cb.themes', '[data-toggle="theme"]', e => {
-            e.preventDefault();
-
-            // Get element and data
-            let el = jQuery(e.currentTarget);
-            let themeName = el.data('theme');
-
-            // Set this color theme link as active
-            jQuery('[data-toggle="theme"]').parent('li').removeClass('active');
-            jQuery('[data-toggle="theme"][data-theme="' + themeName + '"]').parent('li').addClass('active');
-
-            // Update color theme
-            Tools.updateTheme(themeEl, themeName);
-
-            // Update theme element
-            themeEl = jQuery('#css-theme');
-
-            // If cookies are enabled, save the new active color theme
-            if (cookies) {
-                Cookies.set('cbThemeName', themeName, { expires: 7 });
-            }
-
-            // Blur the link/button
-            el.trigger('blur');
-        });
-    }
-
-    /*
-     * Layout API
-     *
-     */
     _uiApiLayout(mode = 'init') {
         let self = this;
 
-        // Get current window width
         self._windowW = Tools.getWidth();
 
-        // API with object literals
         let layoutAPI = {
             init: () => {
-                // Unbind events in case they are already enabled
                 self._lPage.off('click.cb.layout');
                 self._lPage.off('click.cb.overlay');
 
-                // Call layout API on button click
                 self._lPage.on('click.cb.layout', '[data-toggle="layout"]', e => {
                     let el = jQuery(e.currentTarget);
 
@@ -319,7 +167,6 @@ export default class Template {
                     el.trigger('blur');
                 });
 
-                // Prepend Page Overlay div if enabled (used when Side Overlay opens)
                 if (self._lPage.hasClass('enable-page-overlay')) {
                     self._lPage.prepend('<div id="page-overlay"></div>');
 
@@ -458,7 +305,6 @@ export default class Template {
                 self._lHeaderSearch.addClass('show');
                 self._lHeaderSearchInput.focus();
 
-                // When ESCAPE key is hit close the search section
                 jQuery(document).on('keydown.cb.header.search', e => {
                     if (e.which === 27) {
                         e.preventDefault();
@@ -511,32 +357,23 @@ export default class Template {
             }
         };
 
-        // Call layout API
         if (layoutAPI[mode]) {
             layoutAPI[mode]();
         }
     }
 
-    /*
-     * Blocks API
-     *
-     */
     _uiApiBlocks(block = false, mode = 'init') {
         let self = this;
 
-        // Helper variables
         let elBlock, btnFullscreen, btnContentToggle;
 
-        // Set default icons for fullscreen and content toggle buttons
         let iconFullscreen         = 'icon icon-size-fullscreen';
         let iconFullscreenActive   = 'icon icon-size-actual';
         let iconContent            = 'icon icon-arrow-up';
         let iconContentActive      = 'icon icon-arrow-down';
 
-        // API with object literals
         let blockAPI = {
             init: () => {
-                // Auto add the default toggle icons to fullscreen and content toggle buttons
                 jQuery('[data-toggle="block-option"][data-action="fullscreen_toggle"]').each((index, element) => {
                     let el = jQuery(element);
 
@@ -549,7 +386,6 @@ export default class Template {
                     el.html('<i class="' + (el.closest('.block').hasClass('block-mode-hidden') ? iconContentActive : iconContent) + '"></i>');
                 });
 
-                // Unbind event in case it is already enabled
                 self._lPage.off('click.cb.blocks');
 
                 // Call blocks API on option button click
@@ -560,14 +396,12 @@ export default class Template {
             fullscreen_toggle: () => {
                 elBlock.removeClass('block-mode-pinned').toggleClass('block-mode-fullscreen');
 
-                // Enable/disable scroll lock to block
                 if (elBlock.hasClass('block-mode-fullscreen')) {
                     jQuery(elBlock).scrollLock('enable');
                 } else {
                     jQuery(elBlock).scrollLock('disable');
                 }
 
-                // Update block option icon
                 if (btnFullscreen.length) {
                     if (elBlock.hasClass('block-mode-fullscreen')) {
                         jQuery('i', btnFullscreen)
@@ -583,10 +417,8 @@ export default class Template {
             fullscreen_on: () => {
                 elBlock.removeClass('block-mode-pinned').addClass('block-mode-fullscreen');
 
-                // Enable scroll lock to block
                 jQuery(elBlock).scrollLock('enable');
 
-                // Update block option icon
                 if (btnFullscreen.length) {
                     jQuery('i', btnFullscreen)
                         .removeClass(iconFullscreen)
@@ -596,10 +428,8 @@ export default class Template {
             fullscreen_off: () => {
                 elBlock.removeClass('block-mode-fullscreen');
 
-                // Disable scroll lock to block
                 jQuery(elBlock).scrollLock('disable');
 
-                // Update block option icon
                 if (btnFullscreen.length) {
                     jQuery('i', btnFullscreen)
                         .removeClass(iconFullscreenActive)
@@ -609,7 +439,6 @@ export default class Template {
             content_toggle: () => {
                 elBlock.toggleClass('block-mode-hidden');
 
-                // Update block option icon
                 if (btnContentToggle.length) {
                     if (elBlock.hasClass('block-mode-hidden')) {
                         jQuery('i', btnContentToggle)
@@ -625,7 +454,6 @@ export default class Template {
             content_hide: () => {
                 elBlock.addClass('block-mode-hidden');
 
-                // Update block option icon
                 if (btnContentToggle.length) {
                     jQuery('i', btnContentToggle)
                         .removeClass(iconContent)
@@ -635,7 +463,6 @@ export default class Template {
             content_show: () => {
                 elBlock.removeClass('block-mode-hidden');
 
-                // Update block option icon
                 if (btnContentToggle.length) {
                     jQuery('i', btnContentToggle)
                         .removeClass(iconContentActive)
@@ -645,7 +472,6 @@ export default class Template {
             state_toggle: () => {
                 elBlock.toggleClass('block-mode-loading');
 
-                // Return block to normal state if the demostration mode is on in the refresh option button - data-action-mode="demo"
                 if (jQuery('[data-toggle="block-option"][data-action="state_toggle"][data-action-mode="demo"]', elBlock).length) {
                     setTimeout(() => {
                         elBlock.removeClass('block-mode-loading');
@@ -676,19 +502,14 @@ export default class Template {
         };
 
         if (mode === 'init') {
-            // Call Block API
             blockAPI[mode]();
         } else {
-            // Get block element
             elBlock = (block instanceof jQuery) ? block : jQuery(block);
 
-            // If element exists, procceed with block functionality
             if (elBlock.length) {
-                // Get block option buttons if exist (need them to update their icons)
                 btnFullscreen       = jQuery('[data-toggle="block-option"][data-action="fullscreen_toggle"]', elBlock);
                 btnContentToggle    = jQuery('[data-toggle="block-option"][data-action="content_toggle"]', elBlock);
 
-                // Call Block API
                 if (blockAPI[mode]) {
                     blockAPI[mode]();
                 }
@@ -696,50 +517,22 @@ export default class Template {
         }
     }
 
-    /*
-     ********************************************************************************************
-     *
-     * Create aliases for easier/quicker access to vital methods
-     *
-     *********************************************************************************************
-     */
-
-    /*
-     * Init base functionality
-     *
-     */
     init() {
         this._uiInit();
     }
 
-    /*
-     * Layout API
-     *
-     */
     layout(mode) {
         this._uiApiLayout(mode);
     }
 
-    /*
-     * Blocks API
-     *
-     */
     blocks(block, mode) {
         this._uiApiBlocks(block, mode);
     }
 
-    /*
-     * Handle Page Loader
-     *
-     */
     loader(mode, colorClass) {
         this._uiHandlePageLoader(mode, colorClass);
     }
 
-    /*
-     * Run Helpers
-     *
-     */
     helpers(helpers, options = {}) {
         Helpers.run(helpers, options);
     }

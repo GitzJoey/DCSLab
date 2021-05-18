@@ -6,5 +6,5 @@ return [
     'inbox' => 'Surat Masuk',
     'activity' => 'Aktifitas',
     'notifications' => 'Notifikasi',
-    'search_pladeholder' => 'Cari atau tekan ESC..',
+    'search_placeholder' => 'Cari atau tekan ESC..',
 ];
