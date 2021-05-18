@@ -6,5 +6,5 @@ return [
     'inbox' => 'Inbox',
     'settings' => 'Settings',
     'notifications' => 'Notifications',
-    'search_pladeholder' => 'Search or hit ESC..',
+    'search_placeholder' => 'Search or hit ESC..',
 ];
