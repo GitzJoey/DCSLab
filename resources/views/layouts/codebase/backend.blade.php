@@ -35,7 +35,7 @@
         @yield('css_after')
     </head>
     <body>
-        <div id="page-loader" class="show"></div>
+        <div id="page-loader" class="show bg-gd-sea"></div>
 
         <div id="page-container" class="sidebar-o sidebar-inverse enable-page-overlay side-scroll page-header-modern main-content-boxed">
             @include('layouts.codebase.side-overlay')
@@ -45,6 +45,8 @@
             @include('layouts.codebase.header')
 
             <main id="main-container">
+                @include('layouts.codebase.global_alert')
+
                 <div class="content">
                     @yield('content')
                 </div>

@@ -6,8 +6,10 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\ActivityLogService;
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\ActivityLogServiceImpl;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(UserService::class, function (){
             return new UserServiceImpl();
+        });
+
+        $this->app->singleton(ActivityLogService::class, function (){
+            return new ActivityLogServiceImpl();
         });
     }
 

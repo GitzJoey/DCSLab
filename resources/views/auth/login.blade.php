@@ -17,10 +17,10 @@
                 </p>
             </div>
         </div>
-        <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible" data-toggle="appear" data-class="animated fadeInRight">
+        <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible animate__fadeInRight" data-toggle="appear">
             <div class="content content-full">
                 <div class="px-30 py-10">
-                    <a class="link-effect font-w700" href="index.html">
+                    <a class="link-effect font-w700" href="#">
                         <i class="si si-fire"></i>
                         <span class="font-size-xl text-primary-dark">DCS</span><span class="font-size-xl">Lab</span>
                     </a>
@@ -36,7 +36,7 @@
                                 <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
                                 <label for="email">{{ __('auth.login.email') }}</label>
                                 @error('email')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('email') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('email') }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                                 <input type="password" class="form-control" id="password" name="password">
                                 <label for="password">{{ __('auth.login.password') }}</label>
                                 @error('password')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('password') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('password') }}</div>
                                 @enderror
                             </div>
                         </div>

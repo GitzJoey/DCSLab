@@ -39,7 +39,7 @@
                                 <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
                                 <label for="name"> {{ __('auth.register.name') }}</label>
                                 @error('name')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('name') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('name') }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                 <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
                                 <label for="email">{{ __('auth.register.email') }}</label>
                                 @error('email')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('email') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('email') }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                 <input type="password" class="form-control" id="password" name="password">
                                 <label for="password">{{ __('auth.register.password') }}</label>
                                 @error('password')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('password') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('password') }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
                                 <label for="password_confirmation">{{ __('auth.register.password_confirmation') }}</label>
                                 @error('password')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('password') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('password') }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                                 <input type="checkbox" class="custom-control-input" id="terms" name="terms">
                                 <label class="custom-control-label" for="terms">{{ __('auth.register.agree_1').__('auth.register.agree_2') }}</label>
                                 @error('terms')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('terms') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('terms') }}</div>
                                 @enderror
                             </div>
                         </div>

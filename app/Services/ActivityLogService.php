@@ -4,13 +4,14 @@ namespace App\Services;
 
 interface ActivityLogService
 {
-    public function ViewActivity(
-        $viewName
+    public function RoutingActivity(
+        $routeName,
+        $routeParameters
     );
 
-    public function ActionActivity(
-        $type,
-        $controller,
-        $method
+    public function AuthActivity(
+        $type
     );
+
+    public function GetActivityById($id);
 }

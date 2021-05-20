@@ -17,7 +17,7 @@
                 </p>
             </div>
         </div>
-        <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible" data-toggle="appear" data-class="animated fadeInRight">
+        <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible animate__fadeInRight" data-toggle="appear">
             <div class="content content-full">
                 <div class="px-30 py-10">
                     <a class="link-effect font-w700" href="{{ route('welcome') }}">
@@ -63,7 +63,7 @@
                                     <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
                                     <label for="email">{{ __('auth.reset_password.email.email') }}</label>
                                     @error('email')
-                                        <div class="invalid-feedback animated fadeInDown">{{ $errors->first('email') }}</div>
+                                        <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('email') }}</div>
                                     @enderror
                                 </div>
                             </div>

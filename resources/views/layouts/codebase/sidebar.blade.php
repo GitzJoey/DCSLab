@@ -2,8 +2,8 @@
     <div class="sidebar-content">
         <div class="content-header content-header-fullrow px-15">
             <div class="content-header-section sidebar-mini-visible-b">
-                <span class="content-header-item font-w700 font-size-xl float-left animated fadeIn">
-                    <span class="text-dual-primary-dark">c</span><span class="text-primary">b</span>
+                <span class="content-header-item font-w700 font-size-xl float-left animate__fadeIn">
+                    <span class="text-dual-primary-dark">G</span><span class="text-primary">J</span>
                 </span>
             </div>
 
@@ -14,7 +14,6 @@
 
                 <div class="content-header-item">
                     <a class="link-effect font-w700" href="{{ route('db') }}">
-                        <i class="si si-fire text-primary"></i>
                         <span class="font-size-xl text-dual-primary-dark">DCS</span><span class="font-size-xl text-primary">Lab</span>
                     </a>
                 </div>
@@ -23,8 +22,8 @@
 
         <div class="js-sidebar-scroll">
             <div class="content-side content-side-full content-side-user px-10 align-parent">
-                <div class="sidebar-mini-visible-b align-v animated fadeIn">
-                    <img class="img-avatar img-avatar32" src="{{ asset('images/def-user.png') }}" alt="">
+                <div class="sidebar-mini-visible-b align-v animate__fadeIn">
+                    <img class="img-avatar img-avatar32" src="{{ !is_null(\Illuminate\Support\Facades\Auth::user()->profile->img_path) ? asset('storage/'.\Illuminate\Support\Facades\Auth::user()->profile->img_path):asset('images/def-user.png') }}" alt="">
                 </div>
 
                 <div class="sidebar-mini-hidden-b text-center">
