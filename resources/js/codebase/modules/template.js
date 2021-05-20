@@ -26,8 +26,9 @@ export default class Template {
         this._windowW               = Tools.getWidth();
 
         this._uiHandleSidebars('init');
-        this._uiHandleNav();
         this._uiHandleHeader();
+        this._uiHandleNav();
+        this._uiHandleForms();
 
         this._uiApiLayout();
         this._uiApiBlocks();
@@ -147,6 +148,27 @@ export default class Template {
                 this._lpageLoader.removeClass('show');
             }
         }
+    }
+
+    _uiHandleForms() {
+        jQuery('.form-material.floating > .form-control').each((index, element) => {
+            let input  = jQuery(element);
+            let parent = input.parent('.form-material');
+
+            setTimeout(e => {
+                if (input.val() ) {
+                    parent.addClass('open');
+                }
+            }, 150);
+
+            input.off('change.cb.inputs').on('change.cb.inputs', e => {
+                if (input.val()) {
+                    parent.addClass('open');
+                } else {
+                    parent.removeClass('open');
+                }
+            });
+        });
     }
 
     _uiApiLayout(mode = 'init') {

@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'title' => 'Aktifitas'
+    'title' => 'Aktifitas',
+    'page_title' => 'Lini Masa Terkini',
 ];

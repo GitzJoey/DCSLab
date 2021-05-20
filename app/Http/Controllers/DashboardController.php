@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rules\sameEmail;
+use App\Services\ActivityLogService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,31 +11,34 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     private $userService;
+    private $activityLogService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->userService = $userService;
+        $this->activityLogService = $activityLogService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
+
         return view('dashboard.index');
     }
 
-    public function profile()
+    public function profile(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
+
         return view('dashboard.profile');
     }
 
-    public function inbox()
+    public function inbox(Request $request)
     {
-        return view('dashboard.inbox');
-    }
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-    public function activity()
-    {
-        return view('dashboard.activity');
+        return view('dashboard.inbox');
     }
 
     public function readProfile()
@@ -94,6 +98,5 @@ class DashboardController extends Controller
                 'message' => ''
             ],200);
         }
-
     }
 }

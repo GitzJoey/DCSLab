@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rules\unchangedRoleName;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
 use App\Services\RoleService;
@@ -11,15 +12,19 @@ use Vinkla\Hashids\Facades\Hashids;
 class RoleController extends Controller
 {
     private $roleService;
+    private $activityLogService;
 
-    public function __construct(RoleService $roleService)
+    public function __construct(RoleService $roleService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->roleService = $roleService;
+        $this->activityLogService = $activityLogService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
+
         return view('role.index');
     }
 

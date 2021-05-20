@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rules\sameEmail;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
 use App\Services\UserService;
@@ -16,16 +17,20 @@ class UserController extends Controller
 {
     private $userService;
     private $roleService;
+    private $activityLogService;
 
-    public function __construct(UserService $userService, RoleService $roleService)
+    public function __construct(UserService $userService, RoleService $roleService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->userService = $userService;
         $this->roleService = $roleService;
+        $this->activityLogService = $activityLogService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
+
         return view('user.index');
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\DevController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\WarehouseController;
@@ -51,7 +52,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get('', [DashboardController::class, 'index'])->name('db');
         Route::get('profile', [DashboardController::class, 'profile'])->name('db.profile');
         Route::get('inbox', [DashboardController::class, 'inbox'])->name('db.inbox');
-        Route::get('activity', [DashboardController::class, 'activity'])->name('db.activity');        
+        Route::get('activity', [ActivityLogController::class, 'index'])->name('db.activity');
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product_groups');
@@ -75,10 +76,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('customer groups', [SalesCustomerGroupController::class, 'index'])->name('db.sales_customer_groups');
             Route::get('customers', [SalesCustomerController::class, 'index'])->name('db.sales_customers');
         });
-        
+
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');
 
-        Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|dev']],function() {
+        Route::group(['prefix' => 'admin', 'middleware' => ['role:administrator|dev']],function() {
             Route::group(['prefix' => 'users'],function() {
                 Route::get('users', [UserController::class, 'index'])->name('db.admin.users.users');
                 Route::get('roles', [RoleController::class, 'index'])->name('db.admin.users.roles');
@@ -98,5 +99,5 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
                 Route::get('ex5', [DevController::class, 'ex5'])->name('db.dev.examples.ex5');
             });
         });
-    });   
+    });
 });

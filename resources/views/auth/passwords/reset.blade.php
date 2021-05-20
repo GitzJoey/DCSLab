@@ -17,7 +17,7 @@
                 </p>
             </div>
         </div>
-        <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible" data-toggle="appear" data-class="animated fadeInRight">
+        <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible animate__fadeInRight" data-toggle="appear">
             <div class="content content-full">
                 <div class="px-30 py-10">
                     <a class="link-effect font-w700" href="{{ route('welcome') }}">
@@ -37,7 +37,7 @@
                                 <input type="email" class="form-control" id="email" name="email" value="{{ $email }}" readonly>
                                 <label for="email">{{ __('auth.reset_password.reset.email') }}</label>
                                 @error('email')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('email') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('email') }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                                 <input type="password" class="form-control" id="password" name="password">
                                 <label for="password">{{ __('auth.reset_password.reset.password') }}</label>
                                 @error('password')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('password') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('password') }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                                 <input type="password" class="form-control" id="password_confirm" name="password_confirmation">
                                 <label for="password">{{ __('auth.reset_password.reset.password_confirmation') }}</label>
                                 @error('password')
-                                    <div class="invalid-feedback animated fadeInDown">{{ $errors->first('password') }}</div>
+                                    <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('password') }}</div>
                                 @enderror
                             </div>
                         </div>

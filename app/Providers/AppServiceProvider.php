@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Services\UserService;
 use App\Services\RoleService;
-
+use App\Services\ActivityLogService;
 use App\Services\CompanyService;
 use App\Services\BranchService;
 use App\Services\WarehouseService;
@@ -21,6 +21,7 @@ use App\Services\SalesCustomerService;
 
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
@@ -36,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     * 
+     *
      * @return void
      */
     public function register()
@@ -47,6 +48,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(UserService::class, function (){
             return new UserServiceImpl();
+        });
+
+        $this->app->singleton(ActivityLogService::class, function (){
+            return new ActivityLogServiceImpl();
         });
 
         $this->app->singleton(ProductGroupService::class, function (){
@@ -80,7 +85,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(SalesCustomerService::class, function (){
             return new SalesCustomerServiceImpl();
         });
-        
+
         $this->app->singleton(BranchService::class, function (){
             return new BranchServiceImpl();
         });
