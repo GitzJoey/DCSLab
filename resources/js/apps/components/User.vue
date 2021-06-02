@@ -25,14 +25,39 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.email") }}</th>
+                                <th>{{ $t("table.cols.roles") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-for="(u, uIdx) in userList.data">
+                                <td>{{ u.name }}</td>
+                                <td>{{ u.email }}</td>
+                                <td>
+                                    <span v-for="(r, rIdx) in u.roles">{{ r.display_name }}</span><br/>
+                                </td>
+                                <td>{{ u.profile.status }}</td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(uIdx)">
+                                            <i class="fa fa-info"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(uIdx)">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        &nbsp;
+                                        &nbsp;
+                                        &nbsp;
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.reset_password')" v-on:click="resetPassword(u.email)">
+                                            <i class="fa fa-ticket"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">

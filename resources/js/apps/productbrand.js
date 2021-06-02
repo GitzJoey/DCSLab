@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n }from 'vue-i18n';
-import Company from './components/Company';
+import ProductBrand from './components/ProductBrand';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -13,11 +13,10 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Company Lists',
+            title: 'Product Brand Lists',
             cols: {
                 code: 'Code',
                 name: 'Name',
-                status: 'Status',
             }
         },
         buttons: {
@@ -26,14 +25,13 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Company',
-            edit: 'Edit Company',
-            show: 'Show Company',
+            create: 'Create Product Brand',
+            edit: 'Edit Product Group',
+            show: 'Show Product Group',
         },
         fields: {
             code: 'Code',
             name: 'Name',
-            status: 'Status',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -47,18 +45,13 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
-        statusDDL: {
-            active: 'Active',
-            inactive: 'Inactive',
-        }
     },
     id: {
         table: {
-            title: 'Daftar Perusahaan',
+            title: 'Daftar Merk Product',
             cols: {
                 kode: 'Kode',
                 name: 'Nama',
-                status: 'Status',
             }
         },
         buttons: {
@@ -67,15 +60,14 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Perusahaan',
-            edit: 'Ubah Perusahaan',
-            show: 'Tampilkan Perusahaan',
+            create: 'Tambah Merk Product',
+            edit: 'Ubah Product Group',
+            show: 'Tampilkan Product Group',
             reset_password: 'Reset Password',
         },
         fields: {
             code: 'Kode',
             name: 'Nama',
-            status: 'Status',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -89,10 +81,6 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
-        statusDDL: {
-            active: 'Aktif',
-            inactive: 'Tidak Aktif',
-        }
     }
 };
 
@@ -102,6 +90,6 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(Company)
+createApp(ProductBrand)
     .use(i18n)
-    .mount('#companyVue')
+    .mount('#productbrandVue')

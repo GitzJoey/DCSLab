@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n }from 'vue-i18n';
-import Company from './components/Company';
+import FinanceCash from './components/FinanceCash';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -13,11 +13,12 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Company Lists',
+            title: 'Cash Lists',
             cols: {
                 code: 'Code',
                 name: 'Name',
                 status: 'Status',
+                bank: 'Is Bank',
             }
         },
         buttons: {
@@ -26,14 +27,15 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Company',
-            edit: 'Edit Company',
-            show: 'Show Company',
+            create: 'Create Cash',
+            edit: 'Edit Cash',
+            show: 'Show Cash',
         },
         fields: {
             code: 'Code',
             name: 'Name',
             status: 'Status',
+            bank: 'Is Bank',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -50,15 +52,20 @@ const messages = {
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
-        }
+        },
+        bankDDL: {
+            active: 'Active',
+            inactive: '-',
+        },
     },
     id: {
         table: {
-            title: 'Daftar Perusahaan',
+            title: 'Daftar Kas',
             cols: {
                 kode: 'Kode',
                 name: 'Nama',
                 status: 'Status',
+                bank: 'Bank',
             }
         },
         buttons: {
@@ -67,15 +74,16 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Perusahaan',
-            edit: 'Ubah Perusahaan',
-            show: 'Tampilkan Perusahaan',
+            create: 'Tambah Kas',
+            edit: 'Ubah Kas',
+            show: 'Tampilkan Kas',
             reset_password: 'Reset Password',
         },
         fields: {
             code: 'Kode',
             name: 'Nama',
             status: 'Status',
+            bank: 'Bank',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -92,7 +100,7 @@ const messages = {
         statusDDL: {
             active: 'Aktif',
             inactive: 'Tidak Aktif',
-        }
+        },
     }
 };
 
@@ -102,6 +110,6 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(Company)
+createApp(FinanceCash)
     .use(i18n)
-    .mount('#companyVue')
+    .mount('#financecashVue')

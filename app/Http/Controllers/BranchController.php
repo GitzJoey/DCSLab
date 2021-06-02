@@ -19,9 +19,8 @@ class BranchController extends Controller
 
     public function index()
     {
-        $test = $this->read();
 
-        return view('company.branches.index', compact('test'));
+        return view('company.branches.index');
     }
 
     public function read()

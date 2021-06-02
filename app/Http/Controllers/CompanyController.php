@@ -19,9 +19,7 @@ class CompanyController extends Controller
 
     public function index()
     {
-        $test = $this->read();
-
-        return view('company.companies.index', compact('test'));
+        return view('company.companies.index');
     }
 
     public function read()

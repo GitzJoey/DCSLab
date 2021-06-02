@@ -21,7 +21,7 @@ class Warehouse extends Model
         'is_active'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'address', 'city'];
+    protected static $logAttributes = ['code', 'name', 'address', 'city','contact','remarks','is_active'];
 
     protected static $logOnlyDirty = true;
 

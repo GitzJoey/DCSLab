@@ -19,9 +19,8 @@ class SalesCustomerGroupController extends Controller
 
     public function index()
     {
-        $test = $this->read();
 
-        return view('sales.customer.groups.index', compact('test'));
+        return view('sales.customer.groups.index');
     }
 
     public function read()
@@ -35,11 +34,11 @@ class SalesCustomerGroupController extends Controller
             'code' => 'required|max:255',
             'name' => 'required|max:255',
             'is_member_card' => 'required',
-            'use_limit_outstanding_notes' => 'required|max:255',
+            'use_limit_outstanding_notes' => 'required',
             'limit_outstanding_notes' => 'required|max:255',
             'use_limit_payable_nominal' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'use_limit_due_date' => 'required|max:255',
+            'limit_payable_nominal' => 'required',
+            'use_limit_due_date' => 'required',
             'limit_due_date' => 'required|max:255',
             'term' => 'required|max:255',
             'selling_point' => 'required|max:255',
@@ -53,7 +52,7 @@ class SalesCustomerGroupController extends Controller
             'round_on' => 'required|max:255',
             'round_digit' => 'required|max:255',
             'remarks' => 'required|max:255',
-            'finance_cash_id' => 'required|max:255'
+            'finance_cash_id' => 'required'
     
         ]);
 
