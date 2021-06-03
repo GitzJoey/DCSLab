@@ -4,7 +4,7 @@ return [
     'title' => 'Dashboard',
     'profile' => 'Profil',
     'inbox' => 'Surat Masuk',
-    'settings' => 'Pengaturan',
+    'activity' => 'Aktifitas',
     'notifications' => 'Notifikasi',
     'search_placeholder' => 'Cari atau tekan ESC..',
 ];

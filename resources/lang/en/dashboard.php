@@ -4,7 +4,7 @@ return [
     'title' => 'Dashboard',
     'profile' => 'Profile',
     'inbox' => 'Inbox',
-    'settings' => 'Settings',
+    'activity' => 'Activity',
     'notifications' => 'Notifications',
     'search_placeholder' => 'Search or hit ESC..',
 ];
