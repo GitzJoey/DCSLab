@@ -134,7 +134,7 @@
                         <div class="form-group row">
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
-                                <input id="inputContact" name="contact" type="number" class="form-control" :placeholder="$t('fields.contact')" v-model="warehouse.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="warehouse.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ warehouse.contact }}</div>
                             </div>

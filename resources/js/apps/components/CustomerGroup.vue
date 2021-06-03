@@ -248,11 +248,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputRoundOn" class="col-2 col-form-label">{{ $t('fields.round_on') }}</label>
+                            <label class="col-2 col-form-label" for="example-select">Round On</label>
                             <div class="col-md-10">
-                                <Field id="inputRoundOn" name="round_on" as="input" :class="{'form-control':true, 'is-invalid': errors['round_on']}" :placeholder="$t('fields.round_on')" :label="$t('fields.round_on')" v-model="customergroup.round_on" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
-                                <ErrorMessage name="round_on" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ group.round_on }}</div>
+                                <select class="form-control" id="example-select" name="example-select">
+                                    <option value="0">Please select Round On</option>
+                                    <option value="1">High</option>
+                                    <option value="2">Low</option>
+                                </select>             
                             </div>
                         </div>
                         <div class="form-group row">

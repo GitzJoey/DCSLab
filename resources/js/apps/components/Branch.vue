@@ -132,7 +132,7 @@
                         <div class="form-group row">
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
-                                <input id="inputContact" name="contact" type="numeber" class="form-control" :placeholder="$t('fields.contact')" v-model="branch.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="branch.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.contact }}</div>
                             </div>
                         </div>

@@ -87,11 +87,11 @@ const messages = {
         table: {
             title: 'Daftar Product',
             cols: {
-                code: 'Code',
+                code: 'Kode',
                 group_name: 'Nama Group',
                 brand_name: 'Nama Merk',
                 name: 'Nama',
-                unit_name: 'Nama Satuaj',
+                unit_name: 'Nama Satuan',
                 price: 'Harga',
                 tax: 'Ppn',
                 information: 'Informasi',
@@ -117,11 +117,11 @@ const messages = {
             reset_password: 'Reset Password',
         },
         fields: {
-            code: 'Code',
+            code: 'Kode',
             group_name: 'Nama Group',
             brand_name: 'Nama Merk',
             name: 'Nama',
-            unit_name: 'Nama Satuaj',
+            unit_name: 'Nama Satuan',
             price: 'Harga',
             tax: 'Ppn',
             information: 'Informasi',
