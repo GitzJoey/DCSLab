@@ -19,9 +19,8 @@ class ProductGroupController extends Controller
 
     public function index()
     {
-        $test = $this->read();
 
-        return view('product.groups.index', compact('test'));
+        return view('product.groups.index');
     }
 
     public function read()

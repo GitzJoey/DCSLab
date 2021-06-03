@@ -4,16 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Company extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'code',
         'name',
         'is_active'
     ];
+
+    protected static $logAttributes = ['code', 'name', 'is_active'];
+
+    protected static $logOnlyDirty = true;
+
 
     protected $hidden = [
         'created_by',

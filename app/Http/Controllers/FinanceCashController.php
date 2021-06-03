@@ -19,9 +19,8 @@ class FinanceCashController extends Controller
 
     public function index()
     {
-        $test = $this->read();
-
-        return view('finance.cashes.index', compact('test'));
+        
+        return view('finance.cashes.index');
     }
 
     public function read()

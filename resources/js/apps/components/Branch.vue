@@ -25,23 +25,32 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
+                                <th>{{ $t("table.cols.company_name") }}</th>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.address") }}</th>
+                                <th>{{ $t("table.cols.city") }}</th>
+                                <th>{{ $t("table.cols.contact") }}</th>
+                                <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in companyList.data">
-                                <td>{{ c.code }}</td>
-                                <td>{{ c.name }}</td>
-                                <td>{{ c.status }}</td>
+                            <tr v-for="(b, bIdx) in branchList.data">
+                                <td>{{ b.company_name }}</td>
+                                <td>{{ b.code }}</td>
+                                <td>{{ b.name }}</td>
+                                <td>{{ b.address }}</td>
+                                <td>{{ b.city }}</td>
+                                <td>{{ b.contact }}</td>
+                                <td>{{ b.remarks }}</td>
+                                <td>{{ b.status }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     </div>
@@ -51,13 +60,13 @@
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.companyList.prev_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.branchList.prev_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
-                            <li :class="{'page-item':true, 'disabled': this.companyList.next_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.branchList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
@@ -69,7 +78,7 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
-                    <Form id="companyForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                    <Form id="branchForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -80,32 +89,72 @@
                             </ul>
                         </div>
                         <div class="form-group row">
+                            <label class="col-2 col-form-label" for="example-select">Company Name</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="example-select" name="example-select">
+                                    <option value="0">Please select Company Name</option>
+                                    <option value="1">PT. ABC</option>
+                                    <option value="2">PT. DEF</option>
+                                    <option value="3">PT. GHI</option>
+                                </select>             
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="company.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="branch.code" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ company.code }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="company.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="branch.name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ company.name }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.name }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
+                            <div class="col-md-10">
+                                <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="branch.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.address }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
+                            <div class="col-md-10">
+                                <input id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="branch.city" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.city }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
+                            <div class="col-md-10">
+                                <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="branch.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.contact }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
+                            <div class="col-md-10">
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="branch.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <ErrorMessage name="remarks" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.remarks }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="company.status" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <select class="form-control" id="inputStatus" name="status" v-model="branch.status" v-if="this.mode === 'create' || this.mode === 'edit'">
                                         <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
                                         <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
                                     </select>
                                     <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="company.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="company.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
+                                        <span v-if="branch.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
+                                        <span v-if="branch.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -157,8 +206,13 @@ export default {
     },
     setup() {
         const schema = {
+            company_name: 'required',
             code: 'required',
             name: 'required',
+            address: 'required',
+            city: 'required',
+            contact: 'required',
+            remarks: 'required',
         };
 
         return {
@@ -171,10 +225,10 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            companyList: { },
-            company: {
-                company: [],
-                selectedCompanies: [],
+            branchList: { },
+            branch: {
+                branch: [],
+                selectedBranches: [],
                 profile: {
                     status: 'ACTIVE',
                 },
@@ -191,30 +245,30 @@ export default {
 
     mounted() {
         this.mode = 'list';
-        this.getAllCompany(1);
-        //this.getAllCompanies();
+        this.getAllBranch(1);
+        //this.getAllBranches();
     },
     methods: {
-        getAllCompany(page) {
+        getAllBranch(page) {
             this.loading = true;
-            axios.get('/api/get/admin/company/read?page=' + page).then(response => {
-                this.companyList = response.data;
+            axios.get('/api/get/admin/branch/read?page=' + page).then(response => {
+                this.branchList = response.data;
                 this.loading = false;
             });
         },
         onPaginationChangePage(page) {
             if (page === 'next') {
-                this.getAllCompany(this.companyList.current_page + 1);
+                this.getAllBranch(this.branchList.current_page + 1);
             } else if (page === 'prev') {
-                this.getAllCompany(this.companyList.current_page - 1);
+                this.getAllBranch(this.branchList.current_page - 1);
             } else {
-                this.getAllCompany(page);
+                this.getAllBranch(page);
             }
         },
-        emptyCompany() {
+        emptyBranch() {
             return {
-                company: [],
-                selectedCompanies: [],
+                branch: [],
+                selectedBranches: [],
                 profile: {
                     img_path: '',
                     country: '',
@@ -229,20 +283,20 @@ export default {
         },
         createNew() {
             this.mode = 'create';
-            this.company = this.emptyCompany();
+            this.branch = this.emptyBranch();
         },
         editSelected(idx) {
             this.mode = 'edit';
-            this.company = this.companyList.data[idx];
+            this.branch = this.branchList.data[idx];
         },
         showSelected(idx) {
             this.mode = 'show';
-            this.company = this.companyList.data[idx];
+            this.branch = this.branchList.data[idx];
         },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/company/save', new FormData($('#companyForm')[0]), {
+                axios.post('/api/post/admin/branch/save', new FormData($('#branchForm')[0]), {
                     headers: {
                         'content-type': 'multipart/form-data'
                     }
@@ -253,7 +307,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/company/edit/' + this.company.hId, new FormData($('#companyForm')[0]), {
+                axios.post('/api/post/admin/branch/edit/' + this.branch.hId, new FormData($('#branchForm')[0]), {
                     headers: {
                         'content-type': 'multipart/form-data'
                     }
@@ -285,14 +339,14 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.company.profile.img_path = fileReader.result
+                this.branch.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllCompany(this.companyList.current_page);
-            this.company = this.emptyCompany();
+            this.getAllBranch(this.branchList.current_page);
+            this.branch = this.emptyBranch();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -301,25 +355,25 @@ export default {
             this.contentHidden = !this.contentHidden;
         },
         refreshList() {
-            this.getAllCompany(this.companyList.current_page);
+            this.getAllBranch(this.branchList.current_page);
         },
     },
     computed: {
         getPages() {
-            if (this.companyList.current_page == null) return 0;
+            if (this.branchList.current_page == null) return 0;
 
-            return Math.ceil(this.companyList.total / this.companyList.per_page);
+            return Math.ceil(this.branchList.total / this.branchList.per_page);
         },
         retrieveImage()
         {
-            if (this.company.profile.img_path && this.company.profile.img_path !== '') {
-                if (this.company.profile.img_path.includes('data:image')) {
-                    return this.company.profile.img_path;
+            if (this.branch.profile.img_path && this.branch.profile.img_path !== '') {
+                if (this.branch.profile.img_path.includes('data:image')) {
+                    return this.branch.profile.img_path;
                 } else {
-                    return '/storage/' + this.company.profile.img_path;
+                    return '/storage/' + this.branch.profile.img_path;
                 }
             } else {
-                return '/images/def-company.png';
+                return '/images/def-branch.png';
             }
         }
     }

@@ -14,13 +14,13 @@ use App\Services\FinanceCashService;
 use App\Services\ProductGroupService;
 use App\Services\ProductBrandService;
 use App\Services\ProductService;
+use App\Services\ProductUnitService;
 use App\Services\SalesCustomerGroupService;
 use App\Services\SalesCustomerService;
 
 
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
-
 use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
@@ -28,15 +28,15 @@ use App\Services\Impls\FinanceCashServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductBrandServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
+use App\Services\Impls\ProductUnitServiceImpl;
 use App\Services\Impls\SalesCustomerGroupServiceImpl;
 use App\Services\Impls\SalesCustomerServiceImpl;
-
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
+     * 
      * @return void
      */
     public function register()
@@ -55,6 +55,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ProductBrandService::class, function (){
             return new ProductBrandServiceImpl();
+        });
+
+        $this->app->singleton(ProductUnitService::class, function (){
+            return new ProductUnitServiceImpl();
         });
 
         $this->app->singleton(ProductService::class, function (){

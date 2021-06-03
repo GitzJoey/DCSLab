@@ -27,15 +27,13 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in companyList.data">
+                            <tr v-for="(c, cIdx) in productgroupList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.status }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -51,13 +49,13 @@
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.companyList.prev_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.productgroupList.prev_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
-                            <li :class="{'page-item':true, 'disabled': this.companyList.next_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.productgroupList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
@@ -69,7 +67,7 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
-                    <Form id="companyForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                    <Form id="productgroupForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -82,32 +80,17 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="company.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productgroup.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ company.code }}</div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ productgroup.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="company.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productgroup.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ company.name }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="company.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
-                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="company.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="company.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
-                                    </div>
-                                </div>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ productgroup.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -171,9 +154,9 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            companyList: { },
-            company: {
-                company: [],
+            productgroupList: { },
+            productgroup: {
+                productgroup: [],
                 selectedCompanies: [],
                 profile: {
                     status: 'ACTIVE',
@@ -191,29 +174,29 @@ export default {
 
     mounted() {
         this.mode = 'list';
-        this.getAllCompany(1);
+        this.getAllProductGroup(1);
         //this.getAllCompanies();
     },
     methods: {
-        getAllCompany(page) {
+        getAllProductGroup(page) {
             this.loading = true;
-            axios.get('/api/get/admin/company/read?page=' + page).then(response => {
-                this.companyList = response.data;
+            axios.get('/api/get/admin/productgroup/read?page=' + page).then(response => {
+                this.productgroupList = response.data;
                 this.loading = false;
             });
         },
         onPaginationChangePage(page) {
             if (page === 'next') {
-                this.getAllCompany(this.companyList.current_page + 1);
+                this.getAllProductGroup(this.productgroupList.current_page + 1);
             } else if (page === 'prev') {
-                this.getAllCompany(this.companyList.current_page - 1);
+                this.getAllProductGroup(this.productgroupList.current_page - 1);
             } else {
-                this.getAllCompany(page);
+                this.getAllProductGroup(page);
             }
         },
-        emptyCompany() {
+        emptyProductGroup() {
             return {
-                company: [],
+                productgroup: [],
                 selectedCompanies: [],
                 profile: {
                     img_path: '',
@@ -229,20 +212,20 @@ export default {
         },
         createNew() {
             this.mode = 'create';
-            this.company = this.emptyCompany();
+            this.productgroup = this.emptyProductGroup();
         },
         editSelected(idx) {
             this.mode = 'edit';
-            this.company = this.companyList.data[idx];
+            this.productgroup = this.productgroupList.data[idx];
         },
         showSelected(idx) {
             this.mode = 'show';
-            this.company = this.companyList.data[idx];
+            this.productgroup = this.productgroupList.data[idx];
         },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/company/save', new FormData($('#companyForm')[0]), {
+                axios.post('/api/post/admin/productgroup/save', new FormData($('#productgroupForm')[0]), {
                     headers: {
                         'content-type': 'multipart/form-data'
                     }
@@ -253,7 +236,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/company/edit/' + this.company.hId, new FormData($('#companyForm')[0]), {
+                axios.post('/api/post/admin/productgroup/edit/' + this.productgroup.hId, new FormData($('#productgroupForm')[0]), {
                     headers: {
                         'content-type': 'multipart/form-data'
                     }
@@ -285,14 +268,14 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.company.profile.img_path = fileReader.result
+                this.productgroup.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllCompany(this.companyList.current_page);
-            this.company = this.emptyCompany();
+            this.getAllProductGroup(this.productgroupList.current_page);
+            this.productgroup = this.emptyProductGroup();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -301,25 +284,25 @@ export default {
             this.contentHidden = !this.contentHidden;
         },
         refreshList() {
-            this.getAllCompany(this.companyList.current_page);
+            this.getAllProductGroup(this.productgroupList.current_page);
         },
     },
     computed: {
         getPages() {
-            if (this.companyList.current_page == null) return 0;
+            if (this.productgroupList.current_page == null) return 0;
 
-            return Math.ceil(this.companyList.total / this.companyList.per_page);
+            return Math.ceil(this.productgroupList.total / this.productgroupList.per_page);
         },
         retrieveImage()
         {
-            if (this.company.profile.img_path && this.company.profile.img_path !== '') {
-                if (this.company.profile.img_path.includes('data:image')) {
-                    return this.company.profile.img_path;
+            if (this.productgroup.profile.img_path && this.productgroup.profile.img_path !== '') {
+                if (this.productgroup.profile.img_path.includes('data:image')) {
+                    return this.productgroup.profile.img_path;
                 } else {
-                    return '/storage/' + this.company.profile.img_path;
+                    return '/storage/' + this.productgroup.profile.img_path;
                 }
             } else {
-                return '/images/def-company.png';
+                return '/images/def-productgroup.png';
             }
         }
     }

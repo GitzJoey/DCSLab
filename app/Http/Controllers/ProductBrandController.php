@@ -19,9 +19,8 @@ class ProductBrandController extends Controller
 
     public function index()
     {
-        $test = $this->read();
         
-        return view('product.brands.index', compact('test'));
+        return view('product.brands.index');
     }
 
     public function read()

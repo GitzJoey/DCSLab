@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Branch extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'company_id',
@@ -19,6 +20,11 @@ class Branch extends Model
         'remarks',
         'is_active'
     ];
+
+    protected static $logAttributes = ['company_id', 'code', 'name', 'address', 'city', 'contact', 'remarks', 'is_active'];
+
+    protected static $logOnlyDirty = true;
+
 
     protected $hidden = [
         'created_by',

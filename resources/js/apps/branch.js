@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n }from 'vue-i18n';
-import Company from './components/Company';
+import Branch from './components/Branch';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -13,10 +13,15 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Company Lists',
+            title: 'Branch Lists',
             cols: {
+                company_name: 'Company Name',
                 code: 'Code',
                 name: 'Name',
+                address: 'Address',
+                city: 'City',
+                contact: 'Contact',
+                remarks: 'Remarks',
                 status: 'Status',
             }
         },
@@ -26,13 +31,18 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Company',
-            edit: 'Edit Company',
-            show: 'Show Company',
+            create: 'Create Branch',
+            edit: 'Edit Branch',
+            show: 'Show Branch',
         },
         fields: {
+            company_name: 'Company Name',
             code: 'Code',
             name: 'Name',
+            address: 'Address',
+            city: 'City',
+            contact: 'Contact',
+            remarks: 'Remarks',
             status: 'Status',
             settings: {
                 settings: 'Settings',
@@ -56,8 +66,13 @@ const messages = {
         table: {
             title: 'Daftar Perusahaan',
             cols: {
+                company_name: 'Nama Perusahaan',
                 kode: 'Kode',
                 name: 'Nama',
+                address: 'Alamat',
+                city: 'Kota',
+                contact: 'Kontak',
+                remarks: 'Deskripsi',
                 status: 'Status',
             }
         },
@@ -67,15 +82,20 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Perusahaan',
-            edit: 'Ubah Perusahaan',
-            show: 'Tampilkan Perusahaan',
+            create: 'Tambah cabang',
+            edit: 'Ubah Cabang',
+            show: 'Tampilkan Cabang',
             reset_password: 'Reset Password',
         },
         fields: {
-            code: 'Kode',
+            company_name: 'Nama Perusahaan',
+            kode: 'Kode',
             name: 'Nama',
-            status: 'Status',
+            address: 'Alamat',
+            city: 'Kota',
+            contact: 'Kontak',
+            remarks: 'Deskripsi',
+            status: 'Status',    
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -102,6 +122,6 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(Company)
+createApp(Branch)
     .use(i18n)
-    .mount('#companyVue')
+    .mount('#branchVue')
