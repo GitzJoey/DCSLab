@@ -35,6 +35,7 @@ mix
     .js('resources/js/apps/profile.js','public/js/apps/profile.js')
     .js('resources/js/apps/role.js','public/js/apps/role.js')
     .js('resources/js/apps/user.js','public/js/apps/user.js')
+    .js('resources/js/apps/inbox.js','public/js/apps/inbox.js')
     .vue()
     .version()
 ;

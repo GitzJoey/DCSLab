@@ -28,7 +28,7 @@ class ActivityLogServiceImpl implements ActivityLogService
             case 'db.admin.users.users':
                 $friendlyName = 'Users';
                 break;
-            case 'db.admin.users.roles.':
+            case 'db.admin.users.roles':
                 $friendlyName = 'Roles';
                 break;
             default:

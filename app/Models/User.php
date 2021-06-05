@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cmgmyr\Messenger\Traits\Messagable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,6 +20,7 @@ class User extends Authenticatable
     use HasFactory, HasApiTokens, Notifiable;
     use LogsActivity;
     use PivotEventTrait;
+    use Messagable;
 
     /**
      * The attributes that are mass assignable.

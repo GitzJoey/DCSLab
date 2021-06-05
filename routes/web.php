@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DevController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
 
@@ -42,7 +43,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
     Route::group(['prefix' => 'dashboard'], function () {
         Route::get('', [DashboardController::class, 'index'])->name('db');
         Route::get('profile', [DashboardController::class, 'profile'])->name('db.profile');
-        Route::get('inbox', [DashboardController::class, 'inbox'])->name('db.inbox');
+        Route::get('inbox', [InboxController::class, 'index'])->name('db.inbox');
         Route::get('activity', [ActivityLogController::class, 'index'])->name('db.activity');
 
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');

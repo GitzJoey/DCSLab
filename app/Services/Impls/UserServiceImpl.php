@@ -247,4 +247,9 @@ class UserServiceImpl implements UserService
     {
         return User::where('email', '=', $email)->first();
     }
+
+    public function getAllUserExceptMe($email)
+    {
+        return User::where('email', '!=', $email)->get();
+    }
 }

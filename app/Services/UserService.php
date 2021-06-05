@@ -47,4 +47,6 @@ interface UserService
     public function getUserById($id);
 
     public function getUserByEmail($email);
+
+    public function getAllUserExceptMe($email);
 }
