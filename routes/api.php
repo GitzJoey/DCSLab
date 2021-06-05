@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DashboardController;
 
@@ -29,6 +30,11 @@ Route::bind('id', function ($id) {
 Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
     Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
 
+    Route::group(['prefix' => 'inbox'], function () {
+        Route::get('read', [InboxController::class, 'readThread'])->name('api.get.inbox.thread.read');
+        Route::get('user/list/read', [InboxController::class, 'getUserList'])->name('api.get.inbox.user.read');
+    });
+
     Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'role'], function () {
             Route::get('read', [RoleController::class, 'read'])->name('api.get.admin.role.read');
@@ -50,6 +56,11 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 
 Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
     Route::post('profile/update', [DashboardController::class, 'updateProfile'])->name('api.post.profile.update');
+
+    Route::group(['prefix' => 'inbox'], function () {
+        Route::post('save', [InboxController::class, 'store'])->name('api.get.inbox.thread.save');
+        Route::post('edit/id', [InboxController::class, 'update'])->name('api.get.inbox.user.edit');
+    });
 
     Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'role'], function () {

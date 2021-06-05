@@ -6,9 +6,11 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\InboxService;
 use App\Services\ActivityLogService;
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\InboxServiceImpl;
 use App\Services\Impls\ActivityLogServiceImpl;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ActivityLogService::class, function (){
             return new ActivityLogServiceImpl();
+        });
+
+        $this->app->singleton(InboxService::class, function (){
+            return new InboxServiceImpl();
         });
     }
 

@@ -178,6 +178,7 @@ return [
         \App\Providers\FortifyServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,
+        Cmgmyr\Messenger\MessengerServiceProvider::class,
     ],
 
     /*
