@@ -24,8 +24,8 @@ class CreateSalesCustomerGroupsTable extends Migration
             $table->integer('limit_outstanding_notes');
             $table->integer('use_limit_payable_nominal')->nullable();
             $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8);
-            $table->integer('use_limit_due_date')->nullable();
-            $table->integer('limit_due_date');
+            $table->integer('use_limit_age_notes')->nullable();
+            $table->integer('limit_age_notes');
             $table->integer('term');
             
             $table->decimal('selling_point', $precision = 8, $scale = 2);

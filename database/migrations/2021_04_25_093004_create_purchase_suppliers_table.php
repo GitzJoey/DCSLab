@@ -24,7 +24,7 @@ class CreatePurchaseSuppliersTable extends Migration
             $table->integer('is_tax')->nullable();
             $table->string('tax_number')->nullable();
             $table->string('remarks')->nullable();
-            $table->integer('is_active');
+            $table->integer('active_status');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
