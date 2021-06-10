@@ -22,7 +22,7 @@ class CreateBranchesTable extends Migration
             $table->string('city')->nullable();
             $table->string('contact')->nullable();
             $table->string('remarks')->nullable();
-			$table->integer('active_status')->nullable();
+			$table->integer('status')->nullable();
 
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);

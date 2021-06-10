@@ -30,7 +30,7 @@ class CreateProductsTable extends Migration
 			$table->integer('is_production_materials')->nullable();
 			$table->integer('is_production_result')->nullable();
 			$table->integer('is_sell')->nullable();
-			$table->integer('active_status')->nullable();
+			$table->integer('status')->nullable();
 			$table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

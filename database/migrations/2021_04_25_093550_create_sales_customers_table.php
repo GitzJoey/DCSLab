@@ -35,7 +35,7 @@ class CreateSalesCustomersTable extends Migration
             $table->string('tax_id')->nullable();
 
             $table->string('remarks')->nullable();
-			$table->integer('active_status')->nullable();
+			$table->integer('status')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

@@ -18,7 +18,7 @@ class CreateFinanceCashesTable extends Migration
             $table->string('code');
             $table->string('name')->nullable();
             $table->integer('is_bank');
-            $table->integer('active_status');
+            $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
