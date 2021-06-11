@@ -25,8 +25,8 @@ class CreateSalesCustomersTable extends Migration
             $table->integer('limit_outstanding_notes');
             $table->integer('use_limit_payable_nominal')->nullable();
             $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8);
-            $table->integer('use_limit_due_date')->nullable();
-            $table->integer('limit_due_date');
+            $table->integer('use_limit_age_notes')->nullable();
+            $table->integer('limit_age_notes');
             $table->integer('term');
             
             $table->string('address')->nullable();
@@ -35,7 +35,7 @@ class CreateSalesCustomersTable extends Migration
             $table->string('tax_id')->nullable();
 
             $table->string('remarks')->nullable();
-			$table->integer('is_active')->nullable();
+			$table->integer('status')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
