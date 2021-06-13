@@ -30,11 +30,24 @@ class InboxController extends Controller
         return view('inbox.index');
     }
 
-    public function readThread()
+    public function read()
     {
         $usrId = Auth::user()->id;
 
-        return $this->inboxService->getThreads($usrId);
+        $ts = $this->inboxService->getThreads($usrId);
+
+        $tss = $ts->map(function ($item) {
+            return [
+                'hId' => Hashids::encode($item->id),
+                'subject' => $item->subject,
+                'body' => $item->latestMessage->body,
+                'participants' => $item->participantsString(),
+                'created_at' => $item->created_at->diffForHumans(),
+                'updated_at' => $item->updated_at->diffForHumans(),
+            ];
+        });
+
+        return $tss;
     }
 
     public function getUserList()
@@ -53,6 +66,26 @@ class InboxController extends Controller
         });
 
         return $brief;
+    }
+
+    public function show($id)
+    {
+        $usr = Auth::user()->id;
+
+        $t = $this->inboxService->getThread($id);
+
+        $mm = $t->map(function ($item) use($usr) {
+            return [
+                'thread_id' => Hashids::encode($item->thread_id),
+                'full_name' => $item->user->profile->first_name . $item->user->profile->last_name,
+                'img_path' => $item->user->profile->img_path,
+                'message' => $item->body,
+                'reverse' => $item->user_id == $usr ? true:false,
+                'updated_at' => $item->updated_at->diffForHumans(),
+            ];
+        });
+
+        return $mm;
     }
 
     public function store(Request $request)

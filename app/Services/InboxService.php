@@ -6,6 +6,8 @@ interface InboxService
 {
     public function getThreads($userId);
 
+    public function getThread($id);
+
     public function store($userId, $to, $subject, $message);
 
     public function update($id, $to, $subject, $message);

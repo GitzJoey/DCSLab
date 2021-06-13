@@ -34,6 +34,7 @@ const messages = {
         placeholder: {
             addnew: "Add New",
             removing: 'Removing',
+            chat: 'Type your message and hit enter',
         }
     },
     id: {
@@ -59,6 +60,7 @@ const messages = {
         placeholder: {
             addnew: 'Tambah Baru',
             removing: 'Menghapus',
+            chat: 'Ketik pesan anda dan tekan Enter',
         }
     }
 };

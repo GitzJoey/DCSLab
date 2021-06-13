@@ -3,7 +3,7 @@
         <div class="block-header bg-gray-dark">
             <h3 class="block-title" v-if="this.mode === 'list'"><strong>{{ $t('table.title') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'create'"><strong>{{ $t('actions.create') }}</strong></h3>
-            <h3 class="block-title" v-if="this.mode === 'edit'"><strong></strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'edit'"><strong>{{ this.subjectEdited }}</strong></h3>
             <div class="block-options">
                 <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
@@ -32,7 +32,7 @@
                                 </td>
                                 <td class="d-none d-sm-table-cell font-w600" style="width: 240px;">{{ t.participants }}</td>
                                 <td>
-                                    <a class="font-w600" href="" @click.prevent="editSelected(tIdx)">{{ t.subject }}</a>
+                                    <a class="font-w600" href="" @click.prevent="editSelected(t.hId, tIdx)">{{ t.subject }}</a>
                                     <div class="text-muted mt-5">{{ t.body }}</div>
                                 </td>
                                 <td class="d-none d-xl-table-cell font-w600 font-size-sm text-muted" style="width: 120px;">{{ t.updated_at }}</td>
@@ -100,7 +100,7 @@
                                 <ul class="nav-users">
                                     <li v-for="(u, uIdx) in userList">
                                         <a @click="addTag(uIdx)">
-                                            <img class="img-avatar" :src="retrieveImage(uIdx)" alt="">
+                                            <img class="img-avatar" :src="retrieveImage(this.userList[uIdx].img_path)" alt="">
                                             <i class="fa fa-circle text-success"></i> {{ u.full_name }}
                                             <div class="font-w400 font-size-xs text-muted">{{ u.roles }}</div>
                                         </a>
@@ -113,7 +113,35 @@
             </transition>
             <transition name="fade">
                 <div id="crud_edit" v-if="this.mode === 'edit'">
-
+                    <div class="js-chat-window p-15 bg-light flex-grow-1 text-wrap-break-word overflow-y-auto">
+                        <div :class="{'d-flex':true,'flex-row-reverse':m.reverse,'mb-20':true}" v-for="(m, mIdx) in this.messageList">
+                            <div>
+                                <a class="img-link img-status" href="">
+                                    <img class="img-avatar img-avatar32" :src="retrieveImage(m.img_path)" alt="Avatar">
+                                </a>
+                            </div>
+                            <div :class="{'mx-10':true,'text-right':m.reverse}">
+                                <div>
+                                    <p class="bg-primary-lighter text-primary-darker rounded px-15 py-10 mb-5 d-inline-block" v-if="m.reverse">
+                                        {{ m.message }}
+                                    </p>
+                                    <p class="bg-body-dark text-dark rounded px-15 py-10 mb-5" v-else>
+                                        {{ m.message }}
+                                    </p>
+                                </div>
+                                <div class="text-muted font-size-xs font-italic">{{ m.full_name }} - {{ m.updated_at }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="input-group input-group-lg">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-comment text-primary"></i>
+                            </span>
+                        </div>
+                        <input class="form-control" type="text" v-model="newMessage" :placeholder="$t('placeholder.chat')" @click.prevent="addMessage">
+                    </div>
                 </div>
             </transition>
         </div>
@@ -168,13 +196,16 @@ export default {
             contentHidden: false,
             userList: [],
             inboxList: [],
+            messageList: [],
             tagsTo: [],
             newTag: '',
             inbox: {
                 to: '',
                 subject: '',
                 message: ''
-            }
+            },
+            newMessage: '',
+            subjectEdited: '',
         }
     },
     created() {
@@ -206,8 +237,17 @@ export default {
         createNew() {
             this.mode = 'create';
         },
-        editSelected(idx) {
+        editSelected(hId, idx) {
             this.mode = 'edit';
+            this.loading = true;
+            axios.get('/api/get/inbox/show/' + hId).then(response => {
+                this.messageList = response.data;
+                this.subjectEdited = this.inboxList[idx].subject;
+                this.loading = false;
+            }).catch(e => {
+                console.log(e.message);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;
@@ -218,21 +258,9 @@ export default {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
-            } else if (this.mode === 'edit') {
-                axios.post('/api/post/inbox/edit/' + this.inboxList.hId, new FormData($('#userForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
-                    this.backToList();
-                }).catch(e => {
-                    this.handleError(e, actions);
-                    this.loading = false;
-                });
             } else { }
         },
         handleError(e, actions) {
-            //Laravel Validations
             if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
                 for (var key in e.response.data.errors) {
                     for (var i = 0; i < e.response.data.errors[key].length; i++) {
@@ -240,13 +268,22 @@ export default {
                     }
                 }
             } else {
-                //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
         },
         backToList() {
             this.mode = 'list';
             this.getInbox();
+        },
+        addMessage() {
+            if (this.mode === 'edit') {
+                axios.post('/api/post/inbox/edit', new FormData($('#inboxForm')[0])).then(response => {
+                    this.backToList();
+                }).catch(e => {
+                    this.handleError(e, actions);
+                    this.loading = false;
+                });
+            } else { }
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -272,10 +309,10 @@ export default {
         removeTag(idx) {
             this.tagsTo.splice(idx, 1);
         },
-        retrieveImage(idx)
+        retrieveImage(path)
         {
-            if (this.userList[idx].img_path && this.userList[idx].img_path !== '') {
-                return '/storage/' + this.userList[idx].img_path;
+            if (path && path !== '') {
+                return '/storage/' + path;
             } else {
                 return '/images/def-user.png';
             }

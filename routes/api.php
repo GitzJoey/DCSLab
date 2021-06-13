@@ -31,7 +31,8 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
     Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
 
     Route::group(['prefix' => 'inbox'], function () {
-        Route::get('read', [InboxController::class, 'readThread'])->name('api.get.inbox.thread.read');
+        Route::get('read', [InboxController::class, 'read'])->name('api.get.inbox.thread.read');
+        Route::get('show/{id}', [InboxController::class, 'show'])->name('api.get.inbox.thread.show');
         Route::get('user/list/read', [InboxController::class, 'getUserList'])->name('api.get.inbox.user.read');
     });
 
@@ -59,7 +60,7 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
 
     Route::group(['prefix' => 'inbox'], function () {
         Route::post('save', [InboxController::class, 'store'])->name('api.get.inbox.thread.save');
-        Route::post('edit/id', [InboxController::class, 'update'])->name('api.get.inbox.user.edit');
+        Route::post('edit/{id}', [InboxController::class, 'update'])->name('api.get.inbox.user.edit');
     });
 
     Route::group(['prefix' => 'admin'], function () {

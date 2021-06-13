@@ -16,32 +16,19 @@ class InboxServiceImpl implements InboxService
 {
     public function getThreads($userId)
     {
-        $t = Message::with('thread', 'participants', 'participants.user')->where('user_id', '=', $userId)->get();
+        $t = Thread::with('participants')
+            ->whereHas('participants', function($p) use ($userId) {
+                $p->where('user_id', '=', $userId);
+            })->get();
 
-        $tt = $t->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'subject' => $item->thread->subject,
-                'body' => $item->body,
-                'participants' => $this->participantString($item->participants),
-                'created_at' => $item->created_at->diffForHumans(),
-                'updated_at' => $item->updated_at->diffForHumans(),
-            ];
-        });
-
-        return $tt;
+        return $t;
     }
 
-    private function participantString($participants)
+    public function getThread($id)
     {
-        $result = [];
+        $m = Message::with('user')->where('thread_id', '=', $id)->get();
 
-        foreach ($participants as $p)
-        {
-            array_push($result, $p->user->name);
-        }
-
-        return implode(", ", $result);
+        return $m;
     }
 
     public function store($userId, $to, $subject, $message)
