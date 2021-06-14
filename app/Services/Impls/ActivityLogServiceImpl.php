@@ -28,9 +28,42 @@ class ActivityLogServiceImpl implements ActivityLogService
             case 'db.admin.users.users':
                 $friendlyName = 'Users';
                 break;
-            case 'db.admin.users.roles.':
+            case 'db.admin.users.roles':
                 $friendlyName = 'Roles';
                 break;
+            case 'db.company.companies':
+                $friendlyName = 'Companies';
+                break;
+            case 'db.company.branches':
+                $friendlyName = 'Branches';
+                break;
+            case 'db.company.warehouses':
+                $friendlyName = 'Warehouses';
+                break;  
+
+            case 'db.finance_cashes':
+                $friendlyName = 'Finance Cashes';
+                break; 
+
+            case 'db.product_groups':
+                $friendlyName = 'Product Groups';
+                break;   
+            case 'db.product_brands':
+                $friendlyName = 'Product Brands';
+                break; 
+            case 'db.product_units':
+                $friendlyName = 'Product Units';
+                break; 
+            case 'db.products':
+                $friendlyName = 'Products';
+                break; 
+
+            case 'db.sales_customer_groups':
+                $friendlyName = 'Customer Groups';
+                break; 
+            case 'db.sales_customers':
+                $friendlyName = 'Customers';
+                break; 
             default:
                 $friendlyName = $routeName;
                 break;

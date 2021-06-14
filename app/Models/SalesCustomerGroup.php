@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SalesCustomer;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class SalesCustomerGroup extends Model
@@ -48,4 +49,9 @@ class SalesCustomerGroup extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function sales_customer_group()
+    {
+        return $this->hasMany(SalesCustomer::class);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Product;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class ProductGroup extends Model
@@ -24,4 +25,10 @@ class ProductGroup extends Model
         'updated_by',
         'deleted_by'
     ];
+
+    public function groups()
+    {
+        return $this->hasMany(Product::class);
+    }
+    
 }

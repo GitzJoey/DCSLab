@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
@@ -10,18 +11,21 @@ use Vinkla\Hashids\Facades\Hashids;
 class ProductController extends Controller
 {
     private $productService;
+    private $activityLogService;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->productService = $productService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $test = $this->read();
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-        return view('product.products.index', compact('test'));
+        return view('product.products.index');
     }
 
     public function read()
@@ -33,10 +37,10 @@ class ProductController extends Controller
     {
         $request->validate([
             'code' => 'required|max:255',
-            'group_id' => 'required|max:255',
-            'brand_id' => 'required|max:255',
+            'group_id' => 'required',
+            'brand_id' => 'required',
             'name' => 'required|max:255',
-            'unit_id' => 'required|max:255',
+            'unit_id' => 'required',
             'price' => 'required|max:255',
             'tax' => 'required|max:255',
             'information' => 'required|max:255',

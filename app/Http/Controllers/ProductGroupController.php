@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 
@@ -10,15 +11,19 @@ use Vinkla\Hashids\Facades\Hashids;
 class ProductGroupController extends Controller
 {
     private $productGroupService;
+    private $activityLogService;
 
-    public function __construct(ProductGroupService $productGroupService)
+    public function __construct(ProductGroupService $productGroupService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->productGroupService = $productGroupService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
         return view('product.groups.index');
     }

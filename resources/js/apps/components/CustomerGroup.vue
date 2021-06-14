@@ -361,10 +361,10 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            customergroupList: { },
+            customergroupList: [],
             customergroup: {
                 customergroup: [],
-                selectedCompanies: [],
+                selectedCustomerGroups: [],
                 profile: {
                     status: 'ACTIVE',
                 },
@@ -404,7 +404,7 @@ export default {
         emptyCustomerGroup() {
             return {
                 customergroup: [],
-                selectedCompanies: [],
+                selectedCustomerGroups: [],
                 profile: {
                     img_path: '',
                     country: '',

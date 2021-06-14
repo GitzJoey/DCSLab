@@ -24,7 +24,7 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function read()
     {
-        return Warehouse::get();
+        return Warehouse::with('company')->paginate();
     }
 
 

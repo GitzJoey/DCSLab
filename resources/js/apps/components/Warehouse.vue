@@ -37,14 +37,14 @@
                         </thead>
                         <tbody>
                             <tr v-for="(w, wIdx) in warehouseList.data">
-                                <td>{{ w.company_name }}</td>
+                                <td>{{ w.company.name }}</td>
                                 <td>{{ w.code }}</td>
                                 <td>{{ w.name }}</td>
                                 <td>{{ w.address }}</td>
                                 <td>{{ w.city }}</td>
                                 <td>{{ w.contact }}</td>
                                 <td>{{ w.remarks }}</td>
-                                <td>{{ w.status }}</td>
+                                <td>{{ w.is_active }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(wIdx)">

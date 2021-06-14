@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\ProductUnitService;
 use Illuminate\Http\Request;
 
@@ -10,11 +11,14 @@ use Vinkla\Hashids\Facades\Hashids;
 class ProductUnitController extends Controller
 {
     private $productUnitService;
+    private $activityLogService;
 
-    public function __construct(ProductUnitService $productUnitService)
+    public function __construct(ProductUnitService $productUnitService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->productUnitService = $productUnitService;
+        $this->activityLogService = $activityLogService;
+
     }
 
     public function index()

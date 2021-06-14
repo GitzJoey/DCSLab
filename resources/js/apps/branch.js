@@ -67,7 +67,7 @@ const messages = {
             title: 'Daftar Perusahaan',
             cols: {
                 company_name: 'Nama Perusahaan',
-                kode: 'Kode',
+                code: 'Kode',
                 name: 'Nama',
                 address: 'Alamat',
                 city: 'Kota',
@@ -77,7 +77,7 @@ const messages = {
             }
         },
         buttons: {
-            submit: 'Kirim',
+            submit: 'Simpan',
             reset: 'Reset',
             back: 'Kembali',
         },
@@ -89,7 +89,7 @@ const messages = {
         },
         fields: {
             company_name: 'Nama Perusahaan',
-            kode: 'Kode',
+            code: 'Kode',
             name: 'Nama',
             address: 'Alamat',
             city: 'Kota',

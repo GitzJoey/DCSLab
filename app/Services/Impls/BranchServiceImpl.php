@@ -24,7 +24,7 @@ class BranchServiceImpl implements BranchService
 
     public function read()
     {
-        return Branch::get();
+        return Branch::with('company')->paginate();
     }
 
 

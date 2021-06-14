@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 
@@ -10,15 +11,20 @@ use Vinkla\Hashids\Facades\Hashids;
 class BranchController extends Controller
 {
     private $branchService;
+    private $activityLogService;
 
-    public function __construct(BranchService $branchService)
+
+    public function __construct(BranchService $branchService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->branchService = $branchService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
         return view('company.branches.index');
     }

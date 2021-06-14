@@ -33,7 +33,7 @@ class SalesCustomerServiceImpl implements SalesCustomerService
 
     public function read()
     {
-        return SalesCustomer::get();
+        return SalesCustomer::with('sales_customer_group')->paginate();
     }
 
 

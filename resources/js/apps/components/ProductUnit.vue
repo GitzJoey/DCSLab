@@ -154,10 +154,10 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productunitList: { },
+            productunitList: [],
             productunit: {
                 productunit: [],
-                selectedCompanies: [],
+                selectedProductUnits: [],
                 profile: {
                     status: 'ACTIVE',
                 },
@@ -197,7 +197,7 @@ export default {
         emptyProductUnit() {
             return {
                 productunit: [],
-                selectedCompanies: [],
+                selectedProductUnits: [],
                 profile: {
                     img_path: '',
                     country: '',

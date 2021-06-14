@@ -37,14 +37,14 @@
                         </thead>
                         <tbody>
                             <tr v-for="(b, bIdx) in branchList.data">
-                                <td>{{ b.company_name }}</td>
+                                <td>{{ b.company.name }}</td>
                                 <td>{{ b.code }}</td>
                                 <td>{{ b.name }}</td>
                                 <td>{{ b.address }}</td>
                                 <td>{{ b.city }}</td>
                                 <td>{{ b.contact }}</td>
                                 <td>{{ b.remarks }}</td>
-                                <td>{{ b.status }}</td>
+                                <td>{{ b.is_active }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
@@ -118,7 +118,8 @@
                         <div class="form-group row">
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
-                                <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="branch.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputAddress" name="address" type="text" :placeholder="$t('fields.address')" v-model="branch.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.address }}</div>
                             </div>
                         </div>
@@ -126,6 +127,7 @@
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
                                 <input id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="branch.city" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="city" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.city }}</div>
                             </div>
                         </div>
@@ -133,6 +135,7 @@
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
                                 <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="branch.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.contact }}</div>
                             </div>
                         </div>

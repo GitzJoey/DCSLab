@@ -18,7 +18,7 @@ class ProductUnitServiceImpl implements ProductUnitService
 
     public function read()
     {
-        return ProductUnit::where('code', '=', '001')->get();
+        return ProductUnit::paginate();
     }
 
 

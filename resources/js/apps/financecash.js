@@ -69,7 +69,7 @@ const messages = {
             }
         },
         buttons: {
-            submit: 'Kirim',
+            submit: 'Simpan',
             reset: 'Reset',
             back: 'Kembali',
         },

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\SalesCustomerService;
 use Illuminate\Http\Request;
 
@@ -10,18 +11,21 @@ use Vinkla\Hashids\Facades\Hashids;
 class SalesCustomerController extends Controller
 {
     private $salesCustomerService;
+    private $activityLogService;
 
-    public function __construct(SalesCustomerService $salesCustomerService)
+    public function __construct(SalesCustomerService $salesCustomerService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->salesCustomerService = $salesCustomerService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $test = $this->read();
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-        return view('sales.customer.customers.index', compact('test'));
+        return view('sales.customer.customers.index');
     }
 
     public function read()

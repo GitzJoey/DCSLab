@@ -33,9 +33,9 @@
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in companyList.data">
-                                <td>{{ c.code }}</td>
+                                <td>{{ c.code }} {{ cIdx }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>{{ c.is_active }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -171,7 +171,7 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            companyList: { },
+            companyList: [],
             company: {
                 company: [],
                 selectedCompanies: [],
@@ -188,7 +188,6 @@ export default {
     },
     created() {
     },
-
     mounted() {
         this.mode = 'list';
         this.getAllCompany(1);

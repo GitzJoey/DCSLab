@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
 
@@ -10,15 +11,20 @@ use Vinkla\Hashids\Facades\Hashids;
 class CompanyController extends Controller
 {
     private $companyService;
+    private $activityLogService;
 
-    public function __construct(CompanyService $companyService)
+    public function __construct(CompanyService $companyService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->companyService = $companyService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
+
         return view('company.companies.index');
     }
 

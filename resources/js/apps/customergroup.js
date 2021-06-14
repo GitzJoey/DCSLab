@@ -107,12 +107,12 @@ const messages = {
                 is_rounding: 'Pembulatan',
                 round_on: 'Pembulatan Ke',
                 round_digit: 'Angka Pembulatan',
-                remarks: 'Catatan',
+                remarks: 'Keterangan',
                 finance_cash_id: 'Default Pembayaran',
             }
         },
         buttons: {
-            submit: 'Kirim',
+            submit: 'Simpan',
             reset: 'Reset',
             back: 'Kembali',
         },
@@ -143,7 +143,7 @@ const messages = {
             is_rounding: 'Pembulatan',
             round_on: 'Round On',
             round_digit: 'Round Digit',
-            remarks: 'Catatan',
+            remarks: 'Keterangan',
             finance_cash_id: 'Default Pembayaran',
             settings: {
                 settings: 'Pengaturan',

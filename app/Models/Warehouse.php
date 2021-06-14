@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Warehouse extends Model
@@ -34,4 +35,9 @@ class Warehouse extends Model
         'updated_at',
         'deleted_at'
     ];
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

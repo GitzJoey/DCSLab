@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 
@@ -10,18 +11,21 @@ use Vinkla\Hashids\Facades\Hashids;
 class WarehouseController extends Controller
 {
     private $warehouseService;
+    private $activityLogService;
 
-    public function __construct(WarehouseService $warehouseService)
+    public function __construct(WarehouseService $warehouseService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->warehouseService = $warehouseService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $test = $this->read();
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-        return view('company.warehouses.index', compact('test'));
+        return view('company.warehouses.index');
     }
 
     public function read()

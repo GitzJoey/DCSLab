@@ -18,7 +18,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function read()
     {
-        return ProductGroup::get();
+        return ProductGroup::paginate();
     }
 
 

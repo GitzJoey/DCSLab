@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\ProductBrandService;
 use Illuminate\Http\Request;
 
@@ -10,16 +11,20 @@ use Vinkla\Hashids\Facades\Hashids;
 class ProductBrandController extends Controller
 {
     private $productBrandService;
+    private $activityLogService;
 
-    public function __construct(ProductBrandService $productBrandService)
+    public function __construct(ProductBrandService $productBrandService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->productBrandService = $productBrandService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
+
         return view('product.brands.index');
     }
 

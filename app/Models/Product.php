@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ProductGroup;
+use App\Models\ProductBrand;
+use App\Models\ProductUnit;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Product extends Model
@@ -40,4 +43,19 @@ class Product extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function group()
+    {
+        return $this->belongsTo(ProductGroup::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(ProductBrand::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(ProductUnit::class);
+    }
 }

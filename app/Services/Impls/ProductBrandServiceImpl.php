@@ -18,7 +18,7 @@ class ProductBrandServiceImpl implements ProductBrandService
 
     public function read()
     {
-        return ProductBrand::where('code', '=', '001')->get();
+        return ProductBrand::paginate();
     }
 
 

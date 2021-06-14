@@ -38,7 +38,7 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
 
     public function read()
     {
-        return SalesCustomerGroup::get();
+        return SalesCustomerGroup::paginate();
     }
 
 

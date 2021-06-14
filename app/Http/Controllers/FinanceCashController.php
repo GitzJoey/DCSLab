@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ActivityLogService;
 use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
 
@@ -10,15 +11,19 @@ use Vinkla\Hashids\Facades\Hashids;
 class FinanceCashController extends Controller
 {
     private $financeCashService;
+    private $activityLogService;
 
-    public function __construct(FinanceCashService $financeCashService)
+    public function __construct(FinanceCashService $financeCashService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->financeCashService = $financeCashService;
+        $this->activityLogService = $activityLogService;
+
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
         
         return view('finance.cashes.index');
     }

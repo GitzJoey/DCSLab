@@ -31,19 +31,27 @@
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.unit_name") }}</th>
                                 <th>{{ $t("table.cols.price") }}</th>
+                                <th>{{ $t("table.cols.tax") }}</th>
                                 <th>{{ $t("table.cols.information") }}</th>
+                                <th>{{ $t("table.cols.estimated_capital_price") }}</th>
+                                <th>{{ $t("table.cols.point") }}</th>
+                                <th>{{ $t("table.cols.point") }}</th>
+                                <th>{{ $t("table.cols.is_use_serial") }}</th>
+                                <th>{{ $t("table.cols.is_buy") }}</th>
+                                <th>{{ $t("table.cols.is_production_material") }}</th>
+                                <th>{{ $t("table.cols.is_production_result") }}</th>
+                                <th>{{ $t("table.cols.is_sell") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
-
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in productList.data">
                                 <td>{{ c.code }}</td>
-                                <td>{{ c.group_id }}</td>
-                                <td>{{ c.name_id }}</td>
+                                <td>{{ c.group.name }}</td>
+                                <td>{{ c.brand.name }} </td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.unit_id }}</td>
+                                <td>{{ c.unit.name }}</td>
                                 <td>{{ c.price }}</td>
                                 <td>{{ c.tax }}</td>
                                 <td>{{ c.infortmation }}</td>
@@ -54,7 +62,7 @@
                                 <td>{{ c.is_production_material }}</td>
                                 <td>{{ c.is_production_result }}</td>
                                 <td>{{ c.is_sell }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>{{ c.is_active }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -311,10 +319,10 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productList: { },
+            productList: {},
             product: {
                 product: [],
-                selectedproducts: [],
+                selectedProducts: [],
                 profile: {
                     status: 'ACTIVE',
                 },

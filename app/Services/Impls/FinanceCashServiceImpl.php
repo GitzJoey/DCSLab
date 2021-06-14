@@ -20,7 +20,7 @@ class FinanceCashServiceImpl implements FinanceCashService
 
     public function read()
     {
-        return FinanceCash::get();
+        return FinanceCash::paginate();
     }
 
 

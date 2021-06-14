@@ -36,8 +36,8 @@
                             <tr v-for="(c, cIdx) in cashList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
+                                <td>{{ c.is_active }}</td>
                                 <td>{{ c.status }}</td>
-                                <td>{{ c.bank }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">

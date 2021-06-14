@@ -17,8 +17,8 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
-                sales_customer_group: 'Sales Customer Group',
-                sales_territory: 'Sales Territory',
+                sales_customer_group: 'Customer Group',
+                sales_territory: 'Territory',
                 limit_outstanding_notes: 'Limit Outstanding Notes',
                 limit_payable_nominal: 'Limit Payable Nominal',
                 limit_due_date: 'Limit Due Date',
@@ -43,8 +43,8 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
-            sales_customer_group: 'Sales Customer',
-            sales_territory: 'Sales Territory',
+            sales_customer_group: 'Customer Group',
+            sales_territory: 'Territory',
             use_limit_outstanding_notes: 'Use Limit Outstanding Notes',
             limit_outstanding_notes: 'Limit Outstanding Notes',
             use_limit_payable_nominal: 'Use Limit Payable Nominal',
@@ -95,7 +95,7 @@ const messages = {
             }
         },
         buttons: {
-            submit: 'Kirim',
+            submit: 'Simpan',
             reset: 'Reset',
             back: 'Kembali',
         },

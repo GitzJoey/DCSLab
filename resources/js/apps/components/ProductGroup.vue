@@ -31,15 +31,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in productgroupList.data">
-                                <td>{{ c.code }}</td>
-                                <td>{{ c.name }}</td>
+                            <tr v-for="(b, bIdx) in productgroupList.data">
+                                <td>{{ b.code }}</td>
+                                <td>{{ b.name }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     </div>
@@ -154,10 +154,10 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productgroupList: { },
+            productgroupList: [],
             productgroup: {
                 productgroup: [],
-                selectedCompanies: [],
+                selectedProductGroups: [],
                 profile: {
                     status: 'ACTIVE',
                 },
@@ -197,7 +197,7 @@ export default {
         emptyProductGroup() {
             return {
                 productgroup: [],
-                selectedCompanies: [],
+                selectedProductGroups: [],
                 profile: {
                     img_path: '',
                     country: '',

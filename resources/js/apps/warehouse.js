@@ -72,12 +72,12 @@ const messages = {
                 address: 'Alamat',
                 city: 'Kota',
                 contact: 'Kontak',
-                remarks: 'Deskripsi',
+                remarks: 'Keterangan',
                 status: 'Status',
             }
         },
         buttons: {
-            submit: 'Kirim',
+            submit: 'Simpan',
             reset: 'Reset',
             back: 'Kembali',
         },
@@ -94,7 +94,7 @@ const messages = {
             address: 'Alamat',
             city: 'Kota',
             contact: 'Kontak',
-            remarks: 'Deskripsi',
+            remarks: 'Keterangan',
             status: 'Status',    
             settings: {
                 settings: 'Pengaturan',

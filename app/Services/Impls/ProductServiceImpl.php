@@ -31,9 +31,9 @@ class ProductServiceImpl implements ProductService
 
     public function read()
     {
-        return Product::get();
+        return Product::with('group', 'brand', 'unit')->paginate();
+        
     }
-
 
     public function update(
         $code,

@@ -45,7 +45,7 @@
                             <tr v-for="(c, cIdx) in customerList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.sales_customer_group }}</td>
+                                <td>{{ c.sales_customer_group.name }}</td>
                                 <td>{{ c.sales_territory }}</td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
                                 <td>{{ c.limit_payable_nominal }}</td>
@@ -55,7 +55,7 @@
                                 <td>{{ c.city }}</td>
                                 <td>{{ c.contact }}</td>
                                 <td>{{ c.tax_id }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>{{ c.is_active }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -116,10 +116,10 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Sales Customer Group</label>
+                            <label class="col-2 col-form-label" for="example-select">Customer Group</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
-                                    <option value="0">Please select Sales Customer Group</option>
+                                    <option value="0">Please select Customer Group</option>
                                     <option value="1">Retail</option>
                                     <option value="2">Wholesale Price</option>
                                     <option value="3">Distributor</option>
@@ -308,10 +308,10 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            customerList: { },
+            customerList: [],
             customer: {
                 customer: [],
-                selectedCompanies: [],
+                selectedCustomers: [],
                 profile: {
                     status: 'ACTIVE',
                 },
@@ -351,7 +351,7 @@ export default {
         emptyCustomer() {
             return {
                 customer: [],
-                selectedCompanies: [],
+                selectedCustomers: [],
                 profile: {
                     img_path: '',
                     country: '',

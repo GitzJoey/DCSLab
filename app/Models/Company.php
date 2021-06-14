@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Branch;
+use App\Models\Warehouse;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Company extends Model
@@ -20,7 +22,6 @@ class Company extends Model
 
     protected static $logOnlyDirty = true;
 
-
     protected $hidden = [
         'created_by',
         'updated_by',
@@ -29,4 +30,14 @@ class Company extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    } 
+
+    public function warehouses()
+    {
+        return $this->hasMany(Warehouse::class);
+    } 
 }

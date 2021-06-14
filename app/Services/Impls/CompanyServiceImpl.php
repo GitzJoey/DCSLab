@@ -19,7 +19,7 @@ class CompanyServiceImpl implements CompanyService
 
     public function read()
     {
-        return Company::get();
+        return Company::paginate();
     }
 
 

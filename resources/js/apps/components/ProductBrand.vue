@@ -154,10 +154,10 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productbrandList: { },
+            productbrandList: [],
             productbrand: {
                 productbrand: [],
-                selectedCompanies: [],
+                selectedProductBrands: [],
                 profile: {
                     status: 'ACTIVE',
                 },
@@ -197,7 +197,7 @@ export default {
         emptyProductBrand() {
             return {
                 productbrand: [],
-                selectedCompanies: [],
+                selectedProductBrands: [],
                 profile: {
                     img_path: '',
                     country: '',

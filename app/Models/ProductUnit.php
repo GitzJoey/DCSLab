@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Product;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class ProductUnit extends Model
@@ -26,4 +27,9 @@ class ProductUnit extends Model
         'update_at',
         'deleted_at'
     ];
+
+    public function units()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
