@@ -200,7 +200,10 @@ export default {
             tagsTo: [],
             newTag: '',
             inbox: {
+<<<<<<< HEAD
                 hId: '',
+=======
+>>>>>>> origin/boilerplate
                 to: '',
                 subject: '',
                 message: ''
@@ -243,9 +246,13 @@ export default {
             this.loading = true;
             axios.get('/api/get/inbox/show/' + hId).then(response => {
                 this.messageList = response.data;
+<<<<<<< HEAD
                 this.inbox.hId = this.inboxList[idx].hId;
                 this.inbox.to = this.inboxList[idx].participant_user_ids;
                 this.inbox.subject = this.inboxList[idx].subject;
+=======
+                this.subjectEdited = this.inboxList[idx].subject;
+>>>>>>> origin/boilerplate
                 this.loading = false;
             }).catch(e => {
                 console.log(e.message);
@@ -258,7 +265,11 @@ export default {
                 axios.post('/api/post/inbox/save', new FormData($('#inboxForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
+<<<<<<< HEAD
                     console.log(e.message);
+=======
+                    this.handleError(e, actions);
+>>>>>>> origin/boilerplate
                     this.loading = false;
                 });
             } else { }
@@ -280,6 +291,7 @@ export default {
         },
         addMessage() {
             if (this.mode === 'edit') {
+<<<<<<< HEAD
                 axios.post('/api/post/inbox/edit/' + this.inbox.hId, {
                     hId: this.inbox.hId,
                     to: this.inbox.to,
@@ -289,6 +301,12 @@ export default {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e);
+=======
+                axios.post('/api/post/inbox/edit', new FormData($('#inboxForm')[0])).then(response => {
+                    this.backToList();
+                }).catch(e => {
+                    this.handleError(e, actions);
+>>>>>>> origin/boilerplate
                     this.loading = false;
                 });
             } else { }
