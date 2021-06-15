@@ -88,6 +88,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group row @error('captcha') is-invalid @enderror">
+                        <div class="col-12">
+                            <img class="img" src="{{ captcha_src('flat') }}" /><a href="{{ route('register') }}"><button class="btn"><i class="icon icon-refresh"></i></button></a>
+                            <input class="form-control" type="text" name="captcha">
+                            @error('terms')
+                                <div class="invalid-feedback animate__fadeInDown">{{ $errors->first('captcha') }}</div>
+                            @enderror
+                        </div>
+                    </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-sm btn-hero btn-alt-success">
                             {{ __('buttons.submit') }}

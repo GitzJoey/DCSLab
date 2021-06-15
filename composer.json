@@ -19,6 +19,7 @@
         "laravel/sanctum": "^2.9",
         "laravel/tinker": "^2.5",
         "mcamara/laravel-localization": "^1.6",
+        "mews/captcha": "^3.2",
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "santigarcor/laratrust": "^6.3",
         "spatie/laravel-activitylog": "^3.17",

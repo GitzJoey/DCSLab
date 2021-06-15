@@ -128,5 +128,6 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-    'attributes'           => [],
+    'attributes'            => [],
+    'captcha'               => 'Captcha Tidak Valid'
 ];

@@ -34,7 +34,8 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
-            'terms' => 'required'
+            'terms' => 'required',
+            'captcha' => 'required|captcha',
         ])->validate();
 
         $instances = Container::getInstance();
