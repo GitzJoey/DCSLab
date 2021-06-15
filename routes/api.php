@@ -133,14 +133,12 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
             Route::post('edit/{id}', [UserController::class, 'update'])->name('api.post.admin.user.edit');
             Route::post('reset/pswd/{id}', [UserController::class, 'resetPassword'])->name('api.post.admin.user.reset_pwd');
         });
-    });
 
-    Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'company'], function () {
             Route::post('save', [CompanyController::class, 'store'])->name('api.post.admin.company.save');
             Route::post('edit/{id}', [CompanyController::class, 'update'])->name('api.post.admin.company.edit');
         });
-
+  
         Route::group(['prefix' => 'branch'], function () {
             Route::post('save', [BranchController::class, 'store'])->name('api.post.admin.branch.save');
             Route::post('edit/{id}', [BranchController::class, 'update'])->name('api.post.admin.branch.edit');

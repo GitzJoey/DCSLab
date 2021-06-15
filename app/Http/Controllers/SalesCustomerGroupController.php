@@ -39,11 +39,11 @@ class SalesCustomerGroupController extends Controller
             'code' => 'required|max:255',
             'name' => 'required|max:255',
             'is_member_card' => 'required',
-            'use_limit_outstanding_notes' => 'required',
+            'use_limit_outstanding_notes' => '',
             'limit_outstanding_notes' => 'required|max:255',
-            'use_limit_payable_nominal' => 'required|max:255',
-            'limit_payable_nominal' => 'required',
-            'use_limit_due_date' => 'required',
+            'use_limit_payable_nominal' => '',
+            'limit_payable_nominal' => 'required|max:255',
+            'use_limit_due_date' => '',
             'limit_due_date' => 'required|max:255',
             'term' => 'required|max:255',
             'selling_point' => 'required|max:255',
@@ -53,46 +53,15 @@ class SalesCustomerGroupController extends Controller
             'global_markup_nominal' => 'required|max:255',
             'global_discount_percent' => 'required|max:255',
             'global_discount_nominal' => 'required|max:255',
-            'is_rounding' => 'required',
+            'is_rounding' => '',
             'round_on' => 'required|max:255',
             'round_digit' => 'required|max:255',
             'remarks' => 'required|max:255',
-            'finance_cash_id' => 'required'
+            'finance_cash_id' => ''
     
         ]);
 
-        $rolePermissions = [];
-        for($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($rolePermissions, array (
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
-
-        $result = $this->salesCustomerGroupService->create(
-            $request['code'],
-            $request['name'],
-            $request['is_member_card'],
-            $request['use_limit_outstanding_notes'],
-            $request['limit_outstanding_notes'],
-            $request['use_limit_payable_nominal'],
-            $request['limit_payable_nominal'],
-            $request['use_limit_due_date'],
-            $request['limit_due_date'],
-            $request['term'],
-            $request['selling_point'],
-            $request['selling_point_multiple'],
-            $request['sell_at_capital_price'],
-            $request['global_markup_percent'],
-            $request['global_markup_nominal'],
-            $request['global_discount_percent'],
-            $request['global_discount_nominal'],
-            $request['is_rounding'],
-            $request['round_on'],
-            $request['round_digit'],
-            $request['remarks'],
-            $request['finance_cash_id'],
-            $rolePermissions
-        );
+        $result = 1;
 
         if ($result == 0) {
             return response()->json([

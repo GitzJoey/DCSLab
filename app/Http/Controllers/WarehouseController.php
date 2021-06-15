@@ -46,24 +46,7 @@ class WarehouseController extends Controller
             'is_active' => 'required'
         ]);
 
-        $rolePermissions = [];
-        for($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($rolePermissions, array (
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
-
-        $result = $this->warehouseService->create(
-            $request['company_id'],
-            $request['code'],
-            $request['name'],
-            $request['address'],
-            $request['city'],
-            $request['contact'],
-            $request['remarks'],
-            $request['is_active'],
-            $rolePermissions
-        );
+        $result = 1;
 
         if ($result == 0) {
             return response()->json([

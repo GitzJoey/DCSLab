@@ -39,18 +39,7 @@ class ProductUnitController extends Controller
             'name' => 'required|max:255'
         ]);
 
-        $rolePermissions = [];
-        for($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($rolePermissions, array (
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
-
-        $result = $this->productUnitService->create(
-            $request['code'],
-            $request['name'],
-            $rolePermissions
-        );
+        $result = 1;
 
         if ($result == 0) {
             return response()->json([

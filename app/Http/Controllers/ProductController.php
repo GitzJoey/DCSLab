@@ -37,47 +37,23 @@ class ProductController extends Controller
     {
         $request->validate([
             'code' => 'required|max:255',
-            'group_id' => 'required',
-            'brand_id' => 'required',
+            'group_id' => '',
+            'brand_id' => '',
             'name' => 'required|max:255',
-            'unit_id' => 'required',
+            'unit_id' => '',
             'price' => 'required|max:255',
-            'tax' => 'required|max:255',
+            'tax_status' => '',
             'information' => 'required|max:255',
             'estimated_capital_price' => 'required|max:255',
-            'is_use_serial' => 'required',
-            'is_buy' => 'required',
-            'is_production_material' => 'required',
-            'is_production_result' => 'required',
-            'is_sell' => 'required',
-            'is_active' => 'required'
+            'is_use_serial' => '',
+            'is_buy' => '',
+            'is_production_material' => '',
+            'is_production_result' => '',
+            'is_sell' => '',
+            'status' => ''
         ]);
-
-        $rolePermissions = [];
-        for($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($rolePermissions, array (
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
-
-        $result = $this->productService->create(
-            $request['code'],
-            $request['group_id'],
-            $request['brand_id'],
-            $request['name'],
-            $request['unit_id'],
-            $request['price'],
-            $request['tax'],
-            $request['information'],
-            $request['estimated_capital_price'],
-            $request['is_use_serial'],
-            $request['is_buy'],
-            $request['is_production_material'],
-            $request['is_production_result'],
-            $request['is_sell'],
-            $request['is_active'],
-            $rolePermissions
-        );
+       
+        $result = 1;
 
         if ($result == 0) {
             return response()->json([

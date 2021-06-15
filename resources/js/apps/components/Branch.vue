@@ -118,7 +118,7 @@
                         <div class="form-group row">
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputAddress" name="address" type="text" :placeholder="$t('fields.address')" v-model="branch.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="branch.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.address }}</div>
                             </div>
@@ -209,7 +209,7 @@ export default {
     },
     setup() {
         const schema = {
-            company_name: 'required',
+            //company_name: 'required',
             code: 'required',
             name: 'required',
             address: 'required',
@@ -299,11 +299,7 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/branch/save', new FormData($('#branchForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/branch/save', new FormData($('#branchForm')[0])). then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

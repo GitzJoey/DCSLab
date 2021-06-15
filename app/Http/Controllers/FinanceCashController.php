@@ -39,23 +39,10 @@ class FinanceCashController extends Controller
             'code' => 'required|max:255',
             'name' => 'required|max:255',
             'is_bank' => 'required',
-            'is_active' => 'required'
+            'status' => 'required'
         ]);
 
-        $rolePermissions = [];
-        for($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($rolePermissions, array (
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
-
-        $result = $this->financeCashService->create(
-            $request['code'],
-            $request['name'],
-            $request['is_bank'],
-            $request['is_active'],
-            $rolePermissions
-        );
+        $result = 1;
 
         if ($result == 0) {
             return response()->json([
