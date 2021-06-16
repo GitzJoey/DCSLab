@@ -8,6 +8,17 @@ use App\Http\Controllers\InboxController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DashboardController;
 
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\FinanceCashController;
+use App\Http\Controllers\ProductGroupController;
+use App\Http\Controllers\ProductBrandController;
+use App\Http\Controllers\ProductUnitController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SalesCustomerGroupController;
+use App\Http\Controllers\SalesCustomerController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -48,6 +59,60 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 
             Route::get('roles/read', [UserController::class, 'getAllRoles'])->name('api.get.admin.user.roles.read');
         });
+
+        /* ext */
+
+        Route::group(['prefix' => 'company'], function () {
+            Route::get('read', [CompanyController::class, 'read'])->name('api.get.admin.company.read');
+            Route::get('permissions/read', [CompanyController::class, 'getAllPermissions'])->name('api.get.admin.company.permissions.read');
+        });
+
+        Route::group(['prefix' => 'branch'], function () {
+            Route::get('read', [BranchController::class, 'read'])->name('api.get.admin.branch.read');
+            Route::get('permissions/read', [BranchController::class, 'getAllPermissions'])->name('api.get.admin.branch.permissions.read');
+        });
+
+        Route::group(['prefix' => 'warehouse'], function () {
+            Route::get('read', [WarehouseController::class, 'read'])->name('api.get.admin.warehouse.read');
+            Route::get('permissions/read', [WarehouseController::class, 'getAllPermissions'])->name('api.get.admin.warehouse.permissions.read');
+        });
+
+        Route::group(['prefix' => 'cash'], function () {
+            Route::get('read', [FinanceCashController::class, 'read'])->name('api.get.admin.financecash.read');
+            Route::get('permissions/read', [FinanceCashController::class, 'getAllPermissions'])->name('api.get.admin.financecash.permissions.read');
+        });
+
+        Route::group(['prefix' => 'productgroup'], function () {
+            Route::get('read', [ProductGroupController::class, 'read'])->name('api.get.admin.productgroup.read');
+            Route::get('permissions/read', [ProductGroupController::class, 'getAllPermissions'])->name('api.get.admin.productgroup.permissions.read');
+        });
+
+        Route::group(['prefix' => 'productbrand'], function () {
+            Route::get('read', [ProductBrandController::class, 'read'])->name('api.get.admin.productbrand.read');
+            Route::get('permissions/read', [ProductBrandController::class, 'getAllPermissions'])->name('api.get.admin.productbrand.permissions.read');
+        });
+
+        Route::group(['prefix' => 'productunit'], function () {
+            Route::get('read', [ProductUnitController::class, 'read'])->name('api.get.admin.productunit.read');
+            Route::get('permissions/read', [ProductUnitController::class, 'getAllPermissions'])->name('api.get.admin.productunit.permissions.read');
+        });
+
+        Route::group(['prefix' => 'product'], function () {
+            Route::get('read', [ProductController::class, 'read'])->name('api.get.admin.product.read');
+            Route::get('permissions/read', [ProductController::class, 'getAllPermissions'])->name('api.get.admin.product.permissions.read');
+        });
+
+        Route::group(['prefix' => 'customergroup'], function () {
+            Route::get('read', [SalesCustomerGroupController::class, 'read'])->name('api.get.admin.customergroup.read');
+            Route::get('permissions/read', [SalesCustomerGroupController::class, 'getAllPermissions'])->name('api.get.admin.customergroup.permissions.read');
+        });
+
+        Route::group(['prefix' => 'customer'], function () {
+            Route::get('read', [SalesCustomerController::class, 'read'])->name('api.get.admin.customer.read');
+            Route::get('permissions/read', [SalesCustomerController::class, 'getAllPermissions'])->name('api.get.admin.customer.permissions.read');
+        });
+
+        /* ext */
     });
 
     Route::group(['prefix' => 'common'], function () {
@@ -74,5 +139,59 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
             Route::post('edit/{id}', [UserController::class, 'update'])->name('api.post.admin.user.edit');
             Route::post('reset/pswd/{id}', [UserController::class, 'resetPassword'])->name('api.post.admin.user.reset_pwd');
         });
+
+        /* ext */
+
+        Route::group(['prefix' => 'company'], function () {
+            Route::post('save', [CompanyController::class, 'store'])->name('api.post.admin.company.save');
+            Route::post('edit/{id}', [CompanyController::class, 'update'])->name('api.post.admin.company.edit');
+        });
+
+        Route::group(['prefix' => 'branch'], function () {
+            Route::post('save', [BranchController::class, 'store'])->name('api.post.admin.branch.save');
+            Route::post('edit/{id}', [BranchController::class, 'update'])->name('api.post.admin.branch.edit');
+        });
+
+        Route::group(['prefix' => 'warehouse'], function () {
+            Route::post('save', [WarehouseController::class, 'store'])->name('api.post.admin.warehouse.save');
+            Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('api.post.admin.warehouse.edit');
+        });
+
+        Route::group(['prefix' => 'cash'], function () {
+            Route::post('save', [FinanceCashController::class, 'store'])->name('api.post.admin.financecash.save');
+            Route::post('edit/{id}', [FinanceCashController::class, 'update'])->name('api.post.admin.financecash.edit');
+        });
+
+        Route::group(['prefix' => 'productgroup'], function () {
+            Route::post('save', [ProductGroupController::class, 'store'])->name('api.post.admin.productgroup.save');
+            Route::post('edit/{id}', [ProductGroupController::class, 'update'])->name('api.post.admin.productgroup.edit');
+        });
+
+        Route::group(['prefix' => 'productbrand'], function () {
+            Route::post('save', [ProductBrandController::class, 'store'])->name('api.post.admin.productbrand.save');
+            Route::post('edit/{id}', [ProductBrandController::class, 'update'])->name('api.post.admin.productbrand.edit');
+        });
+
+        Route::group(['prefix' => 'productunit'], function () {
+            Route::post('save', [ProductUnitController::class, 'store'])->name('api.post.admin.productunit.save');
+            Route::post('edit/{id}', [ProductUnitController::class, 'update'])->name('api.post.admin.productunit.edit');
+        });
+
+        Route::group(['prefix' => 'product'], function () {
+            Route::post('save', [ProductController::class, 'store'])->name('api.post.admin.product.save');
+            Route::post('edit/{id}', [ProductController::class, 'update'])->name('api.post.admin.product.edit');
+        });
+
+        Route::group(['prefix' => 'customergroup'], function () {
+            Route::post('save', [SalesCustomerGroupController::class, 'store'])->name('api.post.admin.customergroup.save');
+            Route::post('edit/{id}', [SalesCustomerGroupController::class, 'update'])->name('api.post.admin.customergroup.edit');
+        });
+
+        Route::group(['prefix' => 'customer'], function () {
+            Route::post('save', [SalesCustomerController::class, 'store'])->name('api.post.admin.customer.save');
+            Route::post('edit/{id}', [SalesCustomerController::class, 'update'])->name('api.post.admin.customer.edit');
+        });
+
+        /* ext */
     });
 });
