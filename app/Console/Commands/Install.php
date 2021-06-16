@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\SystemService;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
@@ -59,6 +60,22 @@ class Install extends Command
 
         if (env('DB_PASSWORD', '') == '') {
             $this->error('Database not configured properly');
+            $this->error('Aborted');
+            return false;
+        }
+
+        $container = Container::getInstance();
+
+        $systemService = $container->make(SystemService::class);
+
+        if (!$systemService->checkDBConnection()) {
+            $this->error('Database Connection Fail');
+            $this->error('Aborted');
+            return false;
+        }
+
+        if ($systemService->isExistTable('users')) {
+            $this->error('Table User Found, Please DROP first');
             $this->error('Aborted');
             return false;
         }
@@ -139,8 +156,6 @@ class Install extends Command
             $this->error('Aborted');
             return false;
         }
-
-        $container = Container::getInstance();
 
         $userService = $container->make(UserService::class);
         $roleService = $container->make(RoleService::class);

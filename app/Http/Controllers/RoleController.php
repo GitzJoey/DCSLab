@@ -25,7 +25,7 @@ class RoleController extends Controller
     {
         $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-        return view('inbox.index');
+        return view('role.index');
     }
 
     public function read()
