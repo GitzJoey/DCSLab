@@ -67,7 +67,7 @@ class CompanyController extends Controller
             $id,
             $request['code'],
             $request['name'],
-            $request['is_active'],
+            $request['status'],
             $inputtedRolePermissions
         );
 

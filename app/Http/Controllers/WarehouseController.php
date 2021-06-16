@@ -43,7 +43,7 @@ class WarehouseController extends Controller
             'city' => 'required|max:255',
             'contact' => 'required|max:255',
             'remarks' => 'required|max:255',
-            'is_active' => 'required'
+            'status' => 'required'
         ]);
 
         $result = 1;
@@ -77,7 +77,7 @@ class WarehouseController extends Controller
             $request['city'],
             $request['contact'],
             $request['remarks'],
-            $request['is_active'],
+            $request['status'],
             $inputtedRolePermissions
         );
 

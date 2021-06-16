@@ -69,7 +69,7 @@ class FinanceCashController extends Controller
             $request['code'],
             $request['name'],
             $request['is_bank'],
-            $request['is_active'],
+            $request['status'],
             $inputtedRolePermissions
         );
 

@@ -78,7 +78,7 @@ class BranchController extends Controller
             $request['city'],
             $request['contact'],
             $request['remarks'],
-            $request['is_active'],
+            $request['status'],
             $inputtedRolePermissions
         );
 

@@ -37,20 +37,11 @@ class ProductController extends Controller
     {
         $request->validate([
             'code' => 'required|max:255',
-            'group_id' => '',
-            'brand_id' => '',
             'name' => 'required|max:255',
-            'unit_id' => '',
             'price' => 'required|max:255',
-            'tax_status' => '',
             'information' => 'required|max:255',
             'estimated_capital_price' => 'required|max:255',
-            'is_use_serial' => '',
-            'is_buy' => '',
-            'is_production_material' => '',
-            'is_production_result' => '',
-            'is_sell' => '',
-            'status' => ''
+            'status' => 'required'
         ]);
        
         $result = 1;
@@ -83,7 +74,7 @@ class ProductController extends Controller
             $request['name'],
             $request['unit_id'],
             $request['price'],
-            $request['tax'],
+            $request['tax_status'],
             $request['information'],
             $request['estimated_capital_price'],
             $request['is_use_serial'],
@@ -91,7 +82,7 @@ class ProductController extends Controller
             $request['is_production_material'],
             $request['is_production_result'],
             $request['is_sell'],
-            $request['is_active'],
+            $request['status'],
             $inputtedRolePermissions
         );
 
