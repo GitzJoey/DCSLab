@@ -37,7 +37,7 @@ class RoleServiceImpl implements RoleService
 
             DB::commit();
 
-            return $role->hId();
+            return $role->hId;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
