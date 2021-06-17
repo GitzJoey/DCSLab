@@ -10,6 +10,7 @@
 /storage
 /vendor
 /.idea
+/.vscode
 .env
 .env.backup
 .phpunit.result.cache
