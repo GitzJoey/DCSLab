@@ -14,6 +14,7 @@ export default class Template {
         this._lSidebar              = jQuery('#sidebar');
         this._lSidebarScrollCon     = jQuery('.js-sidebar-scroll', '#sidebar');
         this._lSideOverlay          = jQuery('#side-overlay');
+        this._lResize               = false;
         this._lHeader               = jQuery('#page-header');
         this._lHeaderSearch         = jQuery('#page-header-search');
         this._lHeaderSearchInput    = jQuery('#page-header-search-input');
@@ -54,7 +55,13 @@ export default class Template {
 
         if (mode === 'init') {
             self._lPage.addClass('side-trans-enabled');
+            jQuery(window).on('resize', () => {
+                clearTimeout(self._lResize);
 
+                self._lPage.removeClass('side-trans-enabled');
+
+                self._lResize = setTimeout(() => { self._lPage.addClass('side-trans-enabled'); }, 500);
+            });
             this._uiHandleSidebars();
         } else {
             if (self._lPage.hasClass('side-scroll')) {
