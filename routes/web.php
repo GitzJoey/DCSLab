@@ -57,6 +57,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::get('inbox', [InboxController::class, 'index'])->name('db.inbox');
         Route::get('activity', [ActivityLogController::class, 'index'])->name('db.activity');
 
+        Route::get('user/verify/email', [UserController::class, 'sendEmailVerification'])->name('db.user.verify_email');
+        Route::get('user/email/verify/{id}/{hash}', [UserController::class, 'emailVerification'])->name('verification.verify');
+
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');
 
         /* ext */

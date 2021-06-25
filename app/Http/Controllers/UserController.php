@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Rules\sameEmail;
+use App\Rules\validDropDownValue;
 use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,8 @@ use App\Services\RoleService;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Vinkla\Hashids\Facades\Hashids;
 
 class UserController extends Controller
@@ -119,6 +122,7 @@ class UserController extends Controller
             'roles' => 'required',
             'tax_id' => 'required',
             'ic_num' => 'required',
+            'status' => new validDropDownValue('ACTIVE_STATUS'),
         ]);
 
         $profile = array (
@@ -177,5 +181,29 @@ class UserController extends Controller
         $usr = $this->userService->getUserById($id);
 
         $this->userService->resetPassword($usr['email']);
+    }
+
+    public function sendEmailVerification()
+    {
+        $usr = Auth::user();
+
+        $usr->sendEmailVerificationNotification();
+
+        Session::flash('flash-messages', trans('user.flash.email_verification_sent'));
+
+        return redirect()->back();
+    }
+
+    public function emailVerification(Request $request, $id, $hash)
+    {
+        if (!URL::hasValidSignature($request)) {
+            return redirect('/');
+        }
+
+        $usr = $this->userService->getUserById($id);
+
+        $usr->markEmailAsVerified();
+
+        return redirect('/home');
     }
 }

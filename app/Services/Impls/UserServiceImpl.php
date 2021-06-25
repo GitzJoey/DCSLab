@@ -38,7 +38,7 @@ class UserServiceImpl implements UserService
             $profile->first_name = $name;
         }
 
-        $profile->status = 'ACTIVE';
+        $profile->status = 1;
 
         $usr->profile()->save($profile);
 

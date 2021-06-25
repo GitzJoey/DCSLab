@@ -25,7 +25,7 @@ class CreateProfilesTable extends Migration
             $table->string('tax_id')->nullable();
             $table->string('ic_num')->nullable();
             $table->string('img_path')->nullable();
-            $table->string('status')->nullable();
+            $table->integer('status')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
         });

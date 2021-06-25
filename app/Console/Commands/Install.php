@@ -169,7 +169,7 @@ class Install extends Command
 
         $profile = [
             'first_name' => $userName,
-            'status' => 'ACTIVE'
+            'status' => 1
         ];
 
         $userService->create(

@@ -13,4 +13,11 @@ return [
     ],
 
     'ERROR_RETURN_VALUE' => 0,
+
+    'DROPDOWN' => [
+        'ACTIVE_STATUS' => [
+            'ACTIVE' => 1,
+            'INACTIVE' => 0,
+        ],
+    ],
 ];

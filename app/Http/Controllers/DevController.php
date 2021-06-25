@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class DevController extends Controller
 {
@@ -18,6 +19,9 @@ class DevController extends Controller
 
     public function ex1()
     {
+        $t = Config::get('const.DROPDOWN');
+
+
         return view('dev.ex1');
     }
 
