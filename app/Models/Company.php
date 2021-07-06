@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Branch;
 use App\Models\Warehouse;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Company extends Model
 {
@@ -15,14 +16,15 @@ class Company extends Model
     protected $fillable = [
         'code',
         'name',
-        'is_active'
+        'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'is_active'];
+    protected static $logAttributes = ['code', 'name', 'status'];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
+        'id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -30,6 +32,13 @@ class Company extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    protected $appends = ['hId'];
+
+    public function getHIdAttribute() : string
+    {
+        return HashIds::encode($this->attributes['id']);
+    }
 
     public function branches()
     {

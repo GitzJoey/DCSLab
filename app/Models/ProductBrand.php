@@ -34,7 +34,7 @@ class ProductBrand extends Model
 
     public function getHIdAttribute() : string
     {
-        return hashIDs::encode($this->attributes['id']);
+        return HashIds::encode($this->attributes['id']);
     }
 
     public function brands()

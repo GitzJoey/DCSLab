@@ -7,15 +7,18 @@ interface CompanyService
     public function create(
         $code,
         $name,
-        $is_active
+        $status
     );
 
     public function read();
 
+    public function getAllActiveCompany();
+
     public function update(
+        $id,
         $code,
         $name,
-        $is_active
+        $status
     );
 
     public function delete($id);

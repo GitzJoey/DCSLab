@@ -62,7 +62,7 @@
                                 <td>{{ c.is_production_material }}</td>
                                 <td>{{ c.is_production_result }}</td>
                                 <td>{{ c.is_sell }}</td>
-                                <td>{{ c.is_active }}</td>
+                                <td>{{ c.status }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -183,6 +183,14 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="inputPoint" class="col-2 col-form-label">{{ $t('fields.point') }}</label>
+                            <div class="col-md-10">
+                                <Field id="inputPoint" name="point" as="input" :class="{'form-control':true, 'is-invalid': errors['point']}" :placeholder="$t('fields.point')" :label="$t('fields.point')" v-model="product.point" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="point" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.point }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputEstimated_Capital_Price" class="col-2 col-form-label">{{ $t('fields.estimated_capital_price') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputEstimated_Capital_Price" name="estimated_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['estimated_capital_price']}" :placeholder="$t('fields.estimated_capital_price')" :label="$t('fields.estimated_capital_price')" v-model="product.estimated_capital_price" v-if="this.mode === 'create' || this.mode === 'edit'"/>
@@ -298,13 +306,8 @@ export default {
     setup() {
         const schema = {
             code: 'required',
-            group_name: 'required',
-            brand_name: 'required',
             name: 'required',
-            unit_name: 'required',
             price: 'required',
-            tax: 'required',
-            information: 'required',
             estimated_capital_price: 'required',
             point: 'required',
         };

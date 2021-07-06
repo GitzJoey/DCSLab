@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class FinanceCash extends Model
 {
@@ -14,14 +15,15 @@ class FinanceCash extends Model
         'code',
         'name',
         'is_bank',
-        'is_active'
+        'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'is_bank', 'is_active'];
+    protected static $logAttributes = ['code', 'name', 'is_bank', 'status'];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
+        'id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -29,4 +31,11 @@ class FinanceCash extends Model
         'updated_at',
         'deleted_at'
     ];
+    
+    protected $appends = ['hId'];
+
+    public function getHIdAttribute() : string
+    {
+        return HashIds::encode($this->attributes['id']);
+    }
 }

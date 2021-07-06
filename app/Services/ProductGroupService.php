@@ -12,6 +12,7 @@ interface ProductGroupService
     public function read();
 
     public function update(
+        $id,
         $code,
         $name
     );

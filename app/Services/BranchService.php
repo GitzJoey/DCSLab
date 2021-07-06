@@ -12,12 +12,13 @@ interface BranchService
         $city,
         $contact,
         $remarks,
-        $is_active
+        $status
     );
 
     public function read();
 
     public function update(
+        $id,
         $company_id,
         $code,
         $name,
@@ -25,7 +26,7 @@ interface BranchService
         $city,
         $contact,
         $remarks,
-        $is_active
+        $status
     );
 
     public function delete($id);

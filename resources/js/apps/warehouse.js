@@ -15,7 +15,7 @@ const messages = {
         table: {
             title: 'Warehouse Lists',
             cols: {
-                company_name: 'Company Name',
+                company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
                 address: 'Address',
@@ -36,7 +36,7 @@ const messages = {
             show: 'Show Warehouse',
         },
         fields: {
-            company_name: 'Company Name',
+            company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
             address: 'Address',
@@ -66,7 +66,7 @@ const messages = {
         table: {
             title: 'Daftar Perusahaan',
             cols: {
-                company_name: 'Nama Perusahaan',
+                company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
                 address: 'Alamat',
@@ -88,7 +88,7 @@ const messages = {
             reset_password: 'Reset Password',
         },
         fields: {
-            company_name: 'Nama Perusahaan',
+            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',
             address: 'Alamat',

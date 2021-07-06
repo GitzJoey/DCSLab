@@ -18,6 +18,7 @@ use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\CompanyService;
 use App\Services\BranchService;
 use App\Services\WarehouseService;
+use App\Services\HouseService;
 use App\Services\FinanceCashService;
 use App\Services\ProductGroupService;
 use App\Services\ProductBrandService;
@@ -25,9 +26,11 @@ use App\Services\ProductService;
 use App\Services\ProductUnitService;
 use App\Services\SalesCustomerGroupService;
 use App\Services\SalesCustomerService;
+
 use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
+use App\Services\Impls\HouseServiceImpl;
 use App\Services\Impls\FinanceCashServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductBrandServiceImpl;
@@ -104,6 +107,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(WarehouseService::class, function (){
             return new WarehouseServiceImpl();
+        });
+
+        $this->app->singleton(HouseService::class, function (){
+            return new HouseServiceImpl();
         });
     }
 

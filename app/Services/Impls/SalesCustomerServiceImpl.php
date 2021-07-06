@@ -24,7 +24,7 @@ class SalesCustomerServiceImpl implements SalesCustomerService
         $contact,
         $tax_id,
         $remarks,
-        $is_active
+        $status
     )
     {
 
@@ -54,7 +54,7 @@ class SalesCustomerServiceImpl implements SalesCustomerService
         $contact,
         $tax_id,
         $remarks,
-        $is_active
+        $status
     )
     {
 

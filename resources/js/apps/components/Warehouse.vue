@@ -25,7 +25,7 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ $t("table.cols.company_name") }}</th>
+                                <th>{{ $t("table.cols.company_id") }}</th>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.address") }}</th>
@@ -44,7 +44,11 @@
                                 <td>{{ w.city }}</td>
                                 <td>{{ w.contact }}</td>
                                 <td>{{ w.remarks }}</td>
-                                <td>{{ w.is_active }}</td>
+                                <td>
+                                    <span v-if="w.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="w.status === 0">{{ $t('statusDDL.inactive') }}</span>
+
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(wIdx)">
@@ -91,7 +95,7 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="example-select">Company Name</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="example-select">
+                                <select class="form-control" id="example-select" name="company_id">
                                     <option value="0">Please select Company Name</option>
                                     <option value="1">PT. ABC</option>
                                     <option value="2">PT. DEF</option>
@@ -102,62 +106,62 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="warehouse.code" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="warehouse.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ warehouse.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="warehouse.name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="warehouse.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ warehouse.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
-                                <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="warehouse.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="warehouse.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="address" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ warehouse.address }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.address }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
-                                <input id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="warehouse.city" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="warehouse.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="city" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ warehouse.city }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.city }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
-                                <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="warehouse.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="warehouse.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="contact" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ warehouse.contact }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.contact }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
-                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="warehouse.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="warehouse.remarks" v-show="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
                                 <ErrorMessage name="remarks" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ warehouse.remarks }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.remarks }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="warehouse.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
-                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
+                                    <select class="form-control" id="inputStatus" name="status" v-model="warehouse.status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value="1">{{ $t('statusDDL.active') }}</option>
+                                        <option value="0">{{ $t('statusDDL.inactive') }}</option>
                                     </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="warehouse.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="warehouse.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="warehouse.status === 1">{{ $t('statusDDL.active') }}</span>
+                                        <span v-if="warehouse.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -209,13 +213,11 @@ export default {
     },
     setup() {
         const schema = {
-            company_name: 'required',
             code: 'required',
             name: 'required',
             address: 'required',
             city: 'required',
             contact: 'required',
-            remarks: 'required',
         };
 
         return {
@@ -230,16 +232,14 @@ export default {
             contentHidden: false,
             warehouseList: { },
             warehouse: {
-                warehouse: [],
-                selectedWarehouses: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                company_id: '',
+                code: '',
+                name: '',
+                address: '',
+                city: '',
+                contact: '',
+                remarks: '',
+                status: '',
             },
         }
     },
@@ -249,7 +249,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllWarehouse(1);
-        //this.getAllWarehouses();
     },
     methods: {
         getAllWarehouse(page) {
@@ -270,18 +269,14 @@ export default {
         },
         emptyWarehouse() {
             return {
-                warehouse: [],
-                selectedWarehouses: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                company_id:'',
+                code: '',
+                name: '',
+                address: '',
+                city: '',
+                contact: '',
+                remarks: '',
+                status: '',
             }
         },
         createNew() {

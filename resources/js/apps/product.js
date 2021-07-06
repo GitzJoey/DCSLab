@@ -80,7 +80,7 @@ const messages = {
         },
         bankDDL: {
             active: 'Active',
-            inactive: '-',
+            inactive: 'Inactive',
         },
     },
     id: {

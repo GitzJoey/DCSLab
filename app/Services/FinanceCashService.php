@@ -8,7 +8,7 @@ interface FinanceCashService
         $code,
         $name,
         $is_bank,
-        $is_active
+        $status
     );
 
     public function read();
@@ -17,7 +17,7 @@ interface FinanceCashService
         $code,
         $name,
         $is_bank,
-        $is_active
+        $status
     );
 
     public function delete($id);

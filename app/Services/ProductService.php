@@ -19,7 +19,7 @@ interface ProductService
         $is_production_material,
         $is_production_result,
         $is_sell,
-        $is_active
+        $status
 
     );
 
@@ -40,7 +40,7 @@ interface ProductService
         $is_production_material,
         $is_production_result,
         $is_sell,
-        $is_active
+        $status
     );
 
     public function delete($id);

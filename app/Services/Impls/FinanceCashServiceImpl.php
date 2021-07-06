@@ -2,6 +2,11 @@
 
 namespace App\Services\Impls;
 
+use Exception;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 use App\Services\FinanceCashService;
 use App\Models\FinanceCash;
 
@@ -11,10 +16,28 @@ class FinanceCashServiceImpl implements FinanceCashService
         $code,
         $name,
         $is_bank,
-        $is_active
+        $status
     )
     {
+        DB::beginTransaction();
 
+        try {
+            $cash = new FinanceCash();
+            $cash->code = $code;
+            $cash->name = $name;
+            $cash->is_bank = $is_bank;
+            $cash->status = $status;
+
+            $cash->save();
+
+            DB::commit();
+
+            return $cash->hId;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
 
     }
 
@@ -28,7 +51,7 @@ class FinanceCashServiceImpl implements FinanceCashService
         $code,
         $name,
         $is_bank,
-        $is_active
+        $status
     )
     {
 

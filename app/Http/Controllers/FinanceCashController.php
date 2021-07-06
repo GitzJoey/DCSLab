@@ -38,11 +38,10 @@ class FinanceCashController extends Controller
         $request->validate([
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'is_bank' => 'required',
             'status' => 'required'
         ]);
 
-        $result = 1;
+        $result = $this->financeCashService->create($request['code'], $request['name'], $request['is_bank'], $request['status']);
 
         if ($result == 0) {
             return response()->json([

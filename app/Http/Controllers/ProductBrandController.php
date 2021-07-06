@@ -40,7 +40,7 @@ class ProductBrandController extends Controller
             'name' => 'required|max:255'
         ]);
 
-        $result = 1;
+        $result = $this->productBrandService->create($request['code'], $request['name']);
         
         if ($result == 0) {
             return response()->json([
@@ -55,21 +55,26 @@ class ProductBrandController extends Controller
 
     public function update($id, Request $request)
     {
-        $inputtedRolePermissions = [];
-        for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($inputtedRolePermissions, array(
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
+        $request->validate([
+            'code' => 'required|max:255',
+            'name' => 'required|max:255',
+        ]);
 
         $result = $this->productBrandService->update(
             $id,
             $request['code'],
             $request['name'],
-            $inputtedRolePermissions
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function delete($id)
