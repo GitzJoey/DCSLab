@@ -5,7 +5,6 @@ return [
     'db.company.companies' => 'Perusahaan',
     'db.company.branches' => 'Cabang',
     'db.company.warehouses' => 'Gudang',
-    'db.company.houses' => 'Rumah',
     'db.finance' => 'Keuangan',
     'db.finance_cashes' => 'Kas',
     'db.product' => 'Produk',

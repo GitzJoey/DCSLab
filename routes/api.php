@@ -11,7 +11,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\HouseController;
 use App\Http\Controllers\FinanceCashController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProductBrandController;
@@ -76,11 +75,6 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'warehouse'], function () {
             Route::get('read', [WarehouseController::class, 'read'])->name('api.get.admin.warehouse.read');
             Route::get('permissions/read', [WarehouseController::class, 'getAllPermissions'])->name('api.get.admin.warehouse.permissions.read');
-        });
-
-        Route::group(['prefix' => 'house'], function () {
-            Route::get('read', [HouseController::class, 'read'])->name('api.get.admin.house.read');
-            Route::get('permissions/read', [HouseController::class, 'getAllPermissions'])->name('api.get.admin.house.permissions.read');
         });
 
         Route::group(['prefix' => 'cash'], function () {
@@ -161,11 +155,6 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'warehouse'], function () {
             Route::post('save', [WarehouseController::class, 'store'])->name('api.post.admin.warehouse.save');
             Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('api.post.admin.warehouse.edit');
-        });
-
-        Route::group(['prefix' => 'house'], function () {
-            Route::post('save', [HouseController::class, 'store'])->name('api.post.admin.house.save');
-            Route::post('edit/{id}', [HouseController::class, 'update'])->name('api.post.admin.house.edit');
         });
 
         Route::group(['prefix' => 'cash'], function () {

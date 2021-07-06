@@ -12,7 +12,6 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\HouseController;
 use App\Http\Controllers\FinanceCashController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProductBrandController;
@@ -74,7 +73,6 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('companies', [CompanyController::class, 'index'])->name('db.company.companies');
             Route::get('branches', [BranchController::class, 'index'])->name('db.company.branches');
             Route::get('warehouses', [WarehouseController::class, 'index'])->name('db.company.warehouses');
-            Route::get('houses', [HouseController::class, 'index'])->name('db.company.houses');
 
         });
 

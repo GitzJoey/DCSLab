@@ -5,7 +5,6 @@ return [
     'db.company.companies' => 'Companies',
     'db.company.branches' => 'Branches',
     'db.company.warehouses' => 'Warehouses',
-    'db.company.houses' => 'Houses',
     'db.finance' => 'Finance',
     'db.finance_cashes' => 'Cashes',
     'db.product' => 'Product',
