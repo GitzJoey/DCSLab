@@ -10,9 +10,6 @@
         <li>
             <a class="{{ active_class(if_route_pattern('db.company.warehouses')) }}" href="{{route('db.company.warehouses')}}">{{ __('sidebar-ext.db.company.warehouses') }}</a>
         </li>
-        <li>
-            <a class="{{ active_class(if_route_pattern('db.company.houses')) }}" href="{{route('db.company.houses')}}">{{ __('sidebar-ext.db.company.houses') }}</a>
-        </li>
     </ul>
 </li>
 
