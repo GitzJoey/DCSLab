@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductGroup;
 use App\Models\ProductBrand;
 use App\Models\ProductUnit;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Product extends Model
 {
     use HasFactory, LogsActivity;
+    use SoftDeletes;
 
     protected $fillable = [
         'code',

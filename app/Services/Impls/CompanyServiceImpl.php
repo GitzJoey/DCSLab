@@ -83,7 +83,8 @@ class CompanyServiceImpl implements CompanyService
 
     public function delete($id)
     {
+        $company = Company::find($id);
 
-        
+        return $company->delete();
     }
 }

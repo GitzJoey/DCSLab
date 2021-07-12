@@ -60,7 +60,9 @@ class ProductServiceImpl implements ProductService
 
     public function delete($id)
     {
+        $product = Product::find($id);
 
+        return $product->delete();
         
     }
 }

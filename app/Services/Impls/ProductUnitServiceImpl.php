@@ -71,8 +71,9 @@ class ProductUnitServiceImpl implements ProductUnitService
 
     public function delete($id)
     {
+        $productunit = ProductUnit::find($id);
 
+        return $productunit->delete();
         
     }
-
 }

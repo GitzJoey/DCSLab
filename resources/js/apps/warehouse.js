@@ -34,6 +34,7 @@ const messages = {
             create: 'Create Warehouse',
             edit: 'Edit Warehouse',
             show: 'Show Warehouse',
+            delete: 'Delete',
         },
         fields: {
             company_id: 'Company Name',
@@ -85,7 +86,7 @@ const messages = {
             create: 'Tambah Gudang',
             edit: 'Ubah Gudang',
             show: 'Tampilkan Gudang',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             company_id: 'Nama Perusahaan',

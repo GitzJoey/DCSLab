@@ -28,6 +28,7 @@ const messages = {
             create: 'Create Product Unit',
             edit: 'Edit Product Group',
             show: 'Show Product Group',
+            delete: 'Delete',
         },
         fields: {
             code: 'Code',
@@ -63,7 +64,7 @@ const messages = {
             create: 'Tambah Satuan Product',
             edit: 'Ubah Product Group',
             show: 'Tampilkan Product Group',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             code: 'Kode',

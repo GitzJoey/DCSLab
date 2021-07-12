@@ -98,7 +98,9 @@ class BranchServiceImpl implements BranchService
 
     public function delete($id)
     {
+        $branch = Branch::find($id);
 
+        return $branch->delete();
         
     }
 }

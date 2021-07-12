@@ -42,6 +42,9 @@
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -204,6 +207,18 @@ export default {
             this.mode = 'show';
             this.productbrand = this.productbrandList.data[idx];
         },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.productbrand = this.productbrandList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/productbrand/delete/'  + this.productbrand.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
+        },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
@@ -214,11 +229,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/productbrand/edit/' + this.productbrand.hId, new FormData($('#productbrandForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/productbrand/edit/' + this.productbrand.hId, new FormData($('#productbrandForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

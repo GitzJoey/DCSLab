@@ -46,6 +46,9 @@
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -234,6 +237,18 @@ export default {
         showSelected(idx) {
             this.mode = 'show';
             this.cash = this.cashList.data[idx];
+        },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.financecash = this.financecashList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/financecash/delete/'  + this.financecash.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;

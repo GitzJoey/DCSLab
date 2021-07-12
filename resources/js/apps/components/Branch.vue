@@ -56,6 +56,9 @@
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(bIdx)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -295,6 +298,18 @@ export default {
             this.mode = 'show';
             this.branch = this.branchList.data[idx];
         },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.branch = this.branchList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/branch/delete/'  + this.branch.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
+        },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
@@ -305,11 +320,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/branch/edit/' + this.branch.hId, new FormData($('#branchForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/branch/edit/' + this.branch.hId, new FormData($('#branchForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

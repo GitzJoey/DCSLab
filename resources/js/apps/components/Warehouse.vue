@@ -47,7 +47,6 @@
                                 <td>
                                     <span v-if="w.status === 1">{{ $t('statusDDL.active') }}</span>
                                     <span v-if="w.status === 0">{{ $t('statusDDL.inactive') }}</span>
-
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -56,6 +55,9 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(wIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(wIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -290,6 +292,18 @@ export default {
         showSelected(idx) {
             this.mode = 'show';
             this.warehouse = this.warehouseList.data[idx];
+        },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.warehouse = this.warehouseList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/warehouse/delete/'  + this.warehouse.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;

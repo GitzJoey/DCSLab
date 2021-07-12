@@ -42,6 +42,9 @@
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(bIdx)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -202,6 +205,18 @@ export default {
         showSelected(idx) {
             this.mode = 'show';
             this.productgroup = this.productgroupList.data[idx];
+        },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.productgroup = this.productgroupList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/productgroup/delete/'  + this.productgroup.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;

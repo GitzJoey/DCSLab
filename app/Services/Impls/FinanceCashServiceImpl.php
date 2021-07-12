@@ -61,7 +61,9 @@ class FinanceCashServiceImpl implements FinanceCashService
 
     public function delete($id)
     {
+        $financecash = FinanceCash::find($id);
 
+        return $financecash->delete();
         
     }
 }

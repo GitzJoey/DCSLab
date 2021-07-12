@@ -34,6 +34,7 @@ const messages = {
             create: 'Create Branch',
             edit: 'Edit Branch',
             show: 'Show Branch',
+            delete: 'Delete',
         },
         fields: {
             company_id: 'Company Name',
@@ -85,7 +86,7 @@ const messages = {
             create: 'Tambah cabang',
             edit: 'Ubah Cabang',
             show: 'Tampilkan Cabang',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             company_id: 'Nama Perusahaan',

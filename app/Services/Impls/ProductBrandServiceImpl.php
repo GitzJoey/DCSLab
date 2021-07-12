@@ -68,16 +68,11 @@ class ProductBrandServiceImpl implements ProductBrandService
         }
     }
 
-    public function getCompanyById($id)
-    {
-        return ProductBrandService::find($id);
-    }
-
-
     public function delete($id)
     {
+        $productbrand = ProductBrand::find($id);
 
+        return $productbrand->delete();
         
     }
-
 }

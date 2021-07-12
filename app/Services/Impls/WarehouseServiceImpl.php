@@ -95,7 +95,9 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function delete($id)
     {
+        $warehouse = Warehouse::find($id);
 
+        return $warehouse->delete();
         
     }
 }

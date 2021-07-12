@@ -30,6 +30,7 @@ const messages = {
             create: 'Create Cash',
             edit: 'Edit Cash',
             show: 'Show Cash',
+            delete: 'Delete',
         },
         fields: {
             code: 'Code',
@@ -73,7 +74,7 @@ const messages = {
             create: 'Tambah Kas',
             edit: 'Ubah Kas',
             show: 'Tampilkan Kas',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             code: 'Kode',

@@ -77,8 +77,16 @@ class FinanceCashController extends Controller
 
     public function delete($id)
     {
-        $this->financeCashService->delete($id);
+        $result = $this->financecashService->delete($id);
 
-        return response()->json();
+        if ($result == false) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 }

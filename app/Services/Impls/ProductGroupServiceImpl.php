@@ -70,8 +70,8 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function delete($id)
     {
+        $productgroup = ProductGroup::find($id);
 
-        
+        return $productgroup->delete();
     }
-
 }
