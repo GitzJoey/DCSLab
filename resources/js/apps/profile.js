@@ -13,6 +13,10 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         title: 'Your Profile',
+        tabs: {
+            profile: 'Profile',
+            settings: 'Settings'
+        },
         buttons: {
             update: 'Update',
         },
@@ -28,6 +32,12 @@ const messages = {
             remarks: 'Remarks',
             email: 'Email',
             ic_num: 'IC No.',
+            settings: {
+                settings: 'Settings',
+                theme: 'Themes',
+                dateFormat: 'Date Format',
+                timeFormat: 'Time Format',
+            },
         },
         errors: {
             warning: 'Warning',
@@ -35,6 +45,10 @@ const messages = {
     },
     id: {
         title: 'Profil Kamu',
+        tabs: {
+            profile: 'Profil',
+            settings: 'Settings'
+        },
         buttons: {
             update: 'Update',
         },
@@ -50,6 +64,12 @@ const messages = {
             remarks: 'Keterangan',
             email: 'Email',
             ic_num: 'KTP',
+            settings: {
+                settings: 'Pengaturan',
+                theme: 'Tema',
+                dateFormat: 'Format Tanggal',
+                timeFormat: 'Format Waktu',
+            },
         },
         errors: {
             warning: 'Peringatan',

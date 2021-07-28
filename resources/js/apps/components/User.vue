@@ -269,6 +269,12 @@
                                         <br/>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span>{{ $t('fields.settings.apiToken') }}</span><br/>
+                                        <a href="#">{{ $t('actions.regenerate_token') }}</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -346,7 +352,8 @@ export default {
                 selectedSettings: {
                     theme: 'corporate',
                     dateFormat: '',
-                    timeFormat: ''
+                    timeFormat: '',
+                    apiToken:'',
                 }
             },
             countriesDDL: [],
@@ -391,7 +398,8 @@ export default {
                 selectedSettings: {
                     theme: 'corporate',
                     dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
+                    timeFormat: 'hh_mm_ss',
+                    apiToken: '',
                 }
             }
         },
@@ -402,10 +410,12 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.user = this.userList.data[idx];
+            this.getAPIToken();
         },
         showSelected(idx) {
             this.mode = 'show';
             this.user = this.userList.data[idx];
+            this.getAPIToken();
         },
         onSubmit(values, actions) {
             this.loading = true;
@@ -487,6 +497,13 @@ export default {
         },
         resetPassword(email) {
 
+        },
+        getAPIToken() {
+            axios.get('/api/get/user/api/token').then(response => {
+                this.user.selectedSettings.apiToken = response.data;
+            }).catch(e => {
+                console.log(e.message);
+            });
         }
     },
     computed: {

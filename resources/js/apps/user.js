@@ -31,6 +31,7 @@ const messages = {
             edit: 'Edit User',
             show: 'Show User',
             reset_password: 'Reset Password',
+            regenerate_token: 'Regenerate',
         },
         fields: {
             name: 'Name',
@@ -51,6 +52,7 @@ const messages = {
                 theme: 'Themes',
                 dateFormat: 'Date Format',
                 timeFormat: 'Time Format',
+                apiToken: 'API Token',
             },
         },
         errors: {
@@ -84,6 +86,7 @@ const messages = {
             edit: 'Ubah Pengguna',
             show: 'Tampilkan Pengguna',
             reset_password: 'Reset Password',
+            regenerate_token: 'Regenerate',
         },
         fields: {
             name: 'Nama',
@@ -104,6 +107,7 @@ const messages = {
                 theme: 'Tema',
                 dateFormat: 'Format Tanggal',
                 timeFormat: 'Format Waktu',
+                apiToken: 'API Token',
             },
         },
         errors: {
