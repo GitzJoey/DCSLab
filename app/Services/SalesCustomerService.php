@@ -21,7 +21,7 @@ interface SalesCustomerService
         $contact,
         $tax_id,
         $remarks,
-        $is_active
+        $status
     );
 
     public function read();
@@ -43,7 +43,7 @@ interface SalesCustomerService
         $contact,
         $tax_id,
         $remarks,
-        $is_active
+        $status
     );
 
     public function delete($id);

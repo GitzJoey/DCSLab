@@ -239,6 +239,22 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="inputGlobalDiscountPercent" class="col-2 col-form-label">{{ $t('fields.global_discount_percent') }}</label>
+                            <div class="col-md-10">
+                                <Field id="inputGlobalDiscountPercent" name="global_discount_percent" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_percent']}" :placeholder="$t('fields.global_discount_percent')" :label="$t('fields.global_discount_percent')" v-model="customergroup.global_discount_percent" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="global_discount_percent" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ group.global_discount_percent }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputGlobalDiscountNominal" class="col-2 col-form-label">{{ $t('fields.global_discount_nominal') }}</label>
+                            <div class="col-md-10">
+                                <Field id="inputGlobalDiscountNominal" name="global_discount_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_nominal']}" :placeholder="$t('fields.global_discount_nominal')" :label="$t('fields.global_discount_nominal')" v-model="customergroup.global_discount_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="global_discount_nominal" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ group.global_discount_nominal }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputIsRounding" class="col-2 col-form-label">{{ $t('fields.is_rounding') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">
@@ -344,11 +360,7 @@ export default {
             global_markup_nominal: 'required',
             global_discount_percent: 'required',
             global_discount_nominal: 'required',
-            round_on: 'required',
             round_digit: 'required',
-            remarks: 'required',
-            finance_cash_id: 'required',
-
         };
 
         return {

@@ -39,11 +39,13 @@ const messages = {
             submit: 'Submit',
             reset: 'Reset',
             back: 'Back',
+            delete: 'Delete',
         },
         actions: {
             create: 'Create Customer Group',
             edit: 'Edit Customer Group',
             show: 'Show Customer Group',
+            delete: 'Delete',
         },
         fields: {
             code: 'Code',
@@ -120,7 +122,7 @@ const messages = {
             create: 'Tambah Kelompok Pelanggan',
             edit: 'Ubah Kelompok Pelanggan',
             show: 'Tampilkan Kelompok Pelanggan',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             code: 'Kode',

@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductGroup;
 use App\Models\ProductBrand;
 use App\Models\ProductUnit;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Product extends Model
 {
     use HasFactory, LogsActivity;
+    use SoftDeletes;
 
     protected $fillable = [
         'code',
@@ -28,10 +30,10 @@ class Product extends Model
         'is_production_material',
         'is_production_result',
         'is_sell',
-        'is_active'
+        'status'
     ];
 
-    protected static $logAttributes = ['code', 'group_id', 'brand_id', 'name', 'unit_id', 'price', 'tax', 'information', 'estimated_capital_price', 'is_use_serial', 'is_buy', 'is_production_material', 'is_production_result', 'is_sell', 'is_active'];
+    protected static $logAttributes = ['code', 'group_id', 'brand_id', 'name', 'unit_id', 'price', 'tax', 'information', 'estimated_capital_price', 'is_use_serial', 'is_buy', 'is_production_material', 'is_production_result', 'is_sell', 'status'];
 
     protected static $logOnlyDirty = true;
 

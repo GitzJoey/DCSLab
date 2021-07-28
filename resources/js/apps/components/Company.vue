@@ -33,9 +33,12 @@
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in companyList.data">
-                                <td>{{ c.code }} {{ cIdx }}</td>
+                                <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.is_active }}</td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -43,6 +46,9 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -82,17 +88,17 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="company.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="company.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ company.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ company.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="company.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="company.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ company.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ company.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -100,12 +106,12 @@
                             <div class="col-md-10 d-flex align-items-center">
                                 <div>
                                     <select class="form-control" id="inputStatus" name="status" v-model="company.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
-                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
+                                        <option value="1">{{ $t('statusDDL.active') }}</option>
+                                        <option value="0">{{ $t('statusDDL.inactive') }}</option>
                                     </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="company.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="company.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="company.status === 1">{{ $t('statusDDL.active') }}</span>
+                                        <span v-if="company.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +146,7 @@ import { required } from '@vee-validate/rules';
 import { localize, setLocale } from '@vee-validate/i18n';
 import en from '@vee-validate/i18n/dist/locale/en.json';
 import id from '@vee-validate/i18n/dist/locale/id.json';
-import { find } from 'lodash';
+import { map } from 'lodash';
 
 configure({
     validateOnInput: true,
@@ -173,25 +179,17 @@ export default {
             contentHidden: false,
             companyList: [],
             company: {
-                company: [],
-                selectedCompanies: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                name: '',
+                status: '',
             },
-        }
+       }
     },
     created() {
     },
     mounted() {
         this.mode = 'list';
         this.getAllCompany(1);
-        //this.getAllCompanies();
     },
     methods: {
         getAllCompany(page) {
@@ -212,18 +210,9 @@ export default {
         },
         emptyCompany() {
             return {
-                company: [],
-                selectedCompanies: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                name: '',
+                status: '',
             }
         },
         createNew() {
@@ -233,10 +222,22 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.company = this.companyList.data[idx];
-        },
+       },
         showSelected(idx) {
             this.mode = 'show';
             this.company = this.companyList.data[idx];
+        },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.company = this.companyList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/company/delete/'  + this.company.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;
@@ -248,11 +249,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/company/edit/' + this.company.hId, new FormData($('#companyForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/company/edit/' + this.company.hId, new FormData($('#companyForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

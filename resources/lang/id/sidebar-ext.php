@@ -8,7 +8,7 @@ return [
     'db.finance' => 'Keuangan',
     'db.finance_cashes' => 'Kas',
     'db.product' => 'Produk',
-    'db.product_groups' => 'Produk Grup',
+    'db.product_groups' => 'Kelompok Produk',
     'db.product_brands' => 'Merk Produk',
     'db.product_units' => 'Satuan Produk',
     'db.products' => 'Produk',

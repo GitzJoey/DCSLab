@@ -42,6 +42,9 @@
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(bIdx)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -80,17 +83,17 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productgroup.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productgroup.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ productgroup.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productgroup.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productgroup.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productgroup.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ productgroup.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productgroup.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -156,16 +159,8 @@ export default {
             contentHidden: false,
             productgroupList: [],
             productgroup: {
-                productgroup: [],
-                selectedProductGroups: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                name: '',
             },
         }
     },
@@ -175,7 +170,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllProductGroup(1);
-        //this.getAllCompanies();
     },
     methods: {
         getAllProductGroup(page) {
@@ -196,18 +190,8 @@ export default {
         },
         emptyProductGroup() {
             return {
-                productgroup: [],
-                selectedProductGroups: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                name: '',
             }
         },
         createNew() {
@@ -222,6 +206,18 @@ export default {
             this.mode = 'show';
             this.productgroup = this.productgroupList.data[idx];
         },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.productgroup = this.productgroupList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/productgroup/delete/'  + this.productgroup.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
+        },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
@@ -232,11 +228,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/productgroup/edit/' + this.productgroup.hId, new FormData($('#productgroupForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/productgroup/edit/' + this.productgroup.hId, new FormData($('#productgroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

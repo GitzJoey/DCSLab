@@ -62,7 +62,7 @@
                                 <td>{{ c.is_production_material }}</td>
                                 <td>{{ c.is_production_result }}</td>
                                 <td>{{ c.is_sell }}</td>
-                                <td>{{ c.is_active }}</td>
+                                <td>{{ c.status }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -70,6 +70,9 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -180,6 +183,14 @@
                                 <textarea id="inputInformation" name="information" type="text" class="form-control" :placeholder="$t('fields.information')" v-model="product.information" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
                                 <ErrorMessage name="information" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.information }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPoint" class="col-2 col-form-label">{{ $t('fields.point') }}</label>
+                            <div class="col-md-10">
+                                <Field id="inputPoint" name="point" as="input" :class="{'form-control':true, 'is-invalid': errors['point']}" :placeholder="$t('fields.point')" :label="$t('fields.point')" v-model="product.point" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="point" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.point }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -298,13 +309,8 @@ export default {
     setup() {
         const schema = {
             code: 'required',
-            group_name: 'required',
-            brand_name: 'required',
             name: 'required',
-            unit_name: 'required',
             price: 'required',
-            tax: 'required',
-            information: 'required',
             estimated_capital_price: 'required',
             point: 'required',
         };
@@ -385,6 +391,18 @@ export default {
         showSelected(idx) {
             this.mode = 'show';
             this.product = this.productList.data[idx];
+        },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.product = this.productList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/product/delete/'  + this.product.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;

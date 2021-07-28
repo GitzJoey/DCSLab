@@ -43,6 +43,7 @@ const messages = {
             create: 'Create Product',
             edit: 'Edit Product',
             show: 'Show Product',
+            delete: 'Delete',
         },
         fields: {
             code: 'Code',
@@ -80,7 +81,7 @@ const messages = {
         },
         bankDDL: {
             active: 'Active',
-            inactive: '-',
+            inactive: 'Inactive',
         },
     },
     id: {
@@ -114,7 +115,7 @@ const messages = {
             create: 'Tambah Product',
             edit: 'Ubah Product',
             show: 'Tampilkan Product',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             code: 'Kode',

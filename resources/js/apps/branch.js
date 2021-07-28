@@ -15,7 +15,7 @@ const messages = {
         table: {
             title: 'Branch Lists',
             cols: {
-                company_name: 'Company Name',
+                company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
                 address: 'Address',
@@ -34,9 +34,10 @@ const messages = {
             create: 'Create Branch',
             edit: 'Edit Branch',
             show: 'Show Branch',
+            delete: 'Delete',
         },
         fields: {
-            company_name: 'Company Name',
+            company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
             address: 'Address',
@@ -66,7 +67,7 @@ const messages = {
         table: {
             title: 'Daftar Perusahaan',
             cols: {
-                company_name: 'Nama Perusahaan',
+                company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
                 address: 'Alamat',
@@ -85,10 +86,10 @@ const messages = {
             create: 'Tambah cabang',
             edit: 'Ubah Cabang',
             show: 'Tampilkan Cabang',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
-            company_name: 'Nama Perusahaan',
+            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',
             address: 'Alamat',

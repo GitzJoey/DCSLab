@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SalesCustomer;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class SalesCustomerGroup extends Model
 {
     use HasFactory, LogsActivity;
-
+    use SoftDeletes;
+    
     protected $fillable = [
         'code',
         'name',

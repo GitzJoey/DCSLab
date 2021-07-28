@@ -28,7 +28,7 @@ const messages = {
         actions: {
             create: 'Create Company',
             edit: 'Edit Company',
-            show: 'Show Company',
+            delete: 'Delete',
         },
         fields: {
             code: 'Code',
@@ -70,7 +70,7 @@ const messages = {
             create: 'Tambah Perusahaan',
             edit: 'Ubah Perusahaan',
             show: 'Tampilkan Perusahaan',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             code: 'Kode',

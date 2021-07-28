@@ -75,7 +75,9 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
 
     public function delete($id)
     {
+        $salescustomergroup = SalesCustomerGroup::find($id);
 
+        return $salescustomergroup->delete();
         
     }
 }

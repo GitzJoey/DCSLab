@@ -15,7 +15,7 @@ const messages = {
         table: {
             title: 'Warehouse Lists',
             cols: {
-                company_name: 'Company Name',
+                company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
                 address: 'Address',
@@ -34,9 +34,10 @@ const messages = {
             create: 'Create Warehouse',
             edit: 'Edit Warehouse',
             show: 'Show Warehouse',
+            delete: 'Delete',
         },
         fields: {
-            company_name: 'Company Name',
+            company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
             address: 'Address',
@@ -66,7 +67,7 @@ const messages = {
         table: {
             title: 'Daftar Perusahaan',
             cols: {
-                company_name: 'Nama Perusahaan',
+                company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
                 address: 'Alamat',
@@ -85,10 +86,10 @@ const messages = {
             create: 'Tambah Gudang',
             edit: 'Ubah Gudang',
             show: 'Tampilkan Gudang',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
-            company_name: 'Nama Perusahaan',
+            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',
             address: 'Alamat',

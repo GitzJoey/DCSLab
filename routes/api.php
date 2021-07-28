@@ -64,7 +64,7 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 
         Route::group(['prefix' => 'company'], function () {
             Route::get('read', [CompanyController::class, 'read'])->name('api.get.admin.company.read');
-            Route::get('permissions/read', [CompanyController::class, 'getAllPermissions'])->name('api.get.admin.company.permissions.read');
+            Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('api.get.admin.company.read.all_active');
         });
 
         Route::group(['prefix' => 'branch'], function () {
@@ -145,51 +145,61 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'company'], function () {
             Route::post('save', [CompanyController::class, 'store'])->name('api.post.admin.company.save');
             Route::post('edit/{id}', [CompanyController::class, 'update'])->name('api.post.admin.company.edit');
+            Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('api.post.admin.company.delete');
         });
 
         Route::group(['prefix' => 'branch'], function () {
             Route::post('save', [BranchController::class, 'store'])->name('api.post.admin.branch.save');
             Route::post('edit/{id}', [BranchController::class, 'update'])->name('api.post.admin.branch.edit');
+            Route::post('delete/{id}', [BranchController::class, 'delete'])->name('api.post.admin.branch.delete');
         });
 
         Route::group(['prefix' => 'warehouse'], function () {
             Route::post('save', [WarehouseController::class, 'store'])->name('api.post.admin.warehouse.save');
             Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('api.post.admin.warehouse.edit');
+            Route::post('delete/{id}', [WarehouseController::class, 'delete'])->name('api.post.admin.warehouse.delete');
         });
 
         Route::group(['prefix' => 'cash'], function () {
-            Route::post('save', [FinanceCashController::class, 'store'])->name('api.post.admin.financecash.save');
-            Route::post('edit/{id}', [FinanceCashController::class, 'update'])->name('api.post.admin.financecash.edit');
+            Route::post('save', [FinanceCashController::class, 'store'])->name('api.post.admin.cash.save');
+            Route::post('edit/{id}', [FinanceCashController::class, 'update'])->name('api.post.admin.cash.edit');
+            Route::post('delete/{id}', [FinanceCashController::class, 'delete'])->name('api.post.admin.cash.delete');
         });
 
         Route::group(['prefix' => 'productgroup'], function () {
             Route::post('save', [ProductGroupController::class, 'store'])->name('api.post.admin.productgroup.save');
             Route::post('edit/{id}', [ProductGroupController::class, 'update'])->name('api.post.admin.productgroup.edit');
+            Route::post('delete/{id}', [ProductGroupController::class, 'delete'])->name('api.post.admin.productgroup.delete');
         });
 
         Route::group(['prefix' => 'productbrand'], function () {
             Route::post('save', [ProductBrandController::class, 'store'])->name('api.post.admin.productbrand.save');
             Route::post('edit/{id}', [ProductBrandController::class, 'update'])->name('api.post.admin.productbrand.edit');
+            Route::post('delete/{id}', [ProductBrandController::class, 'delete'])->name('api.post.admin.productbrand.delete');
         });
 
         Route::group(['prefix' => 'productunit'], function () {
             Route::post('save', [ProductUnitController::class, 'store'])->name('api.post.admin.productunit.save');
             Route::post('edit/{id}', [ProductUnitController::class, 'update'])->name('api.post.admin.productunit.edit');
+            Route::post('delete/{id}', [ProductUnitController::class, 'delete'])->name('api.post.admin.productunit.delete');
         });
 
         Route::group(['prefix' => 'product'], function () {
             Route::post('save', [ProductController::class, 'store'])->name('api.post.admin.product.save');
             Route::post('edit/{id}', [ProductController::class, 'update'])->name('api.post.admin.product.edit');
+            Route::post('delete/{id}', [ProductController::class, 'delete'])->name('api.post.admin.product.delete');
         });
 
         Route::group(['prefix' => 'customergroup'], function () {
             Route::post('save', [SalesCustomerGroupController::class, 'store'])->name('api.post.admin.customergroup.save');
             Route::post('edit/{id}', [SalesCustomerGroupController::class, 'update'])->name('api.post.admin.customergroup.edit');
+            Route::post('delete/{id}', [SalesCustomerGroupController::class, 'delete'])->name('api.post.admin.customergroup.delete');
         });
 
         Route::group(['prefix' => 'customer'], function () {
             Route::post('save', [SalesCustomerController::class, 'store'])->name('api.post.admin.customer.save');
             Route::post('edit/{id}', [SalesCustomerController::class, 'update'])->name('api.post.admin.customer.edit');
+            Route::post('delete/{id}', [SalesCustomerController::class, 'delete'])->name('api.post.admin.customer.delete');
         });
 
         /* ext */

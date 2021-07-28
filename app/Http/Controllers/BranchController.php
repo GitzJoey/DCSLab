@@ -37,7 +37,7 @@ class BranchController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'company_id' => '',
+            'company_id' => 'required',
             'code' => 'required|max:255',
             'name' => 'required|max:255',
             'address' => 'required|max:255',
@@ -47,7 +47,7 @@ class BranchController extends Controller
             'status' => 'required'
         ]);
 
-        $result = 1;
+        $result = $this->branchService->create($request['company_id'], $request['code'], $request['name'], $request['address'], $request['city'], $request['contact'], $request['remarks'], $request['status']);
 
         if ($result == 0) {
             return response()->json([
@@ -62,12 +62,16 @@ class BranchController extends Controller
 
     public function update($id, Request $request)
     {
-        $inputtedRolePermissions = [];
-        for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($inputtedRolePermissions, array(
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
+        $request->validate([
+            'company_id' => 'required|max:255' ,
+            'code' => 'required|max:255' ,
+            'name' => 'required|max:255',
+            'address' => 'required|max:255' ,
+            'city' => 'required|max:255',
+            'contact' => 'required|max:255' ,
+            'remarks' => 'required|max:255',
+            'status' => 'required'
+        ]);
 
         $result = $this->branchService->update(
             $id,
@@ -79,16 +83,31 @@ class BranchController extends Controller
             $request['contact'],
             $request['remarks'],
             $request['status'],
-            $inputtedRolePermissions
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function delete($id)
     {
-        $this->branchService->delete($id);
+        $result = $this->branchService->delete($id);
 
-        return response()->json();
+        if ($result == false) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 }

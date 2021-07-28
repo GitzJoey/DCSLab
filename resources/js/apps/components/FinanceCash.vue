@@ -27,8 +27,8 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.is_bank") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
-                                <th>{{ $t("table.cols.bank") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -36,7 +36,7 @@
                             <tr v-for="(c, cIdx) in cashList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.is_active }}</td>
+                                <td>{{ c.is_bank }}</td>
                                 <td>{{ c.status }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -45,6 +45,9 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -84,43 +87,43 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="cash.code" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="cash.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ cash.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ cash.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="cash.name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="cash.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ cash.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ cash.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="cash.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
-                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="cash.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="cash.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.bank') }}</label>
+                            <label for="inputIs_Bank" class="col-2 col-form-label">{{ $t('fields.is_bank') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">
                                     <input type="checkbox" class="css-control-input">
                                     <span class="css-control-indicator"></span>
                                 </label>
                             </div>
-                        </div>              
+                        </div> 
+                        <div class="form-group row">
+                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <div>
+                                    <select class="form-control" id="inputStatus" name="status" v-model="cash.status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value="1">{{ $t('statusDDL.active') }}</option>
+                                        <option value="0">{{ $t('statusDDL.inactive') }}</option>
+                                    </select>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="cash.status === 1">{{ $t('statusDDL.active') }}</span>
+                                        <span v-if="cash.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <label class="col-7 col-form-label"></label>
                             <div class="col-md-5">
@@ -182,18 +185,12 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            cashList: { },
+            cashList: [],
             cash: {
-                cash: [],
-                selectedCashes: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                name: '',
+                is_bank: '',
+                status: '',
             },
         }
     },
@@ -203,7 +200,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllCash(1);
-        //this.getAllCashes();
     },
     methods: {
         getAllCash(page) {
@@ -224,18 +220,10 @@ export default {
         },
         emptyCash() {
             return {
-                cash: [],
-                selectedcashes: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                name: '',
+                is_bank: '',
+                status: '',
             }
         },
         createNew() {
@@ -249,6 +237,18 @@ export default {
         showSelected(idx) {
             this.mode = 'show';
             this.cash = this.cashList.data[idx];
+        },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.financecash = this.financecashList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/financecash/delete/'  + this.financecash.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;

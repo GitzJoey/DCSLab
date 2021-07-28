@@ -17,8 +17,8 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
+                is_bank: 'Is Bank',
                 status: 'Status',
-                bank: 'Is Bank',
             }
         },
         buttons: {
@@ -30,12 +30,13 @@ const messages = {
             create: 'Create Cash',
             edit: 'Edit Cash',
             show: 'Show Cash',
+            delete: 'Delete',
         },
         fields: {
             code: 'Code',
             name: 'Name',
+            is_bank: 'Is Bank',
             status: 'Status',
-            bank: 'Is Bank',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -53,10 +54,6 @@ const messages = {
             active: 'Active',
             inactive: 'Inactive',
         },
-        bankDDL: {
-            active: 'Active',
-            inactive: '-',
-        },
     },
     id: {
         table: {
@@ -64,8 +61,8 @@ const messages = {
             cols: {
                 kode: 'Kode',
                 name: 'Nama',
+                is_bank: 'Is Bank',
                 status: 'Status',
-                bank: 'Bank',
             }
         },
         buttons: {
@@ -77,13 +74,13 @@ const messages = {
             create: 'Tambah Kas',
             edit: 'Ubah Kas',
             show: 'Tampilkan Kas',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             code: 'Kode',
             name: 'Nama',
+            is_bank: 'Is Bank',
             status: 'Status',
-            bank: 'Bank',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',

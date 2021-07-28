@@ -22,7 +22,7 @@ class ProductServiceImpl implements ProductService
         $is_production_material,
         $is_production_result,
         $is_sell,
-        $is_active
+        $status
     )
     {
 
@@ -50,7 +50,7 @@ class ProductServiceImpl implements ProductService
         $is_production_material,
         $is_production_result,
         $is_sell,
-        $is_active
+        $status
     )
     {
 
@@ -60,7 +60,9 @@ class ProductServiceImpl implements ProductService
 
     public function delete($id)
     {
+        $product = Product::find($id);
 
+        return $product->delete();
         
     }
 }

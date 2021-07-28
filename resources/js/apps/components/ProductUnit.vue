@@ -31,16 +31,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in productunitList.data">
-                                <td>{{ c.code }}</td>
-                                <td>{{ c.name }}</td>
+                            <tr v-for="(b, bIdx) in productunitList.data">
+                                <td>{{ b.code }}</td>
+                                <td>{{ b.name }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(bIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -80,17 +83,17 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productunit.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productunit.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ productunit.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productunit.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productunit.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productunit.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ productunit.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productunit.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -156,16 +159,8 @@ export default {
             contentHidden: false,
             productunitList: [],
             productunit: {
-                productunit: [],
-                selectedProductUnits: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                name: '',
             },
         }
     },
@@ -175,7 +170,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllProductUnit(1);
-        //this.getAllCompanies();
     },
     methods: {
         getAllProductUnit(page) {
@@ -196,18 +190,8 @@ export default {
         },
         emptyProductUnit() {
             return {
-                productunit: [],
-                selectedProductUnits: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                name: '',
             }
         },
         createNew() {
@@ -222,6 +206,18 @@ export default {
             this.mode = 'show';
             this.productunit = this.productunitList.data[idx];
         },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.productunit = this.productunitList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/productunit/delete/'  + this.productunit.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
+        },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
@@ -232,11 +228,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/productunit/edit/' + this.productunit.hId, new FormData($('#productunitForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/productunit/edit/' + this.productunit.hId, new FormData($('#productunitForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -264,13 +256,13 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.productUnit.profile.img_path = fileReader.result
+                this.productunit.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllProductunit(this.productunitList.current_page);
+            this.getAllProductUnit(this.productunitList.current_page);
             this.productunit = this.emptyProductUnit();
         },
         toggleFullScreen() {

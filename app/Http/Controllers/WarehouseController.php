@@ -36,7 +36,7 @@ class WarehouseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'company_id' => 'required|max:255',
+            'company_id' => 'required',
             'code' => 'required|max:255',
             'name' => 'required|max:255',
             'address' => 'required|max:255',
@@ -46,7 +46,7 @@ class WarehouseController extends Controller
             'status' => 'required'
         ]);
 
-        $result = 1;
+        $result = $this->warehouseService->create($request['company_id'], $request['code'], $request['name'], $request['address'], $request['city'], $request['contact'], $request['remarks'], $request['status']);
 
         if ($result == 0) {
             return response()->json([
@@ -61,12 +61,6 @@ class WarehouseController extends Controller
 
     public function update($id, Request $request)
     {
-        $inputtedRolePermissions = [];
-        for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($inputtedRolePermissions, array(
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
 
         $result = $this->warehouseService->update(
             $id,
@@ -78,16 +72,30 @@ class WarehouseController extends Controller
             $request['contact'],
             $request['remarks'],
             $request['status'],
-            $inputtedRolePermissions
         );
 
-        return response()->json();
-    }
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }    }
 
     public function delete($id)
     {
-        $this->warehouseService->delete($id);
+        $result = $this->warehouseService->delete($id);
 
-        return response()->json();
+        if ($result == false) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 }

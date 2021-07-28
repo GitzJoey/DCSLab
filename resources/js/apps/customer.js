@@ -39,6 +39,7 @@ const messages = {
             create: 'Create Customer',
             edit: 'Edit Customer',
             show: 'Show Customer',
+            delete: 'Delete',
         },
         fields: {
             code: 'Code',
@@ -103,7 +104,7 @@ const messages = {
             create: 'Tambah Pelanggan',
             edit: 'Ubah Pelanggan',
             show: 'Tampilkan Pelanggan',
-            reset_password: 'Reset Password',
+            delete: 'Hapus',
         },
         fields: {
             code: 'Kode',
