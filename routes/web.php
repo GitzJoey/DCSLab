@@ -111,4 +111,46 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             });
         });
     });
+
+    Route::get('/doctoraccounting', function () {
+        return view('/doctoraccounting/home', [
+            "title" => "Home"
+        ]);
+    });
+
+    Route::get('/doctoraccounting/dokumentasi', function () {
+        return view('/doctoraccounting/dokumentasi/index', [
+            "title" => "Dokumentasi"
+        ]);
+    });
+
+    Route::get('/doctoraccounting/faq', function () {
+        return view('/doctoraccounting/faq/index', [
+            "title" => "FAQ"
+        ]);
+    });
+
+    Route::get('/doctoraccounting/download', function () {
+        return view('/doctoraccounting/download/index', [
+            "title" => "Download"
+        ]);
+    });
+
+    Route::get('/doctoraccounting/harga', function () {
+        return view('/doctoraccounting/harga/index', [
+            "title" => "Harga"
+        ]);
+    });
+
+    Route::get('/doctoraccounting/client', function () {
+        return view('/doctoraccounting/client/index', [
+            "title" => "Client"
+        ]);
+    });
+
+    Route::get('/doctoraccounting/tentangkami', function () {
+        return view('/doctoraccounting/tentangkami/index', [
+            "title" => "Tentang Kami"
+        ]);
+    });
 });
