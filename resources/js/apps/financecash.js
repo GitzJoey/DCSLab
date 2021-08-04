@@ -59,9 +59,9 @@ const messages = {
         table: {
             title: 'Daftar Kas',
             cols: {
-                kode: 'Kode',
+                code: 'Kode',
                 name: 'Nama',
-                is_bank: 'Is Bank',
+                is_bank: 'Bank',
                 status: 'Status',
             }
         },
@@ -79,7 +79,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Nama',
-            is_bank: 'Is Bank',
+            is_bank: 'Bank',
             status: 'Status',
             settings: {
                 settings: 'Pengaturan',

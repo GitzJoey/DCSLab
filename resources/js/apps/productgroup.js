@@ -51,7 +51,7 @@ const messages = {
         table: {
             title: 'Daftar Product Group',
             cols: {
-                kode: 'Kode',
+                code: 'Kode',
                 name: 'Nama',
             }
         },

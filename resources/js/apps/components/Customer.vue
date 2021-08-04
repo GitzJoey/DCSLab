@@ -357,7 +357,7 @@ export default {
                 profile: {
                     img_path: '',
                     country: '',
-                    status: 'ACTIVE',
+                    status: '1',
                 },
                 selectedSettings: {
                     theme: 'corporate',

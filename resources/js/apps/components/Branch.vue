@@ -95,7 +95,7 @@
                             </ul>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Company Name</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="company_id">
                                     <option value="0">Please select Company Name</option>
@@ -283,7 +283,7 @@ export default {
                 city: '',
                 contact: '',
                 remarks: '',
-                status: '',
+                status: '1',
             }
         },
         createNew() {

@@ -212,7 +212,7 @@ export default {
             return {
                 code: '',
                 name: '',
-                status: '',
+                status: '1',
             }
         },
         createNew() {
