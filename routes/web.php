@@ -113,7 +113,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
     });
 
     Route::group(['prefix' => 'doctoraccounting'], function () {
-        Route::get('/', function () {
+        Route::get('', function () {
             return view('/doctoraccounting/home', [
                 "title" => "Home"
             ]);
