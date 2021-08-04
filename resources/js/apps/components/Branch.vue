@@ -167,7 +167,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-7 col-form-label"></label>
+                            <label class="col"></label>
                             <div class="col-md-5">
                                 <div v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <button type="submit" class="btn btn-primary min-width-125" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
