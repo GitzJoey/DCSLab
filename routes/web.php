@@ -11,6 +11,7 @@ use App\Http\Controllers\ActivityLogController;
 
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\DoctorAccountingPageController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\FinanceCashController;
 use App\Http\Controllers\ProductGroupController;
@@ -112,48 +113,21 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         });
     });
 
+    
     Route::group(['prefix' => 'doctoraccounting'], function () {
-        Route::get('', function () {
-            return view('/doctoraccounting/home', [
-                "title" => "Home"
-            ]);
-        });
+        Route::get('', [DoctorAccountingPageController::class, 'home']);
     
-        Route::get('dokumentasi', function () {
-            return view('/doctoraccounting/dokumentasi/index', [
-                "title" => "Dokumentasi"
-            ]);
-        });
+        Route::get('dokumentasi', [DoctorAccountingPageController::class, 'dokumentasi']);
     
-        Route::get('faq', function () {
-            return view('/doctoraccounting/faq/index', [
-                "title" => "FAQ"
-            ]);
-        });
-    
-        Route::get('download', function () {
-            return view('/doctoraccounting/download/index', [
-                "title" => "Download"
-            ]);
-        });
-    
-        Route::get('harga', function () {
-            return view('/doctoraccounting/harga/index', [
-                "title" => "Harga"
-            ]);
-        });
-    
-        Route::get('client', function () {
-            return view('/doctoraccounting/client/index', [
-                "title" => "Client"
-            ]);
-        });
-    
-        Route::get('/tentangkami', function () {
-            return view('/doctoraccounting/tentangkami/index', [
-                "title" => "Tentang Kami"
-            ]);
-        });
+        Route::get('faq', [DoctorAccountingPageController::class, 'faq']);
+        
+        Route::get('download', [DoctorAccountingPageController::class, 'download']);
+        
+        Route::get('harga', [DoctorAccountingPageController::class, 'harga']);
+        
+        Route::get('client', [DoctorAccountingPageController::class, 'client']);
+        
+        Route::get('tentangkami', [DoctorAccountingPageController::class, 'tentangkami']);
     });
 
 });

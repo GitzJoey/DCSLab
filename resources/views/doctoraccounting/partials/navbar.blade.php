@@ -1,11 +1,14 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="/">Doctor Accounting</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+<!-- Header Section Start -->
+<header id="home" class="hero-area-2">    
+    <div class="overlay"></div>
+    <nav class="navbar navbar-expand-md bg-inverse fixed-top scrolling-navbar bg-dark">
+        <div class="container">
+        <a href="index.html" class="navbar-brand"><img src="../images/doctoraccounting/logo.png" alt=""></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="lni-menu"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto w-100 justify-content-end">
                 <li class="nav-item">
                     <a class="nav-link {{ ($title === "Home") ? 'active' : '' }}" href="/doctoraccounting/">Home</a>
                 </li>
@@ -28,6 +31,9 @@
                     <a class="nav-link {{ ($title === "Tentang Kami") ? 'active' : '' }}" href="/doctoraccounting/tentangkami">Tentang Kami</a>
                 </li>
             </ul>
-        </div> 
-    </div>
-</nav>
+        </div>
+        </div>
+    </nav>  
+            
+</header>
+<!-- Header Section End --> 
