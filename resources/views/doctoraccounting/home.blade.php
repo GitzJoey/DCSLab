@@ -2,26 +2,6 @@
 
 @section('container')
 
-<div class="container">      
-    <div class="row space-100">
-    <div class="col-lg-7 col-md-12 col-xs-12">
-        <div class="contents">
-        <h2 class="head-title">Get Your App Landing Page <br> With Proton Template</h2>
-        <p>lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse unde blanditiis nostrum mollitia aliquam sed. Numquam ipsum unde repellendus similique autem non ab quibusdam enim provident distinctio! Fugit tenetur, iusto.</p>
-        <div class="header-button">
-            <a href="#" class="btn btn-border-filled">Learn More</a>
-            <a href="#" class="btn btn-border">Get Started</a>
-        </div>
-        </div>
-    </div>
-    <div class="col-lg-5 col-md-12 col-xs-12">
-        <div class="intro-img">
-        <img src="../images/doctoraccounting/intro-mobile.png" alt="">
-        </div>            
-    </div>
-    </div> 
-</div>     
-
 <!-- features Section Start -->
 <div id="app-features" class="section">
     <div class="container">

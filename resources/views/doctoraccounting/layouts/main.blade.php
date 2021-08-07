@@ -35,7 +35,7 @@
                 <div class="container">
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
-                    <img src="../images/doctoraccounting/logo.png" alt="">
+                    <img src="../images/doctoraccounting/logo.png" alt="" height="50">
                     <div class="textwidget">
                         <p>Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive.</p>
                     </div>
