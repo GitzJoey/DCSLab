@@ -353,102 +353,181 @@
     </section>
     <!-- Team section End -->
 
-    <!-- Testimonial Section Start -->
+    {{-- <!-- Testimonial Section Start -->
     <section id="testimonial" class="section">
     <div class="container">
         <div class="section-header">   
-        <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Reviews</p>       
-        <h2 class="section-title">Clients Who Loved Us</h2>
+            <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Reviews</p>       
+            <h2 class="section-title">Clients Who Loved Us</h2>
         </div>
         <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <div id="testimonials" class="touch-slider owl-carousel">
-            <div class="item">
-                <div class="testimonial-item">
-                <div class="author">
-                    <div class="img-thumb">
-                    <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                <div id="testimonials" class="touch-slider owl-carousel">
+                    <div class="item">
+                        <div class="testimonial-item">
+                        <div class="author">
+                            <div class="img-thumb">
+                            <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                            </div>
+                        </div>
+                        <div class="content-inner">
+                            <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                            <div class="author-info">
+                            <h2><a href="#">Mark Parker</a></h2>
+                            <span>UIdeck</span>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                </div>
-                <div class="content-inner">
-                    <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
-                    <div class="author-info">
-                    <h2><a href="#">Mark Parker</a></h2>
-                    <span>UIdeck</span>
+                    <div class="item">
+                        <div class="testimonial-item">
+                        <div class="author">
+                            <div class="img-thumb">
+                            <img src="../images/doctoraccounting/testimonial/img2.png" alt="">
+                            </div>
+                        </div>
+                        <div class="content-inner">
+                            <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                            <div class="author-info">
+                            <h2><a href="#">Mark Parker</a></h2>
+                            <span>Tesla Motors</span>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                        <div class="author">
+                            <div class="img-thumb">
+                            <img src="../images/doctoraccounting/testimonial/img3.png" alt="">
+                            </div>
+                        </div>
+                        <div class="content-inner">
+                            <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                            <div class="author-info">
+                            <h2><a href="#">Mark Parker</a></h2>
+                            <span>Envato Customer</span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                        <div class="author">
+                            <div class="img-thumb">
+                            <img src="../images/doctoraccounting/testimonial/img2.png" alt="">
+                            </div>
+                        </div>
+                        <div class="content-inner">
+                            <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                            <div class="author-info">
+                            <h2><a href="#">Mark Parker</a></h2>
+                            <span>GrayGris Inc.</span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">- Alex Dattilo</a></h2>
+                                <span>CEO Optima Inc</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="testimonial-item">
-                <div class="author">
-                    <div class="img-thumb">
-                    <img src="../images/doctoraccounting/testimonial/img2.png" alt="">
-                    </div>
-                </div>
-                <div class="content-inner">
-                    <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
-                    <div class="author-info">
-                    <h2><a href="#">Mark Parker</a></h2>
-                    <span>Tesla Motors</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="testimonial-item">
-                <div class="author">
-                    <div class="img-thumb">
-                    <img src="../images/doctoraccounting/testimonial/img3.png" alt="">
-                    </div>
-                </div>
-                <div class="content-inner">
-                    <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
-                    <div class="author-info">
-                    <h2><a href="#">Mark Parker</a></h2>
-                    <span>Envato Customer</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="testimonial-item">
-                <div class="author">
-                    <div class="img-thumb">
-                    <img src="../images/doctoraccounting/testimonial/img2.png" alt="">
-                    </div>
-                </div>
-                <div class="content-inner">
-                    <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
-                    <div class="author-info">
-                    <h2><a href="#">Mark Parker</a></h2>
-                    <span>GrayGris Inc.</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="testimonial-item">
-                <div class="author">
-                    <div class="img-thumb">
-                    <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
-                    </div>
-                </div>
-                <div class="content-inner">
-                    <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
-                    <div class="author-info">
-                    <h2><a href="#">- Alex Dattilo</a></h2>
-                    <span>CEO Optima Inc</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-            </div>
-        </div>
         </div>
     </div>
     </section>
-    <!-- Testimonial Section End -->  
+    <!-- Testimonial Section End --> --}}
+
+    <!-- Testimonial Section Start -->
+    <section id="testimonial" class="section">
+        <div class="container">
+            <div class="section-header">   
+                <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Reviews</p>       
+                <h2 class="section-title">Clients Who Loved Us</h2>
+            </div>
+            <div class="row justify-content-center">
+                <ul>
+                    <li>Adzarus Home Custom</li>
+                    <li>Agung Motor</li>
+                    <li>Alexis Butik</li>
+                    <li>Aneka Plastik</li>
+                    <li>Aneka Teknik</li>
+                    <li>Apotik Pandawa</li>
+                    <li>ARFAN MART</li>
+                    <li>Artomoro</li>
+                    <li>Batik  Putri Solo</li>
+                    <li>Batik Banyumasan</li>
+                    <li>BATIK BENGAWAN SOLO</li>
+                    <li>Bellmor</li>
+                    <li>Berlian Jaya</li>
+                    <li>BN Acc</li>
+                    <li>BP Acc</li>
+                    <li>CAHAYA LISTRIK</li>
+                    <li>CCTV Surya Security Sistem</li>
+                    <li>Cicine Warung Depan Kuburan</li>
+                    <li>CV BARU DUA</li>
+                    <li>CV. Cahaya Prima Sejahtera</li>
+                    <li>CV. PRATAMA SUMBER LESTARI</li>
+                    <li>Cynthia Toko Kerudung</li>
+                    <li>Hercules Toys</li>
+                    <li>IBC Purbalingga</li>
+                    <li>Java ATK</li>
+                    <li>Karman Group</li>
+                    <li>Karunia Bike</li>
+                    <li>Karya Gemilang</li>
+                    <li>Kenzu Group</li>
+                    <li>KOH HANAFI</li>
+                    <li>Korean Edition</li>
+                    <li>Maikel Geo</li>
+                    <li>Morodadi</li>
+                    <li>Pst Cilacap</li>
+                    <li>PT. SPC</li>
+                    <li>Purnama Motor</li>
+                    <li>Ragil Acc</li>
+                    <li>Rebelle Salon</li>
+                    <li>Rumah Warna</li>
+                    <li>Sanjaya Land</li>
+                    <li>Sumber Lestari</li>
+                    <li>SUMBER LOGAM</li>
+                    <li>TB Apel</li>
+                    <li>TB Mitra Pembangunan</li>
+                    <li>TB Mugi Lestari Banyumas</li>
+                    <li>Tb. Apel / Alan</li>
+                    <li>Tb. Sahabat Cilacap</li>
+                    <li>Teguh Jaya Motor</li>
+                    <li>TOKO ARIES PBG</li>
+                    <li>Toko Berlian Jaya</li>
+                    <li>Toko Ci Berem</li>
+                    <li>Toko Krisna</li>
+                    <li>Toko Listrik Surya</li>
+                    <li>Toko Obat Damar</li>
+                    <li>Toko Raja Murah</li>
+                    <li>Toko Saba</li>
+                    <li>Toko SBM Gandrungmangu</li>
+                    <li>Toko Sella</li>
+                    <li>Toko Terang</li>
+                    <li>Tunas Jaya</li>
+                    <li>UD Gustur</li>
+                    <li>UD. Dian Pertiwi</li>
+                    <li>Universal Optic</li>
+                    <li>Zone R Stationary</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!-- Testimonial Section End -->
 
     <!-- Clients Section -->
     <div id="clients" class="section">
@@ -505,7 +584,7 @@
     </div>
     <!-- Subcribe Section End --> --}}
 
-        <!-- Subcribe Section Start -->
+    <!-- Subcribe Section Start -->
     <div id="subscribe" class="section">
         <div class="container">
             <div class="row justify-content-center">
@@ -666,7 +745,7 @@
     </div>
     <!-- Subcribe Section End -->
 
-    <!-- Start Pricing Table Section -->
+    {{-- <!-- Start Pricing Table Section -->
     <div id="pricing" class="section pricing-section">
         <div class="container">
             <div class="section-header">   
@@ -747,136 +826,363 @@
             </div>
         </div>
     </div>
-    <!-- End Pricing Table Section -->
+    <!-- End Pricing Table Section --> --}}
 
-        <!-- Start Pricing Table Section -->
-        <div id="pricing" class="section pricing-section">
-            <div class="container">
-                <div class="section-header">   
-                    <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Pricing</p>       
-                    <h2 class="section-title">Our Pricing Plan</h2>
-                </div>
-    
-                <div class="row pricing-tables">
-                    <div class="col">
-                        <div class="pricing-table wow fadeInLeft" data-wow-delay="0.2s">
-                            <div class="pricing-details">
-                                <div class="icon">
-                                    <i class="lni-rocket"></i>
-                                </div>
-                                <h2>Standard</h2>
-                                <ul>
-                                    <li>Multi Operator<br>(Bisa Digunakan Oleh Lebih Dari Satu Pemakai)</li>
-                                    <li>Berbagai Macam Satuan / Kemasan Product<br>(Pcs -> Pack, Gram -> Ons -> Kg, Pcs -> Lusin, Meter -> Roll, dll…)</li>
-                                    <li>Product Discount Per Quantity</li>
-                                    <li>Product Discount Per Kelompok Pelanggan</li>
-                                    <li>Pencatatan Penyesuaian Stock</li>
-                                    <li>Pencatatan Purchase Order (PO)</li>
-                                    <li>Pencatatan Pembelian</li>
-                                    <li>Pencatatan Retur Pembelian</li>
-                                    <li>Pencatatan Penawaran Penjualan</li>
-                                    <li>Pencatatan Sales Order (SO)</li>
-                                    <li>Pencatatan Penjualan</li>
-                                    <li>Pencatatan Piutang Penjualan</li>
-                                    <li>Pencatatan Retur Penjualan</li>
-                                    <li>Pencatatan Kelebihan Penjualan</li>
-                                    <li>Pencatatan Laporan Log Pelanggan</li>
-                                    <li>Laporan Stock</li>
-                                    <li>Laporan Kartu Stock</li>
-                                    <li>Laporan Analisa Stock</li>
-                                    <li>Laporan Pembuktian HPP</li>
-                                    <li>Laporan Laba Rugi</li>
-                                </ul>
-                                Free Training : 3x
-                                <div class="price">Sistem Beli : Rp. 3.500.000<br>Sistem Sewa : Rp. 150.000<span>/ bln</span></div>
+    <!-- Start Pricing Table Section -->
+    <div id="pricing" class="section pricing-section">
+        <div class="container">
+            <div class="section-header">   
+                <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Pricing</p>       
+                <h2 class="section-title">Our Pricing Plan</h2>
+            </div>
+
+            <div class="row pricing-tables">
+                <div class="col">
+                    <div class="pricing-table wow fadeInLeft pricing-active" data-wow-delay="0.2s">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-rocket"></i>
                             </div>
-                            <div class="plan-button">
-                                <a href="#" class="btn btn-border">Get Started</a>
-                            </div>
+                            <h2>Standard</h2>
+                            <ul>
+                                <li>Multi Operator<br>(Bisa Digunakan Oleh Lebih Dari Satu Pemakai)</li>
+                                <li>Berbagai Macam Satuan / Kemasan Product<br>(Pcs -> Pack, Gram -> Ons -> Kg, Pcs -> Lusin, Meter -> Roll, dll…)</li>
+                                <li>Product Discount Per Quantity</li>
+                                <li>Product Discount Per Kelompok Pelanggan</li>
+                                <li>Pencatatan Penyesuaian Stock</li>
+                                <li>Pencatatan Purchase Order (PO)</li>
+                                <li>Pencatatan Pembelian</li>
+                                <li>Pencatatan Retur Pembelian</li>
+                                <li>Pencatatan Penawaran Penjualan</li>
+                                <li>Pencatatan Sales Order (SO)</li>
+                                <li>Pencatatan Penjualan</li>
+                                <li>Pencatatan Piutang Penjualan</li>
+                                <li>Pencatatan Retur Penjualan</li>
+                                <li>Pencatatan Kelebihan Penjualan</li>
+                                <li>Pencatatan Laporan Log Pelanggan</li>
+                                <li>Laporan Stock</li>
+                                <li>Laporan Kartu Stock</li>
+                                <li>Laporan Analisa Stock</li>
+                                <li>Laporan Pembuktian HPP</li>
+                                <li>Laporan Laba Rugi</li>
+                            </ul>
+                            Free Training : 3x
+                            <div class="price">Sistem Beli : Rp. 3.500.000<br>Sistem Sewa : Rp. 150.000<span>/ bln</span></div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
                         </div>
                     </div>
-    
-                </div>
-    
-                <div class="row pricing-tables">
-                    <div class="col-lg-4 col-md-4 col-xs-12">
-                        <div class="pricing-table wow fadeInLeft" data-wow-delay="0.2s">
-                            <div class="pricing-details">
-                                <div class="icon">
-                                    <i class="lni-rocket"></i>
-                                </div>
-                                <h2>Multi Gudang</h2>
-                                <ul>
-                                    <li>Pencatatan Multi Gudang / Lokasi Stock</li>
-                                    <li>Laporan Penjualan Per Masing-masing Gudang</li>
-                                    <li>Laporan Stock Per Masing-masing Gudang</li>
-                                    <li>Laporan Laba Rugi Per Masing-masing Gudang</li>
-                                </ul>
-                                Free Training : 1x
-                                <div class="price">
-                                    <span>Sistem Beli</span><br>
-                                    Rp. 2.000.000<br>
-                                    <span>Sistem Sewa</span><br>
-                                    Rp. 100.000<span>/ bln</span>
-                                </div>
-                            </div>
-                            <div class="plan-button">
-                                <a href="#" class="btn btn-border">Get Started</a>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="col-lg-4 col-md-4 col-xs-12">
-                        <div class="pricing-table pricing-active">
-                            <div class="pricing-details">
-                                <div class="icon">
-                                    <i class="lni-drop"></i>
-                                </div>
-                                <h2>Standard</h2>
-                                <ul>
-                                    <li>Free Installation</li>
-                                    <li>10 GB Hosting</li>
-                                    <li>5 Users</li>
-                                    <li>Sales Dashboard</li>
-                                    <li>Premium Features</li>
-                                    <li>50,000 Logs</li>
-                                </ul>
-                                <div class="price">$99 <span>/mo</span></div>
-                            </div>
-                            <div class="plan-button">
-                                <a href="#" class="btn btn-border">Get Started</a>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="col-lg-4 col-md-4 col-xs-12">
-                        <div class="pricing-table">
-                            <div class="pricing-details">
-                                <div class="icon">
-                                    <i class="lni-briefcase"></i>
-                                </div>
-                                <h2>Business</h2>
-                                <ul>
-                                    <li>Free Installation</li>
-                                    <li>50 GB Hosting</li>
-                                    <li>Unlimited Users</li>
-                                    <li>Sales and Marketing Dashbaord</li>
-                                    <li>Premium Features</li>
-                                    <li>Unlimited Logs</li>
-                                </ul>
-                            <div class="price">$199 <span>/mo</span></div>
-                        </div>
-                            <div class="plan-button">
-                                <a href="#" class="btn btn-border">Get Started</a>
-                            </div>
-                        </div>
-                    </div>
-    
                 </div>
 
             </div>
+
+            <div class="row pricing-tables">
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table wow fadeInLeft pricing-active" data-wow-delay="0.2s">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-rocket"></i>
+                            </div>
+                            <h2>Multi Gudang</h2>
+                            <ul>
+                                <li>Pencatatan Multi Gudang / Lokasi Stock</li>
+                                <li>Laporan Penjualan Per Masing-masing Gudang</li>
+                                <li>Laporan Stock Per Masing-masing Gudang</li>
+                                <li>Laporan Laba Rugi Per Masing-masing Gudang</li>
+                            </ul>
+                            Free Training : 1x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 2.000.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 100.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table pricing-active">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-drop"></i>
+                            </div>
+                            <h2>Salesman</h2>
+                            <ul>
+                                <li>Pencatatan Wilayah Penjualan</li>
+                                <li>Pencatatan Nama Salesman</li>
+                            </ul>
+                            Free Training : 1x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 1.000.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 100.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table pricing-active">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-briefcase"></i>
+                            </div>
+                            <h2>Multi Kelompok Pelanggan</h2>
+                            <ul>
+                                <ul>
+                                    <li>Pencatatan penjualan untuk setiap kelompok pelanggan yang berbeda (End User, Semi Grosir, Grosir, dsb…) / (Tokopedia, Bukalapak, Shopee, dsb…)</li>
+                                <li>Pencatatan discount yang berbeda untuk setiap kelompok pelanggan</li>
+                            </ul>
+                            Free Training : 2x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 1.500.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 100.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row pricing-tables">
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table wow fadeInLeft pricing-active" data-wow-delay="0.2s">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-rocket"></i>
+                            </div>
+                            <h2>Jasa</h2>
+                            <ul>
+                                <li>Pencatatan Product Jasa</li>
+                                <li>Pencatatan Komposisi Product Jasa</li>
+                            </ul>
+                            Free Training : 3x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 1.500.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 100.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table pricing-active">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-drop"></i>
+                            </div>
+                            <h2>PPN</h2>
+                            <ul>
+                                <li>Pencatatan Penyesuaian Hutang PPN</li>
+                                <li>Pencatatan Penyesuaian Piutang PPN</li>
+                                <li>Pencatatan PPN Pembelian</li>
+                                <li>Pencatatan Pembayaran Hutang PPN melalui Piutang PPN</li>
+                                <li> Laporan Arus PPN Keluar Masuk</li>
+                            </ul>
+                            Free Training : 6x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 3.000.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 200.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table pricing-active">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-briefcase"></i>
+                            </div>
+                            <h2>Point Penjualan</h2>
+                            <ul>
+                                <li>Pencatatan Point Penjualan</li>
+                                <li>Laporan Point Penjualan Per Pelanggan</li>
+                            </ul>
+                            Free Training : 4x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 2.000.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 100.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row pricing-tables">
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table wow fadeInLeft pricing-active" data-wow-delay="0.2s">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-rocket"></i>
+                            </div>
+                            <h2>Hutang Piutang</h2>
+                            <ul>
+                                <li>Pencatatan Biaya Langsung Terhutang (Apabila mengambil modul keuangan)</li>
+								<li>Pencatatan Hutang Biaya Dibayar Dimuka (Apabila mengambil modul keuangan)</li>
+								<li>Pencatatan Piutang Pendapatan Langsung (Apabila mengambil modul keuangan)</li>
+								<li>Pencatatan Piutang Pendapatan Dibayar Dimuka (Apabila mengambil modul keuangan)</li>
+								<li>Pencatatan Hutang Pembelian Aset (Apabila mengambil modul keuangan)</li>
+								<li>Pencatatan Piutang Penjualan Aset (Apabila mengambil modul keuangan)</li>
+								<li>Pencatatan Piutang Uang Muka Purchase Order (PO)</li>
+								<li>Pencatatan Hutang Pembelian</li>
+								<li>Pencatatan Piutang Retur Pembelian</li>
+								<li>Pencatatan Hutang Biaya Langsung Proses Produksi (Apabila mengambil modul proses produksi)</li>
+								<li>Pencatatan Hutang Biaya Periode Proses Produksi (Apabila mengambil modul proses produksi)</li>
+								<li>Pencatatan Hutang Uang Muka Sales Order (SO)</li>
+								<li>Pencatatan Piutang Penjualan</li>
+								<li>Pencatatan Hutang Bahan Tambahan Penjualan</li>
+								<li>Pencatatan Piutang Retur Penjualan</li>
+								<li>Pencatatan Hutang Dari Pencairan Pihak Lain Baik Yang Sudah Berjalan Maupun Yang Baru Dicairkan (Hutang Bank, dsb…</li>
+								<li>Pencatatan Piutang Dari Pencairan Pihak Lain Baik Yang Sudah Berjalan Maupun Yang Baru Dicairkan (Kasbon Karyawan, dsb…)</li>
+								<li>Mendukung pencatatan pembayaran lebih dari 1 kali angsuran</li>
+                            </ul>
+                            Free Training : 4x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 4.000.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 200.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table pricing-active">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-drop"></i>
+                            </div>
+                            <h2>Proses Produksi (Manufaktur)</h2>
+                            <ul>
+                                <li>Pencatatan Informasi Surat Perintah Kerja</li>
+                                <li>Pencatatan Informasi Kepala Produksi</li>
+                                <li>Pencatatan Informasi Pelaksana Produksi</li>
+                                <li>Pencatatan Kelompok Proses Produksi</li>
+                                <li>Pencatatan Proses Produksi (Mendukung Proses Produksi One To Many, One To One, Many To Many, Many To One)</li>
+                                <li>Pencatatan Resep Produksi (Mendukung Multi Step Proses Produksi)</li>
+                                <li>Pencatatan Biaya Langsung Terkait Proses Produksi</li>
+                                <li>Pencatatan Biaya Periode Terkait Proses Produksi (Gaji Karyawan, Listrik, dsb…)</li>
+                            </ul>
+                            Free Training : 3x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 7.500.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 250.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-12">
+                    <div class="pricing-table pricing-active">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-briefcase"></i>
+                            </div>
+                            <h2>Proyek</h2>
+                            <ul>
+                                <li>Pencatatan Pekerjaan Berdasarkan Proyek</li>
+                            </ul>
+                            Free Training : 1x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 1.500.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 100.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pricing-tables">
+                <div class="col">
+                    <div class="pricing-table wow fadeInLeft pricing-active" data-wow-delay="0.2s">
+                        <div class="pricing-details">
+                            <div class="icon">
+                                <i class="lni-rocket"></i>
+                            </div>
+                            <h2>Accounting</h2>
+                            <ul>
+                                <li>Pencatatan Biaya Tambahan Dalam Pembelian (Ongkos Angkut / Ongkos Bongkar, dsb …)</li>
+                                <li>Pencatatan Refund Pembelian (Proteksi Harga, dsb…)</li>
+                                <li>Pencatatan Biaya Tambahan Dalam Penjualan (Ongkos Angkut / Ongkos Bongkar, dsb …)</li>
+                                <li>Pencatatan Rekening (Kas Kecil, Kas Besar, Bank BCA, Bank Mandiri, dsb …)</li>
+                                <li>Pencatatan Modal</li>
+                                <li>Pencatatan Prive</li>
+                                <li>Pencatatan Biaya Langsung (Gaji Karyawan, Listrik, PDAM, dsb…)</li>
+                                <li>Pencatatan Biaya Dibayar Dimuka (Sewa Ruko, Iklan Per Tahun, dsb…)</li>
+                                <li>Pencatatan Pendapatan (Bonus Supplier, Bunga Bank, dsb…)</li>
+                                <li>Pencatatan Pendapatan Dibayar Dimuka (Sewa Baliho Tahunan, Pembayaran Kontrak Tahunan, dsb…)</li>
+                                <li>Pencatatan Mutasi Saldo Antar Kas</li>
+                                <li>Pencatatan Penyesuaian Jumlah Aset</li>
+                                <li>Pencatatan Pembelian Aset</li>
+                                <li>Pencatatan Penjualan Aset</li>
+                                <li>Laporan Arus Kas Keluar Masuk</li>
+                                <li>Laporan Transaksi Jurnal Umum</li>
+                                <li>Laporan Buku Besar</li>
+                                <li>Laporan Neraca Saldo</li>
+                                <li>Laporan Neraca</li>
+                            </ul>
+                            Free Training : 3x
+                            <div class="price">
+                                <span>Sistem Beli</span><br>
+                                Rp. 3.500.000<br>
+                                <span>Sistem Sewa</span><br>
+                                Rp. 200.000<span>/ bln</span>
+                            </div>
+                        </div>
+                        <div class="plan-button">
+                            <a href="#" class="btn btn-border">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- End Pricing Table Section -->
+    </div>
+    <!-- End Pricing Table Section -->
 
     <!-- download Section Start -->
     <section id="download">
