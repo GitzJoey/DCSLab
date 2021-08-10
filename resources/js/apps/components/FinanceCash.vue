@@ -104,7 +104,7 @@
                             <label for="inputIs_Bank" class="col-2 col-form-label">{{ $t('fields.is_bank') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
+                                    <input type="checkbox" class="css-control-input" name="is_bank">
                                     <span class="css-control-indicator"></span>
                                 </label>
                             </div>
