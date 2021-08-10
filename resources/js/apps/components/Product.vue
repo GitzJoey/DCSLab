@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Group Name</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.group_name') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
                                     <option value="0">Please select Group Name</option>
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Brand Name</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.brand_name') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
                                     <option value="0">Please select Brand Name</option>
@@ -148,7 +148,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Unit Name</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.unit_name') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
                                     <option value="0">Please select Unit Name</option>
@@ -167,7 +167,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Tax</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.tax') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
                                     <option value="0">Please select Tax Option</option>

@@ -223,7 +223,7 @@ export default {
                 code: '',
                 name: '',
                 is_bank: '',
-                status: '',
+                status: '1',
             }
         },
         createNew() {
