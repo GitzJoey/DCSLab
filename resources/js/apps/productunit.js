@@ -51,7 +51,7 @@ const messages = {
         table: {
             title: 'Daftar Satuan Product',
             cols: {
-                kode: 'Kode',
+                code: 'Kode',
                 name: 'Nama',
             }
         },

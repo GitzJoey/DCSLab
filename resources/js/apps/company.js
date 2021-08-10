@@ -56,7 +56,7 @@ const messages = {
         table: {
             title: 'Daftar Perusahaan',
             cols: {
-                kode: 'Kode',
+                code: 'Kode',
                 name: 'Nama',
                 status: 'Status',
             }
