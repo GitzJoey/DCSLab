@@ -40,9 +40,17 @@ class FinanceCashController extends Controller
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
+        
+        $is_bank = $request['is_bank'];
 
-        $result = $this->financeCashService->create($request['code'], $request['name'], $request['is_bank'], $request['status']);
-
+        if ($is_bank == 'on') {
+            $is_bank = 1;
+        } else { 
+            $is_bank = 0;
+        }
+        
+        $result = $this->financeCashService->create($request['code'], $request['name'], $is_bank, $request['status']);
+        
         if ($result == 0) {
             return response()->json([
                 'message' => ''

@@ -51,3 +51,36 @@ mix
     .vue()
     .version()
 ;
+
+mix
+	.copy('resources/css/doctoraccounting/animate.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/bootstrap.min.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/line-icons.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/magnific-popup.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/main.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/nivo-lightbox.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/owl.carousel.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/owl.theme.css', 'public/css/doctoraccounting')
+	.copy('resources/css/doctoraccounting/responsive.css', 'public/css/doctoraccounting')
+	
+	.copy('resources/fonts/doctoraccounting/LineIcons.eot', 'public/fonts/doctoraccounting')
+	.copy('resources/fonts/doctoraccounting/LineIcons.svg', 'public/fonts/doctoraccounting')
+	.copy('resources/fonts/doctoraccounting/LineIcons.ttf', 'public/fonts/doctoraccounting')
+	.copy('resources/fonts/doctoraccounting/LineIcons.woff', 'public/fonts/doctoraccounting')
+    
+	.copy('resources/js/doctoraccounting/bootstrap.min.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/jquery.counterup.min.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/jquery.easing.min.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/jquery.magnific-popup.min.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/jquery.mixitup.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/jquery.nav.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/jquery.vide.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/jquery-min.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/main.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/nivo-lightbox.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/owl.carousel.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/popper.min.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/scrolling-nav.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/waypoints.min.js', 'public/js/doctoraccounting')
+	.copy('resources/js/doctoraccounting/wow.js', 'public/js/doctoraccounting')
+;
