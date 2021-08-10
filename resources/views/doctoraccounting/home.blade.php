@@ -7,7 +7,7 @@
     <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="Grayrids">
-    <title>Proton - Bootstrap 4 Template</title>
+    <title>Doctor Accounting</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../css/doctoraccounting/bootstrap.min.css">
