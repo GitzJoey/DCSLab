@@ -1,5 +1,6 @@
 @extends('doctoraccounting.layouts.main')
 
+
 @section('container')
     <div class="row mb-3">
         <div class="col text-center">
