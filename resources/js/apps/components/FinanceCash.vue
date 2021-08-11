@@ -36,8 +36,14 @@
                             <tr v-for="(c, cIdx) in cashList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.is_bank }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>
+                                    <span v-if="c.is_bank === 1">{{ $t('is_bankDDL.active') }}</span>
+                                    <span v-if="c.is_bank === 0">{{ $t('is_bankDDL.inactive') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -104,7 +110,11 @@
                             <label for="inputIs_Bank" class="col-2 col-form-label">{{ $t('fields.is_bank') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input" name="is_bank">
+                                    <input type="checkbox" class="css-control-input" name="is_bank" v-model="cash.is_bank" v-show="this.mode === 'create' || this.mode === 'edit' ">
+                                        <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                            <span v-if="cash.is_bank === 1">{{ 'checked' }}</span>
+                                            <span v-if="cash.is_bank === 0">{{ '' }}</span>
+                                        </div>
                                     <span class="css-control-indicator"></span>
                                 </label>
                             </div>
@@ -124,12 +134,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-7 col-form-label"></label>
-                            <div class="col-md-5">
+                        <div class="form-group row">    
+                            <div class="col">
                                 <div v-if="this.mode === 'create' || this.mode === 'edit'">
-                                    <button type="submit" class="btn btn-primary min-width-125" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
-                                    <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
+                                    <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
+                                    <button type="submit" class="btn btn-primary min-width-125 float-right ml-2" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>
                         </div>
