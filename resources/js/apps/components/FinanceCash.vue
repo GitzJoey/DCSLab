@@ -36,8 +36,14 @@
                             <tr v-for="(c, cIdx) in cashList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.is_bank }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>
+                                    <span v-if="c.is_bank === 1">{{ $t('is_bankDDL.active') }}</span>
+                                    <span v-if="c.is_bank === 0">{{ $t('is_bankDDL.inactive') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -104,7 +110,11 @@
                             <label for="inputIs_Bank" class="col-2 col-form-label">{{ $t('fields.is_bank') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input" name="is_bank">
+                                    <input type="checkbox" class="css-control-input" name="is_bank" v-model="cash.is_bank" v-show="this.mode === 'create' || this.mode === 'edit' ">
+                                        <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                            <span v-if="cash.is_bank === 1">{{ 'checked' }}</span>
+                                            <span v-if="cash.is_bank === 0">{{ '' }}</span>
+                                        </div>
                                     <span class="css-control-indicator"></span>
                                 </label>
                             </div>
