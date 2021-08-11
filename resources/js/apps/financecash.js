@@ -54,6 +54,10 @@ const messages = {
             active: 'Active',
             inactive: 'Inactive',
         },
+        is_bankDDL: {
+            active: 'Active',
+            inactive: 'Inactive',
+        },
     },
     id: {
         table: {
@@ -93,6 +97,10 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        is_bankDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         },
         statusDDL: {
             active: 'Aktif',
