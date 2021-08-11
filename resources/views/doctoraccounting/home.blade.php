@@ -7,7 +7,7 @@
     <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="author" content="Grayrids">
-    <title>Proton - Bootstrap 4 Template</title>
+    <title>Doctor Accounting</title>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../css/doctoraccounting/bootstrap.min.css">
@@ -360,7 +360,7 @@
     </section>
     <!-- Team section End -->
 
-    {{-- <!-- Testimonial Section Start -->
+    <!-- Testimonial Section Start -->
     <section id="testimonial" class="section">
     <div class="container">
         <div class="section-header">   
@@ -455,7 +455,7 @@
         </div>
     </div>
     </section>
-    <!-- Testimonial Section End --> --}}
+    <!-- Testimonial Section End -->
 
     <!-- Testimonial Section Start -->
     <section id="testimonial" class="section">
@@ -562,7 +562,7 @@
     </div>
     <!-- Client Section End --> 
 
-    {{-- <!-- Subcribe Section Start -->
+    <!-- Subcribe Section Start -->
     <div id="subscribe" class="section">
         <div class="container">
             <div class="row justify-content-center">
@@ -589,7 +589,7 @@
             </div>
         </div>
     </div>
-    <!-- Subcribe Section End --> --}}
+    <!-- Subcribe Section End -->
 
     <!-- Subcribe Section Start -->
     <div id="subscribe" class="section">
@@ -752,7 +752,7 @@
     </div>
     <!-- Subcribe Section End -->
 
-    {{-- <!-- Start Pricing Table Section -->
+    <!-- Start Pricing Table Section -->
     <div id="pricing" class="section pricing-section">
         <div class="container">
             <div class="section-header">   
@@ -833,7 +833,7 @@
             </div>
         </div>
     </div>
-    <!-- End Pricing Table Section --> --}}
+    <!-- End Pricing Table Section -->
 
     <!-- Start Pricing Table Section -->
     <div id="pricing" class="section pricing-section">
