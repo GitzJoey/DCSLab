@@ -380,8 +380,8 @@
                         <div class="content-inner">
                             <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
                             <div class="author-info">
-                            <h2><a href="#">Mark Parker</a></h2>
-                            <span>UIdeck</span>
+                            <h2><a href="#">Adzarus Home Custom</a></h2>
+                            <span>Interior Design</span>
                             </div>
                         </div>
                         </div>
@@ -396,8 +396,8 @@
                         <div class="content-inner">
                             <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
                             <div class="author-info">
-                            <h2><a href="#">Mark Parker</a></h2>
-                            <span>Tesla Motors</span>
+                            <h2><a href="#">Agung Motor</a></h2>
+                            <span>Workshop</span>
                             </div>
                         </div>
                         </div>
@@ -412,8 +412,8 @@
                         <div class="content-inner">
                             <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
                             <div class="author-info">
-                            <h2><a href="#">Mark Parker</a></h2>
-                            <span>Envato Customer</span>
+                            <h2><a href="#">Alexis Butik</a></h2>
+                            <span>Boutique</span>
                             </div>
                         </div>
                         </div>
@@ -428,8 +428,8 @@
                         <div class="content-inner">
                             <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
                             <div class="author-info">
-                            <h2><a href="#">Mark Parker</a></h2>
-                            <span>GrayGris Inc.</span>
+                            <h2><a href="#">Aneka Plastik</a></h2>
+                            <span>Plastic Grocery</span>
                             </div>
                         </div>
                         </div>
@@ -444,12 +444,502 @@
                             <div class="content-inner">
                                 <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
                                 <div class="author-info">
-                                <h2><a href="#">- Alex Dattilo</a></h2>
-                                <span>CEO Optima Inc</span>
+                                <h2><a href="#">Aneka Teknik</a></h2>
+                                <span>Building Tools</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Apotik Pandawa</a></h2>
+                                <span>Pharmacy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Arfan Mart</a></h2>
+                                <span>Grocery Store</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Artomoro</a></h2>
+                                <span>Grocery Store</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Batik Putri Solo</a></h2>
+                                <span>Boutique</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Batik Banyumasan</a></h2>
+                                <span>Boutique</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Batik Bengawan Solo</a></h2>
+                                <span>Boutique</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Bellmore</a></h2>
+                                <span>Restaurant</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Berlian Jaya</a></h2>
+                                <span>Grocery</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">BN Acc</a></h2>
+                                <span>Accessories</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">BP ACC</a></h2>
+                                <span>Accessories</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Cahaya Listrik</a></h2>
+                                <span>Electric Shop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">CCTV Surya Security Sistem</a></h2>
+                                <span>Electronic Store</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Cicine Warung Depan Kuburan</a></h2>
+                                <span>Roadside Stall</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">CV. Baru Dua</a></h2>
+                                <span>Paint Store</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">CV. Cahaya Prima Sejahtera</a></h2>
+                                <span>-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Cynthia Toko Kerudung</a></h2>
+                                <span>Clothing Store</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Hercules Store</a></h2>
+                                <span>Toy Store</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">IBC Purbalingga</a></h2>
+                                <span>Eyelash Factory</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Java Ateka</a></h2>
+                                <span>Building</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Aneka</a></h2>
+                                <span>Stationery</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Karman Group</a></h2>
+                                <span>Paint Store</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Karunia Bike</a></h2>
+                                <span>Bike Shop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Karya Gemilang</a></h2>
+                                <span>-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Kenzu Group</a></h2>
+                                <span>-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">KOH HANAFI</a></h2>
+                                <span>-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Korean Edition</a></h2>
+                                <span>Accessories Shop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+ 
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">PT.SPC</a></h2>
+                                <span>-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Purnama Motor</a></h2>
+                                <span>Workdhop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Ragil ACC</a></h2>
+                                <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimonial-item">
+                            <div class="author">
+                                <div class="img-thumb">
+                                <img src="../images/doctoraccounting/testimonial/img1.png" alt="">
+                                </div>
+                            </div>
+                            <div class="content-inner">
+                                <p class="description">Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthusiastically architect adaptive. Appropriately implement one-to-one catalysts for change vis-a-vis wireless catalysts for change. Enthu.</p>
+                                <div class="author-info">
+                                <h2><a href="#">Rebelle Salon</a></h2>
+                                <span>Salon</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
