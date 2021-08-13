@@ -50,11 +50,11 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
-        statusDDL: {
-            active: 'Active',
-            inactive: 'Inactive',
+        is_bank: {
+            active: 'Yes',
+            inactive: 'No',
         },
-        is_bankDDL: {
+        statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
         },
@@ -98,9 +98,9 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
-        is_bankDDL: {
-            active: 'Aktif',
-            inactive: 'Tidak Aktif',
+        is_bank: {
+            active: 'Ya',
+            inactive: 'Tidak',
         },
         statusDDL: {
             active: 'Aktif',

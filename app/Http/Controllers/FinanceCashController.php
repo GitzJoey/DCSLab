@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ActivityLogService;
 use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -42,6 +43,8 @@ class FinanceCashController extends Controller
         ]);
         
         $is_bank = $request['is_bank'];
+
+        Log::info($is_bank);
 
         if ($is_bank == 'on') {
             $is_bank = 1;

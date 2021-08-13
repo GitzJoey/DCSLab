@@ -37,8 +37,8 @@
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>
-                                    <span v-if="c.is_bank === 1">{{ $t('is_bankDDL.active') }}</span>
-                                    <span v-if="c.is_bank === 0">{{ $t('is_bankDDL.inactive') }}</span>
+                                    <span v-if="c.is_bank === 1">{{ $t('is_bank.active') }}</span>
+                                    <span v-if="c.is_bank === 0">{{ $t('is_bank.inactive') }}</span>
                                 </td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
@@ -106,19 +106,29 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ cash.name }}</div>
                             </div>
                         </div>
+
                         <div class="form-group row">
                             <label for="inputIs_Bank" class="col-2 col-form-label">{{ $t('fields.is_bank') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input" name="is_bank" v-model="cash.is_bank" v-show="this.mode === 'create' || this.mode === 'edit' ">
-                                        <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                            <span v-if="cash.is_bank === 1">{{ 'checked' }}</span>
-                                            <span v-if="cash.is_bank === 0">{{ '' }}</span>
-                                        </div>
-                                    <span class="css-control-indicator"></span>
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <span v-if="cash.is_bank === 1">
+                                            <input type="checkbox" class="css-control-input" id="is_bank" value="is_bank" name="is_bank" checked>
+                                            <span class="css-control-indicator"></span>
+                                        </span>
+                                        <span v-else>
+                                            <input type="checkbox" class="css-control-input" id="is_bank" value="is_bank" name="is_bank">
+                                            <span class="css-control-indicator"></span>
+                                        </span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="cash.is_bank === 1">{{ $t('is_bank.active') }}</span>
+                                        <span v-if="cash.is_bank === 0">{{ $t('is_bank.inactive') }}</span>
+                                    </div>
                                 </label>
                             </div>
                         </div> 
+
                         <div class="form-group row">
                             <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
