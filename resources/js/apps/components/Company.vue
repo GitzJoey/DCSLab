@@ -32,6 +32,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
                             <tr v-for="(c, cIdx) in companyList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>

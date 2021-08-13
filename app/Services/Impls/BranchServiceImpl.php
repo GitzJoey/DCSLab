@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use App\Services\BranchService;
 use App\Models\Branch;
 
+use Vinkla\Hashids\Facades\Hashids;
+
 class BranchServiceImpl implements BranchService
 {
     public function create(
@@ -24,10 +26,10 @@ class BranchServiceImpl implements BranchService
     )
     {
         DB::beginTransaction();
-
+        
         try {
             $branch = new Branch();
-            $branch->company_id = $company_id;
+            $branch->company_id = Hashids::decode($company_id)[0];
             $branch->code = $code;
             $branch->name = $name;
             $branch->address = $address;
