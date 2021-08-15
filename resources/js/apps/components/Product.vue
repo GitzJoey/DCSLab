@@ -122,9 +122,7 @@
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
                                     <option value="0">Please select Group Name</option>
-                                    <option value="1">Oil</option>
-                                    <option value="2">Cigarret</option>
-                                    <option value="3">Wheat Flour</option>
+                                    <option :value="c.hId" v-for="c in this.groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -133,9 +131,7 @@
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
                                     <option value="0">Please select Brand Name</option>
-                                    <option value="1">Rose Brand</option>
-                                    <option value="2">Sampoerna</option>
-                                    <option value="3">Segi Tiga</option>
+                                    <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -152,9 +148,7 @@
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="example-select">
                                     <option value="0">Please select Unit Name</option>
-                                    <option value="1">Pcs</option>
-                                    <option value="2">Gr</option>
-                                    <option value="3">Dozen</option>
+                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -324,19 +318,28 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productList: {},
+            productList: [],
             product: {
-                product: [],
-                selectedProducts: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                group_name: '',
+                brand_name: '',
+                name: '',
+                unit_name: '',
+                price: '',
+                tax: '',
+                information: '',
+                point: '',
+                estimated_capital_price: '',
+                is_use_serial: '',
+                is_buy: '',
+                is_production_material: '',
+                is_production_result: '',
+                is_sell: '',
+                status: '',
             },
+            groupDDL: [],
+            brandDDL: [],
+            unitDDL: [],
         }
     },
     created() {
@@ -365,18 +368,22 @@ export default {
         },
         emptyProduct() {
             return {
-                product: [],
-                selectedproducts: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                group_name: '',
+                brand_name: '',
+                name: '',
+                unit_name: '',
+                price: '',
+                tax: '',
+                information: '',
+                point: '',
+                estimated_capital_price: '',
+                is_use_serial: '',
+                is_buy: '',
+                is_production_material: '',
+                is_production_result: '',
+                is_sell: '',
+                status: '',
             }
         },
         createNew() {
@@ -406,18 +413,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/product/save', new FormData($('#productForm')[0])).then(response => {
+                axios.post('/api/post/admin/product/save', new FormData($('#productForm')[0])). then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/product/edit/' + this.product.hId, new FormData($('#productForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/product/edit/' + this.product.hId, new FormData($('#productForm')[0])) .then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

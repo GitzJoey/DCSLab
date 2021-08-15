@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ActivityLogService;
 use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -39,12 +39,11 @@ class FinanceCashController extends Controller
         $request->validate([
             'code' => 'required|max:255',
             'name' => 'required|max:255',
+            'is_bank' => 'required',
             'status' => 'required'
         ]);
         
         $is_bank = $request['is_bank'];
-
-        Log::info($is_bank);
 
         if ($is_bank == 'on') {
             $is_bank = 1;
@@ -67,12 +66,12 @@ class FinanceCashController extends Controller
 
     public function update($id, Request $request)
     {
-        $inputtedRolePermissions = [];
-        for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($inputtedRolePermissions, array(
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
+        $request->validate([
+            'code' => 'required|max:255',
+            'name' => 'required|max:255',
+            'is_bank' => 'required',
+            'status' => 'required'
+        ]);
 
         $result = $this->financeCashService->update(
             $id,
@@ -80,15 +79,22 @@ class FinanceCashController extends Controller
             $request['name'],
             $request['is_bank'],
             $request['status'],
-            $inputtedRolePermissions
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function delete($id)
     {
-        $result = $this->financecashService->delete($id);
+        $result = $this->financeCashService->delete($id);
 
         if ($result == false) {
             return response()->json([

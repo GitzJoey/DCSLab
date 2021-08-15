@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use App\Services\WarehouseService;
 use App\Models\Warehouse;
 
+use Vinkla\Hashids\Facades\Hashids;
+
 class WarehouseServiceImpl implements WarehouseService
 {
     public function create(
@@ -27,7 +29,7 @@ class WarehouseServiceImpl implements WarehouseService
 
         try {
             $warehouse = new Warehouse();
-            $warehouse->company_id = $company_id;
+            $warehouse->company_id = Hashids::decode($company_id)[0];
             $warehouse->code = $code;
             $warehouse->name = $name;
             $warehouse->address = $address;

@@ -99,9 +99,7 @@
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="company_id">
                                     <option value="0">Please select Company Name</option>
-                                    <option value="1">PT. ABC</option>
-                                    <option value="2">PT. DEF</option>
-                                    <option value="3">PT. GHI</option>
+                                    <option :value="w.hId" v-for="w in this.companyDDL" v-bind:key="w.hId">{{ w.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -231,7 +229,7 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            warehouseList: { },
+            warehouseList: [],
             warehouse: {
                 company_id: '',
                 code: '',
@@ -242,6 +240,7 @@ export default {
                 remarks: '',
                 status: '',
             },
+            companyDDL: [],
         }
     },
     created() {
@@ -250,6 +249,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllWarehouse(1);
+        this.getAllCompany();
     },
     methods: {
         getAllWarehouse(page) {
@@ -257,6 +257,11 @@ export default {
             axios.get('/api/get/admin/warehouse/read?page=' + page).then(response => {
                 this.warehouseList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllCompany() {
+            axios.get('/api/get/admin/company/read/all/active').then(response => {
+                this.companyDDL = response.data;
             });
         },
         onPaginationChangePage(page) {

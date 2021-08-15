@@ -48,14 +48,33 @@ class FinanceCashServiceImpl implements FinanceCashService
 
 
     public function update(
+        $id,
         $code,
         $name,
         $is_bank,
         $status
     )
     {
+        DB::beginTransaction();
 
-        
+        try {
+            $cash = FinanceCash::where('id', '=', $id);
+
+            $retval = $cash->update([
+                'code' => $code,
+                'name' => $name,
+                'is_bank' => $is_bank,
+                'status' => $status
+            ]);
+
+            DB::commit();
+
+            return $retval;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
     }
 
 

@@ -112,6 +112,7 @@
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="hidden" name="is_bank" value="0">
                                         <span v-if="cash.is_bank === 1">
                                             <input type="checkbox" class="css-control-input" id="is_bank" value="is_bank" name="is_bank" checked>
                                             <span class="css-control-indicator"></span>
@@ -259,10 +260,10 @@ export default {
         },
         deleteSelected(idx) {
             this.mode = 'delete';
-            this.financecash = this.financecashList.data[idx];
+            this.cash = this.cashList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/financecash/delete/'  + this.financecash.hId).then(response => {
+            axios.post('/api/post/admin/cash/delete/'  + this.cash.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);

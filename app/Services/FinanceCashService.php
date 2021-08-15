@@ -14,6 +14,7 @@ interface FinanceCashService
     public function read();
 
     public function update(
+        $id,
         $code,
         $name,
         $is_bank,
