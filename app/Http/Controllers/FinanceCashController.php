@@ -37,19 +37,20 @@ class FinanceCashController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:finance_cashes',
             'name' => 'required|max:255',
-            'is_bank' => 'required',
             'status' => 'required'
         ]);
         
         $is_bank = $request['is_bank'];
 
-        if ($is_bank == 'on') {
-            $is_bank = 1;
-        } else { 
-            $is_bank = 0;
-        }
+        $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
+
+        // if ($is_bank == 'on') {
+        //     $is_bank = 1;
+        // } else { 
+        //     $is_bank = 0;
+        // }
         
         $result = $this->financeCashService->create($request['code'], $request['name'], $is_bank, $request['status']);
         
@@ -67,17 +68,21 @@ class FinanceCashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            // required|email|max:255|unique:users
+            // 'email' => 'unique:users,email_address'
+            'code' => 'required|max:255|unique:finance_cashes,code',
             'name' => 'required|max:255',
-            'is_bank' => 'required',
             'status' => 'required'
         ]);
+
+        $is_bank = $request['is_bank'];
+        $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
         $result = $this->financeCashService->update(
             $id,
             $request['code'],
             $request['name'],
-            $request['is_bank'],
+            $is_bank,
             $request['status'],
         );
 

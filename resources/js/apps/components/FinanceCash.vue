@@ -112,15 +112,10 @@
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="hidden" name="is_bank" value="0">
-                                        <span v-if="cash.is_bank === 1">
-                                            <input type="checkbox" class="css-control-input" id="is_bank" value="is_bank" name="is_bank" checked>
-                                            <span class="css-control-indicator"></span>
-                                        </span>
-                                        <span v-else>
-                                            <input type="checkbox" class="css-control-input" id="is_bank" value="is_bank" name="is_bank">
-                                            <span class="css-control-indicator"></span>
-                                        </span>
+                                        <!-- <input type="hidden" name="is_bank" value="0"> -->
+                                        <!-- <input type="checkbox" class="css-control-input" id="is_bank" name="is_bank" v-model="cash.is_bank" :checked="cash.is_bank === 1"> -->
+                                        <input type="checkbox" class="css-control-input" id="is_bank" name="is_bank" v-model="cash.is_bank" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
                                     </span>
                                     <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                         <span v-if="cash.is_bank === 1">{{ $t('is_bank.active') }}</span>
@@ -207,10 +202,10 @@ export default {
             contentHidden: false,
             cashList: [],
             cash: {
-                code: '',
-                name: '',
-                is_bank: '',
-                status: '',
+                code: '11',
+                name: 'aa',
+                is_bank: '1',
+                status: '1',
             },
         }
     },
