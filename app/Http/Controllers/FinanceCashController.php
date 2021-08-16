@@ -67,9 +67,7 @@ class FinanceCashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            // required|email|max:255|unique:users
-            // 'email' => 'unique:users,email_address'
-            'code' => 'required|max:255|unique:finance_cashes,code',
+            'code' => 'required|max:255|unique:finance_cashes',
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
