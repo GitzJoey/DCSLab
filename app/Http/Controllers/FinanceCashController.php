@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\ActivityLogService;
 use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
-<<<<<<< HEAD
-=======
 
 use Vinkla\Hashids\Facades\Hashids;
->>>>>>> e24f829ee7bd6bf97232db33451bd168a0291a91
 
 class FinanceCashController extends Controller
 {
@@ -64,11 +61,7 @@ class FinanceCashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-<<<<<<< HEAD
-            'code' => 'required|max:255|unique:finance_cashes,code',
-=======
             'code' => 'required|max:255|unique:finance_cashes',
->>>>>>> e24f829ee7bd6bf97232db33451bd168a0291a91
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
