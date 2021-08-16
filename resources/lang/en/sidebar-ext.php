@@ -7,6 +7,8 @@ return [
     'db.company.warehouses' => 'Warehouses',
     'db.finance' => 'Finance',
     'db.finance_cashes' => 'Cashes',
+    'db.purchase' => 'Purchase',
+    'db.purchase_suppliers' => 'Purchase Suppliers',
     'db.product' => 'Product',
     'db.product_groups' => 'Product Groups',
     'db.product_brands' => 'Product Brands',

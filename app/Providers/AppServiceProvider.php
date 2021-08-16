@@ -19,6 +19,7 @@ use App\Services\CompanyService;
 use App\Services\BranchService;
 use App\Services\WarehouseService;
 use App\Services\FinanceCashService;
+use App\Services\PurchaseSupplierService;
 use App\Services\ProductGroupService;
 use App\Services\ProductBrandService;
 use App\Services\ProductService;
@@ -30,13 +31,13 @@ use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
 use App\Services\Impls\FinanceCashServiceImpl;
+use App\Services\Impls\PurchaseSupplierServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductBrandServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
 use App\Services\Impls\ProductUnitServiceImpl;
 use App\Services\Impls\SalesCustomerGroupServiceImpl;
 use App\Services\Impls\SalesCustomerServiceImpl;
-
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -105,6 +106,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(WarehouseService::class, function (){
             return new WarehouseServiceImpl();
+        });
+
+        $this->app->singleton(PurchaseSupplierService::class, function (){
+            return new PurchaseSupplierServiceImpl();
         });
     }
 

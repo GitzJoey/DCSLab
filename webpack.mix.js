@@ -41,6 +41,7 @@ mix
     .js('resources/js/apps/branch.js','public/js/apps/branch.js')
     .js('resources/js/apps/warehouse.js','public/js/apps/warehouse.js')
     .js('resources/js/apps/financecash.js','public/js/apps/financecash.js')
+    .js('resources/js/apps/purchasesupplier.js','public/js/apps/purchasesupplier.js')
     .js('resources/js/apps/productgroup.js','public/js/apps/productgroup.js')
     .js('resources/js/apps/productbrand.js','public/js/apps/productbrand.js')
     .js('resources/js/apps/productunit.js','public/js/apps/productunit.js')

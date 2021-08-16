@@ -22,6 +22,15 @@
     </ul>
 </li>
 
+<li class="{{ active_class(if_route_pattern('db.purchase*'), 'open') }}">
+    <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.purchase')}}</span></a>
+    <ul>
+        <li>
+            <a class="{{ active_class(if_route_pattern('db.purchase_suppliers')) }}" href="{{route('db.purchase_suppliers')}}">{{ __('sidebar-ext.db.purchase_suppliers')}}</a>
+        </li>
+    </ul>
+</li>
+
 <li class="{{ active_class(if_route_pattern('db.product*'), 'open') }}">
     <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-cup"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.product')}}</span></a>
     <ul>

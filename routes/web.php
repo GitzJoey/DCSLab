@@ -15,6 +15,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\FinanceCashController;
+use App\Http\Controllers\PurchaseSupplierController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductUnitController;
@@ -83,6 +84,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
         Route::group(['prefix' => 'finance'], function () {
             Route::get('cashes', [FinanceCashController::class, 'index'])->name('db.finance_cashes');
+        });
+
+        Route::group(['prefix' => 'purchase'], function () {
+            Route::get('suppliers', [PurchaseSupplierController::class, 'index'])->name('db.purchase_suppliers');
         });
 
         Route::group(['prefix' => 'sales'], function () {

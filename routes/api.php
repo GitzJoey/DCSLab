@@ -12,6 +12,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\FinanceCashController;
+use App\Http\Controllers\PurchaseSupplierController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductUnitController;
@@ -80,6 +81,11 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'cash'], function () {
             Route::get('read', [FinanceCashController::class, 'read'])->name('api.get.admin.financecash.read');
             Route::get('permissions/read', [FinanceCashController::class, 'getAllPermissions'])->name('api.get.admin.financecash.permissions.read');
+        });
+
+        Route::group(['prefix' => 'supplier'], function () {
+            Route::get('read', [PurchaseSupplierController::class, 'read'])->name('api.get.admin.purchasesupplier.read');
+            Route::get('permissions/read', [PurchaseSupplierController::class, 'getAllPermissions'])->name('api.get.admin.purchasesupplier.permissions.read');
         });
 
         Route::group(['prefix' => 'productgroup'], function () {
@@ -166,6 +172,12 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
             Route::post('delete/{id}', [FinanceCashController::class, 'delete'])->name('api.post.admin.cash.delete');
         });
 
+        Route::group(['prefix' => 'supplier'], function () {
+            Route::post('save', [PurchaseSupplierController::class, 'store'])->name('api.post.admin.supplier.save');
+            Route::post('edit/{id}', [PurchaseSupplierController::class, 'update'])->name('api.post.admin.supplier.edit');
+            Route::post('delete/{id}', [PurchaseSupplierController::class, 'delete'])->name('api.post.admin.supplier.delete');
+        });
+        
         Route::group(['prefix' => 'productgroup'], function () {
             Route::post('save', [ProductGroupController::class, 'store'])->name('api.post.admin.productgroup.save');
             Route::post('edit/{id}', [ProductGroupController::class, 'update'])->name('api.post.admin.productgroup.edit');

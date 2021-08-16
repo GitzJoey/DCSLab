@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\ActivityLogService;
 use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Log;
-
-use Vinkla\Hashids\Facades\Hashids;
 
 class FinanceCashController extends Controller
 {
@@ -46,12 +43,6 @@ class FinanceCashController extends Controller
 
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
-        // if ($is_bank == 'on') {
-        //     $is_bank = 1;
-        // } else { 
-        //     $is_bank = 0;
-        // }
-        
         $result = $this->financeCashService->create($request['code'], $request['name'], $is_bank, $request['status']);
         
         if ($result == 0) {
@@ -68,8 +59,6 @@ class FinanceCashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            // required|email|max:255|unique:users
-            // 'email' => 'unique:users,email_address'
             'code' => 'required|max:255|unique:finance_cashes,code',
             'name' => 'required|max:255',
             'status' => 'required'
