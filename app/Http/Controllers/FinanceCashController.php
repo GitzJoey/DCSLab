@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\ActivityLogService;
 use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Log;
 
 use Vinkla\Hashids\Facades\Hashids;
 
