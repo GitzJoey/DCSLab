@@ -7,7 +7,7 @@ use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
-
+use Illuminate\Support\Facades\Log;
 class WarehouseController extends Controller
 {
     private $warehouseService;
@@ -46,7 +46,8 @@ class WarehouseController extends Controller
             'status' => 'required'
         ]);
 
-        $result = $this->warehouseService->create($request['company_id'], $request['code'], $request['name'], $request['address'], $request['city'], $request['contact'], $request['remarks'], $request['status']);
+        $company_id = Hashids::decode($request['company_id'])[0];
+        $result = $this->warehouseService->create($company_id, $request['code'], $request['name'], $request['address'], $request['city'], $request['contact'], $request['remarks'], $request['status']);
 
         if ($result == 0) {
             return response()->json([

@@ -42,7 +42,6 @@ class FinanceCashController extends Controller
         ]);
         
         $is_bank = $request['is_bank'];
-
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
         $result = $this->financeCashService->create($request['code'], $request['name'], $is_bank, $request['status']);

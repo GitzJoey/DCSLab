@@ -11,6 +11,8 @@ interface ProductBrandService
 
     public function read();
 
+    public function getAllProductBrand();
+
     public function update(
         $id,
         $code,

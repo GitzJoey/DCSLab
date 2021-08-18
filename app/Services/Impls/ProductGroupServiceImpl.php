@@ -43,6 +43,10 @@ class ProductGroupServiceImpl implements ProductGroupService
         return ProductGroup::paginate();
     }
 
+    public function getAllProductGroup()
+    {
+        return ProductGroup::all();
+    }
 
     public function update(
         $id,

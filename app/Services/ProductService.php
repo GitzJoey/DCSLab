@@ -11,7 +11,7 @@ interface ProductService
         $name,
         $unit_id,
         $price,
-        $tax ,
+        $tax_status ,
         $information,
         $estimated_capital_price,
         $is_use_serial,
@@ -26,13 +26,14 @@ interface ProductService
     public function read();
 
     public function update(
+        $id,
         $code,
         $group_id,
         $brand_id,
         $name,
         $unit_id,
         $price,
-        $tax ,
+        $tax_status ,
         $information,
         $estimated_capital_price,
         $is_use_serial,

@@ -11,6 +11,8 @@ interface ProductUnitService
 
     public function read();
 
+    public function getAllProductUnit();
+
     public function update(
         $id,
         $code,

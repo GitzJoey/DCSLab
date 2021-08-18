@@ -41,6 +41,10 @@ class ProductUnitServiceImpl implements ProductUnitService
         return ProductUnit::paginate();
     }
 
+    public function getAllProductUnit()
+    {
+        return ProductUnit::all();
+    }
 
     public function update(
         $id,

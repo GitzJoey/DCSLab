@@ -33,6 +33,11 @@ class ProductGroupController extends Controller
         return $this->productGroupService->read();
     }
 
+    public function getAllProductGroup()
+    {
+        return $this->productGroupService->getAllProductGroup();
+    }
+
     public function store(Request $request)
     {
         $request->validate([

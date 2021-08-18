@@ -11,6 +11,8 @@ interface ProductGroupService
 
     public function read();
 
+    public function getAllProductGroup();
+
     public function update(
         $id,
         $code,

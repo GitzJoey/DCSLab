@@ -90,17 +90,20 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 
         Route::group(['prefix' => 'productgroup'], function () {
             Route::get('read', [ProductGroupController::class, 'read'])->name('api.get.admin.productgroup.read');
-            Route::get('permissions/read', [ProductGroupController::class, 'getAllPermissions'])->name('api.get.admin.productgroup.permissions.read');
+            Route::get('read/all/active', [ProductGroupController::class, 'getAllProductGroup'])->name('api.get.admin.productgroup.read.all_active');
+            // Route::get('permissions/read', [ProductGroupController::class, 'getAllPermissions'])->name('api.get.admin.productgroup.permissions.read');
         });
 
         Route::group(['prefix' => 'productbrand'], function () {
             Route::get('read', [ProductBrandController::class, 'read'])->name('api.get.admin.productbrand.read');
-            Route::get('permissions/read', [ProductBrandController::class, 'getAllPermissions'])->name('api.get.admin.productbrand.permissions.read');
+            Route::get('read/all/active', [ProductBrandController::class, 'getAllProductBrand'])->name('api.get.admin.productbrand.read.all_active');
+            // Route::get('permissions/read', [ProductBrandController::class, 'getAllPermissions'])->name('api.get.admin.productbrand.permissions.read');
         });
 
         Route::group(['prefix' => 'productunit'], function () {
             Route::get('read', [ProductUnitController::class, 'read'])->name('api.get.admin.productunit.read');
-            Route::get('permissions/read', [ProductUnitController::class, 'getAllPermissions'])->name('api.get.admin.productunit.permissions.read');
+            Route::get('read/all/active', [ProductUnitController::class, 'getAllProductUnit'])->name('api.get.admin.productunit.read.all_active');
+            // Route::get('permissions/read', [ProductUnitController::class, 'getAllPermissions'])->name('api.get.admin.productunit.permissions.read');
         });
 
         Route::group(['prefix' => 'product'], function () {

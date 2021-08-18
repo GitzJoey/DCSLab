@@ -32,6 +32,11 @@ class ProductUnitController extends Controller
         return $this->productUnitService->read();
     }
 
+    public function getAllProductUnit()
+    {
+        return $this->productUnitService->getAllProductUnit();
+    }
+
     public function store(Request $request)
     {
         $request->validate([

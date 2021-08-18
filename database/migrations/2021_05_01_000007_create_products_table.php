@@ -27,7 +27,7 @@ class CreateProductsTable extends Migration
 			$table->integer('point')->nullable();
 			$table->integer('is_use_serial')->nullable();
 			$table->integer('is_buy')->nullable();
-			$table->integer('is_production_materials')->nullable();
+			$table->integer('is_production_material')->nullable();
 			$table->integer('is_production_result')->nullable();
 			$table->integer('is_sell')->nullable();
 			$table->integer('status')->nullable();

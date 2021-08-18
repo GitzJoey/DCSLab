@@ -33,6 +33,11 @@ class ProductBrandController extends Controller
         return $this->productBrandService->read();
     }
 
+    public function getAllProductBrand()
+    {
+        return $this->productBrandService->getAllProductBrand();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
