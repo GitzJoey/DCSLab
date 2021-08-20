@@ -217,7 +217,7 @@ export default {
     methods: {
         getAllCash(page) {
             this.loading = true;
-            axios.get('/api/get/admin/cash/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/cash/read?page=' + page).then(response => {
                 this.cashList = response.data;
                 this.loading = false;
             });
@@ -256,7 +256,7 @@ export default {
             this.cash = this.cashList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/cash/delete/'  + this.cash.hId).then(response => {
+            axios.post('/api/post/dashboard/cash/delete/'  + this.cash.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -266,14 +266,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/cash/save', new FormData($('#cashForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/cash/save', new FormData($('#cashForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/cash/edit/' + this.cash.hId, new FormData($('#cashForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/cash/edit/' + this.cash.hId, new FormData($('#cashForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

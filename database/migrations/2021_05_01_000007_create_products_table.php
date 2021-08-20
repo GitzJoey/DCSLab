@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('unit_id')->references('id')->on('product_units')->onUpdate('cascade')->onDelete('restrict');;
 			$table->decimal('price', 19, 8)->default(0);
 			$table->integer('tax_status')->nullable();
-            $table->string('information')->nullable();	
+            $table->string('remarks')->nullable();	
 			$table->decimal('estimated_capital_price', 19, 8)->default(0);
 			$table->integer('point')->nullable();
 			$table->integer('is_use_serial')->nullable();

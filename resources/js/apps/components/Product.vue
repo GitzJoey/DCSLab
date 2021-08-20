@@ -387,26 +387,26 @@ export default {
     methods: {
         getAllProduct(page) {
             this.loading = true;
-            axios.get('/api/get/admin/product/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/product/read?page=' + page).then(response => {
                 this.productList = response.data;
                 this.loading = false;
             });
         },
 
         getAllProductGroup() {
-            axios.get('/api/get/admin/productgroup/read/all/active').then(response => {
+            axios.get('/api/get/dashboard/productgroup/read/all/active').then(response => {
                 this.groupDDL = response.data;
             });
         },
 
         getAllProductBrand() {
-            axios.get('/api/get/admin/productbrand/read/all/active').then(response => {
+            axios.get('/api/get/dashboard/productbrand/read/all/active').then(response => {
                 this.brandDDL = response.data;
             });
         },
 
         getAllProductUnit() {
-            axios.get('/api/get/admin/productunit/read/all/active').then(response => {
+            axios.get('/api/get/dashboard/productunit/read/all/active').then(response => {
                 this.unitDDL = response.data;
             });
         },
@@ -457,7 +457,7 @@ export default {
             this.product = this.productList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/product/delete/'  + this.product.hId).then(response => {
+            axios.post('/api/post/dashboard/product/delete/'  + this.product.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -467,14 +467,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/product/save', new FormData($('#productForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/product/save', new FormData($('#productForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/product/edit/' + this.product.hId, new FormData($('#productForm')[0])) .then(response => {
+                axios.post('/api/post/dashboard/product/edit/' + this.product.hId, new FormData($('#productForm')[0])) .then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
