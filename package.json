@@ -16,6 +16,7 @@
         "jquery": "^3.6.0",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
+        "path": "^0.12.7",
         "popper.js": "^1.16.1",
         "postcss": "^8.2.14",
         "resolve-url-loader": "^3.1.2",

@@ -372,7 +372,7 @@ export default {
     methods: {
         getAllUser(page) {
             this.loading = true;
-            axios.get('/api/get/admin/user/read?page=' + page).then(response => {
+            axios.get(route('api.get.admin.user.read') + '?page=' + page).then(response => {
                 this.userList = response.data;
                 this.loading = false;
             });
@@ -420,7 +420,7 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/user/save', new FormData($('#userForm')[0]), {
+                axios.post(route('api.post.admin.user.save'), new FormData($('#userForm')[0]), {
                     headers: {
                         'content-type': 'multipart/form-data'
                     }
@@ -431,7 +431,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/user/edit/' + this.user.hId, new FormData($('#userForm')[0]), {
+                axios.post(route('api.post.admin.user.edit', this.user.hId), new FormData($('#userForm')[0]), {
                     headers: {
                         'content-type': 'multipart/form-data'
                     }
@@ -482,14 +482,14 @@ export default {
             this.getAllUser(this.userList.current_page);
         },
         getAllRoles() {
-            axios.get('/api/get/admin/user/roles/read').then(response => {
+            axios.get(route('api.get.admin.user.roles.read')).then(response => {
                 this.rolesDDL = response.data;
             }).catch(e => {
                 console.log(e);
             });
         },
         getCountries() {
-            axios.get('/api/get/common/countries/read').then(response => {
+            axios.get(route('api.get.common.countries.read')).then(response => {
                 this.countriesDDL = response.data;
             }).catch(e => {
                 console.log(e.message);

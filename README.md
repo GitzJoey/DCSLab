@@ -4,12 +4,19 @@ Doctor Computer SG Lab
 
 This project is inspired by the desire to create an up to date web app boilerplate and keep evolving.
 
+## Features
+* Role Based System
+* Internal Messaging System
+* AUditing Tools
+* Secure Coding Paradigm
+* and more...
+
 ## Requirement
 * [PHP](https://www.php.net/downloads.php) (8.0.2)
-* [Laravel](https://laravel.com/) (8.5.15)
+* [Laravel](https://laravel.com/) (8.55.0)
 * [MySQL](https://www.mysql.com/downloads/) (8.0.21)
-* [Git](https://git-scm.com/downloads) (2.31.1)
-* [NodeJS/NPM](https://nodejs.org/en/download/) (14.16.0/6.14.6)
+* [Git](https://git-scm.com/downloads) (2.32.0)
+* [NodeJS/NPM](https://nodejs.org/en/download/) (14.16.0/7.21.0)
 * [Composer](https://getcomposer.org/download/) (2.0.11)
 
 ## Installation
@@ -60,3 +67,6 @@ Recompile
 * **2021-04-15**
     * Using new laravel/fortify and laravel/sanctum
     * Fully utilize VueJS 3 as components
+
+* **2021-08-21**
+    * Messaging System

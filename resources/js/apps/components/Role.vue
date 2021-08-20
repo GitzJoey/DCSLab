@@ -85,7 +85,7 @@
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="role.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="role.name" v-show="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ role.name }}</div>
                             </div>
@@ -93,7 +93,7 @@
                         <div class="form-group row">
                             <label for="inputDisplayName" class="col-2 col-form-label">{{ $t('fields.display_name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputDisplayName" name="display_name" as="input" :class="{'form-control':true, 'is-invalid': errors['display_name']}" v-model="role.display_name" :placeholder="$t('fields.display_name')" :label="$t('fields.display_name')" v-if="this.mode === 'create' || this.mode === 'edit'" />
+                                <Field id="inputDisplayName" name="display_name" as="input" :class="{'form-control':true, 'is-invalid': errors['display_name']}" v-model="role.display_name" :placeholder="$t('fields.display_name')" :label="$t('fields.display_name')" v-show="this.mode === 'create' || this.mode === 'edit'" />
                                 <ErrorMessage name="display_name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ role.display_name }}</div>
                             </div>
@@ -101,7 +101,7 @@
                         <div class="form-group row">
                             <label for="inputDescription" class="col-2 col-form-label">{{ $t('fields.description') }}</label>
                             <div class="col-md-10">
-                                <input id="inputDescription" name="description" type="text" class="form-control" v-model="role.description" :placeholder="$t('fields.description')" v-if="this.mode === 'create' || this.mode === 'edit'" />
+                                <input id="inputDescription" name="description" type="text" class="form-control" v-model="role.description" :placeholder="$t('fields.description')" v-show="this.mode === 'create' || this.mode === 'edit'" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{role.description }}</div>
                             </div>
                         </div>
@@ -190,13 +190,13 @@ export default {
     methods: {
         getAllRole(page) {
             this.loading = true;
-            axios.get('/api/get/admin/role/read?page=' + page).then(response => {
+            axios.get(route('api.get.admin.role.read', '?page=' + page)).then(response => {
                 this.roleList = response.data;
                 this.loading = false;
             });
         },
         getPermissions() {
-            axios.get('/api/get/admin/role/permissions/read').then(response => {
+            axios.get(route('api.get.admin.role.permissions.read')).then(response => {
                 this.permissionsDDL = response.data;
             });
         },
@@ -225,14 +225,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/role/save', new FormData($('#roleForm')[0])).then(response => {
+                axios.post(route('api.post.admin.role.save'), new FormData($('#roleForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/role/edit/' + this.role.hId, new FormData($('#roleForm')[0])).then(response => {
+                axios.post(route('api.post.admin.role.edit', this.role.hId), new FormData($('#roleForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
