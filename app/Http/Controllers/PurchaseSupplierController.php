@@ -48,10 +48,20 @@ class PurchaseSupplierController extends Controller
         ]);
         
         $is_tax = $request['is_tax'];
-
         $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
 
-        $result = $this->purchaseSupplierService->create($request['code'], $request['name'], $request['term'], $request['contact'], $request['address'], $request['city'], $request['tax_number'], $request['remarks'], $is_tax, $request['status'],);
+        $result = $this->purchaseSupplierService->create(
+            $request['code'],
+            $request['name'], 
+            $request['term'], 
+            $request['contact'], 
+            $request['address'], 
+            $request['city'],
+            $request['tax_number'], 
+            $request['remarks'], 
+            $is_tax, 
+            $request['status']
+            );
         
         if ($result == 0) {
             return response()->json([

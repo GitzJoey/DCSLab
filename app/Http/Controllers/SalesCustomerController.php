@@ -51,7 +51,34 @@ class SalesCustomerController extends Controller
             'status' => 'required',
         ]);
 
-        $result = 1;
+        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
+        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
+
+        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
+        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
+
+        $use_limit_due_date = $request['use_limit_due_date'];
+        $use_limit_due_date == 'on' ? $use_limit_due_date = 1 : $use_limit_due_date = 0;
+
+        $result = $this->salesCustomerService->update(
+            $request['code'],
+            $request['name'],
+            $request['sales_customer_group_id'],
+            $request['sales_territory'],
+            $request['use_limit_outstanding_notes'],
+            $request['limit_outstanding_notes'],
+            $request['use_limit_payable_nominal'],
+            $request['limit_payable_nominal'],
+            $request['use_limit_due_date'],
+            $request['limit_due_date'],
+            $request['term'],
+            $request['address'],
+            $request['city'],
+            $request['contact'],
+            $request['tax_id'],
+            $request['remarks'],
+            $request['status'],
+        );
 
         if ($result == 0) {
             return response()->json([
@@ -66,12 +93,30 @@ class SalesCustomerController extends Controller
 
     public function update($id, Request $request)
     {
-        $inputtedRolePermissions = [];
-        for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($inputtedRolePermissions, array(
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
+        $request->validate([
+            'code' => 'required|max:255',
+            'name' => 'required|max:255',
+            'sales_territory' => 'required|max:255',
+            'limit_outstanding_notes' => 'required|max:255',
+            'limit_payable_nominal' => 'required|max:255',
+            'limit_due_date' => 'required|max:255',
+            'term' => 'required|max:255',
+            'address' => 'required|max:255',
+            'city' => 'required|max:255',
+            'contact' => 'required|max:255',
+            'tax_id' => 'required|max:255',
+            'remarks' => 'required|max:255',
+            'status' => 'required',
+        ]);
+
+        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
+        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
+
+        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
+        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
+
+        $use_limit_due_date = $request['use_limit_due_date'];
+        $use_limit_due_date == 'on' ? $use_limit_due_date = 1 : $use_limit_due_date = 0;
 
         $result = $this->salesCustomerService->update(
             $id,
@@ -92,7 +137,6 @@ class SalesCustomerController extends Controller
             $request['tax_id'],
             $request['remarks'],
             $request['status'],
-            $inputtedRolePermissions
         );
 
         return response()->json();

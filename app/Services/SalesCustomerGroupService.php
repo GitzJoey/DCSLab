@@ -12,8 +12,8 @@ interface SalesCustomerGroupService
         $limit_outstanding_notes,
         $use_limit_payable_nominal,
         $limit_payable_nominal,
-        $use_limit_due_date,
-        $limit_due_date,
+        $use_limit_age_notes,
+        $limit_age_notes,
         $term,
         $selling_point,
         $selling_point_multiple,
@@ -32,6 +32,7 @@ interface SalesCustomerGroupService
     public function read();
 
     public function update(
+        $id,
         $code,
         $name,
         $is_member_card,
@@ -39,8 +40,8 @@ interface SalesCustomerGroupService
         $limit_outstanding_notes,
         $use_limit_payable_nominal,
         $limit_payable_nominal,
-        $use_limit_due_date,
-        $limit_due_date,
+        $use_limit_age_notes,
+        $limit_age_notes,
         $term,
         $selling_point,
         $selling_point_multiple,

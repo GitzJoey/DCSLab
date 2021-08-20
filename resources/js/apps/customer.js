@@ -71,6 +71,18 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        use_limit_outstanding_notes: {
+            active: 'Yes',
+            inactive: 'No',
+        },
+        use_limit_payable_nominal: {
+            active: 'Yes',
+            inactive: 'No',
+        },
+        use_limit_due_date: {
+            active: 'Yes',
+            inactive: 'No',
+        },
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
@@ -135,6 +147,18 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        use_limit_outstanding_notes: {
+            active: 'Ya',
+            inactive: 'Tidak',
+        },
+        use_limit_payable_nominal: {
+            active: 'Ya',
+            inactive: 'Tidak',
+        },
+        use_limit_due_date: {
+            active: 'Ya',
+            inactive: 'Tidak',
         },
         statusDDL: {
             active: 'Aktif',
