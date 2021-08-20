@@ -47,7 +47,7 @@ class BranchController extends Controller
         ]);
         
         $result = $this->branchService->create(
-            $request['company_id'], 
+            Hashids::decode($request['company_id'])[0], 
             $request['code'], 
             $request['name'], 
             $request['address'], 
