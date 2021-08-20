@@ -46,7 +46,16 @@ class BranchController extends Controller
             'status' => 'required'
         ]);
         
-        $result = $this->branchService->create($request['company_id'], $request['code'], $request['name'], $request['address'], $request['city'], $request['contact'], $request['remarks'], $request['status']);
+        $result = $this->branchService->create(
+            $request['company_id'], 
+            $request['code'], 
+            $request['name'], 
+            $request['address'], 
+            $request['city'], 
+            $request['contact'], 
+            $request['remarks'], 
+            $request['status']
+        );
     
         if ($result == 0) {
             return response()->json([

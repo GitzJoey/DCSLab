@@ -9,6 +9,7 @@ use App\Models\ProductBrand;
 use App\Models\ProductUnit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Product extends Model
 {
@@ -25,6 +26,7 @@ class Product extends Model
         'tax_status',
         'information',
         'estimated_capital_price',
+        'point',
         'is_use_serial',
         'is_buy',
         'is_production_material',
@@ -33,7 +35,24 @@ class Product extends Model
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'group_id', 'brand_id', 'name', 'unit_id', 'price', 'tax_status', 'information', 'estimated_capital_price', 'is_use_serial', 'is_buy', 'is_production_material', 'is_production_result', 'is_sell', 'status'];
+    protected static $logAttributes = [
+        'code', 
+        'group_id', 
+        'brand_id', 
+        'name', 
+        'unit_id', 
+        'price', 
+        'tax_status', 
+        'information', 
+        'estimated_capital_price', 
+        'point',
+        'is_use_serial', 
+        'is_buy', 
+        'is_production_material', 
+        'is_production_result', 
+        'is_sell', 
+        'status'
+    ];
 
     protected static $logOnlyDirty = true;
 
@@ -45,6 +64,13 @@ class Product extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    protected $appends = ['hId'];
+
+    public function getHIdAttribute() : string
+    {
+        return HashIds::encode($this->attributes['id']);
+    }
 
     public function group()
     {

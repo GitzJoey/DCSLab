@@ -3,12 +3,12 @@
 namespace App\Services\Impls;
 
 use Exception;
-use Illuminate\Support\Facades\Config;
+use App\Models\Product;
+use App\Services\ProductService;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
-use App\Services\ProductService;
-use App\Models\Product;
+use Illuminate\Support\Facades\Config;
 
 class ProductServiceImpl implements ProductService
 {
@@ -19,9 +19,10 @@ class ProductServiceImpl implements ProductService
         $name,
         $unit_id,
         $price,
-        $tax_status ,
+        $tax_status,
         $information,
         $estimated_capital_price,
+        $point,
         $is_use_serial,
         $is_buy,
         $is_production_material,
@@ -44,13 +45,14 @@ class ProductServiceImpl implements ProductService
             $product->tax_status = $tax_status;
             $product->information = $information;
             $product->estimated_capital_price = $estimated_capital_price;
+            $product->point = $point;
             $product->is_use_serial = $is_use_serial;
             $product->is_buy = $is_buy;
             $product->is_production_material = $is_production_material;
             $product->is_production_result = $is_production_result;
             $product->is_sell = $is_sell;
             $product->status = $status;
-
+                        
             $product->save();
 
             DB::commit();
@@ -78,9 +80,10 @@ class ProductServiceImpl implements ProductService
         $name,
         $unit_id,
         $price,
-        $tax_status ,
+        $tax_status,
         $information,
         $estimated_capital_price,
+        $point,
         $is_use_serial,
         $is_buy,
         $is_production_material,

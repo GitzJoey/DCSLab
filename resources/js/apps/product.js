@@ -75,26 +75,27 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        tax_statusDLL: {
+            notax: 'No Tax',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
         statusDDL: {
             active: 'Active',
-            inactive: 'Inactive',
-        },
-        bankDDL: {
-            active: 'Active',
-            inactive: 'Inactive',
-        },
+            inactive: 'Inactive'
+        }
     },
     id: {
         table: {
             title: 'Daftar Product',
             cols: {
                 code: 'Kode',
-                group_name: 'Nama Group',
-                brand_name: 'Nama Merk',
+                group_name: 'Kelompok',
+                brand_name: 'Merk',
                 name: 'Nama',
-                unit_name: 'Nama Satuan',
+                unit_name: 'Satuan',
                 price: 'Harga',
-                tax_status: 'Ppn',
+                tax_status: 'PPN',
                 information: 'Informasi',
                 estimated_capital_price: 'Perkiraan Harga Modal',
                 point: 'Poin',
@@ -124,7 +125,7 @@ const messages = {
             name: 'Nama',
             unit_name: 'Nama Satuan',
             price: 'Harga',
-            tax_status: 'Ppn',
+            tax_status: 'PPN',
             information: 'Informasi',
             estimated_capital_price: 'Perkiraan Harga Modal',
             point: 'Poin',
@@ -146,6 +147,11 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        tax_statusDLL: {
+            notax: 'Tanpa PPN',
+            excudetax: 'Belum Termasuk PPN',
+            includetax: 'Termasuk PPN'
         },
         statusDDL: {
             active: 'Aktif',

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\FinanceCashService;
 use Illuminate\Http\Request;
-
-use Vinkla\Hashids\Facades\Hashids;
 
 class FinanceCashController extends Controller
 {
@@ -44,7 +43,12 @@ class FinanceCashController extends Controller
         $is_bank = $request['is_bank'];
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
-        $result = $this->financeCashService->create($request['code'], $request['name'], $is_bank, $request['status']);
+        $result = $this->financeCashService->create(
+            $request['code'], 
+            $request['name'], 
+            $is_bank, 
+            $request['status']
+        );
         
         if ($result == 0) {
             return response()->json([
@@ -60,7 +64,7 @@ class FinanceCashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:finance_cashes',
+            'code' => new uniqueCode($id, 'finance_cash'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

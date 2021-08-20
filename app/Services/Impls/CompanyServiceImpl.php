@@ -87,4 +87,12 @@ class CompanyServiceImpl implements CompanyService
 
         return $company->delete();
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = Company::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

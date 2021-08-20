@@ -22,4 +22,6 @@ interface FinanceCashService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($id, $code);
 }
