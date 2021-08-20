@@ -27,11 +27,11 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.sales_customer_group") }}</th>
+                                <th>{{ $t("table.cols.sales_customer_group_id") }}</th>
                                 <th>{{ $t("table.cols.sales_territory") }}</th>
                                 <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
                                 <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
-                                <th>{{ $t("table.cols.limit_due_date") }}</th>
+                                <th>{{ $t("table.cols.limit_age_notes") }}</th>
                                 <th>{{ $t("table.cols.term") }}</th>
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
@@ -45,13 +45,22 @@
                             <tr v-for="(c, cIdx) in customerList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.sales_customer_group.name }}</td>
+                                <td>{{ c.customergroup.name }}</td>
                                 <td>{{ c.sales_territory }}</td>
-                                <td>{{ c.use_limit_outstanding_notes }}</td>
+                                <td>
+                                    <span v-if="c.use_limit_outstanding_notes === 1">{{ $t('use_limit_outstanding_notes.active') }}</span>
+                                    <span v-if="c.use_limit_outstanding_notes === 0">{{ $t('use_limit_outstanding_notes.inactive') }}</span>
+                                </td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
-                                <td>{{ c.use_limit_payable_nominal }}</td>
+                                <td>
+                                    <span v-if="c.use_limit_payable_nominal === 1">{{ $t('use_limit_payable_nominal.active') }}</span>
+                                    <span v-if="c.use_limit_payable_nominal === 0">{{ $t('use_limit_payable_nominal.inactive') }}</span>
+                                </td>
                                 <td>{{ c.limit_payable_nominal }}</td>
-                                <td>{{ c.use_limit_age_notes }}</td>
+                                <td>
+                                    <span v-if="c.use_limit_age_notes === 1">{{ $t('use_limit_age_notes.active') }}</span>
+                                    <span v-if="c.use_limit_age_notes === 0">{{ $t('use_limit_age_notes.inactive') }}</span>
+                                </td>
                                 <td>{{ c.limit_age_notes }}</td>
                                 <td>{{ c.term }}</td>
                                 <td>{{ c.address }}</td>
@@ -123,11 +132,11 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.customer_group') }}</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.sales_customer_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="customer_group">
-                                    <option value="0">Please select Customer Group</option>
-                                    <option :value="c.hId" v-for="c in this.customer_groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                <select class="form-control" id="example-select" name="sales_customer_group_id">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option :value="c.hId" v-for="c in this.customergroupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -140,11 +149,17 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUseLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.use_limit_outstanding_notes') }}</label>
+                            <label for="inputUse_limit_outstanding_notes" class="col-2 col-form-label">{{ $t('fields.use_limit_outstanding_notes') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="use_limit_outstanding_notes" name="use_limit_outstanding_notes" v-model="customer.use_limit_outstanding_notes" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customer.use_limit_outstanding_notes === 1">{{ $t('use_limit_outstanding_notes.active') }}</span>
+                                        <span v-if="customer.use_limit_outstanding_notes === 0">{{ $t('use_limit_outstanding_notes.inactive') }}</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -157,11 +172,17 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUseLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.use_limit_payable_nominal') }}</label>
+                            <label for="inputUse_Limit_Outstanding_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_payable_nominal') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="use_limit_payable_nominal" name="use_limit_payable_nominal" v-model="customer.use_limit_payable_nominal" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customer.use_limit_payable_nominal === 1">{{ $t('use_limit_payable_nominal.active') }}</span>
+                                        <span v-if="customer.use_limit_payable_nominal === 0">{{ $t('use_limit_payable_nominal.inactive') }}</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -174,20 +195,26 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUseLimitDueDate" class="col-2 col-form-label">{{ $t('fields.use_limit_due_date') }}</label>
+                            <label for="inputUse_Limit_Age_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_age_notes') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="use_limit_age_notes" name="use_limit_age_notes" v-model="customer.use_limit_age_notes" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customer.use_limit_age_notes === 1">{{ $t('use_limit_age_notes.active') }}</span>
+                                        <span v-if="customer.use_limit_age_notes === 0">{{ $t('use_limit_age_notes.inactive') }}</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputLimitDueDate" class="col-2 col-form-label">{{ $t('fields.limit_due_date') }}</label>
+                            <label for="inputLimitAgeNotes" class="col-2 col-form-label">{{ $t('fields.limit_age_notes') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitDueDate" name="limit_due_date" type="number" class="form-control" :placeholder="$t('fields.limit_due_date')" v-model="customer.limit_due_date" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_due_date" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.limit_due_date }}</div>
+                                <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customer.limit_age_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="limit_age_notes" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -296,7 +323,7 @@ export default {
             sales_territory: 'required',
             limit_outstanding_notes: 'required',
             limit_payable_nominal: 'required',
-            limit_due_date: 'required',
+            limit_age_notes: 'required',
             term: 'required',
             address: 'required',
             city: 'required',
@@ -333,7 +360,7 @@ export default {
                 remarks: '',
                 status: '',
             },
-            customer_groupDDL: [],
+            customergroupDDL: [],
         }
     },
     created() {
@@ -342,6 +369,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllCustomer(1);
+        this.getAllCustomerGroup();
     },
     methods: {
         getAllCustomer(page) {
@@ -349,6 +377,11 @@ export default {
             axios.get('/api/get/admin/customer/read?page=' + page).then(response => {
                 this.customerList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllCustomerGroup() {
+            axios.get('/api/get/admin/customergroup/read/all/active').then(response => {
+                this.customergroupDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
