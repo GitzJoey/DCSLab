@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ActivityLogService;
-use App\Services\ProductService;
 use Illuminate\Http\Request;
+use App\Services\ProductService;
 
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 
 class ProductController extends Controller
 {
@@ -34,7 +34,7 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {   
         $request->validate([
             'code' => 'required|max:255',
             'group_id' => 'required',
@@ -44,11 +44,6 @@ class ProductController extends Controller
             'price' => 'required|max:255',
             'tax_status' => 'required',
             'estimated_capital_price' => 'required|max:255',
-            'is_use_serial' => 'required',
-            'is_buy' => 'required',
-            'is_production_material' => 'required',
-            'is_production_result' => 'required',
-            'is_sell' => 'required',
             'status' => 'required'
         ]);
 
@@ -70,7 +65,7 @@ class ProductController extends Controller
 
         $is_sell = $request['is_sell'];
         $is_sell == 'on' ? $is_sell = 1 : $is_sell = 0;
-        
+
         $result = $this->productService->create(
             $request['code'], 
             $group_id, 
@@ -78,9 +73,10 @@ class ProductController extends Controller
             $request['name'], 
             $unit_id,
             $request['price'], 
-            $request['tax'], 
+            $request['tax_status'], 
             $request['information'], 
             $request['estimated_capital_price'], 
+            $request['point'],
             $is_use_serial, 
             $is_buy, 
             $is_production_material, 
@@ -135,6 +131,7 @@ class ProductController extends Controller
             $request['tax_status'],
             $request['information'],
             $request['estimated_capital_price'],
+            $request['point'],
             $is_use_serial,
             $is_buy,
             $is_production_material,

@@ -35,7 +35,6 @@
                                 <th>{{ $t("table.cols.information") }}</th>
                                 <th>{{ $t("table.cols.estimated_capital_price") }}</th>
                                 <th>{{ $t("table.cols.point") }}</th>
-                                <th>{{ $t("table.cols.point") }}</th>
                                 <th>{{ $t("table.cols.is_use_serial") }}</th>
                                 <th>{{ $t("table.cols.is_buy") }}</th>
                                 <th>{{ $t("table.cols.is_production_material") }}</th>
@@ -122,7 +121,7 @@
                             <div class="col-md-10">
                                 <select class="form-control" id="group_id" name="group_id">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option :value="c.hId" v-for="c in this.groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                    <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -148,7 +147,7 @@
                             <div class="col-md-10">
                                 <select class="form-control" id="unit_id" name="unit_id">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                    <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -161,14 +160,19 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="tax_status">{{ $t('fields.tax_status') }}</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="tax_status" name="tax_status">
+                            <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select class="form-control" id="tax_status" name="tax_status" v-model="product.tax_status" v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">No Tax</option>
-                                    <option value="2">Exclude Tax</option>
-                                    <option value="3">Include Tax</option>
+                                    <option value="1">{{ $t('tax_statusDLL.notax') }}</option>
+                                    <option value="2">{{ $t('tax_statusDLL.excudetax') }}</option>
+                                    <option value="3">{{ $t('tax_statusDLL.includetax') }}</option>
                                 </select>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                    <span v-if="product.tax_status === 1">{{ $t('tax_statusDLL.notax') }}</span>
+                                    <span v-if="product.tax_status === 2">{{ $t('tax_statusDLL.excudetax') }}</span>
+                                    <span v-if="product.tax_status === 3">{{ $t('tax_statusDLL.includetax') }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -271,17 +275,15 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                            <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="product.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value='1'>{{ $t('statusDDL.active') }}</option>
-                                        <option value='0'>{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="product.status === 1">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="product.status === 0">{{ $t('statusDDL.inactive') }}</span>
-                                    </div>
+                                <select class="form-control" id="status" name="status" v-model="product.status" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value='1'>{{ $t('statusDDL.active') }}</option>
+                                    <option value='0'>{{ $t('statusDDL.inactive') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                    <span v-if="product.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="product.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -425,17 +427,17 @@ export default {
                 brand_name: '',
                 name: '',
                 unit_name: '',
-                price: '',
+                price: '0',
                 tax_status: '',
                 information: '',
-                point: '',
-                estimated_capital_price: '',
+                point: '0',
+                estimated_capital_price: '0',
                 is_use_serial: '',
-                is_buy: '',
+                is_buy: '1',
                 is_production_material: '',
                 is_production_result: '',
-                is_sell: '',
-                status: '',
+                is_sell: '1',
+                status: '1',
             }
         },
         createNew() {

@@ -1,29 +1,28 @@
 <?php
 
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\DevController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\InboxController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ActivityLogController;
 
-use App\Http\Controllers\DoctorAccountingPageController;
+use App\Http\Controllers\BranchController;
 
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\BranchController;
-use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\FinanceCashController;
-use App\Http\Controllers\PurchaseSupplierController;
-use App\Http\Controllers\ProductGroupController;
-use App\Http\Controllers\ProductBrandController;
-use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\FinanceCashController;
+use App\Http\Controllers\ProductUnitController;
+use App\Http\Controllers\ProductBrandController;
+use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\SalesCustomerController;
-use App\Http\Controllers\SalesCustomerGroupController;
+use App\Http\Controllers\PurchaseSupplierController;
 
-use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\SalesCustomerGroupController;
+use App\Http\Controllers\DoctorAccountingPageController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*

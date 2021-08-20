@@ -13,7 +13,7 @@ class CreatePurchaseSuppliersTable extends Migration
      */
     public function up()
     {
-        Schema::create('purchase_suppliers', function (Blueprint $table) {
+        Schema::create('suppliers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code');
             $table->string('name')->nullable();
@@ -40,6 +40,6 @@ class CreatePurchaseSuppliersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('purchase_suppliers');
+        Schema::dropIfExists('suppliers');
     }
 }

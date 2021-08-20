@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ActivityLogService;
-use App\Services\CompanyService;
+use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
+use App\Services\CompanyService;
 
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 
 class CompanyController extends Controller
 {
@@ -62,7 +63,7 @@ class CompanyController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255' ,
+            'code' => new uniqueCode($id, 'company'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

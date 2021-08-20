@@ -319,11 +319,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/warehouse/edit/' + this.warehouse.hId, new FormData($('#warehouseForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/warehouse/edit/' + this.warehouse.hId, new FormData($('#warehouseForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

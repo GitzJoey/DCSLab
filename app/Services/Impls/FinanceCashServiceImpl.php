@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\FinanceCashService;
 use App\Models\FinanceCash;
+use Illuminate\Support\Facades\Cache;
 
 class FinanceCashServiceImpl implements FinanceCashService
 {
@@ -85,4 +86,13 @@ class FinanceCashServiceImpl implements FinanceCashService
         return $financecash->delete();
         
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = FinanceCash::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
+
 }
