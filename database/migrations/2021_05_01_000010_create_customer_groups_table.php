@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSalesCustomerGroupsTable extends Migration
+class CreateCustomerGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSalesCustomerGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('sales_customer_groups', function (Blueprint $table) {
+        Schema::create('customer_groups', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code');
             $table->string('name')->nullable();
@@ -59,6 +59,6 @@ class CreateSalesCustomerGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sales_customer_groups');
+        Schema::dropIfExists('customer_groups');
     }
 }
