@@ -287,7 +287,7 @@ export default {
     methods: {
         getAllSupplier(page) {
             this.loading = true;
-            axios.get('/api/get/admin/supplier/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/supplier/read?page=' + page).then(response => {
                 this.supplierList = response.data;
                 this.loading = false;
             });
@@ -332,7 +332,7 @@ export default {
             this.supplier = this.supplierList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/supplier/delete/'  + this.supplier.hId).then(response => {
+            axios.post('/api/post/dashboard/supplier/delete/'  + this.supplier.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -342,14 +342,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/supplier/save', new FormData($('#supplierForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/supplier/save', new FormData($('#supplierForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/supplier/edit/' + this.supplier.hId, new FormData($('#supplierForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/supplier/edit/' + this.supplier.hId, new FormData($('#supplierForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

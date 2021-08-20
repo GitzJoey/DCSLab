@@ -173,7 +173,7 @@ export default {
     methods: {
         getAllProductUnit(page) {
             this.loading = true;
-            axios.get('/api/get/admin/productunit/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/productunit/read?page=' + page).then(response => {
                 this.productunitList = response.data;
                 this.loading = false;
             });
@@ -210,7 +210,7 @@ export default {
             this.productunit = this.productunitList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/productunit/delete/'  + this.productunit.hId).then(response => {
+            axios.post('/api/post/dashboard/productunit/delete/'  + this.productunit.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -220,14 +220,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/productunit/save', new FormData($('#productunitForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/productunit/save', new FormData($('#productunitForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/productunit/edit/' + this.productunit.hId, new FormData($('#productunitForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/productunit/edit/' + this.productunit.hId, new FormData($('#productunitForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
