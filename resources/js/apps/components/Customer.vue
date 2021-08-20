@@ -47,15 +47,22 @@
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.sales_customer_group.name }}</td>
                                 <td>{{ c.sales_territory }}</td>
+                                <td>{{ c.use_limit_outstanding_notes }}</td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
+                                <td>{{ c.use_limit_payable_nominal }}</td>
                                 <td>{{ c.limit_payable_nominal }}</td>
-                                <td>{{ c.limit_due_date }}</td>
+                                <td>{{ c.use_limit_age_notes }}</td>
+                                <td>{{ c.limit_age_notes }}</td>
                                 <td>{{ c.term }}</td>
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
                                 <td>{{ c.contact }}</td>
                                 <td>{{ c.tax_id }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>{{ c.remarks }}</td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -116,13 +123,11 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Customer Group</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.customer_group') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="sales_customer_group">
+                                <select class="form-control" id="example-select" name="customer_group">
                                     <option value="0">Please select Customer Group</option>
-                                    <option value="1">Retail</option>
-                                    <option value="2">Wholesale Price</option>
-                                    <option value="3">Distributor</option>
+                                    <option :value="c.hId" v-for="c in this.customer_groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
                         </div>
@@ -311,17 +316,24 @@ export default {
             contentHidden: false,
             customerList: [],
             customer: {
-                customer: [],
-                selectedCustomers: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                name: '',
+                sales_customer_group_id: '',
+                sales_territory: '',
+                use_limit_outstanding_notes: '',
+                limit_outstanding_notes: '',
+                use_limit_payable_nominal: '',
+                limit_payable_nominal: '',
+                use_limit_age_notes: '',
+                term: '',
+                address: '',
+                city: '',
+                contact: '',
+                tax_id: '',
+                remarks: '',
+                status: '',
             },
+            customer_groupDDL: [],
         }
     },
     created() {
@@ -330,7 +342,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllCustomer(1);
-        //this.getAllCompanies();
     },
     methods: {
         getAllCustomer(page) {
@@ -351,18 +362,22 @@ export default {
         },
         emptyCustomer() {
             return {
-                customer: [],
-                selectedCustomers: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: '1',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                name: '',
+                sales_customer_group_id: '',
+                sales_territory: '',
+                use_limit_outstanding_notes: '',
+                limit_outstanding_notes: '',
+                use_limit_payable_nominal: '1',
+                limit_payable_nominal: '',
+                use_limit_age_notes: '1',
+                term: '',
+                address: '',
+                city: '',
+                contact: '',
+                tax_id: '',
+                remarks: '',
+                status: '1',
             }
         },
         createNew() {
@@ -377,6 +392,18 @@ export default {
             this.mode = 'show';
             this.customer = this.customerList.data[idx];
         },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.customer = this.customerList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/admin/customer/delete/'  + this.customer.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
+        },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
@@ -387,11 +414,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/customer/edit/' + this.customer.hId, new FormData($('#customerForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/admin/customer/edit/' + this.customer.hId, new FormData($('#customerForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

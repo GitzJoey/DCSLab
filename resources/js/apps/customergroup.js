@@ -20,7 +20,7 @@ const messages = {
                 is_member_card: 'Member Card',
                 limit_outstanding_notes: 'Limit Outstanding Notes',
                 limit_payable_nominal: 'Limit Payable Nominal',
-                limit_due_date: 'Limit Due Date',
+                limit_age_notes: 'Limit Age Notes',
                 term: 'Term',
                 selling_point: 'Selling Point',
                 selling_point_multiple: 'Selling Point Multiple',
@@ -55,8 +55,8 @@ const messages = {
             limit_outstanding_notes: 'Limit Outstanding Notes',
             use_limit_payable_nominal: 'Use Limit Payable Nominal',
             limit_payable_nominal: 'Limit Payable Nominal',
-            use_limit_due_date: 'Use Due Date',
-            limit_due_date: 'Limit Due Date',
+            use_limit_age_notes: 'Use Limit Age Notes',
+            limit_age_notes: 'Limit Age Notes',
             term: 'Term',
             selling_point: 'Selling Point',
             selling_point_multiple: 'Selling Point Multiple',
@@ -83,6 +83,22 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        use_limit_outstanding_notes: {
+            active: 'Yes',
+            inactive: 'No',
+        },
+        use_limit_payable_nominal: {
+            active: 'Yes',
+            inactive: 'No',
+        },
+        use_limit_age_notes: {
+            active: 'Yes',
+            inactive: 'No',
+        },
+        is_rounding: {
+            active: 'Yes',
+            inactive: 'No',
+        },
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
@@ -97,7 +113,7 @@ const messages = {
                 is_member_card: 'Kartu Member',
                 limit_outstanding_notes: 'Batas Nota',
                 limit_payable_nominal: 'Batas Nominal',
-                limit_due_date: 'Batas Hari',
+                limit_age_notes: 'Batas Hari',
                 term: 'Tempo',
                 selling_point: 'Poin Penjualan',
                 selling_point_multiple: 'Kelipatan Poin Penjualan',
@@ -132,8 +148,8 @@ const messages = {
             limit_outstanding_notes: 'Batas Nota',
             use_limit_payable_nominal: 'Menggunakan Batas Nominal',
             limit_payable_nominal: 'Batas Nominal',
-            use_limit_due_date: 'Menggunakan Batas Hari',
-            limit_due_date: 'Batas Hari',
+            use_limit_age_notes: 'Menggunakan Batas Hari',
+            limit_age_notes: 'Batas Hari',
             term: 'Tempo',
             selling_point: 'Poin Penjualan',
             selling_point_multiple: 'Kelipatan Poin Penjualan',
@@ -159,6 +175,22 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        use_limit_outstanding_notes: {
+            active: 'Ya',
+            inactive: 'Tidak',
+        },
+        use_limit_payable_nominal: {
+            active: 'Ya',
+            inactive: 'Tidak',
+        },
+        use_limit_age_notes: {
+            active: 'Ya',
+            inactive: 'Tidak',
+        },
+        is_rounding: {
+            active: 'Ya',
+            inactive: 'Tidak',
         },
         statusDDL: {
             active: 'Aktif',

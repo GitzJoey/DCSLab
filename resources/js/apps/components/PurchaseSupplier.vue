@@ -47,8 +47,8 @@
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
                                 <td>
-                                    <span v-if="c.is_tax === 1">{{ $t('is_bank.active') }}</span>
-                                    <span v-if="c.is_tax === 0">{{ $t('is_bank.inactive') }}</span>
+                                    <span v-if="c.is_tax === 1">{{ $t('is_tax.active') }}</span>
+                                    <span v-if="c.is_tax === 0">{{ $t('is_tax.inactive') }}</span>
                                 </td>
                                 <td>{{ c.tax_number }}</td>
                                 <td>{{ c.remarks }}</td>
@@ -151,7 +151,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputIs_Bank" class="col-2 col-form-label">{{ $t('fields.is_tax') }}</label>
+                            <label for="inputIs_Tax" class="col-2 col-form-label">{{ $t('fields.is_tax') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">

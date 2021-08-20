@@ -13,7 +13,6 @@ class BranchController extends Controller
     private $branchService;
     private $activityLogService;
 
-
     public function __construct(BranchService $branchService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
@@ -36,7 +35,6 @@ class BranchController extends Controller
 
     public function store(Request $request)
     {  
-        
         $request->validate([
             'company_id' => 'required',
             'code' => 'required|max:255',
