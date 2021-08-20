@@ -306,13 +306,17 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Round On</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="example-select">
-                                    <option value="0">Please select Round On</option>
-                                    <option value="1">High</option>
-                                    <option value="2">Low</option>
-                                </select>             
+                            <label for="round_on" class="col-2 col-form-label">{{ $t('fields.round_on') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select class="form-control" id="round_on" name="round_on" v-model="customergroup.round_on" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="1">{{ $t('round_onDLL.high') }}</option>
+                                    <option value="2">{{ $t('round_onDLL.low') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                    <span v-if="product.round_on === 1">{{ $t('round_onDLL.high') }}</span>
+                                    <span v-if="product.round_on === 2">{{ $t('round_onDLL.low') }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -331,15 +335,21 @@
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.remarks }}</div>
                             </div>
                         </div>
+                        
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Default Cash Payment</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="example-select">
-                                    <option value="0">Please select Default Cash Payment</option>
-                                    <option value="1">BCA</option>
-                                    <option value="2">Mandiri</option>
-                                    <option value="3">CIMB</option>
-                                </select>             
+                            <label for="finance_cash_id" class="col-2 col-form-label">{{ $t('fields.finance_cash_id') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select class="form-control" id="finance_cash_id" name="finance_cash_id" v-model="customergroup.finance_cash_id" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="1">{{ $t('finance_cash_idDLL.bca') }}</option>
+                                    <option value="2">{{ $t('finance_cash_idDLL.mandiri') }}</option>
+                                    <option value="3">{{ $t('finance_cash_idDLL.cimb') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                    <span v-if="product.finance_cash_id === 1">{{ $t('finance_cash_idDLL.bca') }}</span>
+                                    <span v-if="product.finance_cash_id === 2">{{ $t('finance_cash_idDLL.mandiri') }}</span>
+                                    <span v-if="product.finance_cash_id === 3">{{ $t('finance_cash_idDLL.cimb') }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">    

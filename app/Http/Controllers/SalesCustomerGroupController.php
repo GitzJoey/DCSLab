@@ -54,6 +54,9 @@ class SalesCustomerGroupController extends Controller
             'remarks' => 'required|max:255',
         ]);
 
+        $is_member_card = $request['is_member_card'];
+        $is_member_card == 'on' ? $is_member_card = 1 : $is_member_card = 0;
+
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
 
@@ -69,7 +72,7 @@ class SalesCustomerGroupController extends Controller
         $result = $this->salesCustomerGroupService->create(
             $request['code'],
             $request['name'],
-            $request['is_member_card'],
+            $is_member_card,
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
             $use_limit_payable_nominal,
@@ -123,6 +126,9 @@ class SalesCustomerGroupController extends Controller
             'remarks' => 'required|max:255',
         ]);
 
+        $is_member_card = $request['is_member_card'];
+        $is_member_card == 'on' ? $is_member_card = 1 : $is_member_card = 0;
+
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
 
@@ -139,7 +145,7 @@ class SalesCustomerGroupController extends Controller
             $id,
             $request['code'],
             $request['name'],
-            $request['is_member_card'],
+            $is_member_card,
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
             $use_limit_payable_nominal,

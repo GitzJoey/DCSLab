@@ -13,8 +13,8 @@ interface SalesCustomerService
         $limit_outstanding_notes,
         $use_limit_payable_nominal,
         $limit_payable_nominal,
-        $use_limit_due_date,
-        $limit_due_date,
+        $use_limit_age_notes,
+        $limit_age_notes,
         $term,
         $address,
         $city,
@@ -27,6 +27,7 @@ interface SalesCustomerService
     public function read();
 
     public function update(
+        $id,
         $code,
         $name,
         $sales_customer_group_id,
@@ -35,8 +36,8 @@ interface SalesCustomerService
         $limit_outstanding_notes,
         $use_limit_payable_nominal,
         $limit_payable_nominal,
-        $use_limit_due_date,
-        $limit_due_date,
+        $use_limit_age_notes,
+        $limit_age_notes,
         $term,
         $address,
         $city,

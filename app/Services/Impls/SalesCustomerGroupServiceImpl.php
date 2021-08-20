@@ -73,7 +73,6 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
-
     }
 
     public function read()
