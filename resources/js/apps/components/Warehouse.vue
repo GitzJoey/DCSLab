@@ -302,7 +302,7 @@ export default {
             this.warehouse = this.warehouseList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/warehouse/delete/'  + this.warehouse.hId).then(response => {
+            axios.post('/api/post/dashboard/company/warehouses/delete/'  + this.warehouse.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -312,14 +312,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/warehouse/save', new FormData($('#warehouseForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/company/warehouses/save', new FormData($('#warehouseForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/warehouse/edit/' + this.warehouse.hId, new FormData($('#warehouseForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/company/warehouses/edit/' + this.warehouse.hId, new FormData($('#warehouseForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

@@ -141,21 +141,23 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
 
     Route::group(['prefix' => 'dashboard'], function () {
         Route::group(['prefix' => 'company'], function () {
-            Route::post('save', [CompanyController::class, 'store'])->name('api.post.dashboard.company.save');
-            Route::post('edit/{id}', [CompanyController::class, 'update'])->name('api.post.dashboard.company.edit');
-            Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('api.post.dashboard.company.delete');
-        });
-
-        Route::group(['prefix' => 'branch'], function () {
-            Route::post('save', [BranchController::class, 'store'])->name('api.post.dashboard.branch.save');
-            Route::post('edit/{id}', [BranchController::class, 'update'])->name('api.post.dashboard.branch.edit');
-            Route::post('delete/{id}', [BranchController::class, 'delete'])->name('api.post.dashboard.branch.delete');
-        });
-
-        Route::group(['prefix' => 'warehouse'], function () {
-            Route::post('save', [WarehouseController::class, 'store'])->name('api.post.dashboard.warehouse.save');
-            Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('api.post.dashboard.warehouse.edit');
-            Route::post('delete/{id}', [WarehouseController::class, 'delete'])->name('api.post.dashboard.warehouse.delete');
+            Route::group(['prefix' => 'companies'], function () {
+                Route::post('save', [CompanyController::class, 'store'])->name('api.post.dashboard.company.companies.save');
+                Route::post('edit/{id}', [CompanyController::class, 'update'])->name('api.post.dashboard.company.companies.edit');
+                Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('api.post.dashboard.company.companies.delete');
+            });
+    
+            Route::group(['prefix' => 'branches'], function () {
+                Route::post('save', [BranchController::class, 'store'])->name('api.post.dashboard.company.branches.save');
+                Route::post('edit/{id}', [BranchController::class, 'update'])->name('api.post.dashboard.company.branches.edit');
+                Route::post('delete/{id}', [BranchController::class, 'delete'])->name('api.post.dashboard.company.branches.delete');
+            });
+    
+            Route::group(['prefix' => 'warehouses'], function () {
+                Route::post('save', [WarehouseController::class, 'store'])->name('api.post.dashboard.company.warehouses.save');
+                Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('api.post.dashboard.company.warehouses.edit');
+                Route::post('delete/{id}', [WarehouseController::class, 'delete'])->name('api.post.dashboard.company.warehouses.delete');
+            });
         });
 
         Route::group(['prefix' => 'cash'], function () {

@@ -302,7 +302,7 @@ export default {
             this.branch = this.branchList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/branch/delete/'  + this.branch.hId).then(response => {
+            axios.post('/api/post/dashboard/company/branches/delete/'  + this.branch.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -312,14 +312,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/branch/save', new FormData($('#branchForm')[0])). then(response => {
+                axios.post('/api/post/dashboard/company/branches/save', new FormData($('#branchForm')[0])). then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/branch/edit/' + this.branch.hId, new FormData($('#branchForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/company/branches/edit/' + this.branch.hId, new FormData($('#branchForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

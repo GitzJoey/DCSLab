@@ -232,7 +232,7 @@ export default {
             this.company = this.companyList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/company/delete/'  + this.company.hId).then(response => {
+            axios.post('/api/post/dashboard/company/companies/delete/'  + this.company.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -242,14 +242,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/company/save', new FormData($('#companyForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/company/companies/save', new FormData($('#companyForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/company/edit/' + this.company.hId, new FormData($('#companyForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/company/companies/edit/' + this.company.hId, new FormData($('#companyForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
