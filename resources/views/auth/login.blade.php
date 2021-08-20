@@ -20,7 +20,7 @@
         <div class="hero-static col-md-6 col-xl-4 d-flex align-items-center bg-white invisible animate__fadeInRight" data-toggle="appear">
             <div class="content content-full">
                 <div class="px-30 py-10">
-                    <a class="link-effect font-w700" href="#">
+                    <a class="link-effect font-w700" href="/">
                         <i class="si si-fire"></i>
                         <span class="font-size-xl text-primary-dark">DCS</span><span class="font-size-xl">Lab</span>
                     </a>
