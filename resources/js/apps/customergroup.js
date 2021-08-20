@@ -83,6 +83,19 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        tax_statusDLL: {
+            BCA: 'BCA',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
+        round_onDLL: {
+            high: 'High',
+            low: 'Low',
+        },
+        is_member_card: {
+            active: 'Yes',
+            inactive: 'No',
+        },
         use_limit_outstanding_notes: {
             active: 'Yes',
             inactive: 'No',
@@ -175,6 +188,19 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        tax_statusDLL: {
+            BCA: 'BCA',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
+        round_onDLL: {
+            high: 'High',
+            low: 'Low',
+        },
+        is_member_card: {
+            active: 'Ya',
+            inactive: 'Tidak',
         },
         use_limit_outstanding_notes: {
             active: 'Ya',

@@ -41,7 +41,7 @@ class SalesCustomerController extends Controller
             'sales_territory' => 'required|max:255',
             'limit_outstanding_notes' => 'required|max:255',
             'limit_payable_nominal' => 'required|max:255',
-            'limit_due_date' => 'required|max:255',
+            'limit_age_notes' => 'required|max:255',
             'term' => 'required|max:255',
             'address' => 'required|max:255',
             'city' => 'required|max:255',
@@ -51,26 +51,28 @@ class SalesCustomerController extends Controller
             'status' => 'required',
         ]);
 
+        $customergroup_id = Hashids::decode($request['customergroup_id'])[0];
+
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
 
         $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
         $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
 
-        $use_limit_due_date = $request['use_limit_due_date'];
-        $use_limit_due_date == 'on' ? $use_limit_due_date = 1 : $use_limit_due_date = 0;
+        $use_limit_age_notes = $request['use_limit_age_notes'];
+        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
         $result = $this->salesCustomerService->update(
             $request['code'],
             $request['name'],
             $request['sales_customer_group_id'],
             $request['sales_territory'],
-            $request['use_limit_outstanding_notes'],
+            $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
-            $request['use_limit_payable_nominal'],
+            $use_limit_payable_nominal,
             $request['limit_payable_nominal'],
-            $request['use_limit_due_date'],
-            $request['limit_due_date'],
+            $use_limit_age_notes,
+            $request['limit_age_notes'],
             $request['term'],
             $request['address'],
             $request['city'],
@@ -99,7 +101,7 @@ class SalesCustomerController extends Controller
             'sales_territory' => 'required|max:255',
             'limit_outstanding_notes' => 'required|max:255',
             'limit_payable_nominal' => 'required|max:255',
-            'limit_due_date' => 'required|max:255',
+            'limit_age_notes' => 'required|max:255',
             'term' => 'required|max:255',
             'address' => 'required|max:255',
             'city' => 'required|max:255',
@@ -115,8 +117,8 @@ class SalesCustomerController extends Controller
         $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
         $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
 
-        $use_limit_due_date = $request['use_limit_due_date'];
-        $use_limit_due_date == 'on' ? $use_limit_due_date = 1 : $use_limit_due_date = 0;
+        $use_limit_age_notes = $request['use_limit_age_notes'];
+        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
         $result = $this->salesCustomerService->update(
             $id,
@@ -124,12 +126,12 @@ class SalesCustomerController extends Controller
             $request['name'],
             $request['sales_customer_group_id'],
             $request['sales_territory'],
-            $request['use_limit_outstanding_notes'],
+            $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
-            $request['use_limit_payable_nominal'],
+            $use_limit_payable_nominal,
             $request['limit_payable_nominal'],
-            $request['use_limit_due_date'],
-            $request['limit_due_date'],
+            $use_limit_age_notes,
+            $request['limit_age_notes'],
             $request['term'],
             $request['address'],
             $request['city'],
