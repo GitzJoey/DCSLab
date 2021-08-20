@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Log;
 use App\Services\ProductGroupService;
 use App\Models\ProductGroup;
 
-use Vinkla\Hashids\Facades\Hashids;
-
 class ProductGroupServiceImpl implements ProductGroupService
 {
     public function create(

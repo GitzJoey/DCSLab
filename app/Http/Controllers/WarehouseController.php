@@ -7,7 +7,6 @@ use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Log;
 class WarehouseController extends Controller
 {
     private $warehouseService;
