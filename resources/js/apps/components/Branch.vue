@@ -33,6 +33,7 @@
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>

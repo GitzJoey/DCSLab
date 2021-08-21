@@ -31,6 +31,8 @@ interface SalesCustomerGroupService
 
     public function read();
 
+    public function getAllCustomerGroup();
+
     public function update(
         $id,
         $code,

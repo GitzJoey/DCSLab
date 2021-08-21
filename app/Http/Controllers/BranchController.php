@@ -6,6 +6,7 @@ use App\Services\ActivityLogService;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 
+use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
 
 class BranchController extends Controller
@@ -72,7 +73,7 @@ class BranchController extends Controller
     {
         $request->validate([
             'company_id' => 'required|max:255' ,
-            'code' => 'required|max:255' ,
+            'code' => new uniqueCode($id, 'branches'),
             'name' => 'required|max:255',
             'address' => 'required|max:255' ,
             'city' => 'required|max:255',

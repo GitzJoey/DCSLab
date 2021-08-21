@@ -51,23 +51,10 @@
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.is_member_card }}</td>
-                                <td>
-                                    <span v-if="c.use_limit_outstanding_notes === 1">{{ $t('use_limit_outstanding_notes.active') }}</span>
-                                    <span v-if="c.use_limit_outstanding_notes === 0">{{ $t('use_limit_outstanding_notes.inactive') }}</span>
-                                </td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
-                                <td>
-                                    <span v-if="c.use_limit_payable_nominal === 1">{{ $t('use_limit_payable_nominal.active') }}</span>
-                                    <span v-if="c.use_limit_payable_nominal === 0">{{ $t('use_limit_payable_nominal.inactive') }}</span>
-                                </td>
                                 <td>{{ c.limit_payable_nominal }}</td>
-                                <td>
-                                    <span v-if="c.use_limit_age_notes === 1">{{ $t('use_limit_age_notes.active') }}</span>
-                                    <span v-if="c.use_limit_age_notes === 0">{{ $t('use_limit_age_notes.inactive') }}</span>
-                                </td>
                                 <td>{{ c.limit_age_notes }}</td>
                                 <td>{{ c.term }}</td>
-                                <td>{{ c.selling_point }}</td>
                                 <td>{{ c.selling_point }}</td>
                                 <td>{{ c.selling_point_multiple }}</td>
                                 <td>{{ c.sell_at_capital_price }}</td>
@@ -75,10 +62,6 @@
                                 <td>{{ c.global_markup_nominal }}</td>
                                 <td>{{ c.global_discount_percent }}</td>
                                 <td>{{ c.global_discount_nominal }}</td>
-                                <td>
-                                    <span v-if="c.is_rounding === 1">{{ $t('is_rounding.active') }}</span>
-                                    <span v-if="c.is_rounding === 0">{{ $t('is_rounding.inactive') }}</span>
-                                </td>
                                 <td>{{ c.round_on }}</td>
                                 <td>{{ c.round_digit }}</td>
                                 <td>{{ c.remarks }}</td>
@@ -90,6 +73,9 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -512,6 +498,18 @@ export default {
         showSelected(idx) {
             this.mode = 'show';
             this.customergroup = this.customergroupList.data[idx];
+        },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.customergroup = this.customergroupList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/dashboard/customergroup/delete/'  + this.customergroup.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
         },
         onSubmit(values, actions) {
             this.loading = true;

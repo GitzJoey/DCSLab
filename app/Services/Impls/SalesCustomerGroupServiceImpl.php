@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Models\SalesCustomer;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +79,11 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
     public function read()
     {
         return SalesCustomerGroup::paginate();
+    }
+
+    public function getAllCustomerGroup()
+    {
+        return SalesCustomerGroup::all();
     }
 
 

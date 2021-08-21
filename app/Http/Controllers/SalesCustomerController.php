@@ -51,7 +51,7 @@ class SalesCustomerController extends Controller
             'status' => 'required',
         ]);
 
-        $customergroup_id = Hashids::decode($request['customergroup_id'])[0];
+        $sales_customer_group_id = Hashids::decode($request['sales_customer_group_id'])[0];
 
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
@@ -62,10 +62,10 @@ class SalesCustomerController extends Controller
         $use_limit_age_notes = $request['use_limit_age_notes'];
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
-        $result = $this->salesCustomerService->update(
+        $result = $this->salesCustomerService->create(
             $request['code'],
             $request['name'],
-            $request['sales_customer_group_id'],
+            $sales_customer_group_id,
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],

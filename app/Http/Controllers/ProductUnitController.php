@@ -21,9 +21,10 @@ class ProductUnitController extends Controller
 
     }
 
-    public function index()
+    public function index(Request $request)
     {
-
+        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
+        
         return view('product.units.index');
     }
 

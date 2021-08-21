@@ -33,6 +33,11 @@ class SalesCustomerGroupController extends Controller
         return $this->salesCustomerGroupService->read();
     }
 
+    public function getAllCustomerGroup()
+    {
+        return $this->salesCustomerGroupService->getAllCustomerGroup();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
