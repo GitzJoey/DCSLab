@@ -103,6 +103,13 @@ class BranchServiceImpl implements BranchService
         $branch = Branch::find($id);
 
         return $branch->delete();
-        
+    }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = Branch::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
     }
 }

@@ -110,6 +110,7 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 
         Route::group(['prefix' => 'customergroup'], function () {
             Route::get('read', [SalesCustomerGroupController::class, 'read'])->name('api.get.dashboard.customergroup.read');
+            Route::get('read/all/active', [SalesCustomerGroupController::class, 'getAllCustomerGroup'])->name('api.get.dashboard.customergroup.read.all_active');
         });
 
         Route::group(['prefix' => 'customer'], function () {

@@ -98,12 +98,18 @@ class ProductController extends Controller
 
     public function update($id, Request $request)
     {
-        $inputtedRolePermissions = [];
-        for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($inputtedRolePermissions, array(
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
+        
+        $request->validate([
+            'code' => 'required|max:255',
+            'group_id' => 'required',
+            'brand_id' => 'required',
+            'name' => 'required|max:255',
+            'unit_id' => 'required',
+            'price' => 'required|max:255',
+            'tax_status' => 'required',
+            'estimated_capital_price' => 'required|max:255',
+            'status' => 'required'
+        ]);
 
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
@@ -138,7 +144,6 @@ class ProductController extends Controller
             $is_production_result,
             $is_sell,
             $request['status'],
-            $inputtedRolePermissions
         );
 
         return response()->json();

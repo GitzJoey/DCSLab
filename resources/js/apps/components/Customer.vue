@@ -37,6 +37,7 @@
                                 <th>{{ $t("table.cols.city") }}</th>
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.tax_id") }}</th>
+                                <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
@@ -45,22 +46,10 @@
                             <tr v-for="(c, cIdx) in customerList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.customergroup.name }}</td>
+                                <td>{{ c.sales_customer_group.name }}</td>
                                 <td>{{ c.sales_territory }}</td>
-                                <td>
-                                    <span v-if="c.use_limit_outstanding_notes === 1">{{ $t('use_limit_outstanding_notes.active') }}</span>
-                                    <span v-if="c.use_limit_outstanding_notes === 0">{{ $t('use_limit_outstanding_notes.inactive') }}</span>
-                                </td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
-                                <td>
-                                    <span v-if="c.use_limit_payable_nominal === 1">{{ $t('use_limit_payable_nominal.active') }}</span>
-                                    <span v-if="c.use_limit_payable_nominal === 0">{{ $t('use_limit_payable_nominal.inactive') }}</span>
-                                </td>
                                 <td>{{ c.limit_payable_nominal }}</td>
-                                <td>
-                                    <span v-if="c.use_limit_age_notes === 1">{{ $t('use_limit_age_notes.active') }}</span>
-                                    <span v-if="c.use_limit_age_notes === 0">{{ $t('use_limit_age_notes.inactive') }}</span>
-                                </td>
                                 <td>{{ c.limit_age_notes }}</td>
                                 <td>{{ c.term }}</td>
                                 <td>{{ c.address }}</td>
@@ -79,6 +68,9 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -258,17 +250,22 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
+                            <div class="col-md-10">
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="customer.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.remarks }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="customer.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
-                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="customer.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="customer.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
-                                    </div>
+                                <select class="form-control" id="status" name="status" v-model="customer.status" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value='1'>{{ $t('statusDDL.active') }}</option>
+                                    <option value='0'>{{ $t('statusDDL.inactive') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                    <span v-if="customer.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="customer.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -380,7 +377,7 @@ export default {
             });
         },
         getAllCustomerGroup() {
-            axios.get('/api/get/admin/customergroup/read/all/active').then(response => {
+            axios.get('/api/get/dashboard/customergroup/read/all/active').then(response => {
                 this.customergroupDDL = response.data;
             });
         },

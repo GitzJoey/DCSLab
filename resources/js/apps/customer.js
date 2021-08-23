@@ -27,6 +27,7 @@ const messages = {
                 city: 'City',
                 contact: 'Contact',
                 tax_id: 'Tax ID',
+                remarks: 'Remarks',
                 status: 'Status',
             }
         },
@@ -57,6 +58,7 @@ const messages = {
             city: 'City',
             contact: 'Contact',
             tax_id: 'Tax ID',
+            remarks: 'Remarks',
             status: 'Status',
             settings: {
                 settings: 'Settings',
@@ -79,7 +81,7 @@ const messages = {
             active: 'Yes',
             inactive: 'No',
         },
-        use_limit_due_date: {
+        use_limit_age_notes: {
             active: 'Yes',
             inactive: 'No',
         },
@@ -104,6 +106,7 @@ const messages = {
                 city: 'Kota',
                 contact: 'Kontak',
                 tax_id: 'Nomor Pajak',
+                remarks: 'Remarks',
                 status: 'Status',
             }
         },
@@ -134,6 +137,7 @@ const messages = {
             city: 'Kota',
             contact: 'Kontak',
             tax_id: 'Nomor Pajak',
+            remarks: 'Remarks',
             status: 'Status',
             settings: {
                 settings: 'Pengaturan',
@@ -156,7 +160,7 @@ const messages = {
             active: 'Ya',
             inactive: 'Tidak',
         },
-        use_limit_due_date: {
+        use_limit_age_notes: {
             active: 'Ya',
             inactive: 'Tidak',
         },
