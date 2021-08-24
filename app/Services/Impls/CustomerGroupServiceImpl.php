@@ -2,16 +2,16 @@
 
 namespace App\Services\Impls;
 
-use App\Models\SalesCustomer;
+use App\Models\Customer;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\SalesCustomerGroupService;
-use App\Models\SalesCustomerGroup;
+use App\Services\CustomerGroupService;
+use App\Models\CustomerGroup;
 
-class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
+class CustomerGroupServiceImpl implements CustomerGroupService
 {
     public function create(
         $code,
@@ -35,13 +35,13 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
         $round_on,
         $round_digit,
         $remarks,
-        $finance_cash_id
+        $cash_id
     )
     {
         DB::beginTransaction();
 
         try {
-            $customergroup = new SalesCustomerGroup();
+            $customergroup = new CustomerGroup();
             $customergroup->code = $code;
             $customergroup->name = $name;
             $customergroup->is_member_card = $is_member_card;
@@ -62,7 +62,7 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
             $customergroup->round_on = $round_on;
             $customergroup->round_digit = $round_digit;
             $customergroup->remarks = $remarks;
-            $customergroup->finance_cash_id = $finance_cash_id;
+            $customergroup->cash_id = $cash_id;
 
             $customergroup->save();
 
@@ -78,14 +78,13 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
 
     public function read()
     {
-        return SalesCustomerGroup::paginate();
+        return CustomerGroup::with('cash')->paginate();
     }
 
     public function getAllCustomerGroup()
     {
-        return SalesCustomerGroup::all();
+        return CustomerGroup::all();
     }
-
 
     public function update(
         $id,
@@ -110,14 +109,14 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
         $round_on,
         $round_digit,
         $remarks,
-        $finance_cash_id
+        $cash_id
 
     )
     {
         DB::beginTransaction();
 
         try {
-            $customergroup = SalesCustomerGroup::where('id', '=', $id);
+            $customergroup = CustomerGroup::where('id', '=', $id);
 
             $retval = $customergroup->update([
                 'code' => $code,
@@ -141,7 +140,7 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
                 'round_on' => $round_on,
                 'round_digit' => $round_digit,
                 'remarks' => $remarks,
-                'finance_cash_id' => $finance_cash_id
+                'cash_id' => $cash_id
             ]);
 
             DB::commit();
@@ -157,9 +156,9 @@ class SalesCustomerGroupServiceImpl implements SalesCustomerGroupService
 
     public function delete($id)
     {
-        $salescustomergroup = SalesCustomerGroup::find($id);
+        $customergroup = CustomerGroup::find($id);
 
-        return $salescustomergroup->delete();
+        return $customergroup->delete();
         
     }
 }

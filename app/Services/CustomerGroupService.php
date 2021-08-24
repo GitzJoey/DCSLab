@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface SalesCustomerGroupService
+interface CustomerGroupService
 {
     public function create(
         $code,
@@ -26,7 +26,7 @@ interface SalesCustomerGroupService
         $round_on,
         $round_digit,
         $remarks,
-        $finance_cash_id
+        $cash_id
     );
 
     public function read();
@@ -56,7 +56,7 @@ interface SalesCustomerGroupService
         $round_on,
         $round_digit,
         $remarks,
-        $finance_cash_id
+        $cash_id
     );
 
     public function delete($id);

@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use App\Services\BranchService;
 use App\Services\CompanyService;
-use App\Services\FinanceCashService;
+use App\Services\CashService;
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Rule;
@@ -16,7 +16,7 @@ class uniqueCode implements Rule
 
     private $companyService;
     private $branchService;
-    private $financeCashService;
+    private $CashService;
     
 
     public function __construct($id, $table)
@@ -32,7 +32,7 @@ class uniqueCode implements Rule
                 $this->branchService = Container::getInstance()->make(BranchService::class);
                 break;
             case 'finance_cash': 
-                $this->financeCashService = Container::getInstance()->make(FinanceCashService::class);
+                $this->CashService = Container::getInstance()->make(CashService::class);
                 break;
             default:
                 break;
@@ -51,7 +51,7 @@ class uniqueCode implements Rule
                 $count = $this->branchService->checkDuplicatedCode($this->id, $code);
                 break;
             case 'finance_cash': 
-                $count = $this->financeCashService->checkDuplicatedCode($this->id, $code);
+                $count = $this->CashService->checkDuplicatedCode($this->id, $code);
                 break;
             default:
                 break;

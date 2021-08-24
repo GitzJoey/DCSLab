@@ -27,7 +27,7 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.sales_customer_group_id") }}</th>
+                                <th>{{ $t("table.cols.customer_group_id") }}</th>
                                 <th>{{ $t("table.cols.sales_territory") }}</th>
                                 <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
                                 <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
@@ -46,7 +46,7 @@
                             <tr v-for="(c, cIdx) in customerList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.sales_customer_group.name }}</td>
+                                <td>{{ c.customer_group.name }}</td>
                                 <td>{{ c.sales_territory }}</td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
                                 <td>{{ c.limit_payable_nominal }}</td>
@@ -124,9 +124,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.sales_customer_group_id') }}</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.customer_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="sales_customer_group_id">
+                                <select class="form-control" id="example-select" name="customer_group_id">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.customergroupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
@@ -342,7 +342,7 @@ export default {
             customer: {
                 code: '',
                 name: '',
-                sales_customer_group_id: '',
+                customer_group_id: '',
                 sales_territory: '',
                 use_limit_outstanding_notes: '',
                 limit_outstanding_notes: '',
@@ -394,7 +394,7 @@ export default {
             return {
                 code: '',
                 name: '',
-                sales_customer_group_id: '',
+                customer_group_id: '',
                 sales_territory: '',
                 use_limit_outstanding_notes: '',
                 limit_outstanding_notes: '',

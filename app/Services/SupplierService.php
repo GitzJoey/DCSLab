@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface PurchaseSupplierService
+interface SupplierService
 {
     public function create(
         $code,

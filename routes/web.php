@@ -14,14 +14,14 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\FinanceCashController;
+use App\Http\Controllers\CashController;
 use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductGroupController;
-use App\Http\Controllers\SalesCustomerController;
-use App\Http\Controllers\PurchaseSupplierController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SupplierController;
 
-use App\Http\Controllers\SalesCustomerGroupController;
+use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\DoctorAccountingPageController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -82,16 +82,16 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         });
 
         Route::group(['prefix' => 'finance'], function () {
-            Route::get('cashes', [FinanceCashController::class, 'index'])->name('db.finance_cashes');
+            Route::get('cashes', [CashController::class, 'index'])->name('db.cashes');
         });
 
         Route::group(['prefix' => 'purchase'], function () {
-            Route::get('suppliers', [PurchaseSupplierController::class, 'index'])->name('db.purchase_suppliers');
+            Route::get('suppliers', [SupplierController::class, 'index'])->name('db.suppliers');
         });
 
         Route::group(['prefix' => 'sales'], function () {
-            Route::get('customer groups', [SalesCustomerGroupController::class, 'index'])->name('db.sales_customer_groups');
-            Route::get('customers', [SalesCustomerController::class, 'index'])->name('db.sales_customers');
+            Route::get('customer groups', [CustomerGroupController::class, 'index'])->name('db.customer_groups');
+            Route::get('customers', [CustomerController::class, 'index'])->name('db.customers');
         });
 
         /* ext */

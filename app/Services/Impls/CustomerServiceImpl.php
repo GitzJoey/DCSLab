@@ -3,19 +3,19 @@
 namespace App\Services\Impls;
 
 use Exception;
-use App\Services\SalesCustomerService;
-use App\Models\SalesCustomer;
+use App\Services\CustomerService;
+use App\Models\Customer;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 
-class SalesCustomerServiceImpl implements SalesCustomerService
+class CustomerServiceImpl implements CustomerService
 {
     public function create(
         $code,
         $name,
-        $sales_customer_group_id,
+        $customer_group_id,
         $sales_territory,
         $use_limit_outstanding_notes,
         $limit_outstanding_notes,
@@ -36,10 +36,10 @@ class SalesCustomerServiceImpl implements SalesCustomerService
         DB::beginTransaction();
 
         try {
-            $customer = new SalesCustomer();
+            $customer = new Customer();
             $customer->code = $code;
             $customer->name = $name;
-            $customer->sales_customer_group_id = $sales_customer_group_id;
+            $customer->customer_group_id = $customer_group_id;
             $customer->sales_territory = $sales_territory;
             $customer->use_limit_outstanding_notes = $use_limit_outstanding_notes;
             $customer->limit_outstanding_notes = $limit_outstanding_notes;
@@ -68,7 +68,7 @@ class SalesCustomerServiceImpl implements SalesCustomerService
 
     public function read()
     {
-        return SalesCustomer::with('sales_customer_group')->paginate();
+        return Customer::with('customer_group')->paginate();
     }
 
 
@@ -76,7 +76,7 @@ class SalesCustomerServiceImpl implements SalesCustomerService
         $id,
         $code,
         $name,
-        $sales_customer_group_id,
+        $customer_group_id,
         $sales_territory,
         $use_limit_outstanding_notes,
         $limit_outstanding_notes,
@@ -96,12 +96,12 @@ class SalesCustomerServiceImpl implements SalesCustomerService
         DB::beginTransaction();
 
         try {
-            $customer = SalesCustomer::where('id', '=', $id);
+            $customer = Customer::where('id', '=', $id);
 
             $retval = $customer->update([
                 'code' => $code,
                 'name' => $name,
-                'sales_customer_group_id' => $sales_customer_group_id,
+                'customer_group_id' => $customer_group_id,
                 'sales_territory' => $sales_territory,
                 'use_limit_outstanding_notes' => $use_limit_outstanding_notes,
                 'limit_outstanding_notes' => $limit_outstanding_notes,
@@ -132,9 +132,9 @@ class SalesCustomerServiceImpl implements SalesCustomerService
 
     public function delete($id)
     {
-        $salescustomer = SalesCustomer::find($id);
+        $customer = Customer::find($id);
 
-        return $salescustomer->delete();
+        return $customer->delete();
         
     }
 }

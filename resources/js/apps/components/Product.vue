@@ -32,14 +32,11 @@
                                 <th>{{ $t("table.cols.unit_name") }}</th>
                                 <th>{{ $t("table.cols.price") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
-                                <th>{{ $t("table.cols.information") }}</th>
+                                <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.estimated_capital_price") }}</th>
                                 <th>{{ $t("table.cols.point") }}</th>
                                 <th>{{ $t("table.cols.is_use_serial") }}</th>
-                                <th>{{ $t("table.cols.is_buy") }}</th>
-                                <th>{{ $t("table.cols.is_production_material") }}</th>
-                                <th>{{ $t("table.cols.is_production_result") }}</th>
-                                <th>{{ $t("table.cols.is_sell") }}</th>
+                                <th>{{ $t("table.cols.product_type") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
@@ -57,11 +54,16 @@
                                 <td>{{ c.estimated_capital_price }}</td>
                                 <td>{{ c.point }}</td>
                                 <td>{{ c.is_use_serial }}</td>
-                                <td>{{ c.is_buy }}</td>
-                                <td>{{ c.is_production_material }}</td>
-                                <td>{{ c.is_production_result }}</td>
-                                <td>{{ c.is_sell }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>
+                                    <span v-if="c.product_type === 1">{{ $t('statusDDL.isbuy') }}</span>
+                                    <span v-if="c.product_type === 2">{{ $t('statusDDL.isproductionmaterial') }}</span>
+                                    <span v-if="c.product_type === 3">{{ $t('statusDDL.isproductionresult') }}</span>
+                                    <span v-if="c.product_type === 4">{{ $t('statusDDL.issell') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -176,11 +178,11 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputInformation" class="col-2 col-form-label">{{ $t('fields.information') }}</label>
+                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
-                                <textarea id="inputInformation" name="information" type="text" class="form-control" :placeholder="$t('fields.information')" v-model="product.information" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="information" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.information }}</div>
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="product.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <ErrorMessage name="remarks" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.remarks }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -214,66 +216,26 @@
                                 </label>
                             </div>
                         </div>
+                    
                         <div class="form-group row">
-                            <label for="is_buy" class="col-2 col-form-label">{{ $t('fields.is_buy') }}</label>
+                            <label for="product_type" class="col-2 col-form-label">{{ $t('fields.product_type') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="is_buy" name="is_buy" v-model="product.is_buy" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="product.is_buy === 1">{{ $t('is_buy.active') }}</span>
-                                        <span v-if="product.is_buy === 0">{{ $t('is_buy.inactive') }}</span>
-                                    </div>
-                                </label>
+                                <select class="form-control" id="product_type" name="product_type" v-model="product.product_type" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="1">{{ $t('product_typeDLL.isbuy') }}</option>
+                                    <option value="2">{{ $t('product_typeDLL.isproductionmaterial') }}</option>
+                                    <option value="3">{{ $t('product_typeDLL.isproductionresult') }}</option>
+                                    <option value="4">{{ $t('product_typeDLL.issell') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
+                                    <span v-if="product.product_type === 1">{{ $t('product_typeDLL.isbuy') }}</span>
+                                    <span v-if="product.product_type === 2">{{ $t('product_typeDLL.isproductionmaterial') }}</span>
+                                    <span v-if="product.product_type === 3">{{ $t('product_typeDLL.isproductionresult') }}</span>
+                                    <span v-if="product.product_type === 4">{{ $t('product_typeDLL.issell') }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="is_production_material" class="col-2 col-form-label">{{ $t('fields.is_production_material') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="is_production_material" name="is_production_material" v-model="product.is_production_material" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>    
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="product.is_production_material === 1">{{ $t('is_production_material.active') }}</span>
-                                        <span v-if="product.is_production_material === 0">{{ $t('is_production_material.inactive') }}</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="is_production_result" class="col-2 col-form-label">{{ $t('fields.is_production_result') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="is_production_result" name="is_production_result" v-model="product.is_production_result" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="product.is_production_result === 1">{{ $t('is_production_result.active') }}</span>
-                                        <span v-if="product.is_production_result === 0">{{ $t('is_production_result.inactive') }}</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="is_sell" class="col-2 col-form-label">{{ $t('fields.is_sell') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="is_sell" name="is_sell" v-model="product.is_sell" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="product.is_sell === 1">{{ $t('is_sell.active') }}</span>
-                                        <span v-if="product.is_sell === 0">{{ $t('is_sell.inactive') }}</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
+                        
                         <div class="form-group row">
                             <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -359,7 +321,7 @@ export default {
                 unit_name: '',
                 price: '',
                 tax_status: '',
-                information: '',
+                remarks: '',
                 point: '',
                 estimated_capital_price: '',
                 is_use_serial: '',
@@ -429,7 +391,7 @@ export default {
                 unit_name: '',
                 price: '0',
                 tax_status: '',
-                information: '',
+                remarks: '',
                 point: '0',
                 estimated_capital_price: '0',
                 is_use_serial: '',

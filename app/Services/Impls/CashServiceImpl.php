@@ -7,11 +7,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\FinanceCashService;
-use App\Models\FinanceCash;
-use Illuminate\Support\Facades\Cache;
+use App\Services\CashService;
+use App\Models\Cash;
 
-class FinanceCashServiceImpl implements FinanceCashService
+class CashServiceImpl implements CashService
 {
     public function create(
         $code,
@@ -23,7 +22,7 @@ class FinanceCashServiceImpl implements FinanceCashService
         DB::beginTransaction();
 
         try {
-            $cash = new FinanceCash();
+            $cash = new Cash();
             $cash->code = $code;
             $cash->name = $name;
             $cash->is_bank = $is_bank;
@@ -44,9 +43,13 @@ class FinanceCashServiceImpl implements FinanceCashService
 
     public function read()
     {
-        return FinanceCash::paginate();
+        return Cash::paginate();
     }
 
+    public function getAllActiveCash()
+    {
+        return Cash::where('status', '=', 1)->get();
+    }
 
     public function update(
         $id,
@@ -59,7 +62,7 @@ class FinanceCashServiceImpl implements FinanceCashService
         DB::beginTransaction();
 
         try {
-            $cash = FinanceCash::where('id', '=', $id);
+            $cash = Cash::where('id', '=', $id);
 
             $retval = $cash->update([
                 'code' => $code,
@@ -81,15 +84,15 @@ class FinanceCashServiceImpl implements FinanceCashService
 
     public function delete($id)
     {
-        $financecash = FinanceCash::find($id);
+        $cash = Cash::find($id);
 
-        return $financecash->delete();
+        return $cash->delete();
         
     }
 
     public function checkDuplicatedCode($id, $code)
     {
-        $count = FinanceCash::where('id', '<>' , $id)
+        $count = Cash::where('id', '<>' , $id)
         ->where('code', '=', $code)
         ->count();
         return $count;

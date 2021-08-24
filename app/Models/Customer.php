@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\SalesCustomerGroup;
+use App\Models\CustomerGroup;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SalesCustomer extends Model
+class Customer extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
@@ -17,7 +17,7 @@ class SalesCustomer extends Model
     protected $fillable = [
         'code',
         'name',
-        'sales_customer_group_id',
+        'customer_group_id',
         'sales_territory',
         'use_limit_outstanding_notes',
         'limit_outstanding_notes',
@@ -37,7 +37,7 @@ class SalesCustomer extends Model
     protected static $logAttributes = [
         'code', 
         'name', 
-        'sales_customer_group_id', 
+        'customer_group_id', 
         'sales_territory', 
         'use_limit_outstanding_notes', 
         'limit_outstanding_notes', 
@@ -73,8 +73,8 @@ class SalesCustomer extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function sales_customer_group()
+    public function customer_group()
     {
-        return $this->belongsTo(SalesCustomerGroup::class);
+        return $this->belongsTo(CustomerGroup::class);
     }
 }

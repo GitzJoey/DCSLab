@@ -42,7 +42,7 @@
                                 <th>{{ $t("table.cols.round_on") }}</th>
                                 <th>{{ $t("table.cols.round_digit") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
-                                <th>{{ $t("table.cols.finance_cash_id") }}</th>
+                                <th>{{ $t("table.cols.cash_id") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -65,7 +65,7 @@
                                 <td>{{ c.round_on }}</td>
                                 <td>{{ c.round_digit }}</td>
                                 <td>{{ c.remarks }}</td>
-                                <td>{{ c.finance_cash_id }}</td>
+                                <td>{{ c.cash.name }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -321,21 +321,13 @@
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.remarks }}</div>
                             </div>
                         </div>
-                        
                         <div class="form-group row">
-                            <label for="finance_cash_id" class="col-2 col-form-label">{{ $t('fields.finance_cash_id') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <select class="form-control" id="finance_cash_id" name="finance_cash_id" v-model="customergroup.finance_cash_id" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                    <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('finance_cash_idDLL.bca') }}</option>
-                                    <option value="2">{{ $t('finance_cash_idDLL.mandiri') }}</option>
-                                    <option value="3">{{ $t('finance_cash_idDLL.cimb') }}</option>
-                                </select>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                    <span v-if="product.finance_cash_id === 1">{{ $t('finance_cash_idDLL.bca') }}</span>
-                                    <span v-if="product.finance_cash_id === 2">{{ $t('finance_cash_idDLL.mandiri') }}</span>
-                                    <span v-if="product.finance_cash_id === 3">{{ $t('finance_cash_idDLL.cimb') }}</span>
-                                </div>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.cash_id') }}</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="cash_id" name="cash_id">
+                                    <option value="0">Please select Company Name</option>
+                                    <option :value="c.hId" v-for="c in this.cashDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>             
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -433,8 +425,9 @@ export default {
                 round_on: '',
                 round_digit: '',
                 remarks: '',
-                finance_cash_id: ''
+                cash_id: ''
             },
+            cashDDL: [],
         }
     },
     created() {
@@ -443,6 +436,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllCustomerGroup(1);
+        this.getAllCash();
     },
     methods: {
         getAllCustomerGroup(page) {
@@ -450,6 +444,11 @@ export default {
             axios.get('/api/get/dashboard/customergroup/read?page=' + page).then(response => {
                 this.customergroupList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllCash() {
+            axios.get('/api/get/dashboard/cash/read/all/active').then(response => {
+                this.cashDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -484,7 +483,7 @@ export default {
                 round_on: '',
                 round_digit: '',
                 remarks: '',
-                finance_cash_id: ''
+                cash_id: ''
             }
         },
         createNew() {

@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n }from 'vue-i18n';
-import FinanceCash from './components/FinanceCash';
+import Cash from './components/Cash';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -115,6 +115,6 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(FinanceCash)
+createApp(Cash)
     .use(i18n)
-    .mount('#financecashVue')
+    .mount('#cashVue')

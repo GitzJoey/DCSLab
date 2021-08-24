@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createI18n }from 'vue-i18n';
-import PurchaseSupplier from './components/PurchaseSupplier';
+import Supplier from './components/Supplier';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -139,6 +139,6 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(PurchaseSupplier)
+createApp(Supplier)
     .use(i18n)
-    .mount('#purchasesupplierVue')
+    .mount('#supplierVue')

@@ -18,26 +18,26 @@ use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\CompanyService;
 use App\Services\BranchService;
 use App\Services\WarehouseService;
-use App\Services\FinanceCashService;
-use App\Services\PurchaseSupplierService;
+use App\Services\CashService;
+use App\Services\SupplierService;
 use App\Services\ProductGroupService;
 use App\Services\ProductBrandService;
 use App\Services\ProductService;
 use App\Services\ProductUnitService;
-use App\Services\SalesCustomerGroupService;
-use App\Services\SalesCustomerService;
+use App\Services\CustomerGroupService;
+use App\Services\CustomerService;
 
 use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
-use App\Services\Impls\FinanceCashServiceImpl;
-use App\Services\Impls\PurchaseSupplierServiceImpl;
+use App\Services\Impls\CashServiceImpl;
+use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductBrandServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
 use App\Services\Impls\ProductUnitServiceImpl;
-use App\Services\Impls\SalesCustomerGroupServiceImpl;
-use App\Services\Impls\SalesCustomerServiceImpl;
+use App\Services\Impls\CustomerGroupServiceImpl;
+use App\Services\Impls\CustomerServiceImpl;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -84,20 +84,20 @@ class AppServiceProvider extends ServiceProvider
             return new ProductServiceImpl();
         });
 
-        $this->app->singleton(FinanceCashService::class, function (){
-            return new FinanceCashServiceImpl();
+        $this->app->singleton(CashService::class, function (){
+            return new CashServiceImpl();
         });
 
-        $this->app->singleton(SalesCustomerGroupService::class, function (){
-            return new SalesCustomerGroupServiceImpl();
+        $this->app->singleton(CustomerGroupService::class, function (){
+            return new CustomerGroupServiceImpl();
         });
 
         $this->app->singleton(CompanyService::class, function (){
             return new CompanyServiceImpl();
         });
 
-        $this->app->singleton(SalesCustomerService::class, function (){
-            return new SalesCustomerServiceImpl();
+        $this->app->singleton(CustomerService::class, function (){
+            return new CustomerServiceImpl();
         });
 
         $this->app->singleton(BranchService::class, function (){
@@ -108,8 +108,8 @@ class AppServiceProvider extends ServiceProvider
             return new WarehouseServiceImpl();
         });
 
-        $this->app->singleton(PurchaseSupplierService::class, function (){
-            return new PurchaseSupplierServiceImpl();
+        $this->app->singleton(SupplierService::class, function (){
+            return new SupplierServiceImpl();
         });
     }
 

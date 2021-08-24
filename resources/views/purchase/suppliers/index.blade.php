@@ -1,13 +1,13 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('purchase_suppliers.title') }}
+    {{ __('suppliers.title') }}
 @endsection
 
 @section('content')
-    <div id="purchasesupplierVue"></div>
+    <div id="supplierVue"></div>
 @endsection
 
 @section('js_after')
-    <script src="{{ mix('js/apps/purchasesupplier.js') }}"></script>
+    <script src="{{ mix('js/apps/supplier.js') }}"></script>
 @endsection

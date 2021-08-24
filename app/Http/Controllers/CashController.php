@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
-use App\Services\FinanceCashService;
+use App\Services\CashService;
 use Illuminate\Http\Request;
 
-class FinanceCashController extends Controller
+class CashController extends Controller
 {
-    private $financeCashService;
+    private $CashService;
     private $activityLogService;
 
-    public function __construct(FinanceCashService $financeCashService, ActivityLogService $activityLogService)
+    public function __construct(CashService $CashService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
-        $this->financeCashService = $financeCashService;
+        $this->CashService = $CashService;
         $this->activityLogService = $activityLogService;
 
     }
@@ -29,13 +29,18 @@ class FinanceCashController extends Controller
 
     public function read()
     {
-        return $this->financeCashService->read();
+        return $this->CashService->read();
+    }
+
+    public function getAllActiveCash()
+    {
+        return $this->CashService->getAllActiveCash();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:finance_cashes',
+            'code' => 'required|max:255|unique:cashes',
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
@@ -43,7 +48,7 @@ class FinanceCashController extends Controller
         $is_bank = $request['is_bank'];
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
-        $result = $this->financeCashService->create(
+        $result = $this->CashService->create(
             $request['code'], 
             $request['name'], 
             $is_bank, 
@@ -64,7 +69,7 @@ class FinanceCashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'finance_cash'),
+            'code' => new uniqueCode($id, 'cash'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
@@ -72,7 +77,7 @@ class FinanceCashController extends Controller
         $is_bank = $request['is_bank'];
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
-        $result = $this->financeCashService->update(
+        $result = $this->CashService->update(
             $id,
             $request['code'],
             $request['name'],
@@ -93,7 +98,7 @@ class FinanceCashController extends Controller
 
     public function delete($id)
     {
-        $result = $this->financeCashService->delete($id);
+        $result = $this->CashService->delete($id);
 
         if ($result == false) {
             return response()->json([

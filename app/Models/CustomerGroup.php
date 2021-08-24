@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\SalesCustomer;
+use App\Models\Customer;
+use App\Models\Cash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SalesCustomerGroup extends Model
+class CustomerGroup extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
@@ -36,7 +37,7 @@ class SalesCustomerGroup extends Model
         'round_on',
         'round_digit',
         'remarks',
-        'finance_cash_id'
+        'cash_id'
 
     ];
 
@@ -62,7 +63,7 @@ class SalesCustomerGroup extends Model
         'round_on', 
         'round_digit', 
         'remarks', 
-        'finance_cash_id'
+        'cash_id'
     ];
 
     protected static $logOnlyDirty = true;
@@ -84,8 +85,13 @@ class SalesCustomerGroup extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function sales_customer_group()
+    public function cash()
     {
-        return $this->hasMany(SalesCustomer::class);
+        return $this->belongsTo(Cash::class);
+    }
+
+    public function customer_group()
+    {
+        return $this->hasMany(Customer::class);
     }
 }

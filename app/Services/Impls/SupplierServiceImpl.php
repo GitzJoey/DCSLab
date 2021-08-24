@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\PurchaseSupplierService;
-use App\Models\PurchaseSupplier;
+use App\Services\SupplierService;
+use App\Models\Supplier;
 
-class PurchaseSupplierServiceImpl implements PurchaseSupplierService
+class SupplierServiceImpl implements SupplierService
 {
     public function create(
         $code,
@@ -28,7 +28,7 @@ class PurchaseSupplierServiceImpl implements PurchaseSupplierService
         DB::beginTransaction();
 
         try {
-            $supplier = new PurchaseSupplier();
+            $supplier = new Supplier();
             $supplier->code = $code;
             $supplier->name = $name;
             $supplier->term = $term;
@@ -55,7 +55,7 @@ class PurchaseSupplierServiceImpl implements PurchaseSupplierService
 
     public function read()
     {
-        return PurchaseSupplier::paginate();
+        return Supplier::paginate();
     }
 
 
@@ -76,7 +76,7 @@ class PurchaseSupplierServiceImpl implements PurchaseSupplierService
         DB::beginTransaction();
 
         try {
-            $supplier = PurchaseSupplier::where('id', '=', $id);
+            $supplier = Supplier::where('id', '=', $id);
 
             $retval = $supplier->update([
                 'code' => $code,
@@ -104,9 +104,8 @@ class PurchaseSupplierServiceImpl implements PurchaseSupplierService
 
     public function delete($id)
     {
-        $purchasesupplier = PurchaseSupplier::find($id);
+        $supplier = Supplier::find($id);
 
-        return $purchasesupplier->delete();
-        
+        return $supplier->delete();
     }
 }
