@@ -38,16 +38,6 @@ class CustomerController extends Controller
         $request->validate([
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'sales_territory' => 'required|max:255',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'tax_id' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required',
         ]);
 
@@ -98,16 +88,6 @@ class CustomerController extends Controller
         $request->validate([
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'sales_territory' => 'required|max:255',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'tax_id' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required',
         ]);
 

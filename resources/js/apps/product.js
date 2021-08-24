@@ -69,16 +69,15 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
-        tax_statusDLL: {
+        tax_statusDDL: {
             notax: 'No Tax',
             excudetax: 'Exclude Tax',
             includetax: 'Include Tax'
         },
-        product_typeDLL: {
-            isbuy: 'is Buy',
-            isproductionmaterial: 'Is Production Material',
-            isproductionresult: 'Is Production Result',
-            issell: 'Is Sell'
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
         },
         statusDDL: {
             active: 'Active',
@@ -141,16 +140,15 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
-        tax_statusDLL: {
+        tax_statusDDL: {
             notax: 'Tanpa PPN',
             excudetax: 'Belum Termasuk PPN',
             includetax: 'Termasuk PPN'
         },
-        product_typeDLL: {
-            isbuy: 'is Buy',
-            isproductionmaterial: 'Is Production Material',
-            isproductionresult: 'Is Production Result',
-            issell: 'Is Sell'
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
         },
         statusDDL: {
             active: 'Aktif',

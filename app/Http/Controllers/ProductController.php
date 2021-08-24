@@ -42,8 +42,6 @@ class ProductController extends Controller
             'name' => 'required|max:255',
             'unit_id' => 'required',
             'price' => 'required|max:255',
-            'tax_status' => 'required',
-            'estimated_capital_price' => 'required|max:255',
             'status' => 'required'
         ]);
 
@@ -91,8 +89,6 @@ class ProductController extends Controller
             'name' => 'required|max:255',
             'unit_id' => 'required',
             'price' => 'required|max:255',
-            'tax_status' => 'required',
-            'estimated_capital_price' => 'required|max:255',
             'status' => 'required'
         ]);
 

@@ -38,12 +38,6 @@ class SupplierController extends Controller
         $request->validate([
             'code' => 'required|max:255|unique:suppliers',
             'name' => 'required|max:255',
-            'term' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'tax_number' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
         
@@ -79,12 +73,6 @@ class SupplierController extends Controller
         $request->validate([
             'code' => 'required|max:255|unique:suppliers',
             'name' => 'required|max:255',
-            'term' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'tax_number' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
 

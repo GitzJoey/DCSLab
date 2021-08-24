@@ -38,10 +38,6 @@ class WarehouseController extends Controller
             'company_id' => 'required',
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
 
@@ -61,6 +57,12 @@ class WarehouseController extends Controller
 
     public function update($id, Request $request)
     {
+        $request->validate([
+            'company_id' => 'required',
+            'code' => 'required|max:255',
+            'name' => 'required|max:255',
+            'status' => 'required'
+        ]);
 
         $result = $this->warehouseService->update(
             $id,

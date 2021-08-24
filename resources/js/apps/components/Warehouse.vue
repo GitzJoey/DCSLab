@@ -124,7 +124,6 @@
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="warehouse.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.address }}</div>
                             </div>
                         </div>
@@ -132,7 +131,6 @@
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="warehouse.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="city" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.city }}</div>
                             </div>
                         </div>
@@ -140,7 +138,6 @@
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="warehouse.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.contact }}</div>
                             </div>
                         </div>
@@ -148,7 +145,6 @@
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="warehouse.remarks" v-show="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.remarks }}</div>
                             </div>
                         </div>
@@ -215,9 +211,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            address: 'required',
-            city: 'required',
-            contact: 'required',
         };
 
         return {

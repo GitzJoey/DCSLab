@@ -43,20 +43,6 @@ class CustomerGroupController extends Controller
         $request->validate([
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'is_member_card' => 'required',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'selling_point' => 'required|max:255',
-            'selling_point_multiple' => 'required|max:255',
-            'sell_at_capital_price' => 'required|max:255',
-            'global_markup_percent' => 'required|max:255',
-            'global_markup_nominal' => 'required|max:255',
-            'global_discount_percent' => 'required|max:255',
-            'global_discount_nominal' => 'required|max:255',
-            'round_digit' => 'required|max:255',
-            'remarks' => 'required|max:255',
         ]);
 
         $cash_id = Hashids::decode($request['cash_id'])[0];
@@ -118,19 +104,6 @@ class CustomerGroupController extends Controller
         $request->validate([
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'selling_point' => 'required|max:255',
-            'selling_point_multiple' => 'required|max:255',
-            'sell_at_capital_price' => 'required|max:255',
-            'global_markup_percent' => 'required|max:255',
-            'global_markup_nominal' => 'required|max:255',
-            'global_discount_percent' => 'required|max:255',
-            'global_discount_nominal' => 'required|max:255',
-            'round_digit' => 'required|max:255',
-            'remarks' => 'required|max:255',
         ]);
 
         $is_member_card = $request['is_member_card'];

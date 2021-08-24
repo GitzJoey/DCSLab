@@ -67,10 +67,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         /* ext */
 
         Route::group(['prefix' => 'product'], function () {
-            Route::get('group', [ProductGroupController::class, 'index'])->name('db.product_groups');
-            Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product_brands');
-            Route::get('unit', [ProductUnitController::class, 'index'])->name('db.product_units');
-            Route::get('products', [ProductController::class, 'index'])->name('db.products');
+            Route::get('group', [ProductGroupController::class, 'index'])->name('db.product.product_groups');
+            Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product.product_brands');
+            Route::get('unit', [ProductUnitController::class, 'index'])->name('db.product.product_units');
+            Route::get('products', [ProductController::class, 'index'])->name('db.product.products');
 
         });
 
@@ -82,16 +82,16 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         });
 
         Route::group(['prefix' => 'finance'], function () {
-            Route::get('cashes', [CashController::class, 'index'])->name('db.cashes');
+            Route::get('cashes', [CashController::class, 'index'])->name('db.finance.cashes');
         });
 
         Route::group(['prefix' => 'purchase'], function () {
-            Route::get('suppliers', [SupplierController::class, 'index'])->name('db.suppliers');
+            Route::get('suppliers', [SupplierController::class, 'index'])->name('db.purchase.suppliers');
         });
 
         Route::group(['prefix' => 'sales'], function () {
-            Route::get('customer groups', [CustomerGroupController::class, 'index'])->name('db.customer_groups');
-            Route::get('customers', [CustomerController::class, 'index'])->name('db.customers');
+            Route::get('customer groups', [CustomerGroupController::class, 'index'])->name('db.sales.customer_groups');
+            Route::get('customers', [CustomerController::class, 'index'])->name('db.sales.customers');
         });
 
         /* ext */

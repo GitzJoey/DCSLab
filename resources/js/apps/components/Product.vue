@@ -49,16 +49,19 @@
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.unit.name }}</td>
                                 <td>{{ c.price }}</td>
-                                <td>{{ c.tax_status }}</td>
+                                <td>
+                                    <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="c.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
+                                </td>
                                 <td>{{ c.infortmation }}</td>
                                 <td>{{ c.estimated_capital_price }}</td>
                                 <td>{{ c.point }}</td>
                                 <td>{{ c.is_use_serial }}</td>
                                 <td>
-                                    <span v-if="c.product_type === 1">{{ $t('statusDDL.isbuy') }}</span>
-                                    <span v-if="c.product_type === 2">{{ $t('statusDDL.isproductionmaterial') }}</span>
-                                    <span v-if="c.product_type === 3">{{ $t('statusDDL.isproductionresult') }}</span>
-                                    <span v-if="c.product_type === 4">{{ $t('statusDDL.issell') }}</span>
+                                    <span v-if="c.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
+                                    <span v-if="c.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
+                                    <span v-if="c.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
                                 </td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
@@ -166,14 +169,14 @@
                             <div class="col-md-10 d-flex align-items-center">
                                 <select class="form-control" id="tax_status" name="tax_status" v-model="product.tax_status" v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('tax_statusDLL.notax') }}</option>
-                                    <option value="2">{{ $t('tax_statusDLL.excudetax') }}</option>
-                                    <option value="3">{{ $t('tax_statusDLL.includetax') }}</option>
+                                    <option value="1">{{ $t('tax_statusDDL.notax') }}</option>
+                                    <option value="2">{{ $t('tax_statusDDL.excudetax') }}</option>
+                                    <option value="3">{{ $t('tax_statusDDL.includetax') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                    <span v-if="product.tax_status === 1">{{ $t('tax_statusDLL.notax') }}</span>
-                                    <span v-if="product.tax_status === 2">{{ $t('tax_statusDLL.excudetax') }}</span>
-                                    <span v-if="product.tax_status === 3">{{ $t('tax_statusDLL.includetax') }}</span>
+                                    <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="c.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +184,6 @@
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="product.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.remarks }}</div>
                             </div>
                         </div>
@@ -189,7 +191,6 @@
                             <label for="inputPoint" class="col-2 col-form-label">{{ $t('fields.point') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputPoint" name="point" as="input" :class="{'form-control':true, 'is-invalid': errors['point']}" :placeholder="$t('fields.point')" :label="$t('fields.point')" v-model="product.point" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="point" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.point }}</div>
                             </div>
                         </div>
@@ -197,7 +198,6 @@
                             <label for="inputEstimated_Capital_Price" class="col-2 col-form-label">{{ $t('fields.estimated_capital_price') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputEstimated_Capital_Price" name="estimated_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['estimated_capital_price']}" :placeholder="$t('fields.estimated_capital_price')" :label="$t('fields.estimated_capital_price')" v-model="product.estimated_capital_price" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="estimatescapitalprice" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.name }}</div>
                             </div>
                         </div>
@@ -216,26 +216,22 @@
                                 </label>
                             </div>
                         </div>
-                    
                         <div class="form-group row">
                             <label for="product_type" class="col-2 col-form-label">{{ $t('fields.product_type') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <select class="form-control" id="product_type" name="product_type" v-model="product.product_type" v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('product_typeDLL.isbuy') }}</option>
-                                    <option value="2">{{ $t('product_typeDLL.isproductionmaterial') }}</option>
-                                    <option value="3">{{ $t('product_typeDLL.isproductionresult') }}</option>
-                                    <option value="4">{{ $t('product_typeDLL.issell') }}</option>
+                                    <option value="1">{{ $t('product_typeDDL.rawmaterial') }}</option>
+                                    <option value="2">{{ $t('product_typeDDL.wip') }}</option>
+                                    <option value="3">{{ $t('product_typeDDL.finishedgoods') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                    <span v-if="product.product_type === 1">{{ $t('product_typeDLL.isbuy') }}</span>
-                                    <span v-if="product.product_type === 2">{{ $t('product_typeDLL.isproductionmaterial') }}</span>
-                                    <span v-if="product.product_type === 3">{{ $t('product_typeDLL.isproductionresult') }}</span>
-                                    <span v-if="product.product_type === 4">{{ $t('product_typeDLL.issell') }}</span>
+                                    <span v-if="c.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
+                                    <span v-if="c.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
+                                    <span v-if="c.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="form-group row">
                             <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -298,8 +294,6 @@ export default {
             code: 'required',
             name: 'required',
             price: 'required',
-            estimated_capital_price: 'required',
-            point: 'required',
         };
 
         return {
@@ -325,10 +319,7 @@ export default {
                 point: '',
                 estimated_capital_price: '',
                 is_use_serial: '',
-                is_buy: '',
-                is_production_material: '',
-                is_production_result: '',
-                is_sell: '',
+                product_type: '',
                 status: '',
             },
             groupDDL: [],
@@ -395,10 +386,7 @@ export default {
                 point: '0',
                 estimated_capital_price: '0',
                 is_use_serial: '',
-                is_buy: '1',
-                is_production_material: '',
-                is_production_result: '',
-                is_sell: '1',
+                product_type: '1',
                 status: '1',
             }
         },

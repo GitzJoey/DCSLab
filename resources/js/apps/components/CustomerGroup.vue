@@ -162,7 +162,6 @@
                             <label for="inputLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.limit_outstanding_notes') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputLimitOutstandingNotes" name="limit_outstanding_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_outstanding_notes']}" :placeholder="$t('fields.limit_outstanding_notes')" :label="$t('fields.limit_outstanding_notes')" v-model="customergroup.limit_outstanding_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_outstanding_notes" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.limit_outstanding_notes }}</div>
                             </div>
                         </div>
@@ -185,7 +184,6 @@
                             <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customergroup.limit_payable_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_payable_nominal" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.limit_payable_nominal }}</div>
                             </div>
                         </div>
@@ -208,7 +206,6 @@
                             <label for="inputLimitAgeNotes" class="col-2 col-form-label">{{ $t('fields.limit_age_notes') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customergroup.limit_age_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_age_notes" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.name }}</div>
                             </div>
                         </div>
@@ -216,7 +213,6 @@
                             <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="customergroup.term" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="term" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.term }}</div>
                             </div>
                         </div>
@@ -224,7 +220,6 @@
                             <label for="inputSellingPoint" class="col-2 col-form-label">{{ $t('fields.selling_point') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputSellingPoint" name="selling_point" as="input" :class="{'form-control':true, 'is-invalid': errors['selling_point']}" :placeholder="$t('fields.selling_point')" :label="$t('fields.selling_point')" v-model="customergroup.selling_point" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="selling_point" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.selling_point }}</div>
                             </div>
                         </div>
@@ -232,7 +227,6 @@
                             <label for="inputSellingPointMiltiple" class="col-2 col-form-label">{{ $t('fields.selling_point_multiple') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputSellingPointMiltiple" name="selling_point_multiple" as="input" :class="{'form-control':true, 'is-invalid': errors['selling_point_multiple']}" :placeholder="$t('fields.selling_point_multiple')" :label="$t('fields.selling_point_multiple')" v-model="customergroup.selling_point_multiple" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="selling_point_multiple" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.selling_point_multiple }}</div>
                             </div>
                         </div>
@@ -240,7 +234,6 @@
                             <label for="inputSellAtCapitalPrice" class="col-2 col-form-label">{{ $t('fields.sell_at_capital_price') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputSellAtCapitalPrice" name="sell_at_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['sell_at_capital_price']}" :placeholder="$t('fields.sell_at_capital_price')" :label="$t('fields.sell_at_capital_price')" v-model="customergroup.sell_at_capital_price" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="sell_at_capital_price" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.sell_at_capital_price }}</div>
                             </div>
                         </div>
@@ -248,7 +241,6 @@
                             <label for="inputGlobalMarkupPercent" class="col-2 col-form-label">{{ $t('fields.global_markup_percent') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputGlobalMarkupPercent" name="global_markup_percent" as="input" :class="{'form-control':true, 'is-invalid': errors['global_markup_percent']}" :placeholder="$t('fields.global_markup_percent')" :label="$t('fields.global_markup_percent')" v-model="customergroup.global_markup_percent" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="global_markup_percent" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_markup_percent }}</div>
                             </div>
                         </div>
@@ -256,7 +248,6 @@
                             <label for="inputGlobalMarkupNominal" class="col-2 col-form-label">{{ $t('fields.global_markup_nominal') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputGlobalMarkupNominal" name="global_markup_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['global_markup_nominal']}" :placeholder="$t('fields.global_markup_nominal')" :label="$t('fields.global_markup_nominal')" v-model="customergroup.global_markup_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="global_markup_nominal" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_markup_nominal }}</div>
                             </div>
                         </div>
@@ -264,7 +255,6 @@
                             <label for="inputGlobalDiscountPercent" class="col-2 col-form-label">{{ $t('fields.global_discount_percent') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputGlobalDiscountPercent" name="global_discount_percent" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_percent']}" :placeholder="$t('fields.global_discount_percent')" :label="$t('fields.global_discount_percent')" v-model="customergroup.global_discount_percent" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="global_discount_percent" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_discount_percent }}</div>
                             </div>
                         </div>
@@ -272,7 +262,6 @@
                             <label for="inputGlobalDiscountNominal" class="col-2 col-form-label">{{ $t('fields.global_discount_nominal') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputGlobalDiscountNominal" name="global_discount_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_nominal']}" :placeholder="$t('fields.global_discount_nominal')" :label="$t('fields.global_discount_nominal')" v-model="customergroup.global_discount_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="global_discount_nominal" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_discount_nominal }}</div>
                             </div>
                         </div>
@@ -309,7 +298,6 @@
                             <label for="inputRoundDigit" class="col-2 col-form-label">{{ $t('fields.round_digit') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputRoundDigit" name="round_digit" as="input" :class="{'form-control':true, 'is-invalid': errors['round_digit']}" :placeholder="$t('fields.round_digit')" :label="$t('fields.round_digit')" v-model="customergroup.round_digit" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="round_digit" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.round_digit }}</div>
                             </div>
                         </div>
@@ -317,7 +305,6 @@
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="customergroup.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.remarks }}</div>
                             </div>
                         </div>
@@ -378,18 +365,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            limit_outstanding_notes: 'required',
-            limit_payable_nominal: 'required',
-            limit_age_notes: 'required',
-            term: 'required',
-            selling_point: 'required',
-            selling_point_multiple: 'required',
-            sell_at_capital_price: 'required',
-            global_markup_percent: 'required',
-            global_markup_nominal: 'required',
-            global_discount_percent: 'required',
-            global_discount_nominal: 'required',
-            round_digit: 'required',
         };
 
         return {
