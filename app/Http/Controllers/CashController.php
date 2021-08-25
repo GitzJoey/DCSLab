@@ -69,7 +69,7 @@ class CashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'cash'),
+            'code' => new uniqueCode($id, 'cashes'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
