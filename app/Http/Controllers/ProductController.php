@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 
@@ -36,7 +37,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {   
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:products',
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',
@@ -83,7 +84,7 @@ class ProductController extends Controller
     {
         
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => new uniqueCode($id, 'product'),
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',

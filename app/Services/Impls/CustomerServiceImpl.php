@@ -137,4 +137,12 @@ class CustomerServiceImpl implements CustomerService
         return $customer->delete();
         
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = Customer::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

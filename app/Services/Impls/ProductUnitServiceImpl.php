@@ -80,4 +80,12 @@ class ProductUnitServiceImpl implements ProductUnitService
         return $productunit->delete();
         
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = ProductUnit::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

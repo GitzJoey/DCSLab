@@ -108,4 +108,12 @@ class SupplierServiceImpl implements SupplierService
 
         return $supplier->delete();
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = Supplier::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

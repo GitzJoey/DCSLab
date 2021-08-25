@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\WarehouseService;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class WarehouseController extends Controller
     {
         $request->validate([
             'company_id' => 'required',
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:warehouses',
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
@@ -59,7 +60,7 @@ class WarehouseController extends Controller
     {
         $request->validate([
             'company_id' => 'required',
-            'code' => 'required|max:255',
+            'code' => new uniqueCode($id, 'warehouse'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

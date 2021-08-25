@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CustomerService;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:customers',
             'name' => 'required|max:255',
             'status' => 'required',
         ]);
@@ -86,7 +87,7 @@ class CustomerController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' =>  new uniqueCode($id, 'customer'),
             'name' => 'required|max:255',
             'status' => 'required',
         ]);

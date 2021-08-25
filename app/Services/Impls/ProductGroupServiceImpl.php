@@ -78,4 +78,12 @@ class ProductGroupServiceImpl implements ProductGroupService
 
         return $productgroup->delete();
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = ProductGroup::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

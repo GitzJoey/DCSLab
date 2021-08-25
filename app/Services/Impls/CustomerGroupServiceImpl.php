@@ -161,4 +161,12 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         return $customergroup->delete();
         
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = CustomerGroup::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

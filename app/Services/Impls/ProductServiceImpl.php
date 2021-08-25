@@ -123,4 +123,12 @@ class ProductServiceImpl implements ProductService
         return $product->delete();
         
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = Product::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

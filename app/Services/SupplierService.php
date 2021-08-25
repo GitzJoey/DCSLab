@@ -34,4 +34,6 @@ interface SupplierService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($id, $code);
 }

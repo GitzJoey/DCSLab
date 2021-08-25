@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\SupplierService;
 use Illuminate\Http\Request;
@@ -71,7 +72,7 @@ class SupplierController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:suppliers',
+            'code' => new uniqueCode($id, 'supplier'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
