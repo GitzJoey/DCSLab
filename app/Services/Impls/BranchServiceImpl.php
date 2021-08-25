@@ -55,7 +55,6 @@ class BranchServiceImpl implements BranchService
         return Branch::with('company')->paginate();
     }
 
-
     public function update(
         $id,
         $company_id,

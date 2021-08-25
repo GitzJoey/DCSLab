@@ -22,14 +22,11 @@ const messages = {
                 unit_name: 'Unit Name',
                 price: 'Price',
                 tax_status: 'Tax',
-                information: 'Information',
+                remarks: 'Remarks',
                 estimated_capital_price: 'Estimated Capital Price',
                 point: 'Point',
                 is_use_serial: 'Is Use Serial',
-                is_buy: 'Is Buy',
-                is_production_material: 'Is Production Material',
-                is_production_result: 'Is Production Result',
-                is_sell: 'Is Sell',
+                product_type: 'Product Type',
                 status: 'Status',
                 
             }
@@ -53,14 +50,11 @@ const messages = {
             unit_name: 'Unit Name',
             price: 'Price',
             tax_status: 'Tax',
-            information: 'Information',
+            remarks: 'Remarks',
             estimated_capital_price: 'Estimated Capital Price',
             point: 'Point',
             is_use_serial: 'Is Use Serial',
-            is_buy: 'Is Buy',
-            is_production_material: 'Is Production Material',
-            is_production_result: 'Is Production Result',
-            is_sell: 'Is Sell',
+            product_type: 'Product Type',
             status: 'Status',
             settings: {
                 settings: 'Settings',
@@ -75,10 +69,15 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
-        tax_statusDLL: {
+        tax_statusDDL: {
             notax: 'No Tax',
             excudetax: 'Exclude Tax',
             includetax: 'Include Tax'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
         },
         statusDDL: {
             active: 'Active',
@@ -96,14 +95,11 @@ const messages = {
                 unit_name: 'Satuan',
                 price: 'Harga',
                 tax_status: 'PPN',
-                information: 'Informasi',
+                remarks: 'Remarks',
                 estimated_capital_price: 'Perkiraan Harga Modal',
                 point: 'Poin',
                 is_use_serial: 'Memakai Nomor Serial',
-                is_buy: 'Beli',
-                is_production_material: 'Bahan Produksi',
-                is_production_result: 'Hasil Produksi',
-                is_sell: 'Jual',
+                product_type: 'Tipe Produk',
                 status: 'Status',
             }
         },
@@ -126,14 +122,10 @@ const messages = {
             unit_name: 'Nama Satuan',
             price: 'Harga',
             tax_status: 'PPN',
-            information: 'Informasi',
+            remarks: 'Remarks',
             estimated_capital_price: 'Perkiraan Harga Modal',
             point: 'Poin',
             is_use_serial: 'Memakai Nomor Serial',
-            is_buy: 'Beli',
-            is_production_material: 'Bahan Produksi',
-            is_production_result: 'Hasil Produksi',
-            is_sell: 'Jual',
             status: 'Status',
             settings: {
                 settings: 'Pengaturan',
@@ -148,10 +140,15 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
-        tax_statusDLL: {
+        tax_statusDDL: {
             notax: 'Tanpa PPN',
             excudetax: 'Belum Termasuk PPN',
             includetax: 'Termasuk PPN'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
         },
         statusDDL: {
             active: 'Aktif',

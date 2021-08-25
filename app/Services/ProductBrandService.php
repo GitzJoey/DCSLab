@@ -20,4 +20,6 @@ interface ProductBrandService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($id, $code);
 }

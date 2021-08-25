@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
-use App\Services\SalesCustomerService;
+use App\Services\CustomerService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class SalesCustomerController extends Controller
+class CustomerController extends Controller
 {
-    private $salesCustomerService;
+    private $CustomerService;
     private $activityLogService;
 
-    public function __construct(SalesCustomerService $salesCustomerService, ActivityLogService $activityLogService)
+    public function __construct(CustomerService $CustomerService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
-        $this->salesCustomerService = $salesCustomerService;
+        $this->CustomerService = $CustomerService;
         $this->activityLogService = $activityLogService;
 
     }
@@ -30,28 +31,18 @@ class SalesCustomerController extends Controller
 
     public function read()
     {
-        return $this->salesCustomerService->read();
+        return $this->CustomerService->read();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:customers',
             'name' => 'required|max:255',
-            'sales_territory' => 'required|max:255',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'tax_id' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required',
         ]);
 
-        $sales_customer_group_id = Hashids::decode($request['sales_customer_group_id'])[0];
+        $customer_group_id = Hashids::decode($request['customer_group_id'])[0];
 
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
@@ -62,10 +53,10 @@ class SalesCustomerController extends Controller
         $use_limit_age_notes = $request['use_limit_age_notes'];
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
-        $result = $this->salesCustomerService->create(
+        $result = $this->CustomerService->create(
             $request['code'],
             $request['name'],
-            $sales_customer_group_id,
+            $customer_group_id,
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
@@ -96,18 +87,8 @@ class SalesCustomerController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' =>  new uniqueCode($id, 'customer'),
             'name' => 'required|max:255',
-            'sales_territory' => 'required|max:255',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'tax_id' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required',
         ]);
 
@@ -120,11 +101,11 @@ class SalesCustomerController extends Controller
         $use_limit_age_notes = $request['use_limit_age_notes'];
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
-        $result = $this->salesCustomerService->update(
+        $result = $this->CustomerService->update(
             $id,
             $request['code'],
             $request['name'],
-            $request['sales_customer_group_id'],
+            $request['customer_group_id'],
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
@@ -146,7 +127,7 @@ class SalesCustomerController extends Controller
 
     public function delete($id)
     {
-        $result = $this->salesCustomerService->delete($id);
+        $result = $this->CustomerService->delete($id);
 
         if ($result == false) {
             return response()->json([

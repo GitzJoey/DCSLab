@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
-use App\Services\SalesCustomerGroupService;
+use App\Services\CustomerGroupService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class SalesCustomerGroupController extends Controller
+class CustomerGroupController extends Controller
 {
-    private $salesCustomerGroupService;
+    private $CustomerGroupService;
     private $activityLogService;
 
-    public function __construct(SalesCustomerGroupService $salesCustomerGroupService, ActivityLogService $activityLogService)
+    public function __construct(CustomerGroupService $CustomerGroupService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
-        $this->salesCustomerGroupService = $salesCustomerGroupService;
+        $this->CustomerGroupService = $CustomerGroupService;
         $this->activityLogService = $activityLogService;
 
     }
@@ -30,34 +31,22 @@ class SalesCustomerGroupController extends Controller
 
     public function read()
     {
-        return $this->salesCustomerGroupService->read();
+        return $this->CustomerGroupService->read();
     }
 
     public function getAllCustomerGroup()
     {
-        return $this->salesCustomerGroupService->getAllCustomerGroup();
+        return $this->CustomerGroupService->getAllCustomerGroup();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:customer_groups',
             'name' => 'required|max:255',
-            'is_member_card' => 'required',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'selling_point' => 'required|max:255',
-            'selling_point_multiple' => 'required|max:255',
-            'sell_at_capital_price' => 'required|max:255',
-            'global_markup_percent' => 'required|max:255',
-            'global_markup_nominal' => 'required|max:255',
-            'global_discount_percent' => 'required|max:255',
-            'global_discount_nominal' => 'required|max:255',
-            'round_digit' => 'required|max:255',
-            'remarks' => 'required|max:255',
         ]);
+
+        $cash_id = Hashids::decode($request['cash_id'])[0];
 
         $is_member_card = $request['is_member_card'];
         $is_member_card == 'on' ? $is_member_card = 1 : $is_member_card = 0;
@@ -74,7 +63,7 @@ class SalesCustomerGroupController extends Controller
         $is_rounding = $request['is_rounding'];
         $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
 
-        $result = $this->salesCustomerGroupService->create(
+        $result = $this->CustomerGroupService->create(
             $request['code'],
             $request['name'],
             $is_member_card,
@@ -96,7 +85,7 @@ class SalesCustomerGroupController extends Controller
             $request['round_on'],
             $request['round_digit'],
             $request['remarks'],
-            $request['finance_cash_id'],
+            $cash_id,
         );
 
         if ($result == 0) {
@@ -114,21 +103,8 @@ class SalesCustomerGroupController extends Controller
     {
 
         $request->validate([
-            'code' => 'required|max:255',
+            'code' =>  new uniqueCode($id, 'customer_groups'),
             'name' => 'required|max:255',
-            'limit_outstanding_notes' => 'required|max:255',
-            'limit_payable_nominal' => 'required|max:255',
-            'limit_age_notes' => 'required|max:255',
-            'term' => 'required|max:255',
-            'selling_point' => 'required|max:255',
-            'selling_point_multiple' => 'required|max:255',
-            'sell_at_capital_price' => 'required|max:255',
-            'global_markup_percent' => 'required|max:255',
-            'global_markup_nominal' => 'required|max:255',
-            'global_discount_percent' => 'required|max:255',
-            'global_discount_nominal' => 'required|max:255',
-            'round_digit' => 'required|max:255',
-            'remarks' => 'required|max:255',
         ]);
 
         $is_member_card = $request['is_member_card'];
@@ -146,7 +122,7 @@ class SalesCustomerGroupController extends Controller
         $is_rounding = $request['is_rounding'];
         $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
 
-        $result = $this->salesCustomerGroupService->update(
+        $result = $this->CustomerGroupService->update(
             $id,
             $request['code'],
             $request['name'],
@@ -169,7 +145,7 @@ class SalesCustomerGroupController extends Controller
             $request['round_on'],
             $request['round_digit'],
             $request['remarks'],
-            $request['finance_cash_id'],
+            $request['cash_id'],
         );
 
         if ($result == 0) {
@@ -185,7 +161,7 @@ class SalesCustomerGroupController extends Controller
 
     public function delete($id)
     {
-        $result = $this->salesCustomerGroupService->delete($id);
+        $result = $this->CustomerGroupService->delete($id);
 
         if ($result == false) {
             return response()->json([

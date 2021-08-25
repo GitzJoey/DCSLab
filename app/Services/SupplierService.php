@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface PurchaseSupplierService
+interface SupplierService
 {
     public function create(
         $code,
@@ -34,4 +34,6 @@ interface PurchaseSupplierService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($id, $code);
 }

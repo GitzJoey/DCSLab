@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-interface SalesCustomerService
+interface CustomerService
 {
     public function create(
         $code,
         $name,
-        $sales_customer_group_id,
+        $customer_group_id,
         $sales_territory,
         $use_limit_outstanding_notes,
         $limit_outstanding_notes,
@@ -30,7 +30,7 @@ interface SalesCustomerService
         $id,
         $code,
         $name,
-        $sales_customer_group_id,
+        $customer_group_id,
         $sales_territory,
         $use_limit_outstanding_notes,
         $limit_outstanding_notes,
@@ -48,4 +48,6 @@ interface SalesCustomerService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($id, $code);
 }

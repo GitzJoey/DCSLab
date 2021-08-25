@@ -20,14 +20,11 @@ class ProductServiceImpl implements ProductService
         $unit_id,
         $price,
         $tax_status,
-        $information,
+        $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
-        $is_buy,
-        $is_production_material,
-        $is_production_result,
-        $is_sell,
+        $product_type,
         $status
     )
     {
@@ -43,14 +40,11 @@ class ProductServiceImpl implements ProductService
             $product->unit_id = $unit_id;
             $product->price = $price;
             $product->tax_status = $tax_status;
-            $product->information = $information;
+            $product->remarks = $remarks;
             $product->estimated_capital_price = $estimated_capital_price;
             $product->point = $point;
             $product->is_use_serial = $is_use_serial;
-            $product->is_buy = $is_buy;
-            $product->is_production_material = $is_production_material;
-            $product->is_production_result = $is_production_result;
-            $product->is_sell = $is_sell;
+            $product->product_type = $product_type;
             $product->status = $status;
                         
             $product->save();
@@ -81,14 +75,11 @@ class ProductServiceImpl implements ProductService
         $unit_id,
         $price,
         $tax_status,
-        $information,
+        $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
-        $is_buy,
-        $is_production_material,
-        $is_production_result,
-        $is_sell,
+        $product_type,
         $status
     )
     {
@@ -105,13 +96,10 @@ class ProductServiceImpl implements ProductService
                 'unit_id' => $unit_id,
                 'price' => $price, 
                 'tax_status' => $tax_status, 
-                'information' => $information, 
+                'remarks' => $remarks, 
                 'estimated_capital_price' => $estimated_capital_price, 
                 'is_use_serial' => $is_use_serial, 
-                'is_buy' => $is_buy, 
-                'is_production_material' => $is_production_material, 
-                'is_production_result' => $is_production_result, 
-                'is_sell' => $is_sell, 
+                'product_type' => $product_type, 
                 'status' => $status
                 
             ]);
@@ -134,5 +122,13 @@ class ProductServiceImpl implements ProductService
 
         return $product->delete();
         
+    }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = Product::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
     }
 }

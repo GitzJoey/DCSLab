@@ -20,4 +20,6 @@ interface ProductGroupService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($id, $code);
 }

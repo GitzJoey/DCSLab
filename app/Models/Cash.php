@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CustomerGroup;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class PurchaseSupplier extends Model
+class Cash extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
@@ -16,16 +17,11 @@ class PurchaseSupplier extends Model
     protected $fillable = [
         'code',
         'name',
-        'term',
-        'contact',
-        'address',
-        'city',
-        'tax_number',
-        'remarks',
+        'is_bank',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'term', 'contact', 'address', 'city', 'tax_number', 'remarks', 'status'];
+    protected static $logAttributes = ['code', 'name', 'is_bank', 'status'];
 
     protected static $logOnlyDirty = true;
 
@@ -45,4 +41,9 @@ class PurchaseSupplier extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
+
+    public function customergroups()
+    {
+        return $this->hasMany(CustomerGroup::class);
+    } 
 }

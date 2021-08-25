@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class FinanceCash extends Model
+class Supplier extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
@@ -16,11 +16,16 @@ class FinanceCash extends Model
     protected $fillable = [
         'code',
         'name',
-        'is_bank',
+        'term',
+        'contact',
+        'address',
+        'city',
+        'tax_number',
+        'remarks',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'is_bank', 'status'];
+    protected static $logAttributes = ['code', 'name', 'term', 'contact', 'address', 'city', 'tax_number', 'remarks', 'status'];
 
     protected static $logOnlyDirty = true;
 

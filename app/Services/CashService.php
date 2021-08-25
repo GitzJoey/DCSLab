@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface FinanceCashService
+interface CashService
 {
     public function create(
         $code,
@@ -12,6 +12,8 @@ interface FinanceCashService
     );
 
     public function read();
+
+    public function getAllActiveCash();
 
     public function update(
         $id,

@@ -12,14 +12,11 @@ interface ProductService
         $unit_id,
         $price,
         $tax_status,
-        $information,
+        $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
-        $is_buy,
-        $is_production_material,
-        $is_production_result,
-        $is_sell,
+        $product_type,
         $status
 
     );
@@ -35,16 +32,15 @@ interface ProductService
         $unit_id,
         $price,
         $tax_status,
-        $information,
+        $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
-        $is_buy,
-        $is_production_material,
-        $is_production_result,
-        $is_sell,
+        $product_type,
         $status
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($id, $code);
 }

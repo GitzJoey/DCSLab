@@ -79,4 +79,12 @@ class ProductBrandServiceImpl implements ProductBrandService
         return $productbrand->delete();
         
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = ProductBrand::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

@@ -124,7 +124,6 @@
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputAddress" name="address" as="input" :class="{'form-control':true, 'is-invalid': errors['address']}" :placeholder="$t('fields.address')" :label="$t('fields.address')" v-model="branch.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ branch.address }}</div>
                             </div>
                         </div>
@@ -132,7 +131,6 @@
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputCity" name="city" as="input" :class="{'form-control':true, 'is-invalid': errors['city']}" :placeholder="$t('fields.city')" :label="$t('fields.city')" v-model="branch.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="city" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ branch.city }}</div>
                             </div>
                         </div>
@@ -140,7 +138,6 @@
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputContact" name="contact" as="input" :class="{'form-control':true, 'is-invalid': errors['contact']}" :placeholder="$t('fields.contact')" :label="$t('fields.contact')" v-model="branch.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ branch.contact }}</div>
                             </div>
                         </div>
@@ -148,7 +145,6 @@
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="branch.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.remarks }}</div>
                             </div>
                         </div>
@@ -215,9 +211,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            address: 'required',
-            city: 'required',
-            contact: 'required',
         };
 
         return {

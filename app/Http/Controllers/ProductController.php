@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 
@@ -36,14 +37,12 @@ class ProductController extends Controller
     public function store(Request $request)
     {   
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:products',
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',
             'unit_id' => 'required',
             'price' => 'required|max:255',
-            'tax_status' => 'required',
-            'estimated_capital_price' => 'required|max:255',
             'status' => 'required'
         ]);
 
@@ -53,18 +52,6 @@ class ProductController extends Controller
 
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
-
-        $is_buy = $request['is_buy'];
-        $is_buy == 'on' ? $is_buy = 1 : $is_buy = 0;
-        
-        $is_production_material = $request['is_production_material'];
-        $is_production_material == 'on' ? $is_production_material = 1 : $is_production_material = 0;
-
-        $is_production_result = $request['is_production_result'];
-        $is_production_result == 'on' ? $is_production_result = 1 : $is_production_result = 0;
-
-        $is_sell = $request['is_sell'];
-        $is_sell == 'on' ? $is_sell = 1 : $is_sell = 0;
 
         $result = $this->productService->create(
             $request['code'], 
@@ -78,10 +65,7 @@ class ProductController extends Controller
             $request['estimated_capital_price'], 
             $request['point'],
             $is_use_serial, 
-            $is_buy, 
-            $is_production_material, 
-            $is_production_result, 
-            $is_sell, 
+            $request['product_type'],
             $request['status']
         );
 
@@ -100,31 +84,17 @@ class ProductController extends Controller
     {
         
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => new uniqueCode($id, 'product'),
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',
             'unit_id' => 'required',
             'price' => 'required|max:255',
-            'tax_status' => 'required',
-            'estimated_capital_price' => 'required|max:255',
             'status' => 'required'
         ]);
 
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
-
-        $is_buy = $request['is_buy'];
-        $is_buy == 'on' ? $is_buy = 1 : $is_buy = 0;
-        
-        $is_production_material = $request['is_production_material'];
-        $is_production_material == 'on' ? $is_production_material = 1 : $is_production_material = 0;
-
-        $is_production_result = $request['is_production_result'];
-        $is_production_result == 'on' ? $is_production_result = 1 : $is_production_result = 0;
-
-        $is_sell = $request['is_sell'];
-        $is_sell == 'on' ? $is_sell = 1 : $is_sell = 0;
 
         $result = $this->productService->update(
             $id,
@@ -139,10 +109,7 @@ class ProductController extends Controller
             $request['estimated_capital_price'],
             $request['point'],
             $is_use_serial,
-            $is_buy,
-            $is_production_material,
-            $is_production_result,
-            $is_sell,
+            $request['product_type'],
             $request['status'],
         );
 

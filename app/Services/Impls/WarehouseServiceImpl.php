@@ -100,4 +100,12 @@ class WarehouseServiceImpl implements WarehouseService
         return $warehouse->delete();
         
     }
+
+    public function checkDuplicatedCode($id, $code)
+    {
+        $count = Warehouse::where('id', '<>' , $id)
+        ->where('code', '=', $code)
+        ->count();
+        return $count;
+    }
 }

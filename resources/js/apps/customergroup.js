@@ -32,7 +32,7 @@ const messages = {
                 round_on: 'Round On',
                 round_digit: 'Round Digit',
                 remarks: 'Rermarks',
-                finance_cash_id: ' Default Cash Payment',
+                cash_id: ' Default Cash Payment',
             }
         },
         buttons: {
@@ -69,7 +69,7 @@ const messages = {
             round_on: 'Round On',
             round_digit: 'Round Digit',
             remarks: 'Rermarks',
-            finance_cash_id: ' Default Cash Payment',
+            cash_id: ' Default Cash Payment',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -84,7 +84,6 @@ const messages = {
             please_select: 'Please Select',
         },
         tax_statusDLL: {
-            BCA: 'BCA',
             excudetax: 'Exclude Tax',
             includetax: 'Include Tax'
         },
@@ -115,7 +114,7 @@ const messages = {
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
-        }
+        },
     },
     id: {
         table: {
@@ -139,7 +138,7 @@ const messages = {
                 round_on: 'Pembulatan Ke',
                 round_digit: 'Angka Pembulatan',
                 remarks: 'Keterangan',
-                finance_cash_id: 'Default Pembayaran',
+                cash_id: 'Default Pembayaran',
             }
         },
         buttons: {
@@ -175,7 +174,7 @@ const messages = {
             round_on: 'Round On',
             round_digit: 'Round Digit',
             remarks: 'Keterangan',
-            finance_cash_id: 'Default Pembayaran',
+            cash_id: 'Default Pembayaran',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -221,7 +220,7 @@ const messages = {
         statusDDL: {
             active: 'Aktif',
             inactive: 'Tidak Aktif',
-        }
+        },
     }
 };
 

@@ -17,7 +17,7 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
-                sales_customer_group_id: 'Customer Group',
+                customer_group_id: 'Customer Group',
                 sales_territory: 'Territory',
                 limit_outstanding_notes: 'Limit Outstanding Notes',
                 limit_payable_nominal: 'Limit Payable Nominal',
@@ -45,7 +45,7 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
-            sales_customer_group_id: 'Customer Group',
+            customer_group_id: 'Customer Group',
             sales_territory: 'Territory',
             use_limit_outstanding_notes: 'Use Limit Outstanding Notes',
             limit_outstanding_notes: 'Limit Outstanding Notes',
@@ -96,7 +96,7 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
-                sales_customer_group_id: 'Grup Pelanggan',
+                customer_group_id: 'Grup Pelanggan',
                 sales_territory: 'Wilayah',
                 limit_outstanding_notes: 'Batas Nota',
                 limit_payable_nominal: 'Batas Nominal',
@@ -124,7 +124,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Name',
-            sales_customer_group_id: 'Grup Pelanggan',
+            customer_group_id: 'Grup Pelanggan',
             sales_territory: 'Wilayah',
             use_limit_outstanding_notes: 'Menggunakan Batas Nota',
             limit_outstanding_notes: 'Batas Nota',

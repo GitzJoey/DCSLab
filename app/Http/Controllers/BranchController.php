@@ -40,10 +40,6 @@ class BranchController extends Controller
             'company_id' => 'required',
             'code' => 'required|max:255',
             'name' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
         
@@ -75,10 +71,6 @@ class BranchController extends Controller
             'company_id' => 'required|max:255' ,
             'code' => new uniqueCode($id, 'branches'),
             'name' => 'required|max:255',
-            'address' => 'required|max:255' ,
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255' ,
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
 

@@ -20,7 +20,7 @@
         <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-wallet"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance')}}</span></a>
         <ul>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.finance_cashes')) }}" href="{{route('db.finance_cashes')}}">{{ __('sidebar-ext.db.finance_cashes')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.finance.cashes')) }}" href="{{route('db.finance.cashes')}}">{{ __('sidebar-ext.db.finance.cashes')}}</a>
             </li>
         </ul>
     </li>
@@ -31,7 +31,7 @@
         <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-note"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.purchase')}}</span></a>
         <ul>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.purchase_suppliers')) }}" href="{{route('db.purchase_suppliers')}}">{{ __('sidebar-ext.db.purchase_suppliers')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.purchase.suppliers')) }}" href="{{route('db.purchase.suppliers')}}">{{ __('sidebar-ext.db.purchase.suppliers')}}</a>
             </li>
         </ul>
     </li>
@@ -42,16 +42,16 @@
         <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-drawer"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.product')}}</span></a>
         <ul>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.product_groups')) }}" href="{{route('db.product_groups')}}">{{ __('sidebar-ext.db.product_groups')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.product.product_groups')) }}" href="{{route('db.product.product_groups')}}">{{ __('sidebar-ext.db.product.product_groups')}}</a>
             </li>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.product_brands')) }}" href="{{route('db.product_brands')}}">{{ __('sidebar-ext.db.product_brands')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.product.product_brands')) }}" href="{{route('db.product.product_brands')}}">{{ __('sidebar-ext.db.product.product_brands')}}</a>
             </li>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.product_units')) }}" href="{{route('db.product_units')}}">{{ __('sidebar-ext.db.product_units')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.product.product_units')) }}" href="{{route('db.product.product_units')}}">{{ __('sidebar-ext.db.product.product_units')}}</a>
             </li>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.products')) }}" href="{{route('db.products')}}">{{ __('sidebar-ext.db.products')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.product.products')) }}" href="{{route('db.product.products')}}">{{ __('sidebar-ext.db.product.products')}}</a>
             </li>
         </ul>
     </li>
@@ -62,10 +62,10 @@
         <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-handbag"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.sales')}}</span></a>
         <ul>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.sales_customer_groups')) }}" href="{{route('db.sales_customer_groups')}}">{{ __('sidebar-ext.db.sales_customer_groups')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.sales.customer_groups')) }}" href="{{route('db.sales.customer_groups')}}">{{ __('sidebar-ext.db.sales.customer_groups')}}</a>
             </li>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.sales_customers')) }}" href="{{route('db.sales_customers')}}">{{ __('sidebar-ext.db.sales_customers')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.sales.customers')) }}" href="{{route('db.sales.customers')}}">{{ __('sidebar-ext.db.sales.customers')}}</a>
             </li>
         </ul>
     </li>

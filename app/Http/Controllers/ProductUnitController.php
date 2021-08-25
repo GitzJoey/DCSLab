@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\ProductUnitService;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class ProductUnitController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => 'required|max:255|unique:product_units',
             'name' => 'required|max:255'
         ]);
 
@@ -61,7 +62,7 @@ class ProductUnitController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
+            'code' => new uniqueCode($id, 'product_unit'),
             'name' => 'required|max:255',
         ]);
 

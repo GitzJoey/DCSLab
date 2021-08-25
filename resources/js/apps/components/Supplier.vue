@@ -122,7 +122,6 @@
                             <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="supplier.term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="term" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.code }}</div>
                             </div>
                         </div>
@@ -130,7 +129,6 @@
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputContact" name="contact" as="input" :class="{'form-control':true, 'is-invalid': errors['contact']}" :placeholder="$t('fields.contact')" :label="$t('fields.contact')" v-model="supplier.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.contact }}</div>
                             </div>
                         </div>
@@ -138,7 +136,6 @@
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputAddress" name="address" as="input" :class="{'form-control':true, 'is-invalid': errors['address']}" :placeholder="$t('fields.address')" :label="$t('fields.address')" v-model="supplier.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.address }}</div>
                             </div>
                         </div>
@@ -146,7 +143,6 @@
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputCity" name="city" as="input" :class="{'form-control':true, 'is-invalid': errors['city']}" :placeholder="$t('fields.city')" :label="$t('fields.city')" v-model="supplier.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="city" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.city }}</div>
                             </div>
                         </div>
@@ -169,7 +165,6 @@
                             <label for="inputTax_Number" class="col-2 col-form-label">{{ $t('fields.tax_number') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputTax_Number" name="tax_number" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_number']}" :placeholder="$t('fields.tax_number')" :label="$t('fields.tax_number')" v-model="supplier.tax_number" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="tax_number" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.tax_number }}</div>
                             </div>
                         </div>
@@ -177,7 +172,6 @@
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputRemarks" name="remarks" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.remarks')" :label="$t('fields.remarks')" v-model="supplier.remarks" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.remarks }}</div>
                             </div>
                         </div>
@@ -244,12 +238,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            term: 'required',
-            contact: 'required',
-            address: 'required',
-            city: 'required',
-            tax_number: 'required',
-            remarks: 'required',
         };
 
         return {

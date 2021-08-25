@@ -27,7 +27,7 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.sales_customer_group_id") }}</th>
+                                <th>{{ $t("table.cols.customer_group_id") }}</th>
                                 <th>{{ $t("table.cols.sales_territory") }}</th>
                                 <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
                                 <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
@@ -46,7 +46,7 @@
                             <tr v-for="(c, cIdx) in customerList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.sales_customer_group.name }}</td>
+                                <td>{{ c.customer_group.name }}</td>
                                 <td>{{ c.sales_territory }}</td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
                                 <td>{{ c.limit_payable_nominal }}</td>
@@ -124,9 +124,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.sales_customer_group_id') }}</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.customer_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="sales_customer_group_id">
+                                <select class="form-control" id="example-select" name="customer_group_id">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.customergroupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
@@ -136,7 +136,6 @@
                             <label for="inputSalesTerritory" class="col-2 col-form-label">{{ $t('fields.sales_territory') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputSalesTerritory" name="sales_territory" as="input" :class="{'form-control':true, 'is-invalid': errors['sales_territory']}" :placeholder="$t('fields.sales_territory')" :label="$t('fields.sales_territory')" v-model="customer.sales_territory" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
-                                <ErrorMessage name="sales_territory" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.sales_territory }}</div>
                             </div>
                         </div>
@@ -159,7 +158,6 @@
                             <label for="inputLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.limit_outstanding_notes') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputLimitOutstandingNotes" name="limit_outstanding_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_outstanding_notes']}" :placeholder="$t('fields.limit_outstanding_notes')" :label="$t('fields.limit_outstanding_notes')" v-model="customer.limit_outstanding_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_outstanding_notes" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
                         </div>
@@ -182,7 +180,6 @@
                             <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputLimitPayableNominal" name="limit_payable_nominal" type="number" class="form-control" :placeholder="$t('fields.limit_payable_nominal')" v-model="customer.limit_payable_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_payable_nominal" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.limit_payable_nominal }}</div>
                             </div>
                         </div>
@@ -205,7 +202,6 @@
                             <label for="inputLimitAgeNotes" class="col-2 col-form-label">{{ $t('fields.limit_age_notes') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customer.limit_age_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_age_notes" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
                         </div>
@@ -213,7 +209,6 @@
                             <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="customer.term" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="term" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.term }}</div>
                             </div>
                         </div>
@@ -221,7 +216,6 @@
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="customer.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.address }}</div>
                             </div>
                         </div>
@@ -229,7 +223,6 @@
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="customer.city" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="city" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.city }}</div>
                             </div>
                         </div>
@@ -237,7 +230,6 @@
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="customer.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.contact }}</div>
                             </div>
                         </div>
@@ -245,7 +237,6 @@
                             <label for="inputTaxId" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputTaxId" name="tax_id" type="number" class="form-control" :placeholder="$t('fields.tax_id')" v-model="customer.tax_id" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.tax_id }}</div>
                             </div>
                         </div>
@@ -317,14 +308,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            sales_territory: 'required',
-            limit_outstanding_notes: 'required',
-            limit_payable_nominal: 'required',
-            limit_age_notes: 'required',
-            term: 'required',
-            address: 'required',
-            city: 'required',
-            contact: 'required',
 
         };
 
@@ -342,7 +325,7 @@ export default {
             customer: {
                 code: '',
                 name: '',
-                sales_customer_group_id: '',
+                customer_group_id: '',
                 sales_territory: '',
                 use_limit_outstanding_notes: '',
                 limit_outstanding_notes: '',
@@ -394,7 +377,7 @@ export default {
             return {
                 code: '',
                 name: '',
-                sales_customer_group_id: '',
+                customer_group_id: '',
                 sales_territory: '',
                 use_limit_outstanding_notes: '',
                 limit_outstanding_notes: '',

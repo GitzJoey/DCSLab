@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
-use App\Services\PurchaseSupplierService;
+use App\Services\SupplierService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class PurchaseSupplierController extends Controller
+class SupplierController extends Controller
 {
-    private $purchaseSupplierService;
+    private $SupplierService;
     private $activityLogService;
 
-    public function __construct(PurchaseSupplierService $purchaseSupplierService, ActivityLogService $activityLogService)
+    public function __construct(SupplierService $SupplierService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
-        $this->purchaseSupplierService = $purchaseSupplierService;
+        $this->SupplierService = $SupplierService;
         $this->activityLogService = $activityLogService;
 
     }
@@ -30,27 +31,21 @@ class PurchaseSupplierController extends Controller
 
     public function read()
     {
-        return $this->purchaseSupplierService->read();
+        return $this->SupplierService->read();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:purchase_suppliers',
+            'code' => 'required|max:255|unique:suppliers',
             'name' => 'required|max:255',
-            'term' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'tax_number' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
         
         $is_tax = $request['is_tax'];
         $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
 
-        $result = $this->purchaseSupplierService->create(
+        $result = $this->SupplierService->create(
             $request['code'],
             $request['name'], 
             $request['term'], 
@@ -77,21 +72,15 @@ class PurchaseSupplierController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:purchase_suppliers',
+            'code' => new uniqueCode($id, 'supplier'),
             'name' => 'required|max:255',
-            'term' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'tax_number' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
 
         $is_tax = $request['is_tax'];
         $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
 
-        $result = $this->purchaseSupplierService->update(
+        $result = $this->SupplierService->update(
             $id,
             $request['code'],
             $request['name'],
@@ -118,7 +107,7 @@ class PurchaseSupplierController extends Controller
 
     public function delete($id)
     {
-        $result = $this->purchaseSupplierService->delete($id);
+        $result = $this->SupplierService->delete($id);
 
         if ($result == false) {
             return response()->json([
