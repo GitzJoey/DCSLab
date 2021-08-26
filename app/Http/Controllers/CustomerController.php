@@ -87,7 +87,7 @@ class CustomerController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' =>  new uniqueCode($id, 'customer'),
+            'code' =>  new uniqueCode($id, 'customers'),
             'name' => 'required|max:255',
             'status' => 'required',
         ]);

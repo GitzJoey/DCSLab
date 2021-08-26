@@ -171,8 +171,8 @@
                         <div class="form-group row">
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputRemarks" name="remarks" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.remarks')" :label="$t('fields.remarks')" v-model="supplier.remarks" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.remarks }}</div>
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="supplier.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ supplier.remarks }}</div>
                             </div>
                         </div>
                         <div class="form-group row">

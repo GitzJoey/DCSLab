@@ -62,7 +62,7 @@ class ProductGroupController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'product_group'),
+            'code' => new uniqueCode($id, 'product_groups'),
             'name' => 'required|max:255',
         ]);
         

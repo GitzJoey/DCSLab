@@ -52,9 +52,9 @@ class SupplierController extends Controller
             $request['contact'], 
             $request['address'], 
             $request['city'],
+            $is_tax, 
             $request['tax_number'], 
             $request['remarks'], 
-            $is_tax, 
             $request['status']
             );
         
@@ -72,7 +72,7 @@ class SupplierController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'supplier'),
+            'code' => new uniqueCode($id, 'suppliers'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
@@ -88,9 +88,9 @@ class SupplierController extends Controller
             $request['contact'],
             $request['address'],
             $request['city'],
+            $is_tax,
             $request['tax_number'],
             $request['remarks'],
-            $is_tax,
             $request['status'],
         );
 

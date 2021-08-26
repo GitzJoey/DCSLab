@@ -61,7 +61,7 @@ class ProductController extends Controller
             $unit_id,
             $request['price'], 
             $request['tax_status'], 
-            $request['information'], 
+            $request['remarks'], 
             $request['estimated_capital_price'], 
             $request['point'],
             $is_use_serial, 
@@ -84,7 +84,7 @@ class ProductController extends Controller
     {
         
         $request->validate([
-            'code' => new uniqueCode($id, 'product'),
+            'code' => new uniqueCode($id, 'products'),
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',
@@ -105,7 +105,7 @@ class ProductController extends Controller
             $request['unit_id'],
             $request['price'],
             $request['tax_status'],
-            $request['information'],
+            $request['remarks'],
             $request['estimated_capital_price'],
             $request['point'],
             $is_use_serial,
