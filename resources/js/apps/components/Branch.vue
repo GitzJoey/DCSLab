@@ -99,7 +99,7 @@
                             <label class="col-2 col-form-label" for="example-select">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="example-select" name="company_id">
-                                    <option value="0">Please select Company Name</option>
+                                    <!-- <option value="0">Please select Company Name</option> -->
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
@@ -269,7 +269,7 @@ export default {
         },
         emptyBranch() {
             return {
-                company_id:'',
+                company_id: '1',
                 code: '',
                 name: '',
                 address: '',

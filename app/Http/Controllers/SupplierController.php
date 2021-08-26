@@ -52,9 +52,9 @@ class SupplierController extends Controller
             $request['contact'], 
             $request['address'], 
             $request['city'],
+            $is_tax, 
             $request['tax_number'], 
             $request['remarks'], 
-            $is_tax, 
             $request['status']
             );
         
@@ -88,9 +88,9 @@ class SupplierController extends Controller
             $request['contact'],
             $request['address'],
             $request['city'],
+            $is_tax,
             $request['tax_number'],
             $request['remarks'],
-            $is_tax,
             $request['status'],
         );
 
