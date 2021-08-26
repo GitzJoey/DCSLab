@@ -72,7 +72,7 @@ class SupplierController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'supplier'),
+            'code' => new uniqueCode($id, 'suppliers'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

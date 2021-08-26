@@ -62,7 +62,7 @@ class ProductBrandController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'product_brand'),
+            'code' => new uniqueCode($id, 'product_brands'),
             'name' => 'required|max:255',
         ]);
 

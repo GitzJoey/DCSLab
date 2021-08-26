@@ -84,7 +84,7 @@ class ProductController extends Controller
     {
         
         $request->validate([
-            'code' => new uniqueCode($id, 'product'),
+            'code' => new uniqueCode($id, 'products'),
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',

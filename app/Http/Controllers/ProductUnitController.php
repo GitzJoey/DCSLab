@@ -62,7 +62,7 @@ class ProductUnitController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'product_unit'),
+            'code' => new uniqueCode($id, 'product_units'),
             'name' => 'required|max:255',
         ]);
 
