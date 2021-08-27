@@ -32,10 +32,10 @@
                                 <th>{{ $t("table.cols.unit_name") }}</th>
                                 <th>{{ $t("table.cols.price") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
-                                <th>{{ $t("table.cols.remarks") }}</th>
-                                <th>{{ $t("table.cols.estimated_capital_price") }}</th>
-                                <th>{{ $t("table.cols.point") }}</th>
-                                <th>{{ $t("table.cols.is_use_serial") }}</th>
+                                <!-- <th>{{ $t("table.cols.remarks") }}</th> -->
+                                <!-- <th>{{ $t("table.cols.estimated_capital_price") }}</th> -->
+                                <!-- <th>{{ $t("table.cols.point") }}</th> -->
+                                <!-- <th>{{ $t("table.cols.is_use_serial") }}</th> -->
                                 <th>{{ $t("table.cols.product_type") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
@@ -54,10 +54,10 @@
                                     <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
                                     <span v-if="c.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
                                 </td>
-                                <td>{{ c.infortmation }}</td>
-                                <td>{{ c.estimated_capital_price }}</td>
-                                <td>{{ c.point }}</td>
-                                <td>{{ c.is_use_serial }}</td>
+                                <!-- <td>{{ c.infortmation }}</td> -->
+                                <!-- <td>{{ c.estimated_capital_price }}</td> -->
+                                <!-- <td>{{ c.point }}</td> -->
+                                <!-- <td>{{ c.is_use_serial }}</td> -->
                                 <td>
                                     <span v-if="c.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
                                     <span v-if="c.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>

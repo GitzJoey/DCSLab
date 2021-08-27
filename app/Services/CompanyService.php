@@ -23,5 +23,5 @@ interface CompanyService
 
     public function delete($id);
 
-    public function checkDuplicatedCode($id, $code);
+    public function checkDuplicatedCode($crud_status, $id, $code);
 }
