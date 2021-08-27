@@ -22,11 +22,11 @@ class CreateCustomersTable extends Migration
             $table->string('sales_territory')->nullable();
 
             $table->integer('use_limit_outstanding_notes')->nullable();
-            $table->integer('limit_outstanding_notes');
+            $table->integer('limit_outstanding_notes')->default(0);
             $table->integer('use_limit_payable_nominal')->nullable();
-            $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8);
+            $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8)->default(0);
             $table->integer('use_limit_age_notes')->nullable();
-            $table->integer('limit_age_notes');
+            $table->integer('limit_age_notes')->default(0);
             $table->integer('term');
             
             $table->string('address')->nullable();
@@ -35,7 +35,7 @@ class CreateCustomersTable extends Migration
             $table->string('tax_id')->nullable();
 
             $table->string('remarks')->nullable();
-			$table->integer('status')->nullable();
+			$table->integer('status')->default(0);
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

@@ -21,24 +21,24 @@ class CreateCustomerGroupsTable extends Migration
             $table->integer('is_member_card');
 
             $table->integer('use_limit_outstanding_notes')->nullable();
-            $table->integer('limit_outstanding_notes');
+            $table->integer('limit_outstanding_notes')->default(0);
             $table->integer('use_limit_payable_nominal')->nullable();
-            $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8);
+            $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8)->default(0);
             $table->integer('use_limit_age_notes')->nullable();
-            $table->integer('limit_age_notes');
-            $table->integer('term');
+            $table->integer('limit_age_notes')->default(0);
+            $table->integer('term')->default(0);
             
-            $table->decimal('selling_point', $precision = 8, $scale = 2);
-            $table->decimal('selling_point_multiple', $precision = 16, $scale = 8);
+            $table->decimal('selling_point', $precision = 8, $scale = 2)->default(0);
+            $table->decimal('selling_point_multiple', $precision = 16, $scale = 8)->default(0);
 
-            $table->integer('sell_at_capital_price');
-            $table->decimal('global_markup_percent', $precision = 16, $scale = 8);
-            $table->decimal('global_markup_nominal', $precision = 16, $scale = 8);
-            $table->decimal('global_discount_percent', $precision = 16, $scale = 8);
-            $table->decimal('global_discount_nominal', $precision = 16, $scale = 8);
+            $table->integer('sell_at_capital_price')->nullable();
+            $table->decimal('global_markup_percent', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('global_markup_nominal', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('global_discount_percent', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('global_discount_nominal', $precision = 16, $scale = 8)->default(0);
 
             $table->integer('is_rounding')->nullable();
-            $table->integer('round_on')->nullable();
+            $table->integer('round_on')->default(0);
             $table->integer('round_digit')->nullable();
             $table->string('remarks')->nullable();
 
