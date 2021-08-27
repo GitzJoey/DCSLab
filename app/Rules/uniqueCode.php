@@ -18,6 +18,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class uniqueCode implements Rule
 {
+    private $crud_status;
     private $id;
     private $table;
 
@@ -30,17 +31,18 @@ class uniqueCode implements Rule
     private $productBrandService;
     private $productUnitService;
     private $productService;
+    private $CustomerGroupService;
     private $CustomerService;
-    private $CustomerGroupsService;
     
 
-    public function __construct($id, $table)
+    public function __construct($crud_status, $id, $table)
     {
+        $this->crud_status = $crud_status;
         $this->id = $id;
         $this->table = $table;
 
         switch($this->table) {
-            case 'company': 
+            case 'companies': 
                 $this->companyService = Container::getInstance()->make(CompanyService::class);
                 break;
             case 'branches':
@@ -67,11 +69,11 @@ class uniqueCode implements Rule
             case 'products': 
                 $this->productService = Container::getInstance()->make(Product::class);
                 break;
-            case 'customers': 
-                $this->CustomerService = Container::getInstance()->make(Customer::class);
-                break;
             case 'customer_groups': 
                 $this->CustomerGroupService = Container::getInstance()->make(CustomerGroup::class);
+                break;
+            case 'customers': 
+                $this->CustomerService = Container::getInstance()->make(Customer::class);
                 break;
             default:
                 break;
@@ -83,8 +85,8 @@ class uniqueCode implements Rule
     {
         $count = 0;
         switch($this->table) {
-            case 'company': 
-                $count = $this->companyService->checkDuplicatedCode($this->id, $code);
+            case 'companies': 
+                $count = $this->companyService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'branches': 
                 $count = $this->branchService->checkDuplicatedCode($this->id, $code);
@@ -110,12 +112,13 @@ class uniqueCode implements Rule
             case 'product': 
                 $count = $this->productService->checkDuplicatedCode($this->id, $code);
                 break;
-            case 'customers': 
-                $count = $this->CustomerService->checkDuplicatedCode($this->id, $code);
-                break;
             case 'customer_groups': 
                 $count = $this->CustomerGroupService->checkDuplicatedCode($this->id, $code);
                 break;
+            case 'customers': 
+                $count = $this->CustomerService->checkDuplicatedCode($this->id, $code);
+                break;
+            
             default:
                 break;
         }

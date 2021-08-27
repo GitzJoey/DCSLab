@@ -73,6 +73,7 @@ class BranchServiceImpl implements BranchService
             $branch = Branch::where('id', '=', $id);
 
             $retval = $branch->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'address' => $address,
