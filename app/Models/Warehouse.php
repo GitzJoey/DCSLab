@@ -31,6 +31,7 @@ class Warehouse extends Model
 
 
     protected $hidden = [
+        'id',
         'created_by',
         'updated_by',
         'deleted_by',
