@@ -51,6 +51,10 @@ class Product extends Model
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
+        'id',
+        'group_id', 
+        'brand_id', 
+        'unit_id', 
         'created_by',
         'updated_by',
         'deleted_by',

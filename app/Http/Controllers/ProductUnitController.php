@@ -34,15 +34,16 @@ class ProductUnitController extends Controller
         return $this->productUnitService->read();
     }
 
-    public function getAllProductUnit()
+    public function getAllActiveProductUnit()
     {
-        return $this->productUnitService->getAllProductUnit();
+        return $this->productUnitService->getAllActiveProductUnit();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:product_units',
+            'code' => new uniqueCode('create', '', 'product_units'),
+            'code' => 'required|max:255',
             'name' => 'required|max:255'
         ]);
 
@@ -62,7 +63,7 @@ class ProductUnitController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'product_units'),
+            'code' => new uniqueCode('update', $id, 'product_units'),
             'name' => 'required|max:255',
         ]);
 

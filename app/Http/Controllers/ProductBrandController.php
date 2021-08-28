@@ -34,15 +34,16 @@ class ProductBrandController extends Controller
         return $this->productBrandService->read();
     }
 
-    public function getAllProductBrand()
+    public function getAllActiveProductBrand()
     {
-        return $this->productBrandService->getAllProductBrand();
+        return $this->productBrandService->getAllActiveProductBrand();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:product_brands',
+            'code' => new uniqueCode('create', '', 'product_brands'),
+            'code' => 'required|max:255',
             'name' => 'required|max:255'
         ]);
 
@@ -62,7 +63,7 @@ class ProductBrandController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'product_brands'),
+            'code' => new uniqueCode('update', $id, 'product_brands'),
             'name' => 'required|max:255',
         ]);
 

@@ -40,7 +40,8 @@ class CashController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:cashes',
+            'code' => new uniqueCode('create', '', 'cashes'),
+            'code' => 'required|max:255',
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
@@ -69,7 +70,7 @@ class CashController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'cashes'),
+            'code' => new uniqueCode('update', $id, 'cashes'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

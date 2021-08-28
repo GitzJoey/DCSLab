@@ -37,7 +37,8 @@ class ProductController extends Controller
     public function store(Request $request)
     {   
         $request->validate([
-            'code' => 'required|max:255|unique:products',
+            'code' => new uniqueCode('create', '', 'products'),
+            'code' => 'required|max:255',
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',
@@ -46,19 +47,15 @@ class ProductController extends Controller
             'status' => 'required'
         ]);
 
-        $group_id = Hashids::decode($request['group_id'])[0];
-        $brand_id = Hashids::decode($request['brand_id'])[0];
-        $unit_id = Hashids::decode($request['unit_id'])[0];
-
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
 
         $result = $this->productService->create(
             $request['code'], 
-            $group_id, 
-            $brand_id, 
+            Hashids::decode($request['group_id'])[0], 
+            Hashids::decode($request['brand_id'])[0], 
             $request['name'], 
-            $unit_id,
+            Hashids::decode($request['unit_id'])[0],
             $request['price'], 
             $request['tax_status'], 
             $request['remarks'], 
@@ -84,7 +81,7 @@ class ProductController extends Controller
     {
         
         $request->validate([
-            'code' => new uniqueCode($id, 'products'),
+            'code' => new uniqueCode('update', $id, 'products'),
             'group_id' => 'required',
             'brand_id' => 'required',
             'name' => 'required|max:255',
@@ -98,19 +95,19 @@ class ProductController extends Controller
 
         $result = $this->productService->update(
             $id,
-            $request['code'],
-            $request['group_id'],
-            $request['brand_id'],
-            $request['name'],
-            $request['unit_id'],
-            $request['price'],
-            $request['tax_status'],
-            $request['remarks'],
-            $request['estimated_capital_price'],
+            $request['code'], 
+            Hashids::decode($request['group_id'])[0], 
+            Hashids::decode($request['brand_id'])[0], 
+            $request['name'], 
+            Hashids::decode($request['unit_id'])[0],
+            $request['price'], 
+            $request['tax_status'], 
+            $request['remarks'], 
+            $request['estimated_capital_price'], 
             $request['point'],
-            $is_use_serial,
+            $is_use_serial, 
             $request['product_type'],
-            $request['status'],
+            $request['status']
         );
 
         return response()->json();

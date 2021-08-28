@@ -26,10 +26,10 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
-                                <th>{{ $t("table.cols.group_name") }}</th>
-                                <th>{{ $t("table.cols.brand_name") }}</th>
+                                <th>{{ $t("table.cols.group_id") }}</th>
+                                <th>{{ $t("table.cols.brand_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.unit_name") }}</th>
+                                <th>{{ $t("table.cols.unit_id") }}</th>
                                 <th>{{ $t("table.cols.price") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
                                 <!-- <th>{{ $t("table.cols.remarks") }}</th> -->
@@ -121,20 +121,28 @@
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.code }}</div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.group_name') }}</label>
+                        <!-- <div class="form-group row">
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.group_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="group_id" name="group_id">
-                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>             
                             </div>
+                        </div> -->
+                        <div class="form-group row">
+                            <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.brand_name') }}</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="brand_id" name="brand_id">
-                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
@@ -148,10 +156,10 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.unit_name') }}</label>
+                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="unit_id" name="unit_id">
-                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>             
                             </div>
@@ -309,10 +317,10 @@ export default {
             productList: [],
             product: {
                 code: '',
-                group_name: '',
-                brand_name: '',
+                group: {id:''},
+                brand: {id:''},
                 name: '',
-                unit_name: '',
+                unit: {id:''},
                 price: '',
                 tax_status: '',
                 remarks: '',
@@ -348,19 +356,19 @@ export default {
 
         getAllProductGroup() {
             axios.get('/api/get/dashboard/productgroup/read/all/active').then(response => {
-                this.groupDDL = response.data;
+                this.productgroupDDL = response.data;
             });
         },
 
         getAllProductBrand() {
             axios.get('/api/get/dashboard/productbrand/read/all/active').then(response => {
-                this.brandDDL = response.data;
+                this.productbrandDDL = response.data;
             });
         },
 
         getAllProductUnit() {
             axios.get('/api/get/dashboard/productunit/read/all/active').then(response => {
-                this.unitDDL = response.data;
+                this.productunitDDL = response.data;
             });
         },
 
@@ -376,10 +384,10 @@ export default {
         emptyProduct() {
             return {
                 code: '',
-                group_name: '',
-                brand_name: '',
+                group: {id:''},
+                brand: {id:''},
                 name: '',
-                unit_name: '',
+                unit: {id:''},
                 price: '0',
                 tax_status: '',
                 remarks: '',

@@ -89,34 +89,34 @@ class uniqueCode implements Rule
                 $count = $this->companyService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'branches': 
-                $count = $this->branchService->checkDuplicatedCode($this->id, $code);
+                $count = $this->branchService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'warehouses': 
-                $count = $this->warehouseService->checkDuplicatedCode($this->id, $code);
+                $count = $this->warehouseService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'finance_cash': 
-                $count = $this->CashService->checkDuplicatedCode($this->id, $code);
+                $count = $this->CashService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'suppliers': 
-                $count = $this->SupplierService->checkDuplicatedCode($this->id, $code);
+                $count = $this->SupplierService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'product_groups': 
-                $count = $this->productGroupService->checkDuplicatedCode($this->id, $code);
+                $count = $this->productGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'product_brands': 
-                $count = $this->productBrandService->checkDuplicatedCode($this->id, $code);
+                $count = $this->productBrandService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'product_units': 
-                $count = $this->productUnitService->checkDuplicatedCode($this->id, $code);
+                $count = $this->productUnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'product': 
-                $count = $this->productService->checkDuplicatedCode($this->id, $code);
+                $count = $this->productService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'customer_groups': 
-                $count = $this->CustomerGroupService->checkDuplicatedCode($this->id, $code);
+                $count = $this->CustomerGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'customers': 
-                $count = $this->CustomerService->checkDuplicatedCode($this->id, $code);
+                $count = $this->CustomerService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             
             default:

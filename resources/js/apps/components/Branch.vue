@@ -37,6 +37,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{branchList.data}}
                             <tr v-for="(b, bIdx) in branchList.data">
                                 <td>{{ b.company.name }}</td>
                                 <td>{{ b.code }}</td>
@@ -97,7 +98,6 @@
                         </div>
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
-                            
                             <div class="col-md-10">
                                 <select class="form-control" id="company_id" name="company_id" v-model="branch.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>

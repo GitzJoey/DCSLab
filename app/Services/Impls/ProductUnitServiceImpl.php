@@ -41,7 +41,7 @@ class ProductUnitServiceImpl implements ProductUnitService
         return ProductUnit::paginate();
     }
 
-    public function getAllProductUnit()
+    public function getAllActiveProductUnit()
     {
         return ProductUnit::all();
     }
@@ -72,6 +72,10 @@ class ProductUnitServiceImpl implements ProductUnitService
         }
     }
 
+    public function getProductUnitById($id)
+    {
+        return ProductUnit::find($id);
+    }
 
     public function delete($id)
     {
@@ -81,11 +85,20 @@ class ProductUnitServiceImpl implements ProductUnitService
         
     }
 
-    public function checkDuplicatedCode($id, $code)
+    public function checkDuplicatedCode($crud_status, $id, $code)
     {
-        $count = ProductUnit::where('id', '<>' , $id)
-        ->where('code', '=', $code)
-        ->count();
-        return $count;
+        switch($crud_status) {
+            case 'create': 
+                $count = ProductUnit::where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+            case 'update':
+                $count = ProductUnit::where('id', '<>' , $id)
+                ->where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+        }
     }
 }

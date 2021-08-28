@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Log;
 use App\Services\BranchService;
 use App\Models\Branch;
 
-
-
 class BranchServiceImpl implements BranchService
 {
     public function create(
@@ -105,11 +103,20 @@ class BranchServiceImpl implements BranchService
         return $branch->delete();
     }
 
-    public function checkDuplicatedCode($id, $code)
+    public function checkDuplicatedCode($crud_status, $id, $code)
     {
-        $count = Branch::where('id', '<>' , $id)
-        ->where('code', '=', $code)
-        ->count();
-        return $count;
+        switch($crud_status) {
+            case 'create': 
+                $count = Branch::where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+            case 'update':
+                $count = Branch::where('id', '<>' , $id)
+                ->where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+        }
     }
 }

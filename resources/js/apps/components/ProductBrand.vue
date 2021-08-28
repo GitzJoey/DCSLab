@@ -169,8 +169,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllProductBrand(1);
-        //this.getAllCompanies();
-    },
+        },
     methods: {
         getAllProductBrand(page) {
             this.loading = true;
