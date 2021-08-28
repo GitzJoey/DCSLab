@@ -92,22 +92,21 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
 
         Route::group(['prefix' => 'productgroup'], function () {
             Route::get('read', [ProductGroupController::class, 'read'])->name('api.get.dashboard.productgroup.read');
-            Route::get('read/all/active', [ProductGroupController::class, 'getAllProductGroup'])->name('api.get.dashboard.productgroup.read.all_active');
+            Route::get('read/all/active', [ProductGroupController::class, 'getAllActiveProductGroup'])->name('api.get.dashboard.productgroup.read.all_active');
         });
 
         Route::group(['prefix' => 'productbrand'], function () {
             Route::get('read', [ProductBrandController::class, 'read'])->name('api.get.dashboard.productbrand.read');
-            Route::get('read/all/active', [ProductBrandController::class, 'getAllProductBrand'])->name('api.get.dashboard.productbrand.read.all_active');
+            Route::get('read/all/active', [ProductBrandController::class, 'getAllActiveProductBrand'])->name('api.get.dashboard.productbrand.read.all_active');
         });
 
         Route::group(['prefix' => 'productunit'], function () {
             Route::get('read', [ProductUnitController::class, 'read'])->name('api.get.dashboard.productunit.read');
-            Route::get('read/all/active', [ProductUnitController::class, 'getAllProductUnit'])->name('api.get.dashboard.productunit.read.all_active');
+            Route::get('read/all/active', [ProductUnitController::class, 'getAllActiveProductUnit'])->name('api.get.dashboard.productunit.read.all_active');
         });
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.product.read');
-            Route::get('permissions/read', [ProductController::class, 'getAllPermissions'])->name('api.get.dashboard.product.permissions.read');
         });
 
         Route::group(['prefix' => 'customergroup'], function () {

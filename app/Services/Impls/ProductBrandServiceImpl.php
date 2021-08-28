@@ -41,7 +41,7 @@ class ProductBrandServiceImpl implements ProductBrandService
         return ProductBrand::paginate();
     }
 
-    public function getAllProductBrand()
+    public function getAllActiveProductBrand()
     {
         return ProductBrand::all();
     }
@@ -72,6 +72,11 @@ class ProductBrandServiceImpl implements ProductBrandService
         }
     }
 
+    public function getProductBrandById($id)
+    {
+        return ProductBrand::find($id);
+    }
+
     public function delete($id)
     {
         $productbrand = ProductBrand::find($id);
@@ -80,11 +85,20 @@ class ProductBrandServiceImpl implements ProductBrandService
         
     }
 
-    public function checkDuplicatedCode($id, $code)
+    public function checkDuplicatedCode($crud_status, $id, $code)
     {
-        $count = ProductBrand::where('id', '<>' , $id)
-        ->where('code', '=', $code)
-        ->count();
-        return $count;
+        switch($crud_status) {
+            case 'create': 
+                $count = ProductBrand::where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+            case 'update':
+                $count = ProductBrand::where('id', '<>' , $id)
+                ->where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+        }
     }
 }

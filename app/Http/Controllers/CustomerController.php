@@ -37,7 +37,8 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:customers',
+            'code' => new uniqueCode('create', '', 'customers'),
+            'code' => 'required|max:255',
             'name' => 'required|max:255',
             'status' => 'required',
         ]);
@@ -87,7 +88,7 @@ class CustomerController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' =>  new uniqueCode($id, 'customers'),
+            'code' =>  new uniqueCode('update', $id, 'customers'),
             'name' => 'required|max:255',
             'status' => 'required',
         ]);

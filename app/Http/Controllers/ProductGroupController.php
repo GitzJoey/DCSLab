@@ -34,15 +34,16 @@ class ProductGroupController extends Controller
         return $this->productGroupService->read();
     }
 
-    public function getAllProductGroup()
+    public function getAllActiveProductGroup()
     {
-        return $this->productGroupService->getAllProductGroup();
+        return $this->productGroupService->getAllActiveProductGroup();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255|unique:product_groups',
+            'code' => new uniqueCode('create', '', 'product_groups'),
+            'code' => 'required|max:255',
             'name' => 'required|max:255'
         ]);
 
@@ -62,7 +63,7 @@ class ProductGroupController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode($id, 'product_groups'),
+            'code' => new uniqueCode('update', $id, 'product_groups'),
             'name' => 'required|max:255',
         ]);
         

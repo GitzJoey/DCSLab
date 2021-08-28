@@ -11,7 +11,7 @@ interface ProductBrandService
 
     public function read();
 
-    public function getAllProductBrand();
+    public function getAllActiveProductBrand();
 
     public function update(
         $id,
@@ -21,5 +21,5 @@ interface ProductBrandService
 
     public function delete($id);
 
-    public function checkDuplicatedCode($id, $code);
+    public function checkDuplicatedCode($crud_status, $id, $code);
 }

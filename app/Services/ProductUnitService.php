@@ -11,7 +11,7 @@ interface ProductUnitService
 
     public function read();
 
-    public function getAllProductUnit();
+    public function getAllActiveProductUnit();
 
     public function update(
         $id,
@@ -21,5 +21,5 @@ interface ProductUnitService
 
     public function delete($id);
 
-    public function checkDuplicatedCode($id, $code);
+    public function checkDuplicatedCode($crud_status, $id, $code);
 }

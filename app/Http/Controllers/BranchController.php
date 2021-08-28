@@ -39,6 +39,7 @@ class BranchController extends Controller
     {  
         $request->validate([
             'company_id' => 'required',
+            'code' => new uniqueCode('create', '', 'branches'),
             'code' => 'required|max:255',
             'name' => 'required|max:255',
             'status' => 'required'
@@ -70,7 +71,7 @@ class BranchController extends Controller
     {
         $request->validate([
             'company_id' => 'required|max:255' ,
-            'code' => new uniqueCode($id, 'branches'),
+            'code' => new uniqueCode('update', $id, 'branches'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

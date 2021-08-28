@@ -112,7 +112,21 @@ class ProductServiceImpl implements ProductService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
-        
+    }
+
+    public function getProductGroupById($id)
+    {
+        return Product::find($id);
+    }
+
+    public function getProductBrandById($id)
+    {
+        return Product::find($id);
+    }
+
+    public function getProductUnitById($id)
+    {
+        return Product::find($id);
     }
 
 
@@ -124,11 +138,20 @@ class ProductServiceImpl implements ProductService
         
     }
 
-    public function checkDuplicatedCode($id, $code)
+    public function checkDuplicatedCode($crud_status, $id, $code)
     {
-        $count = Product::where('id', '<>' , $id)
-        ->where('code', '=', $code)
-        ->count();
-        return $count;
+        switch($crud_status) {
+            case 'create': 
+                $count = Product::where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+            case 'update':
+                $count = Product::where('id', '<>' , $id)
+                ->where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+        }
     }
 }
