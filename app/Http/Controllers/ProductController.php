@@ -39,12 +39,9 @@ class ProductController extends Controller
         $request->validate([
             'code' => new uniqueCode('create', '', 'products'),
             'code' => 'required|max:255',
-            'group_id' => 'required',
-            'brand_id' => 'required',
             'name' => 'required|max:255',
-            'unit_id' => 'required',
             'price' => 'required|max:255',
-            'status' => 'required'
+            'status' => 'required',
         ]);
 
         $is_use_serial = $request['is_use_serial'];
@@ -82,12 +79,9 @@ class ProductController extends Controller
         
         $request->validate([
             'code' => new uniqueCode('update', $id, 'products'),
-            'group_id' => 'required',
-            'brand_id' => 'required',
             'name' => 'required|max:255',
-            'unit_id' => 'required',
             'price' => 'required|max:255',
-            'status' => 'required'
+            'status' => 'required',
         ]);
 
         $is_use_serial = $request['is_use_serial'];
@@ -110,7 +104,15 @@ class ProductController extends Controller
             $request['status']
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function delete($id)
