@@ -98,6 +98,7 @@ class ProductServiceImpl implements ProductService
                 'tax_status' => $tax_status, 
                 'remarks' => $remarks, 
                 'estimated_capital_price' => $estimated_capital_price, 
+                'point' => $point,
                 'is_use_serial' => $is_use_serial, 
                 'product_type' => $product_type, 
                 'status' => $status

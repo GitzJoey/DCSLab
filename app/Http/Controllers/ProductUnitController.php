@@ -42,7 +42,7 @@ class ProductUnitController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('create', '', 'product_units'),
+            'code' => new uniqueCode('create', '', 'productunits'),
             'code' => 'required|max:255',
             'name' => 'required|max:255'
         ]);
@@ -63,7 +63,7 @@ class ProductUnitController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('update', $id, 'product_units'),
+            'code' => new uniqueCode('update', $id, 'productunits'),
             'name' => 'required|max:255',
         ]);
 

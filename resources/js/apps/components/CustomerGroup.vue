@@ -115,17 +115,17 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="customergroup.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="customergroup.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="customergroup.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="customergroup.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -161,8 +161,8 @@
                         <div class="form-group row">
                             <label for="inputLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.limit_outstanding_notes') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitOutstandingNotes" name="limit_outstanding_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_outstanding_notes']}" :placeholder="$t('fields.limit_outstanding_notes')" :label="$t('fields.limit_outstanding_notes')" v-model="customergroup.limit_outstanding_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.limit_outstanding_notes }}</div>
+                                <Field id="inputLimitOutstandingNotes" name="limit_outstanding_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_outstanding_notes']}" :placeholder="$t('fields.limit_outstanding_notes')" :label="$t('fields.limit_outstanding_notes')" v-model="customergroup.limit_outstanding_notes" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.limit_outstanding_notes }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -183,8 +183,8 @@
                         <div class="form-group row">
                             <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customergroup.limit_payable_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.limit_payable_nominal }}</div>
+                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customergroup.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.limit_payable_nominal }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -205,64 +205,64 @@
                         <div class="form-group row">
                             <label for="inputLimitAgeNotes" class="col-2 col-form-label">{{ $t('fields.limit_age_notes') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customergroup.limit_age_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.name }}</div>
+                                <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customergroup.limit_age_notes" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="customergroup.term" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.term }}</div>
+                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="customergroup.term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.term }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputSellingPoint" class="col-2 col-form-label">{{ $t('fields.selling_point') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputSellingPoint" name="selling_point" as="input" :class="{'form-control':true, 'is-invalid': errors['selling_point']}" :placeholder="$t('fields.selling_point')" :label="$t('fields.selling_point')" v-model="customergroup.selling_point" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.selling_point }}</div>
+                                <Field id="inputSellingPoint" name="selling_point" as="input" :class="{'form-control':true, 'is-invalid': errors['selling_point']}" :placeholder="$t('fields.selling_point')" :label="$t('fields.selling_point')" v-model="customergroup.selling_point" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.selling_point }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputSellingPointMiltiple" class="col-2 col-form-label">{{ $t('fields.selling_point_multiple') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputSellingPointMiltiple" name="selling_point_multiple" as="input" :class="{'form-control':true, 'is-invalid': errors['selling_point_multiple']}" :placeholder="$t('fields.selling_point_multiple')" :label="$t('fields.selling_point_multiple')" v-model="customergroup.selling_point_multiple" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.selling_point_multiple }}</div>
+                                <Field id="inputSellingPointMiltiple" name="selling_point_multiple" as="input" :class="{'form-control':true, 'is-invalid': errors['selling_point_multiple']}" :placeholder="$t('fields.selling_point_multiple')" :label="$t('fields.selling_point_multiple')" v-model="customergroup.selling_point_multiple" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.selling_point_multiple }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputSellAtCapitalPrice" class="col-2 col-form-label">{{ $t('fields.sell_at_capital_price') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputSellAtCapitalPrice" name="sell_at_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['sell_at_capital_price']}" :placeholder="$t('fields.sell_at_capital_price')" :label="$t('fields.sell_at_capital_price')" v-model="customergroup.sell_at_capital_price" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.sell_at_capital_price }}</div>
+                                <Field id="inputSellAtCapitalPrice" name="sell_at_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['sell_at_capital_price']}" :placeholder="$t('fields.sell_at_capital_price')" :label="$t('fields.sell_at_capital_price')" v-model="customergroup.sell_at_capital_price" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.sell_at_capital_price }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputGlobalMarkupPercent" class="col-2 col-form-label">{{ $t('fields.global_markup_percent') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputGlobalMarkupPercent" name="global_markup_percent" as="input" :class="{'form-control':true, 'is-invalid': errors['global_markup_percent']}" :placeholder="$t('fields.global_markup_percent')" :label="$t('fields.global_markup_percent')" v-model="customergroup.global_markup_percent" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_markup_percent }}</div>
+                                <Field id="inputGlobalMarkupPercent" name="global_markup_percent" as="input" :class="{'form-control':true, 'is-invalid': errors['global_markup_percent']}" :placeholder="$t('fields.global_markup_percent')" :label="$t('fields.global_markup_percent')" v-model="customergroup.global_markup_percent" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.global_markup_percent }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputGlobalMarkupNominal" class="col-2 col-form-label">{{ $t('fields.global_markup_nominal') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputGlobalMarkupNominal" name="global_markup_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['global_markup_nominal']}" :placeholder="$t('fields.global_markup_nominal')" :label="$t('fields.global_markup_nominal')" v-model="customergroup.global_markup_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_markup_nominal }}</div>
+                                <Field id="inputGlobalMarkupNominal" name="global_markup_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['global_markup_nominal']}" :placeholder="$t('fields.global_markup_nominal')" :label="$t('fields.global_markup_nominal')" v-model="customergroup.global_markup_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.global_markup_nominal }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputGlobalDiscountPercent" class="col-2 col-form-label">{{ $t('fields.global_discount_percent') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputGlobalDiscountPercent" name="global_discount_percent" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_percent']}" :placeholder="$t('fields.global_discount_percent')" :label="$t('fields.global_discount_percent')" v-model="customergroup.global_discount_percent" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_discount_percent }}</div>
+                                <Field id="inputGlobalDiscountPercent" name="global_discount_percent" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_percent']}" :placeholder="$t('fields.global_discount_percent')" :label="$t('fields.global_discount_percent')" v-model="customergroup.global_discount_percent" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.global_discount_percent }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputGlobalDiscountNominal" class="col-2 col-form-label">{{ $t('fields.global_discount_nominal') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputGlobalDiscountNominal" name="global_discount_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_nominal']}" :placeholder="$t('fields.global_discount_nominal')" :label="$t('fields.global_discount_nominal')" v-model="customergroup.global_discount_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.global_discount_nominal }}</div>
+                                <Field id="inputGlobalDiscountNominal" name="global_discount_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['global_discount_nominal']}" :placeholder="$t('fields.global_discount_nominal')" :label="$t('fields.global_discount_nominal')" v-model="customergroup.global_discount_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.global_discount_nominal }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -283,36 +283,35 @@
                         <div class="form-group row">
                             <label for="round_on" class="col-2 col-form-label">{{ $t('fields.round_on') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <select class="form-control" id="round_on" name="round_on" v-model="customergroup.round_on" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="round_on" name="round_on" v-model="customergroup.round_on" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
                                     <option value="1">{{ $t('round_onDLL.high') }}</option>
                                     <option value="2">{{ $t('round_onDLL.low') }}</option>
                                 </select>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                    <span v-if="product.round_on === 1">{{ $t('round_onDLL.high') }}</span>
-                                    <span v-if="product.round_on === 2">{{ $t('round_onDLL.low') }}</span>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span v-if="customergroup.round_on === 1">{{ $t('round_onDLL.high') }}</span>
+                                    <span v-if="customergroup.round_on === 2">{{ $t('round_onDLL.low') }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputRoundDigit" class="col-2 col-form-label">{{ $t('fields.round_digit') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputRoundDigit" name="round_digit" as="input" :class="{'form-control':true, 'is-invalid': errors['round_digit']}" :placeholder="$t('fields.round_digit')" :label="$t('fields.round_digit')" v-model="customergroup.round_digit" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.round_digit }}</div>
+                                <Field id="inputRoundDigit" name="round_digit" as="input" :class="{'form-control':true, 'is-invalid': errors['round_digit']}" :placeholder="$t('fields.round_digit')" :label="$t('fields.round_digit')" v-model="customergroup.round_digit" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.round_digit }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
-                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="customergroup.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customergroup.remarks }}</div>
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="customergroup.remarks" v-show="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.remarks }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="example-select">{{ $t('fields.cash_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="cash_id" name="cash_id">
-                                    <option value="0">Please select Company Name</option>
+                                <select class="form-control" id="cash_id" name="cash_id" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.cashDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>             
                             </div>
@@ -400,7 +399,7 @@ export default {
                 round_on: '',
                 round_digit: '',
                 remarks: '',
-                cash_id: ''
+                cash_id: {id:''}
             },
             cashDDL: [],
         }
@@ -458,7 +457,7 @@ export default {
                 round_on: '',
                 round_digit: '',
                 remarks: '',
-                cash_id: ''
+                cash_id: {id:''}
             }
         },
         createNew() {

@@ -39,7 +39,7 @@ class ProductBrand extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function brands()
+    public function products()
     {
         return $this->hasMany(Product::class);
     }

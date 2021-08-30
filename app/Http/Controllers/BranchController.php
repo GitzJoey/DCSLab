@@ -31,7 +31,6 @@ class BranchController extends Controller
 
     public function read()
     {
-        
         return $this->branchService->read();
     }
 

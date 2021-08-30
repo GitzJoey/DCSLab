@@ -19,6 +19,10 @@ class ProductUnit extends Model
         'name'
     ];
 
+    protected static $logAttributes = ['code', 'name'];
+
+    protected static $logOnlyDirty = true;
+
     protected $hidden = [
         'id',
         'symbol',
@@ -39,7 +43,7 @@ class ProductUnit extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function units()
+    public function products()
     {
         return $this->hasMany(Product::class);
     }

@@ -43,8 +43,15 @@ class WarehouseController extends Controller
             'status' => 'required'
         ]);
 
-        $company_id = Hashids::decode($request['company_id'])[0];
-        $result = $this->warehouseService->create($company_id, $request['code'], $request['name'], $request['address'], $request['city'], $request['contact'], $request['remarks'], $request['status']);
+        $result = $this->warehouseService->create(
+            Hashids::decode($request['company_id'])[0], 
+            $request['code'],
+            $request['name'], 
+            $request['address'],
+            $request['city'], 
+            $request['contact'], 
+            $request['remarks'],
+            $request['status']);
 
         if ($result == 0) {
             return response()->json([
@@ -68,7 +75,7 @@ class WarehouseController extends Controller
 
         $result = $this->warehouseService->update(
             $id,
-            $request['company_id'],
+            Hashids::decode($request['company_id'])[0], 
             $request['code'],
             $request['name'],
             $request['address'],

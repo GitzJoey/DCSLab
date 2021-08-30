@@ -79,6 +79,10 @@ const messages = {
             wip: 'WIP',
             finishedgoods: 'Finished Goods',
         },
+        is_use_serial: {
+            active: 'Yes',
+            inactive: 'No',
+        },
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive'
@@ -149,6 +153,10 @@ const messages = {
             rawmaterial: 'RAW Material',
             wip: 'WIP',
             finishedgoods: 'Finished Goods',
+        },
+        is_use_serial: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         },
         statusDDL: {
             active: 'Aktif',
