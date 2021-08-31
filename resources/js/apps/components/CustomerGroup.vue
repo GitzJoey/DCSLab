@@ -50,16 +50,8 @@
                             <tr v-for="(c, cIdx) in customergroupList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-<<<<<<< HEAD
-                                <td>
-                                    <span v-if="c.is_member_card === 1">{{ $t('is_member_card.active') }}</span>
-                                    <span v-if="c.is_member_card === 0">{{ $t('is_member_card.inactive') }}</span>
-                                </td>
-                                <td>{{ c.limit_outstanding_notes }}</td>
-=======
                                 <td>{{ c.is_member_card }}</td>
                                 <!-- <td>{{ c.limit_outstanding_notes }}</td>
->>>>>>> a07b3b8bc818217fc9ecd0416401ee57d4401d09
                                 <td>{{ c.limit_payable_nominal }}</td>
                                 <td>{{ c.limit_age_notes }}</td>
                                 <td>{{ c.term }}</td>

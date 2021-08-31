@@ -7,12 +7,12 @@ use App\Services\CompanyService;
 use App\Services\WarehouseService;
 use App\Services\CashService;
 use App\Services\SupplierService;
+use App\Services\CustomerService;
+use App\Services\CustomerGroupService;
 use App\Models\Product;
 use App\Models\ProductBrand;
 use App\Models\ProductGroup;
 use App\Models\ProductUnit;
-use App\Models\Customer;
-use App\Models\CustomerGroup;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -70,10 +70,10 @@ class uniqueCode implements Rule
                 $this->productService = Container::getInstance()->make(Product::class);
                 break;
             case 'customer_groups': 
-                $this->CustomerGroupService = Container::getInstance()->make(CustomerGroup::class);
+                $this->CustomerGroupService = Container::getInstance()->make(CustomerGroupService::class);
                 break;
             case 'customers': 
-                $this->CustomerService = Container::getInstance()->make(Customer::class);
+                $this->CustomerService = Container::getInstance()->make(CustomerService::class);
                 break;
             default:
                 break;

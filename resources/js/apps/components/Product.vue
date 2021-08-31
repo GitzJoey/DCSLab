@@ -116,7 +116,7 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control-plaintext" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>
                             </div>
@@ -124,9 +124,12 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="brand_id">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="brand_id" name="brand_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="brand_id" name="brand_id" v-model="product.brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>             
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</span>
+                                </div>             
                             </div>
                         </div>
                         <div class="form-group row">
@@ -140,9 +143,12 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="unit_id" name="unit_id" v-model="product.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
-                                </select>             
+                                </select>     
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</span>
+                                </div>        
                             </div>
                         </div>
                         <div class="form-group row">

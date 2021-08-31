@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ActivityLogService;
-use App\Services\CustomerService;
-use Illuminate\Http\Request;
-
 use App\Rules\uniqueCode;
+use Illuminate\Http\Request;
+use App\Services\CustomerService;
+
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 
 class CustomerController extends Controller
 {
@@ -43,8 +43,6 @@ class CustomerController extends Controller
             'status' => 'required',
         ]);
 
-        $customer_group_id = Hashids::decode($request['customer_group_id'])[0];
-
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
 
@@ -57,7 +55,7 @@ class CustomerController extends Controller
         $result = $this->CustomerService->create(
             $request['code'],
             $request['name'],
-            $customer_group_id,
+            Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
@@ -106,7 +104,7 @@ class CustomerController extends Controller
             $id,
             $request['code'],
             $request['name'],
-            $request['customer_group_id'],
+            Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
