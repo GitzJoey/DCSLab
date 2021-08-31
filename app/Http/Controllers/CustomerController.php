@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CustomerService;
 use Illuminate\Http\Request;
 
+use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerController extends Controller
@@ -123,7 +123,15 @@ class CustomerController extends Controller
             $request['status'],
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function delete($id)

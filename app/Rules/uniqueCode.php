@@ -2,8 +2,6 @@
 
 namespace App\Rules;
 
-use App\Models\Customer;
-use App\Models\CustomerGroup;
 use App\Services\BranchService;
 use App\Services\CompanyService;
 use App\Services\WarehouseService;
@@ -13,6 +11,8 @@ use App\Models\Product;
 use App\Models\ProductBrand;
 use App\Models\ProductGroup;
 use App\Models\ProductUnit;
+use App\Models\Customer;
+use App\Models\CustomerGroup;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Rule;
 

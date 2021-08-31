@@ -58,6 +58,7 @@ class Customer extends Model
 
     protected $hidden = [
         'id',
+        'customer_group_id', 
         'created_by',
         'updated_by',
         'deleted_by',

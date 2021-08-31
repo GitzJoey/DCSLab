@@ -178,7 +178,7 @@
                         <div class="form-group row">
                             <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" type="number" class="form-control" :placeholder="$t('fields.limit_payable_nominal')" v-model="customer.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customer.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.limit_payable_nominal }}</div>
                             </div>
                         </div>
@@ -235,7 +235,7 @@
                         <div class="form-group row">
                             <label for="inputTaxId" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTaxId" name="tax_id" type="number" class="form-control" :placeholder="$t('fields.tax_id')" v-model="customer.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputTaxId" name="tax_id" type="text" class="form-control" :placeholder="$t('fields.tax_id')" v-model="customer.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.tax_id }}</div>
                             </div>
                         </div>
