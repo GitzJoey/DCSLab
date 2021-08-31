@@ -28,7 +28,7 @@
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.is_member_card") }}</th>
-                                <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
+                                <!-- <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
                                 <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
                                 <th>{{ $t("table.cols.limit_age_notes") }}</th>
                                 <th>{{ $t("table.cols.term") }}</th>
@@ -40,9 +40,9 @@
                                 <th>{{ $t("table.cols.global_discount_percent") }}</th>
                                 <th>{{ $t("table.cols.global_discount_nominal") }}</th>
                                 <th>{{ $t("table.cols.round_on") }}</th>
-                                <th>{{ $t("table.cols.round_digit") }}</th>
+                                <th>{{ $t("table.cols.round_digit") }}</th> -->
                                 <th>{{ $t("table.cols.remarks") }}</th>
-                                <th>{{ $t("table.cols.cash_id") }}</th>
+                                <!-- <th>{{ $t("table.cols.cash_id") }}</th> -->
                                 <th></th>
                             </tr>
                         </thead>
@@ -50,11 +50,16 @@
                             <tr v-for="(c, cIdx) in customergroupList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
+<<<<<<< HEAD
                                 <td>
                                     <span v-if="c.is_member_card === 1">{{ $t('is_member_card.active') }}</span>
                                     <span v-if="c.is_member_card === 0">{{ $t('is_member_card.inactive') }}</span>
                                 </td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
+=======
+                                <td>{{ c.is_member_card }}</td>
+                                <!-- <td>{{ c.limit_outstanding_notes }}</td>
+>>>>>>> a07b3b8bc818217fc9ecd0416401ee57d4401d09
                                 <td>{{ c.limit_payable_nominal }}</td>
                                 <td>{{ c.limit_age_notes }}</td>
                                 <td>{{ c.term }}</td>
@@ -66,9 +71,9 @@
                                 <td>{{ c.global_discount_percent }}</td>
                                 <td>{{ c.global_discount_nominal }}</td>
                                 <td>{{ c.round_on }}</td>
-                                <td>{{ c.round_digit }}</td>
+                                <td>{{ c.round_digit }}</td> -->
                                 <td>{{ c.remarks }}</td>
-                                <td>{{ c.cash.name }}</td>
+                                <!-- <td>{{ c.cash.name }}</td> -->
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
