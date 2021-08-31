@@ -28,7 +28,7 @@
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.customer_group_id") }}</th>
-                                <th>{{ $t("table.cols.sales_territory") }}</th>
+                                <!-- <th>{{ $t("table.cols.sales_territory") }}</th>
                                 <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
                                 <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
                                 <th>{{ $t("table.cols.limit_age_notes") }}</th>
@@ -36,7 +36,7 @@
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
                                 <th>{{ $t("table.cols.contact") }}</th>
-                                <th>{{ $t("table.cols.tax_id") }}</th>
+                                <th>{{ $t("table.cols.tax_id") }}</th> -->
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
@@ -47,7 +47,7 @@
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.customer_group.name }}</td>
-                                <td>{{ c.sales_territory }}</td>
+                                <!-- <td>{{ c.sales_territory }}</td>
                                 <td>{{ c.limit_outstanding_notes }}</td>
                                 <td>{{ c.limit_payable_nominal }}</td>
                                 <td>{{ c.limit_age_notes }}</td>
@@ -55,7 +55,7 @@
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
                                 <td>{{ c.contact }}</td>
-                                <td>{{ c.tax_id }}</td>
+                                <td>{{ c.tax_id }}</td> -->
                                 <td>{{ c.remarks }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
