@@ -12,7 +12,7 @@ return [
     'db.product' => 'Product',
     'db.product.product_groups' => 'Product Groups',
     'db.product.product_brands' => 'Product Brands',
-    'db.product.product_units' => 'Product Units',
+    'db.product.units' => 'Product Units',
     'db.product.products' => 'Products',
     'db.sales' => 'Sales',
     'db.sales.customer_groups' => 'Customer Groups',

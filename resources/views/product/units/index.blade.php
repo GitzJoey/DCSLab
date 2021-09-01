@@ -1,7 +1,7 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('product_units.title') }}
+    {{ __('units.title') }}
 @endsection
 
 @section('content')

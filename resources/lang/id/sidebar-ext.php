@@ -12,7 +12,7 @@ return [
     'db.product' => 'Produk',
     'db.product_groups' => 'Kelompok Produk',
     'db.product_brands' => 'Merk Produk',
-    'db.product_units' => 'Satuan Produk',
+    'db.product.units' => 'Satuan Produk',
     'db.products' => 'Produk',
     'db.sales' => 'Penjualan',
     'db.customer_groups' => 'Kelompok Pelanggan',

@@ -69,7 +69,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::group(['prefix' => 'product'], function () {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product.product_groups');
             Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product.product_brands');
-            Route::get('unit', [UnitController::class, 'index'])->name('db.product.product_units');
+            Route::get('unit', [UnitController::class, 'index'])->name('db.product.units');
             Route::get('products', [ProductController::class, 'index'])->name('db.product.products');
 
         });

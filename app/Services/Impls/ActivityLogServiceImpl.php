@@ -37,7 +37,7 @@ class ActivityLogServiceImpl implements ActivityLogService
             case 'db.product.brands':
                 $friendlyName = 'Product Brands';
                 break;    
-            case 'db.product.units':
+            case 'db.units':
                 $friendlyName = 'Product Units';
                 break;
             case 'db.products':
