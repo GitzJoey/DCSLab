@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Rules\uniqueCode;
-use App\Services\ActivityLogService;
-use App\Services\CustomerService;
 use Illuminate\Http\Request;
+use App\Services\CustomerService;
 
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 
 class CustomerController extends Controller
 {
@@ -37,13 +37,11 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('create', '', 'customers'),
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'customers'),
             'name' => 'required|max:255',
             'status' => 'required',
         ]);
-
-        $customer_group_id = Hashids::decode($request['customer_group_id'])[0];
 
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
@@ -57,7 +55,7 @@ class CustomerController extends Controller
         $result = $this->CustomerService->create(
             $request['code'],
             $request['name'],
-            $customer_group_id,
+            Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
@@ -106,7 +104,7 @@ class CustomerController extends Controller
             $id,
             $request['code'],
             $request['name'],
-            $request['customer_group_id'],
+            Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],
@@ -123,7 +121,15 @@ class CustomerController extends Controller
             $request['status'],
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function delete($id)

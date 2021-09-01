@@ -42,12 +42,10 @@ class CustomerGroupController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('create', '', 'customer_groups'),
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'customergroups'),
             'name' => 'required|max:255',
         ]);
-
-        $cash_id = Hashids::decode($request['cash_id'])[0];
 
         $is_member_card = $request['is_member_card'];
         $is_member_card == 'on' ? $is_member_card = 1 : $is_member_card = 0;
@@ -86,7 +84,7 @@ class CustomerGroupController extends Controller
             $request['round_on'],
             $request['round_digit'],
             $request['remarks'],
-            $cash_id,
+            Hashids::decode($request['cash_id'])[0], 
         );
 
         if ($result == 0) {
@@ -104,7 +102,7 @@ class CustomerGroupController extends Controller
     {
 
         $request->validate([
-            'code' =>  new uniqueCode('update', $id, 'customer_groups'),
+            'code' =>  new uniqueCode('update', $id, 'customergroups'),
             'name' => 'required|max:255',
         ]);
 
@@ -146,7 +144,7 @@ class CustomerGroupController extends Controller
             $request['round_on'],
             $request['round_digit'],
             $request['remarks'],
-            $request['cash_id'],
+            Hashids::decode($request['cash_id'])[0], 
         );
 
         if ($result == 0) {

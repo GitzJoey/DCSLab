@@ -2,17 +2,17 @@
 
 namespace App\Rules;
 
-use App\Models\Customer;
-use App\Models\CustomerGroup;
 use App\Services\BranchService;
 use App\Services\CompanyService;
 use App\Services\WarehouseService;
 use App\Services\CashService;
 use App\Services\SupplierService;
-use App\Models\Product;
-use App\Models\ProductBrand;
-use App\Models\ProductGroup;
-use App\Models\ProductUnit;
+use App\Services\CustomerService;
+use App\Services\CustomerGroupService;
+use App\Services\ProductService;
+use App\Services\ProductBrandService;
+use App\Services\ProductGroupService;
+use App\Services\UnitService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -29,7 +29,7 @@ class uniqueCode implements Rule
     private $SupplierService;
     private $productGroupService;
     private $productBrandService;
-    private $productUnitService;
+    private $UnitService;
     private $productService;
     private $CustomerGroupService;
     private $CustomerService;
@@ -51,29 +51,29 @@ class uniqueCode implements Rule
             case 'warehouses':
                 $this->warehouseService = Container::getInstance()->make(WarehouseService::class);
                 break;
-            case 'finance_cash': 
+            case 'cashes': 
                 $this->CashService = Container::getInstance()->make(CashService::class);
                 break;
             case 'suppliers': 
                 $this->SupplierService = Container::getInstance()->make(SupplierService::class);
                 break;
-            case 'product_groups': 
-                $this->productGroupService = Container::getInstance()->make(ProductGroup::class);
+            case 'productgroups': 
+                $this->productGroupService = Container::getInstance()->make(ProductGroupService::class);
                 break;
-            case 'product_brands': 
-                $this->productBrandService = Container::getInstance()->make(ProductBrand::class);
+            case 'productbrands': 
+                $this->productBrandService = Container::getInstance()->make(ProductBrandService::class);
                 break;
-            case 'product_units': 
-                $this->productUnitService = Container::getInstance()->make(ProductUnit::class);
+            case 'units': 
+                $this->UnitService = Container::getInstance()->make(UnitService::class);
                 break;
             case 'products': 
-                $this->productService = Container::getInstance()->make(Product::class);
+                $this->productService = Container::getInstance()->make(ProductService::class);
                 break;
-            case 'customer_groups': 
-                $this->CustomerGroupService = Container::getInstance()->make(CustomerGroup::class);
+            case 'customergroups': 
+                $this->CustomerGroupService = Container::getInstance()->make(CustomerGroupService::class);
                 break;
             case 'customers': 
-                $this->CustomerService = Container::getInstance()->make(Customer::class);
+                $this->CustomerService = Container::getInstance()->make(CustomerService::class);
                 break;
             default:
                 break;
@@ -94,25 +94,25 @@ class uniqueCode implements Rule
             case 'warehouses': 
                 $count = $this->warehouseService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
-            case 'finance_cash': 
+            case 'cashes': 
                 $count = $this->CashService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'suppliers': 
                 $count = $this->SupplierService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
-            case 'product_groups': 
+            case 'productgroups': 
                 $count = $this->productGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
-            case 'product_brands': 
+            case 'productbrands': 
                 $count = $this->productBrandService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
-            case 'product_units': 
-                $count = $this->productUnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+            case 'units': 
+                $count = $this->UnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
-            case 'product': 
+            case 'products': 
                 $count = $this->productService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
-            case 'customer_groups': 
+            case 'customergroups': 
                 $count = $this->CustomerGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'customers': 

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class ProductUnit extends Model
+class Unit extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;

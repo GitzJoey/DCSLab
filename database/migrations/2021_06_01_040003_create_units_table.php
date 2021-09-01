@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductUnitsTable extends Migration
+class CreateUnitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateProductUnitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_units', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('code');
             $table->string('name');
@@ -32,6 +32,6 @@ class CreateProductUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_units');
+        Schema::dropIfExists('units');
     }
 }

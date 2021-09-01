@@ -3,12 +3,12 @@
 namespace App\Services\Impls;
 
 use Exception;
-use App\Services\CustomerService;
-use App\Models\Customer;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
+
+use App\Services\CustomerService;
+use App\Models\Customer;
 
 class CustomerServiceImpl implements CustomerService
 {
@@ -128,7 +128,6 @@ class CustomerServiceImpl implements CustomerService
         }
         
     }
-
 
     public function delete($id)
     {

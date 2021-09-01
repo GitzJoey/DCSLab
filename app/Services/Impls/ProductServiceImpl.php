@@ -125,7 +125,7 @@ class ProductServiceImpl implements ProductService
         return Product::find($id);
     }
 
-    public function getProductUnitById($id)
+    public function getUnitById($id)
     {
         return Product::find($id);
     }

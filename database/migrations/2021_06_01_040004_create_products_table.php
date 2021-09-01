@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
 			$table->foreignId('group_id')->references('id')->on('product_groups')->onUpdate('cascade')->onDelete('restrict');;
             $table->foreignId('brand_id')->references('id')->on('product_brands')->onUpdate('cascade')->onDelete('restrict');;
             $table->string('name')->nullable();	
-            $table->foreignId('unit_id')->references('id')->on('product_units')->onUpdate('cascade')->onDelete('restrict');;
+            $table->foreignId('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('restrict');;
 			$table->decimal('price', 19, 8)->default(0);
 			$table->integer('tax_status')->nullable();
             $table->string('remarks')->nullable();	

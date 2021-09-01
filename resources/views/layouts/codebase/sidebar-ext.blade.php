@@ -48,7 +48,7 @@
                 <a class="{{ active_class(if_route_pattern('db.product.product_brands')) }}" href="{{route('db.product.product_brands')}}">{{ __('sidebar-ext.db.product.product_brands')}}</a>
             </li>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.product.product_units')) }}" href="{{route('db.product.product_units')}}">{{ __('sidebar-ext.db.product.product_units')}}</a>
+                <a class="{{ active_class(if_route_pattern('db.product.units')) }}" href="{{route('db.product.units')}}">{{ __('sidebar-ext.db.product.units')}}</a>
             </li>
             <li>
                 <a class="{{ active_class(if_route_pattern('db.product.products')) }}" href="{{route('db.product.products')}}">{{ __('sidebar-ext.db.product.products')}}</a>

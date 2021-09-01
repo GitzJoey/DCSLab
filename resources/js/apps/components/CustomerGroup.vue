@@ -28,21 +28,7 @@
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.is_member_card") }}</th>
-                                <!-- <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
-                                <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
-                                <th>{{ $t("table.cols.limit_age_notes") }}</th>
-                                <th>{{ $t("table.cols.term") }}</th>
-                                <th>{{ $t("table.cols.selling_point") }}</th>
-                                <th>{{ $t("table.cols.selling_point_multiple") }}</th>
-                                <th>{{ $t("table.cols.sell_at_capital_price") }}</th>
-                                <th>{{ $t("table.cols.global_markup_percent") }}</th>
-                                <th>{{ $t("table.cols.global_markup_nominal") }}</th>
-                                <th>{{ $t("table.cols.global_discount_percent") }}</th>
-                                <th>{{ $t("table.cols.global_discount_nominal") }}</th>
-                                <th>{{ $t("table.cols.round_on") }}</th>
-                                <th>{{ $t("table.cols.round_digit") }}</th> -->
                                 <th>{{ $t("table.cols.remarks") }}</th>
-                                <!-- <th>{{ $t("table.cols.cash_id") }}</th> -->
                                 <th></th>
                             </tr>
                         </thead>
@@ -51,21 +37,7 @@
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.is_member_card }}</td>
-                                <!-- <td>{{ c.limit_outstanding_notes }}</td>
-                                <td>{{ c.limit_payable_nominal }}</td>
-                                <td>{{ c.limit_age_notes }}</td>
-                                <td>{{ c.term }}</td>
-                                <td>{{ c.selling_point }}</td>
-                                <td>{{ c.selling_point_multiple }}</td>
-                                <td>{{ c.sell_at_capital_price }}</td>
-                                <td>{{ c.global_markup_percent }}</td>
-                                <td>{{ c.global_markup_nominal }}</td>
-                                <td>{{ c.global_discount_percent }}</td>
-                                <td>{{ c.global_discount_nominal }}</td>
-                                <td>{{ c.round_on }}</td>
-                                <td>{{ c.round_digit }}</td> -->
                                 <td>{{ c.remarks }}</td>
-                                <!-- <td>{{ c.cash.name }}</td> -->
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -309,11 +281,14 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.cash_id') }}</label>
+                            <label class="col-2 col-form-label" for="cash_id">{{ $t('fields.cash_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="cash_id" name="cash_id" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="cash_id" name="cash_id" v-model="customergroup.cash.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.cashDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>             
+                                </select> 
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ customergroup.cash.name }}
+                                </div>            
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -399,7 +374,7 @@ export default {
                 round_on: '',
                 round_digit: '',
                 remarks: '',
-                cash_id: {id:''}
+                cash: {id:''}
             },
             cashDDL: [],
         }
@@ -457,7 +432,7 @@ export default {
                 round_on: '',
                 round_digit: '',
                 remarks: '',
-                cash_id: {id:''}
+                cash: {id:''}
             }
         },
         createNew() {

@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\ProductUnitService;
-use App\Models\ProductUnit;
+use App\Services\UnitService;
+use App\Models\Unit;
 
-class ProductUnitServiceImpl implements ProductUnitService
+class UnitServiceImpl implements UnitService
 {
     public function create(
         $code,
@@ -20,15 +20,15 @@ class ProductUnitServiceImpl implements ProductUnitService
         DB::beginTransaction();
 
         try {
-            $productunit = new ProductUnit();
-            $productunit->code = $code;
-            $productunit->name = $name;
+            $unit = new Unit();
+            $unit->code = $code;
+            $unit->name = $name;
 
-            $productunit->save();
+            $unit->save();
 
             DB::commit();
 
-            return $productunit->hId;
+            return $unit->hId;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -38,12 +38,12 @@ class ProductUnitServiceImpl implements ProductUnitService
 
     public function read()
     {
-        return ProductUnit::paginate();
+        return Unit::paginate();
     }
 
-    public function getAllActiveProductUnit()
+    public function getAllActiveUnit()
     {
-        return ProductUnit::all();
+        return Unit::all();
     }
 
     public function update(
@@ -55,9 +55,9 @@ class ProductUnitServiceImpl implements ProductUnitService
         DB::beginTransaction();
 
         try {
-            $productunit = ProductUnit::where('id', '=', $id);
+            $unit = Unit::where('id', '=', $id);
     
-            $retval = $productunit->update([
+            $retval = $unit->update([
                 'code' => $code,
                 'name' => $name,
             ]);
@@ -72,16 +72,16 @@ class ProductUnitServiceImpl implements ProductUnitService
         }
     }
 
-    public function getProductUnitById($id)
+    public function getUnitById($id)
     {
-        return ProductUnit::find($id);
+        return Unit::find($id);
     }
 
     public function delete($id)
     {
-        $productunit = ProductUnit::find($id);
+        $unit = Unit::find($id);
 
-        return $productunit->delete();
+        return $unit->delete();
         
     }
 
@@ -89,12 +89,12 @@ class ProductUnitServiceImpl implements ProductUnitService
     {
         switch($crud_status) {
             case 'create': 
-                $count = ProductUnit::where('code', '=', $code)
+                $count = Unit::where('code', '=', $code)
                 ->whereNull('deleted_at')
                 ->count();
                 return $count;
             case 'update':
-                $count = ProductUnit::where('id', '<>' , $id)
+                $count = Unit::where('id', '<>' , $id)
                 ->where('code', '=', $code)
                 ->whereNull('deleted_at')
                 ->count();

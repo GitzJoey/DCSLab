@@ -119,14 +119,20 @@
                                 <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ product.group.name }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="brand_id">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="brand_id" name="brand_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="brand_id" name="brand_id" v-model="product.brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>             
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ product.brand.name }}
+                                </div>            
                             </div>
                         </div>
                         <div class="form-group row">
@@ -140,9 +146,12 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="unit_id" name="unit_id" v-model="product.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
-                                </select>             
+                                </select>     
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ product.unit.name }}
+                                </div>        
                             </div>
                         </div>
                         <div class="form-group row">
@@ -215,9 +224,9 @@
                                     <option value="3">{{ $t('product_typeDDL.finishedgoods') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
-                                    <span v-if="product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
-                                    <span v-if="product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
+                                    <span v-if="product.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
+                                    <span v-if="product.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
+                                    <span v-if="product.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -324,7 +333,7 @@ export default {
         this.getAllProduct(1);
         this.getAllProductGroup();
         this.getAllProductBrand();
-        this.getAllProductUnit();
+        this.getAllUnit();
     },
     methods: {
         getAllProduct(page) {
@@ -347,8 +356,8 @@ export default {
             });
         },
 
-        getAllProductUnit() {
-            axios.get('/api/get/dashboard/productunit/read/all/active').then(response => {
+        getAllUnit() {
+            axios.get('/api/get/dashboard/unit/read/all/active').then(response => {
                 this.unitDDL = response.data;
             });
         },
@@ -375,7 +384,7 @@ export default {
                 point: '0',
                 estimated_capital_price: '0',
                 is_use_serial: '',
-                product_type: '1',
+                product_type: '',
                 status: '1',
             }
         },

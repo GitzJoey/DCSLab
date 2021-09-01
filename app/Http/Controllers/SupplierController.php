@@ -37,8 +37,8 @@ class SupplierController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('create', '', 'suppliers'),
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'suppliers'),
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

@@ -28,15 +28,6 @@
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.customer_group_id") }}</th>
-                                <!-- <th>{{ $t("table.cols.sales_territory") }}</th>
-                                <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
-                                <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
-                                <th>{{ $t("table.cols.limit_age_notes") }}</th>
-                                <th>{{ $t("table.cols.term") }}</th>
-                                <th>{{ $t("table.cols.address") }}</th>
-                                <th>{{ $t("table.cols.city") }}</th>
-                                <th>{{ $t("table.cols.contact") }}</th>
-                                <th>{{ $t("table.cols.tax_id") }}</th> -->
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
@@ -47,15 +38,6 @@
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.customer_group.name }}</td>
-                                <!-- <td>{{ c.sales_territory }}</td>
-                                <td>{{ c.limit_outstanding_notes }}</td>
-                                <td>{{ c.limit_payable_nominal }}</td>
-                                <td>{{ c.limit_age_notes }}</td>
-                                <td>{{ c.term }}</td>
-                                <td>{{ c.address }}</td>
-                                <td>{{ c.city }}</td>
-                                <td>{{ c.contact }}</td>
-                                <td>{{ c.tax_id }}</td> -->
                                 <td>{{ c.remarks }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
@@ -124,11 +106,14 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.customer_group_id') }}</label>
+                            <label class="col-2 col-form-label" for="customer_group_id">{{ $t('fields.customer_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="customer_group_id" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="customer_group_id" name="customer_group_id" v-model="customer.customer_group" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.customergroupDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>             
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ customer.customer_group.name }}
+                                </div>             
                             </div>
                         </div>
                         <div class="form-group row">
@@ -178,7 +163,7 @@
                         <div class="form-group row">
                             <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" type="number" class="form-control" :placeholder="$t('fields.limit_payable_nominal')" v-model="customer.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customer.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.limit_payable_nominal }}</div>
                             </div>
                         </div>
@@ -235,7 +220,7 @@
                         <div class="form-group row">
                             <label for="inputTaxId" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTaxId" name="tax_id" type="number" class="form-control" :placeholder="$t('fields.tax_id')" v-model="customer.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputTaxId" name="tax_id" type="text" class="form-control" :placeholder="$t('fields.tax_id')" v-model="customer.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.tax_id }}</div>
                             </div>
                         </div>
@@ -324,7 +309,7 @@ export default {
             customer: {
                 code: '',
                 name: '',
-                customer_group_id: {id:''},
+                customer_group: {id:''},
                 sales_territory: '',
                 use_limit_outstanding_notes: '',
                 limit_outstanding_notes: '',
@@ -376,7 +361,7 @@ export default {
             return {
                 code: '',
                 name: '',
-                customer_group_id: {id:''},
+                customer_group: {id:''},
                 sales_territory: '',
                 use_limit_outstanding_notes: '',
                 limit_outstanding_notes: '',

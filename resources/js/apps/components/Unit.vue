@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(b, bIdx) in productunitList.data">
+                            <tr v-for="(b, bIdx) in unitList.data">
                                 <td>{{ b.code }}</td>
                                 <td>{{ b.name }}</td>
                                 <td class="text-center">
@@ -52,13 +52,13 @@
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.productunitList.prev_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.unitList.prev_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
-                            <li :class="{'page-item':true, 'disabled': this.productunitList.next_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.unitList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
@@ -70,7 +70,7 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
-                    <Form id="productunitForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                    <Form id="unitForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -83,17 +83,17 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productunit.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="unit.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productunit.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ unit.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productunit.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="unit.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productunit.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ unit.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -156,8 +156,8 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productunitList: [],
-            productunit: {
+            unitList: [],
+            unit: {
                 code: '',
                 name: '',
             },
@@ -168,26 +168,26 @@ export default {
 
     mounted() {
         this.mode = 'list';
-        this.getAllProductUnit(1);
+        this.getAllUnit(1);
     },
     methods: {
-        getAllProductUnit(page) {
+        getAllUnit(page) {
             this.loading = true;
-            axios.get('/api/get/dashboard/productunit/read?page=' + page).then(response => {
-                this.productunitList = response.data;
+            axios.get('/api/get/dashboard/unit/read?page=' + page).then(response => {
+                this.unitList = response.data;
                 this.loading = false;
             });
         },
         onPaginationChangePage(page) {
             if (page === 'next') {
-                this.getAllProductUnit(this.productunitList.current_page + 1);
+                this.getAllUnit(this.unitList.current_page + 1);
             } else if (page === 'prev') {
-                this.getAllProductUnit(this.productunitList.current_page - 1);
+                this.getAllUnit(this.unitList.current_page - 1);
             } else {
-                this.getAllProductUnit(page);
+                this.getAllUnit(page);
             }
         },
-        emptyProductUnit() {
+        emptyUnit() {
             return {
                 code: '',
                 name: '',
@@ -195,22 +195,22 @@ export default {
         },
         createNew() {
             this.mode = 'create';
-            this.productunit = this.emptyProductUnit();
+            this.unit = this.emptyUnit();
         },
         editSelected(idx) {
             this.mode = 'edit';
-            this.productunit = this.productunitList.data[idx];
+            this.unit = this.unitList.data[idx];
         },
         showSelected(idx) {
             this.mode = 'show';
-            this.productunit = this.productunitList.data[idx];
+            this.unit = this.unitList.data[idx];
         },
         deleteSelected(idx) {
             this.mode = 'delete';
-            this.productunit = this.productunitList.data[idx];
+            this.unit = this.unitList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/productunit/delete/'  + this.productunit.hId).then(response => {
+            axios.post('/api/post/dashboard/unit/delete/'  + this.unit.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -220,14 +220,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/productunit/save', new FormData($('#productunitForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/unit/save', new FormData($('#unitForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/productunit/edit/' + this.productunit.hId, new FormData($('#productunitForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/unit/edit/' + this.unit.hId, new FormData($('#unitForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -255,14 +255,14 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.productunit.profile.img_path = fileReader.result
+                this.unit.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllProductUnit(this.productunitList.current_page);
-            this.productunit = this.emptyProductUnit();
+            this.getAllUnit(this.unitList.current_page);
+            this.unit = this.emptyUnit();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -271,25 +271,25 @@ export default {
             this.contentHidden = !this.contentHidden;
         },
         refreshList() {
-            this.getAllProductUnit(this.productunitList.current_page);
+            this.getAllUnit(this.unitList.current_page);
         },
     },
     computed: {
         getPages() {
-            if (this.productunitList.current_page == null) return 0;
+            if (this.unitList.current_page == null) return 0;
 
-            return Math.ceil(this.productunitList.total / this.productunitList.per_page);
+            return Math.ceil(this.unitList.total / this.unitList.per_page);
         },
         retrieveImage()
         {
-            if (this.productunit.profile.img_path && this.productunit.profile.img_path !== '') {
-                if (this.productunit.profile.img_path.includes('data:image')) {
-                    return this.productunit.profile.img_path;
+            if (this.unit.profile.img_path && this.unit.profile.img_path !== '') {
+                if (this.unit.profile.img_path.includes('data:image')) {
+                    return this.unit.profile.img_path;
                 } else {
-                    return '/storage/' + this.productunit.profile.img_path;
+                    return '/storage/' + this.unit.profile.img_path;
                 }
             } else {
-                return '/images/def-productunit.png';
+                return '/images/def-unit.png';
             }
         }
     }

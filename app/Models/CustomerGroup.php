@@ -70,6 +70,7 @@ class CustomerGroup extends Model
 
     protected $hidden = [
         'id',
+        'cash_id',
         'created_by',
         'updated_by',
         'deleted_by',
