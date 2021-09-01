@@ -42,8 +42,8 @@ class ProductBrandController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('create', '', 'productbrands'),
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'productbrands'),
             'name' => 'required|max:255'
         ]);
 

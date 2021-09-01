@@ -37,8 +37,8 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('create', '', 'customers'),
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'customers'),
             'name' => 'required|max:255',
             'status' => 'required',
         ]);

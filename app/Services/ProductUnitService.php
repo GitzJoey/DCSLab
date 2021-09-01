@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface ProductUnitService
+interface UnitService
 {
     public function create(
         $code,
@@ -11,7 +11,7 @@ interface ProductUnitService
 
     public function read();
 
-    public function getAllActiveProductUnit();
+    public function getAllActiveUnit();
 
     public function update(
         $id,

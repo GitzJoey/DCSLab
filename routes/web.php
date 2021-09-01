@@ -15,7 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CashController;
-use App\Http\Controllers\ProductUnitController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\CustomerController;
@@ -69,7 +69,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         Route::group(['prefix' => 'product'], function () {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product.product_groups');
             Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product.product_brands');
-            Route::get('unit', [ProductUnitController::class, 'index'])->name('db.product.product_units');
+            Route::get('unit', [UnitController::class, 'index'])->name('db.product.product_units');
             Route::get('products', [ProductController::class, 'index'])->name('db.product.products');
 
         });

@@ -4,20 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
-use App\Services\ProductUnitService;
+use App\Services\UnitService;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class ProductUnitController extends Controller
+class UnitController extends Controller
 {
-    private $productUnitService;
+    private $UnitService;
     private $activityLogService;
 
-    public function __construct(ProductUnitService $productUnitService, ActivityLogService $activityLogService)
+    public function __construct(UnitService $UnitService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
-        $this->productUnitService = $productUnitService;
+        $this->UnitService = $UnitService;
         $this->activityLogService = $activityLogService;
 
     }
@@ -31,23 +31,23 @@ class ProductUnitController extends Controller
 
     public function read()
     {
-        return $this->productUnitService->read();
+        return $this->UnitService->read();
     }
 
-    public function getAllActiveProductUnit()
+    public function getAllActiveUnit()
     {
-        return $this->productUnitService->getAllActiveProductUnit();
+        return $this->UnitService->getAllActiveUnit();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('create', '', 'productunits'),
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'units'),
             'name' => 'required|max:255'
         ]);
 
-        $result = $this->productUnitService->create($request['code'], $request['name']);
+        $result = $this->UnitService->create($request['code'], $request['name']);
 
         if ($result == 0) {
             return response()->json([
@@ -63,11 +63,11 @@ class ProductUnitController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'code' => new uniqueCode('update', $id, 'productunits'),
+            'code' => new uniqueCode('update', $id, 'units'),
             'name' => 'required|max:255',
         ]);
 
-        $result = $this->productUnitService->update(
+        $result = $this->UnitService->update(
             $id,
             $request['code'],
             $request['name'],
@@ -86,7 +86,7 @@ class ProductUnitController extends Controller
 
     public function delete($id)
     {
-        $result = $this->productUnitService->delete($id);
+        $result = $this->UnitService->delete($id);
 
         if ($result == false) {
             return response()->json([

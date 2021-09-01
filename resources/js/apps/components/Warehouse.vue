@@ -102,7 +102,7 @@
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</span>
+                                    {{ warehouse.company.name }}
                                 </div>
                             </div>
                         </div>

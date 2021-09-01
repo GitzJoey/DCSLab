@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductGroup;
 use App\Models\ProductBrand;
-use App\Models\ProductUnit;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -82,6 +82,6 @@ class Product extends Model
 
     public function unit()
     {
-        return $this->belongsTo(ProductUnit::class);
+        return $this->belongsTo(Unit::class);
     }
 }
