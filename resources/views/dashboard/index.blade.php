@@ -31,7 +31,7 @@
                     <div class="block-content ribbon ribbon-bookmark ribbon-primary ribbon-left">
                         <div class="ribbon-box">Beta</div>
                         <p class="mt-5">
-                            <img alt="" src="{{ asset('images/warehouse-system.jpg') }}" width="64" height="64"/>
+                            <img alt="" src="{{ asset('images/warehouse_system.png') }}" width="64" height="64"/>
                         </p>
                         <p class="font-w600">Warehouse System</p>
                     </div>
