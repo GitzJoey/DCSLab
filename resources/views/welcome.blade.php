@@ -45,7 +45,7 @@
                                             <a class="page-scroll" href="#contact">CONTACT</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="{{ route('login') }}">LOGIN</a>
+                                            <a href="{{ route('login') }}">DASHBOARD</a>
                                         </li>
                                     </ul>
                                 </div>

@@ -1,6 +1,7 @@
 const mix = require('laravel-mix');
 const webpack = require('webpack')
 const tailwindcss = require("tailwindcss");
+const path = require('path'); mix.alias();
 
 mix.disableNotifications();
 
@@ -31,6 +32,9 @@ mix
                 __VUE_PROD_DEVTOOLS__: false
             })
         ]
+    })
+    .alias({
+        ziggy: path.resolve('vendor/tightenco/ziggy/dist/vue')
     })
     .js('resources/js/apps/profile.js','public/js/apps/profile.js')
     .js('resources/js/apps/role.js','public/js/apps/role.js')

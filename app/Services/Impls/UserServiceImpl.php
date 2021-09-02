@@ -252,4 +252,21 @@ class UserServiceImpl implements UserService
     {
         return User::where('email', '!=', $email)->get();
     }
+
+    public function setRoleForUserId($userId, $roleId)
+    {
+        DB::beginTransaction();
+
+        try {
+            $usr = User::find($userId);
+
+            $usr->syncRoles($roleId);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
+    }
 }
