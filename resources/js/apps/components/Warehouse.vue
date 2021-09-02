@@ -33,6 +33,7 @@
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,14 +96,14 @@
                             </ul>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.company_id') }}</label>
+                            <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="company_id">
-                                    <option value="0">Please select Company Name</option>
-                                    <option value="1">PT. ABC</option>
-                                    <option value="2">PT. DEF</option>
-                                    <option value="3">PT. GHI</option>
-                                </select>             
+                                <select class="form-control" id="company_id" name="company_id" v-model="warehouse.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ warehouse.company.name }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -125,7 +126,6 @@
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="warehouse.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.address }}</div>
                             </div>
                         </div>
@@ -133,7 +133,6 @@
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="warehouse.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="city" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.city }}</div>
                             </div>
                         </div>
@@ -141,7 +140,6 @@
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="warehouse.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.contact }}</div>
                             </div>
                         </div>
@@ -149,7 +147,6 @@
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="warehouse.remarks" v-show="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ warehouse.remarks }}</div>
                             </div>
                         </div>
@@ -216,9 +213,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            address: 'required',
-            city: 'required',
-            contact: 'required',
         };
 
         return {
@@ -231,9 +225,9 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            warehouseList: { },
+            warehouseList: [],
             warehouse: {
-                company_id: '',
+                company: {id:''},
                 code: '',
                 name: '',
                 address: '',
@@ -242,6 +236,7 @@ export default {
                 remarks: '',
                 status: '',
             },
+            companyDDL: [],
         }
     },
     created() {
@@ -250,13 +245,19 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllWarehouse(1);
+        this.getAllCompany();
     },
     methods: {
         getAllWarehouse(page) {
             this.loading = true;
-            axios.get('/api/get/admin/warehouse/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/warehouse/read?page=' + page).then(response => {
                 this.warehouseList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllCompany() {
+            axios.get('/api/get/dashboard/company/read/all/active').then(response => {
+                this.companyDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -270,7 +271,7 @@ export default {
         },
         emptyWarehouse() {
             return {
-                company_id:'',
+                company: {id:''},
                 code: '',
                 name: '',
                 address: '',
@@ -297,7 +298,7 @@ export default {
             this.warehouse = this.warehouseList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/warehouse/delete/'  + this.warehouse.hId).then(response => {
+            axios.post('/api/post/dashboard/company/warehouses/delete/'  + this.warehouse.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -307,18 +308,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/warehouse/save', new FormData($('#warehouseForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/company/warehouses/save', new FormData($('#warehouseForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/warehouse/edit/' + this.warehouse.hId, new FormData($('#warehouseForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/dashboard/company/warehouses/edit/' + this.warehouse.hId, new FormData($('#warehouseForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

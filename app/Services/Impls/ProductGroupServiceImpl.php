@@ -41,6 +41,10 @@ class ProductGroupServiceImpl implements ProductGroupService
         return ProductGroup::paginate();
     }
 
+    public function getAllActiveProductGroup()
+    {
+        return ProductGroup::all();
+    }
 
     public function update(
         $id,
@@ -68,10 +72,32 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
+    public function getProductGroupById($id)
+    {
+        return ProductGroup::find($id);
+    }
+
     public function delete($id)
     {
         $productgroup = ProductGroup::find($id);
 
         return $productgroup->delete();
+    }
+
+    public function checkDuplicatedCode($crud_status, $id, $code)
+    {
+        switch($crud_status) {
+            case 'create': 
+                $count = ProductGroup::where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+            case 'update':
+                $count = ProductGroup::where('id', '<>' , $id)
+                ->where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+        }
     }
 }

@@ -11,14 +11,12 @@ interface ProductService
         $name,
         $unit_id,
         $price,
-        $tax ,
-        $information,
+        $tax_status,
+        $remarks,
         $estimated_capital_price,
+        $point,
         $is_use_serial,
-        $is_buy,
-        $is_production_material,
-        $is_production_result,
-        $is_sell,
+        $product_type,
         $status
 
     );
@@ -26,22 +24,23 @@ interface ProductService
     public function read();
 
     public function update(
+        $id,
         $code,
         $group_id,
         $brand_id,
         $name,
         $unit_id,
         $price,
-        $tax ,
-        $information,
+        $tax_status,
+        $remarks,
         $estimated_capital_price,
+        $point,
         $is_use_serial,
-        $is_buy,
-        $is_production_material,
-        $is_production_result,
-        $is_sell,
+        $product_type,
         $status
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($crud_status, $id, $code);
 }

@@ -11,6 +11,8 @@ interface ProductGroupService
 
     public function read();
 
+    public function getAllActiveProductGroup();
+
     public function update(
         $id,
         $code,
@@ -18,4 +20,6 @@ interface ProductGroupService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($crud_status, $id, $code);
 }

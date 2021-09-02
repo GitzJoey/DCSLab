@@ -28,22 +28,25 @@ class ActivityLogServiceImpl implements ActivityLogService
             case 'db.finance.cashes':
                 $friendlyName = 'Cashes';
                 break;    
+            case 'db.purchase.suppliers':
+                $friendlyName = 'Suppliers';
+                break; 
             case 'db.product.groups':
                 $friendlyName = 'Product Groups';
                 break;    
             case 'db.product.brands':
                 $friendlyName = 'Product Brands';
                 break;    
-            case 'db.product.units':
+            case 'db.units':
                 $friendlyName = 'Product Units';
                 break;
             case 'db.products':
                 $friendlyName = 'Products';
                 break;
-            case 'db.sales_customer_groups':
+            case 'db.customer_groups':
                 $friendlyName = 'Customer Groups';
                 break;
-            case 'db.sales_customers':
+            case 'db.customers':
                 $friendlyName = 'Customers';
                 break;
             case 'db.profile':

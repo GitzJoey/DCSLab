@@ -1,28 +1,28 @@
 <?php
 
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\DevController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\InboxController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ActivityLogController;
 
-use App\Http\Controllers\DoctorAccountingPageController;
+use App\Http\Controllers\BranchController;
 
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\BranchController;
-use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\FinanceCashController;
-use App\Http\Controllers\ProductGroupController;
-use App\Http\Controllers\ProductBrandController;
-use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SalesCustomerController;
-use App\Http\Controllers\SalesCustomerGroupController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\CashController;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\ProductBrandController;
+use App\Http\Controllers\ProductGroupController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SupplierController;
 
-use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\CustomerGroupController;
+use App\Http\Controllers\DoctorAccountingPageController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -67,10 +67,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         /* ext */
 
         Route::group(['prefix' => 'product'], function () {
-            Route::get('group', [ProductGroupController::class, 'index'])->name('db.product_groups');
-            Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product_brands');
-            Route::get('unit', [ProductUnitController::class, 'index'])->name('db.product_units');
-            Route::get('products', [ProductController::class, 'index'])->name('db.products');
+            Route::get('group', [ProductGroupController::class, 'index'])->name('db.product.product_groups');
+            Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product.product_brands');
+            Route::get('unit', [UnitController::class, 'index'])->name('db.product.units');
+            Route::get('products', [ProductController::class, 'index'])->name('db.product.products');
 
         });
 
@@ -82,12 +82,16 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         });
 
         Route::group(['prefix' => 'finance'], function () {
-            Route::get('cashes', [FinanceCashController::class, 'index'])->name('db.finance_cashes');
+            Route::get('cashes', [CashController::class, 'index'])->name('db.finance.cashes');
+        });
+
+        Route::group(['prefix' => 'purchase'], function () {
+            Route::get('suppliers', [SupplierController::class, 'index'])->name('db.purchase.suppliers');
         });
 
         Route::group(['prefix' => 'sales'], function () {
-            Route::get('customer groups', [SalesCustomerGroupController::class, 'index'])->name('db.sales_customer_groups');
-            Route::get('customers', [SalesCustomerController::class, 'index'])->name('db.sales_customers');
+            Route::get('customer groups', [CustomerGroupController::class, 'index'])->name('db.sales.customer_groups');
+            Route::get('customers', [CustomerController::class, 'index'])->name('db.sales.customers');
         });
 
         /* ext */

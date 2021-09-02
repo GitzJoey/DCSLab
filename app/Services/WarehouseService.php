@@ -30,4 +30,6 @@ interface WarehouseService
     );
 
     public function delete($id);
+
+    public function checkDuplicatedCode($crud_status, $id, $code);
 }

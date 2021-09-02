@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ActivityLogService;
-use App\Services\ProductService;
+use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
+use App\Services\ProductService;
 
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 
 class ProductController extends Controller
 {
@@ -34,17 +35,33 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {   
         $request->validate([
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'products'),
             'name' => 'required|max:255',
             'price' => 'required|max:255',
-            'information' => 'required|max:255',
-            'estimated_capital_price' => 'required|max:255',
-            'status' => 'required'
+            'status' => 'required',
         ]);
-       
-        $result = 1;
+
+        $is_use_serial = $request['is_use_serial'];
+        $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
+
+        $result = $this->productService->create(
+            $request['code'], 
+            Hashids::decode($request['group_id'])[0], 
+            Hashids::decode($request['brand_id'])[0], 
+            $request['name'], 
+            Hashids::decode($request['unit_id'])[0],
+            $request['price'], 
+            $request['tax_status'], 
+            $request['remarks'], 
+            $request['estimated_capital_price'], 
+            $request['point'],
+            $is_use_serial, 
+            $request['product_type'],
+            $request['status']
+        );
 
         if ($result == 0) {
             return response()->json([
@@ -59,34 +76,43 @@ class ProductController extends Controller
 
     public function update($id, Request $request)
     {
-        $inputtedRolePermissions = [];
-        for ($i = 0; $i < count($request['permissions']); $i++) {
-            array_push($inputtedRolePermissions, array(
-                'id' => Hashids::decode($request['permissions'][$i])[0]
-            ));
-        }
+        
+        $request->validate([
+            'code' => new uniqueCode('update', $id, 'products'),
+            'name' => 'required|max:255',
+            'price' => 'required|max:255',
+            'status' => 'required',
+        ]);
+
+        $is_use_serial = $request['is_use_serial'];
+        $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
 
         $result = $this->productService->update(
             $id,
-            $request['code'],
-            $request['group_id'],
-            $request['brand_id'],
-            $request['name'],
-            $request['unit_id'],
-            $request['price'],
-            $request['tax_status'],
-            $request['information'],
-            $request['estimated_capital_price'],
-            $request['is_use_serial'],
-            $request['is_buy'],
-            $request['is_production_material'],
-            $request['is_production_result'],
-            $request['is_sell'],
-            $request['status'],
-            $inputtedRolePermissions
+            $request['code'], 
+            Hashids::decode($request['group_id'])[0], 
+            Hashids::decode($request['brand_id'])[0], 
+            $request['name'], 
+            Hashids::decode($request['unit_id'])[0],
+            $request['price'], 
+            $request['tax_status'], 
+            $request['remarks'], 
+            $request['estimated_capital_price'], 
+            $request['point'],
+            $is_use_serial, 
+            $request['product_type'],
+            $request['status']
         );
 
-        return response()->json();
+        if ($result == 0) {
+            return response()->json([
+                'message' => ''
+            ],500);
+        } else {
+            return response()->json([
+                'message' => ''
+            ],200);
+        }
     }
 
     public function delete($id)

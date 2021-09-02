@@ -16,20 +16,17 @@ const messages = {
             title: 'Product Lists',
             cols: {
                 code: 'Code',
-                group_name: 'Group Name',
-                brand_name: 'Brand Name',
+                group_id: 'Group Name',
+                brand_id: 'Brand Name',
                 name: 'Name',
-                unit_name: 'Unit Name',
+                unit_id: 'Unit Name',
                 price: 'Price',
-                tax: 'Tax',
-                information: 'Information',
+                tax_status: 'Tax',
+                remarks: 'Remarks',
                 estimated_capital_price: 'Estimated Capital Price',
                 point: 'Point',
                 is_use_serial: 'Is Use Serial',
-                is_buy: 'Is Buy',
-                is_production_material: 'Is Production Material',
-                is_production_result: 'Is Production Result',
-                is_sell: 'Is Sell',
+                product_type: 'Product Type',
                 status: 'Status',
                 
             }
@@ -47,20 +44,17 @@ const messages = {
         },
         fields: {
             code: 'Code',
-            group_name: 'Group Name',
-            brand_name: 'Brand Name',
+            group_id: 'Group Name',
+            brand_id: 'Brand Name',
             name: 'Name',
-            unit_name: 'Unit Name',
+            unit_id: 'Unit Name',
             price: 'Price',
-            tax: 'Tax',
-            information: 'Information',
+            tax_status: 'Tax',
+            remarks: 'Remarks',
             estimated_capital_price: 'Estimated Capital Price',
             point: 'Point',
             is_use_serial: 'Is Use Serial',
-            is_buy: 'Is Buy',
-            is_production_material: 'Is Production Material',
-            is_production_result: 'Is Production Result',
-            is_sell: 'Is Sell',
+            product_type: 'Product Type',
             status: 'Status',
             settings: {
                 settings: 'Settings',
@@ -75,34 +69,41 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        tax_statusDDL: {
+            notax: 'No Tax',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
+        },
+        is_use_serial: {
+            active: 'Yes',
+            inactive: 'No',
+        },
         statusDDL: {
             active: 'Active',
-            inactive: 'Inactive',
-        },
-        bankDDL: {
-            active: 'Active',
-            inactive: 'Inactive',
-        },
+            inactive: 'Inactive'
+        }
     },
     id: {
         table: {
             title: 'Daftar Product',
             cols: {
                 code: 'Kode',
-                group_name: 'Nama Group',
-                brand_name: 'Nama Merk',
+                group_id: 'Kelompok',
+                brand_id: 'Merk',
                 name: 'Nama',
-                unit_name: 'Nama Satuan',
+                unit_id: 'Satuan',
                 price: 'Harga',
-                tax: 'Ppn',
-                information: 'Informasi',
+                tax_status: 'PPN',
+                remarks: 'Remarks',
                 estimated_capital_price: 'Perkiraan Harga Modal',
                 point: 'Poin',
                 is_use_serial: 'Memakai Nomor Serial',
-                is_buy: 'Beli',
-                is_production_material: 'Bahan Produksi',
-                is_production_result: 'Hasil Produksi',
-                is_sell: 'Jual',
+                product_type: 'Tipe Produk',
                 status: 'Status',
             }
         },
@@ -119,20 +120,16 @@ const messages = {
         },
         fields: {
             code: 'Kode',
-            group_name: 'Nama Group',
-            brand_name: 'Nama Merk',
+            group_id: 'Nama Group',
+            brand_id: 'Nama Merk',
             name: 'Nama',
-            unit_name: 'Nama Satuan',
+            unit_id: 'Nama Satuan',
             price: 'Harga',
-            tax: 'Ppn',
-            information: 'Informasi',
+            tax_status: 'PPN',
+            remarks: 'Remarks',
             estimated_capital_price: 'Perkiraan Harga Modal',
             point: 'Poin',
             is_use_serial: 'Memakai Nomor Serial',
-            is_buy: 'Beli',
-            is_production_material: 'Bahan Produksi',
-            is_production_result: 'Hasil Produksi',
-            is_sell: 'Jual',
             status: 'Status',
             settings: {
                 settings: 'Pengaturan',
@@ -146,6 +143,20 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        tax_statusDDL: {
+            notax: 'Tanpa PPN',
+            excudetax: 'Belum Termasuk PPN',
+            includetax: 'Termasuk PPN'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
+        },
+        is_use_serial: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         },
         statusDDL: {
             active: 'Aktif',

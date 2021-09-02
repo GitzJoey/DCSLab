@@ -6,13 +6,13 @@ use App\Services\ActivityLogService;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 
+use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
 
 class BranchController extends Controller
 {
     private $branchService;
     private $activityLogService;
-
 
     public function __construct(BranchService $branchService, ActivityLogService $activityLogService)
     {
@@ -35,20 +35,26 @@ class BranchController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {  
         $request->validate([
             'company_id' => 'required',
             'code' => 'required|max:255',
+            'code' => new uniqueCode('create', '', 'branches'),
             'name' => 'required|max:255',
-            'address' => 'required|max:255',
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255',
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
-
-        $result = $this->branchService->create($request['company_id'], $request['code'], $request['name'], $request['address'], $request['city'], $request['contact'], $request['remarks'], $request['status']);
-
+        
+        $result = $this->branchService->create(
+            Hashids::decode($request['company_id'])[0], 
+            $request['code'], 
+            $request['name'], 
+            $request['address'], 
+            $request['city'], 
+            $request['contact'], 
+            $request['remarks'], 
+            $request['status']
+        );
+    
         if ($result == 0) {
             return response()->json([
                 'message' => ''
@@ -64,18 +70,14 @@ class BranchController extends Controller
     {
         $request->validate([
             'company_id' => 'required|max:255' ,
-            'code' => 'required|max:255' ,
+            'code' => new uniqueCode('update', $id, 'branches'),
             'name' => 'required|max:255',
-            'address' => 'required|max:255' ,
-            'city' => 'required|max:255',
-            'contact' => 'required|max:255' ,
-            'remarks' => 'required|max:255',
             'status' => 'required'
         ]);
 
         $result = $this->branchService->update(
             $id,
-            $request['company_id'],
+            Hashids::decode($request['company_id'])[0], 
             $request['code'],
             $request['name'],
             $request['address'],

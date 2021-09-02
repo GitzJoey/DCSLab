@@ -206,4 +206,22 @@ class UserController extends Controller
 
         return redirect('/home');
     }
+
+    public function setRoleByUserId(Request $request, $system)
+    {
+        $usr = Auth::user();
+
+        switch($system) {
+            case 'POS':
+                $role = $this->roleService->getRoleByName('pos-owner');
+                break;
+            default:
+                break;
+        }
+
+        if ($role)
+            $this->userService->setRoleForUserId($usr->id, $role->id);
+
+        return redirect('/logout');
+    }
 }

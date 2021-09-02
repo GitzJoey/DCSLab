@@ -1,13 +1,13 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('finance_cashes.title') }}
+    {{ __('cashes.title') }}
 @endsection
 
 @section('content')
-    <div id="financecashVue"></div>
+    <div id="cashVue"></div>
 @endsection
 
 @section('js_after')
-    <script src="{{ mix('js/apps/financecash.js') }}"></script>
+    <script src="{{ mix('js/apps/cash.js') }}"></script>
 @endsection

@@ -26,21 +26,13 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
-                                <th>{{ $t("table.cols.group_name") }}</th>
-                                <th>{{ $t("table.cols.brand_name") }}</th>
+                                <th>{{ $t("table.cols.group_id") }}</th>
+                                <th>{{ $t("table.cols.brand_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.unit_name") }}</th>
+                                <th>{{ $t("table.cols.unit_id") }}</th>
                                 <th>{{ $t("table.cols.price") }}</th>
-                                <th>{{ $t("table.cols.tax") }}</th>
-                                <th>{{ $t("table.cols.information") }}</th>
-                                <th>{{ $t("table.cols.estimated_capital_price") }}</th>
-                                <th>{{ $t("table.cols.point") }}</th>
-                                <th>{{ $t("table.cols.point") }}</th>
-                                <th>{{ $t("table.cols.is_use_serial") }}</th>
-                                <th>{{ $t("table.cols.is_buy") }}</th>
-                                <th>{{ $t("table.cols.is_production_material") }}</th>
-                                <th>{{ $t("table.cols.is_production_result") }}</th>
-                                <th>{{ $t("table.cols.is_sell") }}</th>
+                                <th>{{ $t("table.cols.tax_status") }}</th>
+                                <th>{{ $t("table.cols.product_type") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
@@ -53,16 +45,20 @@
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.unit.name }}</td>
                                 <td>{{ c.price }}</td>
-                                <td>{{ c.tax }}</td>
-                                <td>{{ c.infortmation }}</td>
-                                <td>{{ c.estimated_capital_price }}</td>
-                                <td>{{ c.point }}</td>
-                                <td>{{ c.is_use_serial }}</td>
-                                <td>{{ c.is_buy }}</td>
-                                <td>{{ c.is_production_material }}</td>
-                                <td>{{ c.is_production_result }}</td>
-                                <td>{{ c.is_sell }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>
+                                    <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="c.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
+                                    <span v-if="c.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
+                                    <span v-if="c.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -112,152 +108,138 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="product.code" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="product.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.group_name') }}</label>
+                            <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="example-select">
-                                    <option value="0">Please select Group Name</option>
-                                    <option value="1">Oil</option>
-                                    <option value="2">Cigarret</option>
-                                    <option value="3">Wheat Flour</option>
-                                </select>             
+                                <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ product.group.name }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.brand_name') }}</label>
+                            <label class="col-2 col-form-label" for="brand_id">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="example-select">
-                                    <option value="0">Please select Brand Name</option>
-                                    <option value="1">Rose Brand</option>
-                                    <option value="2">Sampoerna</option>
-                                    <option value="3">Segi Tiga</option>
-                                </select>             
+                                <select class="form-control" id="brand_id" name="brand_id" v-model="product.brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ product.brand.name }}
+                                </div>            
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="product.name" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="product.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.unit_name') }}</label>
+                            <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="example-select">
-                                    <option value="0">Please select Unit Name</option>
-                                    <option value="1">Pcs</option>
-                                    <option value="2">Gr</option>
-                                    <option value="3">Dozen</option>
-                                </select>             
+                                <select class="form-control" id="unit_id" name="unit_id" v-model="product.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                </select>     
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ product.unit.name }}
+                                </div>        
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputPrice" class="col-2 col-form-label">{{ $t('fields.price') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputPrice" name="price" as="input" :class="{'form-control':true, 'is-invalid': errors['price']}" :placeholder="$t('fields.price')" :label="$t('fields.price')" v-model="product.price" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputPrice" name="price" as="input" :class="{'form-control':true, 'is-invalid': errors['price']}" :placeholder="$t('fields.price')" :label="$t('fields.price')" v-model="product.price" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="price" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.price }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.tax') }}</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="example-select">
-                                    <option value="0">Please select Tax Option</option>
-                                    <option value="1">No Tax</option>
-                                    <option value="2">Exclude Tax</option>
-                                    <option value="3">Include Tax</option>
-                                </select>             
+                            <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select class="form-control" id="tax_status" name="tax_status" v-model="product.tax_status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="1">{{ $t('tax_statusDDL.notax') }}</option>
+                                    <option value="2">{{ $t('tax_statusDDL.excudetax') }}</option>
+                                    <option value="3">{{ $t('tax_statusDDL.includetax') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span v-if="tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputInformation" class="col-2 col-form-label">{{ $t('fields.information') }}</label>
+                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
-                                <textarea id="inputInformation" name="information" type="text" class="form-control" :placeholder="$t('fields.information')" v-model="product.information" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="information" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.information }}</div>
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="product.remarks" v-show="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.remarks }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputPoint" class="col-2 col-form-label">{{ $t('fields.point') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputPoint" name="point" as="input" :class="{'form-control':true, 'is-invalid': errors['point']}" :placeholder="$t('fields.point')" :label="$t('fields.point')" v-model="product.point" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="point" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.point }}</div>
+                                <Field id="inputPoint" name="point" as="input" :class="{'form-control':true, 'is-invalid': errors['point']}" :placeholder="$t('fields.point')" :label="$t('fields.point')" v-model="product.point" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.point }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputEstimated_Capital_Price" class="col-2 col-form-label">{{ $t('fields.estimated_capital_price') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputEstimated_Capital_Price" name="estimated_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['estimated_capital_price']}" :placeholder="$t('fields.estimated_capital_price')" :label="$t('fields.estimated_capital_price')" v-model="product.estimated_capital_price" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="estimatescapitalprice" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ product.name }}</div>
+                                <Field id="inputEstimated_Capital_Price" name="estimated_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['estimated_capital_price']}" :placeholder="$t('fields.estimated_capital_price')" :label="$t('fields.estimated_capital_price')" v-model="product.estimated_capital_price" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.estimated_capital_price }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.is_use_serial') }}</label>
+                            <label for="is_use_serial" class="col-2 col-form-label">{{ $t('fields.is_use_serial') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.is_buy') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.is_production_material') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.is_production_result') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.is_sell') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="product.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
-                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="product.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="product.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="is_use_serial" name="is_use_serial" v-model="product.is_use_serial" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="product.is_use_serial === 1">{{ $t('is_use_serial.active') }}</span>
+                                        <span v-if="product.is_use_serial === 0">{{ $t('is_use_serial.inactive') }}</span>
                                     </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="product_type" class="col-2 col-form-label">{{ $t('fields.product_type') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select class="form-control" id="product_type" name="product_type" v-model="product.product_type" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="1">{{ $t('product_typeDDL.rawmaterial') }}</option>
+                                    <option value="2">{{ $t('product_typeDDL.wip') }}</option>
+                                    <option value="3">{{ $t('product_typeDDL.finishedgoods') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span v-if="product.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
+                                    <span v-if="product.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
+                                    <span v-if="product.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select class="form-control" id="status" name="status" v-model="product.status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value='1'>{{ $t('statusDDL.active') }}</option>
+                                    <option value='0'>{{ $t('statusDDL.inactive') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span v-if="product.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="product.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -310,8 +292,6 @@ export default {
             code: 'required',
             name: 'required',
             price: 'required',
-            estimated_capital_price: 'required',
-            point: 'required',
         };
 
         return {
@@ -324,19 +304,25 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productList: {},
+            productList: [],
             product: {
-                product: [],
-                selectedProducts: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                group: {id:''},
+                brand: {id:''},
+                name: '',
+                unit: {id:''},
+                price: '',
+                tax_status: '',
+                remarks: '',
+                point: '',
+                estimated_capital_price: '',
+                is_use_serial: '',
+                product_type: '',
+                status: '',
             },
+            groupDDL: [],
+            brandDDL: [],
+            unitDDL: [],
         }
     },
     created() {
@@ -345,15 +331,37 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllProduct(1);
+        this.getAllProductGroup();
+        this.getAllProductBrand();
+        this.getAllUnit();
     },
     methods: {
         getAllProduct(page) {
             this.loading = true;
-            axios.get('/api/get/admin/product/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/product/read?page=' + page).then(response => {
                 this.productList = response.data;
                 this.loading = false;
             });
         },
+
+        getAllProductGroup() {
+            axios.get('/api/get/dashboard/productgroup/read/all/active').then(response => {
+                this.groupDDL = response.data;
+            });
+        },
+
+        getAllProductBrand() {
+            axios.get('/api/get/dashboard/productbrand/read/all/active').then(response => {
+                this.brandDDL = response.data;
+            });
+        },
+
+        getAllUnit() {
+            axios.get('/api/get/dashboard/unit/read/all/active').then(response => {
+                this.unitDDL = response.data;
+            });
+        },
+
         onPaginationChangePage(page) {
             if (page === 'next') {
                 this.getAllProduct(this.productList.current_page + 1);
@@ -365,18 +373,19 @@ export default {
         },
         emptyProduct() {
             return {
-                product: [],
-                selectedproducts: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                group: {id:''},
+                brand: {id:''},
+                name: '',
+                unit: {id:''},
+                price: '0',
+                tax_status: '',
+                remarks: '',
+                point: '0',
+                estimated_capital_price: '0',
+                is_use_serial: '',
+                product_type: '',
+                status: '1',
             }
         },
         createNew() {
@@ -396,7 +405,7 @@ export default {
             this.product = this.productList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/product/delete/'  + this.product.hId).then(response => {
+            axios.post('/api/post/dashboard/product/delete/'  + this.product.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -406,18 +415,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/product/save', new FormData($('#productForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/product/save', new FormData($('#productForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/product/edit/' + this.product.hId, new FormData($('#productForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/dashboard/product/edit/' + this.product.hId, new FormData($('#productForm')[0])) .then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

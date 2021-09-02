@@ -27,16 +27,8 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.sales_customer_group") }}</th>
-                                <th>{{ $t("table.cols.sales_territory") }}</th>
-                                <th>{{ $t("table.cols.limit_outstanding_notes") }}</th>
-                                <th>{{ $t("table.cols.limit_payable_nominal") }}</th>
-                                <th>{{ $t("table.cols.limit_due_date") }}</th>
-                                <th>{{ $t("table.cols.term") }}</th>
-                                <th>{{ $t("table.cols.address") }}</th>
-                                <th>{{ $t("table.cols.city") }}</th>
-                                <th>{{ $t("table.cols.contact") }}</th>
-                                <th>{{ $t("table.cols.tax_id") }}</th>
+                                <th>{{ $t("table.cols.customer_group_id") }}</th>
+                                <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
@@ -45,17 +37,12 @@
                             <tr v-for="(c, cIdx) in customerList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.sales_customer_group.name }}</td>
-                                <td>{{ c.sales_territory }}</td>
-                                <td>{{ c.limit_outstanding_notes }}</td>
-                                <td>{{ c.limit_payable_nominal }}</td>
-                                <td>{{ c.limit_due_date }}</td>
-                                <td>{{ c.term }}</td>
-                                <td>{{ c.address }}</td>
-                                <td>{{ c.city }}</td>
-                                <td>{{ c.contact }}</td>
-                                <td>{{ c.tax_id }}</td>
-                                <td>{{ c.status }}</td>
+                                <td>{{ c.customer_group.name }}</td>
+                                <td>{{ c.remarks }}</td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -63,6 +50,9 @@
                                         </button>
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -102,44 +92,49 @@
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="customer.code" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="customer.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="customer.name" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="customer.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">Customer Group</label>
+                            <label class="col-2 col-form-label" for="customer_group_id">{{ $t('fields.customer_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="sales_customer_group">
-                                    <option value="0">Please select Customer Group</option>
-                                    <option value="1">Retail</option>
-                                    <option value="2">Wholesale Price</option>
-                                    <option value="3">Distributor</option>
-                                </select>             
+                                <select class="form-control" id="customer_group_id" name="customer_group_id" v-model="customer.customer_group" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.customergroupDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ customer.customer_group.name }}
+                                </div>             
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputSalesTerritory" class="col-2 col-form-label">{{ $t('fields.sales_territory') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputSalesTerritory" name="sales_territory" as="input" :class="{'form-control':true, 'is-invalid': errors['sales_territory']}" :placeholder="$t('fields.sales_territory')" :label="$t('fields.sales_territory')" v-model="customer.sales_territory" v-if="this.mode === 'create' || this.mode === 'edit'" :readonly="this.mode === 'edit'"/>
-                                <ErrorMessage name="sales_territory" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.sales_territory }}</div>
+                                <Field id="inputSalesTerritory" name="sales_territory" as="input" :class="{'form-control':true, 'is-invalid': errors['sales_territory']}" :placeholder="$t('fields.sales_territory')" :label="$t('fields.sales_territory')" v-model="customer.sales_territory" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.sales_territory }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUseLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.use_limit_outstanding_notes') }}</label>
+                            <label for="inputUse_limit_outstanding_notes" class="col-2 col-form-label">{{ $t('fields.use_limit_outstanding_notes') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="use_limit_outstanding_notes" name="use_limit_outstanding_notes" v-model="customer.use_limit_outstanding_notes" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customer.use_limit_outstanding_notes === 1">{{ $t('use_limit_outstanding_notes.active') }}</span>
+                                        <span v-if="customer.use_limit_outstanding_notes === 0">{{ $t('use_limit_outstanding_notes.inactive') }}</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
@@ -147,96 +142,105 @@
                             <label for="inputLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.limit_outstanding_notes') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputLimitOutstandingNotes" name="limit_outstanding_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_outstanding_notes']}" :placeholder="$t('fields.limit_outstanding_notes')" :label="$t('fields.limit_outstanding_notes')" v-model="customer.limit_outstanding_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_outstanding_notes" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUseLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.use_limit_payable_nominal') }}</label>
+                            <label for="inputUse_Limit_Outstanding_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_payable_nominal') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="use_limit_payable_nominal" name="use_limit_payable_nominal" v-model="customer.use_limit_payable_nominal" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customer.use_limit_payable_nominal === 1">{{ $t('use_limit_payable_nominal.active') }}</span>
+                                        <span v-if="customer.use_limit_payable_nominal === 0">{{ $t('use_limit_payable_nominal.inactive') }}</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" type="number" class="form-control" :placeholder="$t('fields.limit_payable_nominal')" v-model="customer.limit_payable_nominal" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_payable_nominal" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.limit_payable_nominal }}</div>
+                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customer.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.limit_payable_nominal }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUseLimitDueDate" class="col-2 col-form-label">{{ $t('fields.use_limit_due_date') }}</label>
+                            <label for="inputUse_Limit_Age_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_age_notes') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">
-                                    <input type="checkbox" class="css-control-input">
-                                    <span class="css-control-indicator"></span>
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="use_limit_age_notes" name="use_limit_age_notes" v-model="customer.use_limit_age_notes" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customer.use_limit_age_notes === 1">{{ $t('use_limit_age_notes.active') }}</span>
+                                        <span v-if="customer.use_limit_age_notes === 0">{{ $t('use_limit_age_notes.inactive') }}</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputLimitDueDate" class="col-2 col-form-label">{{ $t('fields.limit_due_date') }}</label>
+                            <label for="inputLimitAgeNotes" class="col-2 col-form-label">{{ $t('fields.limit_age_notes') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputLimitDueDate" name="limit_due_date" type="number" class="form-control" :placeholder="$t('fields.limit_due_date')" v-model="customer.limit_due_date" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="limit_due_date" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.limit_due_date }}</div>
+                                <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customer.limit_age_notes" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="customer.term" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="term" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.term }}</div>
+                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="customer.term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.term }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="customer.address" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="address" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.address }}</div>
+                                <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="customer.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.address }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="customer.city" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="city" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.city }}</div>
+                                <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="customer.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.city }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="customer.contact" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.contact }}</div>
+                                <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="customer.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.contact }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputTaxId" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTaxId" name="tax_id" type="number" class="form-control" :placeholder="$t('fields.tax_id')" v-model="customer.tax_id" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.tax_id }}</div>
+                                <Field id="inputTaxId" name="tax_id" type="text" class="form-control" :placeholder="$t('fields.tax_id')" v-model="customer.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.tax_id }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
+                            <div class="col-md-10">
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="customer.remarks" v-show="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.remarks }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="customer.status" v-if="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="ACTIVE">{{ $t('statusDDL.active') }}</option>
-                                        <option value="INACTIVE">{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show'">
-                                        <span v-if="customer.status === 'ACTIVE'">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="customer.status === 'INACTIVE'">{{ $t('statusDDL.inactive') }}</span>
-                                    </div>
+                                <select class="form-control" id="status" name="status" v-model="customer.status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value='1'>{{ $t('statusDDL.active') }}</option>
+                                    <option value='0'>{{ $t('statusDDL.inactive') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span v-if="customer.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="customer.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -288,14 +292,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            sales_territory: 'required',
-            limit_outstanding_notes: 'required',
-            limit_payable_nominal: 'required',
-            limit_due_date: 'required',
-            term: 'required',
-            address: 'required',
-            city: 'required',
-            contact: 'required',
 
         };
 
@@ -311,17 +307,24 @@ export default {
             contentHidden: false,
             customerList: [],
             customer: {
-                customer: [],
-                selectedCustomers: [],
-                profile: {
-                    status: 'ACTIVE',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: '',
-                    timeFormat: ''
-                }
+                code: '',
+                name: '',
+                customer_group: {id:''},
+                sales_territory: '',
+                use_limit_outstanding_notes: '',
+                limit_outstanding_notes: '',
+                use_limit_payable_nominal: '',
+                limit_payable_nominal: '',
+                use_limit_age_notes: '',
+                term: '',
+                address: '',
+                city: '',
+                contact: '',
+                tax_id: '',
+                remarks: '',
+                status: '',
             },
+            customergroupDDL: [],
         }
     },
     created() {
@@ -330,14 +333,19 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllCustomer(1);
-        //this.getAllCompanies();
+        this.getAllCustomerGroup();
     },
     methods: {
         getAllCustomer(page) {
             this.loading = true;
-            axios.get('/api/get/admin/customer/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/customer/read?page=' + page).then(response => {
                 this.customerList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllCustomerGroup() {
+            axios.get('/api/get/dashboard/customergroup/read/all/active').then(response => {
+                this.customergroupDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -351,18 +359,22 @@ export default {
         },
         emptyCustomer() {
             return {
-                customer: [],
-                selectedCustomers: [],
-                profile: {
-                    img_path: '',
-                    country: '',
-                    status: '1',
-                },
-                selectedSettings: {
-                    theme: 'corporate',
-                    dateFormat: 'yyyy_MM_dd',
-                    timeFormat: 'hh_mm_ss'
-                }
+                code: '',
+                name: '',
+                customer_group: {id:''},
+                sales_territory: '',
+                use_limit_outstanding_notes: '',
+                limit_outstanding_notes: '',
+                use_limit_payable_nominal: '1',
+                limit_payable_nominal: '',
+                use_limit_age_notes: '1',
+                term: '',
+                address: '',
+                city: '',
+                contact: '',
+                tax_id: '',
+                remarks: '',
+                status: '1',
             }
         },
         createNew() {
@@ -377,21 +389,29 @@ export default {
             this.mode = 'show';
             this.customer = this.customerList.data[idx];
         },
+        deleteSelected(idx) {
+            this.mode = 'delete';
+            this.customer = this.customerList.data[idx];
+
+            this.loading = true;
+            axios.post('/api/post/dashboard/customer/delete/'  + this.customer.hId).then(response => {
+                this.backToList();
+            }).catch(e => {
+                this.handleError(e, actions);
+                this.loading = false;
+            });
+        },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/customer/save', new FormData($('#customerForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/customer/save', new FormData($('#customerForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/customer/edit/' + this.customer.hId, new FormData($('#customerForm')[0]), {
-                    headers: {
-                        'content-type': 'multipart/form-data'
-                    }
-                }).then(response => {
+                axios.post('/api/post/dashboard/customer/edit/' + this.customer.hId, new FormData($('#customerForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

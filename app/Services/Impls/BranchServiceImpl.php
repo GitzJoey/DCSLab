@@ -24,7 +24,7 @@ class BranchServiceImpl implements BranchService
     )
     {
         DB::beginTransaction();
-
+        
         try {
             $branch = new Branch();
             $branch->company_id = $company_id;
@@ -53,7 +53,6 @@ class BranchServiceImpl implements BranchService
         return Branch::with('company')->paginate();
     }
 
-
     public function update(
         $id,
         $company_id,
@@ -72,6 +71,7 @@ class BranchServiceImpl implements BranchService
             $branch = Branch::where('id', '=', $id);
 
             $retval = $branch->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'address' => $address,
@@ -101,6 +101,22 @@ class BranchServiceImpl implements BranchService
         $branch = Branch::find($id);
 
         return $branch->delete();
-        
+    }
+
+    public function checkDuplicatedCode($crud_status, $id, $code)
+    {
+        switch($crud_status) {
+            case 'create': 
+                $count = Branch::where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+            case 'update':
+                $count = Branch::where('id', '<>' , $id)
+                ->where('code', '=', $code)
+                ->whereNull('deleted_at')
+                ->count();
+                return $count;
+        }
     }
 }

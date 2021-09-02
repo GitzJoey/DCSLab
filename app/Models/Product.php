@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductGroup;
 use App\Models\ProductBrand;
-use App\Models\ProductUnit;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Product extends Model
 {
@@ -22,22 +23,38 @@ class Product extends Model
         'name',
         'unit_id',
         'price',
-        'tax',
-        'information',
+        'tax_status',
+        'remarks',
         'estimated_capital_price',
+        'point',
         'is_use_serial',
-        'is_buy',
-        'is_production_material',
-        'is_production_result',
-        'is_sell',
+        'product_type',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'group_id', 'brand_id', 'name', 'unit_id', 'price', 'tax', 'information', 'estimated_capital_price', 'is_use_serial', 'is_buy', 'is_production_material', 'is_production_result', 'is_sell', 'status'];
+    protected static $logAttributes = [
+        'code', 
+        'group_id', 
+        'brand_id', 
+        'name', 
+        'unit_id', 
+        'price', 
+        'tax_status', 
+        'remarks', 
+        'estimated_capital_price', 
+        'point',
+        'is_use_serial', 
+        'product_type', 
+        'status'
+    ];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
+        'id',
+        'group_id', 
+        'brand_id', 
+        'unit_id', 
         'created_by',
         'updated_by',
         'deleted_by',
@@ -45,6 +62,13 @@ class Product extends Model
         'updated_at',
         'deleted_at'
     ];
+
+    protected $appends = ['hId'];
+
+    public function getHIdAttribute() : string
+    {
+        return HashIds::encode($this->attributes['id']);
+    }
 
     public function group()
     {
@@ -58,6 +82,6 @@ class Product extends Model
 
     public function unit()
     {
-        return $this->belongsTo(ProductUnit::class);
+        return $this->belongsTo(Unit::class);
     }
 }

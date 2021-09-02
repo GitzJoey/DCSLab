@@ -33,6 +33,7 @@
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,12 +96,14 @@
                             </ul>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="example-select">{{ $t('fields.company_id') }}</label>
+                            <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="example-select" name="company_id">
-                                    <option value="0">Please select Company Name</option>
+                                <select class="form-control" id="company_id" name="company_id" v-model="branch.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>             
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ branch.company.name }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -115,7 +118,6 @@
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="branch.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ branch.name }}</div>
                             </div>
                         </div>
@@ -123,7 +125,6 @@
                             <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputAddress" name="address" as="input" :class="{'form-control':true, 'is-invalid': errors['address']}" :placeholder="$t('fields.address')" :label="$t('fields.address')" v-model="branch.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="address" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ branch.address }}</div>
                             </div>
                         </div>
@@ -131,7 +132,6 @@
                             <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputCity" name="city" as="input" :class="{'form-control':true, 'is-invalid': errors['city']}" :placeholder="$t('fields.city')" :label="$t('fields.city')" v-model="branch.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="city" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ branch.city }}</div>
                             </div>
                         </div>
@@ -139,7 +139,6 @@
                             <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputContact" name="contact" as="input" :class="{'form-control':true, 'is-invalid': errors['contact']}" :placeholder="$t('fields.contact')" :label="$t('fields.contact')" v-model="branch.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="contact" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ branch.contact }}</div>
                             </div>
                         </div>
@@ -147,7 +146,6 @@
                             <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
                             <div class="col-md-10">
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="branch.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <ErrorMessage name="remarks" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ branch.remarks }}</div>
                             </div>
                         </div>
@@ -213,10 +211,6 @@ export default {
     setup() {
         const schema = {
             code: 'required',
-            name: 'required',
-            address: 'required',
-            city: 'required',
-            contact: 'required',
         };
 
         return {
@@ -231,7 +225,7 @@ export default {
             contentHidden: false,
             branchList: [],
             branch: {
-                company_id: '',
+                company: {id:''},
                 code: '',
                 name: '',
                 address: '',
@@ -254,13 +248,13 @@ export default {
     methods: {
         getAllBranch(page) {
             this.loading = true;
-            axios.get('/api/get/admin/branch/read?page=' + page).then(response => {
+            axios.get('/api/get/dashboard/branch/read?page=' + page).then(response => {
                 this.branchList = response.data;
                 this.loading = false;
             });
         },
         getAllCompany() {
-            axios.get('/api/get/admin/company/read/all/active').then(response => {
+            axios.get('/api/get/dashboard/company/read/all/active').then(response => {
                 this.companyDDL = response.data;
             });
         },
@@ -275,7 +269,7 @@ export default {
         },
         emptyBranch() {
             return {
-                company_id:'',
+                company: {id:''},
                 code: '',
                 name: '',
                 address: '',
@@ -302,7 +296,7 @@ export default {
             this.branch = this.branchList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/admin/branch/delete/'  + this.branch.hId).then(response => {
+            axios.post('/api/post/dashboard/company/branches/delete/'  + this.branch.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -312,14 +306,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/admin/branch/save', new FormData($('#branchForm')[0])). then(response => {
+                axios.post('/api/post/dashboard/company/branches/save', new FormData($('#branchForm')[0])). then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/admin/branch/edit/' + this.branch.hId, new FormData($('#branchForm')[0])).then(response => {
+                axios.post('/api/post/dashboard/company/branches/edit/' + this.branch.hId, new FormData($('#branchForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
