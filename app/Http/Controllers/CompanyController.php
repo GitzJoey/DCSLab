@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Rules\uniqueCode;
-use App\Services\ActivityLogService;
-use App\Services\CustomerGroupService;
 use Illuminate\Http\Request;
+use App\Services\CompanyService;
 
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 
-class CustomerGroupController extends Controller
+class CompanyController extends Controller
 {
-    private $CustomerGroupService;
+    private $companyService;
     private $activityLogService;
 
-    public function __construct(CustomerGroupService $CustomerGroupService, ActivityLogService $activityLogService)
+    public function __construct(CompanyService $companyService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
-        $this->CustomerGroupService = $CustomerGroupService;
+        $this->companyService = $companyService;
         $this->activityLogService = $activityLogService;
 
     }
@@ -26,69 +26,29 @@ class CustomerGroupController extends Controller
     {
         $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-        return view('sales.customer.groups.index');
+        return view('company.companies.index');
     }
 
     public function read()
     {
-        return $this->CustomerGroupService->read();
+        return $this->companyService->read();
     }
 
-    public function getAllCustomerGroup()
+    public function getAllActiveCompany()
     {
-        return $this->CustomerGroupService->getAllCustomerGroup();
+        return $this->companyService->getAllActiveCompany();
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'customergroups'),
+            'code' => new uniqueCode('create', '', 'companies'),
             'name' => 'required|max:255',
+            'status' => 'required'
         ]);
 
-        $is_member_card = $request['is_member_card'];
-        $is_member_card == 'on' ? $is_member_card = 1 : $is_member_card = 0;
-
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
-
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
-
-        $use_limit_age_notes = $request['use_limit_age_notes'];
-        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
-
-        $sell_at_capital_price = $request['sell_at_capital_price'];
-        $sell_at_capital_price == 'on' ? $sell_at_capital_price = 1 : $sell_at_capital_price = 0;
-
-        $is_rounding = $request['is_rounding'];
-        $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
-
-        $result = $this->CustomerGroupService->create(
-            $request['code'],
-            $request['name'],
-            $is_member_card,
-            $use_limit_outstanding_notes,
-            $request['limit_outstanding_notes'],
-            $use_limit_payable_nominal,
-            $request['limit_payable_nominal'],
-            $use_limit_age_notes,
-            $request['limit_age_notes'],
-            $request['term'],
-            $request['selling_point'],
-            $request['selling_point_multiple'],
-            $sell_at_capital_price,
-            $request['global_markup_percent'],
-            $request['global_markup_nominal'],
-            $request['global_discount_percent'],
-            $request['global_discount_nominal'],
-            $is_rounding,
-            $request['round_on'],
-            $request['round_digit'],
-            $request['remarks'],
-            Hashids::decode($request['cash_id'])[0], 
-        );
+        $result = $this->companyService->create($request['code'], $request['name'],$request['status']);
 
         if ($result == 0) {
             return response()->json([
@@ -103,54 +63,17 @@ class CustomerGroupController extends Controller
 
     public function update($id, Request $request)
     {
-
         $request->validate([
-            'code' =>  new uniqueCode('update', $id, 'customergroups'),
+            'code' => new uniqueCode('update', $id, 'companies'),
             'name' => 'required|max:255',
+            'status' => 'required'
         ]);
 
-        $is_member_card = $request['is_member_card'];
-        $is_member_card == 'on' ? $is_member_card = 1 : $is_member_card = 0;
-
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
-
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
-
-        $use_limit_age_notes = $request['use_limit_age_notes'];
-        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
-
-        $sell_at_capital_price = $request['sell_at_capital_price'];
-        $sell_at_capital_price == 'on' ? $sell_at_capital_price = 1 : $sell_at_capital_price = 0;
-
-        $is_rounding = $request['is_rounding'];
-        $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
-
-        $result = $this->CustomerGroupService->update(
+        $result = $this->companyService->update(
             $id,
             $request['code'],
             $request['name'],
-            $is_member_card,
-            $use_limit_outstanding_notes,
-            $request['limit_outstanding_notes'],
-            $use_limit_payable_nominal,
-            $request['limit_payable_nominal'],
-            $use_limit_age_notes,
-            $request['limit_age_notes'],
-            $request['term'],
-            $request['selling_point'],
-            $request['selling_point_multiple'],
-            $sell_at_capital_price,
-            $request['global_markup_percent'],
-            $request['global_markup_nominal'],
-            $request['global_discount_percent'],
-            $request['global_discount_nominal'],
-            $is_rounding,
-            $request['round_on'],
-            $request['round_digit'],
-            $request['remarks'],
-            Hashids::decode($request['cash_id'])[0], 
+            $request['status']
         );
 
         if ($result == 0) {
@@ -166,7 +89,7 @@ class CustomerGroupController extends Controller
 
     public function delete($id)
     {
-        $result = $this->CustomerGroupService->delete($id);
+        $result = $this->companyService->delete($id);
 
         if ($result == false) {
             return response()->json([
@@ -177,5 +100,6 @@ class CustomerGroupController extends Controller
                 'message' => ''
             ],200);
         }
+
     }
 }
