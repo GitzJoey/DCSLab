@@ -45,10 +45,19 @@ class CompanyController extends Controller
             'code' => 'required|max:255',
             'code' => new uniqueCode('create', '', 'companies'),
             'name' => 'required|max:255',
+            'default' => 'required',
             'status' => 'required'
         ]);
 
-        $result = $this->companyService->create($request['code'], $request['name'],$request['status']);
+        $default = $request['default'];
+        $default == 'on' ? $default = 1 : $default = 0;
+
+        $result = $this->companyService->create(
+            $request['code'],
+            $request['name'],
+            $default,
+            $request['status']
+        );
 
         if ($result == 0) {
             return response()->json([
@@ -66,13 +75,18 @@ class CompanyController extends Controller
         $request->validate([
             'code' => new uniqueCode('update', $id, 'companies'),
             'name' => 'required|max:255',
+            'default' => 'required',
             'status' => 'required'
         ]);
+
+        $default = $request['default'];
+        $default == 'on' ? $default = 1 : $default = 0;
 
         $result = $this->companyService->update(
             $id,
             $request['code'],
             $request['name'],
+            $default,
             $request['status']
         );
 

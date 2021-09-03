@@ -7,6 +7,7 @@ interface CompanyService
     public function create(
         $code,
         $name,
+        $default,
         $status
     );
 
@@ -18,6 +19,7 @@ interface CompanyService
         $id,
         $code,
         $name,
+        $default,
         $status
     );
 

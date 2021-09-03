@@ -17,6 +17,7 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
+                default: 'Default',
                 status: 'Status',
             }
         },
@@ -33,6 +34,7 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
+            default: 'Default',
             status: 'Status',
             settings: {
                 settings: 'Settings',
@@ -58,6 +60,7 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
+                default: 'Default',
                 status: 'Status',
             }
         },
@@ -75,6 +78,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Nama',
+            default: 'Default',
             status: 'Status',
             settings: {
                 settings: 'Pengaturan',

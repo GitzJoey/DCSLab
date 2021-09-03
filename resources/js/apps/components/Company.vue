@@ -103,6 +103,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="inputDefault" class="col-2 col-form-label">{{ $t('fields.default') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="default" name="default" v-model="company.default" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="company.default === 1">{{ $t('default.active') }}</span>
+                                        <span v-if="company.default === 0">{{ $t('default.inactive') }}</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <div>
@@ -181,6 +196,7 @@ export default {
             company: {
                 code: '',
                 name: '',
+                default: '',
                 status: '',
             },
        }
@@ -212,6 +228,7 @@ export default {
             return {
                 code: '',
                 name: '',
+                default: '',
                 status: '1',
             }
         },

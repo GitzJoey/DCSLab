@@ -15,6 +15,7 @@ class CompanyServiceImpl implements CompanyService
     public function create(
         $code,
         $name,
+        $default,
         $status
     )
     {
@@ -24,6 +25,7 @@ class CompanyServiceImpl implements CompanyService
             $company = new Company();
             $company->code = $code;
             $company->name = $name;
+            $company->default = $default;
             $company->status = $status;
 
             $company->save();
@@ -52,6 +54,7 @@ class CompanyServiceImpl implements CompanyService
         $id,
         $code,
         $name,
+        $default,
         $status
     )
     {
@@ -63,6 +66,7 @@ class CompanyServiceImpl implements CompanyService
             $retval = $company->update([
                 'code' => $code,
                 'name' => $name,
+                'default' => $default,
                 'status' => $status
             ]);
 
