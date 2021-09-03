@@ -36,7 +36,10 @@
                             <tr v-for="(c, cIdx) in customergroupList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.is_member_card }}</td>
+                                <td>
+                                    <span v-if="c.is_member_card === 1">{{ $t('is_member_card.active') }}</span>
+                                    <span v-if="c.is_member_card === 0">{{ $t('is_member_card.inactive') }}</span>
+                                </td>
                                 <td>{{ c.remarks }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
