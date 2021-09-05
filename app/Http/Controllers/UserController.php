@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Rules\sameEmail;
 use App\Rules\validDropDownValue;
 use App\Services\ActivityLogService;
+use http\Env\Response;
 use Illuminate\Http\Request;
 
 use App\Services\UserService;
@@ -103,15 +104,7 @@ class UserController extends Controller
             $profile
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -165,15 +158,7 @@ class UserController extends Controller
             $settings
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function resetPassword($id)

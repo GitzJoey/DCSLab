@@ -180,6 +180,8 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Cmgmyr\Messenger\MessengerServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,
+
+        App\Providers\ResponseMacroServiceProvider::class,
     ],
 
     /*
