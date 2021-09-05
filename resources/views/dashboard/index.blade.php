@@ -24,7 +24,7 @@
                                 <img alt="" src="{{ asset('images/pos_system.png') }}" width="64" height="64"/>
                             </p>
                             <p class="font-w600">POS System</p>
-                            <div class="font-size-sm text-muted" data-toggle="popover" title="POS System" data-placement="bottom" data-content="Activated"><i class="icon icon-check"></i></div>
+                            <div class="font-size-sm text-muted" data-toggle="popover" title="POS System" data-placement="bottom" data-content="Activated"><i class="icon icon-check text-body-color-dark"></i></div>
                         </div>
                     </div>
                 @else
@@ -34,7 +34,7 @@
                                 <img alt="" src="{{ asset('images/pos_system.png') }}" width="64" height="64"/>
                             </p>
                             <p class="font-w600">POS System</p>
-                            <div class="font-size-sm text-muted" data-toggle="popover" title="POS System" data-placement="bottom" data-content="Click to Activate"><i class="icon icon-info"></i></div>
+                            <div class="font-size-sm text-muted" data-toggle="popover" title="POS System" data-placement="bottom" data-content="Click to Activate"><i class="icon icon-info text-body-color-dark"></i></div>
                         </div>
                     </a>
                 @endif
@@ -48,7 +48,7 @@
                                 <img alt="" src="{{ asset('images/warehouse_system.png') }}" width="64" height="64"/>
                             </p>
                             <p class="font-w600">Warehouse System</p>
-                            <div class="font-size-sm text-muted" data-toggle="popover" title="Warehouse System" data-placement="bottom" data-content="Activated"><i class="icon icon-check"></i></div>
+                            <div class="font-size-sm text-muted" data-toggle="popover" title="Warehouse System" data-placement="bottom" data-content="Activated"><i class="icon icon-check text-body-color-dark"></i></div>
                         </div>
                     </div>
                 @else
@@ -59,7 +59,7 @@
                                 <img alt="" src="{{ asset('images/warehouse_system.png') }}" width="64" height="64"/>
                             </p>
                             <p class="font-w600">Warehouse System</p>
-                            <div class="font-size-sm text-muted" data-toggle="popover" title="Warehouse System" data-placement="bottom" data-content="Click to Activate"><i class="icon icon-info"></i></div>
+                            <div class="font-size-sm text-muted" data-toggle="popover" title="Warehouse System" data-placement="bottom" data-content="Click to Activate"><i class="icon icon-info text-body-color-dark"></i></div>
                         </div>
                     </a>
                 @endif

@@ -119,5 +119,7 @@ class DashboardController extends Controller
             default:
                 break;
         }
+
+        return redirect()->action([DashboardController::class, 'index']);
     }
 }

@@ -119,15 +119,15 @@ class RoleServiceImpl implements RoleService
 
     public function getRolesByUserId($userId)
     {
-        return User::with('roles')->find($userId)->roles()->pluck('display_name');
+        return User::with('roles')->find($userId)->roles()->pluck('name');
     }
 
     public function setRoleForUserId($roleName, $userId)
     {
         $usr = User::find($userId);
 
-        $role = $this->getRoleByDisplayName($roleName, true);
+        $role = $this->getRoleByName($roleName);
 
-
+        $usr->attachRole($role);
     }
 }
