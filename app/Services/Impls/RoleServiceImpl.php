@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 
@@ -114,5 +115,19 @@ class RoleServiceImpl implements RoleService
         } else {
             return Role::whereRaw("UPPER(display_name) = '".strtoupper($name)."'")->first();
         }
+    }
+
+    public function getRolesByUserId($userId)
+    {
+        return User::with('roles')->find($userId)->roles()->pluck('display_name');
+    }
+
+    public function setRoleForUserId($roleName, $userId)
+    {
+        $usr = User::find($userId);
+
+        $role = $this->getRoleByDisplayName($roleName, true);
+
+
     }
 }

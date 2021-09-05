@@ -20,7 +20,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <nav class="navbar navbar-expand-lg">
-                                <a class="navbar-brand" href="#">
+                                <a class="navbar-brand" href="">
                                     <img src="{{ asset('images/g_logo.png') }}" alt="Logo" width="50px" height="50px">
                                 </a>
 
@@ -71,10 +71,10 @@
                         <div class="col-xl-8 col-lg-10">
                             <div class="header-content text-center">
                                 <h3 class="header-title">DCSLab</h3>
-                                <p class="text">A simple, customizable, and, beautiful SaaS business enabler!</p>
+                                <p class="text">One Stop Business Solutions. Crafted With Latest Technology In Mind</p>
                                 <ul class="header-btn">
-                                    <li><a class="main-btn btn-one" href="#">GET IN TOUCH</a></li>
-                                    <li><a class="main-btn btn-two video-popup" href="#">WATCH THE VIDEO <i class="lni-play"></i></a></li>
+                                    <li><a class="main-btn btn-one" href="">GET IN TOUCH</a></li>
+                                    <li><a class="main-btn btn-two video-popup" href="">WATCH THE VIDEO <i class="lni-play"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -91,8 +91,8 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="section-title pb-10">
-                            <h4 class="title">Crafted For</h4>
-                            <p class="text">Stop wasting time and money designing and managing a website that doesn’t get results. Happiness guaranteed!</p>
+                            <h4 class="title">Services</h4>
+                            <p class="text">Stop wasting time and money that doesn’t get results<br/>Happiness guaranteed!</p>
                         </div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                                     </div>
                                     <div class="services-content media-body">
                                         <h4 class="services-title">Startup</h4>
-                                        <p class="text">Short description for the ones</br> who look for something new.</p>
+                                        <p class="text">Company profile, landing page, startup page or just start something cool.</p>
                                     </div>
                                 </div>
                             </div>
@@ -116,19 +116,19 @@
                                         <i class="lni-bar-chart"></i>
                                     </div>
                                     <div class="services-content media-body">
-                                        <h4 class="services-title">SaaS Business</h4>
-                                        <p class="text">Short description for the ones</br> who look for something new.</p>
+                                        <h4 class="services-title">Business Solutions</h4>
+                                        <p class="text">Point of Sales, Warehouse, CRM, Point System or any solutions to support your business</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="services-content mt-40 d-sm-flex">
                                     <div class="services-icon">
-                                        <i class="lni-brush"></i>
+                                        <i class="lni-code-alt"></i>
                                     </div>
                                     <div class="services-content media-body">
-                                        <h4 class="services-title">Agency</h4>
-                                        <p class="text">Short description for the ones</br> who look for something new.</p>
+                                        <h4 class="services-title">Custom Services</h4>
+                                        <p class="text">Fully customizeable framework to handle any services or business requirement</p>
                                     </div>
                                 </div>
                             </div>
@@ -138,8 +138,8 @@
                                         <i class="lni-bulb"></i>
                                     </div>
                                     <div class="services-content media-body">
-                                        <h4 class="services-title">App Landing</h4>
-                                        <p class="text">Short description for the ones</br> who look for something new.</p>
+                                        <h4 class="services-title">Consultancy</h4>
+                                        <p class="text">Our team with 15 more year experiences in IT world, ready to help.</p>
                                     </div>
                                 </div>
                             </div>
@@ -159,8 +159,8 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-6">
                         <div class="section-title text-center pb-10">
-                            <h4 class="title">Our Pricing</h4>
-                            <p class="text">Stop wasting time and money designing and managing a website that doesn’t get results. Happiness guaranteed!</p>
+                            <h4 class="title">Pricing</h4>
+                            <p class="text">Please use our Contact page or email to our support for more flexible pricing</p>
                         </div>
                     </div>
                 </div>

@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use App\Rules\sameEmail;
 use App\Services\ActivityLogService;
 use App\Services\UserService;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     private $userService;
+    private $roleService;
     private $activityLogService;
 
-    public function __construct(UserService $userService, ActivityLogService $activityLogService)
+    public function __construct(UserService $userService, RoleService $roleService, ActivityLogService $activityLogService)
     {
         $this->middleware('auth');
         $this->userService = $userService;
+        $this->roleService = $roleService;
         $this->activityLogService = $activityLogService;
     }
 
@@ -24,7 +27,9 @@ class DashboardController extends Controller
     {
         $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-        return view('dashboard.index');
+        $roles = $this->roleService->getRolesByUserId(Auth::user()->id);
+
+        return view('dashboard.index', compact($roles, 'roles'));
     }
 
     public function profile(Request $request)
@@ -97,6 +102,22 @@ class DashboardController extends Controller
             return response()->json([
                 'message' => ''
             ],200);
+        }
+    }
+
+    public function activateSystem($system)
+    {
+        $usrId = Auth::user()->id;
+        switch(strtoupper($system))
+        {
+            case 'POS':
+                $this->roleService->setRoleForUserId('pos-owner', $usrId);
+                break;
+            case 'WHS':
+                $this->roleService->setRoleForUserId('whs-owner', $usrId);
+                break;
+            default:
+                break;
         }
     }
 }

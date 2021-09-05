@@ -30,4 +30,8 @@ interface RoleService
     public function getRoleByName($name);
 
     public function getRoleByDisplayName($name, $caseSensitive);
+
+    public function getRolesByUserId($userId);
+
+    public function setRoleForUserId($roleName, $userId);
 }

@@ -64,6 +64,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
         Route::get('logs', ['middleware' => ['role:dev'], 'uses' => '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index'])->name('db.logs');
 
+        Route::get('activate/{system}', [DashboardController::class, 'activateSystem'])->name('db.activate');
+
         /* ext */
 
         Route::group(['prefix' => 'product'], function () {
@@ -120,17 +122,17 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
     Route::group(['prefix' => 'doctoraccounting'], function () {
         Route::get('', [DoctorAccountingPageController::class, 'home']);
-    
+
         Route::get('dokumentasi', [DoctorAccountingPageController::class, 'dokumentasi']);
-    
+
         Route::get('faq', [DoctorAccountingPageController::class, 'faq']);
-        
+
         Route::get('download', [DoctorAccountingPageController::class, 'download']);
-        
+
         Route::get('harga', [DoctorAccountingPageController::class, 'harga']);
-        
+
         Route::get('client', [DoctorAccountingPageController::class, 'client']);
-        
+
         Route::get('tentangkami', [DoctorAccountingPageController::class, 'tentangkami']);
     });
 

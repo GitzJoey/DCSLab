@@ -30,7 +30,21 @@ return [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
-        ]
+        ],
+        /* ext */
+
+        'pos-owner' => [
+            'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'settings' => 'r,u',
+            'company' => 'c,r,u,d',
+            'product' => 'c,r,u,d',
+            'unit' => 'c,r,u,d',
+            'product_brand' => 'c,r,u,d',
+            'product_group' => 'c,r,u,d',
+        ],
+
+        /* ext */
     ],
 
     'permissions_map' => [
