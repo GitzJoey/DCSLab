@@ -51,7 +51,7 @@ class CompanyController extends Controller
         ]);
 
         $default = $request['default'];
-        if ($default == 1) {
+        if ($default == 'on') {
             $userId = Auth::user()->id;
             $this->companyService->resetDefaultCompany($userId);
         };
@@ -86,7 +86,7 @@ class CompanyController extends Controller
         ]);
 
         $default = $request['default'];
-        if ($default == 1) {
+        if ($default == "on") {
             $userId = Auth::user()->id;
             $this->companyService->resetDefaultCompany($userId);
         };

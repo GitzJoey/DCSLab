@@ -115,9 +115,8 @@ class CompanyServiceImpl implements CompanyService
 
         try {
 
-            $retval = Company::where('created_by', '=', $userId)->update([
-                'default' => 0
-            ]);
+            $retval = Company::where('created_by', '=', $userId)
+                      ->update(['default' => 0]);
 
             DB::commit();
 
