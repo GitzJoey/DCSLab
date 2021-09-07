@@ -53,9 +53,9 @@ class SupplierServiceImpl implements SupplierService
 
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Supplier::paginate();
+        return Supplier::where('created_by', '=', $userId)->paginate();
     }
 
 

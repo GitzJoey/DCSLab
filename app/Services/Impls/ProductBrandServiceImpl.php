@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -36,9 +37,9 @@ class ProductBrandServiceImpl implements ProductBrandService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return ProductBrand::paginate();
+        return ProductBrand::where('created_by', '=', $userId)->paginate();
     }
 
     public function getAllActiveProductBrand()

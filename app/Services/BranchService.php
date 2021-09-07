@@ -15,7 +15,7 @@ interface BranchService
         $status
     );
 
-    public function read();
+    public function read($userId);
 
     public function update(
         $id,

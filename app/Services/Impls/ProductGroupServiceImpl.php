@@ -36,9 +36,9 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return ProductGroup::paginate();
+        return ProductGroup::where('created_by', '=', $userId)->paginate();
     }
 
     public function getAllActiveProductGroup()

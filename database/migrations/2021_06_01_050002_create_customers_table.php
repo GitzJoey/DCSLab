@@ -15,10 +15,10 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreignId('customer_group_id')->references('id')->on('customer_groups')->onUpdate('cascade')->onDelete('restrict');;
             $table->string('code');
             $table->string('name')->nullable();
 
-            $table->foreignId('customer_group_id')->references('id')->on('customer_groups')->onUpdate('cascade')->onDelete('restrict');;
             $table->string('sales_territory')->nullable();
 
             $table->integer('use_limit_outstanding_notes')->nullable();

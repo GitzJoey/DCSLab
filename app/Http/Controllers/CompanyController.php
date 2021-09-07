@@ -8,6 +8,7 @@ use App\Services\CompanyService;
 
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -31,7 +32,8 @@ class CompanyController extends Controller
 
     public function read()
     {
-        return $this->companyService->read();
+        $userId = Auth::user()->id;
+        return $this->companyService->read($userId);
     }
 
     public function getAllActiveCompany()
@@ -45,9 +47,14 @@ class CompanyController extends Controller
             'code' => 'required|max:255',
             'code' => new uniqueCode('create', '', 'companies'),
             'name' => 'required|max:255',
-            'default' => 'required',
             'status' => 'required'
         ]);
+
+        $default = $request['default'];
+        if ($default == 1) {
+            $userId = Auth::user()->id;
+            $this->companyService->resetDefaultCompany($userId);
+        };
 
         $default = $request['default'];
         $default == 'on' ? $default = 1 : $default = 0;
@@ -75,9 +82,14 @@ class CompanyController extends Controller
         $request->validate([
             'code' => new uniqueCode('update', $id, 'companies'),
             'name' => 'required|max:255',
-            'default' => 'required',
             'status' => 'required'
         ]);
+
+        $default = $request['default'];
+        if ($default == 1) {
+            $userId = Auth::user()->id;
+            $this->companyService->resetDefaultCompany($userId);
+        };
 
         $default = $request['default'];
         $default == 'on' ? $default = 1 : $default = 0;

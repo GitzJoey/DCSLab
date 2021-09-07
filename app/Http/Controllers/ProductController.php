@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
 
@@ -31,7 +32,8 @@ class ProductController extends Controller
 
     public function read()
     {
-        return $this->productService->read();
+        $userId = Auth::user()->id;
+        return $this->productService->read($userId);
     }
 
     public function store(Request $request)

@@ -7,6 +7,7 @@ use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class UnitController extends Controller
@@ -31,7 +32,8 @@ class UnitController extends Controller
 
     public function read()
     {
-        return $this->UnitService->read();
+        $userId = Auth::user()->id;
+        return $this->UnitService->read($userId);
     }
 
     public function getAllActiveUnit()

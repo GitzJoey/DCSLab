@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Cash;
+use App\Models\CustomerGroup;
 use Illuminate\Database\Seeder;
 
 class CashTableSeeder extends Seeder
@@ -14,6 +15,11 @@ class CashTableSeeder extends Seeder
      */
     public function run()
     {
-        Cash::factory()->count(5)->create();
+        Cash::factory()->count(15)->create();
+
+        $Cash = Cash::factory()->create();
+        $CustomerGroup = CustomerGroup::factory()->create();
+
+        $Cash->customergroups()->saveMany($CustomerGroup);
     }
 }

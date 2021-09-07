@@ -6,6 +6,7 @@ use App\Services\ActivityLogService;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -31,7 +32,8 @@ class BranchController extends Controller
 
     public function read()
     {
-        return $this->branchService->read();
+        $userId = Auth::user()->id;
+        return $this->branchService->read($userId);
     }
 
     public function store(Request $request)

@@ -11,7 +11,7 @@ interface CompanyService
         $status
     );
 
-    public function read();
+    public function read($userId);
 
     public function getAllActiveCompany();
 
@@ -26,4 +26,6 @@ interface CompanyService
     public function delete($id);
 
     public function checkDuplicatedCode($crud_status, $id, $code);
+
+    public function resetDefaultCompany($userId);
 }

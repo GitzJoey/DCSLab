@@ -27,6 +27,7 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.default") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
@@ -36,6 +37,10 @@
                             <tr v-for="(c, cIdx) in companyList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
+                                <td>
+                                    <span v-if="c.default === 1">{{ $t('defaultDDL.active') }}</span>
+                                    <span v-if="c.default === 0">{{ $t('defaultDDL.inactive') }}</span>
+                                </td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
                                     <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
@@ -111,8 +116,8 @@
                                         <span class="css-control-indicator"></span>
                                     </span>
                                     <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="company.default === 1">{{ $t('default.active') }}</span>
-                                        <span v-if="company.default === 0">{{ $t('default.inactive') }}</span>
+                                        <span v-if="company.default === 1">{{ $t('defaultDDL.active') }}</span>
+                                        <span v-if="company.default === 0">{{ $t('defaultDDL.inactive') }}</span>
                                     </div>
                                 </label>
                             </div>

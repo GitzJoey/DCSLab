@@ -66,11 +66,10 @@ class CustomerServiceImpl implements CustomerService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Customer::with('customer_group')->paginate();
+        return Customer::where('created_by', '=', $userId)->with('customer_group')->paginate();
     }
-
 
     public function update(
         $id,

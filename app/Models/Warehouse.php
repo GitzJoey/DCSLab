@@ -8,6 +8,7 @@ use App\Models\Company;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
 
 class Warehouse extends Model
 {
@@ -50,5 +51,33 @@ class Warehouse extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $user = Auth::user();
+            if ($user) {
+                $model->created_by = $user->id;
+                $model->updated_by = $user->id;
+            }
+        });
+
+        static::updating(function ($model) {
+            $user = Auth::user();
+            if ($user) {
+                $model->updated_by = $user->id;
+            }
+        });
+
+        static::deleting(function ($model) {
+            $user = Auth::user();
+            if ($user) {
+                $model->deleted_by = $user->id;
+                $model->save();
+            }
+        });
     }
 }

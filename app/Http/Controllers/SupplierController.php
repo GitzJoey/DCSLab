@@ -7,6 +7,7 @@ use App\Services\ActivityLogService;
 use App\Services\SupplierService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierController extends Controller
@@ -31,7 +32,8 @@ class SupplierController extends Controller
 
     public function read()
     {
-        return $this->SupplierService->read();
+        $userId = Auth::user()->id;
+        return $this->SupplierService->read($userId);
     }
 
     public function store(Request $request)

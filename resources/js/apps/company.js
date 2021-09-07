@@ -49,6 +49,10 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        defaultDDL: {
+            active: 'Active',
+            inactive: 'Inactive',
+        },
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
@@ -92,6 +96,10 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        defaultDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         },
         statusDDL: {
             active: 'Aktif',

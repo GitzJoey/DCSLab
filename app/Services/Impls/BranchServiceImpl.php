@@ -48,9 +48,9 @@ class BranchServiceImpl implements BranchService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Branch::with('company')->paginate();
+        return Branch::where('created_by', '=', $userId)->with('company')->paginate();
     }
 
     public function update(

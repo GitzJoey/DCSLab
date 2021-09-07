@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CashService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CashController extends Controller
 {
@@ -29,7 +30,8 @@ class CashController extends Controller
 
     public function read()
     {
-        return $this->CashService->read();
+        $userId = Auth::user()->id;
+        return $this->CashService->read($userId);
     }
 
     public function getAllActiveCash()

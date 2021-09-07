@@ -48,11 +48,10 @@ class WarehouseServiceImpl implements WarehouseService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Warehouse::with('company')->paginate();
+        return Warehouse::where('created_by', '=', $userId)->with('company')->paginate();
     }
-
 
     public function update(
         $id,

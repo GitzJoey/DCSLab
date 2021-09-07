@@ -75,9 +75,9 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return CustomerGroup::with('cash')->paginate();
+        return CustomerGroup::where('created_by', '=', $userId)->with('cash')->paginate();
     }
 
     public function getAllCustomerGroup()

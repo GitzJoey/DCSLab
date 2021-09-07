@@ -42,7 +42,7 @@ class CustomerGroupFactory extends Factory
             'round_on' => '1',
             'round_digit' => $this->faker->randomDigit(),
             'remarks' => '',
-            'cash_id' => '2',
+            'cash_id' => '',
         ];
     }
 }
