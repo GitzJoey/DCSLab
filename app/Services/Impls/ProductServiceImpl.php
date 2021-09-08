@@ -60,9 +60,9 @@ class ProductServiceImpl implements ProductService
 
     }
 
-    public function read($userId)
+    public function read()
     {
-        return Product::where('created_by', '=', $userId)->with('group', 'brand', 'unit')->paginate();
+        return Product::with('group', 'brand', 'unit')->paginate();
         
     }
     

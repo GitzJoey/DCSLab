@@ -30,8 +30,7 @@ class CashController extends Controller
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->CashService->read($userId);
+        return $this->CashService->read();
     }
 
     public function getAllActiveCash()

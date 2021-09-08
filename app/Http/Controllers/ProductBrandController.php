@@ -7,7 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\ProductBrandService;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductBrandController extends Controller
@@ -32,8 +31,7 @@ class ProductBrandController extends Controller
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->productBrandService->read($userId);
+        return $this->productBrandService->read();
     }
 
     public function getAllActiveProductBrand()

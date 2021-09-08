@@ -32,8 +32,7 @@ class ProductController extends Controller
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->productService->read($userId);
+        return $this->productService->read();
     }
 
     public function store(Request $request)

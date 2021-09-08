@@ -6,7 +6,6 @@ use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\CustomerService;
 
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
 
@@ -32,8 +31,7 @@ class CustomerController extends Controller
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->CustomerService->read($userId);
+        return $this->CustomerService->read();
     }
 
     public function store(Request $request)

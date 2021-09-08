@@ -36,9 +36,9 @@ class UnitServiceImpl implements UnitService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
-        return Unit::where('created_by', '=', $userId)->paginate();
+        return Unit::paginate();
     }
 
     public function getAllActiveUnit()

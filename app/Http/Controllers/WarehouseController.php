@@ -7,7 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseController extends Controller
@@ -32,8 +31,7 @@ class WarehouseController extends Controller
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->warehouseService->read($userId);
+        return $this->warehouseService->read();
     }
 
     public function store(Request $request)

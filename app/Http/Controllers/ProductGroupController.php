@@ -7,7 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductGroupController extends Controller
@@ -32,8 +31,7 @@ class ProductGroupController extends Controller
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->productGroupService->read($userId);
+        return $this->productGroupService->read();
     }
 
     public function getAllActiveProductGroup()

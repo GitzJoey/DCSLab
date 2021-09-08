@@ -9,7 +9,7 @@ interface ProductBrandService
         $name
     );
 
-    public function read($userId);
+    public function read();
 
     public function getAllActiveProductBrand();
 

@@ -7,7 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\CustomerGroupService;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerGroupController extends Controller
@@ -32,8 +31,7 @@ class CustomerGroupController extends Controller
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->CustomerGroupService->read($userId);
+        return $this->CustomerGroupService->read();
     }
 
     public function getAllCustomerGroup()

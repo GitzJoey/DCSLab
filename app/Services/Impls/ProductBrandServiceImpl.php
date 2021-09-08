@@ -37,9 +37,9 @@ class ProductBrandServiceImpl implements ProductBrandService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
-        return ProductBrand::where('created_by', '=', $userId)->paginate();
+        return ProductBrand::paginate();
     }
 
     public function getAllActiveProductBrand()

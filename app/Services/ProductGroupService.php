@@ -9,7 +9,7 @@ interface ProductGroupService
         $name
     );
 
-    public function read($userId);
+    public function read();
 
     public function getAllActiveProductGroup();
 

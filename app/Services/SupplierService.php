@@ -17,7 +17,7 @@ interface SupplierService
         $status
     );
 
-    public function read($userId);
+    public function read();
 
     public function update(
         $id,
