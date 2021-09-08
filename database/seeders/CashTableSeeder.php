@@ -17,9 +17,5 @@ class CashTableSeeder extends Seeder
     {
         Cash::factory()->count(15)->create();
 
-        $Cash = Cash::factory()->create();
-        $CustomerGroup = CustomerGroup::factory()->create();
-
-        $Cash->customergroups()->saveMany($CustomerGroup);
     }
 }
