@@ -10,7 +10,6 @@ use App\Models\Unit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {

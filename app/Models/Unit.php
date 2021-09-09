@@ -8,7 +8,6 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Auth;
 
 class Unit extends Model
 {

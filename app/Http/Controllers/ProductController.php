@@ -6,7 +6,6 @@ use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
 

@@ -6,7 +6,6 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CashService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CashController extends Controller
 {

@@ -9,7 +9,6 @@ use App\Models\Cash;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Auth;
 
 class CustomerGroup extends Model
 {
