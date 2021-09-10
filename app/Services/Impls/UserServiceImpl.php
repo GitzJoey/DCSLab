@@ -50,6 +50,9 @@ class UserServiceImpl implements UserService
 
         $usr->attachRole($user_role);
 
+        if (env('AUTO_VERIFY_EMAIL', true))
+            $usr->markEmailAsVerified();
+
         return $usr;
     }
 
@@ -85,6 +88,9 @@ class UserServiceImpl implements UserService
             $usr->settings()->saveMany($settings);
 
             $usr->attachRoles($rolesId);
+
+            if (env('AUTO_VERIFY_EMAIL', true))
+                $usr->markEmailAsVerified();
 
             DB::commit();
 
