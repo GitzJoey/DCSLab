@@ -40,7 +40,7 @@ Route::bind('id', function ($id) {
     }
 });
 
-Route::post('auth', [\App\Http\Controllers\ApiAuthController::class, 'auth'])->name('api.auth');
+Route::post('auth', [ApiAuthController::class, 'auth'])->name('api.auth');
 
 Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
     Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
