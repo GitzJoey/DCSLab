@@ -47,6 +47,7 @@ class Profile extends Model
 
     protected $hidden = [
         'id',
+        'status',
         'created_by',
         'created_at',
         'updated_by',

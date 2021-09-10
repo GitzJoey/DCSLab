@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ApiAuthController;
 
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
@@ -19,7 +20,6 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\CustomerController;
-use App\Models\Cash;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +39,8 @@ Route::bind('id', function ($id) {
         return $id;
     }
 });
+
+Route::post('auth', [\App\Http\Controllers\ApiAuthController::class, 'auth'])->name('api.auth');
 
 Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
     Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
@@ -148,13 +150,13 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
                 Route::post('edit/{id}', [CompanyController::class, 'update'])->name('api.post.dashboard.company.companies.edit');
                 Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('api.post.dashboard.company.companies.delete');
             });
-    
+
             Route::group(['prefix' => 'branches'], function () {
                 Route::post('save', [BranchController::class, 'store'])->name('api.post.dashboard.company.branches.save');
                 Route::post('edit/{id}', [BranchController::class, 'update'])->name('api.post.dashboard.company.branches.edit');
                 Route::post('delete/{id}', [BranchController::class, 'delete'])->name('api.post.dashboard.company.branches.delete');
             });
-    
+
             Route::group(['prefix' => 'warehouses'], function () {
                 Route::post('save', [WarehouseController::class, 'store'])->name('api.post.dashboard.company.warehouses.save');
                 Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('api.post.dashboard.company.warehouses.edit');
@@ -173,7 +175,7 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
             Route::post('edit/{id}', [SupplierController::class, 'update'])->name('api.post.dashboard.supplier.edit');
             Route::post('delete/{id}', [SupplierController::class, 'delete'])->name('api.post.dashboard.supplier.delete');
         });
-        
+
         Route::group(['prefix' => 'productgroup'], function () {
             Route::post('save', [ProductGroupController::class, 'store'])->name('api.post.dashboard.productgroup.save');
             Route::post('edit/{id}', [ProductGroupController::class, 'update'])->name('api.post.dashboard.productgroup.edit');

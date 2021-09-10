@@ -50,8 +50,6 @@ class UserServiceImpl implements UserService
 
         $usr->attachRole($user_role);
 
-        $usr->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'));
-
         return $usr;
     }
 
@@ -87,8 +85,6 @@ class UserServiceImpl implements UserService
             $usr->settings()->saveMany($settings);
 
             $usr->attachRoles($rolesId);
-
-            $usr->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'));
 
             DB::commit();
 
