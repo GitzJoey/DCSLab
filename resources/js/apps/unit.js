@@ -13,7 +13,7 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Product Unit Lists',
+            title: 'Unit Lists',
             cols: {
                 code: 'Code',
                 name: 'Name',
@@ -25,9 +25,9 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Product Unit',
-            edit: 'Edit Product Group',
-            show: 'Show Product Group',
+            create: 'Create Unit',
+            edit: 'Edit Unit',
+            show: 'Show Unit',
             delete: 'Delete',
         },
         fields: {
@@ -49,7 +49,7 @@ const messages = {
     },
     id: {
         table: {
-            title: 'Daftar Satuan Product',
+            title: 'Daftar Satuan',
             cols: {
                 code: 'Kode',
                 name: 'Nama',
@@ -61,9 +61,9 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Satuan Product',
-            edit: 'Ubah Product Group',
-            show: 'Tampilkan Product Group',
+            create: 'Tambah Satuan',
+            edit: 'Ubah Satuan',
+            show: 'Tampilkan Satuan',
             delete: 'Hapus',
         },
         fields: {

@@ -71,7 +71,6 @@ class CustomerServiceImpl implements CustomerService
         return Customer::with('customer_group')->paginate();
     }
 
-
     public function update(
         $id,
         $code,

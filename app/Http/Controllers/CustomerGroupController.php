@@ -59,6 +59,9 @@ class CustomerGroupController extends Controller
         $use_limit_age_notes = $request['use_limit_age_notes'];
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
+        $sell_at_capital_price = $request['sell_at_capital_price'];
+        $sell_at_capital_price == 'on' ? $sell_at_capital_price = 1 : $sell_at_capital_price = 0;
+
         $is_rounding = $request['is_rounding'];
         $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
 
@@ -75,7 +78,7 @@ class CustomerGroupController extends Controller
             $request['term'],
             $request['selling_point'],
             $request['selling_point_multiple'],
-            $request['sell_at_capital_price'],
+            $sell_at_capital_price,
             $request['global_markup_percent'],
             $request['global_markup_nominal'],
             $request['global_discount_percent'],
@@ -118,6 +121,9 @@ class CustomerGroupController extends Controller
         $use_limit_age_notes = $request['use_limit_age_notes'];
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
+        $sell_at_capital_price = $request['sell_at_capital_price'];
+        $sell_at_capital_price == 'on' ? $sell_at_capital_price = 1 : $sell_at_capital_price = 0;
+
         $is_rounding = $request['is_rounding'];
         $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
 
@@ -135,7 +141,7 @@ class CustomerGroupController extends Controller
             $request['term'],
             $request['selling_point'],
             $request['selling_point_multiple'],
-            $request['sell_at_capital_price'],
+            $sell_at_capital_price,
             $request['global_markup_percent'],
             $request['global_markup_nominal'],
             $request['global_discount_percent'],

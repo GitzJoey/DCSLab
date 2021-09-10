@@ -36,7 +36,10 @@
                             <tr v-for="(c, cIdx) in customergroupList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.is_member_card }}</td>
+                                <td>
+                                    <span v-if="c.is_member_card === 1">{{ $t('is_member_card.active') }}</span>
+                                    <span v-if="c.is_member_card === 0">{{ $t('is_member_card.inactive') }}</span>
+                                </td>
                                 <td>{{ c.remarks }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -203,10 +206,18 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputSellAtCapitalPrice" class="col-2 col-form-label">{{ $t('fields.sell_at_capital_price') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputSellAtCapitalPrice" name="sell_at_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['sell_at_capital_price']}" :placeholder="$t('fields.sell_at_capital_price')" :label="$t('fields.sell_at_capital_price')" v-model="customergroup.sell_at_capital_price" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customergroup.sell_at_capital_price }}</div>
+                            <label for="inputSell_At_Capital_Price" class="col-2 col-form-label">{{ $t('fields.sell_at_capital_price') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="sell_at_capital_price" name="sell_at_capital_price" v-model="customergroup.sell_at_capital_price" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customergroup.sell_at_capital_price === 1">{{ $t('sell_at_capital_price.active') }}</span>
+                                        <span v-if="customergroup.sell_at_capital_price === 0">{{ $t('sell_at_capital_price.inactive') }}</span>
+                                    </div>
+                                </label>
                             </div>
                         </div>
                         <div class="form-group row">

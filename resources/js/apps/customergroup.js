@@ -107,6 +107,10 @@ const messages = {
             active: 'Yes',
             inactive: 'No',
         },
+        sell_at_capital_price: {
+            active: 'Yes',
+            inactive: 'No',
+        },
         is_rounding: {
             active: 'Yes',
             inactive: 'No',
@@ -210,6 +214,10 @@ const messages = {
             inactive: 'Tidak',
         },
         use_limit_age_notes: {
+            active: 'Ya',
+            inactive: 'Tidak',
+        },
+        sell_at_capital_price: {
             active: 'Ya',
             inactive: 'Tidak',
         },

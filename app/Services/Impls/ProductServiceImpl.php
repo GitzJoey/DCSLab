@@ -65,7 +65,7 @@ class ProductServiceImpl implements ProductService
         return Product::with('group', 'brand', 'unit')->paginate();
         
     }
-
+    
     public function update(
         $id,
         $code,

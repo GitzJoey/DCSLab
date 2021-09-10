@@ -44,5 +44,4 @@ class ProductGroup extends Model
     {
         return $this->hasMany(Product::class);
     }
-    
 }

@@ -15,6 +15,7 @@ class CompanyServiceImpl implements CompanyService
     public function create(
         $code,
         $name,
+        $default,
         $status
     )
     {
@@ -24,6 +25,7 @@ class CompanyServiceImpl implements CompanyService
             $company = new Company();
             $company->code = $code;
             $company->name = $name;
+            $company->default = $default;
             $company->status = $status;
 
             $company->save();
@@ -38,9 +40,9 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Company::paginate();
+        return Company::where('created_by', '=', $userId)->paginate();
     }
 
     public function getAllActiveCompany()
@@ -52,6 +54,7 @@ class CompanyServiceImpl implements CompanyService
         $id,
         $code,
         $name,
+        $default,
         $status
     )
     {
@@ -63,6 +66,7 @@ class CompanyServiceImpl implements CompanyService
             $retval = $company->update([
                 'code' => $code,
                 'name' => $name,
+                'default' => $default,
                 'status' => $status
             ]);
 
@@ -102,6 +106,25 @@ class CompanyServiceImpl implements CompanyService
                 ->whereNull('deleted_at')
                 ->count();
                 return $count;
+        }
+    }
+
+    public function resetDefaultCompany($userId)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            $retval = Company::where('created_by', '=', $userId)
+                      ->update(['default' => 0]);
+
+            DB::commit();
+
+            return $retval;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
 }

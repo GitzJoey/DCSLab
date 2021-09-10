@@ -15,6 +15,8 @@ class CreateCustomerGroupsTable extends Migration
     {
         Schema::create('customer_groups', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreignId('cash_id')->references('id')->on('cashes')->onUpdate('cascade')->onDelete('restrict')->nullable();;
+
             $table->string('code');
             $table->string('name')->nullable();
 
@@ -41,8 +43,6 @@ class CreateCustomerGroupsTable extends Migration
             $table->integer('round_on')->default(0);
             $table->integer('round_digit')->nullable();
             $table->string('remarks')->nullable();
-
-			$table->foreignId('cash_id')->references('id')->on('cashes')->onUpdate('cascade')->onDelete('restrict');;
 
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);

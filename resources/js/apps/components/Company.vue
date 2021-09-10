@@ -27,6 +27,7 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.default") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
@@ -36,6 +37,10 @@
                             <tr v-for="(c, cIdx) in companyList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
+                                <td>
+                                    <span v-if="c.default === 1">{{ $t('defaultDDL.active') }}</span>
+                                    <span v-if="c.default === 0">{{ $t('defaultDDL.inactive') }}</span>
+                                </td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
                                     <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
@@ -100,6 +105,21 @@
                                 <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="company.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ company.name }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputDefault" class="col-2 col-form-label">{{ $t('fields.default') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="default" name="default" v-model="company.default" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="company.default === 1">{{ $t('defaultDDL.active') }}</span>
+                                        <span v-if="company.default === 0">{{ $t('defaultDDL.inactive') }}</span>
+                                    </div>
+                                </label>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -181,6 +201,7 @@ export default {
             company: {
                 code: '',
                 name: '',
+                default: '',
                 status: '',
             },
        }
@@ -212,6 +233,7 @@ export default {
             return {
                 code: '',
                 name: '',
+                default: '',
                 status: '1',
             }
         },

@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Models\Product;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;

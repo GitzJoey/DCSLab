@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'title' => 'Product Units'
+    'title' => 'Units'
 ];

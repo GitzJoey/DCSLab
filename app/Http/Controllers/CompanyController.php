@@ -8,6 +8,7 @@ use App\Services\CompanyService;
 
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -31,7 +32,8 @@ class CompanyController extends Controller
 
     public function read()
     {
-        return $this->companyService->read();
+        $userId = Auth::user()->id;
+        return $this->companyService->read($userId);
     }
 
     public function getAllActiveCompany()
@@ -48,7 +50,21 @@ class CompanyController extends Controller
             'status' => 'required'
         ]);
 
-        $result = $this->companyService->create($request['code'], $request['name'],$request['status']);
+        $default = $request['default'];
+        if ($default == 'on') {
+            $userId = Auth::user()->id;
+            $this->companyService->resetDefaultCompany($userId);
+        };
+
+        $default = $request['default'];
+        $default == 'on' ? $default = 1 : $default = 0;
+
+        $result = $this->companyService->create(
+            $request['code'],
+            $request['name'],
+            $default,
+            $request['status']
+        );
 
         if ($result == 0) {
             return response()->json([
@@ -69,10 +85,20 @@ class CompanyController extends Controller
             'status' => 'required'
         ]);
 
+        $default = $request['default'];
+        if ($default == "on") {
+            $userId = Auth::user()->id;
+            $this->companyService->resetDefaultCompany($userId);
+        };
+
+        $default = $request['default'];
+        $default == 'on' ? $default = 1 : $default = 0;
+
         $result = $this->companyService->update(
             $id,
             $request['code'],
             $request['name'],
+            $default,
             $request['status']
         );
 

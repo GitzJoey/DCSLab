@@ -53,7 +53,6 @@ class WarehouseServiceImpl implements WarehouseService
         return Warehouse::with('company')->paginate();
     }
 
-
     public function update(
         $id,
         $company_id,

@@ -17,6 +17,7 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
+                default: 'Default',
                 status: 'Status',
             }
         },
@@ -33,6 +34,7 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
+            default: 'Default',
             status: 'Status',
             settings: {
                 settings: 'Settings',
@@ -47,6 +49,10 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        defaultDDL: {
+            active: 'Active',
+            inactive: 'Inactive',
+        },
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
@@ -58,6 +64,7 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
+                default: 'Default',
                 status: 'Status',
             }
         },
@@ -75,6 +82,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Nama',
+            default: 'Default',
             status: 'Status',
             settings: {
                 settings: 'Pengaturan',
@@ -88,6 +96,10 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        defaultDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         },
         statusDDL: {
             active: 'Aktif',
