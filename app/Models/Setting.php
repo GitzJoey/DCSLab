@@ -24,6 +24,7 @@ class Setting extends Model
 
     protected $hidden = [
         'id',
+        'user_id',
         'created_by',
         'created_at',
         'updated_by',
