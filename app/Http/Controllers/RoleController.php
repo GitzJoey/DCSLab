@@ -47,7 +47,7 @@ class RoleController extends Controller
         //], 500);
 
         $request->validate([
-            'name' => ['required', 'max:255', 'unique:App\Models\Role,name'],
+            'name' => ['required', 'alpha', 'max:255', 'unique:App\Models\Role,name'],
             'display_name' => 'required|max:255',
             'permissions' => 'required',
         ]);
@@ -72,7 +72,7 @@ class RoleController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'name' => ['required', 'max:255', new unchangedRoleName($id)],
+            'name' => ['required','alpha', 'max:255', new unchangedRoleName($id)],
             'display_name' => 'required|max:255',
             'permissions' => 'required',
         ]);

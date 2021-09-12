@@ -40,7 +40,7 @@ interface UserService
 
     public function resetPassword($email);
 
-    public function resetToken($id, $tokenType);
+    public function resetTokens($id);
 
     public function createDefaultSetting();
 

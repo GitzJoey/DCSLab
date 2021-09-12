@@ -6,19 +6,21 @@ use App\Services\UserService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Rule;
 
-class sameEmail implements Rule
+class maxTokens implements Rule
 {
-    private $id;
+    private $email;
+    private $maxCount;
     private $userService;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($id)
+    public function __construct($email = '', $maxCount = 2)
     {
-        $this->id = $id;
-
+        $this->email = $email;
+        $this->maxCount = $maxCount;
         $this->userService = Container::getInstance()->make(UserService::class);
     }
 
@@ -31,9 +33,11 @@ class sameEmail implements Rule
      */
     public function passes($attribute, $value)
     {
-        $usr = $this->userService->getUserById($this->id);
+        $usr = $this->userService->getUserByEmail($this->email);
 
-        return strcmp($usr['email'], $value) == 0;
+        if (!$usr) return false;
+
+        return !($usr->tokens()->count() > $this->maxCount);
     }
 
     /**
@@ -43,6 +47,6 @@ class sameEmail implements Rule
      */
     public function message()
     {
-        return trans('rules.same_email');
+        return trans('rules.too_many_tokens');
     }
 }

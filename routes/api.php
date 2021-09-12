@@ -40,9 +40,9 @@ Route::bind('id', function ($id) {
     }
 });
 
-Route::post('auth', [ApiAuthController::class, 'auth'])->name('api.auth');
+Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
 
-Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
+Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1']], function () {
     Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
 
     Route::group(['prefix' => 'inbox'], function () {
@@ -122,7 +122,7 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
     });
 });
 
-Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
+Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1']], function () {
     Route::post('profile/update', [DashboardController::class, 'updateProfile'])->name('api.post.profile.update');
 
     Route::group(['prefix' => 'inbox'], function () {

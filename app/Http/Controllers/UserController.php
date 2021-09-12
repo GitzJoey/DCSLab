@@ -63,7 +63,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|alpha',
             'email' => 'required|email|max:255|unique:users',
             'roles' => 'required',
             'tax_id' => 'required',
@@ -110,8 +110,8 @@ class UserController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => new sameEmail($id),
+            'name' => 'required|alpha',
+            'email' => 'required|email|max:255|unique:users,email,'.$id,
             'roles' => 'required',
             'tax_id' => 'required',
             'ic_num' => 'required',
@@ -157,6 +157,9 @@ class UserController extends Controller
             $profile,
             $settings
         );
+
+        if ($request->filled('apiToken'))
+            $this->userService->resetTokens($id);
 
         return $result == 0 ? response()->error():response()->success();
     }
