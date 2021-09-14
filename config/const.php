@@ -10,6 +10,10 @@ return [
         'API_TOKEN_NAME' => 'api',
 
         'PAGINATION_LIMIT' => 10,
+
+        'SESSIONS' => [
+            'SELECTED_COMPANY' => '__SELECTED__COMPANY',
+        ],
     ],
 
     'ERROR_RETURN_VALUE' => 0,

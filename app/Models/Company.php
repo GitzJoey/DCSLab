@@ -47,12 +47,17 @@ class Company extends Model
     public function branches()
     {
         return $this->hasMany(Branch::class);
-    } 
+    }
 
     public function warehouses()
     {
         return $this->hasMany(Warehouse::class);
-    } 
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 
     public static function boot()
     {

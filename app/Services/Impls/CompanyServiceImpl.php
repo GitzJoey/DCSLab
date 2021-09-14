@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use App\Services\CompanyService;
+use App\Models\User;
 use App\Models\Company;
 
 class CompanyServiceImpl implements CompanyService
@@ -16,7 +17,8 @@ class CompanyServiceImpl implements CompanyService
         $code,
         $name,
         $default,
-        $status
+        $status,
+        $userId
     )
     {
         DB::beginTransaction();
@@ -30,6 +32,9 @@ class CompanyServiceImpl implements CompanyService
 
             $company->save();
 
+            $usr = User::find($userId)->first();
+            $usr->companies()->attach([$company->id]);
+
             DB::commit();
 
             return $company->hId;
@@ -42,12 +47,16 @@ class CompanyServiceImpl implements CompanyService
 
     public function read($userId)
     {
-        return Company::where('created_by', '=', $userId)->paginate();
+        $usr = User::find($userId)->first();
+        $compIds = $usr->companies()->pluck('company_id');
+        return Company::whereIn('id', $compIds)->paginate();
     }
 
-    public function getAllActiveCompany()
+    public function getAllActiveCompany($userId)
     {
-        return Company::where('status', '=', 1)->get();
+        $usr = User::find($userId)->first();
+        $compIds = $usr->companies()->pluck('company_id');
+        return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();
     }
 
     public function update(
@@ -80,22 +89,32 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function getCompanyById($id)
+    public function delete($userId, $id)
     {
-        return Company::find($id);
-    }
+        DB::beginTransaction();
 
-    public function delete($id)
-    {
-        $company = Company::find($id);
+        try {
+            $company = Company::find($id);
 
-        return $company->delete();
+            $usr = User::find($userId);
+            $usr->companies()->detach([$company->id]);
+
+            $retval = $company->delete();
+
+            DB::commit();
+
+            return $retval;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)
     {
         switch($crud_status) {
-            case 'create': 
+            case 'create':
                 $count = Company::where('code', '=', $code)
                 ->whereNull('deleted_at')
                 ->count();
@@ -109,13 +128,20 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
+    public function isDefaultCompany($companyId)
+    {
+        return Company::where('id', '=', $companyId)->first()->default == 1 ? true:false;
+    }
+
     public function resetDefaultCompany($userId)
     {
         DB::beginTransaction();
 
         try {
+            $usr = User::find($userId);
+            $compIds = $usr->companies()->pluck('company_id');
 
-            $retval = Company::where('created_by', '=', $userId)
+            $retval = Company::whereIn('id', $compIds)
                       ->update(['default' => 0]);
 
             DB::commit();

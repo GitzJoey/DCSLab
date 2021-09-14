@@ -21,9 +21,10 @@ class CompanyFactory extends Factory
      */
     public function definition()
     {
+        $faker = \Faker\Factory::create('id_ID');
         return [
-            'code' => $this->faker->numberBetween(01, 10),
-            'name' => $this->faker->company(),
+            'code' => $faker->numberBetween(01, 10),
+            'name' => $faker->company(),
             'status' => '1',
         ];
     }

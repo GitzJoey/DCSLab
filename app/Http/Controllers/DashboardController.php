@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\sameEmail;
-use App\Services\ActivityLogService;
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\ActivityLogService;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class DashboardController extends Controller
 {
@@ -29,7 +30,17 @@ class DashboardController extends Controller
 
         $roles = $this->roleService->getRolesByUserId(Auth::user()->id);
 
-        return view('dashboard.index', compact($roles, 'roles'));
+        $currentCompany = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'),
+                            Auth::user()->companies()->where('default', '=', 1)->first()->hId);
+        $companies = Auth::user()->companies()->get()->map(function ($c, $currentCompany) {
+            return [
+                'hId' =>  $c->hId,
+                'name' => $c->name,
+                'selected' => $currentCompany == $c->hId ? true:false
+            ];
+        });
+
+        return view('dashboard.index', compact('roles', 'companies'));
     }
 
     public function profile(Request $request)
