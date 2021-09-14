@@ -55,15 +55,7 @@ class BranchController extends Controller
             $request['status']
         );
     
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -87,29 +79,14 @@ class BranchController extends Controller
             $request['status'],
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->branchService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
+
     }
 }

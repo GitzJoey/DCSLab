@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Cash;
 use App\Models\CustomerGroup;
+use App\Services\CustomerGroupService;
+use Illuminate\Container\Container;
+use Exception;
 use Illuminate\Database\Seeder;
 
 class CashTableSeeder extends Seeder
@@ -15,7 +18,6 @@ class CashTableSeeder extends Seeder
      */
     public function run()
     {
-        Cash::factory()->count(15)->create();
-
+        $cash = Cash::factory()->count(5)->create();
     }
 }

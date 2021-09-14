@@ -49,15 +49,7 @@ class ProductGroupController extends Controller
 
         $result = $this->productGroupService->create($request['code'], $request['name']);
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -73,29 +65,13 @@ class ProductGroupController extends Controller
             $request['name'],
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->productGroupService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 }

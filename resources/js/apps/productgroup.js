@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { ZiggyVue } from 'ziggy';
+import { Ziggy } from '../ziggy';
 import { createI18n }from 'vue-i18n';
 import ProductGroup from './components/ProductGroup';
 
@@ -92,5 +94,6 @@ const i18n = createI18n({
 });
 
 createApp(ProductGroup)
+    .use(ZiggyVue, Ziggy)
     .use(i18n)
     .mount('#productgroupVue')

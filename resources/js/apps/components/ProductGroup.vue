@@ -173,7 +173,7 @@ export default {
     methods: {
         getAllProductGroup(page) {
             this.loading = true;
-            axios.get('/api/get/dashboard/productgroup/read?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.productgroup.read') + '?page=' + page).then(response => {
                 this.productgroupList = response.data;
                 this.loading = false;
             });
@@ -210,7 +210,7 @@ export default {
             this.productgroup = this.productgroupList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/productgroup/delete/'  + this.productgroup.hId).then(response => {
+            axios.post(route('api.post.dashboard.productgroup.delete') + this.productgroup.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -220,14 +220,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/productgroup/save', new FormData($('#productgroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.productgroup.save'), new FormData($('#productgroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/productgroup/edit/' + this.productgroup.hId, new FormData($('#productgroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.productgroup.edit') + this.productgroup.hId, new FormData($('#productgroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

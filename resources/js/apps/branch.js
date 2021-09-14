@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { ZiggyVue } from 'ziggy';
+import { Ziggy } from '../ziggy';
 import { createI18n }from 'vue-i18n';
 import Branch from './components/Branch';
 
@@ -124,5 +126,6 @@ const i18n = createI18n({
 });
 
 createApp(Branch)
+    .use(ZiggyVue, Ziggy)
     .use(i18n)
     .mount('#branchVue')

@@ -8,6 +8,10 @@
     <div id="productgroupVue"></div>
 @endsection
 
+@section('ziggy')
+    @routes('productgroup')
+@endsection
+
 @section('js_after')
     <script src="{{ mix('js/apps/productgroup.js') }}"></script>
 @endsection

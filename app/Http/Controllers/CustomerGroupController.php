@@ -90,15 +90,7 @@ class CustomerGroupController extends Controller
             Hashids::decode($request['cash_id'])[0], 
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -153,29 +145,13 @@ class CustomerGroupController extends Controller
             Hashids::decode($request['cash_id'])[0], 
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->CustomerGroupService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 }

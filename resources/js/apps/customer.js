@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { ZiggyVue } from 'ziggy';
+import { Ziggy } from '../ziggy';
 import { createI18n }from 'vue-i18n';
 import Customer from './components/Customer';
 
@@ -178,5 +180,6 @@ const i18n = createI18n({
 });
 
 createApp(Customer)
+    .use(ZiggyVue, Ziggy)
     .use(i18n)
     .mount('#customerVue')
