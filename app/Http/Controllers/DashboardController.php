@@ -76,7 +76,7 @@ class DashboardController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'email' => new sameEmail($id),
+            'email' => 'required|email|max:255|unique:users,email,'.$id,
             'tax_id' => 'required',
             'ic_num' => 'required',
         ]);

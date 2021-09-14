@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\sameEmail;
-use App\Rules\validDropDownValue;
-use App\Services\ActivityLogService;
-use http\Env\Response;
-use Illuminate\Http\Request;
-
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\ActivityLogService;
 
+use App\Rules\validDropDownValue;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
+
 use Vinkla\Hashids\Facades\Hashids;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     private $userService;
     private $roleService;
@@ -25,6 +24,8 @@ class UserController extends Controller
 
     public function __construct(UserService $userService, RoleService $roleService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->userService = $userService;
         $this->roleService = $roleService;

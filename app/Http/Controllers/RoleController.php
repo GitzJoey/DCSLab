@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\unchangedRoleName;
+use App\Services\RoleService;
 use App\Services\ActivityLogService;
+
+use App\Rules\unchangedRoleName;
+
 use Illuminate\Http\Request;
 
-use App\Services\RoleService;
 use Vinkla\Hashids\Facades\Hashids;
 
-class RoleController extends Controller
+class RoleController extends BaseController
 {
     private $roleService;
     private $activityLogService;
 
     public function __construct(RoleService $roleService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->roleService = $roleService;
         $this->activityLogService = $activityLogService;

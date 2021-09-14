@@ -6,12 +6,14 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ActivityLogController extends Controller
+class ActivityLogController extends BaseController
 {
     private $activityLogService;
 
     public function __construct(ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->activityLogService = $activityLogService;
     }
