@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
-class DashboardController extends Controller
+class DashboardController extends BaseController
 {
     private $userService;
     private $roleService;
@@ -18,6 +18,8 @@ class DashboardController extends Controller
 
     public function __construct(UserService $userService, RoleService $roleService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->userService = $userService;
         $this->roleService = $roleService;
