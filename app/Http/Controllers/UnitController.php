@@ -7,8 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 
-use Vinkla\Hashids\Facades\Hashids;
-
 class UnitController extends Controller
 {
     private $UnitService;
@@ -19,7 +17,6 @@ class UnitController extends Controller
         $this->middleware('auth');
         $this->UnitService = $UnitService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -64,7 +61,6 @@ class UnitController extends Controller
             $request['code'],
             $request['name'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

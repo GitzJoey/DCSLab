@@ -19,7 +19,6 @@ class CustomerController extends Controller
         $this->middleware('auth');
         $this->CustomerService = $CustomerService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -71,7 +70,6 @@ class CustomerController extends Controller
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -112,7 +110,6 @@ class CustomerController extends Controller
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

@@ -19,6 +19,9 @@ class ActivityLogServiceImpl implements ActivityLogService
             case 'db.company.companies':
                 $friendlyName = 'Companies';
                 break;
+            case 'db.company.employees':
+                $friendlyName = 'Employees';
+                break;
             case 'db.company.branches':
                 $friendlyName = 'Branches';
                 break;

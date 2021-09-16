@@ -19,7 +19,6 @@ class BranchController extends Controller
         $this->middleware('auth');
         $this->branchService = $branchService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -54,7 +53,6 @@ class BranchController extends Controller
             $request['remarks'], 
             $request['status']
         );
-    
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -78,7 +76,6 @@ class BranchController extends Controller
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -87,6 +84,5 @@ class BranchController extends Controller
         $result = $this->branchService->delete($id);
 
         return $result == 0 ? response()->error():response()->success();
-
     }
 }

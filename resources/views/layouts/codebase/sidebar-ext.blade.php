@@ -6,6 +6,9 @@
                 <a class="{{ active_class(if_route_pattern('db.company.companies')) }}" href="{{route('db.company.companies')}}">{{ __('sidebar-ext.db.company.companies') }}</a>
             </li>
             <li>
+                <a class="{{ active_class(if_route_pattern('db.company.employees')) }}" href="{{route('db.company.employees')}}">{{ __('sidebar-ext.db.company.employees') }}</a>
+            </li>
+            <li>
                 <a class="{{ active_class(if_route_pattern('db.company.branches')) }}" href="{{route('db.company.branches')}}">{{ __('sidebar-ext.db.company.branches') }}</a>
             </li>
             <li>

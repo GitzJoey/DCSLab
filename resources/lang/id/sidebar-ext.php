@@ -3,6 +3,7 @@
 return [
     'db.company' => 'Perusahaan',
     'db.company.companies' => 'Perusahaan',
+    'db.company.employees' => 'Karyawan',
     'db.company.branches' => 'Cabang',
     'db.company.warehouses' => 'Gudang',
     'db.finance' => 'Keuangan',
@@ -17,5 +18,4 @@ return [
     'db.sales' => 'Penjualan',
     'db.customer_groups' => 'Kelompok Pelanggan',
     'db.customers' => 'Pelanggan',
-    
 ];

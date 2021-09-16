@@ -19,7 +19,6 @@ class WarehouseController extends Controller
         $this->middleware('auth');
         $this->warehouseService = $warehouseService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -52,8 +51,8 @@ class WarehouseController extends Controller
             $request['city'], 
             $request['contact'], 
             $request['remarks'],
-            $request['status']);
-
+            $request['status']
+        );
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -77,7 +76,6 @@ class WarehouseController extends Controller
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

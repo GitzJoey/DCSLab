@@ -3,6 +3,7 @@
 return [
     'db.company' => 'Company',
     'db.company.companies' => 'Companies',
+    'db.company.employees' => 'Employees',
     'db.company.branches' => 'Branches',
     'db.company.warehouses' => 'Warehouses',
     'db.finance' => 'Finance',
@@ -17,5 +18,4 @@ return [
     'db.sales' => 'Sales',
     'db.sales.customer_groups' => 'Customer Groups',
     'db.sales.customers' => 'Customers',
-    
 ];

@@ -23,6 +23,7 @@ use App\Http\Controllers\SupplierController;
 
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\DoctorAccountingPageController;
+use App\Http\Controllers\EmployeeController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -73,14 +74,13 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product.product_brands');
             Route::get('unit', [UnitController::class, 'index'])->name('db.product.units');
             Route::get('products', [ProductController::class, 'index'])->name('db.product.products');
-
         });
 
         Route::group(['prefix' => 'company'], function () {
             Route::get('companies', [CompanyController::class, 'index'])->name('db.company.companies');
+            Route::get('employees', [EmployeeController::class, 'index'])->name('db.company.employees');
             Route::get('branches', [BranchController::class, 'index'])->name('db.company.branches');
             Route::get('warehouses', [WarehouseController::class, 'index'])->name('db.company.warehouses');
-
         });
 
         Route::group(['prefix' => 'finance'], function () {

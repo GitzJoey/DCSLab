@@ -7,8 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 
-use Vinkla\Hashids\Facades\Hashids;
-
 class ProductGroupController extends Controller
 {
     private $productGroupService;
@@ -19,7 +17,6 @@ class ProductGroupController extends Controller
         $this->middleware('auth');
         $this->productGroupService = $productGroupService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -64,7 +61,6 @@ class ProductGroupController extends Controller
             $request['code'],
             $request['name'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApiAuthController;
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\CashController;
@@ -73,6 +74,10 @@ Route::group(['prefix' => 'get', 'middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'company'], function () {
             Route::get('read', [CompanyController::class, 'read'])->name('api.get.dashboard.company.read');
             Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('api.get.dashboard.company.read.all_active');
+        });
+
+        Route::group(['prefix' => 'employee'], function () {
+            Route::get('read', [EmployeeController::class, 'read'])->name('api.get.dashboard.employee.read');
         });
 
         Route::group(['prefix' => 'branch'], function () {
@@ -149,6 +154,12 @@ Route::group(['prefix' => 'post', 'middleware' => 'auth:sanctum'], function () {
                 Route::post('save', [CompanyController::class, 'store'])->name('api.post.dashboard.company.companies.save');
                 Route::post('edit/{id}', [CompanyController::class, 'update'])->name('api.post.dashboard.company.companies.edit');
                 Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('api.post.dashboard.company.companies.delete');
+            });
+
+            Route::group(['prefix' => 'employees'], function () {
+                Route::post('save', [EmployeeController::class, 'store'])->name('api.post.dashboard.company.employees.save');
+                Route::post('edit/{id}', [EmployeeController::class, 'update'])->name('api.post.dashboard.company.employees.edit');
+                Route::post('delete/{id}', [EmployeeController::class, 'delete'])->name('api.post.dashboard.company.employees.delete');
             });
 
             Route::group(['prefix' => 'branches'], function () {

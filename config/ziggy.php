@@ -15,6 +15,10 @@ return [
             'api.get.dashboard.branch.read',
             'api.post.dashboard.company.branches.*',
         ],
+        'employee' => [
+            'api.get.dashboard.employee.read',
+            'api.post.dashboard.company.employee.*',
+        ],
         'warehouse' => [
             'api.get.dashboard.warehouse.read',
             'api.post.dashboard.company.warehouses.*',

@@ -7,8 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\ProductBrandService;
 use Illuminate\Http\Request;
 
-use Vinkla\Hashids\Facades\Hashids;
-
 class ProductBrandController extends Controller
 {
     private $productBrandService;
@@ -19,7 +17,6 @@ class ProductBrandController extends Controller
         $this->middleware('auth');
         $this->productBrandService = $productBrandService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -64,7 +61,6 @@ class ProductBrandController extends Controller
             $request['code'],
             $request['name'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
