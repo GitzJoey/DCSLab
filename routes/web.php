@@ -81,6 +81,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('employees', [EmployeeController::class, 'index'])->name('db.company.employees');
             Route::get('branches', [BranchController::class, 'index'])->name('db.company.branches');
             Route::get('warehouses', [WarehouseController::class, 'index'])->name('db.company.warehouses');
+
+            Route::get('switch/company/{id}', [CompanyController::class, 'switchCompany'])->name('db.company.switch_company');
         });
 
         Route::group(['prefix' => 'finance'], function () {

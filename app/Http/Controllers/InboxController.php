@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
-class InboxController extends Controller
+class InboxController extends BaseController
 {
     private $userService;
     private $inboxService;
@@ -17,6 +17,8 @@ class InboxController extends Controller
 
     public function __construct(InboxService $inboxService, UserService $userService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->userService = $userService;
         $this->inboxService = $inboxService;

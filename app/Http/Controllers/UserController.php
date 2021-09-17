@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\sameEmail;
-use App\Rules\validDropDownValue;
-use App\Services\ActivityLogService;
-use http\Env\Response;
-use Illuminate\Http\Request;
-
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\ActivityLogService;
 
+use App\Rules\validDropDownValue;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
+
 use Vinkla\Hashids\Facades\Hashids;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     private $userService;
     private $roleService;
@@ -25,6 +24,8 @@ class UserController extends Controller
 
     public function __construct(UserService $userService, RoleService $roleService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->userService = $userService;
         $this->roleService = $roleService;
@@ -63,7 +64,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|alpha',
             'email' => 'required|email|max:255|unique:users',
             'roles' => 'required',
             'tax_id' => 'required',
@@ -110,8 +111,8 @@ class UserController extends Controller
     public function update($id, Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => new sameEmail($id),
+            'name' => 'required|alpha',
+            'email' => 'required|email|max:255|unique:users,email,'.$id,
             'roles' => 'required',
             'tax_id' => 'required',
             'ic_num' => 'required',
@@ -157,6 +158,9 @@ class UserController extends Controller
             $profile,
             $settings
         );
+
+        if ($request->filled('apiToken'))
+            $this->userService->resetTokens($id);
 
         return $result == 0 ? response()->error():response()->success();
     }

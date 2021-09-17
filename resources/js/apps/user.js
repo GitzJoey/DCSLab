@@ -33,7 +33,7 @@ const messages = {
             edit: 'Edit User',
             show: 'Show User',
             reset_password: 'Reset Password',
-            regenerate_token: 'Regenerate',
+            revoke_token: 'Revoke Tokens',
         },
         fields: {
             name: 'Name',
@@ -88,7 +88,7 @@ const messages = {
             edit: 'Ubah Pengguna',
             show: 'Tampilkan Pengguna',
             reset_password: 'Reset Password',
-            regenerate_token: 'Regenerate',
+            revoke_token: 'Tarik Kembali',
         },
         fields: {
             name: 'Nama',

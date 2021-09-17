@@ -22,6 +22,15 @@
         <div class="block-content">
             <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.tableListErrors">{{ e }}</li>
+                        </ul>
+                    </div>
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
@@ -33,7 +42,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
                             <tr v-for="(c, cIdx) in companyList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
@@ -68,6 +76,9 @@
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
+                            </li>
+                            <li :class="{'page-item': true, 'active': n === this.companyList.current_page}" v-for="n in getPages">
+                                <a class="page-link" href="#" v-on:click="onPaginationChangePage(n)">{{ n }}</a>
                             </li>
                             <li :class="{'page-item':true, 'disabled': this.companyList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
@@ -110,7 +121,7 @@
                         <div class="form-group row">
                             <label for="inputDefault" class="col-2 col-form-label">{{ $t('fields.default') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">                              
+                                <label class="css-control css-control-primary css-checkbox">
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
                                         <input type="checkbox" class="css-control-input" id="default" name="default" v-model="company.default" true-value="1" false-value="0">
                                         <span class="css-control-indicator"></span>
@@ -137,7 +148,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">    
+                        <div class="form-group row">
                             <div class="col">
                                 <div v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
@@ -204,9 +215,8 @@ export default {
                 default: '',
                 status: '',
             },
+            tableListErrors: [],
        }
-    },
-    created() {
     },
     mounted() {
         this.mode = 'list';
@@ -257,7 +267,8 @@ export default {
             axios.post('/api/post/dashboard/company/companies/delete/'  + this.company.hId).then(response => {
                 this.backToList();
             }).catch(e => {
-                this.handleError(e, actions);
+                this.handleTableListError(e);
+                this.mode = 'list';
                 this.loading = false;
             });
         },
@@ -292,6 +303,14 @@ export default {
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
         },
+        handleTableListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.tableListErrors.push(e.response.data.message);
+            }
+        },
+        resetTableListErrors() {
+            this.tableListErrors = [];
+        },
         handleUpload(e) {
             const files = e.target.files;
 
@@ -316,7 +335,7 @@ export default {
         },
         refreshList() {
             this.getAllCompany(this.companyList.current_page);
-        },
+        }
     },
     computed: {
         getPages() {

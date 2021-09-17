@@ -272,7 +272,16 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <span>{{ $t('fields.settings.apiToken') }}</span><br/>
-                                        <a href="#">{{ $t('actions.regenerate_token') }}</a>
+                                        <label class="css-control css-control-primary css-checkbox">
+                                            <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                                <input type="checkbox" class="css-control-input" id="apiToken" name="apiToken">
+                                                <span class="css-control-indicator"></span>
+                                                {{ $t('actions.revoke_token') }}
+                                            </span>
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                                &nbsp;************************************************************
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -353,7 +362,6 @@ export default {
                     theme: 'corporate',
                     dateFormat: '',
                     timeFormat: '',
-                    apiToken:'',
                 }
             },
             countriesDDL: [],
@@ -399,7 +407,6 @@ export default {
                     theme: 'corporate',
                     dateFormat: 'yyyy_MM_dd',
                     timeFormat: 'hh_mm_ss',
-                    apiToken: '',
                 }
             }
         },
@@ -410,12 +417,10 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.user = this.userList.data[idx];
-            this.getAPIToken();
         },
         showSelected(idx) {
             this.mode = 'show';
             this.user = this.userList.data[idx];
-            this.getAPIToken();
         },
         onSubmit(values, actions) {
             this.loading = true;
@@ -498,13 +503,6 @@ export default {
         resetPassword(email) {
 
         },
-        getAPIToken() {
-            axios.get('/api/get/user/api/token').then(response => {
-                this.user.selectedSettings.apiToken = response.data;
-            }).catch(e => {
-                console.log(e.message);
-            });
-        }
     },
     computed: {
         getPages() {

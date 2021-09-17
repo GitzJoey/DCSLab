@@ -212,9 +212,11 @@ class UserServiceImpl implements UserService
         });
     }
 
-    public function resetToken($id, $tokenType)
+    public function resetTokens($id)
     {
+        $usr = User::find($id);
 
+        $usr->tokens()->delete();
     }
 
     public function createDefaultSetting()

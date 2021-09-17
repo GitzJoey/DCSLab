@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\sameEmail;
-use App\Services\ActivityLogService;
 use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\ActivityLogService;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
-class DashboardController extends Controller
+class DashboardController extends BaseController
 {
     private $userService;
     private $roleService;
@@ -17,6 +18,8 @@ class DashboardController extends Controller
 
     public function __construct(UserService $userService, RoleService $roleService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->userService = $userService;
         $this->roleService = $roleService;
@@ -29,7 +32,17 @@ class DashboardController extends Controller
 
         $roles = $this->roleService->getRolesByUserId(Auth::user()->id);
 
-        return view('dashboard.index', compact($roles, 'roles'));
+        $currentCompany = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'),
+                            Auth::user()->companies()->where('default', '=', 1)->first()->hId);
+        $companies = Auth::user()->companies()->get()->map(function ($c, $currentCompany) {
+            return [
+                'hId' =>  $c->hId,
+                'name' => $c->name,
+                'selected' => $currentCompany == $c->hId ? true:false
+            ];
+        });
+
+        return view('dashboard.index', compact('roles', 'companies'));
     }
 
     public function profile(Request $request)
@@ -65,7 +78,7 @@ class DashboardController extends Controller
 
         $request->validate([
             'name' => 'required',
-            'email' => new sameEmail($id),
+            'email' => 'required|email|max:255|unique:users,email,'.$id,
             'tax_id' => 'required',
             'ic_num' => 'required',
         ]);

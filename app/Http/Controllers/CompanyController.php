@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Rules\uniqueCode;
-use Illuminate\Http\Request;
 use App\Services\CompanyService;
-
-use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
+
+use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class CompanyController extends Controller
 {
@@ -20,7 +21,6 @@ class CompanyController extends Controller
         $this->middleware('auth');
         $this->companyService = $companyService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -44,8 +44,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'companies'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'companies')],
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
@@ -59,22 +58,17 @@ class CompanyController extends Controller
         $default = $request['default'];
         $default == 'on' ? $default = 1 : $default = 0;
 
+        $userId = Auth::user()->id;
+
         $result = $this->companyService->create(
             $request['code'],
             $request['name'],
             $default,
-            $request['status']
+            $request['status'],
+            $userId
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -102,30 +96,25 @@ class CompanyController extends Controller
             $request['status']
         );
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
-        $result = $this->companyService->delete($id);
+        $userId = Auth::user()->id;
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        if ($this->companyService->isDefaultCompany($id))
+            return response()->error(trans('rules.company.default_company'));
 
+        $result = $this->companyService->delete($userId, $id);
+
+        return $result == 0 ? response()->error():response()->success();
+    }
+
+    public function switchCompany($id)
+    {
+        session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), Hashids::encode($id));
+
+        return redirect()->back();
     }
 }

@@ -54,31 +54,23 @@ class AppHelper extends Command
         while($loop)
         {
             $this->info('Available Helper:');
-            $this->info('[1] Truncate All Master Data');
-            $this->info('[2] Truncate All Transactions');
-            $this->info('[3] Update Composer And NPM');
-            $this->info('[4] Clear All Cache');
-            $this->info('[5] Change User Roles');
+            $this->info('[1] Update Composer And NPM');
+            $this->info('[2] Clear All Cache');
+            $this->info('[3] Change User Roles');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
 
             switch (strtoupper($choose)) {
                 case 1:
-                    $this->info('Done!');
-                    break;
-                case 2:
-                    $this->info('Done!');
-                    break;
-                case 3:
                     $this->updateComposerAndNPM();
                     $this->info('Done!');
                     break;
-                case 4:
+                case 2:
                     $this->clearCache();
                     $this->info('Done!');
                     break;
-                case 5:
+                case 3:
                     $this->changeUserRoles();
                     $this->info('Done!');
                     break;

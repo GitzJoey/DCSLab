@@ -113,6 +113,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->settings()->where('key', $key)->pluck('value')->first();
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class);
+    }
+
     public static function boot()
     {
         parent::boot();
