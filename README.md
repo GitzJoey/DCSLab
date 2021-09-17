@@ -7,7 +7,8 @@ This project is inspired by the desire to create an up to date web app boilerpla
 ## Features
 * Role Based System
 * Internal Messaging System
-* AUditing Tools
+* Auditing Tools
+* Multi language  
 * Secure Coding Paradigm
 * and more...
 
