@@ -9,20 +9,20 @@
                 <i class="fa fa-search"></i>
             </button>
 
-            @isset($companies)
+            @isset($selectedCompany)
                 <button type="button" class="btn btn-rounded btn-dual-secondary" id="page-header-company-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-umbrella d-sm-none"></i>
-                    @foreach ($companies as $c)
-                        @if ($c['selected'])
-                            <span class="d-none d-sm-inline-block">{{ $c['name'] }}</span>
+                    @foreach (auth()->user()->companies()->get() as $c)
+                        @if ($c->hId == $selectedCompany)
+                            <span class="d-none d-sm-inline-block">{{ $c->name }}</span>
                         @endif
                     @endforeach
                 </button>
                 <div class="dropdown-menu dropdown-menu-left min-width-200" aria-labelledby="page-header-company-dropdown">
-                    @foreach ($companies as $c)
-                        @if (!$c['selected'])
-                            <a class="dropdown-item" href="{{ route('db.company.switch_company', $c['hId']) }}">
-                                {{ $c['name'] }}
+                    @foreach (auth()->user()->companies()->get() as $c)
+                        @if ($c->hId != $selectedCompany)
+                            <a class="dropdown-item" href="{{ route('db.company.switch_company', $c->hId) }}">
+                                {{ $c->name }}
                             </a>
                         @endif
                     @endforeach

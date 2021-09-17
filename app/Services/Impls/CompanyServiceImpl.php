@@ -24,6 +24,11 @@ class CompanyServiceImpl implements CompanyService
         DB::beginTransaction();
 
         try {
+            $usr = User::find($userId)->first();
+
+            if ($usr->companies()->count() == 0)
+                $default = 1;
+
             $company = new Company();
             $company->code = $code;
             $company->name = $name;
@@ -32,7 +37,6 @@ class CompanyServiceImpl implements CompanyService
 
             $company->save();
 
-            $usr = User::find($userId)->first();
             $usr->companies()->attach([$company->id]);
 
             DB::commit();
