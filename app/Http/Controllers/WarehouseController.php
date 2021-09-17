@@ -19,7 +19,6 @@ class WarehouseController extends Controller
         $this->middleware('auth');
         $this->warehouseService = $warehouseService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -52,17 +51,9 @@ class WarehouseController extends Controller
             $request['city'], 
             $request['contact'], 
             $request['remarks'],
-            $request['status']);
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+            $request['status']
+        );
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -85,29 +76,13 @@ class WarehouseController extends Controller
             $request['remarks'],
             $request['status'],
         );
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }    }
+        return $result == 0 ? response()->error():response()->success();
+    }
 
     public function delete($id)
     {
         $result = $this->warehouseService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 }

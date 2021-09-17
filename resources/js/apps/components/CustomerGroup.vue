@@ -401,13 +401,13 @@ export default {
     methods: {
         getAllCustomerGroup(page) {
             this.loading = true;
-            axios.get('/api/get/dashboard/customergroup/read?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.customergroup.read') + '?page=' + page).then(response => {
                 this.customergroupList = response.data;
                 this.loading = false;
             });
         },
         getAllCash() {
-            axios.get('/api/get/dashboard/cash/read/all/active').then(response => {
+            axios.get(route('api.get.dashboard.cash.read.all_active')).then(response => {
                 this.cashDDL = response.data;
             });
         },
@@ -463,7 +463,7 @@ export default {
             this.customergroup = this.customergroupList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/customergroup/delete/'  + this.customergroup.hId).then(response => {
+            axios.post(route('api.post.dashboard.customergroup.delete') + this.customergroup.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -473,14 +473,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/customergroup/save', new FormData($('#customergroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.customergroup.save'), new FormData($('#customergroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/customergroup/edit/' + this.customergroup.hId, new FormData($('#customergroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.customergroup.edit') + this.customergroup.hId, new FormData($('#customergroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

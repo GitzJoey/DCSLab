@@ -7,8 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 
-use Vinkla\Hashids\Facades\Hashids;
-
 class ProductGroupController extends Controller
 {
     private $productGroupService;
@@ -19,7 +17,6 @@ class ProductGroupController extends Controller
         $this->middleware('auth');
         $this->productGroupService = $productGroupService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -49,15 +46,7 @@ class ProductGroupController extends Controller
 
         $result = $this->productGroupService->create($request['code'], $request['name']);
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -72,30 +61,13 @@ class ProductGroupController extends Controller
             $request['code'],
             $request['name'],
         );
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->productGroupService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 }

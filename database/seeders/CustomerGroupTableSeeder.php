@@ -23,34 +23,9 @@ class CustomerGroupTableSeeder extends Seeder
      */
     public function run()
     {
-        $this->truncateCustomerGroupsTables();
-
-        $instances = Container::getInstance();
-
-        for ($i = 0; $i < 19; $i++) {
-            try {
-                $CustomerGroup = CustomerGroup::factory()->make();
-
-                $CustomerGroup->created_at = Carbon::now();
-                $CustomerGroup->updated_at = Carbon::now();
-
-                $CustomerGroup->save();
-
-                $Cash = $instances->make(CustomerGroup::class)->createDefaultCash();
-
-                $CustomerGroup->Cashes()->saveMany($Cash);
-            } catch (Exception $e) {
-
-            }
-        }
-    }
-
-    public function truncateCustomerGroupsTables()
-    {
-        Schema::disableForeignKeyConstraints();
-
-        DB::table('cashes')->truncate();
-
-        Schema::enableForeignKeyConstraints();
+        $customergroup = CustomerGroup::factory()->make();
+        $customergroup->created_at = Carbon::now();
+        $customergroup->updated_at = Carbon::now();
+        $customergroup = CustomerGroup::factory()->count(5)->create();
     }
 }

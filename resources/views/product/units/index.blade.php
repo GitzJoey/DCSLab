@@ -8,6 +8,10 @@
     <div id="unitVue"></div>
 @endsection
 
+@section('ziggy')
+    @routes('unit')
+@endsection
+
 @section('js_after')
     <script src="{{ mix('js/apps/unit.js') }}"></script>
 @endsection

@@ -19,7 +19,6 @@ class CustomerController extends Controller
         $this->middleware('auth');
         $this->CustomerService = $CustomerService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -71,16 +70,7 @@ class CustomerController extends Controller
             $request['remarks'],
             $request['status'],
         );
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -120,30 +110,13 @@ class CustomerController extends Controller
             $request['remarks'],
             $request['status'],
         );
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->CustomerService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 }

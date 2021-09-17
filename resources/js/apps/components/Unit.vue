@@ -210,7 +210,7 @@ export default {
             this.unit = this.unitList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/unit/delete/'  + this.unit.hId).then(response => {
+            axios.post(route('api.post.dashboard.unit.delete') + this.unit.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -220,14 +220,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/unit/save', new FormData($('#unitForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.unit.save'), new FormData($('#unitForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/unit/edit/' + this.unit.hId, new FormData($('#unitForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.unit.edit') + this.unit.hId, new FormData($('#unitForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

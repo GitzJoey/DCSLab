@@ -25,24 +25,24 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.email") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(b, bIdx) in productgroupList.data">
-                                <td>{{ b.code }}</td>
-                                <td>{{ b.name }}</td>
+                            <tr v-for="(c, cIdx) in employeeList.data">
+                                <td>{{ c.name }}</td>
+                                <td>{{ c.email }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -52,13 +52,13 @@
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.productgroupList.prev_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.employeeList.prev_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
-                            <li :class="{'page-item':true, 'disabled': this.productgroupList.next_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.employeeList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
@@ -70,7 +70,7 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
-                    <Form id="productgroupForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                    <Form id="employeeForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -81,19 +81,19 @@
                             </ul>
                         </div>
                         <div class="form-group row">
-                            <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
+                            <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productgroup.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productgroup.code }}</div>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="employee.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="name" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ employee.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
+                            <label for="inputEmail" class="col-2 col-form-label">{{ $t('fields.email') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productgroup.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productgroup.name }}</div>
+                                <Field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'is-invalid': errors['email']}" :placeholder="$t('fields.email')" :label="$t('fields.email')" v-model="employee.email" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <ErrorMessage name="email" class="invalid-feedback" />
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ employee.email }}</div>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -121,7 +121,7 @@
 
 <script>
 import { Form, Field, ErrorMessage, defineRule, configure } from "vee-validate";
-import { required } from '@vee-validate/rules';
+import { required, email } from '@vee-validate/rules';
 import { localize, setLocale } from '@vee-validate/i18n';
 import en from '@vee-validate/i18n/dist/locale/en.json';
 import id from '@vee-validate/i18n/dist/locale/id.json';
@@ -135,6 +135,7 @@ configure({
 setLocale(document.documentElement.lang);
 
 defineRule('required', required);
+defineRule('email', email);
 
 export default {
     components: {
@@ -142,8 +143,8 @@ export default {
     },
     setup() {
         const schema = {
-            code: 'required',
             name: 'required',
+            email: 'required|email',
         };
 
         return {
@@ -156,8 +157,8 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productgroupList: [],
-            productgroup: {
+            employeeList: [],
+            employee: {
                 code: '',
                 name: '',
             },
@@ -168,26 +169,26 @@ export default {
 
     mounted() {
         this.mode = 'list';
-        this.getAllProductGroup(1);
-    },
+        this.getAllEmployee(1);
+        },
     methods: {
-        getAllProductGroup(page) {
+        getAllEmployee(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.productgroup.read') + '?page=' + page).then(response => {
-                this.productgroupList = response.data;
+            axios.get(route('/api/get/dashboard/employee/read') + '?page=' + page).then(response => {
+                this.employeeList = response.data;
                 this.loading = false;
             });
         },
         onPaginationChangePage(page) {
             if (page === 'next') {
-                this.getAllProductGroup(this.productgroupList.current_page + 1);
+                this.getAllEmployee(this.employeeList.current_page + 1);
             } else if (page === 'prev') {
-                this.getAllProductGroup(this.productgroupList.current_page - 1);
+                this.getAllEmployee(this.employeeList.current_page - 1);
             } else {
-                this.getAllProductGroup(page);
+                this.getAllEmployee(page);
             }
         },
-        emptyProductGroup() {
+        emptyEmployee() {
             return {
                 code: '',
                 name: '',
@@ -195,22 +196,22 @@ export default {
         },
         createNew() {
             this.mode = 'create';
-            this.productgroup = this.emptyProductGroup();
+            this.employee = this.emptyEmployee();
         },
         editSelected(idx) {
             this.mode = 'edit';
-            this.productgroup = this.productgroupList.data[idx];
+            this.employee = this.employeeList.data[idx];
         },
         showSelected(idx) {
             this.mode = 'show';
-            this.productgroup = this.productgroupList.data[idx];
+            this.employee = this.employeeList.data[idx];
         },
         deleteSelected(idx) {
             this.mode = 'delete';
-            this.productgroup = this.productgroupList.data[idx];
+            this.employee = this.employeeList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.productgroup.delete') + this.productgroup.hId).then(response => {
+            axios.post(route('api.post.dashboard.employee.delete') + this.employee.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -220,14 +221,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post(route('api.post.dashboard.productgroup.save'), new FormData($('#productgroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.employee.save'), new FormData($('#employeeForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.productgroup.edit') + this.productgroup.hId, new FormData($('#productgroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.employee.edit') + this.employee.hId, new FormData($('#employeeForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -255,14 +256,14 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.productgroup.profile.img_path = fileReader.result
+                this.employee.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllProductGroup(this.productgroupList.current_page);
-            this.productgroup = this.emptyProductGroup();
+            this.getAllEmployee(this.employeeList.current_page);
+            this.employee = this.emptyEmployee();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -271,25 +272,25 @@ export default {
             this.contentHidden = !this.contentHidden;
         },
         refreshList() {
-            this.getAllProductGroup(this.productgroupList.current_page);
+            this.getAllEmployee(this.employeeList.current_page);
         },
     },
     computed: {
         getPages() {
-            if (this.productgroupList.current_page == null) return 0;
+            if (this.employeeList.current_page == null) return 0;
 
-            return Math.ceil(this.productgroupList.total / this.productgroupList.per_page);
+            return Math.ceil(this.employeeList.total / this.employeeList.per_page);
         },
         retrieveImage()
         {
-            if (this.productgroup.profile.img_path && this.productgroup.profile.img_path !== '') {
-                if (this.productgroup.profile.img_path.includes('data:image')) {
-                    return this.productgroup.profile.img_path;
+            if (this.employee.profile.img_path && this.employee.profile.img_path !== '') {
+                if (this.employee.profile.img_path.includes('data:image')) {
+                    return this.employee.profile.img_path;
                 } else {
-                    return '/storage/' + this.productgroup.profile.img_path;
+                    return '/storage/' + this.employee.profile.img_path;
                 }
             } else {
-                return '/images/def-productgroup.png';
+                return '/images/def-employee.png';
             }
         }
     }

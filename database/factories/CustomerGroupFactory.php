@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\CustomerGroup;
+use App\Models\Cash;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CustomerGroupFactory extends Factory
@@ -21,8 +23,14 @@ class CustomerGroupFactory extends Factory
      */
     public function definition()
     {
+        $cashCount = Cash::count();
+        if ($cashCount == 0) {
+            $cash = Cash::factory()->count(5)->create();
+        }
+
         return [
             'code' => $this->faker->numberBetween(01, 10),
+            'cash_id' => Cash::select('id')->inRandomOrder()->limit(1)->get()[0],
             'name' => $this->faker->name(),
             'is_member_card' => '1',
             'use_limit_outstanding_notes' => '1',
@@ -42,7 +50,6 @@ class CustomerGroupFactory extends Factory
             'round_on' => '1',
             'round_digit' => $this->faker->randomDigit(),
             'remarks' => '',
-            'cash_id' => 1
         ];
     }
 }

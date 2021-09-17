@@ -1,17 +1,17 @@
 @extends('layouts.codebase.backend')
 
 @section('title')
-    {{ __('customers.title') }}
+    {{ __('employees.title') }}
 @endsection
 
 @section('content')
-    <div id="customerVue"></div>
+    <div id="employeeVue"></div>
 @endsection
 
 @section('ziggy')
-    @routes('customer')
+    @routes('employee')
 @endsection
 
 @section('js_after')
-    <script src="{{ mix('js/apps/customer.js') }}"></script>
+    <script src="{{ mix('js/apps/employee.js') }}"></script>
 @endsection

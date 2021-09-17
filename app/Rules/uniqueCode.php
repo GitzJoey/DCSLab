@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use App\Services\BranchService;
 use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use App\Services\WarehouseService;
 use App\Services\CashService;
 use App\Services\SupplierService;
@@ -23,6 +24,7 @@ class uniqueCode implements Rule
     private $table;
 
     private $companyService;
+    private $EmployeeService;
     private $branchService;
     private $warehouseService;
     private $CashService;
@@ -44,6 +46,9 @@ class uniqueCode implements Rule
         switch($this->table) {
             case 'companies': 
                 $this->companyService = Container::getInstance()->make(CompanyService::class);
+                break;
+            case 'employees': 
+                $this->EmployeeService = Container::getInstance()->make(EmployeeService::class);
                 break;
             case 'branches':
                 $this->branchService = Container::getInstance()->make(BranchService::class);
@@ -87,6 +92,9 @@ class uniqueCode implements Rule
         switch($this->table) {
             case 'companies': 
                 $count = $this->companyService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'employees': 
+                $count = $this->EmployeeService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'branches': 
                 $count = $this->branchService->checkDuplicatedCode($this->crud_status, $this->id, $code);

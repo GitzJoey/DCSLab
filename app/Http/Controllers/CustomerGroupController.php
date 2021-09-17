@@ -19,7 +19,6 @@ class CustomerGroupController extends Controller
         $this->middleware('auth');
         $this->CustomerGroupService = $CustomerGroupService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -89,21 +88,11 @@ class CustomerGroupController extends Controller
             $request['remarks'],
             Hashids::decode($request['cash_id'])[0], 
         );
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
     {
-
         $request->validate([
             'code' =>  new uniqueCode('update', $id, 'customergroups'),
             'name' => 'required|max:255',
@@ -152,30 +141,13 @@ class CustomerGroupController extends Controller
             $request['remarks'],
             Hashids::decode($request['cash_id'])[0], 
         );
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->CustomerGroupService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 }

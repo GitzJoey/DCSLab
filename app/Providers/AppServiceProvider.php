@@ -16,6 +16,7 @@ use App\Services\Impls\SystemServiceImpl;
 use App\Services\Impls\ActivityLogServiceImpl;
 
 use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use App\Services\BranchService;
 use App\Services\WarehouseService;
 use App\Services\CashService;
@@ -28,6 +29,7 @@ use App\Services\CustomerGroupService;
 use App\Services\CustomerService;
 
 use App\Services\Impls\CompanyServiceImpl;
+use App\Services\Impls\EmployeeServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
 use App\Services\Impls\CashServiceImpl;
@@ -110,6 +112,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(SupplierService::class, function (){
             return new SupplierServiceImpl();
+        });
+
+        $this->app->singleton(EmployeeService::class, function (){
+            return new EmployeeServiceImpl();
         });
     }
 

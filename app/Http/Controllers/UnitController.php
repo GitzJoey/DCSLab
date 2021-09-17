@@ -7,8 +7,6 @@ use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 
-use Vinkla\Hashids\Facades\Hashids;
-
 class UnitController extends Controller
 {
     private $UnitService;
@@ -19,7 +17,6 @@ class UnitController extends Controller
         $this->middleware('auth');
         $this->UnitService = $UnitService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
@@ -49,15 +46,7 @@ class UnitController extends Controller
 
         $result = $this->UnitService->create($request['code'], $request['name']);
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
@@ -72,30 +61,13 @@ class UnitController extends Controller
             $request['code'],
             $request['name'],
         );
-
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->UnitService->delete($id);
 
-        if ($result == false) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return $result == 0 ? response()->error():response()->success();
     }
 }

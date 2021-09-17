@@ -338,13 +338,13 @@ export default {
     methods: {
         getAllCustomer(page) {
             this.loading = true;
-            axios.get('/api/get/dashboard/customer/read?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.customer.read') + '?page=' + page).then(response => {
                 this.customerList = response.data;
                 this.loading = false;
             });
         },
         getAllCustomerGroup() {
-            axios.get('/api/get/dashboard/customergroup/read/all/active').then(response => {
+            axios.get(route('api.get.dashboard.customergroup.read.all_active')).then(response => {
                 this.customergroupDDL = response.data;
             });
         },
@@ -394,7 +394,7 @@ export default {
             this.customer = this.customerList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/customer/delete/'  + this.customer.hId).then(response => {
+            axios.post(route('api.post.dashboard.customer.delete') + this.customer.hId).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -404,14 +404,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/customer/save', new FormData($('#customerForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.customer.save'), new FormData($('#customerForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/customer/edit/' + this.customer.hId, new FormData($('#customerForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.customer.edit') + this.customer.hId, new FormData($('#customerForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
