@@ -174,7 +174,7 @@ export default {
     methods: {
         getAllEmployee(page) {
             this.loading = true;
-            axios.get(route('/api/get/dashboard/employee/read') + '?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.employee.read') + '?page=' + page).then(response => {
                 this.employeeList = response.data;
                 this.loading = false;
             });

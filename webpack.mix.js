@@ -42,6 +42,7 @@ mix
     .js('resources/js/apps/inbox.js','public/js/apps/inbox.js')
 
     .js('resources/js/apps/company.js','public/js/apps/company.js')
+    .js('resources/js/apps/employee.js','public/js/apps/employee.js')
     .js('resources/js/apps/branch.js','public/js/apps/branch.js')
     .js('resources/js/apps/warehouse.js','public/js/apps/warehouse.js')
     .js('resources/js/apps/cash.js','public/js/apps/cash.js')
