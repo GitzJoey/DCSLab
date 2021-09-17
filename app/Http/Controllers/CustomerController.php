@@ -9,13 +9,15 @@ use App\Services\CustomerService;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
 
-class CustomerController extends Controller
+class CustomerController extends BaseController
 {
     private $CustomerService;
     private $activityLogService;
 
     public function __construct(CustomerService $CustomerService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->CustomerService = $CustomerService;
         $this->activityLogService = $activityLogService;

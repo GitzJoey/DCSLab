@@ -7,13 +7,15 @@ use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 
-class ProductGroupController extends Controller
+class ProductGroupController extends BaseController
 {
     private $productGroupService;
     private $activityLogService;
 
     public function __construct(ProductGroupService $productGroupService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->productGroupService = $productGroupService;
         $this->activityLogService = $activityLogService;

@@ -13,7 +13,7 @@ return [
         ],
         'branch' => [
             'api.get.dashboard.branch.read',
-            'api.post.dashboard.company.branches.*',
+            'api.post.dashboard.company.branch.*',
         ],
         'employee' => [
             'api.get.dashboard.employee.read',
@@ -21,44 +21,44 @@ return [
         ],
         'warehouse' => [
             'api.get.dashboard.warehouse.read',
-            'api.post.dashboard.company.warehouses.*',
+            'api.post.dashboard.company.warehouse.*',
         ],
         'cash' => [
             'api.get.dashboard.cash.read',
-            'api.post.dashboard.cashes.*',
+            'api.post.dashboard.cash.*',
         ],
         'supplier' => [
             'api.get.dashboard.supplier.read',
-            'api.post.dashboard.suppliers.*',
+            'api.post.dashboard.supplier.*',
         ],
         'productgroup' => [
             'api.get.dashboard.productgroup.read',
-            'api.post.dashboard.productgroups.*',
+            'api.post.dashboard.productgroup.*',
         ],
         'productbrand' => [
-            'api.get.dashboard.productbrands.read',
-            'api.post.dashboard.productbrands.*',
+            'api.get.dashboard.productbrand.read',
+            'api.post.dashboard.productbrand.*',
         ],
         'unit' => [
             'api.get.dashboard.unit.read',
-            'api.post.dashboard.units.*',
+            'api.post.dashboard.unit.*',
         ],
         'product' => [
             'api.get.dashboard.product.read',
             'api.get.dashboard.productgroup.read.all_active',
             'api.get.dashboard.productbrand.read.all_active',
             'api.get.dashboard.unit.read.all_active',
-            'api.post.dashboard.products.*',
+            'api.post.dashboard.product.*',
         ],
         'customergroup' => [
             'api.get.dashboard.customergroup.read',
             'api.get.dashboard.cash.read.all_active',
-            'api.post.dashboard.customergroups.*',
+            'api.post.dashboard.customergroup.*',
         ],
         'customer' => [
             'api.get.dashboard.customer.read',
             'api.get.dashboard.customergroup.read.all_active',
-            'api.post.dashboard.customers.*',
+            'api.post.dashboard.customer.*',
         ],
     ]
 ];

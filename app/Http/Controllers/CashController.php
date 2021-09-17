@@ -7,17 +7,18 @@ use App\Services\ActivityLogService;
 use App\Services\CashService;
 use Illuminate\Http\Request;
 
-class CashController extends Controller
+class CashController extends BaseController
 {
     private $CashService;
     private $activityLogService;
 
     public function __construct(CashService $CashService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->CashService = $CashService;
         $this->activityLogService = $activityLogService;
-
     }
 
     public function index(Request $request)
