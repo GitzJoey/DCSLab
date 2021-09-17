@@ -210,7 +210,7 @@ export default {
             this.productgroup = this.productgroupList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.productgroup.delete') + this.productgroup.hId).then(response => {
+            axios.post(route('api.post.dashboard.productgroup.delete', this.productgroup.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -227,7 +227,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.productgroup.edit') + this.productgroup.hId, new FormData($('#productgroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.productgroup.edit', this.productgroup.hId), new FormData($('#productgroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

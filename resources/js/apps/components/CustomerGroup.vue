@@ -463,7 +463,7 @@ export default {
             this.customergroup = this.customergroupList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.customergroup.delete') + this.customergroup.hId).then(response => {
+            axios.post(route('api.post.dashboard.customergroup.delete', this.customergroup.hId)) .then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -480,7 +480,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.customergroup.edit') + this.customergroup.hId, new FormData($('#customergroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.customergroup.edit', this.customergroup.hId), new FormData($('#customergroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

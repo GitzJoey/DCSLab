@@ -225,7 +225,7 @@ export default {
     methods: {
         getAllCompany(page) {
             this.loading = true;
-            axios.get('/api/get/dashboard/company/read?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.company.read') + '?page=' + page).then(response => {
                 this.companyList = response.data;
                 this.loading = false;
             });
@@ -264,7 +264,7 @@ export default {
             this.company = this.companyList.data[idx];
 
             this.loading = true;
-            axios.post('/api/post/dashboard/company/companies/delete/'  + this.company.hId).then(response => {
+            axios.post(route('api.post.dashboard.company.companies.delete', this.company.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleTableListError(e);
@@ -275,14 +275,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post('/api/post/dashboard/company/companies/save', new FormData($('#companyForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.company.companies.save'), new FormData($('#companyForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post('/api/post/dashboard/company/companies/edit/' + this.company.hId, new FormData($('#companyForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.company.companies.edit', this.company.hId), new FormData($('#companyForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

@@ -298,7 +298,7 @@ export default {
             this.warehouse = this.warehouseList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.company.warehouses.delete') + this.warehouse.hId).then(response => {
+            axios.post(route('api.post.dashboard.company.warehouses.delete', this.warehouse.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -315,7 +315,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.company.warehouses.edit') + this.warehouse.hId, new FormData($('#warehouseForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.company.warehouses.edit', this.warehouse.hId), new FormData($('#warehouseForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

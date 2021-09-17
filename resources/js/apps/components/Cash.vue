@@ -256,7 +256,7 @@ export default {
             this.cash = this.cashList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.cash.delete') + this.cash.hId).then(response => {
+            axios.post(route('api.post.dashboard.cash.delete', this.cash.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -273,7 +273,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.cash.edit') + this.cash.hId, new FormData($('#cashForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.cash.edit', this.cash.hId), new FormData($('#cashForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

@@ -405,7 +405,7 @@ export default {
             this.product = this.productList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.product.delete') + this.product.hId).then(response => {
+            axios.post(route('api.post.dashboard.product.delete', this.product.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -422,7 +422,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.product.edit') + this.product.hId, new FormData($('#productForm')[0])) .then(response => {
+                axios.post(route('api.post.dashboard.product.edit', this.product.hId), new FormData($('#productForm')[0])) .then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
