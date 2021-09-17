@@ -24,6 +24,11 @@ class CompanyServiceImpl implements CompanyService
         DB::beginTransaction();
 
         try {
+            $usr = User::find($userId)->first();
+
+            if ($usr->companies()->count() == 0)
+                $default = 1;
+
             $company = new Company();
             $company->code = $code;
             $company->name = $name;
@@ -32,7 +37,6 @@ class CompanyServiceImpl implements CompanyService
 
             $company->save();
 
-            $usr = User::find($userId)->first();
             $usr->companies()->attach([$company->id]);
 
             DB::commit();
@@ -152,5 +156,16 @@ class CompanyServiceImpl implements CompanyService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
+    }
+
+    public function getCompanyById($companyId)
+    {
+        return Company::find($companyId)->first();
+    }
+
+    public function getDefaultCompany($userId)
+    {
+        $usr = User::find($userId);
+        return $usr->companies()->where('default','=', 1)->first();
     }
 }

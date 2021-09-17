@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Listeners\AuthenticatedEventListener;
 use App\Listeners\LoginEventListener;
 use App\Listeners\LogoutEventListener;
 use App\Listeners\RouteMatchedEventListener;
+use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\Registered;
@@ -29,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Logout::class => [
             LogoutEventListener::class,
+        ],
+        Authenticated::class => [
+            AuthenticatedEventListener::class,
         ],
     ];
 

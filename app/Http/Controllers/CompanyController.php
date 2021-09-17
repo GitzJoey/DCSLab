@@ -108,6 +108,9 @@ class CompanyController extends Controller
 
         $result = $this->companyService->delete($userId, $id);
 
+        if ($id == Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0])
+            session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), $this->companyService->getDefaultCompany($userId)->hId);
+
         return $result == 0 ? response()->error():response()->success();
     }
 
