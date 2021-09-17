@@ -9,13 +9,15 @@ use Illuminate\Http\Request;
 use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
 
-class BranchController extends Controller
+class BranchController extends BaseController
 {
     private $branchService;
     private $activityLogService;
 
     public function __construct(BranchService $branchService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->branchService = $branchService;
         $this->activityLogService = $activityLogService;

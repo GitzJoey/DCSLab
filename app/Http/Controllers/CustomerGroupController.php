@@ -9,13 +9,15 @@ use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class CustomerGroupController extends Controller
+class CustomerGroupController extends BaseController
 {
     private $CustomerGroupService;
     private $activityLogService;
 
     public function __construct(CustomerGroupService $CustomerGroupService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->CustomerGroupService = $CustomerGroupService;
         $this->activityLogService = $activityLogService;

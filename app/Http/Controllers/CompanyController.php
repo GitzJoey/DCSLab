@@ -11,13 +11,15 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
-class CompanyController extends Controller
+class CompanyController extends BaseController
 {
     private $companyService;
     private $activityLogService;
 
     public function __construct(CompanyService $companyService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->companyService = $companyService;
         $this->activityLogService = $activityLogService;

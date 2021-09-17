@@ -173,7 +173,7 @@ export default {
     methods: {
         getAllProductBrand(page) {
             this.loading = true;
-            axios.get(route('/api/get/dashboard/productbrand/read') + '?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.productbrand.read') + '?page=' + page).then(response => {
                 this.productbrandList = response.data;
                 this.loading = false;
             });

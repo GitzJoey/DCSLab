@@ -7,13 +7,15 @@ use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
 
-class UnitController extends Controller
+class UnitController extends BaseController
 {
     private $UnitService;
     private $activityLogService;
 
     public function __construct(UnitService $UnitService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->UnitService = $UnitService;
         $this->activityLogService = $activityLogService;

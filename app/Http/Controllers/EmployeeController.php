@@ -6,13 +6,15 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use App\Services\EmployeeService;
 
-class EmployeeController extends Controller
+class EmployeeController extends BaseController
 {
     private $EmployeeService;
     private $activityLogService;
 
     public function __construct(EmployeeService $EmployeeService, ActivityLogService $activityLogService)
     {
+        parent::__construct();
+
         $this->middleware('auth');
         $this->EmployeeService = $EmployeeService;
         $this->activityLogService = $activityLogService;
