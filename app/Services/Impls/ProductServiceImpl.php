@@ -30,7 +30,7 @@ class ProductServiceImpl implements ProductService
     {
 
         DB::beginTransaction();
-        
+
         try {
             $product = new Product();
             $product->code = $code;
@@ -46,7 +46,7 @@ class ProductServiceImpl implements ProductService
             $product->is_use_serial = $is_use_serial;
             $product->product_type = $product_type;
             $product->status = $status;
-                        
+
             $product->save();
 
             DB::commit();
@@ -63,9 +63,8 @@ class ProductServiceImpl implements ProductService
     public function read()
     {
         return Product::with('group', 'brand', 'unit')->paginate();
-        
     }
-    
+
     public function update(
         $id,
         $code,
@@ -90,19 +89,19 @@ class ProductServiceImpl implements ProductService
 
             $retval = $product->update([
                 'code' => $code,
-                'group_id' => $group_id, 
-                'brand_id' => $brand_id, 
+                'group_id' => $group_id,
+                'brand_id' => $brand_id,
                 'name' => $name,
                 'unit_id' => $unit_id,
-                'price' => $price, 
-                'tax_status' => $tax_status, 
-                'remarks' => $remarks, 
-                'estimated_capital_price' => $estimated_capital_price, 
+                'price' => $price,
+                'tax_status' => $tax_status,
+                'remarks' => $remarks,
+                'estimated_capital_price' => $estimated_capital_price,
                 'point' => $point,
-                'is_use_serial' => $is_use_serial, 
-                'product_type' => $product_type, 
+                'is_use_serial' => $is_use_serial,
+                'product_type' => $product_type,
                 'status' => $status
-                
+
             ]);
 
             DB::commit();
@@ -136,13 +135,13 @@ class ProductServiceImpl implements ProductService
         $product = Product::find($id);
 
         return $product->delete();
-        
+
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)
     {
         switch($crud_status) {
-            case 'create': 
+            case 'create':
                 $count = Product::where('code', '=', $code)
                 ->whereNull('deleted_at')
                 ->count();

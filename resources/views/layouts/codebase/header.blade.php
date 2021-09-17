@@ -20,11 +20,9 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-left min-width-200" aria-labelledby="page-header-company-dropdown">
                     @foreach (auth()->user()->companies()->get() as $c)
-                        @if ($c->hId != $selectedCompany)
-                            <a class="dropdown-item" href="{{ route('db.company.switch_company', $c->hId) }}">
-                                {{ $c->name }}
-                            </a>
-                        @endif
+                        <a class="dropdown-item" href="{{ route('db.company.switch_company', $c->hId) }}">
+                            {{ $c->name }}
+                        </a>
                     @endforeach
                 </div>
             @endisset

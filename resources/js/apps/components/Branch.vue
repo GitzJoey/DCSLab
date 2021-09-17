@@ -73,6 +73,9 @@
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
+                            <li :class="{'page-item': true, 'active': n === this.branchList.current_page}" v-for="n in getPages">
+                                <a class="page-link" href="#" v-on:click="onPaginationChangePage(n)">{{ n }}</a>
+                            </li>
                             <li :class="{'page-item':true, 'disabled': this.branchList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
@@ -99,6 +102,7 @@
                             <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="company_id" name="company_id" v-model="branch.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -164,7 +168,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">    
+                        <div class="form-group row">
                             <div class="col">
                                 <div v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
@@ -225,7 +229,7 @@ export default {
             contentHidden: false,
             branchList: [],
             branch: {
-                company: {id:''},
+                company: { hId: '0'},
                 code: '',
                 name: '',
                 address: '',
@@ -254,7 +258,7 @@ export default {
             });
         },
         getAllCompany() {
-            axios.get('/api/get/dashboard/company/read/all/active').then(response => {
+            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
                 this.companyDDL = response.data;
             });
         },
@@ -269,7 +273,7 @@ export default {
         },
         emptyBranch() {
             return {
-                company: {id:''},
+                company: { hId:'0' },
                 code: '',
                 name: '',
                 address: '',
@@ -296,7 +300,7 @@ export default {
             this.branch = this.branchList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.company.branches.delete') + this.branch.hId).then(response => {
+            axios.post(route('api.post.dashboard.company.branches.delete', this.branch.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);

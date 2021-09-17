@@ -40,7 +40,8 @@ class CompanyController extends BaseController
 
     public function getAllActiveCompany()
     {
-        return $this->companyService->getAllActiveCompany();
+        $userId = Auth::user()->id;
+        return $this->companyService->getAllActiveCompany($userId);
     }
 
     public function store(Request $request)

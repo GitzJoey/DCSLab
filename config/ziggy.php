@@ -13,7 +13,9 @@ return [
         ],
         'branch' => [
             'api.get.dashboard.branch.read',
-            'api.post.dashboard.company.branch.*',
+            'api.post.dashboard.company.branches.*',
+
+            'api.get.dashboard.company.read.all_active',
         ],
         'employee' => [
             'api.get.dashboard.employee.read',
