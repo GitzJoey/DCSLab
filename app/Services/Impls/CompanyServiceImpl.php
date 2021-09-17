@@ -157,4 +157,15 @@ class CompanyServiceImpl implements CompanyService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
+
+    public function getCompanyById($companyId)
+    {
+        return Company::find($companyId)->first();
+    }
+
+    public function getDefaultCompany($userId)
+    {
+        $usr = User::find($userId);
+        return $usr->companies()->where('default','=', 1)->first();
+    }
 }

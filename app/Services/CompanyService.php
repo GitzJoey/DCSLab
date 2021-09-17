@@ -31,4 +31,8 @@ interface CompanyService
     public function resetDefaultCompany($userId);
 
     public function isDefaultCompany($companyId);
+
+    public function getCompanyById($companyId);
+
+    public function getDefaultCompany($userId);
 }
