@@ -32,8 +32,9 @@ class DashboardController extends BaseController
 
         $roles = $this->roleService->getRolesByUserId(Auth::user()->id);
 
+        /*
         $currentCompany = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'),
-                            Auth::user()->companies()->where('default', '=', 1)->first()->hId);
+                            Auth::user()->companies()->where('default', '=', 1)->valueOrFail('hId'));
         $companies = Auth::user()->companies()->get()->map(function ($c, $currentCompany) {
             return [
                 'hId' =>  $c->hId,
@@ -41,6 +42,8 @@ class DashboardController extends BaseController
                 'selected' => $currentCompany == $c->hId ? true:false
             ];
         });
+        */
+        $companies = null;
 
         return view('dashboard.index', compact('roles', 'companies'));
     }
