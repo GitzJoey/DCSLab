@@ -320,7 +320,7 @@ export default {
             this.supplier = this.supplierList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.supplier.delete') + this.supplier.hId).then(response => {
+            axios.post(route('api.post.dashboard.supplier.delete', this.supplier.hId)) .then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -337,7 +337,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.supplier.edit') + this.supplier.hId, new FormData($('#supplierForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.supplier.edit', this.supplier.hId), new FormData($('#supplierForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

@@ -273,7 +273,7 @@ export default {
         },
         emptyBranch() {
             return {
-                company: { hId:'0' },
+                company: { hId: '0'},
                 code: '',
                 name: '',
                 address: '',

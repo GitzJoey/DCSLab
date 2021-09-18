@@ -211,7 +211,7 @@ export default {
             this.employee = this.employeeList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.employee.delete') + this.employee.hId).then(response => {
+            axios.post(route('api.post.dashboard.employee.delete', this.employee.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -228,7 +228,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.employee.edit') + this.employee.hId, new FormData($('#employeeForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.employee.edit', this.employee.hId), new FormData($('#employeeForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

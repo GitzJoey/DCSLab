@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import { ZiggyVue } from 'ziggy';
+import { Ziggy } from '../ziggy';
 import { createI18n }from 'vue-i18n';
 import Company from './components/Company';
 
@@ -29,6 +31,7 @@ const messages = {
         actions: {
             create: 'Create Company',
             edit: 'Edit Company',
+            show: 'Show Company',
             delete: 'Delete',
         },
         fields: {
@@ -115,5 +118,6 @@ const i18n = createI18n({
 });
 
 createApp(Company)
+    .use(ZiggyVue, Ziggy)
     .use(i18n)
     .mount('#companyVue')
