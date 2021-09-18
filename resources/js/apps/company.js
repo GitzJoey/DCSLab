@@ -29,9 +29,9 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Cash',
-            edit: 'Edit Cash',
-            show: 'Show Cash',
+            create: 'Create Company',
+            edit: 'Edit Company',
+            show: 'Show Company',
             delete: 'Delete',
         },
         fields: {

@@ -254,7 +254,7 @@ export default {
             });
         },
         getAllCompany() {
-            axios.get('/api/get/dashboard/company/read/all/active').then(response => {
+            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
                 this.companyDDL = response.data;
             });
         },
