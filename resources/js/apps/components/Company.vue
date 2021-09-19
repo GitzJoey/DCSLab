@@ -5,6 +5,7 @@
             <h3 class="block-title" v-if="this.mode === 'create'"><strong>{{ $t('actions.create') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'edit'"><strong>{{ $t('actions.edit') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'show'"><strong>{{ $t('actions.show') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'error'"><strong>&nbsp;</strong></h3>
             <div class="block-options">
                 <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
@@ -20,6 +21,19 @@
             </div>
         </div>
         <div class="block-content">
+            <transition name="fade">
+                <div id="error" v-if="this.mode === 'error'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.listErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.listErrors">{{ e }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </transition>
             <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
                     <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
@@ -42,7 +56,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in companyList.data">
+                            <tr v-if="this.companyList.data.length === 0">
+                                <td class="text-center" colspan="5">{{ $t('placeholder.data_not_found') }}</td>
+                            </tr>
+                            <tr v-else v-for="(c, cIdx) in this.companyList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>
@@ -208,13 +225,16 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            companyList: [],
+            companyList: {
+                data: []
+            },
             company: {
                 code: '',
                 name: '',
                 default: '',
                 status: '',
             },
+            listErrors: [],
             tableListErrors: [],
        }
     },
@@ -302,6 +322,15 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
+        },
+        handleListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.mode = 'error';
+                this.listErrors.push(e.response.data.message);
+            }
+        },
+        resetListErrors() {
+            this.listErrors = [];
         },
         handleTableListError(e) {
             if (e.response.data.message !== undefined) {
