@@ -4,185 +4,185 @@
 
 // Base List
 .list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
-    > li {
-        position: relative;
-    }
+  > li {
+    position: relative;
+  }
 
-    &.list-simple > li,
-    &-li-push > li {
-        margin-bottom: 20px;
-    }
+  &.list-simple > li,
+  &-li-push > li {
+    margin-bottom: 20px;
+  }
 
-    &.list-simple-mini > li,
-    &-li-push-sm > li {
-        margin-bottom: 10px;
-    }
+  &.list-simple-mini > li,
+  &-li-push-sm > li {
+    margin-bottom: 10px;
+  }
 }
 
 // Timeline
 .list-timeline {
-    position: relative;
-    padding-top: 20px;
+  position: relative;
+  padding-top: 20px;
 
-    > li {
-        margin-bottom: 10px;
+  > li {
+    margin-bottom: 10px;
+  }
+
+  .list-timeline-time {
+    margin: 0;
+    padding: 10px 20px;
+    min-height: 50px;
+    text-align: right;
+    color: #999;
+    line-height: 30px;
+    font-style: italic;
+    background-color: $body-bg-light;
+    border-radius: 2px;
+  }
+
+  .list-timeline-icon {
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    color: $white;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  .list-timeline-content {
+    padding: 10px 10px 1px;
+
+    > p:first-child {
+      margin-bottom: 0;
     }
-
-    .list-timeline-time {
-        margin: 0;
-        padding: 10px 20px;
-        min-height: 50px;
-        text-align: right;
-        color: #999;
-        line-height: 30px;
-        font-style: italic;
-        background-color: $body-bg-light;
-        border-radius: 2px;
-    }
-
-    .list-timeline-icon {
-        position: absolute;
-        top: 8px;
-        left: 10px;
-        width: 34px;
-        height: 34px;
-        line-height: 34px;
-        color: $white;
-        text-align: center;
-        border-radius: 10px;
-    }
-
-    .list-timeline-content {
-        padding: 10px 10px 1px;
-
-        > p:first-child {
-            margin-bottom: 0;
-        }
-    }
+  }
 }
 
 @include media-breakpoint-up(md) {
-    .list-timeline-modern {
-        &::before {
-            position: absolute;
-            top: 0;
-            left: 119px;
-            bottom: 0;
-            display: block;
-            width: 6px;
-            content: '';
-            background-color: $body-bg-light;
-            z-index: 1;
-        }
-
-        > li {
-            min-height: 40px;
-            z-index: 2;
-
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-
-        .list-timeline-time {
-            position: absolute;
-            top: 0;
-            left: 0;
-            margin: 0;
-            padding-right: 0;
-            padding-left: 0;
-            width: 90px;
-            font-size: $font-size-sm;
-            line-height: normal;
-            background-color: transparent;
-        }
-
-        .list-timeline-icon {
-            top: 3px;
-            left: 105px;
-            z-index: 2 !important;
-        }
-
-        .list-timeline-content {
-            padding-left: 155px;
-        }
+  .list-timeline-modern {
+    &::before {
+      position: absolute;
+      top: 0;
+      left: 119px;
+      bottom: 0;
+      display: block;
+      width: 6px;
+      content: '';
+      background-color: $body-bg-light;
+      z-index: 1;
     }
+
+    > li {
+      min-height: 40px;
+      z-index: 2;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .list-timeline-time {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding-right: 0;
+      padding-left: 0;
+      width: 90px;
+      font-size: $font-size-sm;
+      line-height: normal;
+      background-color: transparent;
+    }
+
+    .list-timeline-icon {
+      top: 3px;
+      left: 105px;
+      z-index: 2 !important;
+    }
+
+    .list-timeline-content {
+      padding-left: 155px;
+    }
+  }
 }
 
 // Activity
 .list-activity {
-    > li {
-        margin-bottom: 10px;
-        padding-bottom: 7px;
-        padding-left: 35px;
-        border-bottom: 1px solid $body-bg;
+  > li {
+    margin-bottom: 10px;
+    padding-bottom: 7px;
+    padding-left: 35px;
+    border-bottom: 1px solid $body-bg;
 
-        > i:first-child {
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            line-height: 20px;
-            font-size: 14px;
-            text-align: center;
-        }
+    > i:first-child {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 14px;
+      text-align: center;
     }
+  }
 
-    > li:last-child {
-        border-bottom: none;
-    }
+  > li:last-child {
+    border-bottom: none;
+  }
 }
 
 // Events
 .list-events {
-    > li {
-        margin-bottom: .25rem;
+  > li {
+    margin-bottom: .25rem;
+  }
+
+  .js-event {
+    background-color: theme-color("info");
+    transition: transform .3s ease-out;
+
+    &::before {
+      @include vertical-align;
+      right: 10px;
+      display: inline-block;
+      font-family: $font-family-fontawesome;
+      color: rgba($white,.5);
+      content: '\f073';
     }
 
-    .js-event {
-        background-color: theme-color("info");
-        transition: transform .3s ease-out;
-
-        &::before {
-            @include vertical-align;
-            right: 10px;
-            display: inline-block;
-            font-family: $font-family-fontawesome;
-            color: rgba($white,.5);
-            content: '\f073';
-        }
-
-        @include hover() {
-            cursor: move;
-            transform: translateX(-.25rem);
-        }
+    @include hover() {
+      cursor: move;
+      transform: translateX(-.25rem);
     }
+  }
 }
 
 // Chat List
 .chat-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
-    &-item {
-        display: flex;
-        align-items: center;
-        padding: 10px 5px;
-        border-bottom: 1px solid rgba(0, 0, 0, .05);
+  &-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
 
-        &:hover {
-            background-color: rgba(0, 0, 0, .025);
-        }
-
-        &:last-child {
-            border-bottom: none;
-        }
+    &:hover {
+      background-color: rgba(0, 0, 0, .025);
     }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 }

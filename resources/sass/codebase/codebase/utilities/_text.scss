@@ -24,13 +24,13 @@
 .text-uppercase { letter-spacing: .05rem; }
 
 .text-back {
-    position: absolute;
-    top: -3rem;
-    right: 0;
-    font-size: 500%;
-    font-weight: 700;
-    opacity: .05;
-    z-index: 0;
+  position: absolute;
+  top: -3rem;
+  right: 0;
+  font-size: 500%;
+  font-weight: 700;
+  opacity: .05;
+  z-index: 0;
 }
 
 // Contextual colors
@@ -64,5 +64,5 @@
 
 .page-header-inverse #page-header,
 .sidebar-inverse #sidebar {
-    @include text-emphasis-variant('.text-dual-primary-dark', $body-color-light);
+  @include text-emphasis-variant('.text-dual-primary-dark', $body-color-light);
 }
