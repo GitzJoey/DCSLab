@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Models\Employee;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -20,11 +21,14 @@ class EmployeeServiceImpl implements EmployeeService
         DB::beginTransaction();
 
         try {
-            $employee = new User();
+            $employee = new Employee();
             $employee->name = $name;
             $employee->email = $email;
 
             $employee->save();
+
+            // if (env('AUTO_VERIFY_EMAIL', true))
+            //     $employee->markEmailAsVerified();
 
             DB::commit();
 
@@ -36,14 +40,19 @@ class EmployeeServiceImpl implements EmployeeService
         }
     }
 
-    public function read()
+    public function readAll()
     {
-        return User::paginate();
+        return Employee::paginate();
+    }
+
+    public function read($userId)
+    {
+        return Employee::where('id', '=', $userId)->paginate();
     }
 
     public function getEmployeeByEmail($email)
     {
-        return User::where('email', '=', $email)->first();
+        return Employee::where('email', '=', $email)->first();
     }
 
     public function update(
@@ -74,7 +83,7 @@ class EmployeeServiceImpl implements EmployeeService
 
     public function getEmployeeById($id)
     {
-        return User::find($id);
+        return Employee::find($id);    
     }
 
     public function delete($id)
@@ -82,22 +91,5 @@ class EmployeeServiceImpl implements EmployeeService
         $employee = User::find($id);
 
         return $employee->delete();
-    }
-
-    public function checkDuplicatedCode($crud_status, $id, $code)
-    {
-        switch($crud_status) {
-            case 'create': 
-                $count = User::where('code', '=', $code)
-                ->whereNull('deleted_at')
-                ->count();
-                return $count;
-            case 'update':
-                $count = User::where('id', '<>' , $id)
-                ->where('code', '=', $code)
-                ->whereNull('deleted_at')
-                ->count();
-                return $count;
-        }
     }
 }

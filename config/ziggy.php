@@ -25,7 +25,7 @@ return [
         ],
         'employee' => [
             'api.get.dashboard.employee.read',
-            'api.post.dashboard.company.employee.*',
+            'api.post.dashboard.company.employees.*',
         ],
         'warehouse' => [
             'api.get.dashboard.warehouse.read',

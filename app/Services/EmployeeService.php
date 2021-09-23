@@ -9,17 +9,17 @@ interface EmployeeService
         $email,
     );
 
-    public function read();
+    public function readAll();
 
-    public function getEmployeeByEmail($email);
+    public function read($userId);
 
     public function update(
         $id,
         $name,
         $email,
-    );
+    );    
+
+    public function getEmployeeByEmail($email);
 
     public function delete($id);
-
-    public function checkDuplicatedCode($crud_status, $id, $code);
 }

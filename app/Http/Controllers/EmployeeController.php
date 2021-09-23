@@ -6,6 +6,8 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use App\Services\EmployeeService;
 
+use Illuminate\Support\Facades\Auth;
+
 class EmployeeController extends BaseController
 {
     private $EmployeeService;
@@ -29,18 +31,18 @@ class EmployeeController extends BaseController
 
     public function read()
     {
-        return $this->EmployeeService->read();
+        return $this->EmployeeService->readAll();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|max:255',
-            'email' => 'required|max:255',
+            'name' => 'required|max:255',
+            'email' => 'required|email',
         ]);
 
         $result = $this->EmployeeService->create(
-            $request['nama'], 
+            $request['name'], 
             $request['email']
         );
         return $result == 0 ? response()->error():response()->success();
@@ -49,18 +51,17 @@ class EmployeeController extends BaseController
     public function update($id, Request $request)
     {
         $request->validate([
-            'nama' => 'required|max:255',
-            'email' => 'required|max:255',
+            'name' => 'required|max:255',
+            'email' => 'required|email',
         ]);
         
         $result = $this->EmployeeService->update(
             $id,
-            $request['nama'], 
+            $request['name'], 
             $request['email']
         );
         return $result == 0 ? response()->error():response()->success();
     }
-
     public function delete($id)
     {
         $result = $this->EmployeeService->delete($id);
@@ -68,4 +69,3 @@ class EmployeeController extends BaseController
         return $result == 0 ? response()->error():response()->success();
     }
 }
-
