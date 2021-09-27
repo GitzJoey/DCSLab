@@ -8,6 +8,10 @@
     <div id="companyVue"></div>
 @endsection
 
+@section('ziggy')
+    @routes('employee')
+@endsection
+
 @section('js_after')
     <script src="{{ mix('js/apps/company.js') }}"></script>
 @endsection

@@ -6,7 +6,7 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use App\Services\EmployeeService;
 
-use Illuminate\Support\Facades\Auth;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeController extends BaseController
 {
@@ -37,13 +37,21 @@ class EmployeeController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
+            'company_id' => 'required',
             'name' => 'required|max:255',
             'email' => 'required|email',
+            'status' => 'required'
         ]);
 
         $result = $this->EmployeeService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['name'], 
-            $request['email']
+            $request['email'],
+            $request['address'],
+            $request['city'],
+            $request['contact'],
+            $request['remarks'],
+            $request['status']
         );
         return $result == 0 ? response()->error():response()->success();
     }
@@ -51,14 +59,22 @@ class EmployeeController extends BaseController
     public function update($id, Request $request)
     {
         $request->validate([
+            'company_id' => 'required',
             'name' => 'required|max:255',
             'email' => 'required|email',
+            'status' => 'required'
         ]);
         
         $result = $this->EmployeeService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['name'], 
-            $request['email']
+            $request['email'],
+            $request['address'],
+            $request['city'],
+            $request['contact'],
+            $request['remarks'],
+            $request['status']
         );
         return $result == 0 ? response()->error():response()->success();
     }

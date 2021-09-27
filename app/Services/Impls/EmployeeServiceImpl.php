@@ -2,33 +2,41 @@
 
 namespace App\Services\Impls;
 
-use App\Models\Employee;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use App\Services\EmployeeService;
-use App\Models\User;
+use App\Models\Employee;
 
 class EmployeeServiceImpl implements EmployeeService
 {
     public function create(
+        $company_id,
         $name,
-        $email
+        $email,
+        $address,
+        $city,
+        $contact,
+        $remarks,
+        $status
     )
     {
         DB::beginTransaction();
 
         try {
             $employee = new Employee();
+            $employee->company_id = $company_id;
             $employee->name = $name;
             $employee->email = $email;
+            $employee->address = $address;
+            $employee->city = $city;
+            $employee->contact = $contact;
+            $employee->remarks = $remarks;
+            $employee->status = $status;
 
             $employee->save();
-
-            // if (env('AUTO_VERIFY_EMAIL', true))
-            //     $employee->markEmailAsVerified();
 
             DB::commit();
 
@@ -57,18 +65,30 @@ class EmployeeServiceImpl implements EmployeeService
 
     public function update(
         $id,
+        $company_id,
         $name,
-        $email
+        $email,
+        $address,
+        $city,
+        $contact,
+        $remarks,
+        $status
     )
     {
         DB::beginTransaction();
 
         try {
-            $employee = User::where('id', '=', $id);
+            $employee = Employee::where('id', '=', $id);
     
             $retval = $employee->update([
+                'company_id' => $company_id,
                 'name' => $name,
                 'email' => $email,
+                'address' => $address,
+                'city' => $city,
+                'contact' => $contact,
+                'remarks' => $remarks,
+                'status' => $status
             ]);
     
             DB::commit();
@@ -88,7 +108,7 @@ class EmployeeServiceImpl implements EmployeeService
 
     public function delete($id)
     {
-        $employee = User::find($id);
+        $employee = Employee::find($id);
 
         return $employee->delete();
     }

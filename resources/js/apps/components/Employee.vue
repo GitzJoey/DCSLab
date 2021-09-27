@@ -25,15 +25,22 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
+                                <th>{{ $t("table.cols.company_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.email") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in employeeList.data">
+                                <td>{{ b.company.name }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.email }}</td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -81,6 +88,18 @@
                             </ul>
                         </div>
                         <div class="form-group row">
+                            <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="company_id" name="company_id" v-model="employee.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
+                                    <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ employee.company.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="employee.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
@@ -94,6 +113,49 @@
                                 <Field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'is-invalid': errors['email']}" :placeholder="$t('fields.email')" :label="$t('fields.email')" v-model="employee.email" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="email" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ employee.email }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
+                            <div class="col-md-10">
+                                <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="employee.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ employee.address }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
+                            <div class="col-md-10">
+                                <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="employee.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ employee.city }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
+                            <div class="col-md-10">
+                                <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="employee.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ employee.contact }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
+                            <div class="col-md-10">
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="employee.remarks" v-show="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ employee.remarks }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <div>
+                                    <select class="form-control" id="inputStatus" name="status" v-model="employee.status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value= '1'>{{ $t('statusDDL.active') }}</option>
+                                        <option value= '0'>{{ $t('statusDDL.inactive') }}</option>
+                                    </select>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="employee.status === 1">{{ $t('statusDDL.active') }}</span>
+                                        <span v-if="employee.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -159,9 +221,16 @@ export default {
             contentHidden: false,
             employeeList: [],
             employee: {
-                code: '',
+                company: { hId: '0'},
                 name: '',
+                email: '',
+                address: '',
+                city: '',
+                contact: '',
+                remarks: '',
+                status: '',
             },
+            companyDDL: [],
         }
     },
     created() {
@@ -179,6 +248,11 @@ export default {
                 this.loading = false;
             });
         },
+        getAllCompany() {
+            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
+                this.companyDDL = response.data;
+            });
+        },
         onPaginationChangePage(page) {
             if (page === 'next') {
                 this.getAllEmployee(this.employeeList.current_page + 1);
@@ -190,8 +264,14 @@ export default {
         },
         emptyEmployee() {
             return {
-                code: '',
+                company: { hId: '0'},
                 name: '',
+                email: '',
+                address: '',
+                city: '',
+                contact: '',
+                remarks: '',
+                status: '1'
             }
         },
         createNew() {

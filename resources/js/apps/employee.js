@@ -17,8 +17,14 @@ const messages = {
         table: {
             title: 'Employee Lists',
             cols: {
+                company_id: 'Company Name',
                 name: 'Name',
                 email: 'Email',
+                address: 'Address',
+                city: 'City',
+                contact: 'Contact',
+                remarks: 'Remarks',
+                status: 'Status',
             }
         },
         buttons: {
@@ -33,8 +39,14 @@ const messages = {
             delete: 'Delete',
         },
         fields: {
+            company_id: 'Company Name',
             name: 'Name',
             email: 'Email',
+            address: 'Address',
+            city: 'City',
+            contact: 'Contact',
+            remarks: 'Remarks',
+            status: 'Status',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -48,13 +60,23 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        statusDDL: {
+            active: 'Active',
+            inactive: 'Inactive',
+        },
     },
     id: {
         table: {
             title: 'Daftar Karyawan',
             cols: {
+                company_id: 'Company Name',
                 name: 'Nama',
                 email: 'Email',
+                address: 'Alamat',
+                city: 'Kota',
+                contact: 'Kontak',
+                remarks: 'Remarks',
+                status: 'Status',
             }
         },
         buttons: {
@@ -69,8 +91,14 @@ const messages = {
             delete: 'Hapus',
         },
         fields: {
+            company_id: 'Company Name',
             name: 'Nama',
-                email: 'Email',
+            email: 'Email',
+            address: 'Alamat',
+            city: 'Kota',
+            contact: 'Kontak',
+            remarks: 'Remarks',
+            status: 'Status',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -83,6 +111,10 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        statusDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
         },
     }
 };
