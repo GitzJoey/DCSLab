@@ -12,7 +12,7 @@ return [
             'api.post.admin.role.*',
         ],
         'company' => [
-            'api.get.dashboard.company.*',
+            'api.get.dashboard.company.read',
             'api.post.dashboard.company.companies.*',
         ],
         'branch' => [
@@ -26,6 +26,7 @@ return [
             'api.post.dashboard.company.employees.*',
 
             'api.get.dashboard.company.read.all_active',
+            'api.get.common.countries.read',
         ],
         'warehouse' => [
             'api.get.dashboard.warehouse.read',

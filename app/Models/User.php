@@ -121,7 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
     
     public function employees()
     {
-        return $this->hasMany(Employee::class);
+        return $this->belongsTo(Employee::class);
     }
 
     public static function boot()

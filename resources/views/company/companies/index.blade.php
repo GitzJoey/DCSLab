@@ -9,7 +9,7 @@
 @endsection
 
 @section('ziggy')
-    @routes('employee')
+    @routes('company')
 @endsection
 
 @section('js_after')

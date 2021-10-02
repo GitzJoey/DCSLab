@@ -17,22 +17,14 @@ class Employee extends Model
 
     protected $fillable = [
         'company_id',
-        'name',
-        'email',
-        'address',
-        'city',
-        'contact',
-        'remarks',
-        'status'
     ];
 
-    protected static $logAttributes = ['company_id', 'name', 'email', 'address', 'city', 'contact', 'remarks', 'status'];
+    protected static $logAttributes = ['company_id'];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
         'id',
-        'email_verified_at',
         'user_id',
         'company_id',
         'created_by',
@@ -50,13 +42,13 @@ class Employee extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function companies()
+    public function company()
     {
-        return $this->hasMany(Company::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 }

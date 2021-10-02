@@ -72,7 +72,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
     Route::group(['prefix' => 'dashboard'], function () {
         Route::group(['prefix' => 'company'], function () {
-            Route::get('read/{userId}', [CompanyController::class, 'read'])->name('api.get.dashboard.company.read.userId');
+            Route::get('read', [CompanyController::class, 'read'])->name('api.get.dashboard.company.read');
             Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('api.get.dashboard.company.read.all_active');
         });
 
