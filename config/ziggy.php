@@ -14,18 +14,19 @@ return [
         'company' => [
             'api.get.dashboard.company.read',
             'api.post.dashboard.company.companies.*',
-
-            'api.get.dashboard.company.read.all_active',
         ],
         'branch' => [
-            'api.get.dashboard.branch.read',
+            'api.get.dashboard.branch.*',
             'api.post.dashboard.company.branches.*',
 
             'api.get.dashboard.company.read.all_active',
         ],
         'employee' => [
             'api.get.dashboard.employee.read',
-            'api.post.dashboard.company.employee.*',
+            'api.post.dashboard.company.employees.*',
+
+            'api.get.dashboard.company.read.all_active',
+            'api.get.common.countries.read',
         ],
         'warehouse' => [
             'api.get.dashboard.warehouse.read',

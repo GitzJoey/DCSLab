@@ -227,7 +227,7 @@ export default {
             contentHidden: false,
             warehouseList: [],
             warehouse: {
-                company: {id:''},
+                company: { hId: '0'},
                 code: '',
                 name: '',
                 address: '',
@@ -271,7 +271,7 @@ export default {
         },
         emptyWarehouse() {
             return {
-                company: {id:''},
+                company: { hId: '0'},
                 code: '',
                 name: '',
                 address: '',

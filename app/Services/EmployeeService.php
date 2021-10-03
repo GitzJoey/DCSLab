@@ -5,21 +5,26 @@ namespace App\Services;
 interface EmployeeService
 {
     public function create(
-        $name,
-        $email,
+        $company_id, $name, $email, $password, 
+        $address, $city, $postal_code, $country, $tax_id, $ic_num, $img_path, $status, $remarks,
+        $role_id
     );
 
-    public function read();
-
-    public function getEmployeeByEmail($email);
+    public function read($userId);
 
     public function update(
         $id,
-        $name,
-        $email,
+        $company_id, 
+        $name, $email, $password, 
+        $address, $city, $postal_code, $country, $tax_id, $ic_num, $img_path, $status, $remarks
     );
 
-    public function delete($id);
+    public function updateProfile(
+        $id,
+        $profile
+    );
 
-    public function checkDuplicatedCode($crud_status, $id, $code);
+    public function getEmployeeByEmail($email);
+
+    public function delete($id);
 }

@@ -173,7 +173,7 @@ export default {
     methods: {
         getAllUnit(page) {
             this.loading = true;
-            axios.get('/api/get/dashboard/unit/read?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.unit.read') + '?page=' + page).then(response => {
                 this.unitList = response.data;
                 this.loading = false;
             });

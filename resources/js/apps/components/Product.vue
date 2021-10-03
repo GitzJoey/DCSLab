@@ -307,10 +307,10 @@ export default {
             productList: [],
             product: {
                 code: '',
-                group: {id:''},
-                brand: {id:''},
+                group: {hId: ''},
+                brand: {hId: ''},
                 name: '',
-                unit: {id:''},
+                unit: {hId: ''},
                 price: '',
                 tax_status: '',
                 remarks: '',
@@ -374,10 +374,10 @@ export default {
         emptyProduct() {
             return {
                 code: '',
-                group: {id:''},
-                brand: {id:''},
+                group: {hId: ''},
+                brand: {hId: ''},
                 name: '',
-                unit: {id:''},
+                unit: {hId: ''},
                 price: '0',
                 tax_status: '',
                 remarks: '',

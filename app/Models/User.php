@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 
+use App\Models\Employee;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\ActivityLogger;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -117,6 +118,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function companies()
     {
         return $this->belongsToMany(Company::class);
+    }
+    
+    public function employees()
+    {
+        return $this->belongsTo(Employee::class);
     }
 
     public static function boot()
