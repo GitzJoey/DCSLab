@@ -25,6 +25,24 @@ mix
 ;
 
 mix
+    .copy('resources/css/midone/', 'public/css/midone/')
+    .webpackConfig({
+        plugins: [
+            new webpack.DefinePlugin({
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_DEVTOOLS__: false
+            }),
+            new webpack.ProvidePlugin({
+                cash: 'cash-dom',
+                Popper: '@popperjs/core'
+            })
+        ]
+    })
+    .js('resources/js/midone/app.js','public/js/midone/main.js')
+    .version()
+;
+
+mix
     .webpackConfig({
         plugins: [
             new webpack.DefinePlugin({

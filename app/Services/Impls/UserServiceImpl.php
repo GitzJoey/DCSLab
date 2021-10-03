@@ -244,7 +244,7 @@ class UserServiceImpl implements UserService
 
     public function getUserById($id)
     {
-        return User::with('profile')->find($id);
+        return User::with('roles', 'profile')->find($id);
     }
 
     public function getUserByEmail($email)

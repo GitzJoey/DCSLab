@@ -60,6 +60,7 @@
                     </li>
 
                     @include('layouts.codebase.sidebar-ext')
+
                     @role('administrator|dev')
                         <li class="nav-main-heading">
                             <span class="sidebar-mini-visible">AD</span><span class="sidebar-mini-hidden">{{ __('sidebar.header.adm') }}</span>
