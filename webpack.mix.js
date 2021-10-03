@@ -1,7 +1,7 @@
 const mix = require('laravel-mix');
 const webpack = require('webpack')
 const tailwindcss = require("tailwindcss");
-const path = require('path'); mix.alias();
+const path = require('path');
 
 mix.disableNotifications();
 
@@ -21,6 +21,24 @@ mix
     .sass('resources/sass/codebase/codebase/themes/pulse.scss', 'public/css/codebase/themes/')
     .js('resources/js/codebase/app.js', 'public/js/codebase/codebase.app.js')
     .copy('node_modules/simplebar/dist/simplebar.esm.js.map', 'public/js/codebase')
+    .version()
+;
+
+mix
+    .copy('resources/css/midone/', 'public/css/midone/')
+    .webpackConfig({
+        plugins: [
+            new webpack.DefinePlugin({
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_DEVTOOLS__: false
+            }),
+            new webpack.ProvidePlugin({
+                cash: 'cash-dom',
+                Popper: '@popperjs/core'
+            })
+        ]
+    })
+    .js('resources/js/midone/app.js','public/js/midone/main.js')
     .version()
 ;
 

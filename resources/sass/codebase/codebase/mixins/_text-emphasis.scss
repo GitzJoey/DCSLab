@@ -3,15 +3,15 @@
 // --------------------------------------------------
 
 @mixin text-emphasis-variant($parent, $color, $ignore-warning: false) {
-    #{$parent} {
-        color: $color !important;
-    }
+  #{$parent} {
+    color: $color !important;
+  }
 
-    @if $emphasized-link-hover-darken-percentage != 0 {
-        a#{$parent} {
-          @include hover-focus() {
-            color: darken($color, $emphasized-link-hover-darken-percentage) !important;
-          }
-        }
+  @if $emphasized-link-hover-darken-percentage != 0 {
+    a#{$parent} {
+      @include hover-focus() {
+        color: darken($color, $emphasized-link-hover-darken-percentage) !important;
+      }
     }
+  }
 }

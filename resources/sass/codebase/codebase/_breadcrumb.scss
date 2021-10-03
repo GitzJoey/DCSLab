@@ -3,9 +3,9 @@
 // --------------------------------------------------
 
 .breadcrumb-item {
-    + .breadcrumb-item::before {
-        font-family: $font-family-fontawesome;
-        font-weight: 900;
-        content: '\f105';
-    }
+  + .breadcrumb-item::before {
+    font-family: $font-family-fontawesome;
+    font-weight: 900;
+    content: '\f105';
+  }
 }

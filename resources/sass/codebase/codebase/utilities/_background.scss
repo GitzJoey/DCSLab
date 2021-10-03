@@ -40,89 +40,89 @@
 
 // Black/White with opacity
 .bg-black-op {
-    background-color: rgba(0,0,0,.5) !important;
+  background-color: rgba(0,0,0,.5) !important;
 
-    &-5 {
-        background-color: rgba(0,0,0,.05) !important;
-    }
+  &-5 {
+    background-color: rgba(0,0,0,.05) !important;
+  }
 
-    &-10 {
-        background-color: rgba(0,0,0,.1) !important;
-    }
+  &-10 {
+    background-color: rgba(0,0,0,.1) !important;
+  }
 
-    &-25 {
-        background-color: rgba(0,0,0,.25) !important;
-    }
+  &-25 {
+    background-color: rgba(0,0,0,.25) !important;
+  }
 
-    &-75 {
-        background-color: rgba(0,0,0,.75) !important;
-    }
+  &-75 {
+    background-color: rgba(0,0,0,.75) !important;
+  }
 
-    &-90 {
-        background-color: rgba(0,0,0,.9) !important;
-    }
+  &-90 {
+    background-color: rgba(0,0,0,.9) !important;
+  }
 
-    &-95 {
-        background-color: rgba(0,0,0,.95) !important;
-    }
+  &-95 {
+    background-color: rgba(0,0,0,.95) !important;
+  }
 }
 
 .bg-white-op {
-    background-color: rgba(255,255,255,.5) !important;
+  background-color: rgba(255,255,255,.5) !important;
 
-    &-5 {
-        background-color: rgba(255,255,255,.05) !important;
-    }
+  &-5 {
+    background-color: rgba(255,255,255,.05) !important;
+  }
 
-    &-10 {
-        background-color: rgba(255,255,255,.1) !important;
-    }
+  &-10 {
+    background-color: rgba(255,255,255,.1) !important;
+  }
 
-    &-25 {
-        background-color: rgba(255,255,255,.25) !important;
-    }
+  &-25 {
+    background-color: rgba(255,255,255,.25) !important;
+  }
 
-    &-75 {
-        background-color: rgba(255,255,255,.75) !important;
-    }
+  &-75 {
+    background-color: rgba(255,255,255,.75) !important;
+  }
 
-    &-90 {
-        background-color: rgba(255,255,255,.9) !important;
-    }
+  &-90 {
+    background-color: rgba(255,255,255,.9) !important;
+  }
 
-    &-95 {
-        background-color: rgba(255,255,255,.95) !important;
-    }
+  &-95 {
+    background-color: rgba(255,255,255,.95) !important;
+  }
 }
 
 // Image Background
 .bg-image {
-    background-color: $gray-lighter;
-    background-position: 0% 50%;
-    background-size: cover;
+  background-color: $gray-lighter;
+  background-position: 0% 50%;
+  background-size: cover;
 
-    &-top {
-        background-position-y: 0%;
-    }
+  &-top {
+    background-position-y: 0%;
+  }
 
-    &-bottom {
-        background-position-y: 100%;
-    }
+  &-bottom {
+    background-position-y: 100%;
+  }
 
-    @include media-breakpoint-up(xl) {
-        &-fixed {
-            background-attachment: fixed;
-        }
+  @include media-breakpoint-up(xl) {
+    &-fixed {
+      background-attachment: fixed;
     }
+  }
 }
 
 // Pattern Image
 .bg-pattern {
-    background-repeat: repeat;
+  background-repeat: repeat;
 }
 
 // Video Background
 .bg-video {
-    width: 100%;
-    transform: translateZ(0);
+  width: 100%;
+  transform: translateZ(0);
 }

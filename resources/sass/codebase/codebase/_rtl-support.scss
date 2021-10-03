@@ -3,138 +3,138 @@
 // --------------------------------------------------
 
 #page-container.rtl-support {
-    direction: rtl;
-    text-align: right;
+  direction: rtl;
+  text-align: right;
 
-    // List Inline
-    .list-inline-item:not(:last-child) {
-        margin-right: 0;
-        margin-left: .5rem;
-    }
+  // List Inline
+  .list-inline-item:not(:last-child) {
+    margin-right: 0;
+    margin-left: .5rem;
+  }
 
-    // Mini Sidebar
-    @include media-breakpoint-up(lg) {
-        &.sidebar-mini.sidebar-o.sidebar-r #sidebar {
-            .content-side,
-            .content-header {
-                transform: translateX(-($sidebar-width - $sidebar-mini-width)) translateY(0) translateZ(0);
-            }
-            
-            &:hover {
-                .content-side,
-                .content-header {
-                    transform: translateX(0);
-                }
-            }
+  // Mini Sidebar
+  @include media-breakpoint-up(lg) {
+    &.sidebar-mini.sidebar-o.sidebar-r #sidebar {
+      .content-side,
+      .content-header {
+        transform: translateX(-($sidebar-width - $sidebar-mini-width)) translateY(0) translateZ(0);
+      }
+
+      &:hover {
+        .content-side,
+        .content-header {
+          transform: translateX(0);
         }
+      }
+    }
+  }
+
+  // Nav Main
+  .nav-main {
+    a {
+      padding-right: 40px;
+      padding-left: 18px;
+
+      > i {
+        right: 19px;
+        left: auto;
+      }
+
+      &.nav-submenu {
+        padding-right: 40px;
+        padding-left: 35px;
+      }
+
+      &.nav-submenu::before,
+      &.nav-submenu::after {
+        right: auto;
+        left: 15px;
+      }
+
+      &.nav-submenu::before {
+        content: '\f105';
+      }
+
+      &.nav-submenu::after {
+        content: '\f101';
+        transform: rotate(90deg);
+      }
     }
 
-    // Nav Main
-    .nav-main {
-        a {
-            padding-right: 40px;
-            padding-left: 18px;
+    ul {
+      padding-right: 40px;
+      padding-left: 0;
 
-            > i {
-                right: 19px;
-                left: auto;
-            }
+      a,
+      a.nav-submenu {
+        padding-right: 0;
+        padding-left: 8px;
+      }
 
-            &.nav-submenu {
-                padding-right: 40px;
-                padding-left: 35px;
-            }
+      a > i {
+        margin-right: 0;
+        margin-left: 15px;
+      }
 
-            &.nav-submenu::before,
-            &.nav-submenu::after {
-                right: auto;
-                left: 15px;
-            }
+      ul {
+        padding-right: 12px;
+      }
+    }
 
-            &.nav-submenu::before {
-                content: '\f105';
-            }
+    li.open > a.nav-submenu::before {
+      transform: rotate(90deg);
+    }
+  }
 
-            &.nav-submenu::after {
-                content: '\f101';
-                transform: rotate(90deg);
-            }
+  // Nav Main Horizontal
+  @include media-breakpoint-up(lg) {
+    .nav-main-header {
+      a {
+        > i {
+          margin-right: 0;
+          margin-left: 8px;
+        }
+
+        &.nav-submenu {
+          padding-right: 14px;
+          padding-left: 28px;
+        }
+
+        &.nav-submenu::before {
+          right: auto;
+          left: 6px;
+        }
+      }
+
+      ul {
+        right: 0;
+        left: auto;
+
+        a.nav-submenu::before {
+          content: '\f104';
         }
 
         ul {
-            padding-right: 40px;
-            padding-left: 0;
+          right: 100%;
+          left: auto;
+        }
+      }
 
-            a,
-            a.nav-submenu {
-                padding-right: 0;
-                padding-left: 8px;
-            }
-
-            a > i {
-                margin-right: 0;
-                margin-left: 15px;
-            }
-
-            ul {
-                padding-right: 12px;
-            }
+      > li:last-child {
+        ul {
+          right: auto;
+          left: 0;
         }
 
-        li.open > a.nav-submenu::before {
-            transform: rotate(90deg);
+        ul a.nav-submenu::before {
+          content: '\f105';
         }
+
+        ul ul {
+          right: auto;
+          left: 100%;
+        }
+      }
     }
-
-    // Nav Main Horizontal
-    @include media-breakpoint-up(lg) {
-        .nav-main-header {
-            a {
-                > i {
-                    margin-right: 0;
-                    margin-left: 8px;
-                }
-
-                &.nav-submenu {
-                    padding-right: 14px;
-                    padding-left: 28px;
-                }
-                
-                &.nav-submenu::before {
-                    right: auto;
-                    left: 6px;
-                }
-            }
-
-            ul {
-                right: 0;
-                left: auto;
-
-                a.nav-submenu::before {
-                    content: '\f104';
-                }
-
-                ul {
-                    right: 100%;
-                    left: auto;
-                }
-            }
-            
-            > li:last-child {
-                ul {
-                    right: auto;
-                    left: 0;
-                }
-
-                ul a.nav-submenu::before {
-                    content: '\f105';
-                }
-
-                ul ul {
-                    right: auto;
-                    left: 100%;
-                }
-            }
-        }
-    }
+  }
 }

@@ -15,10 +15,10 @@
         <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
 
         <link rel="stylesheet" href="{{ mix('css/midone/midone.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/midone/vendors.css') }}">
     </head>
-    <body>
+    <body class="main">
         <div id="app"></div>
-
-        <script src="{{ mix('js/midone/midone.js') }}"></script>
+        <script src="{{ mix('js/midone/main.js') }}"></script>
     </body>
 </html>

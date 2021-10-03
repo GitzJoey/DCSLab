@@ -3,76 +3,76 @@
 // --------------------------------------------------
 
 #page-header {
-    position: relative;
-    margin: 0 auto;
-    width: 100%;
-    background-color: $header-bg;
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  background-color: $header-bg;
 }
 
 // Header overlay (used for various reasons eg: loading or search)
 .overlay-header {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: $white;
-    opacity: 0;
-    transition: transform .2s ease-in-out, opacity .2s ease-in-out;
-    transform: translateY(-100%);
-    will-change: opacity, transform;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: $white;
+  opacity: 0;
+  transition: transform .2s ease-in-out, opacity .2s ease-in-out;
+  transform: translateY(-100%);
+  will-change: opacity, transform;
 
-    &.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // Inner header sections
 .content-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;
-    padding: (($header-height - 34px) / 2) $space-side;
-    height: $header-height;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: (($header-height - 34px) / 2) $space-side;
+  height: $header-height;
 
-    &.content-header-fullrow {
-        flex-direction: column;
-        align-items: stretch;
+  &.content-header-fullrow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  &-section {
+    flex: 0 0 auto;
+
+    &.content-header-section-wrap {
+      flex: 1 1 auto;
     }
+  }
 
-    &-section {
-        flex: 0 0 auto;
+  &-item {
+    display: inline-block;
+    height: 34px;
+    line-height: 34px;
+    vertical-align: middle;
 
-        &.content-header-section-wrap {
-            flex: 1 1 auto;
-        }
+    &-align {
+      vertical-align: middle;
     }
+  }
 
-    &-item {
-        display: inline-block;
-        height: 34px;
-        line-height: 34px;
-        vertical-align: middle;
+  &-logo {
+    height: 34px;
+  }
 
-        &-align {
-            vertical-align: middle;
-        }
+  @at-root #page-header > & {
+    padding-left: $space-mobile;
+    padding-right: $space-mobile;
+
+    @include media-breakpoint-up(md) {
+      padding-left: $space-base;
+      padding-right: $space-base;
     }
-
-    &-logo {
-        height: 34px;
-    }
-
-    @at-root #page-header > & {
-        padding-left: $space-mobile;
-        padding-right: $space-mobile;
-
-        @include media-breakpoint-up(md) {
-            padding-left: $space-base;
-            padding-right: $space-base;
-        }
-    }
+  }
 }

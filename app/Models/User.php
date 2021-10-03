@@ -53,6 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_recovery_codes',
         'created_at',
         'updated_at',
+        'pivot',
     ];
 
     /**

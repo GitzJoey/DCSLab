@@ -46,6 +46,8 @@ Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1']], function () {
     Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
 
+    Route::get('menu', [DashboardController::class, 'menu'])->name('api.get.menu');
+
     Route::group(['prefix' => 'inbox'], function () {
         Route::get('read', [InboxController::class, 'read'])->name('api.get.inbox.thread.read');
         Route::get('show/{id}', [InboxController::class, 'show'])->name('api.get.inbox.thread.show');

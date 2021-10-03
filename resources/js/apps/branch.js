@@ -58,6 +58,7 @@ const messages = {
             warning: 'Warning',
         },
         placeholder: {
+            data_not_found: 'Data Not Found',
             please_select: 'Please Select',
         },
         statusDDL: {
@@ -98,7 +99,7 @@ const messages = {
             city: 'Kota',
             contact: 'Kontak',
             remarks: 'Deskripsi',
-            status: 'Status',    
+            status: 'Status',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -110,6 +111,7 @@ const messages = {
             warning: 'Peringatan',
         },
         placeholder: {
+            data_not_found: 'Data Tidak Ditemukan',
             please_select: 'Silahkan Pilih',
         },
         statusDDL: {

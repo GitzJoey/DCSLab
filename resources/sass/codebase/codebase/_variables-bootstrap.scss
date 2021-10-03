@@ -5,12 +5,12 @@
 
 // Color system
 $theme-colors: (
-    primary: $brand-primary,
-    secondary: $gray-600,
-    success: $brand-success,
-    info: $brand-info,
-    warning: $brand-warning,
-    danger: $brand-danger
+primary: $brand-primary,
+secondary: $gray-600,
+success: $brand-success,
+info: $brand-info,
+warning: $brand-warning,
+danger: $brand-danger
 ) !default;
 
 // The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.

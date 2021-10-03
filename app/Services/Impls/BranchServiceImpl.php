@@ -2,13 +2,14 @@
 
 namespace App\Services\Impls;
 
-use Exception;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
 use App\Services\BranchService;
+
 use App\Models\Branch;
+
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class BranchServiceImpl implements BranchService
 {
