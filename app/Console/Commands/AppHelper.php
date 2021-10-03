@@ -57,6 +57,7 @@ class AppHelper extends Command
             $this->info('[1] Update Composer And NPM');
             $this->info('[2] Clear All Cache');
             $this->info('[3] Change User Roles');
+            $this->info('[4] Seed User & Roles');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
@@ -73,6 +74,8 @@ class AppHelper extends Command
                 case 3:
                     $this->changeUserRoles();
                     $this->info('Done!');
+                    break;
+                case 4:
                     break;
                 case 'X':
                 default:
