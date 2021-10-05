@@ -43,6 +43,8 @@ class EmployeeController extends BaseController
     {
         $request->validate([
             'company_id' => 'required',
+            'name' => 'required|alpha',
+            'email' => 'required|email|max:255|unique:users',
         ]);
 
         $user = array (
@@ -50,7 +52,19 @@ class EmployeeController extends BaseController
             'email' => $request['email'],
         );
 
+        $first_name = '';
+        $last_name = '';
+        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
+            $pieces = explode(" ", $request['name']);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+        } else {
+            $first_name = $request['name'];
+        }
+
         $profile = array (
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'address' => $request['address'],
             'city' => $request['city'],
             'postal_code' => $request['postal_code'],
@@ -69,61 +83,65 @@ class EmployeeController extends BaseController
             $profile['img_path'] = $file;
         }
 
-        $role_id = [];
-        array_push($role_id, $this->roleService->getRoleByName('user')->id);
+        $rolesId = [];
+        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
 
         $result = $this->EmployeeService->create(
             Hashids::decode($request['company_id'])[0],
             $request['name'], 
             $request['email'],
-            $request['password'], 
-            $request['address'],
-            $request['city'], 
-            $request['postal_code'],
-            $request['country'], 
-            $request['tax_id'],
-            $request['ic_num'], 
-            $request['img_path'],
-            $request['status'], 
-            $request['remarks'],
-            $role_id
+            $rolesId,
+            $profile
         );
         return $result == 0 ? response()->error():response()->success();
     }
 
     public function update($id, Request $request)
     {
+
         $request->validate([
             'company_id' => 'required',
+            'name' => 'required|alpha',
         ]);
 
-        if ($request->hasFile('img_path')) {
-            $image = $request->file('img_path');
-            $filename = time().".".$image->getClientOriginalExtension();
+        $user = array (
+            'name' => $request['name'],
+            'email' => $request['email'],
+        );
 
-            $file = $image->storePubliclyAs('usr', $filename, 'public');
-            $request['img_path'] = $file;
+        $first_name = '';
+        $last_name = '';
+        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
+            $pieces = explode(" ", $request['name']);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+        } else {
+            $first_name = $request['name'];
         }
 
-        $role_id = [];
-        array_push($role_id, $this->roleService->getRoleByName('user')->id);
+        $profile = array (
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'postal_code' => $request['postal_code'],
+            'country' => $request['country'],
+            'tax_id' => $request['tax_id'],
+            'ic_num' => $request['ic_num'],
+            'status' => $request['status'],
+            'remarks' => $request['remarks'],
+        );
+
+        $rolesId = [];
+        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
 
         $result = $this->EmployeeService->update(
             $id,
             Hashids::decode($request['company_id'])[0],
             $request['name'], 
             $request['email'],
-            $request['password'], 
-            $request['address'],
-            $request['city'], 
-            $request['postal_code'],
-            $request['country'], 
-            $request['tax_id'],
-            $request['ic_num'], 
-            $request['img_path'],
-            $request['status'], 
-            $request['remarks'],
-            $role_id
+            $rolesId,
+            $profile
         );
         return $result == 0 ? response()->error():response()->success();
     }
