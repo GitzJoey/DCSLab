@@ -16,9 +16,11 @@ use App\Models\Setting;
 class EmployeeServiceImpl implements EmployeeService
 {
     public function create(
-        $company_id, $name, $email, $password, 
-        $address, $city, $postal_code, $country, $tax_id, $ic_num, $img_path, $status, $remarks,
-        $role_id
+        $company_id, 
+        $name, 
+        $email,
+        $rolesId, 
+        $profile
     )
     {
         DB::beginTransaction();
@@ -30,23 +32,24 @@ class EmployeeServiceImpl implements EmployeeService
             $user->save();
             $user_id = $user->id;
 
-            $profile = new Profile();
-            $profile->img_path = $img_path;
-            $profile->address = $address;
-            $profile->city = $city;
-            $profile->postal_code = $postal_code;
-            $profile->country = $country;
-            $profile->tax_id = $tax_id;
-            $profile->ic_num = $ic_num;
-            $profile->status = $status;
-            $profile->remarks = $remarks;            
-
-            $user->profile()->save($profile);
+            $pa = new Profile();
+            $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:null;
+            $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:null;
+            $pa->address = array_key_exists('address', $profile) ? $profile['address']:null;
+            $pa->city = array_key_exists('city', $profile) ? $profile['city']:null;
+            $pa->postal_code = array_key_exists('postal_code', $profile) ? $profile['postal_code']:null;
+            $pa->country = array_key_exists('country', $profile) ? $profile['country']:null;
+            $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:null;
+            $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:null;
+            $pa->status = array_key_exists('status', $profile) ? $profile['status']:null;
+            $pa->img_path = array_key_exists('img_path', $profile) ? $profile['img_path']:null;
+            $pa->remarks = array_key_exists('remarks', $profile) ? $profile['remarks']:null;
+            $user->profile()->save($pa);
 
             $settings = $this->createDefaultSetting();
             $user->settings()->saveMany($settings);
             
-            $user->attachRoles($role_id);
+            $user->attachRoles($rolesId);
 
             $employee = new Employee();
             $employee->company_id = $company_id;
@@ -77,8 +80,10 @@ class EmployeeServiceImpl implements EmployeeService
     public function update(
         $id,
         $company_id, 
-        $name, $email, $password, 
-        $address, $city, $postal_code, $country, $tax_id, $ic_num, $img_path, $status, $remarks
+        $name, 
+        $email, 
+        $rolesId, 
+        $profile
     )
     {
         DB::beginTransaction();
@@ -87,28 +92,32 @@ class EmployeeServiceImpl implements EmployeeService
             $employee = Employee::find($id);
             $employee->company_id = $company_id;
             $retval = $employee->save();
-
+            
             $user_id = User::find($employee->user_id);
             $user_id = $user_id->id;
             $user = User::find($user_id);
             $user->name = $name;
             $user->email = $email;
-            $user->password = $password;
+            // $user->password = $password;
             $retval = $user->save();
             
-            $profile_id = Profile::where('user_id', $user_id)->first();
-            $profile_id = $profile_id->id;
-            $profile = Profile::find($profile_id);
-            $profile->address = $address;
-            $profile->city = $city;
-            $profile->postal_code = $postal_code;
-            $profile->country = $country;
-            $profile->tax_id = $tax_id;
-            $profile->ic_num = $ic_num;
-            $profile->img_path = array_key_exists('img_path', $profile) ? $profile['img_path']:null;
-            $profile->status = $status;
-            $profile->remarks = $remarks;
-            $retval = $profile->save();
+            if ($profile != null) {
+                $pa = $user->profile()->first();
+
+                $retval += $pa->update([
+                    'first_name' => $profile['first_name'],
+                    'last_name' => $profile['last_name'],
+                    'address' => $profile['address'],
+                    'city' => $profile['city'],
+                    'postal_code' => $profile['postal_code'],
+                    'country' => $profile['country'],
+                    'status' => $profile['status'],
+                    'tax_id' => $profile['tax_id'],
+                    'ic_num' => $profile['ic_num'],
+                    'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$pa->img_path,
+                    'remarks' => $profile['remarks']
+                ]);
+            }
 
             DB::commit();
     
@@ -133,9 +142,13 @@ class EmployeeServiceImpl implements EmployeeService
                 $profile = $employee->profile()->first();
 
                 $retval += $profile->update([
+                    'first_name' => $profile['first_name'],
+                    'last_name' => $profile['last_name'],
                     'address' => $profile['address'],
                     'city' => $profile['city'],
                     'postal_code' => $profile['postal_code'],
+                    'country' => $profile['country'],
+                    'status' => $profile['status'],
                     'tax_id' => $profile['tax_id'],
                     'ic_num' => $profile['ic_num'],
                     'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$profile->img_path,
