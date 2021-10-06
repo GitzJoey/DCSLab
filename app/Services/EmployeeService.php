@@ -5,11 +5,8 @@ namespace App\Services;
 interface EmployeeService
 {
     public function create(
-        $company_id, 
-        $name, 
-        $email, 
-        $rolesId, 
-        $profile
+        $company_id,
+        $user_id
     );
 
     public function read($userId);
@@ -17,10 +14,7 @@ interface EmployeeService
     public function update(
         $id,
         $company_id, 
-        $name, 
-        $email, 
-        $rolesId, 
-        $profile
+        $user_id
     );
 
     public function updateProfile(

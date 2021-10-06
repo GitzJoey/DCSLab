@@ -6,23 +6,25 @@ use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 use App\Services\EmployeeService;
 use App\Services\RoleService;
-
+use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeController extends BaseController
 {
-    private $EmployeeService;
+    private $employeeService;
     private $roleService;
+    private $userService;
     private $activityLogService;
 
-    public function __construct(EmployeeService $EmployeeService, RoleService $roleService, ActivityLogService $activityLogService)
+    public function __construct(EmployeeService $employeeService, RoleService $roleService, UserService $userService, ActivityLogService $activityLogService)
     {
         parent::__construct();
 
         $this->middleware('auth');
-        $this->EmployeeService = $EmployeeService;
+        $this->employeeService = $employeeService;
         $this->roleService = $roleService;
+        $this->userService = $userService;
         $this->activityLogService = $activityLogService;
     }
 
@@ -36,7 +38,7 @@ class EmployeeController extends BaseController
     public function read()
     {
         $userId = Auth::user()->id;
-        return $this->EmployeeService->read($userId);
+        return $this->employeeService->read($userId);
     }
 
     public function store(Request $request)
@@ -47,10 +49,8 @@ class EmployeeController extends BaseController
             'email' => 'required|email|max:255|unique:users',
         ]);
 
-        $user = array (
-            'name' => $request['name'],
-            'email' => $request['email'],
-        );
+        $rolesId = [];
+        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
 
         $first_name = '';
         $last_name = '';
@@ -83,15 +83,18 @@ class EmployeeController extends BaseController
             $profile['img_path'] = $file;
         }
 
-        $rolesId = [];
-        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
-
-        $result = $this->EmployeeService->create(
-            Hashids::decode($request['company_id'])[0],
-            $request['name'], 
+        $user = $this->userService->create(
+            $request['name'],
             $request['email'],
+            '',
             $rolesId,
             $profile
+        );
+        $user_id = Hashids::decode($user)[0];
+
+        $result = $this->employeeService->create(
+            Hashids::decode($request['company_id'])[0],
+            $user_id
         );
         return $result == 0 ? response()->error():response()->success();
     }
@@ -104,10 +107,8 @@ class EmployeeController extends BaseController
             'name' => 'required|alpha',
         ]);
 
-        $user = array (
-            'name' => $request['name'],
-            'email' => $request['email'],
-        );
+        $rolesId = [];
+        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
 
         $first_name = '';
         $last_name = '';
@@ -132,16 +133,26 @@ class EmployeeController extends BaseController
             'remarks' => $request['remarks'],
         );
 
-        $rolesId = [];
-        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
+        if ($request->hasFile('img_path')) {
+            $image = $request->file('img_path');
+            $filename = time().".".$image->getClientOriginalExtension();
 
-        $result = $this->EmployeeService->update(
-            $id,
-            Hashids::decode($request['company_id'])[0],
-            $request['name'], 
+            $file = $image->storePubliclyAs('usr', $filename, 'public');
+            $profile['img_path'] = $file;
+        }
+
+        $user = $this->userService->create(
+            $request['name'],
             $request['email'],
+            '',
             $rolesId,
             $profile
+        );
+        $user_id = Hashids::decode($user)[0];
+
+        $result = $this->employeeService->create(
+            Hashids::decode($request['company_id'])[0],
+            $user_id
         );
         return $result == 0 ? response()->error():response()->success();
     }
