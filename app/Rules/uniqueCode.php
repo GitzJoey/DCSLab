@@ -3,10 +3,13 @@
 namespace App\Rules;
 
 use App\Services\BranchService;
+use App\Services\CapitalGroupService;
 use App\Services\CompanyService;
 use App\Services\EmployeeService;
 use App\Services\WarehouseService;
 use App\Services\CashService;
+use App\Services\CapitalService;
+use App\Services\InvestorService;
 use App\Services\SupplierService;
 use App\Services\CustomerService;
 use App\Services\CustomerGroupService;
@@ -28,6 +31,9 @@ class uniqueCode implements Rule
     private $branchService;
     private $warehouseService;
     private $CashService;
+    private $investorService;
+    private $capitalGroupService;
+    private $capitalService;
     private $SupplierService;
     private $productGroupService;
     private $productBrandService;
@@ -58,6 +64,15 @@ class uniqueCode implements Rule
                 break;
             case 'cashes': 
                 $this->CashService = Container::getInstance()->make(CashService::class);
+                break;
+            case 'investors': 
+                $this->investorService = Container::getInstance()->make(InvestorService::class);
+                break;
+            case 'capitals': 
+                $this->capitalService = Container::getInstance()->make(CapitalService::class);
+                break;
+            case 'capitalgroups': 
+                $this->capitalGroupService = Container::getInstance()->make(CapitalGroupService::class);
                 break;
             case 'suppliers': 
                 $this->SupplierService = Container::getInstance()->make(SupplierService::class);
@@ -104,6 +119,15 @@ class uniqueCode implements Rule
                 break;
             case 'cashes': 
                 $count = $this->CashService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'investors': 
+                $count = $this->investorService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'capitals': 
+                $count = $this->capitalService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'capitalgroups': 
+                $count = $this->capitalGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'suppliers': 
                 $count = $this->SupplierService->checkDuplicatedCode($this->crud_status, $this->id, $code);
