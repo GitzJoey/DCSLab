@@ -38,6 +38,10 @@ return [
             'api.get.dashboard.cash.read',
             'api.post.dashboard.cash.*',
         ],
+        'capitalgroup' => [
+            'api.get.dashboard.capitalgroup.read',
+            'api.post.dashboard.capitalgroup.*',
+        ],
         'supplier' => [
             'api.get.dashboard.supplier.read',
             'api.post.dashboard.supplier.*',

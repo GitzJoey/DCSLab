@@ -7,14 +7,18 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\InboxController;
 
-use App\Http\Controllers\BranchController;
 
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CashController;
+use App\Http\Controllers\InvestorController;
+use App\Http\Controllers\CapitalController;
+use App\Http\Controllers\CapitalGroupController;
+
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductGroupController;
@@ -87,6 +91,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
         Route::group(['prefix' => 'finance'], function () {
             Route::get('cashes', [CashController::class, 'index'])->name('db.finance.cashes');
+            Route::get('investors', [InvestorController::class, 'index'])->name('db.finance.capital.investors');
+            Route::get('capitals', [CapitalController::class, 'index'])->name('db.finance.capital.capitals');
+            Route::get('capital_groups', [CapitalGroupController::class, 'index'])->name('db.finance.capital.capital_groups');
         });
 
         Route::group(['prefix' => 'purchase'], function () {
