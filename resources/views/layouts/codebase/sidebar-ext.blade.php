@@ -32,10 +32,10 @@
                         <a class="{{ active_class(if_route_pattern('db.finance.capital.investors')) }}" href="{{route('db.finance.capital.investors')}}">{{ __('sidebar-ext.db.finance.capital.investors')}}</a>
                     </li>
                     <li>
-                        <a class="{{ active_class(if_route_pattern('db.finance.capital.capitals')) }}" href="{{route('db.finance.capital.capitals')}}">{{ __('sidebar-ext.db.finance.capital.capitals')}}</a>
+                        <a class="{{ active_class(if_route_pattern('db.finance.capital.capital_groups')) }}" href="{{route('db.finance.capital.capital_groups')}}">{{ __('sidebar-ext.db.finance.capital.capital_groups')}}</a>
                     </li>
                     <li>
-                        <a class="{{ active_class(if_route_pattern('db.finance.capital.capital_groups')) }}" href="{{route('db.finance.capital.capital_groups')}}">{{ __('sidebar-ext.db.finance.capital.capital_groups')}}</a>
+                        <a class="{{ active_class(if_route_pattern('db.finance.capital.capitals')) }}" href="{{route('db.finance.capital.capitals')}}">{{ __('sidebar-ext.db.finance.capital.capitals')}}</a>
                     </li>
                 </ul>
             </li>
