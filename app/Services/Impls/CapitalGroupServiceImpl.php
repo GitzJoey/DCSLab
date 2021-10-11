@@ -41,6 +41,11 @@ class CapitalGroupServiceImpl implements CapitalGroupService
         return CapitalGroup::paginate();
     }
 
+    public function getAllActiveCapitalGroup()
+    {
+        return CapitalGroup::all();
+    }
+
     public function update(
         $id,
         $code,

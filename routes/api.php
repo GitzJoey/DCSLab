@@ -100,6 +100,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'investor'], function () {
             Route::get('read', [InvestorController::class, 'read'])->name('api.get.dashboard.investor.read');
+            Route::get('read/all/active', [InvestorController::class, 'getAllActiveInvestor'])->name('api.get.dashboard.investor.read.all_active');
         });
 
         Route::group(['prefix' => 'capital'], function () {
@@ -108,6 +109,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'capitalgroup'], function () {
             Route::get('read', [CapitalGroupController::class, 'read'])->name('api.get.dashboard.capitalgroup.read');
+            Route::get('read/all/active', [CapitalGroupController::class, 'getAllActiveCapitalGroup'])->name('api.get.dashboard.capitalgroup.read.all_active');
         });
 
         Route::group(['prefix' => 'supplier'], function () {

@@ -33,6 +33,11 @@ class CapitalGroupController extends BaseController
         return $this->capitalGroupService->read();
     }
 
+    public function getAllActiveCapitalGroup()
+    {
+        return $this->capitalGroupService->getAllActiveCapitalGroup();
+    }
+
     public function store(Request $request)
     {
         $request->validate([

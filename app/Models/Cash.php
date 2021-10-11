@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CustomerGroup;
+use App\Models\Capital;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -46,4 +47,9 @@ class Cash extends Model
     {
         return $this->hasMany(CustomerGroup::class);
     } 
+
+    public function capital()
+    {
+        return $this->belongsTo(Capital::class);
+    }
 }

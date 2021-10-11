@@ -27,7 +27,6 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.term") }}</th>
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
@@ -41,7 +40,6 @@
                             <tr v-for="(c, cIdx) in investorList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.term }}</td>
                                 <td>{{ c.contact }}</td>
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
@@ -111,13 +109,6 @@
                                 <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="investor.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.name }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="investor.term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -234,7 +225,6 @@ export default {
             investor: {
                 code: '',
                 name: '',
-                term: '',
                 contact: '',
                 address: '',
                 city: '',
@@ -272,7 +262,6 @@ export default {
             return {
                 code: '',
                 name: '',
-                term: '',
                 contact: '',
                 address: '',
                 city: '',
