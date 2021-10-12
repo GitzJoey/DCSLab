@@ -5,10 +5,10 @@ namespace App\Services;
 interface CapitalService
 {
     public function create(
-        $investor,
-        $capital_group,
-        $cash_id,
         $ref_number,
+        $investor_id,
+        $group_id,
+        $cash_id,
         $date,
         $amount,
         $remarks,
@@ -18,10 +18,10 @@ interface CapitalService
 
     public function update(
         $id,
-        $investor,
-        $capital_group,
-        $cash_id,
         $ref_number,
+        $investor_id,
+        $group_id,
+        $cash_id,    
         $date,
         $amount,
         $remarks,

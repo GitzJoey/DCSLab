@@ -40,8 +40,9 @@ class CapitalGroup extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function capital()
+    public function capitals()
     {
-        return $this->belongsTo(Capital::class);
+        // return $this->belongsTo(Capital::class);
+        return $this->hasMany(Capital::class);
     }
 }

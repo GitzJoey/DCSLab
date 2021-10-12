@@ -19,8 +19,8 @@ class Capital extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'investor',
-        'capital_group',
+        'investor_id',
+        'group_id',
         'cash_id',
         'ref_number',
         'date',
@@ -29,8 +29,8 @@ class Capital extends Model
     ];
 
     protected static $logAttributes = [
-        'investor',
-        'capital_group',
+        'investor_id',
+        'group_id',
         'cash_id',
         'ref_number',
         'date',
@@ -42,8 +42,8 @@ class Capital extends Model
 
     protected $hidden = [
         'id',
-        'investor',
-        'capital_group',
+        'investor_id',
+        'group_id',
         'cash_id',
         'created_by',
         'updated_by',
@@ -60,18 +60,21 @@ class Capital extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function investors()
+    public function investor()
     {
-        return $this->hasMany(Investor::class);
+        // return $this->hasMany(Investor::class);
+        return $this->belongsTo(Investor::class);
     }
 
-    public function capital_groups()
+    public function group()
     {
-        return $this->hasMany(CapitalGroup::class);
+        // return $this->hasMany(CapitalGroup::class);
+        return $this->belongsTo(CapitalGroup::class);
     }
 
-    public function cashes()
+    public function cash()
     {
-        return $this->hasMany(Cash::class);
+        // return $this->hasMany(Cash::class);
+        return $this->belongsTo(Cash::class);
     }
 }

@@ -48,8 +48,9 @@ class Cash extends Model
         return $this->hasMany(CustomerGroup::class);
     } 
 
-    public function capital()
+    public function capitals()
     {
-        return $this->belongsTo(Capital::class);
+        // return $this->belongsTo(Capital::class);
+        return $this->hasMany(Capital::class);
     }
 }

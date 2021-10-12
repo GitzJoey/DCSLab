@@ -39,17 +39,18 @@ class CapitalController extends BaseController
         $request->validate([
             'ref_number' => 'required|max:255',
         ]);
-
-        $date = [
-            'PREFS.DATE_FORMAT' => $request['dateFormat'],
-            'PREFS.TIME_FORMAT' => $request['timeFormat'],
-        ];
+        
+        $date = '2021-10-01';
+        // $date = [
+        //     'PREFS.DATE_FORMAT' => $request['dateFormat'],
+        //     'PREFS.TIME_FORMAT' => $request['timeFormat'],
+        // ];
 
         $result = $this->capitalService->create(
-            Hashids::decode($request['investor'])[0], 
-            Hashids::decode($request['capital_group'])[0], 
+            $request['ref_number'],
+            Hashids::decode($request['investor_id'])[0], 
+            Hashids::decode($request['group_id'])[0], 
             Hashids::decode($request['cash_id'])[0],
-            $request['ref_number'], 
             $date, 
             $request['amount'], 
             $request['remarks'],

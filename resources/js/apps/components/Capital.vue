@@ -26,6 +26,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ $t("table.cols.ref_number") }}</th>
+                                <th>{{ $t("table.cols.date") }}</th>
                                 <th>{{ $t("table.cols.investor") }}</th>
                                 <th>{{ $t("table.cols.capital_group") }}</th>
                                 <th>{{ $t("table.cols.cash_id") }}</th>
@@ -38,8 +39,8 @@
                             <tr v-for="(c, cIdx) in capitalList.data">
                                 <td>{{ c.ref_number }}</td>
                                 <td>{{ c.date }}</td>
-                                <td>{{ c.investor.name }}</td>
-                                <td>{{ c.capitar_group.name }} </td>
+                                <td>{{ c.investor.name }}</td> 
+                                <td>{{ c.group.name }} </td> 
                                 <td>{{ c.cash.name }}</td>
                                 <td>{{ c.amount }}</td>
                                 <td>{{ c.remarks }}</td>
@@ -97,34 +98,18 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ capital.ref_number }}</div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="row">
-                                <div class="col-6">
-                                    <span>{{ $t('fields.date.dateFormat') }}</span>
-                                    <select id="selectDate" class="form-control" name="dateFormat" v-model="capital.date.dateFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="yyyy_MM_dd">{{ moment(new Date()).format('yyyy-MM-DD') }}</option>
-                                        <option value="dd_MMM_yyyy">{{ moment(new Date()).format('DD-MMM-yyyy') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show' && this.capital.date.dateFormat === 'yyyy_MM_dd'">{{ moment(new Date()).format('yyyy-MM-DD') }}</div>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show' && this.capital.date.dateFormat === 'dd_MMM_yyyy'">{{ moment(new Date()).format('DD-MMM-yyyy') }}</div>
-                                    <br/>
-                                </div>
-                                <div class="col-6">
-                                    <span>{{ $t('fields.date.timeFormat') }}</span>
-                                    <select id="selectTime" class="form-control" name="timeFormat" v-model="capital.date.timeFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="hh_mm_ss">{{ moment(new Date()).format('HH:mm:ss') }}</option>
-                                        <option value="h_m_A">{{ moment(new Date()).format('h:m A') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show' && this.capital.date.timeFormat === 'hh_mm_ss'">{{ moment(new Date()).format('HH:mm:ss') }}</div>
-                                    <div class="form-control-plaintext" v-if="this.mode === 'show' && this.capital.date.timeFormat === 'h_m_A'">{{ moment(new Date()).format('h:m A') }}</div>
-                                    <br/>
+                        <!-- <div class="form-row">
+                            <div class="form-group col-lg-8">
+                                <div class="form-material">
+                                    <input type="text" class="js-flatpickr form-control" id="example-material-flatpickr-custom" name="example-material-flatpickr-custom" placeholder="d-m-Y" data-allow-input="true" data-date-format="d-m-Y">
+                                    <label for="example-material-flatpickr-custom">Choose Date</label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="investor">{{ $t('fields.investor') }}</label>
+                            <label class="col-2 col-form-label" for="investor_id">{{ $t('fields.investor') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="investor" name="investor" v-model="capital.investor.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="investor_id" name="investor_id" v-model="capital.investor.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.investorDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -133,13 +118,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="capital_group">{{ $t('fields.capital_group') }}</label>
+                            <label class="col-2 col-form-label" for="group_id">{{ $t('fields.capital_group') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="capital_group" name="capital_group" v-model="capital.capital_group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="group_id" name="group_id" v-model="capital.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.capitalgroupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ capital.capital_group.name }}
+                                    {{ capital.group.name }}
                                 </div>            
                             </div>
                         </div>
@@ -232,7 +217,7 @@ export default {
             capital: {
                 ref_number: '',
                 investor: {hId: ''},
-                capital_group: {hId: ''},
+                group: {hId: ''},
                 cash: {hId: ''},
                 amount: '',
                 remarks: '',
@@ -296,7 +281,7 @@ export default {
             return {
                 ref_number: '',
                 investor: {hId: ''},
-                capital_group: {hId: ''},
+                group: {hId: ''},
                 cash: {hId: ''},
                 amount: '',
                 remarks: '',

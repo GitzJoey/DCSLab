@@ -21,6 +21,7 @@ const messages = {
                 investor: 'Investor',
                 capital_group: 'Capital Group',
                 cash_id: 'Cash',
+                date: 'Date',
                 amount: 'Amount',
                 remarks: 'Remarks',
             }
@@ -41,13 +42,13 @@ const messages = {
             investor: 'Investor',
             capital_group: 'Capital Group',
             cash_id: 'Cash',
-            amount: 'Amount',
-            remarks: 'Remarks',
             date: {
                 date: 'Date',
                 dateFormat: 'Date Format',
                 timeFormat: 'Time Format'
             },
+            amount: 'Amount',
+            remarks: 'Remarks',
         },
         errors: {
             warning: 'Warning',
@@ -64,6 +65,7 @@ const messages = {
                 investor: 'Investor',
                 capital_group: 'Modal Grup',
                 cash_id: 'Kas',
+                date: 'Tanggal',
                 amount: 'Nominal',
                 remarks: 'Remarks',
             }
@@ -84,6 +86,7 @@ const messages = {
             investor: 'Investor',
             capital_group: 'Modal Grup',
             cash_id: 'Kas',
+            date: 'Tanggal',
             amount: 'Nominal',
             remarks: 'Remarks',
             date: {

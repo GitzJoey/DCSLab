@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Config;
 class CapitalServiceImpl implements CapitalService
 {
     public function create(
-        $investor,
-        $capital_group,
-        $cash_id,
         $ref_number,
+        $investor_id,
+        $group_id,
+        $cash_id,
         $date,
         $amount,
         $remarks,
@@ -27,11 +27,10 @@ class CapitalServiceImpl implements CapitalService
 
         try {
             $capital = new Capital();
-            $capital->investor = $investor;
-            $capital->capital_group = $capital_group;
-            $capital->cash_id = $cash_id;
-            $capital->date = $date;
             $capital->ref_number = $ref_number;
+            $capital->investor_id = $investor_id;
+            $capital->group_id = $group_id;
+            $capital->cash_id = $cash_id;
             $capital->date = $date;
             $capital->amount = $amount;
             $capital->remarks = $remarks;
@@ -51,7 +50,7 @@ class CapitalServiceImpl implements CapitalService
 
     public function read()
     {
-        return Capital::with('group', 'brand', 'unit')->paginate();
+        return Capital::with('investor', 'group', 'cash')->paginate();
     }
 
     public function update(
