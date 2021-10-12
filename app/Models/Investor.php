@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Capital;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -44,6 +45,11 @@ class Investor extends Model
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function capitals()
