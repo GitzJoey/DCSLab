@@ -177,6 +177,11 @@ return [
 
         \App\Providers\FortifyServiceProvider::class,
 
+        Intervention\Image\ImageServiceProvider::class,
+        Cmgmyr\Messenger\MessengerServiceProvider::class,
+        Mews\Captcha\CaptchaServiceProvider::class,
+
+        App\Providers\ResponseMacroServiceProvider::class,
     ],
 
     /*
@@ -231,6 +236,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
     ],
 
 ];
