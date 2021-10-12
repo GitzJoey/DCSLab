@@ -7,6 +7,7 @@ return [
     'db.company.branches' => 'Cabang',
     'db.company.warehouses' => 'Gudang',
     'db.finance' => 'Keuangan',
+    'db.finance.chart_of_accounts' => 'Chart Of Accounts',
     'db.cashes' => 'Kas',
     'db.finance.capital' => 'Modal',
     'db.finance.capital.investors' => 'Investor',
