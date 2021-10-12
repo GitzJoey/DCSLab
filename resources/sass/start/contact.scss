@@ -17,12 +17,12 @@
     }
 }
 
-.form-group {
+.contct-form.form-group {
     margin: 0;
 }
 
-p.form-message.success,
-p.form-message.error {
+.contct-form p.form-message.success,
+.contct-form p.form-message.error {
     font-size: 16px;
     color: #121212;
     background: #cbced1;
@@ -31,7 +31,7 @@ p.form-message.error {
     margin-top: 15px;
 }
 
-p.form-message.error {
+.contct-form p.form-message.error {
     color: #f00;
 }
 
@@ -87,11 +87,4 @@ p.form-message.error {
 
 .contact-form .single-form .main-btn:hover {
     background-color: #005ad5;
-}
-
-.list-unstyled li {
-    font-size: 13px;
-    margin-left: 2px;
-    margin-top: 5px;
-    color: #f00;
 }

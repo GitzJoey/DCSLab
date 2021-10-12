@@ -4,77 +4,28 @@
     {{ __('front.title') }}
 @endsection
 
+@section('header_content')
+    <div id="home" class="header-hero bg_cover background">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-10">
+                    <div class="header-content text-center">
+                        <h3 class="header-title">{{ __('front.header.header_2') }}</h3>
+                        <p class="text">{{ __('front.header.header_3') }}</p>
+                        <ul class="header-btn">
+                            <li><a class="main-btn btn-one" href="#">{{ __('front.buttons.get_in_touch') }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-shape">
+            <img src="{{ asset('images/header-shape.svg') }}" alt="shape">
+        </div>
+    </div>
+@endsection
+
 @section('content')
-    <header class="header-area">
-        <div class="navigation navigation-transparent">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="#">
-                                <img src="{{ asset('images/g_logo.png') }}" alt="Logo" width="50px" height="50px">
-                            </a>
-
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="toggler-icon"></span>
-                                <span class="toggler-icon"></span>
-                                <span class="toggler-icon"></span>
-                            </button>
-
-                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarMain">
-                                <ul class="navbar-nav m-auto">
-                                    <li class="nav-item active" data-menu="home">
-                                        <a class="page-scroll text-uppercase" href="#home">{{ __('front.menu.home') }}</a>
-                                    </li>
-                                    <li class="nav-item" data-menu="service">
-                                        <a class="page-scroll text-uppercase" href="#service">{{ __('front.menu.services') }}</a>
-                                    </li>
-                                    <li class="nav-item" data-menu="pricing">
-                                        <a class="page-scroll text-uppercase" href="#pricing">{{ __('front.menu.pricing') }}</a>
-                                    </li>
-                                    <li class="nav-item" data-menu="contact">
-                                        <a class="page-scroll text-uppercase" href="#contact">{{ __('front.menu.contact') }}</a>
-                                    </li>
-                                    <li class="nav-item" data-menu="dashboard">
-                                        <a class="text-uppercase" href="{{ route('front') }}">{{ __('front.menu.dashboard') }}</a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="navbar-social d-none d-sm-flex align-items-center">
-                                <ul>
-                                    <li><a href=""><i class="icon icon-social-facebook"></i></a></li>
-                                    <li><a href=""><i class="icon icon-social-twitter"></i></a></li>
-                                    <li><a href=""><i class="icon icon-social-instagram"></i></a></li>
-                                    <li><a href=""><i class="icon icon-social-linkedin"></i></a></li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="home" class="header-hero bg_cover background">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-8 col-lg-10">
-                        <div class="header-content text-center">
-                            <h3 class="header-title">{{ __('front.header.header_2') }}</h3>
-                            <p class="text">{{ __('front.header.header_3') }}</p>
-                            <ul class="header-btn">
-                                <li><a class="main-btn btn-one" href="#">{{ __('front.buttons.get_in_touch') }}</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="header-shape">
-                <img src="{{ asset('images/header-shape.svg') }}" alt="shape">
-            </div>
-        </div>
-    </header>
-
     <section id="service" class="services-area">
         <div class="container">
             <div class="row my-5">

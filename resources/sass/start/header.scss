@@ -37,15 +37,29 @@
     z-index: 9;
 }
 
+.header-hero .auth-header-content {
+    padding-top: 100px;
+    position: relative;
+    z-index: 9;
+}
+
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .header-hero .header-content {
         padding-top: 130px;
+    }
+
+    .header-hero .auth-header-content {
+        padding-top: 100px;
     }
 }
 
 @media (max-width: 767px) {
     .header-hero .header-content {
         padding-top: 120px;
+    }
+
+    .header-hero .auth-header-content {
+        padding-top: 100px;
     }
 }
 

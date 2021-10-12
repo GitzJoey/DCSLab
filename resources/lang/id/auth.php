@@ -52,5 +52,12 @@ return [
             'password' => 'Password',
             'password_confirmation' => 'Confirm password',
         ]
+    ],
+    'buttons' => [
+        'login' => 'Login',
+        'register' => 'Daftar',
+        'reset_password' => 'Reset Password',
+        'submit' => 'Daftar',
+        'read_term' => 'Baca Syarat',
     ]
 ];

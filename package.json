@@ -18,6 +18,9 @@
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
+        "resolve-url-loader": "^4.0.0",
+        "sass": "^1.42.1",
+        "sass-loader": "^12.1.0",
         "simple-line-icons": "^2.5.5"
     }
 }

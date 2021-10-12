@@ -52,5 +52,12 @@ return [
             'password' => 'Password',
             'password_confirmation' => 'Confirm password',
         ],
+    ],
+    'buttons' => [
+        'login' => 'Login',
+        'register' => 'Register',
+        'reset_password' => 'Reset Password',
+        'submit' => 'Submit',
+        'read_term' => 'Read Terms',
     ]
 ];
