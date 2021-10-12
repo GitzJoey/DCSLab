@@ -5,7 +5,7 @@
 @endsection
 
 @section('header_content')
-    <div id="login" class="header-hero bg_cover background">
+    <div id="register" class="header-hero bg_cover background">
         <div class="container">
             <div class="auth-header-content">
                 <div class="row">
@@ -67,7 +67,7 @@
                                 </button>
                             </div>
                             <div class="d-flex justify-content-end">
-                                <a class="mx-2" href="#" data-toggle="modal" data-target="#modal-terms">
+                                <a class="mx-2" href="#" data-bs-toggle="modal" data-bs-target="#modal-terms">
                                     <i class="icon icon-book-open"></i> {{ __('auth.buttons.read_term') }}
                                 </a>
                                 <a class="" href="{{ route('login') }}">
@@ -99,23 +99,16 @@
 <div class="modal fade" id="modal-terms" tabindex="-1" role="dialog" aria-labelledby="modal-terms" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-slidedown" role="document">
         <div class="modal-content">
-            <div class="block block-themed block-transparent mb-0">
-                <div class="block-header bg-primary-dark">
-                    <h3 class="block-title">{{ __('auth.register.terms_and_cond') }}</h3>
-                    <div class="block-options">
-                        <button type="button" class="btn-block-option" data-dismiss="modal" aria-label="Close">
-                            <i class="si si-close"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="block-content">
-                    <p>&nbsp;</p>
-                </div>
+            <div class="modal-header">
+                <h3 class="modal-title">{{ __('auth.register.terms_and_cond') }}</h3>
+            </div>
+            <div class="modal-body">
+                <p>&nbsp;</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-alt-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-alt-success" data-dismiss="modal">
-                    <i class="fa fa-check"></i> {{ __('buttons.accept') }}
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ __('auth.buttons.close') }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="icon icon-check"></i> {{ __('auth.buttons.accept') }}
                 </button>
             </div>
         </div>

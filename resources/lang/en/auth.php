@@ -59,5 +59,8 @@ return [
         'reset_password' => 'Reset Password',
         'submit' => 'Submit',
         'read_term' => 'Read Terms',
+        'close' => 'Close',
+        'accept' => 'Accept',
+
     ]
 ];

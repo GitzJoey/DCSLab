@@ -59,5 +59,8 @@ return [
         'reset_password' => 'Reset Password',
         'submit' => 'Daftar',
         'read_term' => 'Baca Syarat',
+        'close' => 'Tutup',
+        'accept' => 'Terima',
+
     ]
 ];
