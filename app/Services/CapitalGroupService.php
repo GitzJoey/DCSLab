@@ -11,6 +11,8 @@ interface CapitalGroupService
 
     public function read();
 
+    public function getAllActiveCapitalGroup();
+
     public function update(
         $id,
         $code,

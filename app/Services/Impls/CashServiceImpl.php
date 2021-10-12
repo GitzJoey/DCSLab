@@ -81,7 +81,6 @@ class CashServiceImpl implements CashService
         }
     }
 
-
     public function delete($id)
     {
         $cash = Cash::find($id);

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Capital;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,5 +38,11 @@ class CapitalGroup extends Model
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
+    }
+
+    public function capitals()
+    {
+        // return $this->belongsTo(Capital::class);
+        return $this->hasMany(Capital::class);
     }
 }

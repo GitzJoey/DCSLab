@@ -7,7 +7,6 @@ interface InvestorService
     public function create(
         $code,
         $name,
-        $term,
         $contact,
         $address,
         $city,
@@ -18,11 +17,12 @@ interface InvestorService
 
     public function read();
 
+    public function getAllActiveInvestor();
+
     public function update(
         $id,
         $code,
         $name,
-        $term,
         $contact,
         $address,
         $city,

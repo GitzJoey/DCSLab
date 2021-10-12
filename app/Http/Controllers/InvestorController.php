@@ -33,11 +33,15 @@ class InvestorController extends BaseController
         return $this->investorService->read();
     }
 
+    public function getAllActiveInvestor()
+    {
+        return $this->investorService->getAllActiveInvestor();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'investors'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'investors')],
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
@@ -45,14 +49,13 @@ class InvestorController extends BaseController
         $result = $this->investorService->create(
             $request['code'],
             $request['name'], 
-            $request['term'], 
             $request['contact'], 
             $request['address'], 
             $request['city'],
             $request['tax_number'], 
             $request['remarks'], 
             $request['status']
-            );
+        );
         
         return $result == 0 ? response()->error():response()->success();
     }
@@ -69,7 +72,6 @@ class InvestorController extends BaseController
             $id,
             $request['code'],
             $request['name'],
-            $request['term'],
             $request['contact'],
             $request['address'],
             $request['city'],
