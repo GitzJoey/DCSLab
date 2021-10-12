@@ -14,10 +14,8 @@
                         @if (session('status'))
                             <div class="px-3 py-3">
                                 <div class="mb-3">
-                                    <div class="row col-12">
-                                        <div class="alert alert-success">
-                                            {{ session('status') }}
-                                        </div>
+                                    <div class="alert alert-success">
+                                        {{ session('status') }}
                                     </div>
                                 </div>
                                 <br/>
