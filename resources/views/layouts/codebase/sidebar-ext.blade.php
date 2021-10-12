@@ -25,21 +25,19 @@
             <li>
                 <a class="{{ active_class(if_route_pattern('db.finance.cashes')) }}" href="{{route('db.finance.cashes')}}">{{ __('sidebar-ext.db.finance.cashes')}}</a>
             </li>
-            <li>
-                <li class="{{ active_class(if_route_pattern('db.finance.capital*'), 'open') }}">
-                    <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class=""></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance.capital')}}</span></a>
-                    <ul>
-                        <li>
-                            <a class="{{ active_class(if_route_pattern('db.finance.capital.investors')) }}" href="{{route('db.finance.capital.investors')}}">{{ __('sidebar-ext.db.finance.capital.investors')}}</a>
-                        </li>
-                        <li>
-                            <a class="{{ active_class(if_route_pattern('db.finance.capital.capitals')) }}" href="{{route('db.finance.capital.capitals')}}">{{ __('sidebar-ext.db.finance.capital.capitals')}}</a>
-                        </li>
-                        <li>
-                            <a class="{{ active_class(if_route_pattern('db.finance.capital.capital_groups')) }}" href="{{route('db.finance.capital.capital_groups')}}">{{ __('sidebar-ext.db.finance.capital.capital_groups')}}</a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="{{ active_class(if_route_pattern('db.finance.capital.*'), 'open') }}">
+                <a class="nav-submenu" data-toggle="nav-submenu" href="#"><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance.capital')}}</span></a>
+                <ul>
+                    <li>
+                        <a class="{{ active_class(if_route_pattern('db.finance.capital.investors')) }}" href="{{route('db.finance.capital.investors')}}">{{ __('sidebar-ext.db.finance.capital.investors')}}</a>
+                    </li>
+                    <li>
+                        <a class="{{ active_class(if_route_pattern('db.finance.capital.capital_groups')) }}" href="{{route('db.finance.capital.capital_groups')}}">{{ __('sidebar-ext.db.finance.capital.capital_groups')}}</a>
+                    </li>
+                    <li>
+                        <a class="{{ active_class(if_route_pattern('db.finance.capital.capitals')) }}" href="{{route('db.finance.capital.capitals')}}">{{ __('sidebar-ext.db.finance.capital.capitals')}}</a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </li>

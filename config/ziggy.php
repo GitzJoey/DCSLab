@@ -38,9 +38,20 @@ return [
             'api.get.dashboard.cash.read',
             'api.post.dashboard.cash.*',
         ],
+        'capital' => [
+            'api.get.dashboard.capital.read',
+            'api.get.dashboard.investor.read.all_active',
+            'api.get.dashboard.capitalgroup.read.all_active',
+            'api.get.dashboard.cash.read.all_active',
+            'api.post.dashboard.capital.*',
+        ],
         'capitalgroup' => [
             'api.get.dashboard.capitalgroup.read',
             'api.post.dashboard.capitalgroup.*',
+        ],
+        'investor' => [
+            'api.get.dashboard.investor.read',
+            'api.post.dashboard.investor.*',
         ],
         'supplier' => [
             'api.get.dashboard.supplier.read',

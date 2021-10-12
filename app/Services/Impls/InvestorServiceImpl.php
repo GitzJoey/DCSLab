@@ -15,7 +15,6 @@ class InvestorServiceImpl implements InvestorService
     public function create(
         $code,
         $name,
-        $term,
         $contact,
         $address,
         $city,
@@ -30,7 +29,6 @@ class InvestorServiceImpl implements InvestorService
             $investor = new Investor();
             $investor->code = $code;
             $investor->name = $name;
-            $investor->term = $term;
             $investor->contact = $contact;
             $investor->address = $address;
             $investor->city = $city;
@@ -56,12 +54,15 @@ class InvestorServiceImpl implements InvestorService
         return Investor::paginate();
     }
 
+    public function getAllActiveInvestor()
+    {
+        return Investor::all();
+    }
 
     public function update(
         $id,
         $code,
         $name,
-        $term,
         $contact,
         $address,
         $city,
@@ -78,7 +79,6 @@ class InvestorServiceImpl implements InvestorService
             $retval = $investor->update([
                 'code' => $code,
                 'name' => $name,
-                'term' => $term,
                 'contact' => $contact,
                 'address' => $address,
                 'city' => $city,
