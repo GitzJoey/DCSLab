@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Capital;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,9 +41,13 @@ class CapitalGroup extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function capitals()
     {
-        // return $this->belongsTo(Capital::class);
         return $this->hasMany(Capital::class);
     }
 }

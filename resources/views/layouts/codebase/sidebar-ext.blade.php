@@ -23,6 +23,9 @@
         <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-wallet"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance')}}</span></a>
         <ul>
             <li>
+                <a class="{{ active_class(if_route_pattern('db.finance.chart_of_accounts')) }}" href="{{route('db.finance.chart_of_accounts')}}">{{ __('sidebar-ext.db.finance.chart_of_accounts')}}</a>
+            </li>
+            <li>
                 <a class="{{ active_class(if_route_pattern('db.finance.cashes')) }}" href="{{route('db.finance.cashes')}}">{{ __('sidebar-ext.db.finance.cashes')}}</a>
             </li>
             <li class="{{ active_class(if_route_pattern('db.finance.capital.*'), 'open') }}">
@@ -36,6 +39,28 @@
                     </li>
                     <li>
                         <a class="{{ active_class(if_route_pattern('db.finance.capital.capitals')) }}" href="{{route('db.finance.capital.capitals')}}">{{ __('sidebar-ext.db.finance.capital.capitals')}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="{{ active_class(if_route_pattern('db.finance.expense.*'), 'open') }}">
+                <a class="nav-submenu" data-toggle="nav-submenu" href="#"><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance.expense')}}</span></a>
+                <ul>
+                    <li>
+                        <a class="{{ active_class(if_route_pattern('db.finance.expense.expenses')) }}" href="{{route('db.finance.expense.expenses')}}">{{ __('sidebar-ext.db.finance.expense.expenses')}}</a>
+                    </li>
+                    <li>
+                        <a class="{{ active_class(if_route_pattern('db.finance.expense.expense_groups')) }}" href="{{route('db.finance.expense.expense_groups')}}">{{ __('sidebar-ext.db.finance.expense.expense_groups')}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="{{ active_class(if_route_pattern('db.finance.income.*'), 'open') }}">
+                <a class="nav-submenu" data-toggle="nav-submenu" href="#"><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance.income')}}</span></a>
+                <ul>
+                    <li>
+                        <a class="{{ active_class(if_route_pattern('db.finance.income.incomes')) }}" href="{{route('db.finance.income.incomes')}}">{{ __('sidebar-ext.db.finance.income.incomes')}}</a>
+                    </li>
+                    <li>
+                        <a class="{{ active_class(if_route_pattern('db.finance.income.income_groups')) }}" href="{{route('db.finance.income.income_groups')}}">{{ __('sidebar-ext.db.finance.income.income_groups')}}</a>
                     </li>
                 </ul>
             </li>

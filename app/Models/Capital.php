@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Investor;
 use App\Models\CapitalGroup;
 use App\Models\Cash;
+use App\Models\Company;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -60,21 +61,23 @@ class Capital extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function investor()
     {
-        // return $this->hasMany(Investor::class);
         return $this->belongsTo(Investor::class);
     }
 
     public function group()
     {
-        // return $this->hasMany(CapitalGroup::class);
         return $this->belongsTo(CapitalGroup::class);
     }
 
     public function cash()
     {
-        // return $this->hasMany(Cash::class);
         return $this->belongsTo(Cash::class);
     }
 }

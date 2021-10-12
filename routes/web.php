@@ -19,6 +19,7 @@ use App\Http\Controllers\CapitalGroupController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductBrandController;
 use App\Http\Controllers\ProductGroupController;
@@ -28,6 +29,10 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\DoctorAccountingPageController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExpenseGroupController;
+use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\IncomeGroupController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -90,10 +95,15 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
         });
 
         Route::group(['prefix' => 'finance'], function () {
+            Route::get('chart_of_accounts', [ChartOfAccountController::class, 'index'])->name('db.finance.chart_of_accounts');
             Route::get('cashes', [CashController::class, 'index'])->name('db.finance.cashes');
             Route::get('investors', [InvestorController::class, 'index'])->name('db.finance.capital.investors');
             Route::get('capitals', [CapitalController::class, 'index'])->name('db.finance.capital.capitals');
             Route::get('capital_groups', [CapitalGroupController::class, 'index'])->name('db.finance.capital.capital_groups');
+            Route::get('expenses', [ExpenseController::class, 'index'])->name('db.finance.expense.expenses');
+            Route::get('expense_groups', [ExpenseGroupController::class, 'index'])->name('db.finance.expense.expense_groups');
+            Route::get('incomes', [IncomeController::class, 'index'])->name('db.finance.income.incomes');
+            Route::get('income_groups', [IncomeGroupController::class, 'index'])->name('db.finance.income.incomes_groups');
         });
 
         Route::group(['prefix' => 'purchase'], function () {

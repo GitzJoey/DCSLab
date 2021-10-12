@@ -55,10 +55,10 @@ class CapitalServiceImpl implements CapitalService
 
     public function update(
         $id,
-        $investor,
-        $capital_group,
-        $cash_id,
         $ref_number,
+        $investor_id,
+        $group_id,
+        $cash_id,
         $date,
         $amount,
         $remarks,
@@ -70,10 +70,10 @@ class CapitalServiceImpl implements CapitalService
             $capital = Capital::where('id', '=', $id);
 
             $retval = $capital->update([
-                'investor' => $investor,
-                'capital_group' => $capital_group,
-                'cash_id' => $cash_id,
                 'ref_number' => $ref_number,
+                'investor_id' => $investor_id,
+                'group_id' => $group_id,
+                'cash_id' => $cash_id,
                 'date' => $date,
                 'amount' => $amount,
                 'remarks' => $remarks,

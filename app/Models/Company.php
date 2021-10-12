@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Branch;
 use App\Models\Warehouse;
 use App\Models\Employee;
+use App\Models\Investor;
+use App\Models\Capital;
+use App\Models\CapitalGroup;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -53,6 +56,21 @@ class Company extends Model
     public function warehouses()
     {
         return $this->hasMany(Warehouse::class);
+    }
+
+    public function investors()
+    {
+        return $this->hasMany(Investor::class);
+    }
+
+    public function capitals()
+    {
+        return $this->hasMany(Capital::class);
+    }
+
+    public function capital_groups()
+    {
+        return $this->hasMany(CapitalGroup::class);
     }
 
     public function users()
