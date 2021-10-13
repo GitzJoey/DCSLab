@@ -25,6 +25,7 @@ class Capital extends Model
         'cash_id',
         'ref_number',
         'date',
+        'capital_status',
         'amount',
         'remarks',
     ];
@@ -35,6 +36,7 @@ class Capital extends Model
         'cash_id',
         'ref_number',
         'date',
+        'capital_status',
         'amount',
         'remarks',
     ];

@@ -53,6 +53,18 @@ return [
             'api.get.dashboard.investor.read',
             'api.post.dashboard.investor.*',
         ],
+        'expensegroup' => [
+            'api.get.dashboard.expensegroup.read',
+            'api.post.dashboard.expensegroup.*',
+
+            'api.get.dashboard.company.read.all_active',
+        ],
+        'incomegroup' => [
+            'api.get.dashboard.incomegroup.read',
+            'api.post.dashboard.incomegroup.*',
+
+            'api.get.dashboard.company.read.all_active',
+        ],
         'supplier' => [
             'api.get.dashboard.supplier.read',
             'api.post.dashboard.supplier.*',

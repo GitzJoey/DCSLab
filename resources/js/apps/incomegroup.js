@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { ZiggyVue } from 'ziggy';
 import { Ziggy } from '../ziggy';
 import { createI18n }from 'vue-i18n';
-import Investor from './components/Investor';
+import IncomeGroup from './components/IncomeGroup';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -15,17 +15,11 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Purchase Investors',
+            title: 'IncomeGroup Lists',
             cols: {
                 company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
-                contact: 'Contact',
-                address: 'Address',
-                city: 'City',
-                tax_number: 'Tax Number',
-                remarks: 'Remarks',
-                status: 'Status',
             }
         },
         buttons: {
@@ -34,21 +28,15 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Investor',
-            edit: 'Edit Investor',
-            show: 'Show Investor',
+            create: 'Create IncomeGroup',
+            edit: 'Edit IncomeGroup',
+            show: 'Show IncomeGroup',
             delete: 'Delete',
         },
         fields: {
             company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
-            contact: 'Contact',
-            address: 'Address',
-            city: 'City',
-            tax_number: 'Tax Number',
-            remarks: 'Remarks',
-            status: 'Status',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -65,21 +53,15 @@ const messages = {
         statusDDL: {
             active: 'Active',
             inactive: 'Inactive',
-        },
+        }
     },
     id: {
         table: {
-            title: 'Pemasok',
+            title: 'Daftar Perusahaan',
             cols: {
                 company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
-                contact: 'Kontak',
-                address: 'Alamat',
-                city: 'Kota',
-                tax_number: 'Nomor Pajak',
-                remarks: 'Remarks',
-                status: 'Status',
             }
         },
         buttons: {
@@ -88,21 +70,15 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Kas',
-            edit: 'Ubah Kas',
-            show: 'Tampilkan Kas',
+            create: 'Tambah Gudang',
+            edit: 'Ubah Gudang',
+            show: 'Tampilkan Gudang',
             delete: 'Hapus',
         },
         fields: {
             company_id: 'Nama Perusahaan',
             code: 'Kode',
-            name: 'Nama',
-            contact: 'Kontak',
-            address: 'Alamat',
-            city: 'Kota',
-            tax_number: 'Nomor Pajak',
-            remarks: 'Remarks',
-            status: 'Status',
+            name: 'Nama',    
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -119,7 +95,7 @@ const messages = {
         statusDDL: {
             active: 'Aktif',
             inactive: 'Tidak Aktif',
-        },
+        }
     }
 };
 
@@ -129,7 +105,7 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(Investor)
+createApp(IncomeGroup)
     .use(ZiggyVue, Ziggy)
     .use(i18n)
-    .mount('#investorVue')
+    .mount('#incomegroupVue')

@@ -10,6 +10,7 @@ interface CapitalService
         $group_id,
         $cash_id,
         $date,
+        $capital_status,
         $amount,
         $remarks,
     );
@@ -23,6 +24,7 @@ interface CapitalService
         $group_id,
         $cash_id,    
         $date,
+        $capital_status,
         $amount,
         $remarks,
     );

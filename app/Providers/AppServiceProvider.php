@@ -23,6 +23,8 @@ use App\Services\CashService;
 use App\Services\InvestorService;
 use App\Services\CapitalService;
 use App\Services\CapitalGroupService;
+use App\Services\IncomeGroupService;
+use App\Services\ExpenseGroupService;
 use App\Services\SupplierService;
 use App\Services\ProductGroupService;
 use App\Services\ProductBrandService;
@@ -39,6 +41,8 @@ use App\Services\Impls\CashServiceImpl;
 use App\Services\Impls\InvestorServiceImpl;
 use App\Services\Impls\CapitalServiceImpl;
 use App\Services\Impls\CapitalGroupServiceImpl;
+use App\Services\Impls\IncomeGroupServiceImpl;
+use App\Services\Impls\ExpenseGroupServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductBrandServiceImpl;
@@ -106,6 +110,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(CapitalGroupService::class, function (){
             return new CapitalGroupServiceImpl();
+        });
+
+        $this->app->singleton(IncomeGroupService::class, function (){
+            return new IncomeGroupServiceImpl();
+        });
+
+        $this->app->singleton(ExpenseGroupService::class, function (){
+            return new ExpenseGroupServiceImpl();
         });
 
         $this->app->singleton(CustomerGroupService::class, function (){

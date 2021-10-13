@@ -28,38 +28,23 @@
                                 <th>{{ $t("table.cols.company_id") }}</th>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.contact") }}</th>
-                                <th>{{ $t("table.cols.address") }}</th>
-                                <th>{{ $t("table.cols.city") }}</th>
-                                <th>{{ $t("table.cols.tax_number") }}</th>
-                                <th>{{ $t("table.cols.remarks") }}</th>
-                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in investorList.data">
-                                <td>{{ c.company.name }}</td>
-                                <td>{{ c.code }}</td>
-                                <td>{{ c.name }}</td>
-                                <td>{{ c.contact }}</td>
-                                <td>{{ c.address }}</td>
-                                <td>{{ c.city }}</td>
-                                <td>{{ c.tax_number }}</td>
-                                <td>{{ c.remarks }}</td>
-                                <td>
-                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
-                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
-                                </td>
+                            <tr v-for="(w, wIdx) in incomegroupList.data">
+                                <td>{{ w.company.name }}</td>
+                                <td>{{ w.code }}</td>
+                                <td>{{ w.name }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(wIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(wIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(wIdx)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -69,13 +54,13 @@
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.investorList.prev_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.incomegroupList.prev_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
-                            <li :class="{'page-item':true, 'disabled': this.investorList.next_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.incomegroupList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
@@ -87,7 +72,7 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
-                    <Form id="investorForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                    <Form id="incomegroupForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -100,78 +85,28 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="company_id" name="company_id" v-model="capital.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="company_id" name="company_id" v-model="incomegroup.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ capital.company.name }}
+                                    {{ incomegroup.company.name }}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="investor.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="incomegroup.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ incomegroup.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="investor.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="incomegroup.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.name }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputContact" name="contact" as="input" :class="{'form-control':true, 'is-invalid': errors['contact']}" :placeholder="$t('fields.contact')" :label="$t('fields.contact')" v-model="investor.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.contact }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputAddress" name="address" as="input" :class="{'form-control':true, 'is-invalid': errors['address']}" :placeholder="$t('fields.address')" :label="$t('fields.address')" v-model="investor.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.address }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputCity" name="city" as="input" :class="{'form-control':true, 'is-invalid': errors['city']}" :placeholder="$t('fields.city')" :label="$t('fields.city')" v-model="investor.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.city }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputTax_Number" class="col-2 col-form-label">{{ $t('fields.tax_number') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputTax_Number" name="tax_number" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_number']}" :placeholder="$t('fields.tax_number')" :label="$t('fields.tax_number')" v-model="investor.tax_number" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ investor.tax_number }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
-                            <div class="col-md-10">
-                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="investor.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ investor.remarks }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="investor.status" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="1">{{ $t('statusDDL.active') }}</option>
-                                        <option value="0">{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="investor.status === 1">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="investor.status === 0">{{ $t('statusDDL.inactive') }}</span>
-                                    </div>
-                                </div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ incomegroup.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -234,19 +169,13 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            investorList: [],
-            investor: {
+            incomegroupList: [],
+            incomegroup: {
                 company: { hId: '0'},
                 code: '',
                 name: '',
-                contact: '',
-                address: '',
-                city: '',
-                tax_number: '',
-                remarks: '',
-                status: '1',
             },
-            CompanyDDL: [],
+            companyDDL: [],
         }
     },
     created() {
@@ -254,14 +183,14 @@ export default {
 
     mounted() {
         this.mode = 'list';
-        this.getAllInvestor(1);
+        this.getAllIncomeGroup(1);
         this.getAllCompany();
     },
     methods: {
-        getAllInvestor(page) {
+        getAllIncomeGroup(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.investor.read') + '?page=' + page).then(response => {
-                this.investorList = response.data;
+            axios.get(route('api.get.dashboard.incomegroup.read') + '?page=' + page).then(response => {
+                this.incomegroupList = response.data;
                 this.loading = false;
             });
         },
@@ -272,44 +201,38 @@ export default {
         },
         onPaginationChangePage(page) {
             if (page === 'next') {
-                this.getAllInvestor(this.investorList.current_page + 1);
+                this.getAllIncomeGroup(this.incomegroupList.current_page + 1);
             } else if (page === 'prev') {
-                this.getAllInvestor(this.investorList.current_page - 1);
+                this.getAllIncomeGroup(this.incomegroupList.current_page - 1);
             } else {
-                this.getAllInvestor(page);
+                this.getAllIncomeGroup(page);
             }
         },
-        emptyInvestor() {
+        emptyIncomeGroup() {
             return {
                 company: { hId: '0'},
                 code: '',
                 name: '',
-                contact: '',
-                address: '',
-                city: '',
-                tax_number: '',
-                remarks: '',
-                status: '1',
             }
         },
         createNew() {
             this.mode = 'create';
-            this.investor = this.emptyInvestor();
+            this.incomegroup = this.emptyIncomeGroup();
         },
         editSelected(idx) {
             this.mode = 'edit';
-            this.investor = this.investorList.data[idx];
+            this.incomegroup = this.incomegroupList.data[idx];
         },
         showSelected(idx) {
             this.mode = 'show';
-            this.investor = this.investorList.data[idx];
+            this.incomegroup = this.incomegroupList.data[idx];
         },
         deleteSelected(idx) {
             this.mode = 'delete';
-            this.investor = this.investorList.data[idx];
+            this.incomegroup = this.incomegroupList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.investor.delete', this.investor.hId)) .then(response => {
+            axios.post(route('api.post.dashboard.incomegroup.delete', this.incomegroup.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -319,14 +242,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post(route('api.post.dashboard.investor.save'), new FormData($('#investorForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.incomegroup.save'), new FormData($('#incomegroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.investor.edit', this.investor.hId), new FormData($('#investorForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.incomegroup.edit', this.incomegroup.hId), new FormData($('#incomegroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -354,14 +277,14 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.investor.profile.img_path = fileReader.result
+                this.incomegroup.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllInvestor(this.investorList.current_page);
-            this.investor = this.emptyInvestor();
+            this.getAllIncomeGroup(this.incomegroupList.current_page);
+            this.incomegroup = this.emptyIncomeGroup();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -370,25 +293,25 @@ export default {
             this.contentHidden = !this.contentHidden;
         },
         refreshList() {
-            this.getAllInvestor(this.investorList.current_page);
+            this.getAllIncomeGroup(this.incomegroupList.current_page);
         },
     },
     computed: {
         getPages() {
-            if (this.investorList.current_page == null) return 0;
+            if (this.incomegroupList.current_page == null) return 0;
 
-            return Math.ceil(this.investorList.total / this.investorList.per_page);
+            return Math.ceil(this.incomegroupList.total / this.incomegroupList.per_page);
         },
         retrieveImage()
         {
-            if (this.investor.profile.img_path && this.investor.profile.img_path !== '') {
-                if (this.investor.profile.img_path.includes('data:image')) {
-                    return this.investor.profile.img_path;
+            if (this.incomegroup.profile.img_path && this.incomegroup.profile.img_path !== '') {
+                if (this.incomegroup.profile.img_path.includes('data:image')) {
+                    return this.incomegroup.profile.img_path;
                 } else {
-                    return '/storage/' + this.investor.profile.img_path;
+                    return '/storage/' + this.incomegroup.profile.img_path;
                 }
             } else {
-                return '/images/def-investor.png';
+                return '/images/def-incomegroup.png';
             }
         }
     }

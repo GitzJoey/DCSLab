@@ -30,6 +30,7 @@
                                 <th>{{ $t("table.cols.investor") }}</th>
                                 <th>{{ $t("table.cols.capital_group") }}</th>
                                 <th>{{ $t("table.cols.cash_id") }}</th>
+                                <th>{{ $t("table.cols.capital_status") }}</th>
                                 <th>{{ $t("table.cols.amount") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th></th>
@@ -42,6 +43,10 @@
                                 <td>{{ c.investor.name }}</td> 
                                 <td>{{ c.group.name }} </td> 
                                 <td>{{ c.cash.name }}</td>
+                                <td>
+                                    <span v-if="c.capital_status === 1">{{ $t('capital_statusDDL.active') }}</span>
+                                    <span v-if="c.capital_status === 0">{{ $t('capital_statusDDL.inactive') }}</span>
+                                </td>
                                 <td>{{ c.amount }}</td>
                                 <td>{{ c.remarks }}</td>
                                 <td class="text-center">
@@ -98,14 +103,6 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ capital.ref_number }}</div>
                             </div>
                         </div>
-                        <!-- <div class="form-row">
-                            <div class="form-group col-lg-8">
-                                <div class="form-material">
-                                    <input type="text" class="js-flatpickr form-control" id="example-material-flatpickr-custom" name="example-material-flatpickr-custom" placeholder="d-m-Y" data-allow-input="true" data-date-format="d-m-Y">
-                                    <label for="example-material-flatpickr-custom">Choose Date</label>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="investor_id">{{ $t('fields.investor') }}</label>
                             <div class="col-md-10">
@@ -137,6 +134,21 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                     {{ capital.cash.name }}
                                 </div>            
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputCapital_Status" class="col-2 col-form-label">{{ $t('fields.capital_status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <div>
+                                    <select class="form-control" id="inputStatus" name="capital_status" v-model="capital.capital_status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value="1">{{ $t('capital_statusDDL.active') }}</option>
+                                        <option value="0">{{ $t('capital_statusDDL.inactive') }}</option>
+                                    </select>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="capital.capital_status === 1">{{ $t('capital_statusDDL.active') }}</span>
+                                        <span v-if="capital.capital_status === 0">{{ $t('capital_statusDDL.inactive') }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -219,6 +231,7 @@ export default {
                 investor: {hId: ''},
                 group: {hId: ''},
                 cash: {hId: ''},
+                capital_status: '1',
                 amount: '',
                 remarks: '',
                 date: {
@@ -229,6 +242,7 @@ export default {
             investorDDL: [],
             capitalgroupDDL: [],
             cashDDL: [],
+            capital_statusDDL: [],
         }
     },
     created() {
@@ -283,6 +297,7 @@ export default {
                 investor: {hId: ''},
                 group: {hId: ''},
                 cash: {hId: ''},
+                capital_status: '1',
                 amount: '',
                 remarks: '',
             }

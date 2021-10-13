@@ -22,6 +22,7 @@ const messages = {
                 capital_group: 'Capital Group',
                 cash_id: 'Cash',
                 date: 'Date',
+                capital_status: 'Capital Status',
                 amount: 'Amount',
                 remarks: 'Remarks',
             }
@@ -42,6 +43,10 @@ const messages = {
             investor: 'Investor',
             capital_group: 'Capital Group',
             cash_id: 'Cash',
+            date: 'Date',
+            capital_status: 'Capital Status',
+            amount: 'Amount',
+            remarks: 'Remarks',
             date: {
                 date: 'Date',
                 dateFormat: 'Date Format',
@@ -56,6 +61,10 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        capital_statusDDL: {
+            active: 'In',
+            inactive: 'Out',
+        },
     },
     id: {
         table: {
@@ -66,6 +75,7 @@ const messages = {
                 capital_group: 'Modal Grup',
                 cash_id: 'Kas',
                 date: 'Tanggal',
+                capital_status: 'Status Modal',
                 amount: 'Nominal',
                 remarks: 'Remarks',
             }
@@ -87,6 +97,7 @@ const messages = {
             capital_group: 'Modal Grup',
             cash_id: 'Kas',
             date: 'Tanggal',
+            capital_status: 'Status Modal',
             amount: 'Nominal',
             remarks: 'Remarks',
             date: {
@@ -101,6 +112,10 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        capital_statusDDL: {
+            active: 'Masuk',
+            inactive: 'Keluar',
         },
     }
 };

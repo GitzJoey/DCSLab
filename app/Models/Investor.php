@@ -16,6 +16,7 @@ class Investor extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'company_id',
         'code',
         'name',
         'contact',
@@ -26,7 +27,7 @@ class Investor extends Model
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'contact', 'address', 'city', 'tax_number', 'remarks', 'status'];
+    protected static $logAttributes = ['company_id', 'code', 'name', 'contact', 'address', 'city', 'tax_number', 'remarks', 'status'];
 
     protected static $logOnlyDirty = true;
 
@@ -54,7 +55,6 @@ class Investor extends Model
 
     public function capitals()
     {
-        // return $this->belongsTo(Capital::class);
         return $this->hasMany(Capital::class);
     }
 }

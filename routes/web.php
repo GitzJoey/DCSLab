@@ -103,7 +103,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('expenses', [ExpenseController::class, 'index'])->name('db.finance.expense.expenses');
             Route::get('expense_groups', [ExpenseGroupController::class, 'index'])->name('db.finance.expense.expense_groups');
             Route::get('incomes', [IncomeController::class, 'index'])->name('db.finance.income.incomes');
-            Route::get('income_groups', [IncomeGroupController::class, 'index'])->name('db.finance.income.incomes_groups');
+            Route::get('income_groups', [IncomeGroupController::class, 'index'])->name('db.finance.income.income_groups');
         });
 
         Route::group(['prefix' => 'purchase'], function () {

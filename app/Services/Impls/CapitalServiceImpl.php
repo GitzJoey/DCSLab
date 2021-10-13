@@ -18,6 +18,7 @@ class CapitalServiceImpl implements CapitalService
         $group_id,
         $cash_id,
         $date,
+        $capital_status,
         $amount,
         $remarks,
     )
@@ -32,6 +33,7 @@ class CapitalServiceImpl implements CapitalService
             $capital->group_id = $group_id;
             $capital->cash_id = $cash_id;
             $capital->date = $date;
+            $capital->capital_status = $capital_status;
             $capital->amount = $amount;
             $capital->remarks = $remarks;
 
@@ -60,6 +62,7 @@ class CapitalServiceImpl implements CapitalService
         $group_id,
         $cash_id,
         $date,
+        $capital_status,
         $amount,
         $remarks,
     )
@@ -75,6 +78,7 @@ class CapitalServiceImpl implements CapitalService
                 'group_id' => $group_id,
                 'cash_id' => $cash_id,
                 'date' => $date,
+                'capital_status' => $capital_status,
                 'amount' => $amount,
                 'remarks' => $remarks,
             ]);

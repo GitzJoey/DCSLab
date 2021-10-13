@@ -39,8 +39,7 @@ class WarehouseController extends BaseController
     {
         $request->validate([
             'company_id' => 'required',
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'warehouses'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'warehouses')],
             'name' => 'required|max:255',
             'status' => 'required'
         ]);

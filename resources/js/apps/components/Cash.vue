@@ -122,7 +122,6 @@
                                 </label>
                             </div>
                         </div> 
-
                         <div class="form-group row">
                             <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">

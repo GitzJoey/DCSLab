@@ -52,6 +52,7 @@ class CapitalController extends BaseController
             Hashids::decode($request['group_id'])[0], 
             Hashids::decode($request['cash_id'])[0],
             $date, 
+            $request['capital_status'], 
             $request['amount'], 
             $request['remarks'],
         );
@@ -77,6 +78,7 @@ class CapitalController extends BaseController
             Hashids::decode($request['group_id'])[0], 
             Hashids::decode($request['cash_id'])[0],
             $date, 
+            $request['capital_status'],
             $request['amount'], 
             $request['remarks'],
         );

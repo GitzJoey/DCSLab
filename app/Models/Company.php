@@ -10,6 +10,8 @@ use App\Models\Employee;
 use App\Models\Investor;
 use App\Models\Capital;
 use App\Models\CapitalGroup;
+use App\Models\ExpenseGroup;
+use App\Models\IncomeGroup;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -56,6 +58,16 @@ class Company extends Model
     public function warehouses()
     {
         return $this->hasMany(Warehouse::class);
+    }
+
+    public function expensegroups()
+    {
+        return $this->hasMany(ExpenseGroup::class);
+    }
+
+    public function incomegroups()
+    {
+        return $this->hasMany(IncomeGroup::class);
     }
 
     public function investors()
