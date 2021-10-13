@@ -1,0 +1,18 @@
+html {
+    @apply bg-theme-1;
+    &.dark {
+        @apply bg-dark-2;
+        body {
+            @apply text-gray-300;
+            *,
+            ::before,
+            ::after {
+                @apply border-dark-3;
+            }
+        }
+    }
+    body {
+        -webkit-font-smoothing: antialiased;
+        @apply overflow-x-hidden font-roboto text-sm text-gray-800;
+    }
+}

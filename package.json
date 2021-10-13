@@ -22,5 +22,22 @@
         "sass": "^1.42.1",
         "sass-loader": "^12.1.0",
         "simple-line-icons": "^2.5.5"
+    },
+    "dependencies": {
+        "@left4code/tw-starter": "^2.1.1",
+        "@vee-validate/i18n": "^4.5.2",
+        "@vee-validate/rules": "^4.5.2",
+        "@zhuowenli/vue-feather-icons": "^5.0.2",
+        "autoprefixer": "^10.3.7",
+        "dayjs": "^1.10.7",
+        "tailwindcss": "^2.2.16",
+        "tippy.js": "^6.3.2",
+        "toastify-js": "^1.11.2",
+        "tom-select": "^2.0.0-rc.4",
+        "vee-validate": "^3.4.13",
+        "velocity-animate": "^1.5.2",
+        "vue": "^2.6.14",
+        "vue-router": "^3.5.2",
+        "vuex": "^3.6.2"
     }
 }

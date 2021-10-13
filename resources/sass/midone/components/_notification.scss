@@ -1,0 +1,18 @@
+.notification {
+  @apply relative text-gray-600;
+  &.notification--light {
+    @apply text-theme-12;
+  }
+  .notification__icon {
+    @apply w-5 h-5;
+  }
+  &.notification--bullet:before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    @apply rounded-full absolute right-0 bg-theme-16;
+  }
+}
+.content--dashboard .notification {
+  @apply text-theme-12;
+}
