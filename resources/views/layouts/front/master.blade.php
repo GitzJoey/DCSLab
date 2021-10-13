@@ -29,7 +29,7 @@
 
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarMain">
                                 <ul class="navbar-nav m-auto">
-                                    <li class="nav-item active" data-menu="home">
+                                    <li class="nav-item" data-menu="home">
                                         <a class="page-scroll text-uppercase" href="{{ route('front').'#home' }}">{{ __('front.menu.home') }}</a>
                                     </li>
                                     <li class="nav-item" data-menu="service">
@@ -41,9 +41,15 @@
                                     <li class="nav-item" data-menu="contact">
                                         <a class="page-scroll text-uppercase" href="{{ route('front').'#contact' }}">{{ __('front.menu.contact') }}</a>
                                     </li>
-                                    <li class="nav-item" data-menu="dashboard">
-                                        <a class="text-uppercase" href="{{ route('login') }}">{{ __('front.menu.dashboard') }}</a>
-                                    </li>
+                                    @if (Route::current()->getName() == 'login' ||  Route::current()->getName() == 'register')
+                                        <li class="nav-item active" data-menu="dashboard">
+                                            <a class="text-uppercase" href="{{ route('login') }}">{{ __('front.menu.dashboard') }}</a>
+                                        </li>
+                                    @else
+                                        <li class="nav-item" data-menu="dashboard">
+                                            <a class="text-uppercase" href="{{ route('login') }}">{{ __('front.menu.dashboard') }}</a>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
 

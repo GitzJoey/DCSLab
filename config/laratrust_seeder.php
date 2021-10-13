@@ -16,15 +16,13 @@ return [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
-            'users' => 'c,r,u',
-            'roles' => 'c,r,u',
+            'users' => 'c,r,u'
         ],
         'administrator' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
-            'users' => 'c,r,u',
-            'roles' => 'c,r,u',
+            'users' => 'c,r,u'
         ],
         'user' => [
             'profile' => 'r,u',

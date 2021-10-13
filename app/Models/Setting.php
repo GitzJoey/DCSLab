@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -40,5 +41,10 @@ class Setting extends Model
 
     public function hId() {
         return HashIds::encode($this->attributes['id']);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
     }
 }

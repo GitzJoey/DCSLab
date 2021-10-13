@@ -198,7 +198,6 @@ class UserServiceImpl implements UserService
         }
     }
 
-
     public function resetPassword($email)
     {
         $response = Password::sendResetLink(['email' => $email], function (Message $message) {

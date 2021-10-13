@@ -24,11 +24,13 @@ $(document).ready(function() {
         var scrollbarLocation = window.pageYOffset;
 
         scrollLink.each(function() {
-            var sectionOffset = $(this.hash).offset().top - 90;
+            if ($(this.hash).length !== 0) {
+                var sectionOffset = $(this.hash).offset().top - 90;
 
-            if ( sectionOffset <= scrollbarLocation ) {
-                $(this).parent().addClass('active');
-                $(this).parent().siblings().removeClass('active');
+                if ( sectionOffset <= scrollbarLocation ) {
+                    $(this).parent().addClass('active');
+                    $(this).parent().siblings().removeClass('active');
+                }
             }
         });
     });

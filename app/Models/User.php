@@ -12,6 +12,7 @@ use Laratrust\Traits\LaratrustUserTrait;
 
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\ActivityLogger;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -112,6 +113,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getSetting($key)
     {
         return $this->settings()->where('key', $key)->pluck('value')->first();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
     }
 
     public static function boot()
