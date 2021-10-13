@@ -30,7 +30,6 @@ mix
             tailwindcss('./tailwind.config.js'),
         ]
     })
-    .copy('resources/css/midone/', 'public/css/midone/')
     .js('resources/js/midone/app.js','public/js/midone/main.js')
     .vue()
     .version()

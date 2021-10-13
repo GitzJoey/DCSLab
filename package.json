@@ -25,7 +25,7 @@
         "vue-loader": "^16.2.0"
     },
     "dependencies": {
-        "@left4code/tw-starter": "^2.1.1",
+        "@left4code/tw-starter": "^1.1.0",
         "@vee-validate/i18n": "^4.5.2",
         "@vee-validate/rules": "^4.5.2",
         "@zhuowenli/vue-feather-icons": "^5.0.2",

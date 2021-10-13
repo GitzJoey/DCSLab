@@ -25,7 +25,7 @@ class DashboardController extends BaseController
     {
         $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
-        return view('dashboard.index');
+        return view('dashboard.midone');
     }
 
     public function profile(Request $request)
