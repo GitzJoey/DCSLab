@@ -1,0 +1,28 @@
+{
+    "components": {
+        "data-list": {
+            "print": "Cetak",
+            "exportToExcel": "Export ke Excel",
+            "exportToPDF": "Export ke PDF",
+            "placeholderSearch": "Cari...",
+            "columnActions": "ACTIONS",
+            "deleteConfirmTitle": "Konfirmasi hapus?",
+            "deleteConfirmText": "Apakah anda yakin untuk menghapus data ini?",
+            "deleteConfirmCancel": "Cancel",
+            "deleteConfirmDelete": "Delete"
+        }
+    },
+    "views": {
+        "users": {
+            "page_title": "Pengguna",
+            "table": {
+                "cols": {
+                    "name": "Nama",
+                    "email": "Email",
+                    "roles": "Peran",
+                    "status": "Status"
+                }
+            }
+        }
+    }
+}

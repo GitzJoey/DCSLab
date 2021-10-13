@@ -21,7 +21,8 @@
         "resolve-url-loader": "^4.0.0",
         "sass": "^1.42.1",
         "sass-loader": "^12.1.0",
-        "simple-line-icons": "^2.5.5"
+        "simple-line-icons": "^2.5.5",
+        "vue-loader": "^16.2.0"
     },
     "dependencies": {
         "@left4code/tw-starter": "^2.1.1",
@@ -34,10 +35,12 @@
         "tippy.js": "^6.3.2",
         "toastify-js": "^1.11.2",
         "tom-select": "^2.0.0-rc.4",
-        "vee-validate": "^3.4.13",
+        "vee-validate": "^4.3.0",
         "velocity-animate": "^1.5.2",
-        "vue": "^2.6.14",
-        "vue-router": "^3.5.2",
-        "vuex": "^3.6.2"
+        "vue": "^3.0.11",
+        "vue-router": "^4.0.6",
+        "vuex": "^4.0.0",
+        "vue-i18n": "^9.1.5",
+        "zoom-vanilla.js": "^2.0.6"
     }
 }

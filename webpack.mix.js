@@ -26,10 +26,12 @@ mix
     .sass('resources/sass/midone/app.scss', 'public/css/midone/app.css')
     .options({
         postCss: [
-            require('postcss-import'),
-            tailwindcss('./tailwind.config.js'),
             require('autoprefixer'),
+            tailwindcss('./tailwind.config.js'),
         ]
     })
+    .copy('resources/css/midone/', 'public/css/midone/')
+    .js('resources/js/midone/app.js','public/js/midone/main.js')
+    .vue()
     .version()
 ;
