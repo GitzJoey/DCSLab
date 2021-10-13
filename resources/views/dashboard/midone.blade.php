@@ -14,8 +14,7 @@
 
         <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
 
-        <link rel="stylesheet" href="{{ mix('css/midone/midone.css') }}">
-        <link rel="stylesheet" href="{{ mix('css/midone/vendors.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/midone/app.css') }}">
     </head>
     <body class="main">
         <div id="app"></div>
