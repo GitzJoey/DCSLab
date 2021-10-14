@@ -22,12 +22,12 @@
                 <div class="dropdown-menu__content box dark:bg-dark-6">
                     <div class="p-2">
                         <a href="" @click.prevent="switchLang('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                            <img alt="" src="/images/us.png" class="w-4 h-4 mr-2" /> <span class="font-medium">English</span>
+                            <img alt="English" :src="assetPath('us.png')" class="w-4 h-4 mr-2" /> <span class="font-medium">English</span>
                         </a>
                     </div>
                     <div class="p-2">
                         <a href="" @click.prevent="switchLang('id')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                            <img alt="" src="/images/id.png" class="w-4 h-4 mr-2" /> Bahasa Indonesia
+                            <img alt="Bahasa Indonesia" :src="assetPath('id.png')" class="w-4 h-4 mr-2" /> Bahasa Indonesia
                         </a>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
 
         <div class="intro-x dropdown w-8 h-8">
             <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in" role="button" aria-expanded="false">
-                <img alt="" src="/images/gray.jpg" />
+                <img alt="Profile" :src="assetPath('gray200.jpg')" />
             </div>
             <div class="dropdown-menu w-56">
                 <div class="dropdown-menu__content box dark:bg-dark-6">
@@ -63,11 +63,14 @@
 <script>
 import {computed, defineComponent, onMounted, ref} from 'vue';
 import { useStore } from '../../store';
+import mainMixins from '../../mixins/index';
 
 export default defineComponent({
     setup() {
         const store = useStore()
         const userContext = computed(() => store.state.main.userContext )
+
+        const { assetPath } = mainMixins();
 
         const switchLang = (lang) => {
             document.documentElement.lang = lang;
@@ -75,6 +78,7 @@ export default defineComponent({
 
         return {
             userContext,
+            assetPath,
             switchLang
         }
     }

@@ -37,18 +37,60 @@ class DashboardController extends BaseController
 
     public function userMenu()
     {
-        return array(
-                array(
-                    'icon' => 'HomeIcon',
-                    'pageName' => 'side-menu-dashboard',
-                    'title' => 'Dashboard',
-                    'subMenu' => array (
+        return [
+            array(
+                'icon' => 'HomeIcon',
+                'pageName' => 'side-menu-dashboar',
+                'title' => 'Dashboard',
+                'subMenu' => [
+                    array (
                         'icon' => '',
-                        'pageName' => 'side-menu-dashboard-overview-1',
-                        'title' => 'Overview 1'
+                        'pageName' => 'side-menu-dashboard-maindashboard',
+                        'title' => 'Main Dashboard'
                     )
-
-                )
-                );
+                ]
+            ),
+            array(
+                'icon' => 'CpuIcon',
+                'pageName' => 'side-menu-administrators',
+                'title' => 'Administrator',
+                'subMenu' => [
+                    array (
+                        'icon' => 'UsersIcon',
+                        'pageName' => 'side-menu-administrators-users',
+                        'title' => 'Users'
+                    )
+                ]
+            ),
+            array(
+                'icon' => 'GithubIcon',
+                'pageName' => 'side-menu-devtools',
+                'title' => 'Dev Tools',
+                'subMenu' => [
+                    array (
+                        'icon' => 'DatabaseIcon',
+                        'pageName' => 'side-menu-devtools-backup',
+                        'title' => 'DB Backup'
+                    ),
+                    array (
+                        'icon' => 'DatabaseIcon',
+                        'pageName' => 'side-menu-devtools-examples',
+                        'title' => 'Playgrounds',
+                        'subMenu' => [
+                            array (
+                                'icon' => 'CodeIcon',
+                                'pageName' => 'side-menu-devtools-examples-ex1',
+                                'title' => 'Example 1'
+                            ),
+                            array (
+                                'icon' => 'CodeIcon',
+                                'pageName' => 'side-menu-devtools-examples-ex1',
+                                'title' => 'Example 2'
+                            )
+                        ]
+                    )
+                ]
+            )
+        ];
     }
 }

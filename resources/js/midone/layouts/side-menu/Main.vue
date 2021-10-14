@@ -5,7 +5,7 @@
         <div class="flex overflow-hidden">
             <nav class="side-nav">
                 <a href="" class="intro-x flex items-center pl-5 pt-4 mt-3">
-                    <img :alt="getLogoAlt" class="w-6" :src="getLogo" />
+                    <img alt="Logo" class="w-6" :src="assetPath('logo.svg')" />
                     <span class="hidden xl:block text-white text-lg ml-3">DCS<span class="font-medium">Lab</span></span>
                 </a>
                 <div class="side-nav__devider my-6"></div>
@@ -81,7 +81,8 @@ import {defineComponent, computed, provide, onMounted, ref, watch, onBeforeMount
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '../../store/index';
 import { helper as $h } from '../../utils/helper';
-import { linkTo, nestedMenu, enter, leave } from './index'
+import { linkTo, nestedMenu, enter, leave } from './index';
+import mainMixins from '../../mixins/index';
 
 import TopBar from '../../components/top-bar/Main';
 import MobileMenu from '../../components/mobile-menu/Main';
@@ -105,6 +106,8 @@ export default {
         const formattedMenu = ref([]);
 
         const menuContext = computed(() => store.state.sideMenu.menu );
+
+        const { assetPath } = mainMixins();
 
         provide('setDashboardLayout', newVal => {
             dashboardLayout.value = newVal
@@ -134,18 +137,11 @@ export default {
             dashboardLayout,
             formattedMenu,
             router,
+            assetPath,
             linkTo,
             enter,
             leave
         }
-    },
-    computed: {
-        getLogo() {
-            return '/images/logo.svg';
-        },
-        getLogoAlt() {
-            return 'G Logo';
-        },
     }
 }
 </script>

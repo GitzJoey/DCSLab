@@ -4,7 +4,6 @@ import SideMenu from '../layouts/side-menu/Main.vue';
 
 import MainDashboard from '../views/dashboard/MainDashboard.vue';
 import AdminUsers from "../views/administrators/Users";
-import AdminRoles from "../views/administrators/Roles";
 
 import DBBackup from "../views/dev/DBBackup";
 import Ex1 from "../views/dev/Ex1";
@@ -32,11 +31,6 @@ const routes = [
                 path: root + '/admin' + '/users/users',
                 name: 'side-menu-administrators-users',
                 component: AdminUsers
-            },
-            {
-                path: root + '/admin' + '/users/roles',
-                name: 'side-menu-administrators-roles',
-                component: AdminRoles
             }
         ],
     },
