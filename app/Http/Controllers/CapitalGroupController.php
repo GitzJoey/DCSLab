@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CapitalGroupService;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CapitalGroupController extends BaseController
 {
@@ -41,12 +42,15 @@ class CapitalGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'capitalgroups'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'capitalgroups')],
             'name' => 'required|max:255'
         ]);
 
-        $result = $this->capitalGroupService->create($request['code'], $request['name']);
+        $result = $this->capitalGroupService->create(
+            Hashids::decode($request['company_id'])[0],
+            $request['code'],
+            $request['name']
+        );
         
         return $result == 0 ? response()->error():response()->success();
     }
@@ -60,6 +64,7 @@ class CapitalGroupController extends BaseController
 
         $result = $this->capitalGroupService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
         );

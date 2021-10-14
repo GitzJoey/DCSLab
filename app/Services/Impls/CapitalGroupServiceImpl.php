@@ -13,6 +13,7 @@ use App\Models\CapitalGroup;
 class CapitalGroupServiceImpl implements CapitalGroupService
 {
     public function create(
+        $company_id,
         $code,
         $name
     )
@@ -21,6 +22,7 @@ class CapitalGroupServiceImpl implements CapitalGroupService
 
         try {
             $capitalgroup = new CapitalGroup();
+            $capitalgroup->company_id = $company_id;
             $capitalgroup->code = $code;
             $capitalgroup->name = $name;
 
@@ -38,7 +40,7 @@ class CapitalGroupServiceImpl implements CapitalGroupService
 
     public function read()
     {
-        return CapitalGroup::paginate();
+        return CapitalGroup::with('company')->paginate();
     }
 
     public function getAllActiveCapitalGroup()
@@ -48,6 +50,7 @@ class CapitalGroupServiceImpl implements CapitalGroupService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name
     )
@@ -58,6 +61,7 @@ class CapitalGroupServiceImpl implements CapitalGroupService
             $capitalgroup = CapitalGroup::where('id', '=', $id);
     
             $retval = $capitalgroup->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
             ]);

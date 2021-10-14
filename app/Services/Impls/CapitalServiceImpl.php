@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Config;
 class CapitalServiceImpl implements CapitalService
 {
     public function create(
+        $company_id,
         $ref_number,
         $investor_id,
         $group_id,
@@ -28,6 +29,7 @@ class CapitalServiceImpl implements CapitalService
 
         try {
             $capital = new Capital();
+            $capital->company_id = $company_id;
             $capital->ref_number = $ref_number;
             $capital->investor_id = $investor_id;
             $capital->group_id = $group_id;
@@ -52,11 +54,12 @@ class CapitalServiceImpl implements CapitalService
 
     public function read()
     {
-        return Capital::with('investor', 'group', 'cash')->paginate();
+        return Capital::with('company', 'investor', 'group', 'cash')->paginate();
     }
 
     public function update(
         $id,
+        $company_id,
         $ref_number,
         $investor_id,
         $group_id,
@@ -73,6 +76,7 @@ class CapitalServiceImpl implements CapitalService
             $capital = Capital::where('id', '=', $id);
 
             $retval = $capital->update([
+                'company_id' => $company_id,
                 'ref_number' => $ref_number,
                 'investor_id' => $investor_id,
                 'group_id' => $group_id,

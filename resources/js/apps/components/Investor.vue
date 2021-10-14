@@ -100,11 +100,11 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="company_id" name="company_id" v-model="capital.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="company_id" name="company_id" v-model="investor.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ capital.company.name }}
+                                    {{ investor.company.name }}
                                 </div>
                             </div>
                         </div>
@@ -246,7 +246,7 @@ export default {
                 remarks: '',
                 status: '1',
             },
-            CompanyDDL: [],
+            companyDDL: [],
         }
     },
     created() {

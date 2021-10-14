@@ -17,6 +17,7 @@ const messages = {
         table: {
             title: 'Capital Group Lists',
             cols: {
+                company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
             }
@@ -33,6 +34,7 @@ const messages = {
             delete: 'Delete',
         },
         fields: {
+            company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
             settings: {
@@ -53,6 +55,7 @@ const messages = {
         table: {
             title: 'Daftar Capital Group',
             cols: {
+                company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
             }
@@ -69,6 +72,7 @@ const messages = {
             delete: 'Hapus',
         },
         fields: {
+            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',
             settings: {

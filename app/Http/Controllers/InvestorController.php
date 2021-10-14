@@ -7,6 +7,8 @@ use App\Services\ActivityLogService;
 use App\Services\InvestorService;
 use Illuminate\Http\Request;
 
+use Vinkla\Hashids\Facades\Hashids;
+
 class InvestorController extends BaseController
 {
     private $investorService;

@@ -53,7 +53,7 @@ class InvestorServiceImpl implements InvestorService
 
     public function read()
     {
-        return Investor::paginate();
+        return Investor::with('company')->paginate();
     }
 
     public function getAllActiveInvestor()
