@@ -13,23 +13,20 @@ class ActivityLogServiceImpl implements ActivityLogService
     public function RoutingActivity($routeName, $routeParameters)
     {
         switch ($routeName) {
-            case 'db':
+            case 'side-menu-dashboard-maindashboard':
                 $friendlyName = 'Dashboard';
                 break;
-            case 'db.profile':
+            case 'side-menu-dashboard-profile':
                 $friendlyName = 'Profile';
                 break;
-            case 'db.activity':
+            case 'side-menu-dashboard-activity':
                 $friendlyName = 'Activity';
                 break;
-            case 'db.inbox':
+            case 'side-menu-dashboard-inbox':
                 $friendlyName = 'Inbox';
                 break;
-            case 'db.admin.users.users':
+            case 'side-menu-administrators-users':
                 $friendlyName = 'Users';
-                break;
-            case 'db.admin.users.roles':
-                $friendlyName = 'Roles';
                 break;
             default:
                 $friendlyName = $routeName;

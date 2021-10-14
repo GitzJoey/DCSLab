@@ -19,11 +19,7 @@ interface UserService
         $profile
     );
 
-    public function read();
-
-    public function readCreatedById($id);
-
-    public function getMyProfile($id);
+    public function read($parameters = null);
 
     public function update(
         $id,
@@ -33,20 +29,9 @@ interface UserService
         $settings
     );
 
-    public function updateProfile(
-        $id,
-        $profile
-    );
-
     public function resetPassword($email);
 
     public function resetTokens($id);
 
     public function createDefaultSetting();
-
-    public function getUserById($id);
-
-    public function getUserByEmail($email);
-
-    public function getAllUserExceptMe($email);
 }

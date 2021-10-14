@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
+import './libs'
 import router from './route/route'
 import i18n from './lang/index'
 import store from './store'
 import Main from './Main'
 import globalComponents from './global-components'
 import utils from './utils'
-import './libs'
 
 const app = createApp(Main)
     .use(i18n)

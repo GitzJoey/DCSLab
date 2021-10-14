@@ -8,6 +8,8 @@ class FrontController extends Controller
 {
     public function index(Request $request)
     {
+
+
         return view('front.index');
     }
 }

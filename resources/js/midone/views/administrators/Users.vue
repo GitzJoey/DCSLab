@@ -61,7 +61,7 @@ export default defineComponent({
             const setDashboardLayout = inject('setDashboardLayout')
             setDashboardLayout(false);
 
-            axios.get('/api/get/admin/user/read?page=1').then(response => {
+            axios.get('/api/get/dashboard/admin/users/read?page=1').then(response => {
                 userList.value = response.data;
             });
         });

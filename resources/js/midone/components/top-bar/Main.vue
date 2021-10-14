@@ -56,8 +56,14 @@
                             {{ t("components.top-bar.profile_ddl.inbox") }}
                         </a>
                     </div>
-                    <div class="p-2 border-t border-black border-opacity-5 dark:border-dark-3">
+                    <div class="p-2">
                         <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                            <ActivityIcon class="w-4 h-4 mr-2" />
+                            {{ t("components.top-bar.profile_ddl.activity") }}
+                        </a>
+                    </div>
+                    <div class="p-2 border-t border-black border-opacity-5 dark:border-dark-3">
+                        <a href="" @click.prevent="logout" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
                             <ToggleRightIcon class="w-4 h-4 mr-2" />
                             {{ t("components.top-bar.profile_ddl.logout") }}
                         </a>
@@ -84,11 +90,19 @@ export default defineComponent({
             document.documentElement.lang = lang;
         }
 
+        function logout() {
+            axios.post('/logout').then(response => {
+                window.location.href = '/';
+            }).catch(response, function(e) {
+            });
+        }
+
         return {
             t,
             userContext,
             assetPath,
-            switchLang
+            switchLang,
+            logout
         }
     }
 });

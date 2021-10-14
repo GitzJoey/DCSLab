@@ -30,9 +30,11 @@ class DashboardController extends BaseController
 
     public function userProfile()
     {
-        $id = Auth::user()->id;
+        $parameters = array (
+            'readById' =>  Auth::user()->id
+        );
 
-        return $this->userService->getUserById($id);
+        return $this->userService->read($parameters);
     }
 
     public function userMenu()
@@ -56,7 +58,7 @@ class DashboardController extends BaseController
                 'title' => 'Administrator',
                 'subMenu' => [
                     array (
-                        'icon' => 'UsersIcon',
+                        'icon' => '',
                         'pageName' => 'side-menu-administrators-users',
                         'title' => 'Users'
                     )
@@ -68,22 +70,22 @@ class DashboardController extends BaseController
                 'title' => 'Dev Tools',
                 'subMenu' => [
                     array (
-                        'icon' => 'DatabaseIcon',
+                        'icon' => '',
                         'pageName' => 'side-menu-devtools-backup',
                         'title' => 'DB Backup'
                     ),
                     array (
-                        'icon' => 'DatabaseIcon',
+                        'icon' => '',
                         'pageName' => 'side-menu-devtools-examples',
                         'title' => 'Playgrounds',
                         'subMenu' => [
                             array (
-                                'icon' => 'CodeIcon',
+                                'icon' => '',
                                 'pageName' => 'side-menu-devtools-examples-ex1',
                                 'title' => 'Example 1'
                             ),
                             array (
-                                'icon' => 'CodeIcon',
+                                'icon' => '',
                                 'pageName' => 'side-menu-devtools-examples-ex1',
                                 'title' => 'Example 2'
                             )

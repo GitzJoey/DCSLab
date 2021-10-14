@@ -45,9 +45,27 @@ class RoleServiceImpl implements RoleService
         }
     }
 
-    public function read()
+    public function read($parameters = null)
     {
-        return Role::with('permissions')->paginate(Config::get('const.DEFAULT.PAGINATION_LIMIT'));
+        if ($parameters == null) {
+            return Role::with('permissions')->paginate(Config::get('const.DEFAULT.PAGINATION_LIMIT'));
+        }
+
+        if (array_key_exists('readById', $parameters))  {
+            return Role::find($parameters['readById']);
+        }
+
+        if (array_key_exists('readByName', $parameters))  {
+            return Role::where('name', $parameters['readByName'])->first();
+        }
+
+        if (array_key_exists('readByDisplayName', $parameters))  {
+            return Role::whereRaw("UPPER(display_name) = '".strtoupper($parameters['readByDisplayName'])."'")->first();
+        }
+
+        if (array_key_exists('readByDisplayNameCaseSensitive', $parameters)) {
+            return Role::where('display_name', $parameters['readByDisplayNameCaseSensitive'])->first();
+        }
     }
 
     public function readRoles($withDefaultRole)
@@ -95,24 +113,5 @@ class RoleServiceImpl implements RoleService
     public function getAllPermissions()
     {
         return Permission::get();
-    }
-
-    public function getRoleById($id)
-    {
-        return Role::find($id);
-    }
-
-    public function getRoleByName($name)
-    {
-        return Role::where('name', $name)->first();
-    }
-
-    public function getRoleByDisplayName($name, $caseSensitive)
-    {
-        if ($caseSensitive) {
-            return Role::where('display_name', $name)->first();
-        } else {
-            return Role::whereRaw("UPPER(display_name) = '".strtoupper($name)."'")->first();
-        }
     }
 }

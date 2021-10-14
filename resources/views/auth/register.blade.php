@@ -43,7 +43,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input @error('terms') border-danger @enderror" type="checkbox" value="" id="terms" name="terms">
+                                    <input class="form-check-input @error('terms') border-danger @enderror" type="checkbox" value="checked" id="terms" name="terms">
                                     <label class="form-check-label" for="remember">
                                         {{ __('auth.register.agree_1').__('auth.register.agree_2') }}
                                     </label>

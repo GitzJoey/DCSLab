@@ -11,7 +11,7 @@ interface RoleService
         $permissions
     );
 
-    public function read();
+    public function read($parameters = null);
 
     public function readRoles($withDefaultRole);
 
@@ -24,10 +24,4 @@ interface RoleService
     );
 
     public function getAllPermissions();
-
-    public function getRoleById($id);
-
-    public function getRoleByName($name);
-
-    public function getRoleByDisplayName($name, $caseSensitive);
 }

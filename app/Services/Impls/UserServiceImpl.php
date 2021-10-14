@@ -96,19 +96,23 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function read()
+    public function read($parameters = null)
     {
-        return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
-    }
+        if ($parameters == null) {
+            return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
+        }
 
-    public function readCreatedById($id)
-    {
-        return User::with('profile', 'settings', 'roles')->where('created_by', $id)->paginate(Config::get('const.PAGINATION_LIMIT'));
-    }
+        if (array_key_exists('readById', $parameters))  {
+            return User::with('roles', 'profile')->find($parameters['readById']);
+        }
 
-    public function getMyProfile($id)
-    {
-        return User::with('profile', 'settings', 'roles')->where('id', $id);
+        if (array_key_exists('readByEmail', $parameters)) {
+            return User::where('email', '=', $parameters['readByEmail'])->first();
+        }
+
+        if (array_key_exists('allExceptMe', $parameters)) {
+            return User::where('email', '!=', $parameters['allExceptMe'])->get();
+        }
     }
 
     public function update($id, $name, $rolesId, $profile, $settings)
@@ -163,41 +167,6 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateProfile($id, $profile)
-    {
-        DB::beginTransaction();
-
-        try {
-            $retval = 0;
-
-            $usr = User::find($id);
-
-            if ($profile != null) {
-                $pa = $usr->profile()->first();
-
-                $retval += $pa->update([
-                    'first_name' => $profile['first_name'],
-                    'last_name' => $profile['last_name'],
-                    'address' => $profile['address'],
-                    'city' => $profile['city'],
-                    'postal_code' => $profile['postal_code'],
-                    'tax_id' => $profile['tax_id'],
-                    'ic_num' => $profile['ic_num'],
-                    'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$pa->img_path,
-                    'remarks' => $profile['remarks']
-                ]);
-            }
-
-            DB::commit();
-
-            return $retval;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        }
-    }
-
     public function resetPassword($email)
     {
         $response = Password::sendResetLink(['email' => $email], function (Message $message) {
@@ -233,20 +202,5 @@ class UserServiceImpl implements UserService
         );
 
         return $list;
-    }
-
-    public function getUserById($id)
-    {
-        return User::with('roles', 'profile')->find($id);
-    }
-
-    public function getUserByEmail($email)
-    {
-        return User::where('email', '=', $email)->first();
-    }
-
-    public function getAllUserExceptMe($email)
-    {
-        return User::where('email', '!=', $email)->get();
     }
 }

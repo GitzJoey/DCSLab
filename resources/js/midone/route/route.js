@@ -69,4 +69,11 @@ const router = createRouter({
     routes,
 });
 
+router.afterEach((to, from) => {
+    axios.post('/api/post/dashboard/core/log/route', {
+        to: to.name,
+        params: to.params
+    });
+});
+
 export default router;
