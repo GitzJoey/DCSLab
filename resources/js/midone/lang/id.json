@@ -1,5 +1,12 @@
 {
     "components": {
+        "top-bar": {
+            "profile_ddl": {
+                "profile": "Profile",
+                "inbox": "Inbox",
+                "logout": "Logout"
+            }
+        },
         "data-list": {
             "print": "Cetak",
             "exportToExcel": "Export ke Excel",

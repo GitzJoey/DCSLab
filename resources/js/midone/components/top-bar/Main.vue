@@ -42,16 +42,24 @@
                 <div class="dropdown-menu__content box dark:bg-dark-6">
                     <div class="p-4 border-b border-black border-opacity-5 dark:border-dark-3">
                         <div class="font-medium">{{ userContext !== undefined ? userContext.name:'' }}</div>
-                        <div class="text-xs text-gray-600 mt-0.5 dark:text-gray-600">Roles</div>
+                        <div class="text-xs text-gray-600 mt-0.5 dark:text-gray-600">{{ userContext.email }}</div>
                     </div>
                     <div class="p-2">
                         <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                            <UserIcon class="w-4 h-4 mr-2" /> Profile
+                            <UserIcon class="w-4 h-4 mr-2" />
+                            {{ t("components.top-bar.profile_ddl.profile") }}
+                        </a>
+                    </div>
+                    <div class="p-2">
+                        <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                            <MailIcon class="w-4 h-4 mr-2" />
+                            {{ t("components.top-bar.profile_ddl.inbox") }}
                         </a>
                     </div>
                     <div class="p-2 border-t border-black border-opacity-5 dark:border-dark-3">
                         <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                            <ToggleRightIcon class="w-4 h-4 mr-2" /> Logout
+                            <ToggleRightIcon class="w-4 h-4 mr-2" />
+                            {{ t("components.top-bar.profile_ddl.logout") }}
                         </a>
                     </div>
                 </div>
@@ -70,13 +78,14 @@ export default defineComponent({
         const store = useStore()
         const userContext = computed(() => store.state.main.userContext )
 
-        const { assetPath } = mainMixins();
+        const { t, assetPath } = mainMixins();
 
         const switchLang = (lang) => {
             document.documentElement.lang = lang;
         }
 
         return {
+            t,
             userContext,
             assetPath,
             switchLang

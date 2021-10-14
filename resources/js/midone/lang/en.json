@@ -1,5 +1,12 @@
 {
     "components": {
+        "top-bar": {
+            "profile_ddl": {
+                "profile": "Profile",
+                "inbox": "Inbox",
+                "logout": "Logout"
+            }
+        },
         "data-list": {
             "print": "Print",
             "exportToExcel": "Export to Excel",

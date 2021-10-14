@@ -43,7 +43,7 @@
 
 <script>
 import { defineComponent, inject, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import mainMixins from '../../mixins/index'
 
 import DataList from '../../global-components/data-list/Main'
 
@@ -53,7 +53,7 @@ export default defineComponent({
         DataList
     },
     setup() {
-        const { t } = useI18n();
+        const { t } = mainMixins();
 
         const userList = ref({ });
 
