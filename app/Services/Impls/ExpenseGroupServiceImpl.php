@@ -13,7 +13,6 @@ use App\Models\ExpenseGroup;
 class ExpenseGroupServiceImpl implements ExpenseGroupService
 {
     public function create(
-        $company_id,
         $code,
         $name,
     )
@@ -21,16 +20,15 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
         DB::beginTransaction();
 
         try {
-            $warehouse = new ExpenseGroup();
-            $warehouse->company_id = $company_id;
-            $warehouse->code = $code;
-            $warehouse->name = $name;
+            $expensegroup = new ExpenseGroup();
+            $expensegroup->code = $code;
+            $expensegroup->name = $name;
 
-            $warehouse->save();
+            $expensegroup->save();
 
             DB::commit();
 
-            return $warehouse->hId;
+            return $expensegroup->hId;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -40,12 +38,11 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
 
     public function read()
     {
-        return ExpenseGroup::with('company')->paginate();
+        return ExpenseGroup::paginate();
     }
 
     public function update(
         $id,
-        $company_id,
         $code,
         $name,
     )
@@ -53,9 +50,9 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
         DB::beginTransaction();
 
         try {
-            $warehouse = ExpenseGroup::where('id', '=', $id);
+            $expensegroup = ExpenseGroup::where('id', '=', $id);
 
-            $retval = $warehouse->update([
+            $retval = $expensegroup->update([
                 'code' => $code,
                 'name' => $name,
             ]);
@@ -74,9 +71,9 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
 
     public function delete($id)
     {
-        $warehouse = ExpenseGroup::find($id);
+        $expensegroup = ExpenseGroup::find($id);
 
-        return $warehouse->delete();
+        return $expensegroup->delete();
         
     }
 

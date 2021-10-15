@@ -25,7 +25,6 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ $t("table.cols.company_id") }}</th>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th></th>
@@ -33,7 +32,6 @@
                         </thead>
                         <tbody>
                             <tr v-for="(w, wIdx) in incomegroupList.data">
-                                <td>{{ w.company.name }}</td>
                                 <td>{{ w.code }}</td>
                                 <td>{{ w.name }}</td>
                                 <td class="text-center">
@@ -81,17 +79,6 @@
                             <ul>
                                 <li v-for="e in errors">{{ e }}</li>
                             </ul>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="company_id" name="company_id" v-model="incomegroup.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ incomegroup.company.name }}
-                                </div>
-                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
@@ -171,11 +158,9 @@ export default {
             contentHidden: false,
             incomegroupList: [],
             incomegroup: {
-                company: { hId: '0'},
                 code: '',
                 name: '',
             },
-            companyDDL: [],
         }
     },
     created() {
@@ -184,7 +169,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllIncomeGroup(1);
-        this.getAllCompany();
     },
     methods: {
         getAllIncomeGroup(page) {
@@ -192,11 +176,6 @@ export default {
             axios.get(route('api.get.dashboard.incomegroup.read') + '?page=' + page).then(response => {
                 this.incomegroupList = response.data;
                 this.loading = false;
-            });
-        },
-        getAllCompany() {
-            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
-                this.companyDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -210,7 +189,6 @@ export default {
         },
         emptyIncomeGroup() {
             return {
-                company: { hId: '0'},
                 code: '',
                 name: '',
             }

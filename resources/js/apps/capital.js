@@ -17,7 +17,6 @@ const messages = {
         table: {
             title: 'Capital Lists',
             cols: {
-                company_id: 'Company Name',
                 ref_number: 'Ref Number',
                 investor: 'Investor',
                 capital_group: 'Capital Group',
@@ -40,7 +39,6 @@ const messages = {
             delete: 'Delete',
         },
         fields: {
-            company_id: 'Company Name',
             ref_number: 'Ref Number',
             investor: 'Investor',
             capital_group: 'Capital Group',
@@ -72,7 +70,6 @@ const messages = {
         table: {
             title: 'Daftar Capital',
             cols: {
-                company_id: 'Nama Perusahaan',
                 ref_number: 'Ref Number',
                 investor: 'Investor',
                 capital_group: 'Modal Grup',
@@ -95,7 +92,6 @@ const messages = {
             delete: 'Hapus',
         },
         fields: {
-            company_id: 'Nama Perusahaan',
             ref_number: 'Ref Number',
             investor: 'Investor',
             capital_group: 'Modal Grup',

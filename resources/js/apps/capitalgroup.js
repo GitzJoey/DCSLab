@@ -72,7 +72,6 @@ const messages = {
             delete: 'Hapus',
         },
         fields: {
-            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',
             settings: {
