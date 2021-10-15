@@ -23,6 +23,8 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpenseGroupController;
+use App\Http\Controllers\IncomeGroupController;
 use App\Http\Controllers\InvestorController;
 
 /*
@@ -110,6 +112,14 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         Route::group(['prefix' => 'capitalgroup'], function () {
             Route::get('read', [CapitalGroupController::class, 'read'])->name('api.get.dashboard.capitalgroup.read');
             Route::get('read/all/active', [CapitalGroupController::class, 'getAllActiveCapitalGroup'])->name('api.get.dashboard.capitalgroup.read.all_active');
+        });
+
+        Route::group(['prefix' => 'expensegroup'], function () {
+            Route::get('read', [ExpenseGroupController::class, 'read'])->name('api.get.dashboard.expensegroup.read');
+        });
+
+        Route::group(['prefix' => 'incomegroup'], function () {
+            Route::get('read', [IncomeGroupController::class, 'read'])->name('api.get.dashboard.incomegroup.read');
         });
 
         Route::group(['prefix' => 'supplier'], function () {
@@ -216,6 +226,18 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
             Route::post('save', [CapitalGroupController::class, 'store'])->name('api.post.dashboard.capitalgroup.save');
             Route::post('edit/{id}', [CapitalGroupController::class, 'update'])->name('api.post.dashboard.capitalgroup.edit');
             Route::post('delete/{id}', [CapitalGroupController::class, 'delete'])->name('api.post.dashboard.capitalgroup.delete');
+        });
+
+        Route::group(['prefix' => 'expensegroup'], function () {
+            Route::post('save', [ExpenseGroupController::class, 'store'])->name('api.post.dashboard.expensegroup.save');
+            Route::post('edit/{id}', [ExpenseGroupController::class, 'update'])->name('api.post.dashboard.expensegroup.edit');
+            Route::post('delete/{id}', [ExpenseGroupController::class, 'delete'])->name('api.post.dashboard.expensegroup.delete');
+        });
+
+        Route::group(['prefix' => 'incomegroup'], function () {
+            Route::post('save', [IncomeGroupController::class, 'store'])->name('api.post.dashboard.incomegroup.save');
+            Route::post('edit/{id}', [IncomeGroupController::class, 'update'])->name('api.post.dashboard.incomegroup.edit');
+            Route::post('delete/{id}', [IncomeGroupController::class, 'delete'])->name('api.post.dashboard.incomegroup.delete');
         });
 
         Route::group(['prefix' => 'supplier'], function () {

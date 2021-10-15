@@ -7,6 +7,8 @@ use App\Services\ActivityLogService;
 use App\Services\InvestorService;
 use Illuminate\Http\Request;
 
+use Vinkla\Hashids\Facades\Hashids;
+
 class InvestorController extends BaseController
 {
     private $investorService;
@@ -47,6 +49,7 @@ class InvestorController extends BaseController
         ]);
 
         $result = $this->investorService->create(
+            Hashids::decode($request['company_id'])[0], 
             $request['code'],
             $request['name'], 
             $request['contact'], 
@@ -70,6 +73,7 @@ class InvestorController extends BaseController
 
         $result = $this->investorService->update(
             $id,
+            Hashids::decode($request['company_id'])[0], 
             $request['code'],
             $request['name'],
             $request['contact'],

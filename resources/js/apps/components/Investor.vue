@@ -25,6 +25,7 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
+                                <th>{{ $t("table.cols.company_id") }}</th>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.contact") }}</th>
@@ -38,6 +39,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in investorList.data">
+                                <td>{{ c.company.name }}</td>
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.contact }}</td>
@@ -94,6 +96,17 @@
                             <ul>
                                 <li v-for="e in errors">{{ e }}</li>
                             </ul>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="company_id" name="company_id" v-model="investor.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ investor.company.name }}
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
@@ -223,6 +236,7 @@ export default {
             contentHidden: false,
             investorList: [],
             investor: {
+                company: { hId: '0'},
                 code: '',
                 name: '',
                 contact: '',
@@ -232,6 +246,7 @@ export default {
                 remarks: '',
                 status: '1',
             },
+            companyDDL: [],
         }
     },
     created() {
@@ -240,6 +255,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllInvestor(1);
+        this.getAllCompany();
     },
     methods: {
         getAllInvestor(page) {
@@ -247,6 +263,11 @@ export default {
             axios.get(route('api.get.dashboard.investor.read') + '?page=' + page).then(response => {
                 this.investorList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllCompany() {
+            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
+                this.companyDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -260,6 +281,7 @@ export default {
         },
         emptyInvestor() {
             return {
+                company: { hId: '0'},
                 code: '',
                 name: '',
                 contact: '',

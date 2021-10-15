@@ -43,8 +43,7 @@ class CustomerGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'customergroups'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'customergroups')],
             'name' => 'required|max:255',
         ]);
 
