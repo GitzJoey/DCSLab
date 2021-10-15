@@ -25,11 +25,13 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
+                                <th>{{ $t("table.cols.company_id") }}</th>
                                 <th>{{ $t("table.cols.ref_number") }}</th>
                                 <th>{{ $t("table.cols.date") }}</th>
                                 <th>{{ $t("table.cols.investor") }}</th>
                                 <th>{{ $t("table.cols.capital_group") }}</th>
                                 <th>{{ $t("table.cols.cash_id") }}</th>
+                                <th>{{ $t("table.cols.capital_status") }}</th>
                                 <th>{{ $t("table.cols.amount") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th></th>
@@ -37,11 +39,16 @@
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in capitalList.data">
+                                <td>{{ c.company.name }}</td>
                                 <td>{{ c.ref_number }}</td>
                                 <td>{{ c.date }}</td>
                                 <td>{{ c.investor.name }}</td> 
                                 <td>{{ c.group.name }} </td> 
                                 <td>{{ c.cash.name }}</td>
+                                <td>
+                                    <span v-if="c.capital_status === 1">{{ $t('capital_statusDDL.active') }}</span>
+                                    <span v-if="c.capital_status === 0">{{ $t('capital_statusDDL.inactive') }}</span>
+                                </td>
                                 <td>{{ c.amount }}</td>
                                 <td>{{ c.remarks }}</td>
                                 <td class="text-center">
@@ -91,6 +98,17 @@
                             </ul>
                         </div>
                         <div class="form-group row">
+                            <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="company_id" name="company_id" v-model="capital.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ capital.company.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputRefNumber" class="col-2 col-form-label">{{ $t('fields.ref_number') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputRefNumber" name="ref_number" as="input" :class="{'form-control':true, 'is-invalid': errors['ref_number']}" :placeholder="$t('fields.ref_number')" :label="$t('fields.ref_number')" v-model="capital.ref_number" v-show="this.mode === 'create' || this.mode === 'edit'"/>
@@ -98,14 +116,6 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ capital.ref_number }}</div>
                             </div>
                         </div>
-                        <!-- <div class="form-row">
-                            <div class="form-group col-lg-8">
-                                <div class="form-material">
-                                    <input type="text" class="js-flatpickr form-control" id="example-material-flatpickr-custom" name="example-material-flatpickr-custom" placeholder="d-m-Y" data-allow-input="true" data-date-format="d-m-Y">
-                                    <label for="example-material-flatpickr-custom">Choose Date</label>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="investor_id">{{ $t('fields.investor') }}</label>
                             <div class="col-md-10">
@@ -137,6 +147,21 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                     {{ capital.cash.name }}
                                 </div>            
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputCapital_Status" class="col-2 col-form-label">{{ $t('fields.capital_status') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <div>
+                                    <select class="form-control" id="inputStatus" name="capital_status" v-model="capital.capital_status" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value="1">{{ $t('capital_statusDDL.active') }}</option>
+                                        <option value="0">{{ $t('capital_statusDDL.inactive') }}</option>
+                                    </select>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="capital.capital_status === 1">{{ $t('capital_statusDDL.active') }}</span>
+                                        <span v-if="capital.capital_status === 0">{{ $t('capital_statusDDL.inactive') }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -215,10 +240,12 @@ export default {
             contentHidden: false,
             capitalList: [],
             capital: {
+                company: { hId: '0'},
                 ref_number: '',
                 investor: {hId: ''},
                 group: {hId: ''},
                 cash: {hId: ''},
+                capital_status: '1',
                 amount: '',
                 remarks: '',
                 date: {
@@ -226,9 +253,11 @@ export default {
                     timeFormat: '',
                 }
             },
+            companyDDL: [],
             investorDDL: [],
             capitalgroupDDL: [],
             cashDDL: [],
+            capital_statusDDL: [],
         }
     },
     created() {
@@ -237,6 +266,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllCapital(1);
+        this.getAllCompany();
         this.getAllInvestor();
         this.getAllCapitalGroup();
         this.getAllCash();
@@ -249,25 +279,25 @@ export default {
                 this.loading = false;
             });
         },
-
+        getAllCompany() {
+            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
+                this.companyDDL = response.data;
+            });
+        },
         getAllInvestor() {
             axios.get(route('api.get.dashboard.investor.read.all_active')) .then(response => {
                 this.investorDDL = response.data;
             });
         },
-
         getAllCapitalGroup() {
             axios.get(route('api.get.dashboard.capitalgroup.read.all_active')).then(response => {
                 this.capitalgroupDDL = response.data;
             });
-        },
-
-        getAllCash() {
+        },        getAllCash() {
             axios.get(route('api.get.dashboard.cash.read.all_active')).then(response => {
                 this.cashDDL = response.data;
             });
         },
-
         onPaginationChangePage(page) {
             if (page === 'next') {
                 this.getAllCapital(this.capitalList.current_page + 1);
@@ -279,10 +309,12 @@ export default {
         },
         emptyCapital() {
             return {
+                company: { hId: '0'},
                 ref_number: '',
                 investor: {hId: ''},
                 group: {hId: ''},
                 cash: {hId: ''},
+                capital_status: '1',
                 amount: '',
                 remarks: '',
             }

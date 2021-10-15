@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { ZiggyVue } from 'ziggy';
 import { Ziggy } from '../ziggy';
 import { createI18n }from 'vue-i18n';
-import CapitalGroup from './components/CapitalGroup';
+import IncomeGroup from './components/IncomeGroup';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -15,7 +15,7 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Capital Group Lists',
+            title: 'IncomeGroup Lists',
             cols: {
                 company_id: 'Company Name',
                 code: 'Code',
@@ -28,9 +28,9 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Capital Group',
-            edit: 'Edit Capital Group',
-            show: 'Show Capital Group',
+            create: 'Create IncomeGroup',
+            edit: 'Edit IncomeGroup',
+            show: 'Show IncomeGroup',
             delete: 'Delete',
         },
         fields: {
@@ -50,10 +50,14 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        statusDDL: {
+            active: 'Active',
+            inactive: 'Inactive',
+        }
     },
     id: {
         table: {
-            title: 'Daftar Capital Group',
+            title: 'Daftar Perusahaan',
             cols: {
                 company_id: 'Nama Perusahaan',
                 code: 'Kode',
@@ -66,15 +70,15 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Capital Group',
-            edit: 'Ubah Capital Group',
-            show: 'Tampilkan Capital Group',
+            create: 'Tambah Gudang',
+            edit: 'Ubah Gudang',
+            show: 'Tampilkan Gudang',
             delete: 'Hapus',
         },
         fields: {
             company_id: 'Nama Perusahaan',
             code: 'Kode',
-            name: 'Nama',
+            name: 'Nama',    
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -88,6 +92,10 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
+        statusDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
+        }
     }
 };
 
@@ -97,7 +105,7 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(CapitalGroup)
+createApp(IncomeGroup)
     .use(ZiggyVue, Ziggy)
     .use(i18n)
-    .mount('#capitalgroupVue')
+    .mount('#incomegroupVue')

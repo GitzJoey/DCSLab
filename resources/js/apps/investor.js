@@ -17,6 +17,7 @@ const messages = {
         table: {
             title: 'Purchase Investors',
             cols: {
+                company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
                 contact: 'Contact',
@@ -39,6 +40,7 @@ const messages = {
             delete: 'Delete',
         },
         fields: {
+            company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
             contact: 'Contact',
@@ -69,6 +71,7 @@ const messages = {
         table: {
             title: 'Pemasok',
             cols: {
+                company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
                 contact: 'Kontak',
@@ -91,6 +94,7 @@ const messages = {
             delete: 'Hapus',
         },
         fields: {
+            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',
             contact: 'Kontak',

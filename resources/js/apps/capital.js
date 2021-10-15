@@ -17,11 +17,13 @@ const messages = {
         table: {
             title: 'Capital Lists',
             cols: {
+                company_id: 'Company Name',
                 ref_number: 'Ref Number',
                 investor: 'Investor',
                 capital_group: 'Capital Group',
                 cash_id: 'Cash',
                 date: 'Date',
+                capital_status: 'Capital Status',
                 amount: 'Amount',
                 remarks: 'Remarks',
             }
@@ -38,10 +40,15 @@ const messages = {
             delete: 'Delete',
         },
         fields: {
+            company_id: 'Company Name',
             ref_number: 'Ref Number',
             investor: 'Investor',
             capital_group: 'Capital Group',
             cash_id: 'Cash',
+            date: 'Date',
+            capital_status: 'Capital Status',
+            amount: 'Amount',
+            remarks: 'Remarks',
             date: {
                 date: 'Date',
                 dateFormat: 'Date Format',
@@ -56,16 +63,22 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        capital_statusDDL: {
+            active: 'In',
+            inactive: 'Out',
+        },
     },
     id: {
         table: {
             title: 'Daftar Capital',
             cols: {
+                company_id: 'Nama Perusahaan',
                 ref_number: 'Ref Number',
                 investor: 'Investor',
                 capital_group: 'Modal Grup',
                 cash_id: 'Kas',
                 date: 'Tanggal',
+                capital_status: 'Status Modal',
                 amount: 'Nominal',
                 remarks: 'Remarks',
             }
@@ -82,11 +95,13 @@ const messages = {
             delete: 'Hapus',
         },
         fields: {
+            company_id: 'Nama Perusahaan',
             ref_number: 'Ref Number',
             investor: 'Investor',
             capital_group: 'Modal Grup',
             cash_id: 'Kas',
             date: 'Tanggal',
+            capital_status: 'Status Modal',
             amount: 'Nominal',
             remarks: 'Remarks',
             date: {
@@ -101,6 +116,10 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        capital_statusDDL: {
+            active: 'Masuk',
+            inactive: 'Keluar',
         },
     }
 };

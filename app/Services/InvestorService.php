@@ -5,6 +5,7 @@ namespace App\Services;
 interface InvestorService
 {
     public function create(
+        $company_id,
         $code,
         $name,
         $contact,
@@ -21,6 +22,7 @@ interface InvestorService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
         $contact,

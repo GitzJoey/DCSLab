@@ -1,4 +1,4 @@
-<template>
+.<template>
     <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title" v-if="this.mode === 'list'"><strong>{{ $t('table.title') }}</strong></h3>
@@ -32,19 +32,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in capitalgroupList.data">
-                                <td>{{ c.company.name }}</td>
-                                <td>{{ c.code }}</td>
-                                <td>{{ c.name }}</td>
+                            <tr v-for="(w, wIdx) in expensegroupList.data">
+                                <td>{{ w.company.name }}</td>
+                                <td>{{ w.code }}</td>
+                                <td>{{ w.name }}</td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(wIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(wIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(wIdx)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -54,13 +54,13 @@
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.capitalgroupList.prev_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.expensegroupList.prev_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
-                            <li :class="{'page-item':true, 'disabled': this.capitalgroupList.next_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.expensegroupList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
@@ -72,7 +72,7 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list'">
-                    <Form id="capitalgroupForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                    <Form id="expensegroupForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -85,28 +85,28 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="company_id" name="company_id" v-model="capitalgroup.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="company_id" name="company_id" v-model="expensegroup.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ capitalgroup.company.name }}
+                                    {{ expensegroup.company.name }}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="capitalgroup.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="expensegroup.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ capitalgroup.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ expensegroup.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="capitalgroup.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="expensegroup.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ capitalgroup.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ expensegroup.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -169,8 +169,8 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            capitalgroupList: [],
-            capitalgroup: {
+            expensegroupList: [],
+            expensegroup: {
                 company: { hId: '0'},
                 code: '',
                 name: '',
@@ -183,14 +183,14 @@ export default {
 
     mounted() {
         this.mode = 'list';
-        this.getAllCapitalGroup(1);
+        this.getAllExpenseGroup(1);
         this.getAllCompany();
     },
     methods: {
-        getAllCapitalGroup(page) {
+        getAllExpenseGroup(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.capitalgroup.read') + '?page=' + page).then(response => {
-                this.capitalgroupList = response.data;
+            axios.get(route('api.get.dashboard.expensegroup.read') + '?page=' + page).then(response => {
+                this.expensegroupList = response.data;
                 this.loading = false;
             });
         },
@@ -201,14 +201,14 @@ export default {
         },
         onPaginationChangePage(page) {
             if (page === 'next') {
-                this.getAllCapitalGroup(this.capitalgroupList.current_page + 1);
+                this.getAllExpenseGroup(this.expensegroupList.current_page + 1);
             } else if (page === 'prev') {
-                this.getAllCapitalGroup(this.capitalgroupList.current_page - 1);
+                this.getAllExpenseGroup(this.expensegroupList.current_page - 1);
             } else {
-                this.getAllCapitalGroup(page);
+                this.getAllExpenseGroup(page);
             }
         },
-        emptyCapitalGroup() {
+        emptyExpenseGroup() {
             return {
                 company: { hId: '0'},
                 code: '',
@@ -217,22 +217,22 @@ export default {
         },
         createNew() {
             this.mode = 'create';
-            this.capitalgroup = this.emptyCapitalGroup();
+            this.expensegroup = this.emptyExpenseGroup();
         },
         editSelected(idx) {
             this.mode = 'edit';
-            this.capitalgroup = this.capitalgroupList.data[idx];
+            this.expensegroup = this.expensegroupList.data[idx];
         },
         showSelected(idx) {
             this.mode = 'show';
-            this.capitalgroup = this.capitalgroupList.data[idx];
+            this.expensegroup = this.expensegroupList.data[idx];
         },
         deleteSelected(idx) {
             this.mode = 'delete';
-            this.capitalgroup = this.capitalgroupList.data[idx];
+            this.expensegroup = this.expensegroupList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.capitalgroup.delete', this.capitalgroup.hId)).then(response => {
+            axios.post(route('api.post.dashboard.expensegroup.delete', this.expensegroup.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -242,14 +242,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post(route('api.post.dashboard.capitalgroup.save'), new FormData($('#capitalgroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.expensegroup.save'), new FormData($('#expensegroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.capitalgroup.edit', this.capitalgroup.hId), new FormData($('#capitalgroupForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.expensegroup.edit', this.expensegroup.hId), new FormData($('#expensegroupForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -277,14 +277,14 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.capitalgroup.profile.img_path = fileReader.result
+                this.expensegroup.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllCapitalGroup(this.capitalgroupList.current_page);
-            this.capitalgroup = this.emptyCapitalGroup();
+            this.getAllExpenseGroup(this.expensegroupList.current_page);
+            this.expensegroup = this.emptyExpenseGroup();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -293,25 +293,25 @@ export default {
             this.contentHidden = !this.contentHidden;
         },
         refreshList() {
-            this.getAllCapitalGroup(this.capitalgroupList.current_page);
+            this.getAllExpenseGroup(this.expensegroupList.current_page);
         },
     },
     computed: {
         getPages() {
-            if (this.capitalgroupList.current_page == null) return 0;
+            if (this.expensegroupList.current_page == null) return 0;
 
-            return Math.ceil(this.capitalgroupList.total / this.capitalgroupList.per_page);
+            return Math.ceil(this.expensegroupList.total / this.expensegroupList.per_page);
         },
         retrieveImage()
         {
-            if (this.capitalgroup.profile.img_path && this.capitalgroup.profile.img_path !== '') {
-                if (this.capitalgroup.profile.img_path.includes('data:image')) {
-                    return this.capitalgroup.profile.img_path;
+            if (this.expensegroup.profile.img_path && this.expensegroup.profile.img_path !== '') {
+                if (this.expensegroup.profile.img_path.includes('data:image')) {
+                    return this.expensegroup.profile.img_path;
                 } else {
-                    return '/storage/' + this.capitalgroup.profile.img_path;
+                    return '/storage/' + this.expensegroup.profile.img_path;
                 }
             } else {
-                return '/images/def-capitalgroup.png';
+                return '/images/def-expensegroup.png';
             }
         }
     }

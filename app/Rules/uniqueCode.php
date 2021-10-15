@@ -13,6 +13,8 @@ use App\Services\InvestorService;
 use App\Services\SupplierService;
 use App\Services\CustomerService;
 use App\Services\CustomerGroupService;
+use App\Services\ExpenseGroupService;
+use App\Services\IncomeGroupService;
 use App\Services\ProductService;
 use App\Services\ProductBrandService;
 use App\Services\ProductGroupService;
@@ -34,6 +36,8 @@ class uniqueCode implements Rule
     private $investorService;
     private $capitalGroupService;
     private $capitalService;
+    private $incomeGroupService;
+    private $expenseGroupService;
     private $SupplierService;
     private $productGroupService;
     private $productBrandService;
@@ -73,6 +77,12 @@ class uniqueCode implements Rule
                 break;
             case 'capitalgroups': 
                 $this->capitalGroupService = Container::getInstance()->make(CapitalGroupService::class);
+                break;
+            case 'incomegroups': 
+                $this->incomeGroupService = Container::getInstance()->make(IncomeGroupService::class);
+                break;
+            case 'expensegroups': 
+                $this->expenseGroupService = Container::getInstance()->make(ExpenseGroupService::class);
                 break;
             case 'suppliers': 
                 $this->SupplierService = Container::getInstance()->make(SupplierService::class);
@@ -128,6 +138,12 @@ class uniqueCode implements Rule
                 break;
             case 'capitalgroups': 
                 $count = $this->capitalGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'incomegroups': 
+                $count = $this->incomeGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'expensegroups': 
+                $count = $this->expenseGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'suppliers': 
                 $count = $this->SupplierService->checkDuplicatedCode($this->crud_status, $this->id, $code);
