@@ -15,6 +15,7 @@ class CreateProductGroupsTable extends Migration
     {
         Schema::create('product_groups', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->string('code');
             $table->string('name');
             $table->unsignedBigInteger('created_by')->default(0);
