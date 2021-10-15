@@ -15,9 +15,8 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'ExpenseGroup Lists',
+            title: 'Expense Group Lists',
             cols: {
-                company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
             }
@@ -28,13 +27,12 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create ExpenseGroup',
-            edit: 'Edit ExpenseGroup',
-            show: 'Show ExpenseGroup',
+            create: 'Create Expense Group',
+            edit: 'Edit Expense Group',
+            show: 'Show Expense Group',
             delete: 'Delete',
         },
         fields: {
-            company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
             settings: {
@@ -57,9 +55,8 @@ const messages = {
     },
     id: {
         table: {
-            title: 'Daftar Perusahaan',
+            title: 'Daftar Pengeluaran',
             cols: {
-                company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
             }
@@ -70,13 +67,12 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Gudang',
-            edit: 'Ubah Gudang',
-            show: 'Tampilkan Gudang',
+            create: 'Tambah Pengeluaran',
+            edit: 'Ubah Pengeluaran',
+            show: 'Tampilkan Pengeluaran',
             delete: 'Hapus',
         },
         fields: {
-            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',    
             settings: {

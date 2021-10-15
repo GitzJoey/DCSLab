@@ -5,7 +5,6 @@ namespace App\Services;
 interface CapitalService
 {
     public function create(
-        $company_id,
         $ref_number,
         $investor_id,
         $group_id,
@@ -20,7 +19,6 @@ interface CapitalService
 
     public function update(
         $id,
-        $company_id,
         $ref_number,
         $investor_id,
         $group_id,

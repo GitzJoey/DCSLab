@@ -25,7 +25,6 @@
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
-                                <th>{{ $t("table.cols.company_id") }}</th>
                                 <th>{{ $t("table.cols.ref_number") }}</th>
                                 <th>{{ $t("table.cols.date") }}</th>
                                 <th>{{ $t("table.cols.investor") }}</th>
@@ -39,7 +38,6 @@
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in capitalList.data">
-                                <td>{{ c.company.name }}</td>
                                 <td>{{ c.ref_number }}</td>
                                 <td>{{ c.date }}</td>
                                 <td>{{ c.investor.name }}</td> 
@@ -96,17 +94,6 @@
                             <ul>
                                 <li v-for="e in errors">{{ e }}</li>
                             </ul>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="company_id" name="company_id" v-model="capital.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ capital.company.name }}
-                                </div>
-                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputRefNumber" class="col-2 col-form-label">{{ $t('fields.ref_number') }}</label>
@@ -240,7 +227,6 @@ export default {
             contentHidden: false,
             capitalList: [],
             capital: {
-                company: { hId: '0'},
                 ref_number: '',
                 investor: {hId: ''},
                 group: {hId: ''},
@@ -253,7 +239,6 @@ export default {
                     timeFormat: '',
                 }
             },
-            companyDDL: [],
             investorDDL: [],
             capitalgroupDDL: [],
             cashDDL: [],
@@ -266,7 +251,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllCapital(1);
-        this.getAllCompany();
         this.getAllInvestor();
         this.getAllCapitalGroup();
         this.getAllCash();
@@ -277,11 +261,6 @@ export default {
             axios.get(route('api.get.dashboard.capital.read') + '?page=' + page) .then(response => {
                 this.capitalList = response.data;
                 this.loading = false;
-            });
-        },
-        getAllCompany() {
-            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
-                this.companyDDL = response.data;
             });
         },
         getAllInvestor() {
@@ -309,7 +288,6 @@ export default {
         },
         emptyCapital() {
             return {
-                company: { hId: '0'},
                 ref_number: '',
                 investor: {hId: ''},
                 group: {hId: ''},

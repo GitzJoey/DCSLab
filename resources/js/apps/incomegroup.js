@@ -15,9 +15,8 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'IncomeGroup Lists',
+            title: 'Income Group Lists',
             cols: {
-                company_id: 'Company Name',
                 code: 'Code',
                 name: 'Name',
             }
@@ -28,13 +27,12 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create IncomeGroup',
-            edit: 'Edit IncomeGroup',
-            show: 'Show IncomeGroup',
+            create: 'Create Income Group',
+            edit: 'Edit Income Group',
+            show: 'Show Income Group',
             delete: 'Delete',
         },
         fields: {
-            company_id: 'Company Name',
             code: 'Code',
             name: 'Name',
             settings: {
@@ -57,9 +55,8 @@ const messages = {
     },
     id: {
         table: {
-            title: 'Daftar Perusahaan',
+            title: 'Daftar Modal',
             cols: {
-                company_id: 'Nama Perusahaan',
                 code: 'Kode',
                 name: 'Nama',
             }
@@ -70,13 +67,12 @@ const messages = {
             back: 'Kembali',
         },
         actions: {
-            create: 'Tambah Gudang',
-            edit: 'Ubah Gudang',
-            show: 'Tampilkan Gudang',
+            create: 'Tambah Modal',
+            edit: 'Ubah Modal',
+            show: 'Tampilkan Modal',
             delete: 'Hapus',
         },
         fields: {
-            company_id: 'Nama Perusahaan',
             code: 'Kode',
             name: 'Nama',    
             settings: {

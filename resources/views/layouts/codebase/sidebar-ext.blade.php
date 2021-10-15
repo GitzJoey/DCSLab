@@ -69,17 +69,6 @@
 @endrole
 
 @role('dev|administrator|pos-owner')
-    <li class="{{ active_class(if_route_pattern('db.purchase.*'), 'open') }}">
-        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-note"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.purchase')}}</span></a>
-        <ul>
-            <li>
-                <a class="{{ active_class(if_route_pattern('db.purchase.suppliers')) }}" href="{{route('db.purchase.suppliers')}}">{{ __('sidebar-ext.db.purchase.suppliers')}}</a>
-            </li>
-        </ul>
-    </li>
-@endrole
-
-@role('dev|administrator|pos-owner')
     <li class="{{ active_class(if_route_pattern('db.product.*'), 'open') }}">
         <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-drawer"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.product')}}</span></a>
         <ul>
@@ -94,6 +83,17 @@
             </li>
             <li>
                 <a class="{{ active_class(if_route_pattern('db.product.products')) }}" href="{{route('db.product.products')}}">{{ __('sidebar-ext.db.product.products')}}</a>
+            </li>
+        </ul>
+    </li>
+@endrole
+
+@role('dev|administrator|pos-owner')
+    <li class="{{ active_class(if_route_pattern('db.purchase.*'), 'open') }}">
+        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-note"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.purchase')}}</span></a>
+        <ul>
+            <li>
+                <a class="{{ active_class(if_route_pattern('db.purchase.suppliers')) }}" href="{{route('db.purchase.suppliers')}}">{{ __('sidebar-ext.db.purchase.suppliers')}}</a>
             </li>
         </ul>
     </li>

@@ -13,7 +13,6 @@ use App\Models\Investor;
 class InvestorServiceImpl implements InvestorService
 {
     public function create(
-        $company_id,
         $code,
         $name,
         $contact,
@@ -28,7 +27,6 @@ class InvestorServiceImpl implements InvestorService
 
         try {
             $investor = new Investor();
-            $investor->company_id = $company_id;
             $investor->code = $code;
             $investor->name = $name;
             $investor->contact = $contact;
@@ -53,7 +51,7 @@ class InvestorServiceImpl implements InvestorService
 
     public function read()
     {
-        return Investor::with('company')->paginate();
+        return Investor::paginate();
     }
 
     public function getAllActiveInvestor()
@@ -63,7 +61,6 @@ class InvestorServiceImpl implements InvestorService
 
     public function update(
         $id,
-        $company_id,
         $code,
         $name,
         $contact,
@@ -80,7 +77,6 @@ class InvestorServiceImpl implements InvestorService
             $investor = Investor::where('id', '=', $id);
 
             $retval = $investor->update([
-                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'contact' => $contact,
