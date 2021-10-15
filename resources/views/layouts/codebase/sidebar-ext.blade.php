@@ -46,10 +46,10 @@
                 <a class="nav-submenu" data-toggle="nav-submenu" href="#"><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance.expense')}}</span></a>
                 <ul>
                     <li>
-                        <a class="{{ active_class(if_route_pattern('db.finance.expense.expenses')) }}" href="{{route('db.finance.expense.expenses')}}">{{ __('sidebar-ext.db.finance.expense.expenses')}}</a>
+                        <a class="{{ active_class(if_route_pattern('db.finance.expense.expense_groups')) }}" href="{{route('db.finance.expense.expense_groups')}}">{{ __('sidebar-ext.db.finance.expense.expense_groups')}}</a>
                     </li>
                     <li>
-                        <a class="{{ active_class(if_route_pattern('db.finance.expense.expense_groups')) }}" href="{{route('db.finance.expense.expense_groups')}}">{{ __('sidebar-ext.db.finance.expense.expense_groups')}}</a>
+                        <a class="{{ active_class(if_route_pattern('db.finance.expense.expenses')) }}" href="{{route('db.finance.expense.expenses')}}">{{ __('sidebar-ext.db.finance.expense.expenses')}}</a>
                     </li>
                 </ul>
             </li>
@@ -57,10 +57,10 @@
                 <a class="nav-submenu" data-toggle="nav-submenu" href="#"><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.finance.income')}}</span></a>
                 <ul>
                     <li>
-                        <a class="{{ active_class(if_route_pattern('db.finance.income.incomes')) }}" href="{{route('db.finance.income.incomes')}}">{{ __('sidebar-ext.db.finance.income.incomes')}}</a>
+                        <a class="{{ active_class(if_route_pattern('db.finance.income.income_groups')) }}" href="{{route('db.finance.income.income_groups')}}">{{ __('sidebar-ext.db.finance.income.income_groups')}}</a>
                     </li>
                     <li>
-                        <a class="{{ active_class(if_route_pattern('db.finance.income.income_groups')) }}" href="{{route('db.finance.income.income_groups')}}">{{ __('sidebar-ext.db.finance.income.income_groups')}}</a>
+                        <a class="{{ active_class(if_route_pattern('db.finance.income.incomes')) }}" href="{{route('db.finance.income.incomes')}}">{{ __('sidebar-ext.db.finance.income.incomes')}}</a>
                     </li>
                 </ul>
             </li>
