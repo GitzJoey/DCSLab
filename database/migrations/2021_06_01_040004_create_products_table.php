@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('restrict');;
             $table->string('code')->nullable();
             $table->string('name')->nullable();	
+            $table->decimal('isi', 19, 8)->default(0);
 			$table->decimal('price', 19, 8)->default(0);
 			$table->integer('tax_status')->nullable();
             $table->string('remarks')->nullable();	
