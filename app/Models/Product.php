@@ -73,18 +73,18 @@ class Product extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function group()
+    public function groups()
     {
-        return $this->belongsTo(ProductGroup::class);
+        return $this->hasMany(ProductGroup::class);
     }
 
-    public function brand()
+    public function brands()
     {
-        return $this->belongsTo(ProductBrand::class);
+        return $this->hasMany(ProductBrand::class);
     }
 
-    public function unit()
+    public function units()
     {
-        return $this->belongsTo(Unit::class);
+        return $this->hasMany(Unit::class);
     }
 }
