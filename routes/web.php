@@ -100,10 +100,10 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('investors', [InvestorController::class, 'index'])->name('db.finance.capital.investors');
             Route::get('capitals', [CapitalController::class, 'index'])->name('db.finance.capital.capitals');
             Route::get('capital_groups', [CapitalGroupController::class, 'index'])->name('db.finance.capital.capital_groups');
-            Route::get('expenses', [ExpenseController::class, 'index'])->name('db.finance.expense.expenses');
             Route::get('expense_groups', [ExpenseGroupController::class, 'index'])->name('db.finance.expense.expense_groups');
-            Route::get('incomes', [IncomeController::class, 'index'])->name('db.finance.income.incomes');
+            Route::get('expenses', [ExpenseController::class, 'index'])->name('db.finance.expense.expenses');
             Route::get('income_groups', [IncomeGroupController::class, 'index'])->name('db.finance.income.income_groups');
+            Route::get('incomes', [IncomeController::class, 'index'])->name('db.finance.income.incomes');
         });
 
         Route::group(['prefix' => 'purchase'], function () {
