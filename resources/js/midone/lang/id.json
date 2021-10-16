@@ -17,7 +17,12 @@
             "deleteConfirmTitle": "Konfirmasi hapus?",
             "deleteConfirmText": "Apakah anda yakin untuk menghapus data ini?",
             "deleteConfirmCancel": "Cancel",
-            "deleteConfirmDelete": "Delete"
+            "deleteConfirmDelete": "Delete",
+            "showing": "Menampilkan",
+            "to": "sampai",
+            "of": "dari",
+            "entries": "masukan data",
+            "search": "Cari..."
         }
     },
     "views": {

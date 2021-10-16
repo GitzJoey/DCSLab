@@ -17,7 +17,12 @@
             "deleteConfirmTitle": "Are you sure",
             "deleteConfirmText": "Do you really want to delete these records?",
             "deleteConfirmCancel": "Cancel",
-            "deleteConfirmDelete": "Delete"
+            "deleteConfirmDelete": "Delete",
+            "showing": "Showing",
+            "to": "to",
+            "of": "of",
+            "entries": "entries",
+            "search": "Search..."
         }
     },
     "views": {

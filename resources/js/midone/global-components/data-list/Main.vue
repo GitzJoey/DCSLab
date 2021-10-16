@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2 class="intro-y text-lg font-medium mt-10">{{ title }}</h2>
+        <h2 class="intro-y text-lg font-bold mt-5">{{ title }}</h2>
         <div class="grid grid-cols-12 gap-6 mt-5">
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
                 <button class="btn btn-primary shadow-md mr-2 w-20" v-if="enableCreate"><PlusIcon class="w-4 h-4" /></button>
@@ -25,11 +25,11 @@
                     </div>
                 </div>
                 <div class="hidden md:block mx-auto text-gray-600">
-                    Showing 1 to 10 of 150 entries
+                    {{ t('components.data-list.showing') }} {{ data.from }} {{ t('components.data-list.to') }} {{ data.to }} {{ t('components.data-list.of') }} {{ data.total }} {{ t('components.data-list.entries') }}
                 </div>
                 <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0" v-if="enableSearch">
                     <div class="w-56 relative text-gray-700 dark:text-gray-300">
-                        <input type="text" class="form-control w-56 box pr-10 placeholder-theme-13" placeholder="Search..." />
+                        <input type="text" class="form-control w-56 box pr-10 placeholder-theme-13" :placeholder="t('components.data-list.search')" />
                         <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
                     </div>
                 </div>
@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, computed, toRef, watch } from 'vue'
+import { defineComponent, onMounted, computed, ref , toRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent( {
@@ -153,7 +153,7 @@ export default defineComponent( {
             enableEdit,
             enableDelete,
             enableView,
-            data
+            data,
         }
     }
 })

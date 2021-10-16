@@ -14,4 +14,12 @@ const i18n = createI18n({
     }
 });
 
+export function switchLang(lang) {
+    i18n.global.locale.value = lang;
+}
+
+export function getLang() {
+    return i18n.global.locale.value;
+}
+
 export default i18n;
