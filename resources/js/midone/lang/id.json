@@ -22,7 +22,17 @@
             "to": "sampai",
             "of": "dari",
             "entries": "masukan data",
-            "search": "Cari..."
+            "search": "Cari...",
+            "view": "Tampilkan",
+            "edit": "Ubah",
+            "delete": "Hapus",
+            "delete_confirmation": {
+                "title": "Konfirmasi",
+                "desc_1": "Apakah Anda benar-benar ingin menghapus data ini?",
+                "desc_2": "Proses ini tidak dapat dibatalkan.",
+                "delete": "Hapus",
+                "cancel": "Batal"
+            }
         }
     },
     "views": {

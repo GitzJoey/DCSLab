@@ -1,6 +1,6 @@
 <template>
     <div class="intro-y">
-        <DataList title="User Lists" :data="userList">
+        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:refreshData="refreshData">
             <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
@@ -21,15 +21,20 @@
                             </td>
                             <td>
                                 <CheckCircleIcon v-if="u.profile.status === 1" />
+                                <XIcon v-if="u.profile.status === 0" />
                             </td>
                             <td class="table-report__action w-56">
                                 <div class="flex justify-center items-center">
-                                    <a class="flex items-center mr-3" href="javascript:;">
+                                    <a class="flex items-center mr-3" href="" @click.prevent="viewSelected(rIdx)">
+                                        <InfoIcon class="w-4 h-4 mr-1" />
+                                        {{ t('components.data-list.view') }}
+                                    </a>
+                                    <a class="flex items-center mr-3" href="" @click.prevent="editSelected(rIdx)">
                                         <CheckSquareIcon class="w-4 h-4 mr-1" />
-                                        Edit
+                                        {{ t('components.data-list.edit') }}
                                     </a>
                                     <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal">
-                                        <Trash2Icon class="w-4 h-4 mr-1" /> Delete
+                                        <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                     </a>
                                 </div>
                             </td>
@@ -61,14 +66,38 @@ export default defineComponent({
             const setDashboardLayout = inject('setDashboardLayout')
             setDashboardLayout(false);
 
+            getUser();
+        });
+
+        function getUser() {
             axios.get('/api/get/dashboard/admin/users/read?page=1').then(response => {
                 userList.value = response.data;
             });
-        });
+        }
+
+        function createNew() {
+            console.log('createNew');
+        }
+
+        function refreshData() {
+            console.log('refreshData');
+        }
+
+        function editSelected(index) {
+            console.log('editSelected');
+        }
+
+        function viewSelected(index) {
+
+        }
 
         return {
             t,
-            userList
+            userList,
+            createNew,
+            refreshData,
+            editSelected,
+            viewSelected,
         }
     }
 })

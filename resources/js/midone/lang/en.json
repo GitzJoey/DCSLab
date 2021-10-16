@@ -22,7 +22,17 @@
             "to": "to",
             "of": "of",
             "entries": "entries",
-            "search": "Search..."
+            "search": "Search...",
+            "view": "View",
+            "edit": "Edit",
+            "delete": "Delete",
+            "delete_confirmation": {
+                "title": "Confirmation",
+                "desc_1": "Do you really want to delete these records?",
+                "desc_2": "This process cannot be undone.",
+                "delete": "Delete",
+                "cancel": "Cancel"
+            }
         }
     },
     "views": {
