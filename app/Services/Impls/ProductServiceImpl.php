@@ -18,7 +18,6 @@ class ProductServiceImpl implements ProductService
         $brand_id,
         $name,
         $unit_id,
-        $price,
         $tax_status,
         $remarks,
         $estimated_capital_price,
@@ -38,7 +37,6 @@ class ProductServiceImpl implements ProductService
             $product->brand_id = $brand_id;
             $product->name = $name;
             $product->unit_id = $unit_id;
-            $product->price = $price;
             $product->tax_status = $tax_status;
             $product->remarks = $remarks;
             $product->estimated_capital_price = $estimated_capital_price;
@@ -72,7 +70,6 @@ class ProductServiceImpl implements ProductService
         $brand_id,
         $name,
         $unit_id,
-        $price,
         $tax_status,
         $remarks,
         $estimated_capital_price,
@@ -93,7 +90,6 @@ class ProductServiceImpl implements ProductService
                 'brand_id' => $brand_id,
                 'name' => $name,
                 'unit_id' => $unit_id,
-                'price' => $price,
                 'tax_status' => $tax_status,
                 'remarks' => $remarks,
                 'estimated_capital_price' => $estimated_capital_price,
