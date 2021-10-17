@@ -30,7 +30,6 @@
                                 <th>{{ $t("table.cols.brand_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.unit_id") }}</th>
-                                <th>{{ $t("table.cols.price") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
                                 <th>{{ $t("table.cols.product_type") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
@@ -44,7 +43,6 @@
                                 <td>{{ c.brand.name }} </td>
                                 <td>{{ c.name }}</td>
                                 <td>{{ c.unit.name }}</td>
-                                <td>{{ c.price }}</td>
                                 <td>
                                     <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
                                     <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
@@ -143,23 +141,29 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.name }}</div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="product.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
-                                </select>     
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ product.unit.name }}
-                                </div>        
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputPrice" class="col-2 col-form-label">{{ $t('fields.price') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputPrice" name="price" as="input" :class="{'form-control':true, 'is-invalid': errors['price']}" :placeholder="$t('fields.price')" :label="$t('fields.price')" v-model="product.price" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="price" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.price }}</div>
+                        
+                        <div class="col-md-6">
+                            <div class="block">
+                                <div class="block-header block-header-default">
+                                    <!-- <h3 class="block-title">Normal Form</h3> -->
+                                    <div class="block-options">
+                                        <button type="button" class="btn-block-option">
+                                            <i class="si si-wrench"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                  <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
+                                  <div class="col-md-10">
+                                      <select class="form-control" id="unit_id" name="unit_id" v-model="product.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                          <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                      </select>     
+                                      <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                          {{ product.unit.name }}
+                                      </div>        
+                                  </div>
+                              </div>
+
                             </div>
                         </div>
                         <div class="form-group row">
@@ -291,7 +295,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            price: 'required',
         };
 
         return {
@@ -311,7 +314,6 @@ export default {
                 brand: {hId: ''},
                 name: '',
                 unit: {hId: ''},
-                price: '',
                 tax_status: '',
                 remarks: '',
                 point: '',
@@ -378,7 +380,6 @@ export default {
                 brand: {hId: ''},
                 name: '',
                 unit: {hId: ''},
-                price: '0',
                 tax_status: '',
                 remarks: '',
                 point: '0',

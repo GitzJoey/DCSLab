@@ -40,7 +40,6 @@ class ProductController extends BaseController
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
             'name' => 'required|max:255',
-            'price' => 'required|max:255',
             'status' => 'required',
         ]);
 
@@ -53,7 +52,6 @@ class ProductController extends BaseController
             Hashids::decode($request['brand_id'])[0], 
             $request['name'], 
             Hashids::decode($request['unit_id'])[0],
-            $request['price'], 
             $request['tax_status'], 
             $request['remarks'], 
             $request['estimated_capital_price'], 
@@ -70,7 +68,6 @@ class ProductController extends BaseController
         $request->validate([
             'code' => new uniqueCode('update', $id, 'products'),
             'name' => 'required|max:255',
-            'price' => 'required|max:255',
             'status' => 'required',
         ]);
 
@@ -84,7 +81,6 @@ class ProductController extends BaseController
             Hashids::decode($request['brand_id'])[0], 
             $request['name'], 
             Hashids::decode($request['unit_id'])[0],
-            $request['price'], 
             $request['tax_status'], 
             $request['remarks'], 
             $request['estimated_capital_price'], 
