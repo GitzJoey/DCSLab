@@ -71,6 +71,7 @@ Recompile
     * Utilize VueJS 3 as components
 
 * **2021-08-21**
+    * Split the code into master and boilerplate (for easier upgrade)
     * Messaging System
 
 * **2021-10-07**
