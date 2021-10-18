@@ -1,5 +1,5 @@
 <template>
-    <div class="intro-y">
+    <div class="intro-y" v-if="mode === 'list'">
         <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:refreshData="refreshData">
             <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
@@ -44,11 +44,30 @@
             </template>
         </DataList>
     </div>
+
+    <div class="intro-y box mt-5" v-if="mode === 'create'">
+        <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.users.actions.create') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.users.actions.edit') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
+        </div>
+        <vee-form id="userForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+            <div class="form-inline">
+                <label for="inputName" class="form-label w-1/3">{{ t('views.users.fields.name') }}</label>
+                <vee-field id="inputName" name="name" as="input" :class="{'form-control w-2/3':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
+                <ErrorMessage name="name" class="text-theme-21 mt-2 ml-1" />
+                <div class="form-label" v-if="mode === 'show'">{{ user.name }}</div>
+            </div>
+            <div class="sm:ml-20 sm:pl-5 mt-5">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </vee-form>
+    </div>
 </template>
 
 <script>
 import { defineComponent, inject, onMounted, ref } from 'vue'
-import mainMixins from '../../mixins/index'
+import mainMixins from '../../mixins';
 
 import DataList from '../../global-components/data-list/Main'
 
@@ -60,6 +79,17 @@ export default defineComponent({
     setup() {
         const { t } = mainMixins();
 
+        const schema = {
+            name: 'required',
+            email: 'required|email',
+            tax_id: 'required',
+            ic_num: 'required',
+        };
+
+        let mode = ref('list');
+        let user = ref({
+            name: ''
+        });
         const userList = ref({ });
 
         onMounted(() => {
@@ -72,11 +102,16 @@ export default defineComponent({
         function getUser() {
             axios.get('/api/get/dashboard/admin/users/read?page=1').then(response => {
                 userList.value = response.data;
+                mode.value = 'list';
             });
         }
 
+        function onSubmit(values) {
+            console.log(values);
+        }
+
         function createNew() {
-            console.log('createNew');
+            mode.value = 'create';
         }
 
         function refreshData() {
@@ -91,13 +126,22 @@ export default defineComponent({
 
         }
 
+        function backToList() {
+            this.mode = 'list';
+        }
+
         return {
             t,
+            schema,
+            onSubmit,
+            mode,
+            user,
             userList,
             createNew,
             refreshData,
             editSelected,
             viewSelected,
+            backToList,
         }
     }
 })

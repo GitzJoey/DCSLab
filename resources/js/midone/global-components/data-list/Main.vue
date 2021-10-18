@@ -159,7 +159,6 @@ export default defineComponent( {
 
         watch(
             data, (oldData, newData) => {
-                console.log(newData.value);
                 loading.value = false;
             }
         )

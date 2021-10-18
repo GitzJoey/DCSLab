@@ -4,7 +4,7 @@
         "dev": "npm run development",
         "development": "mix",
         "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "watch-poll": "mix watch -- --watch-options-poll=60000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
         "production": "mix --production"
@@ -26,8 +26,8 @@
     },
     "dependencies": {
         "@left4code/tw-starter": "^1.1.0",
-        "@vee-validate/i18n": "^4.5.2",
-        "@vee-validate/rules": "^4.5.2",
+        "@vee-validate/i18n": "^4.5.3",
+        "@vee-validate/rules": "^4.5.3",
         "@zhuowenli/vue-feather-icons": "^5.0.2",
         "autoprefixer": "^10.3.7",
         "dayjs": "^1.10.7",
@@ -35,12 +35,12 @@
         "tippy.js": "^6.3.2",
         "toastify-js": "^1.11.2",
         "tom-select": "^2.0.0-rc.4",
-        "vee-validate": "^4.3.0",
+        "vee-validate": "^4.5.3",
         "velocity-animate": "^1.5.2",
         "vue": "^3.0.11",
+        "vue-i18n": "^9.1.5",
         "vue-router": "^4.0.6",
         "vuex": "^4.0.0",
-        "vue-i18n": "^9.1.5",
         "zoom-vanilla.js": "^2.0.6"
     }
 }

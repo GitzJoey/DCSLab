@@ -10,6 +10,14 @@ return [
         'API_TOKEN_NAME' => 'api',
 
         'PAGINATION_LIMIT' => 10,
+
+        'DATA_CACHE' => [
+            '24_HOURS' => 1440,
+            '12_HOURS' => 720,
+            '6_HOURS' => 360,
+            '3_HOURS' => 180,
+            '1_HOUR' => 60
+        ]
     ],
 
     'ERROR_RETURN_VALUE' => 0,
