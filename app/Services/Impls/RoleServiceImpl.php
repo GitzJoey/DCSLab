@@ -48,7 +48,7 @@ class RoleServiceImpl implements RoleService
     public function read($parameters = null)
     {
         if ($parameters == null) {
-            return Role::with('permissions')->paginate(Config::get('const.DEFAULT.PAGINATION_LIMIT'));
+            return Role::with('permissions')->get();
         }
 
         if (array_key_exists('readById', $parameters))  {
@@ -66,14 +66,8 @@ class RoleServiceImpl implements RoleService
         if (array_key_exists('readByDisplayNameCaseSensitive', $parameters)) {
             return Role::where('display_name', $parameters['readByDisplayNameCaseSensitive'])->first();
         }
-    }
 
-    public function readRoles($withDefaultRole)
-    {
-        if ($withDefaultRole)
-        {
-            return Role::all()->pluck('display_name', 'hId');
-        } else {
+        if (array_key_exists('withDefaultRole', $parameters)) {
             return Role::whereNotIn('name', ['dev','administrator'])->get()->pluck('display_name', 'hId');
         }
     }

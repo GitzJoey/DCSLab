@@ -38,7 +38,7 @@
                         <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
                     </div>
                 </div>
-                <button class="btn shadow-md mr-2 w-20" @click="$emit('refreshData')"><RefreshCwIcon class="w-4 h-4" /></button>
+                <button class="btn btn-primary-soft shadow-md mr-2 w-20" @click="$emit('refreshData')"><RefreshCwIcon class="w-4 h-4" /></button>
             </div>
             <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
                 <slot name="table" :dataList="data"></slot>
@@ -90,9 +90,9 @@
                         </div>
                         <div class="px-5 pb-8 text-center">
                             <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
-                                Cancel
+                                {{ t('components.buttons.cancel') }}
                             </button>
-                            <button type="button" class="btn btn-danger w-24">Delete</button>
+                            <button type="button" class="btn btn-danger w-24">{{ t('components.buttons.delete') }}</button>
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, computed, ref , toRef, watch } from 'vue'
+import {defineComponent, onMounted, computed, ref, toRef, watch, onUnmounted} from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent( {
@@ -141,8 +141,19 @@ export default defineComponent( {
         const filterColumns = toRef(props, 'filterColumns');
 
         const data = toRef(props, 'data');
-        let loading = ref(true);
-        let pages = ref([]);
+
+        let loading = computed(() => {
+            if (data.value.data !== undefined && data.value.data.length !== 0) return false;
+            else return true;
+        });
+
+        let pages = computed(() => {
+            if (data.value.current_page !== undefined && data.value.last_page !== undefined) {
+                return pagination(data.value.current_page, data.value.last_page);
+            } else {
+                return [];
+            }
+        });
 
         const { t } = useI18n();
 
@@ -166,15 +177,6 @@ export default defineComponent( {
 
             return range
         }
-
-        watch(
-            data, (oldData, newData) => {
-                loading.value = false;
-
-                pages.value = [];
-                pages.value = pagination(data.value.current_page, data.value.last_page);
-            }
-        )
 
         return {
             t,

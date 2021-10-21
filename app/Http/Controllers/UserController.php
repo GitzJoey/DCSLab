@@ -45,12 +45,25 @@ class UserController extends BaseController
             Config::get('const.DEFAULT.ROLE.DEV')
         ]);
 
-        $roles = $this->roleService->readRoles($withDefaultRole);
+        $parameters = null;
+        if ($withDefaultRole) {
+            $parameters = array (
+                'withDefaultRole' => $withDefaultRole
+            );
+        }
+
+        $roles = $this->roleService->read($parameters);
         return $roles;
     }
 
     public function store(Request $request)
     {
+        //throw New \Exception('Test Exception From Controller');
+
+        //return response()->json([
+        //    'message' => 'Test error from JSON HTTP Status 500'
+        //], 500);
+
         $request->validate([
             'name' => 'required|alpha',
             'email' => 'required|email|max:255|unique:users',

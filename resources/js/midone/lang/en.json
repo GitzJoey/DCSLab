@@ -1,5 +1,12 @@
 {
     "components": {
+        "buttons": {
+            "save": "Save",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "back": "Back",
+            "reset": "Reset"
+        },
         "dropdown": {
             "placeholder": "Please Select",
             "values": {

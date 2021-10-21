@@ -1,5 +1,12 @@
 {
     "components": {
+        "buttons": {
+            "save": "Simpan",
+            "cancel": "Batal",
+            "delete": "Hapus",
+            "back": "Kembali",
+            "reset": "Reset"
+        },
         "dropdown": {
             "placeholder": "Silahkan Pilih",
             "values": {

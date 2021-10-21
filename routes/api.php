@@ -25,6 +25,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         Route::group(['prefix' => 'admin', 'as' => 'admin'], function() {
             Route::group(['prefix' => 'users', 'as' => 'users'], function() {
                 Route::get('read', [UserController::class, 'read'])->name('read');
+
+                Route::get('roles/read', [UserController::class, 'getAllRoles'])->name('roles.read');
             });
         });
 

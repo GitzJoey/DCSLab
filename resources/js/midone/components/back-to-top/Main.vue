@@ -1,15 +1,13 @@
 <template>
-    <div class="intro-y box bg-white" v-if="visible">
-        <div class="flex justify-center">
-            <button class="btn btn-secondary rounded mr-1 mb-2" @click.prevent="goTop">
-                <chevron-up-icon/>
-            </button>
-        </div>
+    <div class="flex justify-center" v-if="visible">
+        <button class="btn-elevated-rounded" @click.prevent="goTop">
+            <chevron-up-icon/>
+        </button>
     </div>
 </template>
 
 <script>
-import {defineComponent, toRef} from "vue";
+import { defineComponent, toRef } from "vue";
 
 export default defineComponent({
     name: "BackToTop",

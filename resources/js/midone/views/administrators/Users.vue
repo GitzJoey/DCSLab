@@ -70,7 +70,7 @@
                 <label for="inputImg" class="w-40 px-3 py-2"></label>
                 <div class="flex-1">
                     <div class="my-1">
-                        <img class="" :src="retrieveImage">
+                        <img alt="" class="" :src="retrieveImage">
                     </div>
                     <div class="">
                         <input type="file" class="h-full w-full" v-on:change="handleUpload"/>
@@ -142,8 +142,8 @@
             <div class="flex items-start p-3">
                 <label for="inputRoles" class="w-40 px-3 py-2">{{ t('views.users.fields.roles') }}</label>
                 <div class="flex-1">
-                    <select multiple :class="{'form-select':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
-                        <option v-for="(r, rIdx) in rolesDDL" :value="rIdx">{{ r }}</option>
+                    <select multiple :class="{'form-control':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
+                        <option v-for="(r, rIdx) in rolesDDL" :value="r.hId">{{ r.display_name }}</option>
                     </select>
                     <ErrorMessage name="roles" class="text-theme-21 px-1" />
                     <div class="form-control-plaintext" v-if="mode === 'show'">
@@ -174,14 +174,18 @@
                     <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.remarks }}</div>
                 </div>
             </div>
-
             <div class="flex items-start p-3">
                 <div class="w-40 px-3 py-2"></div>
                 <div class="flex-1">
-                    <button class="btn btn-primary mt-5">Save</button>
+                    <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
+                    <button type="button" class="btn btn-secondary" @click="handleReset">{{ t('components.buttons.reset') }}</button>
                 </div>
             </div>
         </vee-form>
+        <hr/>
+        <div>
+            <button type="button" class="btn btn-secondary w-15 m-3" @click="backToList">{{ t('components.buttons.back') }}</button>
+        </div>
     </div>
 </template>
 
@@ -209,6 +213,8 @@ export default defineComponent({
         let mode = ref('list');
         let user = ref({
             name: '',
+            selectedRoles: '',
+            roles: [],
             profile: {
                 status: '',
                 country: '',
@@ -216,6 +222,7 @@ export default defineComponent({
             }
         });
         const userList = ref({ });
+        let rolesDDL = ref([]);
         let statusDDL = ref([]);
         let countriesDDL = ref([]);
 
@@ -241,6 +248,10 @@ export default defineComponent({
 
             axios.get('/api/get/dashboard/common/ddl/list/statuses').then(response => {
                 statusDDL.value = response.data;
+            });
+
+            axios.get('/api/get/dashboard/admin/users/roles/read').then(response => {
+                rolesDDL.value = response.data;
             });
         }
 
@@ -273,7 +284,7 @@ export default defineComponent({
         }
 
         function backToList() {
-            mode = 'list';
+            mode.value = 'list';
         }
 
         function handleUpload(e) {
@@ -318,6 +329,7 @@ export default defineComponent({
             handleUpload,
             countriesDDL,
             statusDDL,
+            rolesDDL
         }
     }
 })

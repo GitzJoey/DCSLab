@@ -12,6 +12,7 @@ class Permission extends LaratrustPermission
 
     protected $hidden = [
         'id',
+        'name',
         'description',
         'created_at',
         'updated_at',

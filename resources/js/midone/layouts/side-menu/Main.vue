@@ -71,7 +71,7 @@
                 <br/>
                 <br/>
                 <br/>
-                <back-to-top v-on:visible="!dashboardLayout"/>
+                <back-to-top :visible="!dashboardLayout"/>
             </div>
         </div>
     </div>
