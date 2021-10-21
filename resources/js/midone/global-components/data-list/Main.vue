@@ -17,13 +17,13 @@
                     </button>
                     <div class="dropdown-menu w-40">
                         <div class="dropdown-menu__content box dark:bg-dark-1 p-2">
-                            <a v-if="canPrint" href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
+                            <a v-if="canPrint" href="" @click.prevent="$emit('print')" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
                                 <PrinterIcon class="w-4 h-4 mr-2" /> {{ t('components.data-list.print') }}
                             </a>
-                            <a v-if="canExport" href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
+                            <a v-if="canExport" href="" @click.prevent="$emit('export', 'xls')" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
                                 <FileTextIcon class="w-4 h-4 mr-2" /> {{ t('components.data-list.exportToExcel') }}
                             </a>
-                            <a v-if="canExport" href="" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
+                            <a v-if="canExport" href="" @click.prevent="$emit('export', 'pdf')" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
                                 <FileTextIcon class="w-4 h-4 mr-2" /> {{ t('components.data-list.exportToPDF') }}
                             </a>
                         </div>
@@ -38,7 +38,7 @@
                         <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
                     </div>
                 </div>
-                <button class="btn btn-primary-soft shadow-md mr-2 w-20" @click="$emit('refreshData')"><RefreshCwIcon class="w-4 h-4" /></button>
+                <button class="btn btn-primary-soft shadow-md mr-2 w-20" @click="$emit('dataListChange', { page: data.current_page, pageSize: pageSize })"><RefreshCwIcon class="w-4 h-4" /></button>
             </div>
             <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
                 <slot name="table" :dataList="data"></slot>
@@ -46,34 +46,34 @@
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
                 <ul class="pagination">
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'first')">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: first, pageSize: pageSize })">
                             <ChevronsLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'previous')">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: previous, pageSize: pageSize })">
                             <ChevronLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li v-for="(n, nIdx) in pages">
-                        <a :class="{'pagination__link':true, 'pagination__link--active': data.current_page === n}" href="" @click.prevent="$emit('pageLinks', n)">{{ n }}</a>
+                        <a :class="{'pagination__link':true, 'pagination__link--active': data.current_page === n}" href="" @click.prevent="$emit('dataListChange', { page: n, pageSize: pageSize })">{{ n }}</a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'next')">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: next, pageSize: pageSize })">
                             <ChevronRightIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'last')">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: last, pageSize: pageSize })">
                             <ChevronsRightIcon class="w-4 h-4" />
                         </a>
                     </li>
                 </ul>
-                <select class="w-20 form-select box mt-3 sm:mt-0" v-on:change="$emit('dataLimit', $event.target.value)">
-                    <option>10</option>
-                    <option>50</option>
-                    <option>100</option>
-                    <option>1000</option>
+                <select class="w-20 form-select box mt-3 sm:mt-0" v-model="pageSize" v-on:change="$emit('dataListChange', { page: data.current_page, pageSize: pageSize })">
+                    <option value="10">10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="1000">1000</option>
                 </select>
             </div>
         </div>
@@ -117,16 +117,13 @@ export default defineComponent( {
         enableEdit: { type: Boolean, default: true },
         enableDelete: { type: Boolean, default: true },
         enableDeleteConfirmation: { type: Boolean, default: true },
-        enableView: { type: Boolean, default: true },
-        filterColumns: { type: String, default: '' }
+        enableView: { type: Boolean, default: true }
     },
     emits: [
         'createNew',
-        'refreshData',
+        'dataListChange',
         'print',
-        'export',
-        'pageLinks',
-        'pageLimit'
+        'export'
     ],
     setup(props) {
         const title = toRef(props, 'title');
@@ -138,8 +135,8 @@ export default defineComponent( {
         const enableDelete = toRef(props, 'enableDelete');
         const enableDeleteConfirmation = toRef(props, 'enableDeleteConfirmation');
         const enableView = toRef(props, 'enableView');
-        const filterColumns = toRef(props, 'filterColumns');
 
+        const pageSize = ref(10);
         const data = toRef(props, 'data');
 
         let loading = computed(() => {
@@ -154,6 +151,19 @@ export default defineComponent( {
                 return [];
             }
         });
+
+        let first = computed(()=> { return 1; });
+        let previous = computed(()=> {
+            if (data.value.current_page === undefined) return 1;
+            if (data.value.current_page === 1) return 1;
+            return data.value.current_page - 1;
+        });
+        let next = computed(()=> {
+            if (data.value.current_page === undefined) return 1;
+            if (data.value.current_page === data.value.last_page) return data.value.last_page;
+            return data.value.current_page + 1;
+        });
+        let last = computed(()=> { return data.value.last_page; });
 
         const { t } = useI18n();
 
@@ -191,6 +201,11 @@ export default defineComponent( {
             data,
             loading,
             pages,
+            pageSize,
+            first,
+            previous,
+            next,
+            last,
         }
     }
 })

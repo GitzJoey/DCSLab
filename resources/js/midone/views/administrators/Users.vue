@@ -1,6 +1,6 @@
 <template>
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:refreshData="refreshData" v-on:pageLinks="pageLinks" v-on:dataLimit="dataLimit">
+        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange">
             <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
@@ -263,8 +263,9 @@ export default defineComponent({
             mode.value = 'create';
         }
 
-        function refreshData() {
-            console.log('refreshData');
+        function onDataListChange({page, pageSize}) {
+            console.log(page);
+            console.log(pageSize);
         }
 
         function editSelected(index) {
@@ -273,14 +274,6 @@ export default defineComponent({
 
         function viewSelected(index) {
 
-        }
-
-        function pageLinks(value) {
-            console.log(value);
-        }
-
-        function dataLimit(value) {
-            console.log(value);
         }
 
         function backToList() {
@@ -319,9 +312,7 @@ export default defineComponent({
             user,
             userList,
             createNew,
-            refreshData,
-            pageLinks,
-            dataLimit,
+            onDataListChange,
             editSelected,
             viewSelected,
             backToList,
