@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
@@ -30,8 +31,13 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         Route::group(['prefix' => 'core', 'as' => 'core'], function() {
             Route::get('user/profile', [DashboardController::class, 'userProfile'])->name('user_profile');
             Route::get('user/menu', [DashboardController::class, 'userMenu'])->name('user_menu');
-
         });
+
+        Route::group(['prefix' => 'common', 'as' => 'common'], function() {
+            Route::get('ddl/list/countries', [CommonController::class, 'getCountries'])->name('ddl.list.countries');
+            Route::get('ddl/list/statuses', [CommonController::class, 'getStatus'])->name('ddl.list.statuses');
+        });
+
     });
 });
 

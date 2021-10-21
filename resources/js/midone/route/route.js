@@ -28,7 +28,7 @@ const routes = [
         component: SideMenu,
         children: [
             {
-                path: root + '/admin' + '/users/users',
+                path: root + '/admin' + '/users',
                 name: 'side-menu-administrators-users',
                 component: AdminUsers
             }

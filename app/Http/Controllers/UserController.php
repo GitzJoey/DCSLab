@@ -31,7 +31,11 @@ class UserController extends BaseController
 
     public function read(Request $request)
     {
-        return $this->userService->read();
+        $parameters = array (
+            'readAll' => Auth::id()
+        );
+
+        return $this->userService->read($parameters);
     }
 
     public function getAllRoles()

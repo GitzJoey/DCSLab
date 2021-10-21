@@ -1,5 +1,14 @@
 {
     "components": {
+        "dropdown": {
+            "placeholder": "Silahkan Pilih",
+            "values": {
+                "statusDDL": {
+                    "active": "Aktif",
+                    "inactive": "Tidak Aktif"
+                }
+            }
+        },
         "top-bar": {
             "profile_ddl": {
                 "profile": "Profile",

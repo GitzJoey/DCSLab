@@ -1,5 +1,14 @@
 {
     "components": {
+        "dropdown": {
+            "placeholder": "Please Select",
+            "values": {
+                "statusDDL": {
+                    "active": "Active",
+                    "inactive": "Inactive"
+                }
+            }
+        },
         "top-bar": {
             "profile_ddl": {
                 "profile": "Profile",

@@ -46,46 +46,34 @@
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
                 <ul class="pagination">
                     <li>
-                        <a class="pagination__link" href="">
+                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'first')">
                             <ChevronsLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="">
+                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'previous')">
                             <ChevronLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
-                    <li>
-                        <a class="pagination__link" href="">...</a>
+                    <li v-for="(n, nIdx) in pages">
+                        <a :class="{'pagination__link':true, 'pagination__link--active': data.current_page === n}" href="" @click.prevent="$emit('pageLinks', n)">{{ n }}</a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="">1</a>
-                    </li>
-                    <li>
-                        <a class="pagination__link pagination__link--active" href="">2</a>
-                    </li>
-                    <li>
-                        <a class="pagination__link" href="">3</a>
-                    </li>
-                    <li>
-                        <a class="pagination__link" href="">...</a>
-                    </li>
-                    <li>
-                        <a class="pagination__link" href="">
+                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'next')">
                             <ChevronRightIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="">
+                        <a class="pagination__link" href="" @click.prevent="$emit('pageLinks', 'last')">
                             <ChevronsRightIcon class="w-4 h-4" />
                         </a>
                     </li>
                 </ul>
-                <select class="w-20 form-select box mt-3 sm:mt-0">
+                <select class="w-20 form-select box mt-3 sm:mt-0" v-on:change="$emit('dataLimit', $event.target.value)">
                     <option>10</option>
-                    <option>25</option>
-                    <option>35</option>
                     <option>50</option>
+                    <option>100</option>
+                    <option>1000</option>
                 </select>
             </div>
         </div>
@@ -137,8 +125,8 @@ export default defineComponent( {
         'refreshData',
         'print',
         'export',
-        'page_links',
-        'paginate_number'
+        'pageLinks',
+        'pageLimit'
     ],
     setup(props) {
         const title = toRef(props, 'title');
@@ -154,12 +142,37 @@ export default defineComponent( {
 
         const data = toRef(props, 'data');
         let loading = ref(true);
+        let pages = ref([]);
 
         const { t } = useI18n();
+
+        function pagination(currentPage, pageCount) {
+            const delta = 2
+
+            let range = []
+            for (let i = Math.max(2, currentPage - delta); i <= Math.min(pageCount - 1, currentPage + delta); i++) {
+                range.push(i)
+            }
+
+            if (currentPage - delta > 2) {
+                range.unshift("...")
+            }
+            if (currentPage + delta < pageCount - 1) {
+                range.push("...")
+            }
+
+            range.unshift(1)
+            range.push(pageCount)
+
+            return range
+        }
 
         watch(
             data, (oldData, newData) => {
                 loading.value = false;
+
+                pages.value = [];
+                pages.value = pagination(data.value.current_page, data.value.last_page);
             }
         )
 
@@ -175,6 +188,7 @@ export default defineComponent( {
             enableView,
             data,
             loading,
+            pages,
         }
     }
 })

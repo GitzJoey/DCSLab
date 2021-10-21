@@ -97,14 +97,26 @@ class UserServiceImpl implements UserService
         }
     }
 
+    public function flushCache($id)
+    {
+        Cache::forget('readAll'.$id);
+        Cache::forget('readById'.$id);
+    }
+
     public function read($parameters = null)
     {
-        if ($parameters == null) {
-            return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
+        if ($parameters == null) return null;
+
+        if (array_key_exists('readAll', $parameters)) {
+            return Cache::remember('readAll'.$parameters['readAll'], Config::get('const.DEFAULT.DATA_CACHE.1_HOUR'), function() use ($parameters) {
+                return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
+            });
         }
 
         if (array_key_exists('readById', $parameters))  {
-            return User::with('roles', 'profile')->find($parameters['readById']);
+            return Cache::remember('readById'.$parameters['readById'], Config::get('const.DEFAULT.DATA_CACHE.1_HOUR'), function() use ($parameters) {
+                return User::with('roles', 'profile')->find($parameters['readById']);
+            });
         }
 
         if (array_key_exists('readByEmail', $parameters)) {

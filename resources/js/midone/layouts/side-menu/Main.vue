@@ -71,6 +71,7 @@
                 <br/>
                 <br/>
                 <br/>
+                <back-to-top v-on:visible="!dashboardLayout"/>
             </div>
         </div>
     </div>
@@ -88,6 +89,7 @@ import TopBar from '../../components/top-bar/Main';
 import MobileMenu from '../../components/mobile-menu/Main';
 import SideMenuTooltip from '../../components/side-menu-tooltip/Main.vue';
 import DarkModeSwitcher from '../../components/dark-mode-switcher/Main.vue';
+import BackToTop from '../../components/back-to-top/Main.vue';
 
 export default {
     name: "SideMenu",
@@ -95,14 +97,15 @@ export default {
         TopBar,
         MobileMenu,
         SideMenuTooltip,
-        DarkModeSwitcher
+        DarkModeSwitcher,
+        BackToTop
     },
     setup() {
         const route = useRoute();
         const router = useRouter();
         const store = useStore();
 
-        const dashboardLayout = ref(false);
+        const dashboardLayout = ref(true);
         const formattedMenu = ref([]);
 
         const menuContext = computed(() => store.state.sideMenu.menu );
@@ -120,12 +123,13 @@ export default {
 
             store.dispatch('main/fetchUserContext');
             store.dispatch('sideMenu/fetchMenuContext');
+
+            dashboardLayout.value = true;
         });
 
         watch(
             computed(() => route.path),() => {
                 formattedMenu.value = nestedMenu($h.toRaw(menuContext.value), route);
-                dashboardLayout.value = false
         });
 
         watch(

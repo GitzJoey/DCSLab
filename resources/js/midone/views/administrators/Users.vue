@@ -1,6 +1,6 @@
 <template>
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:refreshData="refreshData">
+        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:refreshData="refreshData" v-on:pageLinks="pageLinks" v-on:dataLimit="dataLimit">
             <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
@@ -45,28 +45,148 @@
         </DataList>
     </div>
 
-    <div class="intro-y box mt-5" v-if="mode === 'create'">
+    <div class="intro-y box" v-if="mode === 'create'">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.users.actions.create') }}</h2>
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.users.actions.edit') }}</h2>
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
         </div>
         <vee-form id="userForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-            <div class="form-inline">
-                <label for="inputName" class="form-label w-1/3">{{ t('views.users.fields.name') }}</label>
-                <vee-field id="inputName" name="name" as="input" :class="{'form-control w-2/3':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
-                <ErrorMessage name="name" class="text-theme-21 mt-2 ml-1" />
-                <div class="form-label" v-if="mode === 'show'">{{ user.name }}</div>
+            <div class="flex items-start p-3">
+                <label for="inputName" class="w-40 px-3 py-2">{{ t('views.users.fields.name') }}</label>
+                <div class="flex-1">
+                    <vee-field id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
+                    <ErrorMessage name="name" class="text-theme-21 px-1" />
+                </div>
             </div>
-            <div class="sm:ml-20 sm:pl-5 mt-5">
-                <button type="submit" class="btn btn-primary">Login</button>
+            <div class="flex items-start p-3">
+                <label for="inputEmail" class="w-40 px-3 py-2">{{ t('views.users.fields.email') }}</label>
+                <div class="flex-1">
+                    <vee-field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                    <ErrorMessage name="email" class="text-theme-21 px-1" />
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputImg" class="w-40 px-3 py-2"></label>
+                <div class="flex-1">
+                    <div class="my-1">
+                        <img class="" :src="retrieveImage">
+                    </div>
+                    <div class="">
+                        <input type="file" class="h-full w-full" v-on:change="handleUpload"/>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputFirstName" class="w-40 px-3 py-2">{{ t('views.users.fields.first_name') }}</label>
+                <div class="flex-1">
+                    <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.users.fields.first_name')" v-model="user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.first_name }}</div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputLastName" class="w-40 px-3 py-2">{{ t('views.users.fields.last_name') }}</label>
+                <div class="flex-1">
+                    <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.users.fields.last_name')" v-model="user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.last_name }}</div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputAddress" class="w-40 px-3 py-2">{{ t('views.users.fields.address') }}</label>
+                <div class="flex-1">
+                    <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.users.fields.address')" v-model="user.profile.address" v-show="mode === 'create' || mode === 'edit'"/>
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.address }}</div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputCity" class="w-40 px-3 py-2">{{ t('views.users.fields.city') }}</label>
+                <div class="flex-1">
+                    <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.users.fields.city')" v-model="user.profile.city" v-show="mode === 'create' || mode === 'edit'"/>
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.city }}</div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputPostalCode" class="w-40 px-3 py-2">{{ t('views.users.fields.postal_code') }}</label>
+                <div class="flex-1">
+                    <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.users.fields.postal_code')" v-model="user.profile.postal_code" v-show="mode === 'create' || mode === 'edit'"/>
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.postal_code }}</div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputCountry" class="w-40 px-3 py-2">{{ t('views.users.fields.country') }}</label>
+                <div class="flex-1">
+                    <select id="inputCountry" name="country" class="form-select" v-model="user.profile.country" :placeholder="t('views.users.fields.country')" v-show="mode === 'create' || mode === 'edit'">
+                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                        <option v-for="c in countriesDDL" :key="c.name">{{ c.name }}</option>
+                    </select>
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.country }}</div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputTaxId" class="w-40 px-3 py-2">{{ t('views.users.fields.tax_id') }}</label>
+                <div class="flex-1">
+                    <vee-field id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
+                    <ErrorMessage name="tax_id" class="text-theme-21 px-1" />
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.tax_id }}</div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputICNum" class="w-40 px-3 py-2">{{ t('views.users.fields.ic_num') }}</label>
+                <div class="flex-1">
+                    <vee-field id="inputICNum" name="ic_num" as="input" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
+                    <ErrorMessage name="ic_num" class="text-theme-21 px-1" />
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.ic_num }}</div>
+                </div>
+            </div>
+            <hr/>
+            <div class="flex items-start p-3">
+                <label for="inputRoles" class="w-40 px-3 py-2">{{ t('views.users.fields.roles') }}</label>
+                <div class="flex-1">
+                    <select multiple :class="{'form-select':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
+                        <option v-for="(r, rIdx) in rolesDDL" :value="rIdx">{{ r }}</option>
+                    </select>
+                    <ErrorMessage name="roles" class="text-theme-21 px-1" />
+                    <div class="form-control-plaintext" v-if="mode === 'show'">
+                        <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputStatus" class="w-40 px-3 py-2">{{ t('views.users.fields.status') }}</label>
+                <div class="flex-1 d-flex align-items-center">
+                    <div>
+                        <select class="form-select" id="inputStatus" name="status" v-model="user.profile.status" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code">{{ c.name }}</option>
+                        </select>
+                        <div class="form-control-plaintext" v-if="mode === 'show'">
+                            <span v-if="user.profile.status === 1">{{ t('statusDDL.active') }}</span>
+                            <span v-if="user.profile.status === 0">{{ t('statusDDL.inactive') }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-start p-3">
+                <label for="inputRemarks" class="w-40 px-3 py-2">{{ t('views.users.fields.remarks') }}</label>
+                <div class="flex-1">
+                    <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.users.fields.remarks')" v-model="user.profile.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                    <ErrorMessage name="remarks" class="invalid-feedback" />
+                    <div class="form-control-plaintext" v-if="mode === 'show'">{{ user.profile.remarks }}</div>
+                </div>
+            </div>
+
+            <div class="flex items-start p-3">
+                <div class="w-40 px-3 py-2"></div>
+                <div class="flex-1">
+                    <button class="btn btn-primary mt-5">Save</button>
+                </div>
             </div>
         </vee-form>
     </div>
 </template>
 
 <script>
-import { defineComponent, inject, onMounted, ref } from 'vue'
+import { defineComponent, inject, onMounted, ref, computed } from 'vue'
 import mainMixins from '../../mixins';
 
 import DataList from '../../global-components/data-list/Main'
@@ -88,21 +208,39 @@ export default defineComponent({
 
         let mode = ref('list');
         let user = ref({
-            name: ''
+            name: '',
+            profile: {
+                status: '',
+                country: '',
+                img_path: ''
+            }
         });
         const userList = ref({ });
+        let statusDDL = ref([]);
+        let countriesDDL = ref([]);
 
         onMounted(() => {
-            const setDashboardLayout = inject('setDashboardLayout')
+            const setDashboardLayout = inject('setDashboardLayout');
             setDashboardLayout(false);
 
             getUser();
+            getDDL();
         });
 
         function getUser() {
             axios.get('/api/get/dashboard/admin/users/read?page=1').then(response => {
                 userList.value = response.data;
                 mode.value = 'list';
+            });
+        }
+
+        function getDDL() {
+            axios.get('/api/get/dashboard/common/ddl/list/countries').then(response => {
+                countriesDDL.value = response.data;
+            });
+
+            axios.get('/api/get/dashboard/common/ddl/list/statuses').then(response => {
+                statusDDL.value = response.data;
             });
         }
 
@@ -126,9 +264,41 @@ export default defineComponent({
 
         }
 
-        function backToList() {
-            this.mode = 'list';
+        function pageLinks(value) {
+            console.log(value);
         }
+
+        function dataLimit(value) {
+            console.log(value);
+        }
+
+        function backToList() {
+            mode = 'list';
+        }
+
+        function handleUpload(e) {
+            const files = e.target.files;
+
+            let filename = files[0].name;
+
+            const fileReader = new FileReader()
+            fileReader.addEventListener('load', () => {
+                user.value.profile.img_path = fileReader.result
+            })
+            fileReader.readAsDataURL(files[0])
+        }
+
+        const retrieveImage = computed(() => {
+            if (user.value.profile.img_path && user.value.profile.img_path !== '') {
+                if (user.value.profile.img_path.includes('data:image')) {
+                    return user.value.profile.img_path;
+                } else {
+                    return '/storage/' + user.value.profile.img_path;
+                }
+            } else {
+                return '/images/def-user.png';
+            }
+        });
 
         return {
             t,
@@ -139,9 +309,15 @@ export default defineComponent({
             userList,
             createNew,
             refreshData,
+            pageLinks,
+            dataLimit,
             editSelected,
             viewSelected,
             backToList,
+            retrieveImage,
+            handleUpload,
+            countriesDDL,
+            statusDDL,
         }
     }
 })
