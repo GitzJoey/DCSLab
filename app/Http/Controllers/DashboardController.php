@@ -86,7 +86,7 @@ class DashboardController extends BaseController
                             ),
                             array (
                                 'icon' => '',
-                                'pageName' => 'side-menu-devtools-examples-ex1',
+                                'pageName' => 'side-menu-devtools-examples-ex2',
                                 'title' => 'Example 2'
                             )
                         ]

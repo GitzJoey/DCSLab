@@ -77,27 +77,6 @@
                 </select>
             </div>
         </div>
-        <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <div class="p-5 text-center">
-                            <XCircleIcon class="w-16 h-16 text-theme-21 mx-auto mt-3" />
-                            <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
-                            <div class="text-gray-600 mt-2">
-                                {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
-                            </div>
-                        </div>
-                        <div class="px-5 pb-8 text-center">
-                            <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
-                                {{ t('components.buttons.cancel') }}
-                            </button>
-                            <button type="button" class="btn btn-danger w-24">{{ t('components.buttons.delete') }}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 

@@ -81,6 +81,7 @@
 import {defineComponent, computed, provide, onMounted, ref, watch, onBeforeMount} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '../../store/index';
+import { switchLang, getLang } from '../../lang';
 import { helper as $h } from '../../utils/helper';
 import { linkTo, nestedMenu, enter, leave } from './index';
 import mainMixins from '../../mixins/index';
@@ -125,7 +126,26 @@ export default {
             store.dispatch('sideMenu/fetchMenuContext');
 
             dashboardLayout.value = true;
+
+            localeSetup();
+            goToLastRoute();
         });
+
+        function localeSetup() {
+            if (localStorage.getItem('DCSLAB_LANG') === null) {
+                localStorage.setItem('DCSLAB_LANG', getLang());
+            }
+
+            if (localStorage.getItem('DCSLAB_LANG') !== getLang()) {
+                switchLang(localStorage.getItem('DCSLAB_LANG'));
+            }
+        }
+
+        function goToLastRoute() {
+            if (localStorage.getItem('DCSLAB_LAST_ROUTE') !== null) {
+                router.push({ name: localStorage.getItem('DCSLAB_LAST_ROUTE') });
+            }
+        }
 
         watch(
             computed(() => route.path),() => {

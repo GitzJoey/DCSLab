@@ -108,13 +108,19 @@ class UserServiceImpl implements UserService
         if ($parameters == null) return null;
 
         if (array_key_exists('readAll', $parameters)) {
-            return Cache::remember('readAll'.$parameters['readAll'], Config::get('const.DEFAULT.DATA_CACHE.1_HOUR'), function() use ($parameters) {
+            if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
+                return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
+
+            return Cache::remember('readAll'.$parameters['readAll'], Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($parameters) {
                 return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
             });
         }
 
         if (array_key_exists('readById', $parameters))  {
-            return Cache::remember('readById'.$parameters['readById'], Config::get('const.DEFAULT.DATA_CACHE.1_HOUR'), function() use ($parameters) {
+            if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
+                return User::with('roles', 'profile')->find($parameters['readById']);
+
+            return Cache::remember('readById'.$parameters['readById'], Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($parameters) {
                 return User::with('roles', 'profile')->find($parameters['readById']);
             });
         }

@@ -13,4 +13,5 @@ Route::get('/home', function() {
 
 Route::group(['prefix' => 'dashboard'], function () {
     Route::get('', [DashboardController::class, 'index'])->name('db');
+    Route::any('/{all}', function($page) { return redirect()->route('db'); })->where(['all' => '.*']);
 });

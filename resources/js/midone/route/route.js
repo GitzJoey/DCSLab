@@ -19,7 +19,8 @@ const routes = [
             {
                 path: root,
                 name: 'side-menu-dashboard-maindashboard',
-                component: MainDashboard
+                component: MainDashboard,
+                meta: { remember: false }
             },
         ],
     },
@@ -30,7 +31,8 @@ const routes = [
             {
                 path: root + '/admin' + '/users',
                 name: 'side-menu-administrators-users',
-                component: AdminUsers
+                component: AdminUsers,
+                meta: { remember: true }
             }
         ],
     },
@@ -41,7 +43,8 @@ const routes = [
             {
                 path: root + '/dev' + '/tools/db_backup',
                 name: 'side-menu-devtools-backup',
-                component: DBBackup
+                component: DBBackup,
+                meta: { remember: true }
             }
         ],
     },
@@ -54,11 +57,13 @@ const routes = [
                 path: root + '/dev' + '/examples' + '/ex1',
                 name: 'side-menu-devtools-examples-ex1',
                 component: Ex1,
+                meta: { remember: true }
             },
             {
                 path: root + '/dev' + '/examples' + '/ex2',
                 name: 'side-menu-devtools-examples-ex2',
                 component: Ex2,
+                meta: { remember: true }
             }
         ]
     },
@@ -74,6 +79,9 @@ router.afterEach((to, from) => {
         to: to.name,
         params: to.params
     });
+
+    if (to.matched.some(r => r.meta.remember))
+        localStorage.setItem('DCSLAB_LAST_ROUTE', to.name);
 });
 
 export default router;

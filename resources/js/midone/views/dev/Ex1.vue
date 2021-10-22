@@ -2,8 +2,11 @@
 
 </template>
 
-<script>
-export default {
-    name: "Ex1"
-}
+<script setup>
+import {inject, onMounted} from "vue";
+
+onMounted(() => {
+    const setDashboardLayout = inject('setDashboardLayout');
+    setDashboardLayout(false);
+});
 </script>
