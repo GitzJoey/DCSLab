@@ -18,6 +18,7 @@ class CreateProductUnitTable extends Migration
             $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('restrict');
+            $table->string('code')->nullable();
             $table->boolean('is_base')->nullable();
             $table->decimal('conversion_value', 19, 2)->nullable();
             $table->string('remarks')->nullable();

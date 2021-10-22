@@ -40,8 +40,8 @@ class ProductGroup extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(Product::class);
     }
 }

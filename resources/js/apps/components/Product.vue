@@ -29,7 +29,6 @@
                                 <th>{{ $t("table.cols.group_id") }}</th>
                                 <th>{{ $t("table.cols.brand_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.unit_id") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
                                 <th>{{ $t("table.cols.product_type") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
@@ -42,7 +41,6 @@
                                 <td>{{ c.group.name }}</td>
                                 <td>{{ c.brand.name }} </td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.unit.name }}</td>
                                 <td>
                                     <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
                                     <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
@@ -141,31 +139,42 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.name }}</div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-6">
-                            <div class="block">
-                                <div class="block-header block-header-default">
-                                    <!-- <h3 class="block-title">Normal Form</h3> -->
-                                    <div class="block-options">
-                                        <button type="button" class="btn-block-option">
-                                            <i class="si si-wrench"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                  <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
-                                  <div class="col-md-10">
-                                      <select class="form-control" id="unit_id" name="unit_id" v-model="product.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                          <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
-                                      </select>     
-                                      <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                          {{ product.unit.name }}
-                                      </div>        
-                                  </div>
-                              </div>
+                        {{product.product_unit.unit}}
+                        <table class="table table-vcenter">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Is Base</th>
+                                    <th>Conversion Value</th>
+                                    <!-- <th>Unit</th> -->
+                                    <th>Remarks</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(c, cIdx) in product.product_unit">
+                                    <td>{{ c.code }}</td>
+                                    <td>{{ c.is_base }}</td>
+                                    <td>{{ c.conversion_value }} </td>
+                                    <!-- <td>{{ c.unit.name }} </td> -->
+                                    <td>{{ c.remark }}</td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                                <i class="fa fa-info"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                            </div>
-                        </div>
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -176,9 +185,9 @@
                                     <option value="3">{{ $t('tax_statusDDL.includetax') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
-                                    <span v-if="tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
-                                    <span v-if="tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
+                                    <span v-if="product.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="product.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="product.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -313,7 +322,10 @@ export default {
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
-                unit: {hId: ''},
+                product_unit: {
+                    hId: '',
+                    unit: {hId: ''}
+                    },
                 tax_status: '',
                 remarks: '',
                 point: '',
@@ -324,7 +336,6 @@ export default {
             },
             groupDDL: [],
             brandDDL: [],
-            unitDDL: [],
         }
     },
     created() {
@@ -335,6 +346,7 @@ export default {
         this.getAllProduct(1);
         this.getAllProductGroup();
         this.getAllProductBrand();
+        this.getAllProductUnit();
         this.getAllUnit();
     },
     methods: {
@@ -355,6 +367,12 @@ export default {
         getAllProductBrand() {
             axios.get(route('api.get.dashboard.productbrand.read.all_active')).then(response => {
                 this.brandDDL = response.data;
+            });
+        },
+
+        getAllProductUnit() {
+            axios.get(route('api.get.dashboard.productunit.read.all_active')).then(response => {
+                this.product_unitDDL = response.data;
             });
         },
 
@@ -379,7 +397,10 @@ export default {
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
-                unit: {hId: ''},
+                product_unit: {
+                    hId: '',
+                    unit: {hId: ''}
+                    },
                 tax_status: '',
                 remarks: '',
                 point: '0',

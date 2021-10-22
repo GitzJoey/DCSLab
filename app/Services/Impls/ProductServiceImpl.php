@@ -17,7 +17,6 @@ class ProductServiceImpl implements ProductService
         $group_id,
         $brand_id,
         $name,
-        $unit_id,
         $tax_status,
         $remarks,
         $estimated_capital_price,
@@ -36,7 +35,6 @@ class ProductServiceImpl implements ProductService
             $product->group_id = $group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
-            $product->unit_id = $unit_id;
             $product->tax_status = $tax_status;
             $product->remarks = $remarks;
             $product->estimated_capital_price = $estimated_capital_price;
@@ -60,7 +58,7 @@ class ProductServiceImpl implements ProductService
 
     public function read()
     {
-        return Product::with('group', 'brand', 'unit')->paginate();
+        return Product::with('group', 'brand', 'product_unit.unit')->paginate();
     }
 
     public function update(
@@ -69,7 +67,6 @@ class ProductServiceImpl implements ProductService
         $group_id,
         $brand_id,
         $name,
-        $unit_id,
         $tax_status,
         $remarks,
         $estimated_capital_price,
@@ -89,7 +86,6 @@ class ProductServiceImpl implements ProductService
                 'group_id' => $group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
-                'unit_id' => $unit_id,
                 'tax_status' => $tax_status,
                 'remarks' => $remarks,
                 'estimated_capital_price' => $estimated_capital_price,
@@ -120,17 +116,11 @@ class ProductServiceImpl implements ProductService
         return Product::find($id);
     }
 
-    public function getUnitById($id)
-    {
-        return Product::find($id);
-    }
-
     public function delete($id)
     {
         $product = Product::find($id);
 
         return $product->delete();
-
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

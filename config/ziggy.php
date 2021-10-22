@@ -83,6 +83,10 @@ return [
             'api.get.dashboard.productbrand.read',
             'api.post.dashboard.productbrand.*',
         ],
+        'productunit' => [
+            'api.get.dashboard.productunit.read',
+            'api.post.dashboard.productunit.*',
+        ],
         'unit' => [
             'api.get.dashboard.unit.read',
             'api.post.dashboard.unit.*',
