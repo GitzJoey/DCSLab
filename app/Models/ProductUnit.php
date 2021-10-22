@@ -5,31 +5,40 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Product;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class ProductBrand extends Model
+class ProductUnit extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
 
+    protected $table = 'product_unit';
+    
     protected $fillable = [
-        'code',
-        'name'
+        'product_id',
+        'unit_id',
+        'is_base',
+        'conversion_value',
+        'remarks'
     ];
 
-    protected static $logAttributes = ['code', 'name'];
+    protected static $logAttributes = ['product_id', 'unit_id', 'is_base', 'conversion_value', 'remarks'];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
         'id',
+        'product_id',
+        'unit_id',
         'created_by',
         'updated_by',
         'deleted_by',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'deleted_at'
     ];
 
     protected $appends = ['hId'];
@@ -39,8 +48,13 @@ class ProductBrand extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function products()
+    public function product()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Product::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

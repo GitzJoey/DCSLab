@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Config;
 
 use App\Models\ProductGroup;
 use App\Models\ProductBrand;
 use App\Models\Unit;
+use App\Models\ProductUnit;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -24,7 +24,6 @@ class Product extends Model
         'group_id',
         'brand_id',
         'name',
-        'unit_id',
         'tax_status',
         'remarks',
         'estimated_capital_price',
@@ -39,7 +38,6 @@ class Product extends Model
         'group_id',
         'brand_id',
         'name',
-        'unit_id',
         'tax_status',
         'remarks',
         'estimated_capital_price',
@@ -55,7 +53,6 @@ class Product extends Model
         'id',
         'group_id',
         'brand_id',
-        'unit_id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -71,18 +68,23 @@ class Product extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function groups()
+    public function group()
     {
-        return $this->hasMany(ProductGroup::class);
+        return $this->belongsTo(ProductGroup::class);
     }
 
-    public function brands()
+    public function brand()
     {
-        return $this->hasMany(ProductBrand::class);
+        return $this->belongsTo(ProductBrand::class);
     }
 
-    public function units()
+    public function unit()
     {
-        return $this->hasMany(Unit::class);
+        return $this->belongsTo(Unit::class);
+    }
+
+    public function product_unit()
+    {
+        return $this->hasMany(ProductUnit::class);
     }
 }

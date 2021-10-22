@@ -19,6 +19,7 @@ use App\Services\ProductService;
 use App\Services\ProductBrandService;
 use App\Services\ProductGroupService;
 use App\Services\UnitService;
+use App\Services\ProductUnitService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -40,6 +41,7 @@ class uniqueCode implements Rule
     private $expenseGroupService;
     private $SupplierService;
     private $productGroupService;
+    private $productUnitService;
     private $productBrandService;
     private $UnitService;
     private $productService;
@@ -92,6 +94,9 @@ class uniqueCode implements Rule
                 break;
             case 'productbrands': 
                 $this->productBrandService = Container::getInstance()->make(ProductBrandService::class);
+                break;
+            case 'productunits': 
+                $this->productUnitService = Container::getInstance()->make(ProductUnitService::class);
                 break;
             case 'units': 
                 $this->UnitService = Container::getInstance()->make(UnitService::class);
@@ -156,6 +161,9 @@ class uniqueCode implements Rule
                 break;
             case 'units': 
                 $count = $this->UnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'productunits': 
+                $count = $this->productUnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'products': 
                 $count = $this->productService->checkDuplicatedCode($this->crud_status, $this->id, $code);
