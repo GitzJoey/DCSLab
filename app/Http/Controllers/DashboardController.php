@@ -42,7 +42,7 @@ class DashboardController extends BaseController
         return [
             array(
                 'icon' => 'HomeIcon',
-                'pageName' => 'side-menu-dashboar',
+                'pageName' => 'side-menu-dashboard',
                 'title' => 'Dashboard',
                 'subMenu' => [
                     array (
