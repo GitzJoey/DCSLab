@@ -52,6 +52,36 @@
         }
     },
     "views": {
+        "profile": {
+            "title": "Profil",
+            "menu": {
+                "personal_information": "Informasi Pribadi",
+                "account_settings": "Pengaturan Akun",
+                "change_password": "Ubah Password",
+                "user_settings": "Pengaturan Pengguna",
+                "email_settings": "Email Settings"
+            },
+            "fields": {
+                "name": "Nama",
+                "first_name": "Nama Depan",
+                "last_name": "Nama Keluarga",
+                "address": "Alamat",
+                "city": "Kota",
+                "postal_code": "Kode Pos",
+                "country": "Negara",
+                "tax_id": "NPWP",
+                "remarks": "Keterangan",
+                "email": "Email",
+                "ic_num": "KTP",
+                "settings": {
+                    "settings": "Pengaturan",
+                    "theme": "Tema",
+                    "dateFormat": "Format Tanggal",
+                    "timeFormat": "Format Waktu",
+                    "api_token": "API Token"
+                }
+            }
+        },
         "users": {
             "page_title": "Pengguna",
             "table": {

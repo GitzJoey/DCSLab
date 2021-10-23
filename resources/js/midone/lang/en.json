@@ -52,6 +52,36 @@
         }
     },
     "views": {
+        "profile": {
+            "title": "Profile",
+            "menu": {
+                "personal_information": "Personal Information",
+                "account_settings": "Account Settings",
+                "change_password": "Change Password",
+                "user_settings": "User Settings",
+                "email_settings": "Email Settings"
+            },
+            "fields": {
+                "name": "Name",
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "address": "Address",
+                "city": "City",
+                "postal_code": "Postal Code",
+                "country": "Country",
+                "tax_id": "Tax ID",
+                "remarks": "Remarks",
+                "email": "Email",
+                "ic_num": "IC No.",
+                "settings":  {
+                    "settings": "Settings",
+                    "theme": "Themes",
+                    "dateFormat": "Date Format",
+                    "timeFormat": "Time Format",
+                    "api_token": "API Token"
+                }
+            }
+        },
         "users": {
             "page_title": "Users",
             "table": {

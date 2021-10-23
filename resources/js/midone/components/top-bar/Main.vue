@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <div class="intro-x dropdown w-8 h-8">
+        <div id="main-dropdown" class="intro-x dropdown w-8 h-8">
             <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in" role="button" aria-expanded="false">
                 <img alt="Profile" :src="assetPath('gray200.jpg')" />
             </div>
@@ -45,19 +45,19 @@
                         <div class="text-xs text-gray-600 mt-0.5 dark:text-gray-600">{{ userContext.email }}</div>
                     </div>
                     <div class="p-2">
-                        <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                        <a href="" @click.prevent="goTo('profile')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
                             <UserIcon class="w-4 h-4 mr-2" />
                             {{ t('components.top-bar.profile_ddl.profile') }}
                         </a>
                     </div>
                     <div class="p-2">
-                        <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                        <a href="" @click.prevent="goTo('inbox')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
                             <MailIcon class="w-4 h-4 mr-2" />
                             {{ t('components.top-bar.profile_ddl.inbox') }}
                         </a>
                     </div>
                     <div class="p-2">
-                        <a href="" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                        <a href="" @click.prevent="goTo('activity')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
                             <ActivityIcon class="w-4 h-4 mr-2" />
                             {{ t('components.top-bar.profile_ddl.activity') }}
                         </a>
@@ -79,10 +79,13 @@ import {computed, defineComponent, onMounted, ref} from 'vue';
 import { switchLang, getLang } from '../../lang/index';
 import { useStore } from '../../store';
 import mainMixins from '../../mixins/index';
+import { useRouter } from "vue-router";
 
 export default defineComponent({
     setup() {
-        const store = useStore()
+        const store = useStore();
+        const router = useRouter();
+
         const userContext = computed(() => store.state.main.userContext )
 
         const { t, assetPath } = mainMixins();
@@ -96,20 +99,37 @@ export default defineComponent({
             return getLang();
         });
 
+        function goTo(page) {
+            switch(page) {
+                case 'profile':
+                    router.push({ name: 'side-menu-dashboard-profile' });
+                    break;
+                case 'inbox':
+                    router.push({ name: 'side-menu-dashboard-inbox' });
+                    break;
+                case 'activity':
+                    router.push({ name: 'side-menu-dashboard-activity' });
+                    break;
+            }
+
+            cash('#main-dropdown').dropdown('hide');
+        }
+
         function logout() {
             axios.post('/logout').then(response => {
                 window.location.href = '/';
-            }).catch(response, function(e) {
-            });
+            }).catch(response, function(e) { });
         }
 
         return {
             t,
+            router,
             userContext,
             assetPath,
             switchLanguage,
             currentLanguage,
-            logout
+            logout,
+            goTo,
         }
     }
 });

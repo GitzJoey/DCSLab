@@ -7,8 +7,13 @@ export default function() {
         return '/images/' + assetName;
     }
 
+    function isEmptyObject(obj) {
+        return _.isEmpty(obj);
+    }
+
     return {
         t,
         assetPath,
+        isEmptyObject,
     }
 }

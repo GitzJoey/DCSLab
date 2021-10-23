@@ -3,6 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 import SideMenu from '../layouts/side-menu/Main.vue';
 
 import MainDashboard from '../views/dashboard/MainDashboard.vue';
+import Profile from '../views/dashboard/Profile.vue';
+import Inbox from '../views/dashboard/Inbox.vue';
+import Activity from '../views/dashboard/Activity.vue';
+
 import AdminUsers from "../views/administrators/Users";
 
 import DBBackup from "../views/dev/DBBackup";
@@ -21,6 +25,24 @@ const routes = [
                 name: 'side-menu-dashboard-maindashboard',
                 component: MainDashboard,
                 meta: { remember: false }
+            },
+            {
+                path: root + '/profile',
+                name: 'side-menu-dashboard-profile',
+                component: Profile,
+                meta: { remember: true }
+            },
+            {
+                path: root + '/profile' + '/inbox',
+                name: 'side-menu-dashboard-inbox',
+                component: Inbox,
+                meta: { remember: true }
+            },
+            {
+                path: root + '/profile' + '/activity',
+                name: 'side-menu-dashboard-activity',
+                component: Activity,
+                meta: { remember: true }
             },
         ],
     },
@@ -78,7 +100,7 @@ router.afterEach((to, from) => {
     axios.post('/api/post/dashboard/core/log/route', {
         to: to.name,
         params: to.params
-    });
+    }).catch(e => { });
 
     if (to.matched.some(r => r.meta.remember))
         localStorage.setItem('DCSLAB_LAST_ROUTE', to.name);
