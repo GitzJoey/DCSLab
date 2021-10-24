@@ -3,8 +3,60 @@
     <MobileMenu :dashboard-layout="dashboardLayout" layout="side-menu" />
     <div>
         <div class="flex overflow-hidden">
-            <nav class="side-nav">
-                <a href="" class="intro-x flex items-center pl-5 pt-4 mt-3">
+            <nav class="intro-x side-nav side-nav--simple" v-if="menuMode === 'simple'">
+                <a href="" class="intro-x flex items-center pl-5 pt-4" @click.prevent="switchMenu">
+                    <img alt="" class="w-6" :src="assetPath('logo.svg')" />
+                </a>
+                <div class="side-nav__devider my-6"></div>
+                <ul>
+                    <template v-for="(menu, menuKey) in formattedMenu">
+                        <li v-if="menu == 'devider'" :key="menu + menuKey" class="side-nav__devider my-6"></li>
+                        <li v-else :key="menu + menuKey">
+                            <Tippy tag="a" :content="menu.title" :options="{ placement: 'left' }" :href="menu.subMenu ? 'javascript:;' : router.resolve({ name: menu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': menu.active, 'side-menu--open': menu.activeDropdown }" @click="linkTo(menu, router, $event)">
+                                <div class="side-menu__icon">
+                                    <component :is="menu.icon" />
+                                </div>
+                                <div class="side-menu__title">
+                                    {{ menu.title }}
+                                    <ChevronDownIcon v-if="$h.isset(menu.subMenu)" class="side-menu__sub-icon" :class="{ 'transform rotate-180': menu.activeDropdown }" />
+                                </div>
+                            </Tippy>
+                            <transition @enter="enter" @leave="leave">
+                                <ul v-if="menu.subMenu && menu.activeDropdown">
+                                    <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
+                                        <Tippy tag="a" :content="subMenu.title" :options="{ placement: 'left' }" :href="subMenu.subMenu ? 'javascript:;' : router.resolve({ name: subMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': subMenu.active }" @click="linkTo(subMenu, router, $event)">
+                                            <div class="side-menu__icon">
+                                                <ChevronRightIcon />
+                                            </div>
+                                            <div class="side-menu__title">
+                                                {{ subMenu.title }}
+                                                <ChevronDownIcon v-if="$h.isset(subMenu.subMenu)" class="side-menu__sub-icon" :class="{ 'transform rotate-180': subMenu.activeDropdown }" />
+                                            </div>
+                                        </Tippy>
+                                        <transition @enter="enter" @leave="leave">
+                                            <ul v-if="subMenu.subMenu && subMenu.activeDropdown">
+                                                <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
+                                                    <Tippy tag="a" :content="lastSubMenu.title" :options="{ placement: 'left' }" :href="lastSubMenu.subMenu ? 'javascript:;' : router.resolve({ name: lastSubMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': lastSubMenu.active }" @click="linkTo(lastSubMenu, router, $event)">
+                                                        <div class="side-menu__icon">
+                                                            <ChevronsRightIcon />
+                                                        </div>
+                                                        <div class="side-menu__title">
+                                                            {{ lastSubMenu.title }}
+                                                        </div>
+                                                    </Tippy>
+                                                </li>
+                                            </ul>
+                                        </transition>
+                                    </li>
+                                </ul>
+                            </transition>
+                        </li>
+                    </template>
+                </ul>
+            </nav>
+
+            <nav class="intro-y side-nav" v-if="menuMode === 'side'">
+                <a href="" class="intro-x flex items-center pl-5 pt-4 mt-3" @click.prevent="switchMenu">
                     <img alt="Logo" class="w-6" :src="assetPath('logo.svg')" />
                     <span class="hidden xl:block text-white text-lg ml-3">DCS<span class="font-medium">Lab</span></span>
                 </a>
@@ -111,6 +163,8 @@ export default {
 
         const menuContext = computed(() => store.state.sideMenu.menu );
 
+        const menuMode = ref('side');
+
         const { assetPath } = mainMixins();
 
         provide('setDashboardLayout', newVal => {
@@ -147,6 +201,14 @@ export default {
             }
         }
 
+        function switchMenu() {
+            if (menuMode.value === 'simple') {
+                menuMode.value = 'side'
+            } else {
+                menuMode.value = 'simple'
+            }
+        }
+
         watch(
             computed(() => route.path),() => {
                 formattedMenu.value = nestedMenu($h.toRaw(menuContext.value), route);
@@ -164,7 +226,9 @@ export default {
             assetPath,
             linkTo,
             enter,
-            leave
+            leave,
+            menuMode,
+            switchMenu,
         }
     }
 }
