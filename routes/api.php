@@ -17,7 +17,7 @@ Route::bind('id', function ($id) {
     }
 });
 
-Route::post('/api/auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
+Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
 
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => 'db'], function() {

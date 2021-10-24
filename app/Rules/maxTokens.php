@@ -33,7 +33,11 @@ class maxTokens implements Rule
      */
     public function passes($attribute, $value)
     {
-        $usr = $this->userService->getUserByEmail($this->email);
+        $parameters =  array (
+            'readByEmail' => $this->email
+        );
+
+        $usr = $this->userService->read($parameters);
 
         if (!$usr) return false;
 
