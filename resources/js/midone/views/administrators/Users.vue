@@ -1,4 +1,5 @@
 <template>
+    <AlertPlaceholder :errors="formErrors" />
     <div class="intro-y" v-if="mode === 'list'">
         <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange">
             <template v-slot:table="tableProps">
@@ -213,9 +214,11 @@
 
 <script setup>
 import { inject, onMounted, ref, computed } from 'vue'
+import { useFormErrors } from 'vee-validate'
 import mainMixins from '../../mixins';
 
 import DataList from '../../global-components/data-list/Main'
+import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
 const { t } = mainMixins();
 
@@ -225,6 +228,8 @@ const schema = {
     tax_id: 'required',
     ic_num: 'required',
 };
+
+const formErrors = useFormErrors();
 
 let mode = ref('list');
 let user = ref({
@@ -272,30 +277,7 @@ function getDDL() {
 }
 
 function onSubmit(values, actions) {
-    this.loading = true;
-    if (this.mode === 'create') {
-        axios.post(route('api.post.admin.user.save'), new FormData($('#userForm')[0]), {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }).then(response => {
-            this.backToList();
-        }).catch(e => {
-            this.handleError(e, actions);
-            this.loading = false;
-        });
-    } else if (this.mode === 'edit') {
-        axios.post(route('api.post.admin.user.edit', this.user.hId), new FormData($('#userForm')[0]), {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }).then(response => {
-            this.backToList();
-        }).catch(e => {
-            this.handleError(e, actions);
-            this.loading = false;
-        });
-    } else { }
+    console.log('submit');
 }
 
 function handleError(e, actions) {
