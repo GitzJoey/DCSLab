@@ -73,138 +73,141 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.users.actions.edit') }}</h2>
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
         </div>
-        <vee-form id="userForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
-                    <vee-field id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.name }}</div>
+        <div class="loader-container">
+            <vee-form id="userForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
+                        <vee-field id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.name }}</div>
+                    </div>
+                    <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                 </div>
-                <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputEmail" class="form-label w-40 px-3">{{ t('views.users.fields.email') }}</label>
-                    <vee-field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.email }}</div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputEmail" class="form-label w-40 px-3">{{ t('views.users.fields.email') }}</label>
+                        <vee-field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.email }}</div>
+                    </div>
+                    <ErrorMessage name="email" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                 </div>
-                <ErrorMessage name="email" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputImg" class="form-label w-40 px-3"></label>
-                    <div class="flex-1">
-                        <div class="my-1">
-                            <img id="inputImg" alt="" class="" :src="retrieveImage">
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputImg" class="form-label w-40 px-3"></label>
+                        <div class="flex-1">
+                            <div class="my-1">
+                                <img id="inputImg" alt="" class="" :src="retrieveImage">
+                            </div>
+                            <div class="">
+                                <input type="file" class="h-full w-full" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload"/>
+                            </div>
                         </div>
-                        <div class="">
-                            <input type="file" class="h-full w-full" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload"/>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputFirstName" class="form-label w-40 px-3">{{ t('views.users.fields.first_name') }}</label>
+                        <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.users.fields.first_name')" v-model="user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.first_name }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputLastName" class="form-label w-40 px-3">{{ t('views.users.fields.last_name') }}</label>
+                        <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.users.fields.last_name')" v-model="user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.last_name }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputAddress" class="form-label w-40 px-3">{{ t('views.users.fields.address') }}</label>
+                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.users.fields.address')" v-model="user.profile.address" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.address }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputCity" class="form-label w-40 px-3">{{ t('views.users.fields.city') }}</label>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.users.fields.city')" v-model="user.profile.city" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.city }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputPostalCode" class="form-label w-40 px-3">{{ t('views.users.fields.postal_code') }}</label>
+                        <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.users.fields.postal_code')" v-model="user.profile.postal_code" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.postal_code }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputCountry" class="form-label w-40 px-3">{{ t('views.users.fields.country') }}</label>
+                        <select id="inputCountry" name="country" class="form-control form-select" v-model="user.profile.country" :placeholder="t('views.users.fields.country')" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
+                        </select>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.country }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputTaxId" class="form-label w-40 px-3">{{ t('views.users.fields.tax_id') }}</label>
+                        <vee-field id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.tax_id }}</div>
+                    </div>
+                    <ErrorMessage name="tax_id" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputICNum" class="form-label w-40 px-3">{{ t('views.users.fields.ic_num') }}</label>
+                        <vee-field id="inputICNum" name="ic_num" as="input" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.ic_num }}</div>
+                    </div>
+                    <ErrorMessage name="ic_num" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputRoles" class="form-label w-40 px-3">{{ t('views.users.fields.roles') }}</label>
+                        <select multiple :class="{'form-control form-select':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
+                            <option v-for="(r, rIdx) in rolesDDL" :value="r.hId">{{ r.display_name }}</option>
+                        </select>
+                        <div class="" v-if="mode === 'show'">
+                            <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
+                        </div>
+                    </div>
+                    <ErrorMessage name="roles" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputStatus" class="form-label w-40 px-3">{{ t('views.users.fields.status') }}</label>
+                        <select class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ c.name }}</option>
+                        </select>
+                        <div class="" v-if="mode === 'show'">
+                            <span v-if="user.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                            <span v-if="user.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputFirstName" class="form-label w-40 px-3">{{ t('views.users.fields.first_name') }}</label>
-                    <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.users.fields.first_name')" v-model="user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.first_name }}</div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputLastName" class="form-label w-40 px-3">{{ t('views.users.fields.last_name') }}</label>
-                    <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.users.fields.last_name')" v-model="user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.last_name }}</div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputAddress" class="form-label w-40 px-3">{{ t('views.users.fields.address') }}</label>
-                    <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.users.fields.address')" v-model="user.profile.address" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.address }}</div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputCity" class="form-label w-40 px-3">{{ t('views.users.fields.city') }}</label>
-                    <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.users.fields.city')" v-model="user.profile.city" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.city }}</div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputPostalCode" class="form-label w-40 px-3">{{ t('views.users.fields.postal_code') }}</label>
-                    <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.users.fields.postal_code')" v-model="user.profile.postal_code" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.postal_code }}</div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputCountry" class="form-label w-40 px-3">{{ t('views.users.fields.country') }}</label>
-                    <select id="inputCountry" name="country" class="form-control form-select" v-model="user.profile.country" :placeholder="t('views.users.fields.country')" v-show="mode === 'create' || mode === 'edit'">
-                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                        <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
-                    </select>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.country }}</div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputTaxId" class="form-label w-40 px-3">{{ t('views.users.fields.tax_id') }}</label>
-                    <vee-field id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.tax_id }}</div>
-                </div>
-                <ErrorMessage name="tax_id" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputICNum" class="form-label w-40 px-3">{{ t('views.users.fields.ic_num') }}</label>
-                    <vee-field id="inputICNum" name="ic_num" as="input" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.ic_num }}</div>
-                </div>
-                <ErrorMessage name="ic_num" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputRoles" class="form-label w-40 px-3">{{ t('views.users.fields.roles') }}</label>
-                    <select multiple :class="{'form-control form-select':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
-                        <option v-for="(r, rIdx) in rolesDDL" :value="r.hId">{{ r.display_name }}</option>
-                    </select>
-                    <div class="" v-if="mode === 'show'">
-                        <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputRemarks" class="form-label w-40 px-3">{{ t('views.users.fields.remarks') }}</label>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.users.fields.remarks')" v-model="user.profile.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                        <div class="" v-if="mode === 'show'">{{ user.profile.remarks }}</div>
                     </div>
                 </div>
-                <ErrorMessage name="roles" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputStatus" class="form-label w-40 px-3">{{ t('views.users.fields.status') }}</label>
-                    <select class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" v-show="mode === 'create' || mode === 'edit'">
-                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                        <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ c.name }}</option>
-                    </select>
-                    <div class="" v-if="mode === 'show'">
-                        <span v-if="user.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                        <span v-if="user.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                <div class="mb-3" v-if="this.mode === 'create' || this.mode === 'edit'">
+                    <div class="form-inline">
+                        <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
+                            <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
+                            <button type="button" class="btn btn-secondary" @click="handleReset">{{ t('components.buttons.reset') }}</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <div class="form-inline">
-                    <label for="inputRemarks" class="form-label w-40 px-3">{{ t('views.users.fields.remarks') }}</label>
-                    <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.users.fields.remarks')" v-model="user.profile.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
-                    <div class="" v-if="mode === 'show'">{{ user.profile.remarks }}</div>
-                </div>
-            </div>
-            <div class="mb-3" v-if="this.mode === 'create' || this.mode === 'edit'">
-                <div class="form-inline">
-                    <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
-                        <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
-                        <button type="button" class="btn btn-secondary" @click="handleReset">{{ t('components.buttons.reset') }}</button>
-                    </div>
-                </div>
-            </div>
-        </vee-form>
+            </vee-form>
+            <div class="loader"></div>
+        </div>
         <hr/>
         <div>
             <button type="button" class="btn btn-secondary w-15 m-3" @click="backToList">{{ t('components.buttons.back') }}</button>
