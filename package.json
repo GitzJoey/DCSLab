@@ -22,7 +22,8 @@
         "sass": "^1.42.1",
         "sass-loader": "^12.1.0",
         "simple-line-icons": "^2.5.5",
-        "vue-loader": "^16.2.0"
+        "vue-loader": "^16.2.0",
+        "webpack-shell-plugin-next": "^2.2.2"
     },
     "dependencies": {
         "@left4code/tw-starter": "^1.1.0",
@@ -41,6 +42,7 @@
         "vue-i18n": "^9.1.5",
         "vue-router": "^4.0.6",
         "vuex": "^4.0.0",
+        "ziggy-js": "^1.4.2",
         "zoom-vanilla.js": "^2.0.6"
     }
 }

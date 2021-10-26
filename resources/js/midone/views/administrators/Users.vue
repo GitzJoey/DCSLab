@@ -1,5 +1,5 @@
 <template>
-    <AlertPlaceholder :errors="formErrors" />
+    <AlertPlaceholder :errors="errors" />
     <div class="intro-y" v-if="mode === 'list'">
         <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange">
             <template v-slot:table="tableProps">
@@ -74,7 +74,7 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
         </div>
         <div class="loader-container">
-            <vee-form id="userForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+            <form id="userForm" class="p-5" @submit="onSubmit">
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                 </div>
-            </vee-form>
+            </form>
             <div class="loader" v-if="loading"></div>
         </div>
         <hr/>
@@ -217,22 +217,23 @@
 
 <script setup>
 import { inject, onMounted, ref, computed } from 'vue'
-import { useFormErrors } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import mainMixins from '../../mixins';
 
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
-const { t } = mainMixins();
+const { t, route } = mainMixins();
 
-const schema = {
-    name: 'required',
-    email: 'required|email',
-    tax_id: 'required',
-    ic_num: 'required',
-};
-
-const formErrors = useFormErrors();
+const { handleSubmit, handleReset, errors } = useForm({
+    validationSchema: {
+        name: 'required',
+        email: 'required|email',
+        tax_id: 'required',
+        ic_num: 'required',
+    },
+    validateOnMount: false
+});
 
 let mode = ref('list');
 let loading = ref(false);
@@ -257,6 +258,8 @@ onMounted(() => {
 
     getUser();
     getDDL();
+
+    loading.value = false;
 });
 
 function getUser() {
@@ -280,36 +283,8 @@ function getDDL() {
     });
 }
 
-function onSubmit(values, actions) {
-    loading.value = true;
-    if (mode.value === 'create') {
-        /*
-        axios.post(route('api.post.admin.user.save'), new FormData($('#userForm')[0]), {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }).then(response => {
-            this.backToList();
-        }).catch(e => {
-            this.handleError(e, actions);
-            this.loading = false;
-        });
-        */
-    } else if (mode.value === 'edit') {
-        /*
-        axios.post(route('api.post.admin.user.edit', this.user.hId), new FormData($('#userForm')[0]), {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }).then(response => {
-            this.backToList();
-        }).catch(e => {
-            this.handleError(e, actions);
-            this.loading = false;
-        });
-        */
-    } else { }
-}
+const onSubmit = handleSubmit(values => {
+});
 
 function handleError(e, actions) {
     //Laravel Validations
@@ -345,6 +320,7 @@ function showSelected(index) {
 }
 
 function backToList() {
+    handleReset();
     mode.value = 'list';
 }
 

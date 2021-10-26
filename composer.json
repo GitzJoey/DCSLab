@@ -19,6 +19,7 @@
         "rap2hpoutre/laravel-log-viewer": "^1.7",
         "santigarcor/laratrust": "^6.3",
         "spatie/laravel-activitylog": "^4.2",
+        "tightenco/ziggy": "^1.4",
         "vinkla/hashids": "^9.1"
     },
     "require-dev": {
