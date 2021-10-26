@@ -30,6 +30,7 @@ use App\Services\ProductGroupService;
 use App\Services\ProductBrandService;
 use App\Services\ProductService;
 use App\Services\UnitService;
+use App\Services\ProductUnitService;
 use App\Services\CustomerGroupService;
 use App\Services\CustomerService;
 
@@ -48,6 +49,7 @@ use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductBrandServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
+use App\Services\Impls\ProductUnitServiceImpl;
 use App\Services\Impls\CustomerGroupServiceImpl;
 use App\Services\Impls\CustomerServiceImpl;
 
@@ -94,6 +96,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ProductService::class, function (){
             return new ProductServiceImpl();
+        });
+
+        $this->app->singleton(ProductUnitService::class, function (){
+            return new ProductUnitServiceImpl();
         });
 
         $this->app->singleton(CashService::class, function (){

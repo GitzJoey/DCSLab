@@ -11,12 +11,13 @@ interface ProductUnitService
         $unit_id,
         $is_base,
         $conversion_value,
+        $is_primary_unit,
         $remarks
     );
 
     public function read();
 
-    public function getAllActiveProductUnit();
+    public function getAllProductUnit();
 
     public function update(
         $id,
@@ -26,6 +27,7 @@ interface ProductUnitService
         $unit_id,
         $is_base,
         $conversion_value,
+        $is_primary_unit,
         $remarks
     );
 
