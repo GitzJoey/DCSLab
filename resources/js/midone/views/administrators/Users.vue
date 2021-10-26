@@ -206,7 +206,7 @@
                     </div>
                 </div>
             </vee-form>
-            <div class="loader"></div>
+            <div class="loader" v-if="loading"></div>
         </div>
         <hr/>
         <div>
@@ -235,6 +235,7 @@ const schema = {
 const formErrors = useFormErrors();
 
 let mode = ref('list');
+let loading = ref(false);
 let user = ref({
     name: '',
     selectedRoles: '',
@@ -280,7 +281,34 @@ function getDDL() {
 }
 
 function onSubmit(values, actions) {
-    console.log('submit');
+    loading.value = true;
+    if (mode.value === 'create') {
+        /*
+        axios.post(route('api.post.admin.user.save'), new FormData($('#userForm')[0]), {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }).then(response => {
+            this.backToList();
+        }).catch(e => {
+            this.handleError(e, actions);
+            this.loading = false;
+        });
+        */
+    } else if (mode.value === 'edit') {
+        /*
+        axios.post(route('api.post.admin.user.edit', this.user.hId), new FormData($('#userForm')[0]), {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }).then(response => {
+            this.backToList();
+        }).catch(e => {
+            this.handleError(e, actions);
+            this.loading = false;
+        });
+        */
+    } else { }
 }
 
 function handleError(e, actions) {
