@@ -34,9 +34,9 @@ class ProductUnitController extends BaseController
         return $this->productUnitService->read();
     }
 
-    public function getAllActiveProductUnit()
+    public function getAllProductUnit()
     {
-        return $this->productUnitService->getAllActiveProductUnit();
+        return $this->productUnitService->getAllProductUnit();
     }
 
     public function store(Request $request)
@@ -53,6 +53,7 @@ class ProductUnitController extends BaseController
             Hashids::decode($request['unit_id'])[0], 
             $request['is_base'],
             $request['conversion_value'],
+            $request['is_primary_unit'],
             $request['remarks'],
         );
 

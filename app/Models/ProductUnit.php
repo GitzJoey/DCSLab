@@ -22,10 +22,11 @@ class ProductUnit extends Model
         'unit_id',
         'is_base',
         'conversion_value',
+        'is_primary_unit',
         'remarks'
     ];
 
-    protected static $logAttributes = ['product_id', 'unit_id', 'is_base', 'conversion_value', 'remarks'];
+    protected static $logAttributes = ['product_id', 'unit_id', 'is_base', 'conversion_value', 'is_primary_unit', 'remarks'];
 
     protected static $logOnlyDirty = true;
 

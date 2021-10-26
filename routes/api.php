@@ -139,7 +139,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'productunit'], function () {
             Route::get('read', [ProductUnitController::class, 'read'])->name('api.get.dashboard.productunit.read');
-            Route::get('read/all/active', [ProductUnitController::class, 'getAllActiveProductUnit'])->name('api.get.dashboard.productunit.read.all_active');
+            Route::get('read/all/active', [ProductUnitController::class, 'getAllProductUnit'])->name('api.get.dashboard.productunit.read.all_active');
         });
 
         Route::group(['prefix' => 'unit'], function () {

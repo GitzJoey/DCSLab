@@ -19,6 +19,7 @@ class ProductUnitServiceImpl implements ProductUnitService
         $unit_id,
         $is_base,
         $conversion_value,
+        $is_primary_unit,
         $remarks
     )
     {
@@ -32,6 +33,7 @@ class ProductUnitServiceImpl implements ProductUnitService
             $productunit->unit_id = $unit_id;
             $productunit->is_base = $is_base;
             $productunit->conversion_value = $conversion_value;
+            $productunit->is_primary_unit = $is_primary_unit;
             $productunit->remarks = $remarks;
 
             $productunit->save();
@@ -51,7 +53,7 @@ class ProductUnitServiceImpl implements ProductUnitService
         return ProductUnit::paginate();
     }
 
-    public function getAllActiveProductUnit()
+    public function getAllProductUnit()
     {
         return ProductUnit::all();
     }
@@ -64,6 +66,7 @@ class ProductUnitServiceImpl implements ProductUnitService
         $unit_id,
         $is_base,
         $conversion_value,
+        $is_primary_unit,
         $remarks
     )
     {
@@ -79,6 +82,7 @@ class ProductUnitServiceImpl implements ProductUnitService
                 'unit_id' => $unit_id,
                 'is_base' => $is_base,
                 'conversion_value' => $conversion_value,
+                'is_primary_unit' => $is_primary_unit,
                 'remarks' => $remarks,
             ]);
     

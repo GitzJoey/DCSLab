@@ -139,31 +139,64 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.name }}</div>
                             </div>
                         </div>
-                        {{product.product_unit.unit}}
+
                         <table class="table table-vcenter">
                             <thead class="thead-light">
                                 <tr>
                                     <th>Code</th>
-                                    <th>Is Base</th>
+                                    <th v-show="this.mode === 'edit'">Is Base</th>
                                     <th>Conversion Value</th>
-                                    <!-- <th>Unit</th> -->
+                                    <th>Unit</th>
+                                    <th>Primary Unit</th>
                                     <th>Remarks</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {{product.product_unit}}
                                 <tr v-for="(c, cIdx) in product.product_unit">
-                                    <td>{{ c.code }}</td>
-                                    <td>{{ c.is_base }}</td>
-                                    <td>{{ c.conversion_value }} </td>
-                                    <!-- <td>{{ c.unit.name }} </td> -->
-                                    <td>{{ c.remark }}</td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="c.code" id="code" name="code[]"/>
+                                    </td>
+
+                                    <td>
+                                        <span v-if="c.is_base === 1" v-show="this.mode === 'edit'">YES</span>
+                                        <span v-if="c.is_base === 0" v-show="this.mode === 'edit'">NO</span>
+                                    </td>
+
+                                    <td>
+                                        <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control" id="unit_id" name="unit_id" v-model="c.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                            <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                        </select>
+                                        <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                            {{ c.unit.name }}
+                                        </div>  
+                                    </td>
+
+                                    <td>
+                                        <label class="css-control css-control-primary css-checkbox">
+                                            <input type="checkbox" class="css-control-input" id="is_primary_unit" name="is_primary_unit[]" v-model="c.is_primary_unit" true-value="1" false-value="0">
+                                            <span class="css-control-indicator"></span>
+                                        </label>
+                                    </td>
+                                   
+                                    <td>
+                                        <input type="text" class="form-control" v-model="c.remark" id="remark" name="remark[]"/>
+                                    </td>
+
                                     <td class="text-center">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                            <!-- <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="createNewProductUnit">
                                                 <i class="fa fa-info"></i>
+                                            </button> -->
+                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="createNewProductUnit">
+                                                <i class="fa fa-plus"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="showUnitSelected2(cIdx)">
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                             <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
@@ -322,10 +355,12 @@ export default {
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
-                product_unit: {
-                    hId: '',
-                    unit: {hId: ''}
-                    },
+                product_unit: [
+                    {
+                        hId: '',
+                        unit: {hId: ''}
+                    }
+                ],
                 tax_status: '',
                 remarks: '',
                 point: '',
@@ -397,10 +432,12 @@ export default {
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
-                product_unit: {
-                    hId: '',
-                    unit: {hId: ''}
-                    },
+                product_unit: [
+                    {
+                        hId: '',
+                        unit: {hId: ''}
+                    }
+                ],
                 tax_status: '',
                 remarks: '',
                 point: '0',
@@ -422,6 +459,20 @@ export default {
             this.mode = 'show';
             this.product = this.productList.data[idx];
         },
+        createNewProductUnit() {
+            var product_unit = {
+                hId: '',
+                unit: {hId: ''}
+            };
+            this.product.product_unit.push(product_unit);
+            // console.log('a');
+        },
+        showUnitSelected2(inx) {
+            console.log(inx);
+            this.product.product_unit.pop();
+            console.log('a');
+        },
+
         deleteSelected(idx) {
             this.mode = 'delete';
             this.product = this.productList.data[idx];
