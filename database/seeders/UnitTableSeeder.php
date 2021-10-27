@@ -14,6 +14,6 @@ class UnitTableSeeder extends Seeder
      */
     public function run()
     {
-        Unit::factory()->count(15)->create();
+        Unit::factory()->count(5)->create();
     }
 }

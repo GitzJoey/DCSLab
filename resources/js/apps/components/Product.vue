@@ -153,15 +153,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{product.product_unit}}
                                 <tr v-for="(c, cIdx) in product.product_unit">
                                     <td>
                                         <input type="text" class="form-control" v-model="c.code" id="code" name="code[]"/>
                                     </td>
 
-                                    <td>
-                                        <span v-if="c.is_base === 1" v-show="this.mode === 'edit'">YES</span>
-                                        <span v-if="c.is_base === 0" v-show="this.mode === 'edit'">NO</span>
+                                    <td v-show="this.mode === 'edit'">
+                                        <span v-if="c.is_base === 1">YES</span>
+                                        <span v-if="c.is_base === 0">NO</span>
                                     </td>
 
                                     <td>

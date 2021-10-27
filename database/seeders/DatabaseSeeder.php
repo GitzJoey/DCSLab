@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call([
             CompanyTableSeeder::class,
-            BranchSeeder::class,
+            BranchTableSeeder::class,
             WarehouseTableSeeder::class,
             
             CashTableSeeder::class,
@@ -27,7 +27,8 @@ class DatabaseSeeder extends Seeder
             SupplierTableSeeder::class,
 
             ProductTableSeeder::class,
-            
+            ProductUnitTableSeeder::class,
+
             //LaratrustSeeder::class,
             //UserSeeder::class,
             //RoleSeeder::class,

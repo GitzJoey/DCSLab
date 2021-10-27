@@ -6,7 +6,7 @@ use App\Models\Branch;
 
 use Illuminate\Database\Seeder;
 
-class BranchSeeder extends Seeder
+class BranchTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
