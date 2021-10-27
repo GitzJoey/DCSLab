@@ -168,7 +168,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputRoles" class="form-label w-40 px-3">{{ t('views.users.fields.roles') }}</label>
-                        <select multiple :class="{'form-control form-select':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
+                        <select multiple :class="{'form-control':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
                             <option v-for="(r, rIdx) in rolesDDL" :value="r.hId">{{ r.display_name }}</option>
                         </select>
                         <div class="" v-if="mode === 'show'">
@@ -259,13 +259,13 @@ onMounted(() => {
     getUser();
     getDDL();
 
+    mode.value = 'create';
     loading.value = false;
 });
 
 function getUser() {
     axios.get('/api/get/dashboard/admin/users/read?page=1').then(response => {
         userList.value = response.data;
-        mode.value = 'list';
     });
 }
 
@@ -283,7 +283,32 @@ function getDDL() {
     });
 }
 
-const onSubmit = handleSubmit(values => {
+const onSubmit = handleSubmit((values, actions) => {
+    loading.value = true;
+    if (mode.value === 'create') {
+        axios.post(route('api.post.db.admin.users.save'), new FormData(cash('#userForm')[0]), {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }).then(response => {
+            backToList();
+        }).catch(e => {
+            handleError(e, actions);
+            loading.value = false;
+        });
+    } else if (mode === 'edit') {
+        axios.post(route('api.post.db.admin.users.edit', user.hId), new FormData(cash('#userForm')[0]), {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }).then(response => {
+            backToList();
+        }).catch(e => {
+            handleError(e, actions);
+            loading.value = false;
+        });
+    } else { }
+
 });
 
 function handleError(e, actions) {
