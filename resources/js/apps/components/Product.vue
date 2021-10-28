@@ -219,7 +219,7 @@
                             </div>
                             <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
                                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
-                            </div>
+                            </div> 
                         </div>
 
                         <div class="form-group row">
