@@ -13,5 +13,5 @@ interface ActivityLogService
         $type
     );
 
-    public function GetActivityById($id);
+    public function getAuthUserActivities($maxRecords = 25);
 }

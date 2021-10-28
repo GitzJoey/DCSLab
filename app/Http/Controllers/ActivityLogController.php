@@ -25,4 +25,55 @@ class ActivityLogController extends BaseController
 
         $this->activityLogService->RoutingActivity($to, $params);
     }
+
+    public function getRouteActivity(Request $request)
+    {
+        $act = $this->activityLogService->getAuthUserActivities();
+
+        $result = collect();
+
+        $pos = '';
+        foreach($act as $a) {
+            if ($a->log_name == 'RoutingActivity') {
+                $pos = $this->togglePos($pos);
+
+                $result->add(array(
+                    'pos' => $pos,
+                    'dot' => true,
+                    'log_name' => $a->log_name,
+                    'title' => 'Routing',
+                    'description' => $a->description,
+                    'timestamp' => $a->created_at->format('Y.m.d H.i.s'),
+                    'data' => []
+                ));
+            } else if ($a->log_name == 'AuthActivity') {
+                $pos = $this->togglePos($pos);
+
+                $result->add(array(
+                    'pos' => $pos,
+                    'dot' => true,
+                    'log_name' => $a->log_name,
+                    'title' => 'Login',
+                    'description' => $a->description,
+                    'timestamp' => $a->created_at->format('Y.m.d H.i.s'),
+                    'data' => []
+                ));
+            } else { }
+        }
+
+        return $result;
+    }
+
+    private function togglePos($pos)
+    {
+        if ($pos == '') {
+            $newpos = 'left';
+        } else if ($pos == 'left') {
+            $newpos = 'right';
+        } else if ($pos == 'right') {
+            $newpos = 'left';
+        } else { }
+
+        return $newpos;
+    }
 }

@@ -57,9 +57,7 @@
             "menu": {
                 "personal_information": "Personal Information",
                 "account_settings": "Account Settings",
-                "change_password": "Change Password",
-                "user_settings": "User Settings",
-                "email_settings": "Email Settings"
+                "change_password": "Change Password"
             },
             "fields": {
                 "name": "Name",
@@ -74,11 +72,15 @@
                 "email": "Email",
                 "ic_num": "IC No.",
                 "settings":  {
-                    "settings": "Settings",
                     "theme": "Themes",
                     "dateFormat": "Date Format",
                     "timeFormat": "Time Format",
                     "api_token": "API Token"
+                },
+                "change_password": {
+                    "current_password": "Current Password",
+                    "new_password": "New Password",
+                    "confirm_password": "Confirm Password"
                 }
             }
         },
@@ -119,6 +121,9 @@
                     "apiToken": "API Token"
                 }
             }
+        },
+        "activity": {
+            "title": "Activity Log"
         }
     }
 }

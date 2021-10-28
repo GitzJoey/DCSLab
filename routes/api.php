@@ -33,6 +33,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         Route::group(['prefix' => 'core', 'as' => '.core'], function() {
             Route::get('user/profile', [DashboardController::class, 'userProfile'])->name('.user_profile');
             Route::get('user/menu', [DashboardController::class, 'userMenu'])->name('.user_menu');
+
+            Route::get('log/route/list', [ActivityLogController::class, 'getRouteActivity'])->name('.log_route.list');
         });
 
         Route::group(['prefix' => 'common', 'as' => '.common'], function() {

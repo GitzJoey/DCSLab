@@ -205,8 +205,8 @@ class UserServiceImpl implements UserService
         $list = array (
             new Setting(array(
                 'type' => 'KEY_VALUE',
-                'key' => 'THEME.CODEBASE',
-                'value' => 'corporate',
+                'key' => 'THEME.MIDONE',
+                'value' => '',
             )),
             new Setting(array(
                 'type' => 'KEY_VALUE',

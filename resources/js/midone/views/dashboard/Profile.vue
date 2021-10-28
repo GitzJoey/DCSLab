@@ -17,20 +17,14 @@
                     </div>
                 </div>
                 <div class="p-5 border-t border-gray-200 dark:border-dark-5">
-                    <a @click.prevent="changeTab('personal_info')" class="flex items-center text-theme-25 dark:text-theme-22 font-medium" href="">
+                    <a @click.prevent="changeTab('personal_info')" :class="{'flex items-center':true, 'text-theme-25 dark:text-theme-22 font-medium':mode === 'personal_info'}" href="">
                         <ActivityIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.personal_information') }}
                     </a>
-                    <a @click.prevent="changeTab('account_settings')" class="flex items-center mt-5" href="">
+                    <a @click.prevent="changeTab('account_settings')" :class="{'flex items-center mt-5':true, 'text-theme-25 dark:text-theme-22 font-medium':mode === 'account_settings'}" href="">
                         <BoxIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.account_settings') }}
                     </a>
-                    <a @click.prevent="changeTab('change_password')" class="flex items-center mt-5" href="">
+                    <a @click.prevent="changeTab('change_password')" :class="{'flex items-center mt-5':true, 'text-theme-25 dark:text-theme-22 font-medium':mode === 'change_password'}" href="">
                         <LockIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.change_password') }}
-                    </a>
-                    <a @click.prevent="changeTab('user_settings')" class="flex items-center mt-5" href="">
-                        <SettingsIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.user_settings') }}
-                    </a>
-                    <a @click.prevent="changeTab('email_settings')" class="flex items-center mt-5" href="">
-                        <ActivityIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.email_settings') }}
                     </a>
                 </div>
             </div>
@@ -45,7 +39,7 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <vee-form id="profileForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                        <vee-form id="profileForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                             <div class="mb-3">
                                 <div class="form-inline">
                                     <label class="form-label w-40 px-3" for="name">{{ t('views.profile.fields.name') }}</label>
@@ -122,6 +116,88 @@
                                 <div class="form-inline">
                                     <label class="form-label w-40 px-3" for="remarks">{{ t('views.profile.fields.remarks') }}</label>
                                     <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks"/>
+                                </div>
+                            </div>
+                        </vee-form>
+                    </div>
+                </div>
+                <div class="intro-y box col-span-12 2xl:col-span-6" v-if="mode === 'account_settings'">
+                    <div class="flex items-center px-5 py-5 sm:py-3 border-b border-gray-200 dark:border-dark-5">
+                        <h2 class="font-medium text-base mr-auto">{{ t('views.profile.menu.account_settings') }}</h2>
+                    </div>
+                    <div class="intro-x flex justify-center" v-if="isEmptyObject(userContext)">
+                        <LoadingIcon icon="puff" />
+                    </div>
+                    <div class="intro-x" v-if="!isEmptyObject(userContext)">
+                        <vee-form id="profileSettingsForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label class="form-label w-40 px-3" for="inputTheme">{{ t('views.profile.fields.settings.theme') }}</label>
+                                    <select class="form-control form-select" id="inputTheme" name="theme" v-model="userContext.selectedSettings.theme">
+                                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                        <option value="side-menu-normal-light">Side Menu Normal Light</option>
+                                        <option value="side-menu-mini-light">Side Menu Mini Light</option>
+                                        <option value="side-menu-normal-dark">Side Menu Normal Dark</option>
+                                        <option value="side-menu-mini-dark">Side Menu Mini Dark</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label class="form-label w-40 px-3" for="selectDate">{{ t('views.profile.fields.settings.dateFormat') }}</label>
+                                    <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="userContext.selectedSettings.dateFormat">
+                                        <option value="yyyy-MM-dd">{{ (new Date()).getFullYear() + '-' + (new Date()).getMonth() + '_' + (new Date()).getDay() }}</option>
+                                        <option value="dd-MMM-yyyy">{{ (new Date()).getDay() + '-' + (new Date()).getMonth() + '-' + (new Date()).getFullYear() }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label class="form-label w-40 px-3" for="selectTime">{{ t('views.profile.fields.settings.timeFormat') }}</label>
+                                    <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="userContext.selectedSettings.timeFormat">
+                                        <option value="hh:mm:ss">10:45:22</option>
+                                        <option value="h:m_A">9:30 AM</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label class="form-label w-40 px-3" for="api_token">{{ t('views.profile.fields.settings.api_token') }}</label>
+                                    <button id="api_token" class="btn">{{ t('components.buttons.reset') }}</button>
+                                </div>
+                            </div>
+                        </vee-form>
+                    </div>
+                </div>
+                <div class="intro-y box col-span-12 2xl:col-span-6" v-if="mode === 'change_password'">
+                    <div class="flex items-center px-5 py-5 sm:py-3 border-b border-gray-200 dark:border-dark-5">
+                        <h2 class="font-medium text-base mr-auto">{{ t('views.profile.menu.change_password') }}</h2>
+                    </div>
+                    <div class="intro-x flex justify-center" v-if="isEmptyObject(userContext)">
+                        <LoadingIcon icon="puff" />
+                    </div>
+                    <div class="intro-x" v-if="!isEmptyObject(userContext)">
+                        <vee-form id="profileChangePasswordForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label class="form-label w-40 px-3" for="current_pwd">{{ t('views.profile.fields.change_password.current_password') }}</label>
+                                    <input id="current_pwd" type="password" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label class="form-label w-40 px-3" for="new_pwd">{{ t('views.profile.fields.change_password.new_password') }}</label>
+                                    <input id="new_pwd" type="password" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-inline">
+                                    <label class="form-label w-40 px-3" for="confirm_pwd">{{ t('views.profile.fields.change_password.confirm_password') }}</label>
+                                    <input id="confirm_pwd" type="password" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-inline">
                                 </div>
                             </div>
                         </vee-form>
