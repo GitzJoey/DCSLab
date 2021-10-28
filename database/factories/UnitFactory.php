@@ -34,6 +34,11 @@ class UnitFactory extends Factory
             'PACK',
             'SAK', 
             'KRT',
+            'BKS',
+            'SLOP',
+            'DUS',
+            'ROLL',
+            'BTG',
         ];
         
         return [

@@ -16,10 +16,7 @@ class WarehouseTableSeeder extends Seeder
      */
     public function run()
     {
-        $randomGenerator = new randomGenerator();
-        $randomGenerator->generateOne(5);
-
-        for($i = 0; $i < 5; $i++)
+        for($i = 0; $i < 15; $i++)
         {
             $branch = Warehouse::factory()->make();
 

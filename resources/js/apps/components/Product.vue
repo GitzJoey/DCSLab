@@ -140,72 +140,87 @@
                             </div>
                         </div>
 
-                        <table class="table table-vcenter">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Code</th>
-                                    <th v-show="this.mode === 'edit'">Is Base</th>
-                                    <th>Conversion Value</th>
-                                    <th>Unit</th>
-                                    <th>Primary Unit</th>
-                                    <th>Remarks</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(c, cIdx) in product.product_unit">
-                                    <td>
-                                        <input type="text" class="form-control" v-model="c.code" id="code" name="code[]"/>
-                                    </td>
+                        <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
+                            <div class="block-header bg-gray-dark">
+                                <h3 class="block-title"><strong>Product Unit</strong></h3>
 
-                                    <td v-show="this.mode === 'edit'">
-                                        <span v-if="c.is_base === 1">YES</span>
-                                        <span v-if="c.is_base === 0">NO</span>
-                                    </td>
+                                <div class="block-options">
+                                    <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
+                                        <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
+                                        <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
+                                    </button>
+                                    <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list'">
+                                        <i class="icon icon-refresh"></i>
+                                    </button>
+                                    <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
+                                        <i class="icon icon-arrow-down" v-if="this.contentHidden === true"></i>
+                                        <i class="icon icon-arrow-up" v-if="this.contentHidden === false"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="block-content">
+                                <table class="table table-vcenter">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Code</th>
+                                            <th v-show="this.mode === 'edit'">Is Base</th>
+                                            <th>Conversion Value</th>
+                                            <th>Unit</th>
+                                            <th>Primary Unit</th>
+                                            <th>Remarks</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(c, cIdx) in product.product_unit">
+                                            <td>
+                                                <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
+                                            </td>
 
-                                    <td>
-                                        <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
-                                    </td>
+                                            <td v-show="this.mode === 'edit'">
+                                                <span v-if="c.is_base === 1">YES</span>
+                                                <span v-if="c.is_base === 0">NO</span>
+                                            </td>
 
-                                    <td>
-                                        <select class="form-control" id="unit_id" name="unit_id" v-model="c.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                            <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                        </select>
-                                        <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                            {{ c.unit.name }}
-                                        </div>  
-                                    </td>
+                                            <td>
+                                                <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
+                                            </td>
 
-                                    <td>
-                                        <label class="css-control css-control-primary css-checkbox">
-                                            <input type="checkbox" class="css-control-input" id="is_primary_unit" name="is_primary_unit[]" v-model="c.is_primary_unit" true-value="1" false-value="0">
-                                            <span class="css-control-indicator"></span>
-                                        </label>
-                                    </td>
-                                   
-                                    <td>
-                                        <input type="text" class="form-control" v-model="c.remark" id="remark" name="remark[]"/>
-                                    </td>
+                                            <td>
+                                                <select class="form-control" id="unit_id" name="unit_id" v-model="c.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                                </select>
+                                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                                    {{ c.unit.name }}
+                                                </div>  
+                                            </td>
 
-                                    <td class="text-center">
-                                        <div class="btn-group">
-                                            <!-- <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="createNewProductUnit">
-                                                <i class="fa fa-info"></i>
-                                            </button> -->
-                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="createNewProductUnit">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="showUnitSelected2(cIdx)">
-                                                <i class="fa fa-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                            <td>
+                                                <label class="css-control css-control-primary css-checkbox">
+                                                    <input type="checkbox" class="css-control-input" id="is_primary_unit" name="is_primary_unit[]" v-model="c.is_primary_unit" true-value="1" false-value="0">
+                                                    <span class="css-control-indicator"></span>
+                                                </label>
+                                            </td>
+                                        
+                                            <td>
+                                                <input type="text" class="form-control" v-model="c.remark" id="product_unit_remark" name="product_unit_remark[]"/>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedProductUnit(cIdx)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
+                                <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
@@ -427,13 +442,15 @@ export default {
         },
         emptyProduct() {
             return {
-                code: '',
+                code: 'AUTO',
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
                 product_unit: [
                     {
                         hId: '',
+                        code: 'AUTO',
+                        conversion_value: '1',
                         unit: {hId: ''}
                     }
                 ],
@@ -458,20 +475,6 @@ export default {
             this.mode = 'show';
             this.product = this.productList.data[idx];
         },
-        createNewProductUnit() {
-            var product_unit = {
-                hId: '',
-                unit: {hId: ''}
-            };
-            this.product.product_unit.push(product_unit);
-            // console.log('a');
-        },
-        showUnitSelected2(inx) {
-            console.log(inx);
-            this.product.product_unit.pop();
-            console.log('a');
-        },
-
         deleteSelected(idx) {
             this.mode = 'delete';
             this.product = this.productList.data[idx];
@@ -483,6 +486,18 @@ export default {
                 this.handleError(e, actions);
                 this.loading = false;
             });
+        },
+        createNewProductUnit() {
+            var product_unit = {
+                hId: '',
+                code: 'AUTO',
+                conversion_value: '0',
+                unit: {hId: ''}
+            };
+            this.product.product_unit.push(product_unit);
+        },
+        deleteSelectedProductUnit(idx) {
+            this.product.product_unit.splice(idx, 1);
         },
         onSubmit(values, actions) {
             this.loading = true;
