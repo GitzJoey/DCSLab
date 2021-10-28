@@ -46,7 +46,9 @@ class ProductController extends BaseController
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
 
-$adala_array = $request['conv_value'];
+        $product_unit = [];
+        array_push($product_unit, [$request['product_unit_code'], $request['conv_value'], $request['unit_id'], $request['is_primary_unit'], $request['product_unit_remarks']]);
+        // $adala_array = $request['conv_value'];
 
         $result = $this->productService->create(
             $request['code'], 
