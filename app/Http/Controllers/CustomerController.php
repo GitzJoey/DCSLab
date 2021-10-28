@@ -53,6 +53,7 @@ class CustomerController extends BaseController
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
         $result = $this->CustomerService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 
@@ -93,6 +94,7 @@ class CustomerController extends BaseController
 
         $result = $this->CustomerService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 

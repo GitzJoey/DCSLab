@@ -13,6 +13,7 @@ use App\Models\CustomerGroup;
 class CustomerGroupServiceImpl implements CustomerGroupService
 {
     public function create(
+        $company_id,
         $code,
         $name,
         $is_member_card,
@@ -41,6 +42,7 @@ class CustomerGroupServiceImpl implements CustomerGroupService
 
         try {
             $customergroup = new CustomerGroup();
+            $customergroup->company_id = $company_id;
             $customergroup->code = $code;
             $customergroup->name = $name;
             $customergroup->is_member_card = $is_member_card;
@@ -87,6 +89,7 @@ class CustomerGroupServiceImpl implements CustomerGroupService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
         $is_member_card,
@@ -118,6 +121,7 @@ class CustomerGroupServiceImpl implements CustomerGroupService
             $customergroup = CustomerGroup::where('id', '=', $id);
 
             $retval = $customergroup->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'is_member_card' => $is_member_card,

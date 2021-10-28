@@ -5,6 +5,7 @@ namespace App\Services;
 interface ProductService
 {
     public function create(
+        $company_id,
         $code,
         $group_id,
         $brand_id,
@@ -23,6 +24,7 @@ interface ProductService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $group_id,
         $brand_id,

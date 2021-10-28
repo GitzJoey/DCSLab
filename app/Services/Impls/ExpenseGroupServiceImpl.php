@@ -13,6 +13,7 @@ use App\Models\ExpenseGroup;
 class ExpenseGroupServiceImpl implements ExpenseGroupService
 {
     public function create(
+        $company_id,
         $code,
         $name,
     )
@@ -21,6 +22,7 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
 
         try {
             $expensegroup = new ExpenseGroup();
+            $expensegroup->company_id = $company_id;
             $expensegroup->code = $code;
             $expensegroup->name = $name;
 
@@ -43,6 +45,7 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
     )
@@ -53,6 +56,7 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
             $expensegroup = ExpenseGroup::where('id', '=', $id);
 
             $retval = $expensegroup->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
             ]);

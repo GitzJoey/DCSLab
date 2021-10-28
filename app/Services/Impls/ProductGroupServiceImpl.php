@@ -13,6 +13,7 @@ use App\Models\ProductGroup;
 class ProductGroupServiceImpl implements ProductGroupService
 {
     public function create(
+        $company_id,
         $code,
         $name
     )
@@ -21,6 +22,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
         try {
             $productgroup = new ProductGroup();
+            $productgroup->company_id = $company_id;
             $productgroup->code = $code;
             $productgroup->name = $name;
 
@@ -48,6 +50,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name
     )
@@ -58,6 +61,8 @@ class ProductGroupServiceImpl implements ProductGroupService
             $productgroup = ProductGroup::where('id', '=', $id);
     
             $retval = $productgroup->update([
+                'company_id' => $company_id,
+                'code' => $code,
                 'code' => $code,
                 'name' => $name,
             ]);

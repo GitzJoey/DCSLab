@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductGroupController extends BaseController
 {
@@ -45,7 +46,11 @@ class ProductGroupController extends BaseController
             'name' => 'required|max:255'
         ]);
 
-        $result = $this->productGroupService->create($request['code'], $request['name']);
+        $result = $this->productGroupService->create(
+            Hashids::decode($request['company_id'])[0],
+            $request['code'],
+            $request['name']
+        );
 
         return $result == 0 ? response()->error():response()->success();
     }
@@ -59,6 +64,7 @@ class ProductGroupController extends BaseController
         
         $result = $this->productGroupService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
         );

@@ -51,6 +51,7 @@ class ProductController extends BaseController
         // $adala_array = $request['conv_value'];
 
         $result = $this->productService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'], 
             Hashids::decode($request['group_id'])[0], 
             Hashids::decode($request['brand_id'])[0], 
@@ -79,6 +80,7 @@ class ProductController extends BaseController
 
         $result = $this->productService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'], 
             Hashids::decode($request['group_id'])[0], 
             Hashids::decode($request['brand_id'])[0], 

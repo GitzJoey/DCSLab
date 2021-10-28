@@ -46,14 +46,20 @@ class ProductUnitController extends BaseController
             'name' => 'required|max:255'
         ]);
 
+        $is_base = $request['is_base'];
+        $is_base == 'on' ? $is_base = 1 : $is_base = 0;
+
+        $is_primary_unit = $request['is_primary_unit'];
+        $is_primary_unit == 'on' ? $is_primary_unit = 1 : $is_primary_unit = 0;
+
         $result = $this->productUnitService->create(
             $request['code'],
             Hashids::decode($request['company_id'])[0], 
             Hashids::decode($request['product_id'])[0], 
             Hashids::decode($request['unit_id'])[0], 
-            $request['is_base'],
+            $is_base,
             $request['conversion_value'],
-            $request['is_primary_unit'],
+            $is_primary_unit,
             $request['remarks'],
         );
 
@@ -67,14 +73,21 @@ class ProductUnitController extends BaseController
             'name' => 'required|max:255',
         ]);
         
+        $is_base = $request['is_base'];
+        $is_base == 'on' ? $is_base = 1 : $is_base = 0;
+
+        $is_primary_unit = $request['is_primary_unit'];
+        $is_primary_unit == 'on' ? $is_primary_unit = 1 : $is_primary_unit = 0;
+
         $result = $this->productUnitService->update(
             $id,
             $request['code'],
             Hashids::decode($request['company_id'])[0], 
             Hashids::decode($request['product_id'])[0], 
             Hashids::decode($request['unit_id'])[0], 
-            $request['is_base'],
+            $is_base,
             $request['conversion_value'],
+            $is_primary_unit,
             $request['remarks'],
         );
         return $result == 0 ? response()->error():response()->success();
