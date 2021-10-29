@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
 			$table->integer('point')->nullable();
 			$table->integer('is_use_serial')->nullable();
             $table->integer('product_type')->nullable(); //[RAW, WIP, FINISHED GOOD]
+            $table->integer('is_service')->default(0);            
             $table->integer('status')->nullable();
 			$table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
