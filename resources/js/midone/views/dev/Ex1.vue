@@ -1,24 +1,33 @@
 <template>
-
-    <vee-form @submit="onSubmit" :validationSchema="validationSchema" v-slot="{ errors }">
+    <form @submit.prevent="onSubmit">
         <input type="text" name="name" v-model="model"/>
         <button type="submit" class="btn">aaaaaa</button>
         {{ errors }}
-    </vee-form>
+    </form>
 </template>
 
 <script setup>
 import {inject, onMounted, ref} from "vue";
+import { useForm, defineRule } from 'vee-validate';
+import { required } from '@vee-validate/rules';
+
+defineRule('required', required);
 
 const model = ref('');
 
-const validationSchema = {
-    name: 'required'
-};
+const { handleSubmit, errors } = useForm({
+    initialValues: {
+        name: ''
+    },
+   validationSchema: {
+       name: 'required'
+   },
+    validateOnMount: false
+});
 
-function onSubmit() {
+const onSubmit = handleSubmit(values => {
     console.log('a');
-}
+});
 
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');

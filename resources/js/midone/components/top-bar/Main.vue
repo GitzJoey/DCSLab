@@ -10,13 +10,13 @@
             </div>
         </div>
 
-        <div class="-intro-x breadcrumb mr-auto hidden sm:flex">
-            <a href="" class="breadcrumb--active"><strong>Company</strong></a>
+        <div class="-intro-x flex items-center text-theme-30 dark:text-white mr-auto hidden sm:flex">
+            <a href="" class="text-gray-800 cursor-text dark:text-gray-600"><strong></strong></a>
         </div>
 
-        <div class="mr-auto sm:mr-6">
+        <div class="mr-auto sm:mr-6 hover:animate-pulse">
             <a id="slide-over" href="javascript:;" data-toggle="modal" data-target="#slide-over-content" class="notification cursor-pointer">
-                <ApertureIcon class="notification__icon dark:text-gray-300" />
+                <ArchiveIcon class="notification__icon dark:text-gray-300" />
             </a>
         </div>
 

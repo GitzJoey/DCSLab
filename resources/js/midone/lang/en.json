@@ -5,7 +5,8 @@
             "cancel": "Cancel",
             "delete": "Delete",
             "back": "Back",
-            "reset": "Reset"
+            "reset": "Reset",
+            "compose": "Compose"
         },
         "dropdown": {
             "placeholder": "Please Select",
@@ -52,11 +53,20 @@
         }
     },
     "views": {
+        "inbox": {
+            "title": "Inbox",
+            "fields": {
+                "to": "To",
+                "subject": "Subject",
+                "message": "Message"
+            }
+        },
         "profile": {
             "title": "Profile",
             "menu": {
                 "personal_information": "Personal Information",
                 "account_settings": "Account Settings",
+                "roles": "Roles",
                 "change_password": "Change Password"
             },
             "fields": {

@@ -5,7 +5,8 @@
             "cancel": "Batal",
             "delete": "Hapus",
             "back": "Kembali",
-            "reset": "Reset"
+            "reset": "Reset",
+            "compose": "Pesan Baru"
         },
         "dropdown": {
             "placeholder": "Silahkan Pilih",
@@ -52,11 +53,20 @@
         }
     },
     "views": {
+        "inbox": {
+            "title": "Kotak Masuk",
+            "fields": {
+                "to": "Kepada",
+                "subject": "Subjek",
+                "message": "Pesan"
+            }
+        },
         "profile": {
             "title": "Profil",
             "menu": {
                 "personal_information": "Informasi Pribadi",
                 "account_settings": "Pengaturan Akun",
+                "roles": "Peran",
                 "change_password": "Ubah Password"
             },
             "fields": {

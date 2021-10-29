@@ -117,12 +117,14 @@
                 </ul>
             </nav>
 
-            <div :class="{ 'content--dashboard': dashboardLayout }" class="content">
+            <div :class="{ 'content--dashboard': dashboardLayout, 'content':true }">
                 <TopBar />
                 <router-view />
-                <br/>
-                <br/>
-                <br/>
+                <template v-if="!dashboardLayout">
+                    <br/>
+                    <br/>
+                    <br/>
+                </template>
                 <back-to-top :visible="!dashboardLayout"/>
             </div>
         </div>

@@ -259,7 +259,6 @@ onMounted(() => {
     getUser();
     getDDL();
 
-    mode.value = 'create';
     loading.value = false;
 });
 

@@ -23,6 +23,9 @@
                     <a @click.prevent="changeTab('account_settings')" :class="{'flex items-center mt-5':true, 'text-theme-25 dark:text-theme-22 font-medium':mode === 'account_settings'}" href="">
                         <BoxIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.account_settings') }}
                     </a>
+                    <a @click.prevent="changeTab('roles')" :class="{'flex items-center mt-5':true, 'text-theme-25 dark:text-theme-22 font-medium':mode === 'roles'}" href="">
+                        <BoxIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.roles') }}
+                    </a>
                     <a @click.prevent="changeTab('change_password')" :class="{'flex items-center mt-5':true, 'text-theme-25 dark:text-theme-22 font-medium':mode === 'change_password'}" href="">
                         <LockIcon class="w-4 h-4 mr-2" /> {{ t('views.profile.menu.change_password') }}
                     </a>
@@ -167,6 +170,16 @@
                                 </div>
                             </div>
                         </vee-form>
+                    </div>
+                </div>
+                <div class="intro-y box col-span-12 2xl:col-span-6" v-if="mode === 'roles'">
+                    <div class="flex items-center px-5 py-5 sm:py-3 border-b border-gray-200 dark:border-dark-5">
+                        <h2 class="font-medium text-base mr-auto">{{ t('views.profile.menu.roles') }}</h2>
+                    </div>
+                    <div class="intro-x flex justify-center" v-if="isEmptyObject(userContext)">
+                        <LoadingIcon icon="puff" />
+                    </div>
+                    <div class="intro-x" v-if="!isEmptyObject(userContext)">
                     </div>
                 </div>
                 <div class="intro-y box col-span-12 2xl:col-span-6" v-if="mode === 'change_password'">
