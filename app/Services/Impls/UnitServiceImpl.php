@@ -13,6 +13,7 @@ use App\Models\Unit;
 class UnitServiceImpl implements UnitService
 {
     public function create(
+        $company_id,
         $code,
         $name
     )
@@ -21,6 +22,7 @@ class UnitServiceImpl implements UnitService
 
         try {
             $unit = new Unit();
+            $unit->company_id = $company_id;
             $unit->code = $code;
             $unit->name = $name;
 
@@ -48,6 +50,7 @@ class UnitServiceImpl implements UnitService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name
     )
@@ -58,6 +61,7 @@ class UnitServiceImpl implements UnitService
             $unit = Unit::where('id', '=', $id);
     
             $retval = $unit->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
             ]);

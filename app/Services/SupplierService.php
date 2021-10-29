@@ -5,6 +5,7 @@ namespace App\Services;
 interface SupplierService
 {
     public function create(
+        $company_id,
         $code,
         $name,
         $term,
@@ -21,6 +22,7 @@ interface SupplierService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
         $term,

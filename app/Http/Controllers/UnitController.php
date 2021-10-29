@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class UnitController extends BaseController
 {
@@ -45,7 +46,11 @@ class UnitController extends BaseController
             'name' => 'required|max:255'
         ]);
 
-        $result = $this->UnitService->create($request['code'], $request['name']);
+        $result = $this->UnitService->create(
+            Hashids::decode($request['company_id'])[0],
+            $request['code'],
+            $request['name']
+        );
 
         return $result == 0 ? response()->error():response()->success();
     }
@@ -59,6 +64,7 @@ class UnitController extends BaseController
 
         $result = $this->UnitService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
         );

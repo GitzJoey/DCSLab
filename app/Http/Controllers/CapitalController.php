@@ -47,6 +47,7 @@ class CapitalController extends BaseController
         // ];
 
         $result = $this->capitalService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['ref_number'],
             Hashids::decode($request['investor_id'])[0], 
             Hashids::decode($request['group_id'])[0], 
@@ -73,6 +74,7 @@ class CapitalController extends BaseController
 
         $result = $this->capitalService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['ref_number'], 
             Hashids::decode($request['investor_id'])[0], 
             Hashids::decode($request['group_id'])[0], 

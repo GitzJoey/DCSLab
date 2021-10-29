@@ -60,6 +60,7 @@ class ExpenseGroupController extends BaseController
 
         $result = $this->expenseGroupService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
         );

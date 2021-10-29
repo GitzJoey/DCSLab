@@ -43,6 +43,7 @@ class IncomeGroupController extends BaseController
         ]);
 
         $result = $this->incomeGroupService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'], 
         );
@@ -58,6 +59,7 @@ class IncomeGroupController extends BaseController
 
         $result = $this->incomeGroupService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
         );

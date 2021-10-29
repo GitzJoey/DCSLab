@@ -5,6 +5,7 @@ namespace App\Services;
 interface ExpenseGroupService
 {
     public function create(
+        $company_id,
         $code,
         $name,
     );
@@ -13,6 +14,7 @@ interface ExpenseGroupService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
     );

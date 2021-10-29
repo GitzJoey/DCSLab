@@ -14,6 +14,7 @@ use App\Models\ProductBrand;
 class ProductBrandServiceImpl implements ProductBrandService
 {
     public function create(
+        $company_id,
         $code,
         $name
     )
@@ -22,6 +23,7 @@ class ProductBrandServiceImpl implements ProductBrandService
 
         try {
             $productbrand = new ProductBrand();
+            $productbrand->company_id = $company_id;
             $productbrand->code = $code;
             $productbrand->name = $name;
 
@@ -49,6 +51,7 @@ class ProductBrandServiceImpl implements ProductBrandService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name
     )
@@ -59,6 +62,7 @@ class ProductBrandServiceImpl implements ProductBrandService
             $productbrand = ProductBrand::where('id', '=', $id);
 
             $retval = $productbrand->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
             ]);
