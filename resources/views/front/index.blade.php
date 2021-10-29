@@ -96,7 +96,7 @@
 
     <section id="pricing" class="pricing-area">
         <div class="container">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center mb-3">
                 <div class="col-lg-6">
                     <div class="section-title text-center pb-10">
                         <h4 class="title">{{ __('front.pricing.title') }}</h4>
@@ -161,7 +161,7 @@
                         <div class="pricing-flower">
                             <img src="{{ asset('images/flower.svg') }}" alt="flower">
                         </div>
-                        <div class="pricing-header text-right">
+                        <div class="pricing-header text-end">
                             <h5 class="sub-title">Enterprise</h5>
                             <span class="price">$ 799</span>
                             <p class="year">per year</p>

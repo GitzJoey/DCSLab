@@ -40,7 +40,7 @@
                                         <div class="form-text text-danger">{{ $errors->first('email') }}</div>
                                     @enderror
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-2">
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('auth.buttons.submit') }}
                                     </button>

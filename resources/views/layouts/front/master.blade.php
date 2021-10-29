@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
     <title> @yield('title', 'DCSLab') - {{ config('app.name') }}</title>
+
     <meta name="description" content="DCSLab" />
     <meta name="keywords" content="DCSLab" />
     <meta name="author" content="GitzJoey" />
+
+    <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ mix('/css/start/main.css') }}" />
 </head>
 <body>
@@ -30,24 +34,24 @@
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarMain">
                                 <ul class="navbar-nav m-auto">
                                     <li class="nav-item" data-menu="home">
-                                        <a class="page-scroll text-uppercase" href="{{ route('front').'#home' }}">{{ __('front.menu.home') }}</a>
+                                        <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#home' }}">{{ __('front.menu.home') }}</a>
                                     </li>
                                     <li class="nav-item" data-menu="service">
-                                        <a class="page-scroll text-uppercase" href="{{ route('front').'#service' }}">{{ __('front.menu.services') }}</a>
+                                        <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#service' }}">{{ __('front.menu.services') }}</a>
                                     </li>
                                     <li class="nav-item" data-menu="pricing">
-                                        <a class="page-scroll text-uppercase" href="{{ route('front').'#pricing' }}">{{ __('front.menu.pricing') }}</a>
+                                        <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#pricing' }}">{{ __('front.menu.pricing') }}</a>
                                     </li>
                                     <li class="nav-item" data-menu="contact">
-                                        <a class="page-scroll text-uppercase" href="{{ route('front').'#contact' }}">{{ __('front.menu.contact') }}</a>
+                                        <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#contact' }}">{{ __('front.menu.contact') }}</a>
                                     </li>
                                     @if (Route::current()->getName() == 'login' ||  Route::current()->getName() == 'register')
                                         <li class="nav-item active" data-menu="dashboard">
-                                            <a class="text-uppercase" href="{{ route('login') }}">{{ __('front.menu.dashboard') }}</a>
+                                            <a class="text-uppercase fw-bolder" href="{{ route('login') }}">{{ __('front.menu.dashboard') }}</a>
                                         </li>
                                     @else
                                         <li class="nav-item" data-menu="dashboard">
-                                            <a class="text-uppercase" href="{{ route('login') }}">{{ __('front.menu.dashboard') }}</a>
+                                            <a class="text-uppercase fw-bolder" href="{{ route('login') }}">{{ __('front.menu.dashboard') }}</a>
                                         </li>
                                     @endif
                                 </ul>
@@ -55,10 +59,10 @@
 
                             <div class="navbar-social d-none d-sm-flex align-items-center">
                                 <ul>
-                                    <li><a href=""><i class="icon icon-social-facebook"></i></a></li>
-                                    <li><a href=""><i class="icon icon-social-twitter"></i></a></li>
-                                    <li><a href=""><i class="icon icon-social-instagram"></i></a></li>
-                                    <li><a href=""><i class="icon icon-social-linkedin"></i></a></li>
+                                    <li class="mx-1"><a href=""><i class="icon icon-social-facebook"></i></a></li>
+                                    <li class="mx-1"><a href=""><i class="icon icon-social-twitter"></i></a></li>
+                                    <li class="mx-1"><a href=""><i class="icon icon-social-instagram"></i></a></li>
+                                    <li class="mx-1"><a href=""><i class="icon icon-social-linkedin"></i></a></li>
                                 </ul>
                             </div>
                         </nav>
