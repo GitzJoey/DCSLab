@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Customer;
 use App\Models\Cash;
+use App\Models\Customer;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -94,5 +95,10 @@ class CustomerGroup extends Model
     public function customer_group()
     {
         return $this->hasMany(Customer::class);
+    }
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

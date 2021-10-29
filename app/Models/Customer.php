@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CustomerGroup;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -77,5 +78,10 @@ class Customer extends Model
     public function customer_group()
     {
         return $this->belongsTo(CustomerGroup::class);
+    }
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

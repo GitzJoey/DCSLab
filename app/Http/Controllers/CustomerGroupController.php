@@ -66,6 +66,7 @@ class CustomerGroupController extends BaseController
         $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
 
         $result = $this->CustomerGroupService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $is_member_card,
@@ -119,6 +120,7 @@ class CustomerGroupController extends BaseController
 
         $result = $this->CustomerGroupService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $is_member_card,

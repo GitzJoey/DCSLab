@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\ProductBrandService;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductBrandController extends BaseController
 {
@@ -46,7 +47,11 @@ class ProductBrandController extends BaseController
             'name' => 'required|max:255'
         ]);
 
-        $result = $this->productBrandService->create($request['code'], $request['name']);
+        $result = $this->productBrandService->create(
+            Hashids::decode($request['company_id'])[0],
+            $request['code'],
+            $request['name']
+        );
         
         return $result == 0 ? response()->error():response()->success();
     }
@@ -60,6 +65,7 @@ class ProductBrandController extends BaseController
 
         $result = $this->productBrandService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
         );

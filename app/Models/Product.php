@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Company;
 use App\Models\ProductGroup;
 use App\Models\ProductBrand;
 use App\Models\Unit;
@@ -66,6 +67,11 @@ class Product extends Model
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
+    }
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function group()

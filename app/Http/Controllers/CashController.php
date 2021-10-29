@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CashService;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CashController extends BaseController
 {
@@ -50,6 +51,7 @@ class CashController extends BaseController
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
         $result = $this->CashService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'], 
             $request['name'], 
             $is_bank, 
@@ -72,6 +74,7 @@ class CashController extends BaseController
 
         $result = $this->CashService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $is_bank,

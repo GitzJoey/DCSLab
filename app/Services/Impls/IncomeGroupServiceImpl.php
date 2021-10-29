@@ -13,6 +13,7 @@ use App\Models\IncomeGroup;
 class IncomeGroupServiceImpl implements IncomeGroupService
 {
     public function create(
+        $company_id,
         $code,
         $name,
     )
@@ -21,6 +22,7 @@ class IncomeGroupServiceImpl implements IncomeGroupService
 
         try {
             $incomegroup = new IncomeGroup();
+            $incomegroup->company_id = $company_id;
             $incomegroup->code = $code;
             $incomegroup->name = $name;
 
@@ -43,6 +45,7 @@ class IncomeGroupServiceImpl implements IncomeGroupService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
     )
@@ -53,6 +56,7 @@ class IncomeGroupServiceImpl implements IncomeGroupService
             $incomegroup = IncomeGroup::where('id', '=', $id);
 
             $retval = $incomegroup->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
             ]);

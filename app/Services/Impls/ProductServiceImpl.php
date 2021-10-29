@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Config;
 class ProductServiceImpl implements ProductService
 {
     public function create(
+        $company_id,
         $code,
         $group_id,
         $brand_id,
@@ -31,6 +32,7 @@ class ProductServiceImpl implements ProductService
 
         try {
             $product = new Product();
+            $product->company_id = $company_id;
             $product->code = $code;
             $product->group_id = $group_id;
             $product->brand_id = $brand_id;
@@ -63,6 +65,7 @@ class ProductServiceImpl implements ProductService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $group_id,
         $brand_id,
@@ -82,6 +85,7 @@ class ProductServiceImpl implements ProductService
             $product = Product::where('id', '=', $id);
 
             $retval = $product->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'group_id' => $group_id,
                 'brand_id' => $brand_id,

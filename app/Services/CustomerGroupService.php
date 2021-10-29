@@ -5,6 +5,7 @@ namespace App\Services;
 interface CustomerGroupService
 {
     public function create(
+        $company_id,
         $code,
         $name,
         $is_member_card,
@@ -35,6 +36,7 @@ interface CustomerGroupService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
         $is_member_card,
