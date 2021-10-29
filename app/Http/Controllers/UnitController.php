@@ -39,6 +39,21 @@ class UnitController extends BaseController
         return $this->UnitService->getAllActiveUnit();
     }
 
+    public function getAllProductUnit()
+    {
+        return $this->UnitService->getAllProductUnit();
+    }
+
+    public function getAllServiceUnit()
+    {
+        return $this->UnitService->getAllServiceUnit();
+    }
+
+    public function GetAllProductandServiceUnit()
+    {
+        return $this->UnitService->GetAllProductandServiceUnit();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -47,11 +62,11 @@ class UnitController extends BaseController
         ]);
 
         $result = $this->UnitService->create(
-            Hashids::decode($request['company_id'])[0],
+            // Hashids::decode($request['company_id'])[0],
             $request['code'],
-            $request['name']
+            $request['name'],
+            $request['category']
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -64,9 +79,10 @@ class UnitController extends BaseController
 
         $result = $this->UnitService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            // Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
+            $request['category']
         );
         return $result == 0 ? response()->error():response()->success();
     }

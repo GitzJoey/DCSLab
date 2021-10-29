@@ -19,6 +19,7 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
+                category: 'Category',
             }
         },
         buttons: {
@@ -35,6 +36,7 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
+            category: 'Category',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -48,6 +50,11 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        categoryDDL: {
+            productgroup: 'Product Group',
+            servicegroup: 'Service Group',
+            productandservicegroup: 'Product and Service Group'
+        },
     },
     id: {
         table: {
@@ -55,6 +62,7 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
+                category: 'Kategory',
             }
         },
         buttons: {
@@ -71,6 +79,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Nama',
+            category: 'Kategory',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -83,6 +92,11 @@ const messages = {
         },
         placeholder: {
             please_select: 'Silahkan Pilih',
+        },
+        categoryDDL: {
+            productgroup: 'Product Group',
+            servicegroup: 'Service Group',
+            productandservicegroup: 'Product and Service Group'
         },
     }
 };

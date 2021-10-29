@@ -5,20 +5,28 @@ namespace App\Services;
 interface UnitService
 {
     public function create(
-        $company_id,
+        // $company_id,
         $code,
-        $name
+        $name,
+        $category
     );
 
     public function read();
 
     public function getAllActiveUnit();
+    
+    public function getAllProductUnit();
+
+    public function getAllServiceUnit();
+
+    public function GetAllProductandServiceUnit();
 
     public function update(
         $id,
-        $company_id,
+        // $company_id,
         $code,
-        $name
+        $name,
+        $category
     );
     public function delete($id);
     

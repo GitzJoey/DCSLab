@@ -39,6 +39,21 @@ class ProductGroupController extends BaseController
         return $this->productGroupService->getAllActiveProductGroup();
     }
 
+    public function getAllProductGroup()
+    {
+        return $this->productGroupService->getAllProductGroup();
+    }
+
+    public function getAllServiceGroup()
+    {
+        return $this->productGroupService->getAllServiceGroup();
+    }
+
+    public function GetAllProductandServiceGroup()
+    {
+        return $this->productGroupService->GetAllProductandServiceGroup();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -47,9 +62,10 @@ class ProductGroupController extends BaseController
         ]);
 
         $result = $this->productGroupService->create(
-            Hashids::decode($request['company_id'])[0],
+            // Hashids::decode($request['company_id'])[0],
             $request['code'],
-            $request['name']
+            $request['name'],
+            $request['category']
         );
 
         return $result == 0 ? response()->error():response()->success();
@@ -64,9 +80,10 @@ class ProductGroupController extends BaseController
         
         $result = $this->productGroupService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            // Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
+            $request['category']
         );
         return $result == 0 ? response()->error():response()->success();
     }

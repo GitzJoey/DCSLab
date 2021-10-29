@@ -27,6 +27,7 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.category") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -34,6 +35,11 @@
                             <tr v-for="(b, bIdx) in unitList.data">
                                 <td>{{ b.code }}</td>
                                 <td>{{ b.name }}</td>
+                                <td>
+                                    <span v-if="b.category === 1">{{ $t('categoryDDL.productunit') }}</span>
+                                    <span v-if="b.category === 2">{{ $t('categoryDDL.serviceunit') }}</span>
+                                    <span v-if="b.category === 3">{{ $t('categoryDDL.productandserviceunit') }}</span>
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
@@ -94,6 +100,22 @@
                                 <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="unit.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ unit.name }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="category" class="col-2 col-form-label">{{ $t('fields.category') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <select class="form-control" id="category" name="category" v-model="unit.category" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option value="1">{{ $t('categoryDDL.productunit') }}</option>
+                                    <option value="2">{{ $t('categoryDDL.serviceunit') }}</option>
+                                    <option value="3">{{ $t('categoryDDL.productandserviceunit') }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    <span v-if="unit.category === 1">{{ $t('categoryDDL.productunit') }}</span>
+                                    <span v-if="unit.category === 2">{{ $t('categoryDDL.serviceunit') }}</span>
+                                    <span v-if="unit.category === 3">{{ $t('categoryDDL.productandserviceunit') }}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -160,6 +182,7 @@ export default {
             unit: {
                 code: '',
                 name: '',
+                category: '',
             },
         }
     },
@@ -191,6 +214,7 @@ export default {
             return {
                 code: '',
                 name: '',
+                category: '',
             }
         },
         createNew() {

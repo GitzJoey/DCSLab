@@ -18,10 +18,15 @@ class Unit extends Model
     
     protected $fillable = [
         'code',
-        'name'
+        'name',
+        'category'
     ];
 
-    protected static $logAttributes = ['code', 'name'];
+    protected static $logAttributes = [
+        'code',
+        'name',
+        'category'
+    ];
 
     protected static $logOnlyDirty = true;
 
