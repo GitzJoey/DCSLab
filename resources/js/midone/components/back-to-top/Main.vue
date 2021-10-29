@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center" v-if="visible">
-        <button class="btn-elevated-rounded" @click.prevent="goTop">
+        <button class="bg-white btn-elevated-rounded" @click.prevent="goTop">
             <chevron-up-icon/>
         </button>
     </div>

@@ -53,7 +53,7 @@ class ActivityLogController extends BaseController
                     'pos' => $pos,
                     'dot' => true,
                     'log_name' => $a->log_name,
-                    'title' => 'Login',
+                    'title' => $a->description,
                     'description' => $a->description,
                     'timestamp' => $a->created_at->format('Y.m.d H.i.s'),
                     'data' => []

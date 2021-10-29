@@ -14,6 +14,12 @@
             <a href="" class="breadcrumb--active"><strong>Company</strong></a>
         </div>
 
+        <div class="mr-auto sm:mr-6">
+            <a id="slide-over" href="javascript:;" data-toggle="modal" data-target="#slide-over-content" class="notification cursor-pointer">
+                <ApertureIcon class="notification__icon dark:text-gray-300" />
+            </a>
+        </div>
+
         <div id="language-dropdown" class="intro-x dropdown mr-auto sm:mr-6">
             <div class="dropdown-toggle notification cursor-pointer" role="button" aria-expanded="false">
                 <GlobeIcon class="notification__icon dark:text-gray-300" />
@@ -68,6 +74,27 @@
                             {{ t('components.top-bar.profile_ddl.logout') }}
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="slide-over-content" class="modal modal-slide-over" data-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <a data-dismiss="modal" href="javascript:;">
+                    <XIcon class="w-8 h-8 text-white"/>
+                </a>
+
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto"></h2>
+                </div>
+
+                <div class="modal-body">
+                </div>
+
+                <div class="modal-footer text-right w-full absolute bottom-0">
+                    <strong>Copyright &copy; {{ (new Date()).getFullYear() }} <a href="https://www.github.com/GitzJoey">GitzJoey</a>&nbsp;&amp;&nbsp;<a href="#">Contributors</a>.</strong> All rights reserved.<br/> Powered By Coffee &amp; Curiosity.
                 </div>
             </div>
         </div>
