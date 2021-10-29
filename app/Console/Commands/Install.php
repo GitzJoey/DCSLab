@@ -106,16 +106,16 @@ class Install extends Command
             Artisan::call('storage:link');
         }
 
-        // $this->info('Starting NPM Install');
-        // exec('npm install');
+        $this->info('Starting NPM Install');
+        exec('npm install');
 
-        // $this->info('Starting Mix');
-        // if (App::environment('prod', 'production')) {
-        //     $this->info('Executing for production enviroment');
-        //     exec('npm run prod');
-        // } else {
-        //     exec('npm run dev');
-        // }
+        $this->info('Starting Mix');
+        if (App::environment('prod', 'production')) {
+            $this->info('Executing for production enviroment');
+            exec('npm run prod');
+        } else {
+            exec('npm run dev');
+        }
 
         $this->info('Creating Admin/Dev Account ...');
         $is_dev = $this->confirm("Are you a developer?", false);
