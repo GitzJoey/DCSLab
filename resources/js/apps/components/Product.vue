@@ -187,7 +187,7 @@
                                             </td>
 
                                             <td>
-                                                <select class="form-control" id="unit_id" name="unit_id" v-model="c.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                                <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                                 </select>
                                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">

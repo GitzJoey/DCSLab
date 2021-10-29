@@ -45,10 +45,39 @@ class ProductController extends BaseController
 
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
+        
+        // $product_unit = [];
+        // array_push(
+        //     $product_unit,         
+        //     $product_unit_code, 
+        //     $conv_value, 
+        //     $unit_id, 
+        //     $is_primary_unit, 
+        //     $product_unit_remarks
+        // );
+
+        // $product_unit_code = [];
+        // for($i = 0; $i < count($request['product_unit_code']); $i++) {
+        //     array_push($product_unit_code, array (
+        //         'id' => $request['product_unit_code'][$i]
+        //     ));
+        // }
+
+        $product_unit_code = $request['product_unit_code'];
+        $conv_value = $request['conv_value'];
+        $unit_id = $request['unit_id'];
+        $is_primary_unit = $request['is_primary_unit'];
+        $product_unit_remarks = $request['product_unit_remarks'];
 
         $product_unit = [];
-        array_push($product_unit, [$request['product_unit_code'], $request['conv_value'], $request['unit_id'], $request['is_primary_unit'], $request['product_unit_remarks']]);
-        // $adala_array = $request['conv_value'];
+        array_push(
+            $product_unit,         
+            $product_unit_code, 
+            $conv_value, 
+            $unit_id, 
+            $is_primary_unit, 
+            $product_unit_remarks
+        );
 
         $result = $this->productService->create(
             Hashids::decode($request['company_id'])[0],
