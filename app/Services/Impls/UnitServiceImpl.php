@@ -13,18 +13,20 @@ use App\Models\Unit;
 class UnitServiceImpl implements UnitService
 {
     public function create(
-        $company_id,
+        // $company_id,
         $code,
-        $name
+        $name,
+        $category
     )
     {
         DB::beginTransaction();
 
         try {
             $unit = new Unit();
-            $unit->company_id = $company_id;
+            // $unit->company_id = $company_id;
             $unit->code = $code;
             $unit->name = $name;
+            $unit->category = $category;
 
             $unit->save();
 
@@ -48,11 +50,27 @@ class UnitServiceImpl implements UnitService
         return Unit::all();
     }
 
+    public function getAllProductUnit()
+    {
+        return Unit::where('category', '=', 1)->get();
+    }
+
+    public function getAllServiceUnit()
+    {
+        return Unit::where('category', '=', 2)->get();
+    }
+
+    public function GetAllProductandServiceUnit()
+    {
+        return Unit::where('category', '=', 3)->get();
+    }
+
     public function update(
         $id,
-        $company_id,
+        // $company_id,
         $code,
-        $name
+        $name,
+        $category
     )
     {
         DB::beginTransaction();
@@ -61,9 +79,10 @@ class UnitServiceImpl implements UnitService
             $unit = Unit::where('id', '=', $id);
     
             $retval = $unit->update([
-                'company_id' => $company_id,
+                // 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
+                'category' => $category,
             ]);
     
             DB::commit();

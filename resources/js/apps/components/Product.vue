@@ -221,7 +221,6 @@
                                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
                             </div> 
                         </div>
-
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
