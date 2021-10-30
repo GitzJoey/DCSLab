@@ -78,7 +78,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
-                        <vee-field id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.name }}</div>
                     </div>
                     <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -86,7 +86,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputEmail" class="form-label w-40 px-3">{{ t('views.users.fields.email') }}</label>
-                        <vee-field id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <input id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.email }}</div>
                     </div>
                     <ErrorMessage name="email" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -152,7 +152,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputTaxId" class="form-label w-40 px-3">{{ t('views.users.fields.tax_id') }}</label>
-                        <vee-field id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.profile.tax_id }}</div>
                     </div>
                     <ErrorMessage name="tax_id" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -160,7 +160,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputICNum" class="form-label w-40 px-3">{{ t('views.users.fields.ic_num') }}</label>
-                        <vee-field id="inputICNum" name="ic_num" as="input" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.profile.ic_num }}</div>
                     </div>
                     <ErrorMessage name="ic_num" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -217,13 +217,29 @@
 
 <script setup>
 import { inject, onMounted, ref, computed } from 'vue'
-import { useForm } from 'vee-validate'
+import { useForm, useField, defineRule, configure } from 'vee-validate'
+import { required, email } from '@vee-validate/rules'
+import { localize, setLocale } from '@vee-validate/i18n';
+import en from '@vee-validate/i18n/dist/locale/en.json';
+import id from '@vee-validate/i18n/dist/locale/id.json';
+import { getLang } from '../../lang';
+
 import mainMixins from '../../mixins';
 
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
-const { t, route } = mainMixins();
+defineRule('required', required);
+defineRule('email', email);
+
+configure({
+    validateOnInput: true,
+    generateMessage: localize({ en, id }),
+})
+
+setLocale(getLang());
+
+const { t, route,  } = mainMixins();
 
 const { handleSubmit, handleReset, errors } = useForm({
     validationSchema: {
@@ -234,6 +250,11 @@ const { handleSubmit, handleReset, errors } = useForm({
     },
     validateOnMount: false
 });
+
+const { value: vname } = useField('name', 'required');
+const { value: vemail } = useField('email', 'required|email');
+const { value: vtax_id } = useField('tax_id', 'required');
+const { value: vic_num } = useField('ic_num', 'required');
 
 let mode = ref('list');
 let loading = ref(false);
