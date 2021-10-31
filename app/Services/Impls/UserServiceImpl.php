@@ -56,6 +56,8 @@ class UserServiceImpl implements UserService
         DB::beginTransaction();
 
         try {
+            //throw New \Exception('Test Exception From Services');
+
             $usr = new User();
             $usr->name = $name;
             $usr->email = $email;
@@ -132,6 +134,8 @@ class UserServiceImpl implements UserService
         if (array_key_exists('allExceptMe', $parameters)) {
             return User::where('email', '!=', $parameters['allExceptMe'])->get();
         }
+
+        return null;
     }
 
     public function update($id, $name, $rolesId, $profile, $settings)

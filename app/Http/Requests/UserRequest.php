@@ -25,8 +25,18 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $nullableArr = [
+            'first_name' => 'nullable',
+            'last_name' => 'nullable',
+            'address' => 'nullable',
+            'city' => 'nullable',
+            'postal_code' => 'nullable',
+            'img_path' => 'nullable',
+            'remarks' => 'nullable',
+        ];
+
         if ($this->route()->getActionMethod() == 'store') {
-            return [
+            $rules_store = [
                 'name' => 'required|alpha',
                 'email' => 'required|email|max:255|unique:users',
                 'roles' => 'required',
@@ -35,9 +45,11 @@ class UserRequest extends FormRequest
                 'status' => 'required',
                 'country' => 'required',
             ];
+
+            return array_merge($rules_store, $nullableArr);
         } else if ($this->route()->getActionMethod() == 'update') {
             $id = $this->route()->parameter('id');
-            return [
+            $rules_update = [
                 'name' => 'required|alpha',
                 'email' => 'required|email|max:255|unique:users,email,'.$id,
                 'roles' => 'required',
@@ -46,9 +58,11 @@ class UserRequest extends FormRequest
                 'status' => new validDropDownValue('ACTIVE_STATUS'),
                 'country' => 'required'
             ];
+
+            return array_merge($rules_update, $nullableArr);
         } else {
             return [
-
+                '' => 'required'
             ];
         }
     }

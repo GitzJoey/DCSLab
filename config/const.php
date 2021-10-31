@@ -24,7 +24,7 @@ return [
         ]
     ],
 
-    'ERROR_RETURN_VALUE' => 0,
+    'ERROR_RETURN_VALUE' => null,
 
     'DROPDOWN' => [
         'ACTIVE_STATUS' => [

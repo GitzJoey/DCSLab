@@ -67,6 +67,8 @@ class UserController extends BaseController
 
         $request = $userRequest->validated();
 
+        $request['password'] = 'P@ssw0rd';
+
         $profile = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
@@ -80,8 +82,8 @@ class UserController extends BaseController
             'remarks' => $request['remarks'],
         );
 
-        if ($request->hasFile('img_path')) {
-            $image = $request->file('img_path');
+        if (array_key_exists('img_path', $request)) {
+            $image = $request['img_path'];
             $filename = time().".".$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
@@ -101,7 +103,7 @@ class UserController extends BaseController
             $profile
         );
 
-        return $result == 0 ? response()->error():response()->success();
+        return $result == null ? response()->error():response()->success();
     }
 
     public function update($id, UserRequest $userRequest)
@@ -132,8 +134,8 @@ class UserController extends BaseController
             'PREFS.TIME_FORMAT' => $request['timeFormat'],
         ];
 
-        if ($request->hasFile('img_path')) {
-            $image = $request->file('img_path');
+        if (array_key_exists('img_path', $request)) {
+            $image = $request['img_path'];
             $filename = time().".".$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
@@ -148,10 +150,10 @@ class UserController extends BaseController
             $settings
         );
 
-        if ($request->filled('apiToken'))
+        if (array_key_exists('apiToken', $request))
             $this->userService->resetTokens($id);
 
-        return $result == 0 ? response()->error():response()->success();
+        return $result == null ? response()->error():response()->success();
     }
 
     public function resetPassword($id)

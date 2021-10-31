@@ -99,7 +99,7 @@
                                 <img id="inputImg" alt="" class="" :src="retrieveImage">
                             </div>
                             <div class="">
-                                <input type="file" class="h-full w-full" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload"/>
+                                <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload"/>
                             </div>
                         </div>
                     </div>
