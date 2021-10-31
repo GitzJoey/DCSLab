@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use App\Services\RoleService;
 
@@ -56,7 +57,7 @@ class UserController extends BaseController
         return $roles;
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $userRequest)
     {
         //throw New \Exception('Test Exception From Controller');
 
@@ -64,13 +65,7 @@ class UserController extends BaseController
         //    'message' => 'Test error from JSON HTTP Status 500'
         //], 500);
 
-        $request->validate([
-            'name' => 'required|alpha',
-            'email' => 'required|email|max:255|unique:users',
-            'roles' => 'required',
-            'tax_id' => 'required',
-            'ic_num' => 'required',
-        ]);
+        $request = $userRequest->validated();
 
         $profile = array (
             'first_name' => $request['first_name'],
@@ -109,16 +104,9 @@ class UserController extends BaseController
         return $result == 0 ? response()->error():response()->success();
     }
 
-    public function update($id, Request $request)
+    public function update($id, UserRequest $userRequest)
     {
-        $request->validate([
-            'name' => 'required|alpha',
-            'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'roles' => 'required',
-            'tax_id' => 'required',
-            'ic_num' => 'required',
-            'status' => new validDropDownValue('ACTIVE_STATUS'),
-        ]);
+        $request = $userRequest->validated();
 
         $profile = array (
             'first_name' => $request['first_name'],

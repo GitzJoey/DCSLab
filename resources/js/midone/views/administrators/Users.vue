@@ -148,6 +148,7 @@
                         </select>
                         <div class="" v-if="mode === 'show'">{{ user.profile.country }}</div>
                     </div>
+                    <ErrorMessage name="country" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                 </div>
                 <div class="mb-3">
                     <div class="form-inline">
@@ -189,6 +190,7 @@
                             <span v-if="user.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                         </div>
                     </div>
+                    <ErrorMessage name="status" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                 </div>
                 <div class="mb-3">
                     <div class="form-inline">
@@ -287,9 +289,6 @@ function getDDL() {
 }
 
 function onSubmit(values, actions) {
-    console.log(values);
-    console.log(actions);
-
     loading.value = true;
     if (mode.value === 'create') {
         axios.post(route('api.post.db.admin.users.save'), new FormData(cash('#userForm')[0]), {
@@ -302,7 +301,7 @@ function onSubmit(values, actions) {
             handleError(e, actions);
             loading.value = false;
         });
-    } else if (mode === 'edit') {
+    } else if (mode.value === 'edit') {
         axios.post(route('api.post.db.admin.users.edit', user.hId), new FormData(cash('#userForm')[0]), {
             headers: {
                 'content-type': 'multipart/form-data'
