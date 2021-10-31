@@ -74,11 +74,11 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
         </div>
         <div class="loader-container">
-            <form id="userForm" class="p-5" @submit="onSubmit">
+            <VeeForm id="userForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
-                        <input id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.name }}</div>
                     </div>
                     <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -86,7 +86,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputEmail" class="form-label w-40 px-3">{{ t('views.users.fields.email') }}</label>
-                        <input id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.email }}</div>
                     </div>
                     <ErrorMessage name="email" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -152,7 +152,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputTaxId" class="form-label w-40 px-3">{{ t('views.users.fields.tax_id') }}</label>
-                        <input id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.profile.tax_id }}</div>
                     </div>
                     <ErrorMessage name="tax_id" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -160,7 +160,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputICNum" class="form-label w-40 px-3">{{ t('views.users.fields.ic_num') }}</label>
-                        <input id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.profile.ic_num }}</div>
                     </div>
                     <ErrorMessage name="ic_num" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </VeeForm>
             <div class="loader" v-if="loading"></div>
         </div>
         <hr/>
@@ -216,46 +216,27 @@
 </template>
 
 <script setup>
+// Vue Import
 import { inject, onMounted, ref, computed } from 'vue'
-import { useForm, useField, defineRule, configure } from 'vee-validate'
-import { required, email } from '@vee-validate/rules'
-import { localize, setLocale } from '@vee-validate/i18n';
-import en from '@vee-validate/i18n/dist/locale/en.json';
-import id from '@vee-validate/i18n/dist/locale/id.json';
+// Helper Import
 import { getLang } from '../../lang';
-
 import mainMixins from '../../mixins';
-
+// Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
-defineRule('required', required);
-defineRule('email', email);
+// Vee-Validate Schema
+const schema = {
+    name: 'required',
+    email: 'required|email',
+    tax_id: 'required',
+    ic_num: 'required',
+};
 
-configure({
-    validateOnInput: true,
-    generateMessage: localize({ en, id }),
-})
+// Mixins
+const { t, route } = mainMixins();
 
-setLocale(getLang());
-
-const { t, route,  } = mainMixins();
-
-const { handleSubmit, handleReset, errors } = useForm({
-    validationSchema: {
-        name: 'required',
-        email: 'required|email',
-        tax_id: 'required',
-        ic_num: 'required',
-    },
-    validateOnMount: false
-});
-
-const { value: vname } = useField('name', 'required');
-const { value: vemail } = useField('email', 'required|email');
-const { value: vtax_id } = useField('tax_id', 'required');
-const { value: vic_num } = useField('ic_num', 'required');
-
+// Data
 let mode = ref('list');
 let loading = ref(false);
 let user = ref({
@@ -273,6 +254,7 @@ let rolesDDL = ref([]);
 let statusDDL = ref([]);
 let countriesDDL = ref([]);
 
+// onMounted
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
@@ -283,6 +265,7 @@ onMounted(() => {
     loading.value = false;
 });
 
+//Methods
 function getUser() {
     axios.get('/api/get/dashboard/admin/users/read?page=1').then(response => {
         userList.value = response.data;
@@ -303,7 +286,10 @@ function getDDL() {
     });
 }
 
-const onSubmit = handleSubmit((values, actions) => {
+function onSubmit(values, actions) {
+    console.log(values);
+    console.log(actions);
+
     loading.value = true;
     if (mode.value === 'create') {
         axios.post(route('api.post.db.admin.users.save'), new FormData(cash('#userForm')[0]), {
@@ -328,8 +314,7 @@ const onSubmit = handleSubmit((values, actions) => {
             loading.value = false;
         });
     } else { }
-
-});
+}
 
 function handleError(e, actions) {
     //Laravel Validations
@@ -343,6 +328,13 @@ function handleError(e, actions) {
         //Catch From Controller
         actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
     }
+}
+
+const validate = (valid, error, str) => {
+    console.log(valid);
+    console.log(error);
+    console.log(str);
+    console.log('validating')
 }
 
 function createNew() {
@@ -365,7 +357,6 @@ function showSelected(index) {
 }
 
 function backToList() {
-    handleReset();
     mode.value = 'list';
 }
 
@@ -381,6 +372,7 @@ function handleUpload(e) {
     fileReader.readAsDataURL(files[0])
 }
 
+//Computed
 const retrieveImage = computed(() => {
     if (user.value.profile.img_path && user.value.profile.img_path !== '') {
         if (user.value.profile.img_path.includes('data:image')) {
@@ -392,4 +384,6 @@ const retrieveImage = computed(() => {
         return '/images/def-user.png';
     }
 });
+
+// Watcher
 </script>
