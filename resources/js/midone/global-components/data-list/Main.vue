@@ -125,7 +125,7 @@ export default defineComponent( {
 
         let pages = computed(() => {
             if (data.value.current_page !== undefined && data.value.last_page !== undefined) {
-                return pagination(data.value.current_page, data.value.last_page);
+                 return paginate(data.value.total, data.value.current_page, data.value.per_page, 5);
             } else {
                 return [];
             }
@@ -146,25 +146,41 @@ export default defineComponent( {
 
         const { t } = useI18n();
 
-        function pagination(currentPage, pageCount) {
-            const delta = 2
+        function paginate(totalItems, currentPage, pageSize, maxPages) {
+            let totalPages = Math.ceil(totalItems / pageSize);
 
-            let range = []
-            for (let i = Math.max(2, currentPage - delta); i <= Math.min(pageCount - 1, currentPage + delta); i++) {
-                range.push(i)
+            if (currentPage < 1) {
+                currentPage = 1;
+            } else if (currentPage > totalPages) {
+                currentPage = totalPages;
             }
 
-            if (currentPage - delta > 2) {
-                range.unshift("...")
-            }
-            if (currentPage + delta < pageCount - 1) {
-                range.push("...")
+            let startPage;
+            let endPage;
+            if (totalPages <= maxPages) {
+                startPage = 1;
+                endPage = totalPages;
+            } else {
+                let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
+                let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
+                if (currentPage <= maxPagesBeforeCurrentPage) {
+                    startPage = 1;
+                    endPage = maxPages;
+                } else if (currentPage + maxPagesAfterCurrentPage >= totalPages) {
+                    startPage = totalPages - maxPages + 1;
+                    endPage = totalPages;
+                } else {
+                    startPage = currentPage - maxPagesBeforeCurrentPage;
+                    endPage = currentPage + maxPagesAfterCurrentPage;
+                }
             }
 
-            range.unshift(1)
-            range.push(pageCount)
+            let startIndex = (currentPage - 1) * pageSize;
+            let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
 
-            return range
+            let pages = Array.from(Array((endPage + 1) - startPage).keys()).map(i => startPage + i);
+
+            return pages;
         }
 
         return {
