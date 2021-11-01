@@ -45,22 +45,22 @@ class UnitServiceImpl implements UnitService
         return Unit::paginate();
     }
 
-    public function getAllActiveUnit()
+    public function getAllUnit()
     {
         return Unit::all();
     }
 
-    public function getAllProductUnit()
+    public function getAllProduct()
     {
         return Unit::where('category', '=', 1)->get();
     }
 
-    public function getAllServiceUnit()
+    public function getAllService()
     {
         return Unit::where('category', '=', 2)->get();
     }
 
-    public function GetAllProductandServiceUnit()
+    public function GetAllProductandService()
     {
         return Unit::where('category', '=', 3)->get();
     }

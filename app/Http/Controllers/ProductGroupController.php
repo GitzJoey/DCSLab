@@ -34,24 +34,24 @@ class ProductGroupController extends BaseController
         return $this->productGroupService->read();
     }
 
-    public function getAllActiveProductGroup()
-    {
-        return $this->productGroupService->getAllActiveProductGroup();
-    }
-
     public function getAllProductGroup()
     {
         return $this->productGroupService->getAllProductGroup();
     }
 
-    public function getAllServiceGroup()
+    public function getAllProduct()
     {
-        return $this->productGroupService->getAllServiceGroup();
+        return $this->productGroupService->getAllProduct();
     }
 
-    public function GetAllProductandServiceGroup()
+    public function getAllService()
     {
-        return $this->productGroupService->GetAllProductandServiceGroup();
+        return $this->productGroupService->getAllService();
+    }
+
+    public function GetAllProductandService()
+    {
+        return $this->productGroupService->GetAllProductandService();
     }
 
     public function store(Request $request)

@@ -13,13 +13,13 @@ interface UnitService
 
     public function read();
 
-    public function getAllActiveUnit();
+    public function getAllUnit();
     
-    public function getAllProductUnit();
+    public function getAllProduct();
 
-    public function getAllServiceUnit();
+    public function getAllService();
 
-    public function GetAllProductandServiceUnit();
+    public function GetAllProductandService();
 
     public function update(
         $id,

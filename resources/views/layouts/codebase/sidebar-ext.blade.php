@@ -6,13 +6,33 @@
                 <a class="{{ active_class(if_route_pattern('db.company.companies')) }}" href="{{route('db.company.companies')}}">{{ __('sidebar-ext.db.company.companies') }}</a>
             </li>
             <li>
-                <a class="{{ active_class(if_route_pattern('db.company.employees')) }}" href="{{route('db.company.employees')}}">{{ __('sidebar-ext.db.company.employees') }}</a>
-            </li>
-            <li>
                 <a class="{{ active_class(if_route_pattern('db.company.branches')) }}" href="{{route('db.company.branches')}}">{{ __('sidebar-ext.db.company.branches') }}</a>
             </li>
             <li>
                 <a class="{{ active_class(if_route_pattern('db.company.warehouses')) }}" href="{{route('db.company.warehouses')}}">{{ __('sidebar-ext.db.company.warehouses') }}</a>
+            </li>
+            <li>
+                <a class="{{ active_class(if_route_pattern('db.company.employees')) }}" href="{{route('db.company.employees')}}">{{ __('sidebar-ext.db.company.employees') }}</a>
+            </li>
+        </ul>
+    </li>
+@endrole
+
+@role('dev|administrator|pos-owner')
+    <li class="{{ active_class(if_route_pattern('db.product.*'), 'open') }}">
+        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-drawer"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.product')}}</span></a>
+        <ul>
+            <li>
+                <a class="{{ active_class(if_route_pattern('db.product.product_groups')) }}" href="{{route('db.product.product_groups')}}">{{ __('sidebar-ext.db.product.product_groups')}}</a>
+            </li>
+            <li>
+                <a class="{{ active_class(if_route_pattern('db.product.product_brands')) }}" href="{{route('db.product.product_brands')}}">{{ __('sidebar-ext.db.product.product_brands')}}</a>
+            </li>
+            <li>
+                <a class="{{ active_class(if_route_pattern('db.product.units')) }}" href="{{route('db.product.units')}}">{{ __('sidebar-ext.db.product.units')}}</a>
+            </li>
+            <li>
+                <a class="{{ active_class(if_route_pattern('db.product.products')) }}" href="{{route('db.product.products')}}">{{ __('sidebar-ext.db.product.products')}}</a>
             </li>
         </ul>
     </li>
@@ -63,26 +83,6 @@
                         <a class="{{ active_class(if_route_pattern('db.finance.income.incomes')) }}" href="{{route('db.finance.income.incomes')}}">{{ __('sidebar-ext.db.finance.income.incomes')}}</a>
                     </li>
                 </ul>
-            </li>
-        </ul>
-    </li>
-@endrole
-
-@role('dev|administrator|pos-owner')
-    <li class="{{ active_class(if_route_pattern('db.product.*'), 'open') }}">
-        <a class="nav-submenu" data-toggle="nav-submenu" href="#"><i class="icon icon-drawer"></i><span class="sidebar-mini-hidden">{{ __('sidebar-ext.db.product')}}</span></a>
-        <ul>
-            <li>
-                <a class="{{ active_class(if_route_pattern('db.product.product_groups')) }}" href="{{route('db.product.product_groups')}}">{{ __('sidebar-ext.db.product.product_groups')}}</a>
-            </li>
-            <li>
-                <a class="{{ active_class(if_route_pattern('db.product.product_brands')) }}" href="{{route('db.product.product_brands')}}">{{ __('sidebar-ext.db.product.product_brands')}}</a>
-            </li>
-            <li>
-                <a class="{{ active_class(if_route_pattern('db.product.units')) }}" href="{{route('db.product.units')}}">{{ __('sidebar-ext.db.product.units')}}</a>
-            </li>
-            <li>
-                <a class="{{ active_class(if_route_pattern('db.product.products')) }}" href="{{route('db.product.products')}}">{{ __('sidebar-ext.db.product.products')}}</a>
             </li>
         </ul>
     </li>

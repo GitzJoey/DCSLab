@@ -407,25 +407,25 @@ export default {
         },
 
         getAllProductGroup() {
-            axios.get(route('api.get.dashboard.productgroup.read.all_active')) .then(response => {
+            axios.get(route('api.get.dashboard.productgroup.read.all')) .then(response => {
                 this.groupDDL = response.data;
             });
         },
 
         getAllProductBrand() {
-            axios.get(route('api.get.dashboard.productbrand.read.all_active')).then(response => {
+            axios.get(route('api.get.dashboard.productbrand.read.all')).then(response => {
                 this.brandDDL = response.data;
             });
         },
 
         getAllProductUnit() {
-            axios.get(route('api.get.dashboard.productunit.read.all_active')).then(response => {
+            axios.get(route('api.get.dashboard.productunit.read.all')).then(response => {
                 this.product_unitDDL = response.data;
             });
         },
 
         getAllUnit() {
-            axios.get(route('api.get.dashboard.unit.read.all_active')).then(response => {
+            axios.get(route('api.get.dashboard.unit.read.all')).then(response => {
                 this.unitDDL = response.data;
             });
         },

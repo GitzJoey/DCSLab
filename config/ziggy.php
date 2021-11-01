@@ -93,10 +93,10 @@ return [
         ],
         'product' => [
             'api.get.dashboard.product.read',
-            'api.get.dashboard.productgroup.read.all_active',
-            'api.get.dashboard.productbrand.read.all_active',
-            'api.get.dashboard.unit.read.all_active',
-            'api.get.dashboard.productunit.read.all_active',
+            'api.get.dashboard.productgroup.read.all',
+            'api.get.dashboard.productbrand.read.all',
+            'api.get.dashboard.unit.read.all',
+            'api.get.dashboard.productunit.read.all',
             'api.post.dashboard.product.*',
         ],
         'customergroup' => [
