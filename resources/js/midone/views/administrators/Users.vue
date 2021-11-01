@@ -208,7 +208,7 @@
                     </div>
                 </div>
             </VeeForm>
-            <div class="loader" v-if="loading"></div>
+            <div class="loader-overlay" v-if="loading"></div>
         </div>
         <hr/>
         <div>
