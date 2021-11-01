@@ -19,6 +19,95 @@
                 </button>
             </div>
         </div>
+
+        <div class="block-content">
+            <div class="col-lg-3">
+                <div class="list-group push">
+                    <a :class="{'list-group-item list-group-item-action d-flex justify-content-between align-items-center':true, 'active':this.mode === 'tabs_products'}" @click="toggleTabs">
+                        Products
+                    </a>
+                    <a :class="{'list-group-item list-group-item-action d-flex justify-content-between align-items-center':true, 'active':this.mode === 'tabs_services'}" @click="toggleTabs">
+                        Services
+                    </a>
+                </div>
+            </div>
+
+            <transition name="fade">
+                <div v-show="this.mode === 'tabs_products'">
+                    <table class="table table-vcenter">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>{{ $t("table.cols.code") }}</th>
+                                <th>{{ $t("table.cols.group_id") }}</th>
+                                <th>{{ $t("table.cols.brand_id") }}</th>
+                                <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.tax_status") }}</th>
+                                <th>{{ $t("table.cols.product_type") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(c, cIdx) in productList.data">
+                                <td>{{ c.code }}</td>
+                                <td>{{ c.group.name }}</td>
+                                <td>{{ c.brand.name }} </td>
+                                <td>{{ c.name }}</td>
+                                <td>
+                                    <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="c.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
+                                    <span v-if="c.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
+                                    <span v-if="c.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
+                                            <i class="fa fa-info"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm justify-content-end">
+                            <li :class="{'page-item':true, 'disabled': this.productList.prev_page_url == null}">
+                                <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li :class="{'page-item':true, 'disabled': this.productList.next_page_url == null}">
+                                <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </transition>
+            <transition name="fade">
+                <div v-show="this.mode === 'tabs_services'">
+
+                </div>
+            </transition>
+        </div>
+
         <div class="block-content">
             <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
@@ -539,6 +628,13 @@ export default {
                 this.product.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
+        },
+        toggleTabs() {
+            if (this.mode === 'tabs_services') {
+                this.mode = 'tabs_products';
+            } else {
+                this.mode = 'tabs_services';
+            }
         },
         backToList() {
             this.mode = 'list';
