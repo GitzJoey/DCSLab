@@ -21,13 +21,13 @@ class UserSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run($truncate = false, $count = 19)
     {
-        $this->truncateUsersTables();
+        if ($truncate) $this->truncateUsersTables();
 
         $instances = Container::getInstance();
 
-        for ($i = 0; $i < 19; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             try {
                 $usr = User::factory()->make();
 

@@ -16,6 +16,7 @@ const i18n = createI18n({
 
 export function switchLang(lang) {
     i18n.global.locale.value = lang;
+    document.documentElement.setAttribute('lang', lang);
     localStorage.setItem('DSCSLAB_LANG', lang);
 }
 

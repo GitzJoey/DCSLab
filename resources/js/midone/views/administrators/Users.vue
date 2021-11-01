@@ -1,5 +1,5 @@
 <template>
-    <AlertPlaceholder :errors="errors" />
+    <AlertPlaceholder :errors="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
         <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange">
             <template v-slot:table="tableProps">
@@ -74,7 +74,7 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="userForm" class="p-5" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+            <VeeForm id="userForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
@@ -203,7 +203,7 @@
                     <div class="form-inline">
                         <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
                             <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
-                            <button type="button" class="btn btn-secondary" @click="handleReset">{{ t('components.buttons.reset') }}</button>
+                            <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                         </div>
                     </div>
                 </div>
@@ -239,9 +239,10 @@ const schema = {
 const { t, route } = mainMixins();
 
 // Data
-let mode = ref('list');
-let loading = ref(false);
-let user = ref({
+const mode = ref('list');
+const loading = ref(false);
+const alertErrors = ref([]);
+const user = ref({
     name: '',
     selectedRoles: '',
     roles: [],
@@ -252,9 +253,9 @@ let user = ref({
     }
 });
 const userList = ref({ });
-let rolesDDL = ref([]);
-let statusDDL = ref([]);
-let countriesDDL = ref([]);
+const rolesDDL = ref([]);
+const statusDDL = ref([]);
+const countriesDDL = ref([]);
 
 // onMounted
 onMounted(() => {
@@ -323,17 +324,21 @@ function handleError(e, actions) {
                 actions.setFieldError(key, e.response.data.errors[key][i]);
             }
         }
+        alertErrors.value = e.response.data.errors;
     } else {
         //Catch From Controller
-        actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
+        alertErrors.value = {
+            controller: e.response.status + ' ' + e.response.statusText +': ' + e.response.data.message
+        };
     }
 }
 
-const validate = (valid, error, str) => {
-    console.log(valid);
-    console.log(error);
-    console.log(str);
-    console.log('validating')
+function invalidSubmit(e) {
+    alertErrors.value = e.errors;
+}
+
+function resetAlertErrors() {
+    alertErrors.value = [];
 }
 
 function createNew() {
@@ -356,6 +361,7 @@ function showSelected(index) {
 }
 
 function backToList() {
+    resetAlertErrors();
     mode.value = 'list';
 }
 

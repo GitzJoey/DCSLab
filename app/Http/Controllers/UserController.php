@@ -61,10 +61,6 @@ class UserController extends BaseController
     {
         //throw New \Exception('Test Exception From Controller');
 
-        //return response()->json([
-        //    'message' => 'Test error from JSON HTTP Status 500'
-        //], 500);
-
         $request = $userRequest->validated();
 
         $request['password'] = 'P@ssw0rd';

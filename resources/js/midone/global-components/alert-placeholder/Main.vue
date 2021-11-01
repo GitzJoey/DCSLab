@@ -8,7 +8,14 @@
             </div>
             <div class="mt-3">
                 <ul class="list-disc ml-5">
-                    <li class="ml-5" v-for="e in errors">{{ e }}</li>
+                    <template v-for="e in errors">
+                        <template v-if="Array.isArray(e)">
+                            <li class="ml-5" v-for="ee in e">{{ ee }}</li>
+                        </template>
+                        <template v-else>
+                            <li class="ml-5">{{ e }}</li>
+                        </template>
+                    </template>
                 </ul>
             </div>
         </div>

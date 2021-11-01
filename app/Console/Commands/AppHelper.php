@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\RoleService;
 use App\Services\UserService;
+use Database\Seeders\UserSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
@@ -57,7 +58,7 @@ class AppHelper extends Command
             $this->info('[1] Update Composer And NPM');
             $this->info('[2] Clear All Cache');
             $this->info('[3] Change User Roles');
-            $this->info('[4] Seed User & Roles');
+            $this->info('[4] Seed Users');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
@@ -76,6 +77,7 @@ class AppHelper extends Command
                     $this->info('Done!');
                     break;
                 case 4:
+                    $this->seedUser();
                     break;
                 case 'X':
                 default:
@@ -85,6 +87,21 @@ class AppHelper extends Command
             sleep(3);
         }
         $this->info('Bye!');
+    }
+
+    private function seedUser()
+    {
+        $truncate = $this->confirm('Do you want to truncate the users table first?', false);
+        $count = $this->ask('How many data:', 100);
+
+        $this->info('Seeding...');
+
+        $seeder = new UserSeeder();
+        $seeder->callWith(UserSeeder::class, [$truncate, $count]);
+
+        $this->info('Done.');
+
+        sleep(3);
     }
 
     private function changeUserRoles()
