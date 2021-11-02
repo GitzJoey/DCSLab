@@ -227,7 +227,7 @@
                                     </div>
                                     <div>
                                         <label for="selectTime">{{ t('views.users.fields.settings.timeFormat') }}</label>
-                                        <select id="selectTime" class="form-control" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
                                             <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
                                             <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
                                         </select>
