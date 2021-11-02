@@ -6,11 +6,13 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Rules\mustResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
+use App\Models\User;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -46,6 +48,14 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::loginView(function() {
             return view('auth.login');
+        });
+
+        Fortify::authenticateUsing(function (Request $request) {
+            $request->validate([
+                'password' => new mustResetPassword($request['email'])
+            ]);
+
+            return User::where('email', $request->email)->first();
         });
 
         Fortify::registerView(function() {

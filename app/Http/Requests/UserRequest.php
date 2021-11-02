@@ -33,6 +33,10 @@ class UserRequest extends FormRequest
             'postal_code' => 'nullable',
             'img_path' => 'nullable',
             'remarks' => 'nullable',
+            'theme' => 'nullable',
+            'dateFormat' => 'nullable',
+            'timeFormat' => 'nullable',
+            'apiToken' => 'nullable'
         ];
 
         if ($this->route()->getActionMethod() == 'store') {

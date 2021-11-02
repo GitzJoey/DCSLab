@@ -3,6 +3,7 @@
 namespace App\Services\Impls;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -62,6 +63,8 @@ class UserServiceImpl implements UserService
             $usr->name = $name;
             $usr->email = $email;
             $usr->password = Hash::make($password);
+
+            $usr->password_changed_at = Carbon::now();
 
             $usr->save();
 

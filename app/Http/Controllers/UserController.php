@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\RandomGenerator;
 use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use App\Services\RoleService;
@@ -60,7 +61,7 @@ class UserController extends BaseController
 
         $request = $userRequest->validated();
 
-        $request['password'] = 'P@ssw0rd';
+        $request['password'] = (new RandomGenerator())->generateAlphaNumeric(10);
 
         $profile = array (
             'first_name' => $request['first_name'],
