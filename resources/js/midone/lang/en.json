@@ -6,7 +6,8 @@
             "delete": "Delete",
             "back": "Back",
             "reset": "Reset",
-            "compose": "Compose"
+            "compose": "Compose",
+            "revoke": "Revoke"
         },
         "dropdown": {
             "placeholder": "Please Select",

@@ -46,12 +46,9 @@ class UserController extends BaseController
             Config::get('const.DEFAULT.ROLE.DEV')
         ]);
 
-        $parameters = null;
-        if ($withDefaultRole) {
-            $parameters = array (
-                'withDefaultRole' => $withDefaultRole
-            );
-        }
+        $parameters = array (
+            'withDefaultRole' => $withDefaultRole
+        );
 
         $roles = $this->roleService->read($parameters);
         return $roles;
@@ -125,7 +122,7 @@ class UserController extends BaseController
         }
 
         $settings = [
-            'THEME.CODEBASE' => $request['theme'],
+            'PREFS.THEME' => $request['theme'],
             'PREFS.DATE_FORMAT' => $request['dateFormat'],
             'PREFS.TIME_FORMAT' => $request['timeFormat'],
         ];

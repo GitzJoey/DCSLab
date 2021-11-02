@@ -83,7 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
         foreach ($this->settings as $s) {
             $skey = '';
             switch ($s->key) {
-                case 'THEME.CODEBASE':
+                case 'PREFS.THEME':
                     $skey = 'theme';
                     break;
                 case 'PREFS.DATE_FORMAT':

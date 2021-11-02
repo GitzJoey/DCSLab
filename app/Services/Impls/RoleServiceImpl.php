@@ -68,8 +68,13 @@ class RoleServiceImpl implements RoleService
         }
 
         if (array_key_exists('withDefaultRole', $parameters)) {
-            return Role::whereNotIn('name', ['dev','administrator'])->get()->pluck('display_name', 'hId');
+            if (!$parameters['withDefaultRole'])
+                return Role::whereNotIn('name', ['dev','administrator'])->get()->pluck('display_name', 'hId');
+            else
+                return Role::get()->pluck('display_name', 'hId');
         }
+
+        return null;
     }
 
     public function update(

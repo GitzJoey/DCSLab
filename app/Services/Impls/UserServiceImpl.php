@@ -209,8 +209,8 @@ class UserServiceImpl implements UserService
         $list = array (
             new Setting(array(
                 'type' => 'KEY_VALUE',
-                'key' => 'THEME.MIDONE',
-                'value' => '',
+                'key' => 'PREFS.THEME',
+                'value' => 'side-menu-light-full',
             )),
             new Setting(array(
                 'type' => 'KEY_VALUE',

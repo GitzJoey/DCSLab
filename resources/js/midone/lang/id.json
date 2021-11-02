@@ -6,7 +6,8 @@
             "delete": "Hapus",
             "back": "Kembali",
             "reset": "Reset",
-            "compose": "Pesan Baru"
+            "compose": "Pesan Baru",
+            "revoke": "Revoke"
         },
         "dropdown": {
             "placeholder": "Silahkan Pilih",

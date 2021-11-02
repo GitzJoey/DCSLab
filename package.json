@@ -22,8 +22,7 @@
         "sass": "^1.42.1",
         "sass-loader": "^12.1.0",
         "simple-line-icons": "^2.5.5",
-        "vue-loader": "^16.2.0",
-        "webpack-shell-plugin-next": "^2.2.2"
+        "vue-loader": "^16.2.0"
     },
     "dependencies": {
         "@left4code/tw-starter": "^1.1.0",

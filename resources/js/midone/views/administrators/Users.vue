@@ -34,7 +34,7 @@
                                         <CheckSquareIcon class="w-4 h-4 mr-1" />
                                         {{ t('components.data-list.edit') }}
                                     </a>
-                                    <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal">
+                                    <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(uIdx)">
                                         <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                     </a>
                                 </div>
@@ -57,7 +57,7 @@
                                     <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
                                         {{ t('components.buttons.cancel') }}
                                     </button>
-                                    <button type="button" class="btn btn-danger w-24">{{ t('components.buttons.delete') }}</button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +170,7 @@
                     <div class="form-inline">
                         <label for="inputRoles" class="form-label w-40 px-3">{{ t('views.users.fields.roles') }}</label>
                         <select multiple :class="{'form-control':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
-                            <option v-for="(r, rIdx) in rolesDDL" :value="r.hId">{{ r.display_name }}</option>
+                            <option v-for="(value, name) in rolesDDL" :value="name">{{ value }}</option>
                         </select>
                         <div class="" v-if="mode === 'show'">
                             <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
@@ -199,6 +199,54 @@
                         <div class="" v-if="mode === 'show'">{{ user.profile.remarks }}</div>
                     </div>
                 </div>
+                <hr class="mb-3"/>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputSettings" class="form-label w-40 px-3">{{ t('views.users.fields.settings.settings') }}</label>
+                        <div class="flex-1">
+                            <div class="mb-3">
+                                <label for="selectTheme" class="form-label">{{ t('views.users.fields.settings.theme') }}</label>
+                                <select class="form-control form-select" id="selectTheme" name="theme" v-model="user.selectedSettings.theme" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="side-menu-light-full">Menu Light</option>
+                                    <option value="side-menu-light-mini">Mini Menu Light</option>
+                                    <option value="side-menu-dark-full">Menu Dark</option>
+                                    <option value="side-menu-dark-mini">Mini Menu Dark</option>
+                                </select>
+                                <div v-if="this.mode === 'show'">{{ this.user.selectedSettings.theme }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label for="selectDate">{{ t('views.users.fields.settings.dateFormat') }}</label>
+                                        <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                            <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
+                                            <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
+                                        </select>
+                                        <div v-if="this.mode === 'show' && this.user.selectedSettings.dateFormat === 'yyyy_MM_dd'">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</div>
+                                        <div v-if="this.mode === 'show' && this.user.selectedSettings.dateFormat === 'dd_MMM_yyyy'">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</div>
+                                    </div>
+                                    <div>
+                                        <label for="selectTime">{{ t('views.users.fields.settings.timeFormat') }}</label>
+                                        <select id="selectTime" class="form-control" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                            <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
+                                            <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
+                                        </select>
+                                        <div v-if="this.mode === 'show' && this.user.selectedSettings.timeFormat === 'hh_mm_ss'">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</div>
+                                        <div v-if="this.mode === 'show' && this.user.selectedSettings.timeFormat === 'h_m_A'">{{ helper.formatDate(new Date(), 'h:m A') }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="apiToken">{{ t('views.users.fields.settings.apiToken') }}</label>
+                                <div class="form-check" v-show="this.mode === 'edit'">
+                                    <input id="apiToken" class="form-check-input" type="checkbox" value="" name="apiToken">
+                                    <label class="form-check-label" for="apiToken">{{ t('components.buttons.revoke') }}</label>
+                                </div>
+                                <div v-if="this.mode === 'create' || this.mode === 'show'">*************************</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="mb-3" v-if="this.mode === 'create' || this.mode === 'edit'">
                     <div class="form-inline">
                         <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
@@ -223,6 +271,7 @@ import { inject, onMounted, ref, computed } from 'vue'
 // Helper Import
 import { getLang } from '../../lang';
 import mainMixins from '../../mixins';
+import { helper } from '../../utils/helper';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
@@ -238,18 +287,25 @@ const schema = {
 // Mixins
 const { t, route } = mainMixins();
 
-// Data
+// Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
+const deleteId = ref('');
+
+// Data - Views
 const user = ref({
-    name: '',
-    selectedRoles: '',
     roles: [],
+    selectedRoles: [],
     profile: {
-        status: '',
         country: '',
+        status: 1,
         img_path: ''
+    },
+    selectedSettings: {
+        theme: 'side-menu-light-full',
+        dateFormat: '',
+        timeFormat: '',
     }
 });
 const userList = ref({ });
@@ -262,15 +318,18 @@ onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
-    getUser();
+    getUser({ page: 1 });
     getDDL();
 
     loading.value = false;
 });
 
 //Methods
-function getUser() {
-    axios.get('/api/get/dashboard/admin/users/read?page=1').then(response => {
+function getUser(args) {
+    userList.value = {};
+    if (args.pageSize === undefined) args.pageSize = 10;
+
+    axios.get(route('api.get.db.admin.users.read', { "page": args.page, "perPage": args.pageSize })).then(response => {
         userList.value = response.data;
     });
 }
@@ -297,20 +356,28 @@ function onSubmit(values, actions) {
                 'content-type': 'multipart/form-data'
             }
         }).then(response => {
+            actions.resetForm({
+                values: {
+                    remarks: ''
+                }
+            });
             backToList();
         }).catch(e => {
             handleError(e, actions);
+        }).finally(() => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.admin.users.edit', user.hId), new FormData(cash('#userForm')[0]), {
+        axios.post(route('api.post.db.admin.users.edit', user.value.hId), new FormData(cash('#userForm')[0]), {
             headers: {
                 'content-type': 'multipart/form-data'
             }
         }).then(response => {
+            actions.resetForm();
             backToList();
         }).catch(e => {
             handleError(e, actions);
+        }).finally(() => {
             loading.value = false;
         });
     } else { }
@@ -337,22 +404,47 @@ function invalidSubmit(e) {
     alertErrors.value = e.errors;
 }
 
+function emptyUser() {
+    return {
+        roles: [],
+        selectedRoles: [],
+        profile: {
+            img_path: '',
+            country: '',
+            status: 1,
+        },
+        selectedSettings: {
+            theme: 'side-menu-light-full',
+            dateFormat: 'yyyy_MM_dd',
+            timeFormat: 'hh_mm_ss',
+        }
+    }
+}
+
 function resetAlertErrors() {
     alertErrors.value = [];
 }
 
 function createNew() {
     mode.value = 'create';
+    user.value = emptyUser();
 }
 
 function onDataListChange({page, pageSize}) {
-    console.log(page);
-    console.log(pageSize);
+    getUser({page, pageSize});
 }
 
 function editSelected(index) {
     mode.value = 'edit';
     user.value = userList.value.data[index];
+}
+
+function deleteSelected(index) {
+    deleteId.value = userList.value.data[index].hId;
+}
+
+function confirmDelete() {
+    if (deleteId.value) console.log('Data ' + deleteId.value + ' deleted.');
 }
 
 function showSelected(index) {
@@ -363,6 +455,7 @@ function showSelected(index) {
 function backToList() {
     resetAlertErrors();
     mode.value = 'list';
+    getUser({ page: userList.value.current_page, pageSize: userList.value.per_page });
 }
 
 function handleUpload(e) {
