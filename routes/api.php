@@ -149,6 +149,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.product.read');
+            Route::get('read/product', [ProductController::class, 'read_product'])->name('api.get.dashboard.product.read.product');
+            Route::get('read/service', [ProductController::class, 'read_service'])->name('api.get.dashboard.product.read.service');
         });
 
         Route::group(['prefix' => 'customergroup'], function () {

@@ -124,6 +124,7 @@ const messages = {
             estimated_capital_price: 'Perkiraan Harga Modal',
             point: 'Poin',
             is_use_serial: 'Memakai Nomor Serial',
+            product_type: 'Tipe Produk',
             status: 'Status',
             settings: {
                 settings: 'Pengaturan',

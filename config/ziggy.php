@@ -93,6 +93,8 @@ return [
         ],
         'product' => [
             'api.get.dashboard.product.read',
+            'api.get.dashboard.product.read.product',
+            'api.get.dashboard.product.read.service',
             'api.get.dashboard.productgroup.read.all',
             'api.get.dashboard.productbrand.read.all',
             'api.get.dashboard.unit.read.all',
