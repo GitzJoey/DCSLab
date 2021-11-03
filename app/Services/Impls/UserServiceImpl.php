@@ -98,7 +98,7 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 
@@ -113,12 +113,19 @@ class UserServiceImpl implements UserService
         if ($parameters == null) return null;
 
         if (array_key_exists('readAll', $parameters)) {
-            if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
-                return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
+            $perPage = array_key_exists('perPage', $parameters) ? $parameters['perPage'] : Config::get('const.DEFAULT.PAGINATION_LIMIT');
 
-            return Cache::remember('readAll'.$parameters['readAll'], Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($parameters) {
-                return User::with('roles', 'profile', 'settings')->paginate(Config::get('const.PAGINATION_LIMIT'));
-            });
+            if (array_key_exists('search', $parameters) && !empty($parameters['search'])) {
+                return User::with('profile')
+                            ->where('email', 'like', '%'.$parameters['search'].'%')
+                            ->orWhere('name', 'like', '%'.$parameters['search'].'%')
+                            ->orWhereHas('profile', function ($query) use($parameters) {
+                                $query->where('first_name', 'like', '%'.$parameters['search'].'%')
+                                    ->orWhere('last_name', 'like', '%'.$parameters['search'].'%');
+                            })->paginate($perPage);
+            }
+
+            return User::with('roles', 'profile', 'settings')->paginate($perPage);
         }
 
         if (array_key_exists('readById', $parameters))  {
@@ -189,7 +196,7 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 

@@ -1,7 +1,7 @@
 <template>
     <AlertPlaceholder :errors="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange">
+        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
             <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
@@ -328,8 +328,9 @@ onMounted(() => {
 function getUser(args) {
     userList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.search === undefined) args.search = '';
 
-    axios.get(route('api.get.db.admin.users.read', { "page": args.page, "perPage": args.pageSize })).then(response => {
+    axios.get(route('api.get.db.admin.users.read', { "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         userList.value = response.data;
     });
 }
@@ -430,8 +431,8 @@ function createNew() {
     user.value = emptyUser();
 }
 
-function onDataListChange({page, pageSize}) {
-    getUser({page, pageSize});
+function onDataListChange({page, pageSize, search}) {
+    getUser({page, pageSize, search});
 }
 
 function editSelected(index) {

@@ -7,6 +7,7 @@ return [
             'ADMIN' => 'administrator',
             'USER' => 'user'
         ],
+
         'API_TOKEN_NAME' => 'api',
 
         'PAGINATION_LIMIT' => 10,
@@ -21,22 +22,24 @@ return [
                 '3_HOURS' => 180,
                 '1_HOUR' => 60
             ]
+        ],
+
+        'PASSWORD_EXPIRY_DAYS' => 365,
+
+        'ERROR_RETURN_VALUE' => null,
+
+        'RANDOMSTRINGRANGE' => [
+            'ALPHABET' => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+            'NUMERIC' => [3,4,7,9],
         ]
     ],
 
-    'PASSWORD_EXPIRY_DAYS' => 365,
-
-    'ERROR_RETURN_VALUE' => null,
-
-    'DROPDOWN' => [
-        'ACTIVE_STATUS' => [
-            'ACTIVE' => 1,
-            'INACTIVE' => 0,
+    'RULES' => [
+        'VALID_DROPDOWN_VALUES' => [
+            'ACTIVE_STATUS' => [
+                'ACTIVE' => 1,
+                'INACTIVE' => 0,
+            ],
         ],
     ],
-
-    'RANDOMSTRINGRANGE' => [
-        'ALPHABET' => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-        'NUMERIC' => [3,4,7,9],
-    ]
 ];

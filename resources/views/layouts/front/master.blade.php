@@ -33,9 +33,15 @@
 
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarMain">
                                 <ul class="navbar-nav m-auto">
-                                    <li class="nav-item" data-menu="home">
-                                        <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#home' }}">{{ __('front.menu.home') }}</a>
-                                    </li>
+                                    @if (Route::current()->getName() == 'front')
+                                        <li class="nav-item active" data-menu="home">
+                                            <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#home' }}">{{ __('front.menu.home') }}</a>
+                                        </li>
+                                    @else
+                                        <li class="nav-item" data-menu="home">
+                                            <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#home' }}">{{ __('front.menu.home') }}</a>
+                                        </li>
+                                    @endif
                                     <li class="nav-item" data-menu="service">
                                         <a class="page-scroll text-uppercase fw-bolder" href="{{ route('front').'#service' }}">{{ __('front.menu.services') }}</a>
                                     </li>

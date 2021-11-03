@@ -33,9 +33,8 @@ class UserController extends BaseController
 
     public function read(Request $request)
     {
-        $parameters = array (
-            'readAll' => Auth::id()
-        );
+        $parameters = $request->all();
+        $parameters['readAll'] = Auth::id();
 
         return $this->userService->read($parameters);
     }
@@ -47,9 +46,7 @@ class UserController extends BaseController
             Config::get('const.DEFAULT.ROLE.DEV')
         ]);
 
-        $parameters = array (
-            'withDefaultRole' => $withDefaultRole
-        );
+        $parameters['withDefaultRole'] = $withDefaultRole;
 
         $roles = $this->roleService->read($parameters);
         return $roles;
@@ -152,9 +149,7 @@ class UserController extends BaseController
 
     public function resetPassword($id)
     {
-        $parameters = array (
-            'readById' => $id
-        );
+        $parameters['readById'] = $id;
 
         $usr = $this->userService->read($parameters);
 
@@ -178,9 +173,7 @@ class UserController extends BaseController
             return redirect('/');
         }
 
-        $parameters = array (
-            'readById' => $id
-        );
+        $parameters['readById'] = $id;
 
         $usr = $this->userService->read($parameters);
 

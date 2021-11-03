@@ -32,9 +32,9 @@
                 <div class="hidden md:block mx-auto text-gray-600">
                     {{ t('components.data-list.showing') }} {{ data.from }} {{ t('components.data-list.to') }} {{ data.to }} {{ t('components.data-list.of') }} {{ data.total }} {{ t('components.data-list.entries') }}
                 </div>
-                <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0" v-if="enableSearch">
+                <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0 mr-3" v-if="enableSearch">
                     <div class="w-56 relative text-gray-700 dark:text-gray-300">
-                        <input type="text" class="form-control w-56 box pr-10 placeholder-theme-13" :placeholder="t('components.data-list.search')" />
+                        <input type="text" class="form-control w-56 box pr-10 placeholder-theme-13" v-model="search" :placeholder="t('components.data-list.search')" @change="$emit('dataListChange', { page: data.current_page, pageSize: pageSize, search: search })"/>
                         <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
                     </div>
                 </div>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import {defineComponent, onMounted, computed, ref, toRef, watch, onUnmounted} from 'vue'
+import { defineComponent, onMounted, computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 export default defineComponent( {
@@ -114,6 +114,7 @@ export default defineComponent( {
         const enableDelete = toRef(props, 'enableDelete');
         const enableDeleteConfirmation = toRef(props, 'enableDeleteConfirmation');
         const enableView = toRef(props, 'enableView');
+        const search = ref('');
 
         const pageSize = ref(10);
         const data = toRef(props, 'data');
@@ -201,6 +202,7 @@ export default defineComponent( {
             previous,
             next,
             last,
+            search,
         }
     }
 })

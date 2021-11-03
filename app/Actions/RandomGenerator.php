@@ -36,7 +36,7 @@ class RandomGenerator
     public function generateAlphaNumeric($length)
     {
         $generatedString = '';
-        $characters = array_merge(Config::get('const.RANDOMSTRINGRANGE.ALPHABET'), Config::get('const.RANDOMSTRINGRANGE.NUMERIC'));
+        $characters = array_merge(Config::get('const.DEFAULT.RANDOMSTRINGRANGE.ALPHABET'), Config::get('const.DEFAULT.RANDOMSTRINGRANGE.NUMERIC'));
         $max = sizeof($characters) - 1;
 
         for ($i = 0; $i < $length; $i++) {

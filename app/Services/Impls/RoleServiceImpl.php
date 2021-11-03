@@ -41,7 +41,7 @@ class RoleServiceImpl implements RoleService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 
@@ -105,7 +105,7 @@ class RoleServiceImpl implements RoleService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 

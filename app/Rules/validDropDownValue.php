@@ -29,7 +29,7 @@ class validDropDownValue implements Rule
     {
         $result = false;
 
-        $typeList = Config::get('const.DROPDOWN');
+        $typeList = Config::get('const.RULES.VALID_DROPDOWN_VALUES');
 
         foreach ($typeList as $key => $val) {
             if ($key == $this->dropDownType) {

@@ -65,7 +65,7 @@ class InboxServiceImpl implements InboxService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 
@@ -99,7 +99,7 @@ class InboxServiceImpl implements InboxService
             return 0;
         } catch (Exception $e) {
             Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 }
