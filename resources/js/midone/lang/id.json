@@ -50,7 +50,8 @@
                 "desc_2": "Proses ini tidak dapat dibatalkan.",
                 "delete": "Hapus",
                 "cancel": "Batal"
-            }
+            },
+            "data_not_found": "Data Tidak Ditemukan"
         }
     },
     "views": {

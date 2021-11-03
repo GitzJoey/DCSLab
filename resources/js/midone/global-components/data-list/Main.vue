@@ -30,46 +30,55 @@
                     </div>
                 </div>
                 <div class="hidden md:block mx-auto text-gray-600">
-                    {{ t('components.data-list.showing') }} {{ data.from }} {{ t('components.data-list.to') }} {{ data.to }} {{ t('components.data-list.of') }} {{ data.total }} {{ t('components.data-list.entries') }}
+                    <template v-if="!dataNotFound">
+                        {{ t('components.data-list.showing') }} {{ data.from }} {{ t('components.data-list.to') }} {{ data.to }} {{ t('components.data-list.of') }} {{ data.total }} {{ t('components.data-list.entries') }}
+                    </template>
                 </div>
                 <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0 mr-3" v-if="enableSearch">
                     <div class="w-56 relative text-gray-700 dark:text-gray-300">
-                        <input type="text" class="form-control w-56 box pr-10 placeholder-theme-13" v-model="search" :placeholder="t('components.data-list.search')" @change="$emit('dataListChange', { page: data.current_page, pageSize: pageSize, search: search })"/>
+                        <input type="text" class="form-control w-56 box pr-10 placeholder-theme-13" v-model="search" :placeholder="t('components.data-list.search')" @focus="$event.target.select()" @change="$emit('dataListChange', { page: data.current_page, pageSize: pageSize, search: search })"/>
                         <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
                     </div>
                 </div>
-                <button class="btn btn-primary-soft shadow-md mr-2 w-20" @click="$emit('dataListChange', { page: data.current_page, pageSize: pageSize })"><RefreshCwIcon class="w-4 h-4" /></button>
+                <button class="btn btn-primary-soft shadow-md mr-2 w-20" @click="$emit('dataListChange', { page: data.current_page, pageSize: pageSize, search: search })"><RefreshCwIcon class="w-4 h-4" /></button>
             </div>
             <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
                 <slot name="table" :dataList="data"></slot>
+                <table class="table table-report -mt-2" v-if="dataNotFound">
+                    <tbody>
+                        <tr class="intro-x">
+                            <td class="text-sm italic text-center">{{ t('components.data-list.data_not_found') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center">
+            <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" v-if="!dataNotFound">
                 <ul class="pagination">
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: first, pageSize: pageSize })">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: first, pageSize: pageSize, search: search })">
                             <ChevronsLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: previous, pageSize: pageSize })">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: previous, pageSize: pageSize, search: search })">
                             <ChevronLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li v-for="(n, nIdx) in pages">
-                        <a :class="{'pagination__link':true, 'pagination__link--active': data.current_page === n}" href="" @click.prevent="$emit('dataListChange', { page: n, pageSize: pageSize })">{{ n }}</a>
+                        <a :class="{'pagination__link':true, 'pagination__link--active': data.current_page === n}" href="" @click.prevent="$emit('dataListChange', { page: n, pageSize: pageSize, search: search })">{{ n }}</a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: next, pageSize: pageSize })">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: next, pageSize: pageSize, search: search })">
                             <ChevronRightIcon class="w-4 h-4" />
                         </a>
                     </li>
                     <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: last, pageSize: pageSize })">
+                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: last, pageSize: pageSize, search: search })">
                             <ChevronsRightIcon class="w-4 h-4" />
                         </a>
                     </li>
                 </ul>
-                <select class="w-20 form-select box mt-3 sm:mt-0" v-model="pageSize" v-on:change="$emit('dataListChange', { page: data.current_page, pageSize: pageSize })">
+                <select class="w-20 form-select box mt-3 sm:mt-0" v-model="pageSize" v-on:change="$emit('dataListChange', { page: data.current_page, pageSize: pageSize, search: search })">
                     <option value="10">10</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
@@ -119,12 +128,15 @@ export default defineComponent( {
         const pageSize = ref(10);
         const data = toRef(props, 'data');
 
-        let loading = computed(() => {
-            if (data.value.data !== undefined && data.value.data.length !== 0) return false;
-            else return true;
+        const loading = computed(() => {
+            return data.value.data === undefined;
         });
 
-        let pages = computed(() => {
+        const dataNotFound = computed(() => {
+            return data.value.data !== undefined && data.value.data.length === 0;
+        });
+
+        const pages = computed(() => {
             if (data.value.current_page !== undefined && data.value.last_page !== undefined) {
                  return paginate(data.value.total, data.value.current_page, data.value.per_page, 5);
             } else {
@@ -132,18 +144,18 @@ export default defineComponent( {
             }
         });
 
-        let first = computed(()=> { return 1; });
+        const first = computed(()=> { return 1; });
         let previous = computed(()=> {
             if (data.value.current_page === undefined) return 1;
             if (data.value.current_page === 1) return 1;
             return data.value.current_page - 1;
         });
-        let next = computed(()=> {
+        const next = computed(()=> {
             if (data.value.current_page === undefined) return 1;
             if (data.value.current_page === data.value.last_page) return data.value.last_page;
             return data.value.current_page + 1;
         });
-        let last = computed(()=> { return data.value.last_page; });
+        const last = computed(()=> { return data.value.last_page; });
 
         const { t } = useI18n();
 
@@ -203,6 +215,7 @@ export default defineComponent( {
             next,
             last,
             search,
+            dataNotFound,
         }
     }
 })

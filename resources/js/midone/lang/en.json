@@ -50,7 +50,8 @@
                 "desc_2": "This process cannot be undone.",
                 "delete": "Delete",
                 "cancel": "Cancel"
-            }
+            },
+            "data_not_found": "Data Not Found"
         }
     },
     "views": {
