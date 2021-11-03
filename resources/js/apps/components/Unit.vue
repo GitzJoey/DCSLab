@@ -107,14 +107,14 @@
                             <div class="col-md-10 d-flex align-items-center">
                                 <select class="form-control" id="category" name="category" v-model="unit.category" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('categoryDDL.productunit') }}</option>
-                                    <option value="2">{{ $t('categoryDDL.serviceunit') }}</option>
-                                    <option value="3">{{ $t('categoryDDL.productandserviceunit') }}</option>
+                                    <option value="1">{{ $t('categoryDDL.product') }}</option>
+                                    <option value="2">{{ $t('categoryDDL.service') }}</option>
+                                    <option value="3">{{ $t('categoryDDL.productandservice') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="unit.category === 1">{{ $t('categoryDDL.productunit') }}</span>
-                                    <span v-if="unit.category === 2">{{ $t('categoryDDL.serviceunit') }}</span>
-                                    <span v-if="unit.category === 3">{{ $t('categoryDDL.productandserviceunit') }}</span>
+                                    <span v-if="unit.category === 1">{{ $t('categoryDDL.product') }}</span>
+                                    <span v-if="unit.category === 2">{{ $t('categoryDDL.service') }}</span>
+                                    <span v-if="unit.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
                                 </div>
                             </div>
                         </div>

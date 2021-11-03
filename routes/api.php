@@ -129,26 +129,28 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'productgroup'], function () {
             Route::get('read', [ProductGroupController::class, 'read'])->name('api.get.dashboard.productgroup.read');
-            Route::get('read/all/active', [ProductGroupController::class, 'getAllActiveProductGroup'])->name('api.get.dashboard.productgroup.read.all_active');
+            Route::get('read/all/', [ProductGroupController::class, 'getAllProductGroup'])->name('api.get.dashboard.productgroup.read.all');
         });
 
         Route::group(['prefix' => 'productbrand'], function () {
             Route::get('read', [ProductBrandController::class, 'read'])->name('api.get.dashboard.productbrand.read');
-            Route::get('read/all/active', [ProductBrandController::class, 'getAllActiveProductBrand'])->name('api.get.dashboard.productbrand.read.all_active');
+            Route::get('read/all/', [ProductBrandController::class, 'getAllProductBrand'])->name('api.get.dashboard.productbrand.read.all');
         });
 
         Route::group(['prefix' => 'productunit'], function () {
             Route::get('read', [ProductUnitController::class, 'read'])->name('api.get.dashboard.productunit.read');
-            Route::get('read/all/active', [ProductUnitController::class, 'getAllProductUnit'])->name('api.get.dashboard.productunit.read.all_active');
+            Route::get('read/all/', [ProductUnitController::class, 'getAllProductUnit'])->name('api.get.dashboard.productunit.read.all');
         });
 
         Route::group(['prefix' => 'unit'], function () {
             Route::get('read', [UnitController::class, 'read'])->name('api.get.dashboard.unit.read');
-            Route::get('read/all/active', [UnitController::class, 'getAllActiveUnit'])->name('api.get.dashboard.unit.read.all_active');
+            Route::get('read/all/', [UnitController::class, 'getAllUnit'])->name('api.get.dashboard.unit.read.all');
         });
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.product.read');
+            Route::get('read/product', [ProductController::class, 'read_product'])->name('api.get.dashboard.product.read.product');
+            Route::get('read/service', [ProductController::class, 'read_service'])->name('api.get.dashboard.product.read.service');
         });
 
         Route::group(['prefix' => 'customergroup'], function () {

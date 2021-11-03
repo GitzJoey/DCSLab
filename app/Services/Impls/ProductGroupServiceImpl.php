@@ -45,22 +45,22 @@ class ProductGroupServiceImpl implements ProductGroupService
         return ProductGroup::paginate();
     }
 
-    public function getAllActiveProductGroup()
+    public function getAllProductGroup()
     {
         return ProductGroup::all();
     }
 
-    public function getAllProductGroup()
+    public function getAllProduct()
     {
         return ProductGroup::where('category', '=', 1)->get();
     }
 
-    public function getAllServiceGroup()
+    public function getAllService()
     {
         return ProductGroup::where('category', '=', 2)->get();
     }
 
-    public function GetAllProductandServiceGroup()
+    public function GetAllProductandService()
     {
         return ProductGroup::where('category', '=', 3)->get();
     }

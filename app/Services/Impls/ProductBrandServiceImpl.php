@@ -44,7 +44,7 @@ class ProductBrandServiceImpl implements ProductBrandService
         return ProductBrand::paginate();
     }
 
-    public function getAllActiveProductBrand()
+    public function getAllProductBrand()
     {
         return ProductBrand::all();
     }

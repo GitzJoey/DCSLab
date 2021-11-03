@@ -12,7 +12,7 @@ interface ProductBrandService
 
     public function read();
 
-    public function getAllActiveProductBrand();
+    public function getAllProductBrand();
 
     public function update(
         $id,

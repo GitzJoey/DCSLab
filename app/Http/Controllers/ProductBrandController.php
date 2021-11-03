@@ -34,9 +34,9 @@ class ProductBrandController extends BaseController
         return $this->productBrandService->read();
     }
 
-    public function getAllActiveProductBrand()
+    public function getAllProductBrand()
     {
-        return $this->productBrandService->getAllActiveProductBrand();
+        return $this->productBrandService->getAllProductBrand();
     }
 
     public function store(Request $request)

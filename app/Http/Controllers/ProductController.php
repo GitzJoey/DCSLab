@@ -35,6 +35,16 @@ class ProductController extends BaseController
         return $this->productService->read();
     }
 
+    public function read_product()
+    {
+        return $this->productService->read_product();
+    }
+
+    public function read_service()
+    {
+        return $this->productService->read_service();
+    }
+
     public function store(Request $request)
     {   
         $request->validate([

@@ -34,24 +34,24 @@ class UnitController extends BaseController
         return $this->UnitService->read();
     }
 
-    public function getAllActiveUnit()
+    public function getAllUnit()
     {
-        return $this->UnitService->getAllActiveUnit();
+        return $this->UnitService->getAllUnit();
     }
 
-    public function getAllProductUnit()
+    public function getAllProduct()
     {
-        return $this->UnitService->getAllProductUnit();
+        return $this->UnitService->getAllProduct();
     }
 
-    public function getAllServiceUnit()
+    public function getAllService()
     {
-        return $this->UnitService->getAllServiceUnit();
+        return $this->UnitService->getAllService();
     }
 
-    public function GetAllProductandServiceUnit()
+    public function GetAllProductandService()
     {
-        return $this->UnitService->GetAllProductandServiceUnit();
+        return $this->UnitService->GetAllProductandService();
     }
 
     public function store(Request $request)

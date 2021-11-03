@@ -63,14 +63,14 @@ class ProductServiceImpl implements ProductService
         return Product::with('group', 'brand', 'product_unit.unit')->paginate();
     }
 
-    public function read_products()
+    public function read_product()
     {
         return Product::with('group', 'brand', 'product_unit.unit')
                 ->where('product_type', '<>', 4)
                 ->paginate();
     }
 
-    public function read_services()
+    public function read_service()
     {
         return Product::with('group', 'brand', 'product_unit.unit')
                 ->where('product_type', '=', 4)

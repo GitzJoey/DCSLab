@@ -13,13 +13,13 @@ interface ProductGroupService
 
     public function read();
 
-    public function getAllActiveProductGroup();
-
     public function getAllProductGroup();
 
-    public function getAllServiceGroup();
+    public function getAllProduct();
 
-    public function GetAllProductandServiceGroup();
+    public function getAllService();
+
+    public function GetAllProductandService();
 
     public function update(
         $id,
