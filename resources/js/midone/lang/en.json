@@ -7,7 +7,8 @@
             "back": "Back",
             "reset": "Reset",
             "compose": "Compose",
-            "revoke": "Revoke"
+            "revoke": "Revoke",
+            "activate": "Activate"
         },
         "dropdown": {
             "placeholder": "Please Select",
@@ -94,6 +95,9 @@
                     "new_password": "New Password",
                     "confirm_password": "Confirm Password"
                 }
+            },
+            "tooltip": {
+                "email_verified": "Email Verified"
             }
         },
         "users": {

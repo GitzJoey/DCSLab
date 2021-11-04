@@ -66,11 +66,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['hId', 'selectedRoles', 'selectedSettings'];
+    protected $appends = ['hId', 'emailVerified', 'selectedRoles', 'selectedSettings'];
 
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
+    }
+
+    public function getEmailVerifiedAttribute()
+    {
+        return !is_null($this->email_verified_at);
     }
 
     public function getSelectedRolesAttribute()

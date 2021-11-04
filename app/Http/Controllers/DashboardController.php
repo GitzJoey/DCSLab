@@ -30,11 +30,14 @@ class DashboardController extends BaseController
 
     public function userProfile()
     {
-        $parameters = array (
-            'readById' =>  Auth::user()->id
-        );
+        $parameters['readById'] = Auth::id();
 
         return $this->userService->read($parameters);
+    }
+
+    public function updateProfile()
+    {
+
     }
 
     public function userMenu()

@@ -153,17 +153,51 @@ class UserServiceImpl implements UserService
         DB::beginTransaction();
 
         try {
-            $retval = 0;
-
             $usr = User::find($id);
-            $retval += $usr->update([
+
+            $this->updateUser($usr, $name, false);
+            $this->updateProfile($usr, $profile, false);
+            $this->updateRoles($usr, $rolesId, false);
+            $this->updateSettings($usr, $settings, false);
+
+            DB::commit();
+
+            return $usr;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        }
+    }
+
+    public function updateUser($user, $name, $useTransactions = true)
+    {
+        !$useTransactions ?: DB::beginTransaction();
+
+        try {
+            $retval = $user->update([
                 'name' => $name,
             ]);
 
-            if ($profile != null) {
-                $pa = $usr->profile()->first();
+            !$useTransactions ?: DB::commit();
 
-                $retval += $pa->update([
+            return $retval;
+        } catch (Exception $e) {
+            !$useTransactions ?: DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        }
+    }
+
+    public function updateProfile($user, $profile, $useTransactions = true)
+    {
+        !$useTransactions ?: DB::beginTransaction();
+
+        try {
+            if ($profile != null) {
+                $pa = $user->profile()->first();
+
+                $retval = $pa->update([
                     'first_name' => $profile['first_name'],
                     'last_name' => $profile['last_name'],
                     'address' => $profile['address'],
@@ -178,10 +212,43 @@ class UserServiceImpl implements UserService
                 ]);
             }
 
-            $usr->syncRoles($rolesId);
+            !$useTransactions ?: DB::commit();
 
+            return $retval;
+        } catch (Exception $e) {
+            !$useTransactions ?: DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        }
+    }
+
+    public function updateRoles($user, $rolesId, $useTransactions = true)
+    {
+        !$useTransactions ?: DB::beginTransaction();
+
+        try {
+            !$useTransactions ?: DB::commit();
+
+            $retval = $user->syncRoles($rolesId);
+
+            return $retval;
+        } catch (Exception $e) {
+            !$useTransactions ?: DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        }
+    }
+
+    public function updateSettings($user, $settings, $useTransactions = true)
+    {
+        !$useTransactions ?: DB::beginTransaction();
+
+        try {
+            !$useTransactions ?: DB::commit();
+
+            $retval = 0;
             foreach ($settings as $key => $value) {
-                $setting = $usr->settings()->where('key', $key)->first();
+                $setting = $user->settings()->where('key', $key)->first();
                 if (!$setting || $value == null) continue;
                 if ($setting->value != $value) {
                     $retval += $setting->update([
@@ -190,11 +257,9 @@ class UserServiceImpl implements UserService
                 }
             }
 
-            DB::commit();
-
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
+            !$useTransactions ?: DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }

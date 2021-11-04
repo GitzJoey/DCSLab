@@ -7,7 +7,8 @@
             "back": "Kembali",
             "reset": "Reset",
             "compose": "Pesan Baru",
-            "revoke": "Revoke"
+            "revoke": "Revoke",
+            "activate": "Aktifkan"
         },
         "dropdown": {
             "placeholder": "Silahkan Pilih",
@@ -94,6 +95,9 @@
                     "new_password": "Password Baru",
                     "confirm_password": "Konfirmasi Password Baru"
                 }
+            },
+            "tooltip": {
+                "email_verified": "Email terverifikasi"
             }
         },
         "users": {

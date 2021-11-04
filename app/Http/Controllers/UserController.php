@@ -7,8 +7,6 @@ use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use App\Services\RoleService;
 
-use App\Rules\validDropDownValue;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
