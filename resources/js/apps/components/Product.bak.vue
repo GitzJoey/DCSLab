@@ -6,17 +6,17 @@
             <h3 class="block-title" v-if="this.mode === 'edit_product'"><strong>{{ $t('actions.edit') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'show_product'"><strong>{{ $t('actions.show') }}</strong></h3>
             
-            <h3 class="block-title" v-if="this.mode === 'list_service'"><strong>Service Lists</strong></h3>
-            <h3 class="block-title" v-if="this.mode === 'create_service'"><strong>Create Service</strong></h3>
-            <h3 class="block-title" v-if="this.mode === 'edit_service'"><strong>Edit Service</strong></h3>
-            <h3 class="block-title" v-if="this.mode === 'show_service'"><strong>Delete Service</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'list_service'"><strong>{{ $t('table.title') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'create_service'"><strong>{{ $t('actions.create') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'edit_service'"><strong>{{ $t('actions.edit') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'show_service'"><strong>{{ $t('actions.show') }}</strong></h3>
             
             <div class="block-options">
                 <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
                     <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
                 </button>
-                <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list_product' || this.mode === 'list_service'">
+                <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list_product'">
                     <i class="icon icon-refresh"></i>
                 </button>
                 <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <!-- Lists Product -->
+            <!-- Tabs Product -->
             <transition name="fade">
                 <div v-show="this.mode === 'list_product'">
                     <table class="table table-vcenter">
@@ -110,84 +110,10 @@
                 </div>
             </transition>
 
-            <!-- Lists Service -->
+            <!-- inputan product... -->
             <transition name="fade">
-                <div v-show="this.mode === 'list_service'">
-                    <table class="table table-vcenter">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>{{ $t("table.cols.code") }}</th>
-                                <th>{{ $t("table.cols.group_id") }}</th>
-                                <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.tax_status") }}</th>
-                                <th>{{ $t("table.cols.remarks") }}</th>
-                                <th>{{ $t("table.cols.point") }}</th>
-                                <th>{{ $t("table.cols.product_type") }}</th>
-                                <th>{{ $t("table.cols.status") }}</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(c, cIdx) in serviceList.data">
-                                <td>{{ c.code }}</td>
-                                <td>{{ c.group.name }}</td>
-                                <td>{{ c.name }}</td>
-                                <td>
-                                    <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
-                                    <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
-                                    <span v-if="c.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
-                                </td>
-                                <td>{{ c.remarks }}</td>
-                                <td>{{ c.point }}</td>
-                                <td>
-                                    <span v-if="c.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
-                                    <span v-if="c.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
-                                    <span v-if="c.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
-                                </td>
-                                <td>
-                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
-                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelectedProduct(cIdx)">
-                                            <i class="fa fa-info"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelectedProduct(cIdx)">
-                                            <i class="fa fa-pencil"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedProduct(cIdx)">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.serviceList.prev_page_url == null}">
-                                <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePageService('prev')">
-                                    <span aria-hidden="true">&laquo;</span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                            </li>
-                            <li :class="{'page-item':true, 'disabled': this.serviceList.next_page_url == null}">
-                                <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePageService('next')">
-                                    <span aria-hidden="true">&raquo;</span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </transition>
-
-            <!-- inputan -->
-            <transition name="fade">
-                <div id="crud" v-if="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product' || this.mode === 'create_service' || this.mode === 'edit_service' || this.mode === 'show_service'">
-                    <Form id="productForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                        <!-- error alert -->
+                <div id="crud" v-if="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product'">
+                    <Form id="list_productForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -197,17 +123,15 @@
                                 <li v-for="e in errors">{{ e }}</li>
                             </ul>
                         </div>
-                        <!-- code -->
-                        <div class="form-group row" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product' || this.mode === 'create_service' || this.mode === 'edit_service' || this.mode === 'show_service'">
+                        <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="product.code" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'create_service' || this.mode === 'edit_service'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="product.code" v-show="this.mode === 'create_product' || this.mode === 'edit_product'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
                                 <div class="form-control-plaintext" v-show="this.mode === 'show_product'">{{ product.code }}</div>
                             </div>
                         </div>
-                        <!-- group -->
-                        <div class="form-group row" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product' || this.mode === 'create_service' || this.mode === 'edit_service' || this.mode === 'show_service'">
+                        <div class="form-group row">
                             <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
@@ -218,8 +142,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- brand -->
-                        <div class="form-group row" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product'">
+                        <div class="form-group row">
                             <label class="col-2 col-form-label" for="brand_id">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="brand_id" name="brand_id" v-model="product.brand.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
@@ -230,8 +153,7 @@
                                 </div>            
                             </div>
                         </div>
-                        <!-- name -->
-                        <div class="form-group row" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product' || this.mode === 'create_service' || this.mode === 'edit_service' || this.mode === 'show_service'">
+                        <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="product.name" v-show="this.mode === 'create_product' || this.mode === 'edit_product'"/>
@@ -239,6 +161,7 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show_product'">{{ product.name }}</div>
                             </div>
                         </div>
+
                         <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
                             <div class="block-header bg-gray-dark">
                                 <h3 class="block-title"><strong>Product Unit</strong></h3>
@@ -320,16 +243,7 @@
                                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
                             </div> 
                         </div>
-                        <!-- unit -->
-                        
-                        <td>
-                            <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
-                                <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                            </select>
-                            <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
-                                {{ c.unit.name }}
-                            </div>  
-                        </td>
+
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="supplier_id">{{ $t('fields.supplier_id') }}</label>
                             <div class="col-md-10">
@@ -439,7 +353,78 @@
             </div>
             <!-- End Tabs Product -->
 
-
+            <!-- Tabs Service -->
+            <transition name="fade">
+                <div v-show="this.mode === 'list_service'">
+                    <table class="table table-vcenter">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>{{ $t("table.cols.code") }}</th>
+                                <th>{{ $t("table.cols.group_id") }}</th>
+                                <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.tax_status") }}</th>
+                                <th>{{ $t("table.cols.remarks") }}</th>
+                                <th>{{ $t("table.cols.point") }}</th>
+                                <th>{{ $t("table.cols.product_type") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(c, cIdx) in serviceList.data">
+                                <td>{{ c.code }}</td>
+                                <td>{{ c.group.name }}</td>
+                                <td>{{ c.name }}</td>
+                                <td>
+                                    <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="c.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
+                                </td>
+                                <td>{{ c.remarks }}</td>
+                                <td>{{ c.point }}</td>
+                                <td>
+                                    <span v-if="c.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
+                                    <span v-if="c.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
+                                    <span v-if="c.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
+                                </td>
+                                <td>
+                                    <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
+                                    <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelectedProduct(cIdx)">
+                                            <i class="fa fa-info"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelectedProduct(cIdx)">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedProduct(cIdx)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination pagination-sm justify-content-end">
+                            <li :class="{'page-item':true, 'disabled': this.serviceList.prev_page_url == null}">
+                                <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePageService('prev')">
+                                    <span aria-hidden="true">&laquo;</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li :class="{'page-item':true, 'disabled': this.serviceList.next_page_url == null}">
+                                <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePageService('next')">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </transition>
 
             <!-- inputan service... -->
             <transition name="fade">
