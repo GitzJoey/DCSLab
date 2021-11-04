@@ -240,7 +240,7 @@
                             </div>
                         </div>
                         <!-- product_unit -->
-                        <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
+                        <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product'">
                             <div class="block-header bg-gray-dark">
                                 <h3 class="block-title"><strong>Product Unit</strong></h3>
 
@@ -328,14 +328,13 @@
                                 <select class="form-control" id="service_unit_id" name="service_unit_id" v-model="service.unit.hId" v-show="this.mode === 'create_service' || this.mode === 'edit_service'">
                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
-                                <!-- <div class="form-control-plaintext" v-show="this.mode === 'show_service'">
-                                    {{ c.unit.name }}
-                                </div> -->
+                                <div class="form-control-plaintext" v-show="this.mode === 'show_service'">
+                                    {{ service.unit.name }}
+                                </div>
                             </div>
                         </div>
-
                         <!-- supplier -->
-                        <div class="form-group row">
+                        <div class="form-group row" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'show_product'">
                             <label class="col-2 col-form-label" for="supplier_id">{{ $t('fields.supplier_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.supplier.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
