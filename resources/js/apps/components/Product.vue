@@ -203,7 +203,7 @@
                             <div class="col-md-10">
                                 <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="product.code" v-show="this.mode === 'create_product' || this.mode === 'edit_product' || this.mode === 'create_service' || this.mode === 'edit_service'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show_product'">{{ product.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show_product' || this.mode === 'show_service'">{{ product.code }}</div>
                             </div>
                         </div>
                         <!-- group -->
@@ -213,7 +213,7 @@
                                 <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
                                     <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
+                                <div class="form-control-plaintext" v-show="this.mode === 'show_product' || this.mode === 'show_service'">
                                     {{ product.group.name }}
                                 </div>
                             </div>
@@ -236,9 +236,10 @@
                             <div class="col-md-10">
                                 <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="product.name" v-show="this.mode === 'create_product' || this.mode === 'edit_product'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show_product'">{{ product.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show_product' || this.mode === 'show_service'">{{ product.name }}</div>
                             </div>
                         </div>
+                        <!-- product_unit -->
                         <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
                             <div class="block-header bg-gray-dark">
                                 <h3 class="block-title"><strong>Product Unit</strong></h3>
@@ -321,15 +322,19 @@
                             </div> 
                         </div>
                         <!-- unit -->
-                        
-                        <td>
-                            <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
-                                <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                            </select>
-                            <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
-                                {{ c.unit.name }}
-                            </div>  
-                        </td>
+                        <div class="form-group row" v-show="this.mode === 'create_service' || this.mode === 'edit_service' || this.mode === 'show_service'">
+                            <label class="col-2 col-form-label" for="service_unit_id">Unit</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="service_unit_id" name="service_unit_id" v-model="service.unit.hId" v-show="this.mode === 'create_service' || this.mode === 'edit_service'">
+                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <!-- <div class="form-control-plaintext" v-show="this.mode === 'show_service'">
+                                    {{ c.unit.name }}
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <!-- supplier -->
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="supplier_id">{{ $t('fields.supplier_id') }}</label>
                             <div class="col-md-10">
@@ -517,14 +522,14 @@
                                                 <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
                                             </td>
 
-                                            <td>
+                                            <!-- <td>
                                                 <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
                                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                                 </select>
                                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                                     {{ c.unit.name }}
                                                 </div>  
-                                            </td>
+                                            </td> -->
 
                                             <td>
                                                 <label class="css-control css-control-primary css-checkbox">
@@ -1011,12 +1016,7 @@ export default {
                 code: '',
                 group: {hId: ''},
                 name: '',
-                product_unit: [
-                    {
-                        hId: '',
-                        unit: {hId: ''}
-                    }
-                ],
+                unit: {hId: ''},
                 tax_status: '',
                 remarks: '',
                 point: '',
@@ -1026,6 +1026,7 @@ export default {
             groupDDL: [],
             brandpDDL: [],
             supplierDDL: [],
+            unitDDL: [],
         }
     },
     created() {
@@ -1034,11 +1035,10 @@ export default {
     mounted() {
         this.mode = 'list_product';
         this.getAllProduct(1);
-        this.getAllProductUnit();
         this.getAllService(1);
         this.getAllProductGroup();
         this.getAllProductBrand();
-        this.getAllProductUnit();
+        // this.getAllProductUnit();
         this.getAllUnit();
     },
     methods: {
@@ -1055,15 +1055,16 @@ export default {
             });
         },
 
+        // getAllProductUnit() {
+        //     axios.get(route('api.get.dashboard.productunit.read.all')).then(response => {
+        //         this.product_unitDDL = response.data;
+        //     });
+        // },
+
         getAllUnit() {
             axios.get(route('api.get.dashboard.unit.read.all')).then(response => {
                 this.unitDDL = response.data;
-            });
-        },
-
-        getAllProductUnit() {
-            axios.get(route('api.get.dashboard.productunit.read.all')).then(response => {
-                this.product_unitDDL = response.data;
+                // this.product_unitDDL = response.data;
             });
         },
 
@@ -1173,14 +1174,7 @@ export default {
                 code: 'AUTO',
                 group: {hId: ''},
                 name: '',
-                product_unit: [
-                    {
-                        hId: '',
-                        code: 'AUTO',
-                        conversion_value: '1',
-                        unit: {hId: ''}
-                    }
-                ],
+                unit: {hId: ''},
                 tax_status: '',
                 remarks: '',
                 point: '0',
