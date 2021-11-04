@@ -11,6 +11,7 @@ use App\Models\ProductGroup;
 use App\Models\ProductBrand;
 use App\Models\Unit;
 use App\Models\ProductUnit;
+use App\Models\Supplier;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -92,5 +93,10 @@ class Product extends Model
     public function product_unit()
     {
         return $this->hasMany(ProductUnit::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 }
