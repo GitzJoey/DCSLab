@@ -24,7 +24,8 @@ class ProductServiceImpl implements ProductService
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
+        $productservice
     )
     {
 
@@ -90,7 +91,8 @@ class ProductServiceImpl implements ProductService
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
+        $productservice
     )
     {
         DB::beginTransaction();

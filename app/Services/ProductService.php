@@ -16,8 +16,8 @@ interface ProductService
         $point,
         $is_use_serial,
         $product_type,
-        $status
-
+        $status,
+        $productservice
     );
 
     public function read();
@@ -39,7 +39,8 @@ interface ProductService
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
+        $productservice
     );
 
     public function delete($id);

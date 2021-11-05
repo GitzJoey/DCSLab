@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('group_id')->references('id')->on('product_groups')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('brand_id')->references('id')->on('product_brands')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('supplier_id')->references('id')->on('suppliers')->onUpdate('cascade')->onDelete('restrict');
             $table->string('code')->nullable();
             $table->string('name')->nullable();	

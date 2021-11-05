@@ -53,6 +53,18 @@ class ProductController extends BaseController
             'status' => 'required',
         ]);
 
+        $productservice = array (
+            'code' => $request['code'],
+            'group_id' => $request['group_id'],
+            'name' => $request['name'],
+            'unit_id' => $request['unit_id'],
+            'tax_status' => $request['tax_status'],
+            'remarks' => $request['remarks'],
+            'point' => $request['point'],
+            'product_type' => $request['product_type'],
+            'status' => $request['status'],
+        );
+
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
         
@@ -101,7 +113,8 @@ class ProductController extends BaseController
             $request['point'],
             $is_use_serial, 
             $request['product_type'],
-            $request['status']
+            $request['status'],
+            $productservice
         );
         return $result == 0 ? response()->error():response()->success();
     }
@@ -113,6 +126,18 @@ class ProductController extends BaseController
             'name' => 'required|max:255',
             'status' => 'required',
         ]);
+
+        $productservice = array (
+            'code' => $request['code'],
+            'group_id' => $request['group_id'],
+            'name' => $request['name'],
+            'unit_id' => $request['unit_id'],
+            'tax_status' => $request['tax_status'],
+            'remarks' => $request['remarks'],
+            'point' => $request['point'],
+            'product_type' => $request['product_type'],
+            'status' => $request['status'],
+        );
 
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
@@ -130,7 +155,8 @@ class ProductController extends BaseController
             $request['point'],
             $is_use_serial, 
             $request['product_type'],
-            $request['status']
+            $request['status'],
+            $productservice
         );
         return $result == 0 ? response()->error():response()->success();
     }
