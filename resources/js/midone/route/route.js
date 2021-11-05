@@ -33,13 +33,13 @@ const routes = [
                 meta: { remember: true }
             },
             {
-                path: root + '/profile' + '/inbox',
+                path: root + '/inbox',
                 name: 'side-menu-dashboard-inbox',
                 component: Inbox,
                 meta: { remember: true }
             },
             {
-                path: root + '/profile' + '/activity',
+                path: root + '/activity',
                 name: 'side-menu-dashboard-activity',
                 component: Activity,
                 meta: { remember: true }
@@ -97,7 +97,7 @@ const router = createRouter({
 });
 
 router.afterEach((to, from) => {
-    axios.post('/api/post/dashboard/core/log/route', {
+    axios.post('/api/post/dashboard/core/activity/log/route', {
         to: to.name,
         params: to.params
     }).catch(e => { });

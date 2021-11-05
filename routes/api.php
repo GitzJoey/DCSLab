@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
 
@@ -31,10 +32,15 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         });
 
         Route::group(['prefix' => 'core', 'as' => '.core'], function() {
-            Route::get('user/profile', [DashboardController::class, 'userProfile'])->name('.user_profile');
-            Route::get('user/menu', [DashboardController::class, 'userMenu'])->name('.user_menu');
+            Route::group(['prefix' => 'profile', 'as' => '.profile'], function() {
+                Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');
+            });
 
-            Route::get('log/route/list', [ActivityLogController::class, 'getRouteActivity'])->name('.log_route.list');
+            Route::group(['prefix' => 'activity', 'as' => '.activity'], function() {
+                Route::get('route/list', [ActivityLogController::class, 'getRouteActivity'])->name('.route.list');
+            });
+
+            Route::get('user/menu', [DashboardController::class, 'userMenu'])->name('.user_menu');
         });
 
         Route::group(['prefix' => 'common', 'as' => '.common'], function() {
@@ -56,7 +62,14 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
         });
 
         Route::group(['prefix' => 'core', 'as' => '.core'], function() {
-            Route::post('log/route', [ActivityLogController::class, 'logRouteActivity'])->name('.log_route');
+            Route::group(['prefix' => 'profile', 'as' => '.profile'], function() {
+                Route::post('update', [ProfileController::class, 'updateProfile'])->name('.update');
+                Route::post('change/password', [ProfileController::class, 'changePassword'])->name('.change_password');
+            });
+
+            Route::group(['prefix' => 'activity', 'as' => '.activity'], function() {
+                Route::post('log/route', [ActivityLogController::class, 'logRouteActivity'])->name('.log_route');
+            });
         });
     });
 });

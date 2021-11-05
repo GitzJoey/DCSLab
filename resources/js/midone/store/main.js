@@ -20,7 +20,7 @@ const actions = {
         commit(types.USERCONTEXT, { userPayload });
     },
     fetchUserContext({ commit }) {
-        axios.get('/api/get/dashboard/core/user/profile').then(response => {
+        axios.get('/api/get/dashboard/core/profile/read').then(response => {
             var userPayload = response.data;
             commit(USERCONTEXT, { userPayload });
         });

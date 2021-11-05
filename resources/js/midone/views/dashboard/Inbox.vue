@@ -6,15 +6,15 @@
     </div>
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-3 2xl:col-span-2">
-            <div class="intro-y box bg-white p-5 mt-6">
-                <button type="button" class="btn text-gray-700 dark:text-gray-300 w-full bg-white dark:bg-theme-1 mt-1 hover:btn-secondary">
+            <div class="intro-y box bg-white p-5 mt-5">
+                <button type="button" class="btn text-gray-700 dark:text-gray-300 w-full bg-white dark:bg-theme-1 mt-1 hover:btn-secondary" @click="createNew">
                     <Edit3Icon class="w-4 h-4 mr-2" />
                     {{ t('components.buttons.compose')}}
                 </button>
             </div>
         </div>
         <div class="col-span-12 lg:col-span-9 2xl:col-span-10">
-            <div class="intro-y inbox box mt-5">
+            <div class="intro-y inbox box mt-5" v-if="mode === 'list'">
                 <div class="p-5 flex flex-col-reverse sm:flex-row text-gray-600 border-b border-gray-200 dark:border-dark-1">
                     <div class="flex items-center mt-3 sm:mt-0 border-t sm:border-0 border-gray-200 pt-5 sm:pt-0 mt-5 sm:mt-0 -mx-5 sm:mx-0 px-5 sm:px-0">
                         <input class="form-check-input" type="checkbox" @click="checkAll">
@@ -75,20 +75,56 @@
                     <div class="sm:ml-auto mt-2 sm:mt-0 dark:text-gray-300">Last account activity: 36 minutes ago</div>
                 </div>
             </div>
+            <div class="intro-y box mt-5" v-if="mode === 'create'">
+                <div class="m-5 p-3">
+                    <label for="tagsTo" class="form-label">{{ t('views.inbox.fields.to') }}</label>
+                    <TomSelect v-model="tagsTo" :options="{ placeholder: t('components.dropdown.placeholder') }" class="w-full" multiple>
+                        <option value="1">Leonardo DiCaprio</option>
+                        <option value="2">Johnny Deep</option>
+                        <option value="3">Robert Downey, Jr</option>
+                        <option value="4">Samuel L. Jackson</option>
+                        <option value="5">Morgan Freeman</option>
+                    </TomSelect>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { inject, onMounted } from "vue";
+import { inject, onMounted, ref } from "vue";
 import mainMixins from '../../mixins';
 
 const { t, assetPath } = mainMixins();
+
+const mode = ref('list');
+const userList = ref([]);
+const inboxList = ref([]);
+const messageList = ref([]);
+const tagsTo = ref('');
+const inbox = ref({
+    hId: '',
+    to: '',
+    subject: '',
+    message: ''
+});
+const newMessage = ref('');
+const subjectEdited = ref('');
 
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 });
+
+function createNew() {
+    mode.value = 'create';
+}
 
 function checkAll() {
 

@@ -13,28 +13,19 @@ class InboxController extends BaseController
 {
     private $userService;
     private $inboxService;
-    private $activityLogService;
 
-    public function __construct(InboxService $inboxService, UserService $userService, ActivityLogService $activityLogService)
+    public function __construct(InboxService $inboxService, UserService $userService)
     {
         parent::__construct();
 
         $this->middleware('auth');
         $this->userService = $userService;
         $this->inboxService = $inboxService;
-        $this->activityLogService = $activityLogService;
-    }
-
-    public function index(Request $request)
-    {
-        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
-
-        return view('inbox.index');
     }
 
     public function read()
     {
-        $usrId = Auth::user()->id;
+        $usrId = Auth::id();
 
         $ts = $this->inboxService->getThreads($usrId);
 

@@ -3,21 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Services\ActivityLogService;
-use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends BaseController
 {
-    private $userService;
     private $activityLogService;
 
-    public function __construct(UserService $userService, ActivityLogService $activityLogService)
+    public function __construct(ActivityLogService $activityLogService)
     {
         parent::__construct();
 
         $this->middleware('auth');
-        $this->userService = $userService;
         $this->activityLogService = $activityLogService;
     }
 
@@ -26,18 +22,6 @@ class DashboardController extends BaseController
         $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
 
         return view('dashboard.midone');
-    }
-
-    public function userProfile()
-    {
-        $parameters['readById'] = Auth::id();
-
-        return $this->userService->read($parameters);
-    }
-
-    public function updateProfile()
-    {
-
     }
 
     public function userMenu()
