@@ -119,8 +119,8 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                     {{ service.group.name }}
@@ -266,6 +266,9 @@ export default {
                 product_type: '',
                 status: '',
             },
+            groupDDL: [],
+            unitDDL: [],
+            statusDDL: [],
         }
     },
     created() {

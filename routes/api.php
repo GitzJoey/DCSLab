@@ -153,6 +153,11 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::get('read/service', [ProductController::class, 'read_service'])->name('api.get.dashboard.product.read.service');
         });
 
+        Route::group(['prefix' => 'service'], function () {
+            Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.service.read');
+            Route::get('read/all/', [ProductController::class, 'getAllService'])->name('api.get.dashboard.service.read.all');
+        });
+
         Route::group(['prefix' => 'customergroup'], function () {
             Route::get('read', [CustomerGroupController::class, 'read'])->name('api.get.dashboard.customergroup.read');
             Route::get('read/all/active', [CustomerGroupController::class, 'getAllCustomerGroup'])->name('api.get.dashboard.customergroup.read.all_active');
@@ -281,6 +286,12 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
                 Route::post('save', [ProductController::class, 'store'])->name('api.post.dashboard.product.save');
                 Route::post('edit/{id}', [ProductController::class, 'update'])->name('api.post.dashboard.product.edit');
                 Route::post('delete/{id}', [ProductController::class, 'delete'])->name('api.post.dashboard.product.delete');
+            });
+
+            Route::group(['prefix' => 'service'], function () {
+                Route::post('save', [ProductController::class, 'store'])->name('api.post.dashboard.service.save');
+                Route::post('edit/{id}', [ProductController::class, 'update'])->name('api.post.dashboard.service.edit');
+                Route::post('delete/{id}', [ProductController::class, 'delete'])->name('api.post.dashboard.service.delete');
             });
 
             Route::group(['prefix' => 'customergroup'], function () {

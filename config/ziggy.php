@@ -101,6 +101,10 @@ return [
             'api.get.dashboard.productunit.read.all',
             'api.post.dashboard.product.*',
         ],
+        'service' => [
+            'api.get.dashboard.service.read',
+            'api.post.dashboard.service.*',
+        ],
         'customergroup' => [
             'api.get.dashboard.customergroup.read',
             'api.get.dashboard.cash.read.all_active',

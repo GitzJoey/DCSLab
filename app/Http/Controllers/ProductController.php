@@ -45,6 +45,11 @@ class ProductController extends BaseController
         return $this->productService->read_service();
     }
 
+    public function getAllService()
+    {
+        return $this->ProductService->getAllService();
+    }
+
     public function store(Request $request)
     {   
         $request->validate([
@@ -52,18 +57,6 @@ class ProductController extends BaseController
             'name' => 'required|max:255',
             'status' => 'required',
         ]);
-
-        $productservice = array (
-            'code' => $request['code'],
-            'group_id' => $request['group_id'],
-            'name' => $request['name'],
-            'unit_id' => $request['unit_id'],
-            'tax_status' => $request['tax_status'],
-            'remarks' => $request['remarks'],
-            'point' => $request['point'],
-            'product_type' => $request['product_type'],
-            'status' => $request['status'],
-        );
 
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
@@ -104,17 +97,18 @@ class ProductController extends BaseController
         $result = $this->productService->create(
             Hashids::decode($request['company_id'])[0],
             $request['code'], 
-            Hashids::decode($request['group_id'])[0], 
-            Hashids::decode($request['brand_id'])[0], 
-            $request['name'],          
-            $request['tax_status'], 
-            $request['remarks'], 
-            $request['estimated_capital_price'], 
+            Hashids::decode($request['group_id'])[0],
+            Hashids::decode($request['brand_id'])[0],
+            $request['name'],
+            $request['product_unit'],
+            Hashids::decode($request['unit_id'])[0],
+            $request['tax_status'],
+            Hashids::decode($request['supplier_id'])[0],
+            $request['remarks'],
             $request['point'],
-            $is_use_serial, 
+            $is_use_serial,
             $request['product_type'],
             $request['status'],
-            $productservice
         );
         return $result == 0 ? response()->error():response()->success();
     }
@@ -127,18 +121,6 @@ class ProductController extends BaseController
             'status' => 'required',
         ]);
 
-        $productservice = array (
-            'code' => $request['code'],
-            'group_id' => $request['group_id'],
-            'name' => $request['name'],
-            'unit_id' => $request['unit_id'],
-            'tax_status' => $request['tax_status'],
-            'remarks' => $request['remarks'],
-            'point' => $request['point'],
-            'product_type' => $request['product_type'],
-            'status' => $request['status'],
-        );
-
         $is_use_serial = $request['is_use_serial'];
         $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
 
@@ -146,17 +128,18 @@ class ProductController extends BaseController
             $id,
             Hashids::decode($request['company_id'])[0],
             $request['code'], 
-            Hashids::decode($request['group_id'])[0], 
-            Hashids::decode($request['brand_id'])[0], 
-            $request['name'], 
-            $request['tax_status'], 
-            $request['remarks'], 
-            $request['estimated_capital_price'], 
+            Hashids::decode($request['group_id'])[0],
+            Hashids::decode($request['brand_id'])[0],
+            $request['name'],
+            $request['product_unit'],
+            Hashids::decode($request['unit_id'])[0],
+            $request['tax_status'],
+            Hashids::decode($request['supplier_id'])[0],
+            $request['remarks'],
             $request['point'],
-            $is_use_serial, 
+            $is_use_serial,
             $request['product_type'],
             $request['status'],
-            $productservice
         );
         return $result == 0 ? response()->error():response()->success();
     }

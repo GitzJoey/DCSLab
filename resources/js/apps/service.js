@@ -121,7 +121,7 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(Status)
+createApp(Service)
     .use(ZiggyVue, Ziggy)
     .use(i18n)
     .mount('#statusVue')

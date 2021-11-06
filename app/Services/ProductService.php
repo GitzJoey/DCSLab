@@ -10,6 +10,8 @@ interface ProductService
         $group_id,
         $brand_id,
         $name,
+        $product_unit,
+        $unit,
         $tax_status,
         $remarks,
         $estimated_capital_price,
@@ -17,7 +19,6 @@ interface ProductService
         $is_use_serial,
         $product_type,
         $status,
-        $productservice
     );
 
     public function read();
@@ -26,6 +27,8 @@ interface ProductService
 
     public function read_service();
 
+    public function getAllService();
+
     public function update(
         $id,
         $company_id,
@@ -33,6 +36,8 @@ interface ProductService
         $group_id,
         $brand_id,
         $name,
+        $product_unit,
+        $unit,
         $tax_status,
         $remarks,
         $estimated_capital_price,
@@ -40,7 +45,6 @@ interface ProductService
         $is_use_serial,
         $product_type,
         $status,
-        $productservice
     );
 
     public function delete($id);
