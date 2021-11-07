@@ -18,13 +18,15 @@ class ProductServiceImpl implements ProductService
         $group_id,
         $brand_id,
         $name,
+        $product_unit,
+        $unit,
         $tax_status,
         $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
     )
     {
 
@@ -37,6 +39,8 @@ class ProductServiceImpl implements ProductService
             $product->group_id = $group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
+            $product->product_unit = $product_unit;
+            $product->unit = $unit;
             $product->tax_status = $tax_status;
             $product->remarks = $remarks;
             $product->estimated_capital_price = $estimated_capital_price;
@@ -46,6 +50,8 @@ class ProductServiceImpl implements ProductService
             $product->status = $status;
 
             $product->save();
+
+            $product = new Product();
 
             DB::commit();
 
@@ -77,6 +83,11 @@ class ProductServiceImpl implements ProductService
                 ->paginate();
     }
 
+    public function getAllService()
+    {
+        return Product::all();
+    }
+
     public function update(
         $id,
         $company_id,
@@ -84,13 +95,15 @@ class ProductServiceImpl implements ProductService
         $group_id,
         $brand_id,
         $name,
+        $product_unit,
+        $unit,
         $tax_status,
         $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
     )
     {
         DB::beginTransaction();
@@ -104,6 +117,8 @@ class ProductServiceImpl implements ProductService
                 'group_id' => $group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
+                'product_unit' => $product_unit,
+                'unit' => $unit,
                 'tax_status' => $tax_status,
                 'remarks' => $remarks,
                 'estimated_capital_price' => $estimated_capital_price,

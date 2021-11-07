@@ -74,6 +74,7 @@ mix
     .js('resources/js/apps/productbrand.js','public/js/apps/productbrand.js')
     .js('resources/js/apps/unit.js','public/js/apps/unit.js')
     .js('resources/js/apps/product.js','public/js/apps/product.js')
+    .js('resources/js/apps/service.js','public/js/apps/service.js')
     .js('resources/js/apps/customergroup.js','public/js/apps/customergroup.js')
     .js('resources/js/apps/customer.js','public/js/apps/customer.js')
 

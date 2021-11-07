@@ -34,6 +34,9 @@
             <li>
                 <a class="{{ active_class(if_route_pattern('db.product.products')) }}" href="{{route('db.product.products')}}">{{ __('sidebar-ext.db.product.products')}}</a>
             </li>
+            <li>
+                <a class="{{ active_class(if_route_pattern('db.product.services')) }}" href="{{route('db.product.services')}}">{{ __('sidebar-ext.db.product.services')}}</a>
+            </li>
         </ul>
     </li>
 @endrole

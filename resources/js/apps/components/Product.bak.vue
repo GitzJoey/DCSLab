@@ -991,23 +991,6 @@ export default {
                 product_type: '',
                 status: '',
             },
-            serviceList: [],
-            service: {
-                code: '',
-                group: {hId: ''},
-                name: '',
-                product_unit: [
-                    {
-                        hId: '',
-                        unit: {hId: ''}
-                    }
-                ],
-                tax_status: '',
-                remarks: '',
-                point: '',
-                product_type: '',
-                status: '',
-            },
             groupDDL: [],
             brandpDDL: [],
             supplierDDL: [],
