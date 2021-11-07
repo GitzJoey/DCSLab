@@ -163,11 +163,10 @@
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Code</th>
-                                            <th v-show="this.mode === 'edit'">Is Base</th>
+                                            <th>Is Base</th>
                                             <th>Conversion Value</th>
                                             <th>Unit</th>
                                             <th>Primary Unit</th>
-                                            <th>Remarks</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -177,9 +176,11 @@
                                                 <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
                                             </td>
 
-                                            <td v-show="this.mode === 'edit'">
-                                                <span v-if="c.is_base === 1">YES</span>
-                                                <span v-if="c.is_base === 0">NO</span>
+                                            <td>
+                                                <label class="css-control css-control-primary css-checkbox">
+                                                    <input type="checkbox" class="css-control-input" id="is_base" name="is_base[]" v-model="c.is_base" true-value="1" false-value="0">
+                                                    <span class="css-control-indicator"></span>
+                                                </label>
                                             </td>
 
                                             <td>
@@ -192,7 +193,7 @@
                                                 </select>
                                                 <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
                                                     {{ c.unit.name }}
-                                                </div>  
+                                                </div>
                                             </td>
 
                                             <td>
@@ -200,10 +201,6 @@
                                                     <input type="checkbox" class="css-control-input" id="is_primary_unit" name="is_primary_unit[]" v-model="c.is_primary_unit" true-value="1" false-value="0">
                                                     <span class="css-control-indicator"></span>
                                                 </label>
-                                            </td>
-                                        
-                                            <td>
-                                                <input type="text" class="form-control" v-model="c.remark" id="product_unit_remark" name="product_unit_remark[]"/>
                                             </td>
 
                                             <td class="text-center">
@@ -383,6 +380,7 @@ export default {
                 supplier: {hId: ''},
                 remarks: '',
                 point: '',
+                is_use_serial: '',
                 product_type: '',
                 status: '',
             },
@@ -467,6 +465,7 @@ export default {
                 supplier: {hId: ''},
                 remarks: '',
                 point: '',
+                is_use_serial: '',
                 product_type: '',
                 status: '1',
             }
