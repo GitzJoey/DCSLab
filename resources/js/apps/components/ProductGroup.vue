@@ -36,9 +36,9 @@
                                 <td>{{ b.code }}</td>
                                 <td>{{ b.name }}</td>
                                 <td>
-                                    <span v-if="b.category === 1">{{ $t('categoryDDL.productgroup') }}</span>
-                                    <span v-if="b.category === 2">{{ $t('categoryDDL.servicegroup') }}</span>
-                                    <span v-if="b.category === 3">{{ $t('categoryDDL.productandservicegroup') }}</span>
+                                    <span v-if="b.category === 1">{{ $t('categoryDDL.product') }}</span>
+                                    <span v-if="b.category === 2">{{ $t('categoryDDL.service') }}</span>
+                                    <span v-if="b.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
@@ -107,14 +107,14 @@
                             <div class="col-md-10 d-flex align-items-center">
                                 <select class="form-control" id="category" name="category" v-model="productgroup.category" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('categoryDDL.productgroup') }}</option>
-                                    <option value="2">{{ $t('categoryDDL.servicegroup') }}</option>
-                                    <option value="3">{{ $t('categoryDDL.productandservicegroup') }}</option>
+                                    <option value="1">{{ $t('categoryDDL.product') }}</option>
+                                    <option value="2">{{ $t('categoryDDL.service') }}</option>
+                                    <option value="3">{{ $t('categoryDDL.productandservice') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="productgroup.category === 1">{{ $t('categoryDDL.productgroup') }}</span>
-                                    <span v-if="productgroup.category === 2">{{ $t('categoryDDL.servicegroup') }}</span>
-                                    <span v-if="productgroup.category === 3">{{ $t('categoryDDL.productandservicegroup') }}</span>
+                                    <span v-if="productgroup.category === 1">{{ $t('categoryDDL.product') }}</span>
+                                    <span v-if="productgroup.category === 2">{{ $t('categoryDDL.service') }}</span>
+                                    <span v-if="productgroup.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
                                 </div>
                             </div>
                         </div>

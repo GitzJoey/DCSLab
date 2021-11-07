@@ -125,6 +125,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'supplier'], function () {
             Route::get('read', [SupplierController::class, 'read'])->name('api.get.dashboard.supplier.read');
+            Route::get('read/all/', [SupplierController::class, 'getAllSupplier'])->name('api.get.dashboard.supplier.read.all');
         });
 
         Route::group(['prefix' => 'productgroup'], function () {

@@ -94,9 +94,9 @@ const messages = {
             please_select: 'Silahkan Pilih',
         },
         categoryDDL: {
-            product: 'Product',
-            service: 'Service',
-            productandservice: 'Product and Service'
+            product: 'Barang',
+            service: 'Jasa',
+            productandservice: 'Barang and Jasa'
         },
     }
 };

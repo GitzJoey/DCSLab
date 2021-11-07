@@ -59,6 +59,11 @@ class SupplierServiceImpl implements SupplierService
         return Supplier::paginate();
     }
 
+    public function getAllSupplier()
+    {
+        return Supplier::get();
+    }
+
 
     public function update(
         $id,
