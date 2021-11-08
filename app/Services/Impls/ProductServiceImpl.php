@@ -46,8 +46,6 @@ class ProductServiceImpl implements ProductService
             $product->status = $status;
             $product->save();
 
-            
-
             DB::commit();
 
             return $product->hId;
