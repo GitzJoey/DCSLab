@@ -456,6 +456,7 @@ export default {
                     {
                         hId: '',
                         code: '[AUTO]',
+                        is_base: '1',
                         conversion_value: '1',
                         is_primary_unit: '1',
                         unit: {hId: ''}
