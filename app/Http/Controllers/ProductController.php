@@ -63,38 +63,8 @@ class ProductController extends BaseController
             $group_id = Hashids::decode($request->group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
             $name = $request->name;
-
-            // $product_units = [];
-            // foreach ($request['product_unit_code'] as $product_unit) {
-            //     array_push($product_units, 
-            
-            // );
-            // }
-
-            // $product_units = array (
-            //     #'company_id' => Hashids::decode($request['company_id'])[0],
-            //     'code' => $request['product_unit_code'],
-            //     'is_base' => $request['is_base'],
-            //     'unit_id' => $request['unit_id'],
-            //     'is_primary_unit' => $request['is_primary_unit'],
-            // );
-
-            // $product_units = [];
-            // $count_unit = count($request['unit_id']);
-            // for ($i = 0; $i < $count_unit; $i++) {
-            //     array_push($product_units, array (
-            //         'company_id' => $request->company_id,
-            //         'code' => array_key_exists($i, $request['product_unit_code']) == true ? $request['product_unit_code'][$i]:null,
-            //         'is_base' => array_key_exists($i, $request['is_base']) == true ? $request['is_base'][$i]:null,
-            //         'conv_value' => array_key_exists($i, $request['conv_value']) == true ? $request['conv_value'][$i]:null,
-            //         'unit_id' => array_key_exists($i, $request['unit_id']) == true ? $request['unit_id'][$i]:null,
-            //         'is_primary_unit' => array_key_exists($i, $request['is_primary_unit']) == true ? $request['is_primary_unit'][$i]:null
-            //     ));
-            // }
-
             $tax_status = $request->tax_status;
-            $request['company_id'] != null ? $company_id = Hashids::decode($request['company_id'])[0]:$company_id = null;
-            $supplier_id = Hashids::decode($request->supplier_id)[0];
+            $supplier_id = $request->supplier_id != null ? Hashids::decode($request->supplier_id)[0]:$supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
             $is_use_serial = $request->is_use_serial;
@@ -124,28 +94,31 @@ class ProductController extends BaseController
         $product_units = [];
         $count_unit = count($request['unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
+            $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
+            $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+
             array_push($product_units, array (
                 'code' => $request['product_unit_code'][$i],
                 'company_id' => $request->company_id,
                 'product_id' => Hashids::decode($product)[0],
                 'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-                'is_base' => $request['is_base'][$i],
+                'is_base' => $is_base,
                 'conv_value' => $request['conv_value'][$i],
-                'is_primary_unit' => $request['is_primary_unit'][$i],
+                'is_primary_unit' => $is_primary_unit,
                 'remarks' => $request['remarks']
             ));
         }
 
         foreach ($product_units as $product_unit) {
             $result = $this->productUnitService->create(
-                $product_unit->code,
-                $product_unit->company_id,
-                $product_unit->product_id,
-                $product_unit->unit_id,
-                $product_unit->is_base,
-                $product_unit->conv_value,
-                $product_unit->is_primary_unit,
-                $product_unit->remarks
+                $product_unit['code'],
+                $product_unit['company_id'],
+                $product_unit['product_id'],
+                $product_unit['unit_id'],
+                $product_unit['is_base'],
+                $product_unit['conv_value'],
+                $product_unit['is_primary_unit'],
+                $product_unit['remarks']
             );
 
             if ($result == 0) {
