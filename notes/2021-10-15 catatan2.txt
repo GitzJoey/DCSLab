@@ -1,0 +1,4 @@
+<select value ="1">
+<option value = "1">satu</option>
+<option value = "2">dua</option>
+</select>

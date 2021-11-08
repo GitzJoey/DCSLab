@@ -36,6 +36,11 @@ class SupplierController extends BaseController
         return $this->SupplierService->read();
     }
 
+    public function getAllSupplier()
+    {
+        return $this->SupplierService->getAllSupplier();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -49,6 +54,7 @@ class SupplierController extends BaseController
         $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
 
         $result = $this->SupplierService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'], 
             $request['term'], 
@@ -77,6 +83,7 @@ class SupplierController extends BaseController
 
         $result = $this->SupplierService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $request['term'],

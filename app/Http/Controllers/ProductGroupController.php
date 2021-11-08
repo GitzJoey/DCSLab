@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductGroupController extends BaseController
 {
@@ -33,20 +34,39 @@ class ProductGroupController extends BaseController
         return $this->productGroupService->read();
     }
 
-    public function getAllActiveProductGroup()
+    public function getAllProductGroup()
     {
-        return $this->productGroupService->getAllActiveProductGroup();
+        return $this->productGroupService->getAllProductGroup();
+    }
+
+    public function getAllProduct()
+    {
+        return $this->productGroupService->getAllProduct();
+    }
+
+    public function getAllService()
+    {
+        return $this->productGroupService->getAllService();
+    }
+
+    public function GetAllProductandService()
+    {
+        return $this->productGroupService->GetAllProductandService();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'productgroups'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'productgroups')],
             'name' => 'required|max:255'
         ]);
 
-        $result = $this->productGroupService->create($request['code'], $request['name']);
+        $result = $this->productGroupService->create(
+            // Hashids::decode($request['company_id'])[0],
+            $request['code'],
+            $request['name'],
+            $request['category']
+        );
 
         return $result == 0 ? response()->error():response()->success();
     }
@@ -60,8 +80,10 @@ class ProductGroupController extends BaseController
         
         $result = $this->productGroupService->update(
             $id,
+            // Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
+            $request['category']
         );
         return $result == 0 ? response()->error():response()->success();
     }

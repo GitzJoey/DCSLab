@@ -13,6 +13,7 @@ use App\Models\Cash;
 class CashServiceImpl implements CashService
 {
     public function create(
+        $company_id,
         $code,
         $name,
         $is_bank,
@@ -23,6 +24,7 @@ class CashServiceImpl implements CashService
 
         try {
             $cash = new Cash();
+            $cash->company_id = $company_id;
             $cash->code = $code;
             $cash->name = $name;
             $cash->is_bank = $is_bank;
@@ -53,6 +55,7 @@ class CashServiceImpl implements CashService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
         $is_bank,
@@ -65,6 +68,7 @@ class CashServiceImpl implements CashService
             $cash = Cash::where('id', '=', $id);
 
             $retval = $cash->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'is_bank' => $is_bank,
@@ -80,7 +84,6 @@ class CashServiceImpl implements CashService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-
 
     public function delete($id)
     {

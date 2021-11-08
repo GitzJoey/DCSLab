@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductsTable extends Migration
+class CreateProductServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,16 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('product_services', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('group_id')->references('id')->on('product_groups')->onUpdate('cascade')->onDelete('restrict');;
-            $table->foreignId('brand_id')->references('id')->on('product_brands')->onUpdate('cascade')->onDelete('restrict');;
+            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('group_id')->references('id')->on('product_service_groups')->onUpdate('cascade')->onDelete('restrict');;
             $table->foreignId('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('restrict');;
             $table->string('code')->nullable();
             $table->string('name')->nullable();	
 			$table->decimal('price', 19, 8)->default(0);
 			$table->integer('tax_status')->nullable();
             $table->string('remarks')->nullable();	
-			$table->decimal('estimated_capital_price', 19, 8)->default(0);
-			$table->integer('point')->nullable();
-			$table->integer('is_use_serial')->nullable();
-            $table->integer('product_type')->nullable(); //[RAW, WIP, FINISHED GOOD]
             $table->integer('status')->nullable();
 			$table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
@@ -43,6 +39,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('product_services');
     }
 }

@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Unit;
+use App\Models\Company;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UnitFactory extends Factory
@@ -21,9 +23,28 @@ class UnitFactory extends Factory
      */
     public function definition()
     {
+        $faker = \Faker\Factory::create('id_ID');
+
+        $units = [
+            'GR', 
+            'ONS',
+            'KG', 
+            'MTR',
+            'PCS', 
+            'PACK',
+            'SAK', 
+            'KRT',
+            'BKS',
+            'SLOP',
+            'DUS',
+            'ROLL',
+            'BTG',
+        ];
+        
         return [
-            'code' => $this->faker->numberBetween(01, 10),
-            'name' => $this->faker->word(),
+            'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
+            'code' => $faker->numberBetween(01, 10),
+            'name' => $faker->randomElement($units),
         ];
     }
 }

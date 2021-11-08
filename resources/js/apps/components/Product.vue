@@ -29,8 +29,6 @@
                                 <th>{{ $t("table.cols.group_id") }}</th>
                                 <th>{{ $t("table.cols.brand_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.unit_id") }}</th>
-                                <th>{{ $t("table.cols.price") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
                                 <th>{{ $t("table.cols.product_type") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
@@ -43,8 +41,6 @@
                                 <td>{{ c.group.name }}</td>
                                 <td>{{ c.brand.name }} </td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.unit.name }}</td>
-                                <td>{{ c.price }}</td>
                                 <td>
                                     <span v-if="c.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
                                     <span v-if="c.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
@@ -78,13 +74,13 @@
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
                             <li :class="{'page-item':true, 'disabled': this.productList.prev_page_url == null}">
-                                <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
+                                <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePageProduct('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
                             <li :class="{'page-item':true, 'disabled': this.productList.next_page_url == null}">
-                                <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
+                                <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePageProduct('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
                                 </a>
@@ -143,24 +139,84 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.name }}</div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="product.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
-                                </select>     
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ product.unit.name }}
-                                </div>        
+
+                        <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
+                            <div class="block-header bg-gray-dark">
+                                <h3 class="block-title"><strong>Product Unit</strong></h3>
+
+                                <div class="block-options">
+                                    <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
+                                        <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
+                                        <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
+                                    </button>
+                                    <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list'">
+                                        <i class="icon icon-refresh"></i>
+                                    </button>
+                                    <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
+                                        <i class="icon icon-arrow-down" v-if="this.contentHidden === true"></i>
+                                        <i class="icon icon-arrow-up" v-if="this.contentHidden === false"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputPrice" class="col-2 col-form-label">{{ $t('fields.price') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputPrice" name="price" as="input" :class="{'form-control':true, 'is-invalid': errors['price']}" :placeholder="$t('fields.price')" :label="$t('fields.price')" v-model="product.price" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="price" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.price }}</div>
+                            <div class="block-content">
+                                <table class="table table-vcenter">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Is Base</th>
+                                            <th>Conversion Value</th>
+                                            <th>Unit</th>
+                                            <th>Primary Unit</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(c, cIdx) in product.product_unit">
+                                            <td>
+                                                <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
+                                            </td>
+
+                                            <td>
+                                                <label class="css-control css-control-primary css-checkbox">
+                                                    <input type="checkbox" class="css-control-input" id="is_base" name="is_base[]" v-model="c.is_base" true-value="1" false-value="0">
+                                                    <span class="css-control-indicator"></span>
+                                                </label>
+                                            </td>
+
+                                            <td>
+                                                <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId">
+                                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                                </select>
+                                                <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
+                                                    {{ c.unit.name }}
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <label class="css-control css-control-primary css-checkbox">
+                                                    <input type="checkbox" class="css-control-input" id="is_primary_unit" name="is_primary_unit[]" v-model="c.is_primary_unit" true-value="1" false-value="0">
+                                                    <span class="css-control-indicator"></span>
+                                                </label>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedProductUnit(cIdx)">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
+                            <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
+                                <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
+                            </div> 
                         </div>
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
@@ -172,10 +228,21 @@
                                     <option value="3">{{ $t('tax_statusDDL.includetax') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
-                                    <span v-if="tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
-                                    <span v-if="tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
+                                    <span v-if="product.tax_status === 1">{{ $t('tax_statusDDL.notax') }}</span>
+                                    <span v-if="product.tax_status === 2">{{ $t('tax_statusDDL.excudetax') }}</span>
+                                    <span v-if="product.tax_status === 3">{{ $t('tax_statusDDL.includetax') }}</span>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-2 col-form-label" for="supplier_id">{{ $t('fields.supplier_id') }}</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.supplier.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.supplierDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ product.supplier.name }}
+                                </div>            
                             </div>
                         </div>
                         <div class="form-group row">
@@ -190,13 +257,6 @@
                             <div class="col-md-10">
                                 <Field id="inputPoint" name="point" as="input" :class="{'form-control':true, 'is-invalid': errors['point']}" :placeholder="$t('fields.point')" :label="$t('fields.point')" v-model="product.point" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.point }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEstimated_Capital_Price" class="col-2 col-form-label">{{ $t('fields.estimated_capital_price') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputEstimated_Capital_Price" name="estimated_capital_price" as="input" :class="{'form-control':true, 'is-invalid': errors['estimated_capital_price']}" :placeholder="$t('fields.estimated_capital_price')" :label="$t('fields.estimated_capital_price')" v-model="product.estimated_capital_price" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ product.estimated_capital_price }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -291,7 +351,6 @@ export default {
         const schema = {
             code: 'required',
             name: 'required',
-            price: 'required',
         };
 
         return {
@@ -308,14 +367,19 @@ export default {
             product: {
                 code: '',
                 group: {hId: ''},
-                brand: {hId: ''},
+                brand: {hId: ''},   
                 name: '',
-                unit: {hId: ''},
-                price: '',
+                product_unit: [
+                    {
+                        hId: '',
+                        conversion_value: '0',
+                        unit: {hId: ''}
+                    }
+                ],
                 tax_status: '',
+                supplier: {hId: ''},
                 remarks: '',
                 point: '',
-                estimated_capital_price: '',
                 is_use_serial: '',
                 product_type: '',
                 status: '',
@@ -323,6 +387,8 @@ export default {
             groupDDL: [],
             brandDDL: [],
             unitDDL: [],
+            supplierDDL: [],
+            statusDDL: [],
         }
     },
     created() {
@@ -334,34 +400,43 @@ export default {
         this.getAllProductGroup();
         this.getAllProductBrand();
         this.getAllUnit();
-    },
+        this.getAllProductUnit();
+        this.getAllSupplier();
+        },
     methods: {
         getAllProduct(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.product.read') + '?page=' + page) .then(response => {
+            axios.get(route('api.get.dashboard.product.read.product') + '?page=' + page).then(response => {
                 this.productList = response.data;
                 this.loading = false;
             });
         },
-
         getAllProductGroup() {
-            axios.get(route('api.get.dashboard.productgroup.read.all_active')) .then(response => {
+            axios.get(route('api.get.dashboard.productgroup.read.all')) .then(response => {
                 this.groupDDL = response.data;
             });
         },
 
         getAllProductBrand() {
-            axios.get(route('api.get.dashboard.productbrand.read.all_active')).then(response => {
+            axios.get(route('api.get.dashboard.productbrand.read.all')).then(response => {
                 this.brandDDL = response.data;
             });
         },
-
         getAllUnit() {
-            axios.get(route('api.get.dashboard.unit.read.all_active')).then(response => {
+            axios.get(route('api.get.dashboard.unit.read.all')).then(response => {
                 this.unitDDL = response.data;
             });
         },
-
+        getAllProductUnit() {
+            axios.get(route('api.get.dashboard.productunit.read.all')).then(response => {
+                this.product_unitDDL = response.data;
+            });
+        },
+        getAllSupplier() {
+            axios.get(route('api.get.dashboard.supplier.read.all')).then(response => {
+                this.supplierDDL = response.data;
+            });
+        },
         onPaginationChangePage(page) {
             if (page === 'next') {
                 this.getAllProduct(this.productList.current_page + 1);
@@ -373,16 +448,24 @@ export default {
         },
         emptyProduct() {
             return {
-                code: '',
+                code: '[AUTO]',
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
-                unit: {hId: ''},
-                price: '0',
-                tax_status: '',
+                product_unit: [
+                    {
+                        hId: '',
+                        code: '[AUTO]',
+                        is_base: '1',
+                        conversion_value: '1',
+                        is_primary_unit: '1',
+                        unit: {hId: ''}
+                    }
+                ],
+                tax_status: '0',
+                supplier: {hId: ''},
                 remarks: '',
-                point: '0',
-                estimated_capital_price: '0',
+                point: '',
                 is_use_serial: '',
                 product_type: '',
                 status: '1',
@@ -412,6 +495,18 @@ export default {
                 this.loading = false;
             });
         },
+        createNewProductUnit() {
+            var product_unit = {
+                hId: '',
+                code: '[AUTO]',
+                conversion_value: '0',
+                unit: {hId: ''}
+            };
+            this.product.product_unit.push(product_unit);
+        },
+        deleteSelectedProductUnit(idx) {
+            this.product.product_unit.splice(idx, 1);
+        },
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
@@ -422,7 +517,7 @@ export default {
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.product.edit', this.product.hId), new FormData($('#productForm')[0])) .then(response => {
+                axios.post(route('api.post.dashboard.product.edit', this.product.hId), new FormData($('#productForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);

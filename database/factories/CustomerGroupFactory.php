@@ -25,14 +25,14 @@ class CustomerGroupFactory extends Factory
     {
         $cashCount = Cash::count();
         if ($cashCount == 0) {
-            $cash = Cash::factory()->count(5)->create();
+            Cash::factory()->count(5)->create();
         }
 
         return [
             'code' => $this->faker->numberBetween(01, 10),
             'cash_id' => Cash::select('id')->inRandomOrder()->limit(1)->get()[0],
             'name' => $this->faker->name(),
-            'is_member_card' => '1',
+            'is_member_card' => $this->faker->numberBetween(0, 1),
             'use_limit_outstanding_notes' => '1',
             'limit_outstanding_notes' => $this->faker->randomDigit(),
             'use_limit_payable_nominal' => '1',

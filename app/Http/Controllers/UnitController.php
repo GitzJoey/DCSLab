@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class UnitController extends BaseController
 {
@@ -33,21 +34,39 @@ class UnitController extends BaseController
         return $this->UnitService->read();
     }
 
-    public function getAllActiveUnit()
+    public function getAllUnit()
     {
-        return $this->UnitService->getAllActiveUnit();
+        return $this->UnitService->getAllUnit();
+    }
+
+    public function getAllProduct()
+    {
+        return $this->UnitService->getAllProduct();
+    }
+
+    public function getAllService()
+    {
+        return $this->UnitService->getAllService();
+    }
+
+    public function GetAllProductandService()
+    {
+        return $this->UnitService->GetAllProductandService();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'units'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'units')],
             'name' => 'required|max:255'
         ]);
 
-        $result = $this->UnitService->create($request['code'], $request['name']);
-
+        $result = $this->UnitService->create(
+            // Hashids::decode($request['company_id'])[0],
+            $request['code'],
+            $request['name'],
+            $request['category']
+        );
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -60,8 +79,10 @@ class UnitController extends BaseController
 
         $result = $this->UnitService->update(
             $id,
+            // Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
+            $request['category']
         );
         return $result == 0 ? response()->error():response()->success();
     }

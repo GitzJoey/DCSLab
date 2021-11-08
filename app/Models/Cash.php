@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CustomerGroup;
+use App\Models\Capital;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -42,8 +44,18 @@ class Cash extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function customergroups()
     {
         return $this->hasMany(CustomerGroup::class);
     } 
+
+    public function capitals()
+    {
+        return $this->hasMany(Capital::class);
+    }
 }

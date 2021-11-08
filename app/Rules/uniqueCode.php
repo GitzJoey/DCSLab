@@ -3,17 +3,23 @@
 namespace App\Rules;
 
 use App\Services\BranchService;
+use App\Services\CapitalGroupService;
 use App\Services\CompanyService;
 use App\Services\EmployeeService;
 use App\Services\WarehouseService;
 use App\Services\CashService;
+use App\Services\CapitalService;
+use App\Services\InvestorService;
 use App\Services\SupplierService;
 use App\Services\CustomerService;
 use App\Services\CustomerGroupService;
+use App\Services\ExpenseGroupService;
+use App\Services\IncomeGroupService;
 use App\Services\ProductService;
 use App\Services\ProductBrandService;
 use App\Services\ProductGroupService;
 use App\Services\UnitService;
+use App\Services\ProductUnitService;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -28,8 +34,14 @@ class uniqueCode implements Rule
     private $branchService;
     private $warehouseService;
     private $CashService;
+    private $investorService;
+    private $capitalGroupService;
+    private $capitalService;
+    private $incomeGroupService;
+    private $expenseGroupService;
     private $SupplierService;
     private $productGroupService;
+    private $productUnitService;
     private $productBrandService;
     private $UnitService;
     private $productService;
@@ -59,6 +71,21 @@ class uniqueCode implements Rule
             case 'cashes': 
                 $this->CashService = Container::getInstance()->make(CashService::class);
                 break;
+            case 'investors': 
+                $this->investorService = Container::getInstance()->make(InvestorService::class);
+                break;
+            case 'capitals': 
+                $this->capitalService = Container::getInstance()->make(CapitalService::class);
+                break;
+            case 'capitalgroups': 
+                $this->capitalGroupService = Container::getInstance()->make(CapitalGroupService::class);
+                break;
+            case 'incomegroups': 
+                $this->incomeGroupService = Container::getInstance()->make(IncomeGroupService::class);
+                break;
+            case 'expensegroups': 
+                $this->expenseGroupService = Container::getInstance()->make(ExpenseGroupService::class);
+                break;
             case 'suppliers': 
                 $this->SupplierService = Container::getInstance()->make(SupplierService::class);
                 break;
@@ -67,6 +94,9 @@ class uniqueCode implements Rule
                 break;
             case 'productbrands': 
                 $this->productBrandService = Container::getInstance()->make(ProductBrandService::class);
+                break;
+            case 'productunits': 
+                $this->productUnitService = Container::getInstance()->make(ProductUnitService::class);
                 break;
             case 'units': 
                 $this->UnitService = Container::getInstance()->make(UnitService::class);
@@ -105,6 +135,21 @@ class uniqueCode implements Rule
             case 'cashes': 
                 $count = $this->CashService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
+            case 'investors': 
+                $count = $this->investorService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'capitals': 
+                $count = $this->capitalService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'capitalgroups': 
+                $count = $this->capitalGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'incomegroups': 
+                $count = $this->incomeGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'expensegroups': 
+                $count = $this->expenseGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
             case 'suppliers': 
                 $count = $this->SupplierService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
@@ -116,6 +161,9 @@ class uniqueCode implements Rule
                 break;
             case 'units': 
                 $count = $this->UnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+                break;
+            case 'productunits': 
+                $count = $this->productUnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'products': 
                 $count = $this->productService->checkDuplicatedCode($this->crud_status, $this->id, $code);

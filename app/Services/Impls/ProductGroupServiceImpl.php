@@ -13,16 +13,20 @@ use App\Models\ProductGroup;
 class ProductGroupServiceImpl implements ProductGroupService
 {
     public function create(
+        // $company_id,
         $code,
-        $name
+        $name,
+        $category
     )
     {
         DB::beginTransaction();
 
         try {
             $productgroup = new ProductGroup();
+            // $productgroup->company_id = $company_id;
             $productgroup->code = $code;
             $productgroup->name = $name;
+            $productgroup->category = $category;
 
             $productgroup->save();
 
@@ -41,15 +45,32 @@ class ProductGroupServiceImpl implements ProductGroupService
         return ProductGroup::paginate();
     }
 
-    public function getAllActiveProductGroup()
+    public function getAllProductGroup()
     {
         return ProductGroup::all();
     }
 
+    public function getAllProduct()
+    {
+        return ProductGroup::where('category', '=', 1)->get();
+    }
+
+    public function getAllService()
+    {
+        return ProductGroup::where('category', '=', 2)->get();
+    }
+
+    public function GetAllProductandService()
+    {
+        return ProductGroup::where('category', '=', 3)->get();
+    }
+    
     public function update(
         $id,
+        // $company_id,
         $code,
-        $name
+        $name,
+        $category
     )
     {
         DB::beginTransaction();
@@ -58,8 +79,10 @@ class ProductGroupServiceImpl implements ProductGroupService
             $productgroup = ProductGroup::where('id', '=', $id);
     
             $retval = $productgroup->update([
+                // 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
+                'category' => $category,
             ]);
     
             DB::commit();

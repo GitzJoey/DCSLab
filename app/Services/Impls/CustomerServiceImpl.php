@@ -13,6 +13,7 @@ use App\Models\Customer;
 class CustomerServiceImpl implements CustomerService
 {
     public function create(
+        $company_id,
         $code,
         $name,
         $customer_group_id,
@@ -37,6 +38,7 @@ class CustomerServiceImpl implements CustomerService
 
         try {
             $customer = new Customer();
+            $customer->company_id = $company_id;
             $customer->code = $code;
             $customer->name = $name;
             $customer->customer_group_id = $customer_group_id;
@@ -73,6 +75,7 @@ class CustomerServiceImpl implements CustomerService
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
         $customer_group_id,
@@ -98,6 +101,7 @@ class CustomerServiceImpl implements CustomerService
             $customer = Customer::where('id', '=', $id);
 
             $retval = $customer->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'customer_group_id' => $customer_group_id,

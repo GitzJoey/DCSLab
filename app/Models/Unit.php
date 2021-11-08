@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
 use App\Models\Product;
+use App\Models\ProductUnit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -16,10 +18,15 @@ class Unit extends Model
     
     protected $fillable = [
         'code',
-        'name'
+        'name',
+        'category'
     ];
 
-    protected static $logAttributes = ['code', 'name'];
+    protected static $logAttributes = [
+        'code',
+        'name',
+        'category'
+    ];
 
     protected static $logOnlyDirty = true;
 
@@ -42,9 +49,19 @@ class Unit extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function product_unit()
+    {
+        return $this->hasMany(ProductUnit::class);
     }
 }

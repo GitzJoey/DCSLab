@@ -38,8 +38,7 @@ class CustomerController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'customers'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'customers')],
             'name' => 'required|max:255',
             'status' => 'required',
         ]);
@@ -54,6 +53,7 @@ class CustomerController extends BaseController
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
         $result = $this->CustomerService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 
@@ -94,6 +94,7 @@ class CustomerController extends BaseController
 
         $result = $this->CustomerService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 

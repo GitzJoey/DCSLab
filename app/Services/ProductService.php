@@ -5,39 +5,42 @@ namespace App\Services;
 interface ProductService
 {
     public function create(
+        $company_id,
         $code,
         $group_id,
         $brand_id,
         $name,
-        $unit_id,
-        $price,
         $tax_status,
+        $supplier_id,
         $remarks,
-        $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
-        $status
-
+        $status,
     );
 
     public function read();
 
+    public function read_product();
+
+    public function read_service();
+
     public function update(
         $id,
+        $company_id,
         $code,
         $group_id,
         $brand_id,
         $name,
-        $unit_id,
-        $price,
+        $product_unit,
+        $unit,
         $tax_status,
         $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
     );
 
     public function delete($id);

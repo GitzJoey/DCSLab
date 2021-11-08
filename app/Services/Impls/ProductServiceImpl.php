@@ -13,19 +13,18 @@ use Illuminate\Support\Facades\Config;
 class ProductServiceImpl implements ProductService
 {
     public function create(
+        $company_id,
         $code,
         $group_id,
         $brand_id,
         $name,
-        $unit_id,
-        $price,
         $tax_status,
+        $supplier_id,
         $remarks,
-        $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
     )
     {
 
@@ -33,21 +32,21 @@ class ProductServiceImpl implements ProductService
 
         try {
             $product = new Product();
+            $product->company_id = $company_id;
             $product->code = $code;
             $product->group_id = $group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
-            $product->unit_id = $unit_id;
-            $product->price = $price;
             $product->tax_status = $tax_status;
+            $product->supplier_id = $supplier_id;
             $product->remarks = $remarks;
-            $product->estimated_capital_price = $estimated_capital_price;
             $product->point = $point;
             $product->is_use_serial = $is_use_serial;
             $product->product_type = $product_type;
             $product->status = $status;
-
             $product->save();
+
+            
 
             DB::commit();
 
@@ -62,24 +61,44 @@ class ProductServiceImpl implements ProductService
 
     public function read()
     {
-        return Product::with('group', 'brand', 'unit')->paginate();
+        return Product::with('group', 'brand', 'product_unit.unit')->paginate();
+    }
+
+    public function read_product()
+    {
+        return Product::with('group', 'brand', 'product_unit.unit', 'supplier')
+                ->where('product_type', '<>', 4)
+                ->paginate();
+    }
+
+    public function read_service()
+    {
+        return Product::with('group', 'brand', 'product_unit.unit')
+                ->where('product_type', '=', 4)
+                ->paginate();
+    }
+
+    public function getAllService()
+    {
+        return Product::all();
     }
 
     public function update(
         $id,
+        $company_id,
         $code,
         $group_id,
         $brand_id,
         $name,
-        $unit_id,
-        $price,
+        $product_unit,
+        $unit,
         $tax_status,
         $remarks,
         $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
-        $status
+        $status,
     )
     {
         DB::beginTransaction();
@@ -88,12 +107,13 @@ class ProductServiceImpl implements ProductService
             $product = Product::where('id', '=', $id);
 
             $retval = $product->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'group_id' => $group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
-                'unit_id' => $unit_id,
-                'price' => $price,
+                'product_unit' => $product_unit,
+                'unit' => $unit,
                 'tax_status' => $tax_status,
                 'remarks' => $remarks,
                 'estimated_capital_price' => $estimated_capital_price,
@@ -124,18 +144,11 @@ class ProductServiceImpl implements ProductService
         return Product::find($id);
     }
 
-    public function getUnitById($id)
-    {
-        return Product::find($id);
-    }
-
-
     public function delete($id)
     {
         $product = Product::find($id);
 
         return $product->delete();
-
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

@@ -5,16 +5,18 @@ namespace App\Services;
 interface ProductBrandService
 {
     public function create(
+        $company_id,
         $code,
         $name
     );
 
     public function read();
 
-    public function getAllActiveProductBrand();
+    public function getAllProductBrand();
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name
     );

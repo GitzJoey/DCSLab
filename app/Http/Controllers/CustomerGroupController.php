@@ -43,8 +43,7 @@ class CustomerGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'customergroups'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'customergroups')],
             'name' => 'required|max:255',
         ]);
 
@@ -67,6 +66,7 @@ class CustomerGroupController extends BaseController
         $is_rounding == 'on' ? $is_rounding = 1 : $is_rounding = 0;
 
         $result = $this->CustomerGroupService->create(
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $is_member_card,
@@ -120,6 +120,7 @@ class CustomerGroupController extends BaseController
 
         $result = $this->CustomerGroupService->update(
             $id,
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $is_member_card,

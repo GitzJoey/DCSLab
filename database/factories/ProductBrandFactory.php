@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\ProductBrand;
+use App\Models\Company;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductBrandFactory extends Factory
@@ -22,6 +24,7 @@ class ProductBrandFactory extends Factory
     public function definition()
     {
         return [
+            'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $this->faker->numberBetween(01, 10),
             'name' => $this->faker->word(),
         ];

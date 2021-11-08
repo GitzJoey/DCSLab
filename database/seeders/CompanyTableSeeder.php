@@ -19,16 +19,16 @@ class CompanyTableSeeder extends Seeder
      */
     public function run()
     {
-        $uL = User::all();
+        $users = User::all();
 
         $randomGenerator = new randomGenerator();
 
-        foreach ($uL as $u)
+        foreach ($users as $user)
         {
             $rand = $randomGenerator->generateOne(5);
 
             $cIds = [];
-            for($i = 0; $i < 5; $i++)
+            for($i = 0; $i < 2; $i++)
             {
                 $comp = Company::factory()->make();
 
@@ -40,7 +40,7 @@ class CompanyTableSeeder extends Seeder
                 array_push($cIds, $comp->id);
             }
 
-            $u->companies()->attach($cIds);
+            $user->companies()->attach($cIds);
         }
     }
 }

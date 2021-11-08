@@ -13,6 +13,7 @@ use App\Models\Supplier;
 class SupplierServiceImpl implements SupplierService
 {
     public function create(
+        $company_id,
         $code,
         $name,
         $term,
@@ -58,9 +59,15 @@ class SupplierServiceImpl implements SupplierService
         return Supplier::paginate();
     }
 
+    public function getAllSupplier()
+    {
+        return Supplier::get();
+    }
+
 
     public function update(
         $id,
+        $company_id,
         $code,
         $name,
         $term,
@@ -79,6 +86,7 @@ class SupplierServiceImpl implements SupplierService
             $supplier = Supplier::where('id', '=', $id);
 
             $retval = $supplier->update([
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'term' => $term,

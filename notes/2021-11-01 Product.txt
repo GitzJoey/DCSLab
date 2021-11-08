@@ -1,0 +1,20 @@
+cek product service impl, ada 2 fungsi baru
+
+di product vue ada tabs_products sama tabs_services
+jadi intinya 
+kalo klik tab product nanti ngambil dari service impl yg read product
+kalo klik tab service nanti ngambil dari service impl yg read service
+
+code            P & S .
+group_id        P & S .
+brand_id        P .
+name            P & S .
+product unit    P .
+unit                S
+tax_status      P & S
+supplier_id     P
+remarks         P & S
+point           P & S
+is_use_serial   P
+product_type    P & S
+status          P & S
