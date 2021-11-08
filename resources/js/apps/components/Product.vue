@@ -128,7 +128,7 @@
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                     {{ product.brand.name }}
-                                </div>            
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -178,9 +178,10 @@
 
                                             <td>
                                                 <label class="css-control css-control-primary css-checkbox">
-                                                    <input type="checkbox" class="css-control-input" id="is_base" name="is_base[]" v-model="c.is_base" true-value="1" false-value="0">
+                                                    <input type="checkbox" class="css-control-input" id="is_base" v-model="c.is_base" true-value="1" false-value="0">
                                                     <span class="css-control-indicator"></span>
                                                 </label>
+                                                <input type="hidden" v-model="c.is_base" name="is_base[]"/>
                                             </td>
 
                                             <td>
@@ -216,7 +217,7 @@
                             </div>
                             <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
                                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
-                            </div> 
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
@@ -242,7 +243,7 @@
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                     {{ product.supplier.name }}
-                                </div>            
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -303,7 +304,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">    
+                        <div class="form-group row">
                             <div class="col">
                                 <div v-if="this.mode === 'create' || this.mode === 'edit'">
                                     <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
@@ -367,7 +368,7 @@ export default {
             product: {
                 code: '',
                 group: {hId: ''},
-                brand: {hId: ''},   
+                brand: {hId: ''},
                 name: '',
                 product_unit: [
                     {
