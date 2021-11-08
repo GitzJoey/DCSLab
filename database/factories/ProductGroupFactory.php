@@ -26,6 +26,7 @@ class ProductGroupFactory extends Factory
             'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $this->faker->numberBetween(01, 10),
             'name' => $this->faker->word(),
+            'category' => $this->faker->numberBetween(1, 3),
         ];
     }
 }

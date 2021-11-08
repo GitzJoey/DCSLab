@@ -27,8 +27,6 @@ interface ProductService
 
     public function read_service();
 
-    public function getAllService();
-
     public function update(
         $id,
         $company_id,

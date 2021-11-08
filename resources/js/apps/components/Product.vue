@@ -90,7 +90,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div id="crud" v-if="this.mode !== 'list' || this.mode !== 'list_service'">
+                <div id="crud" v-if="this.mode !== 'list'">
                     <Form id="productForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
@@ -163,11 +163,10 @@
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Code</th>
-                                            <th v-show="this.mode === 'edit'">Is Base</th>
+                                            <th>Is Base</th>
                                             <th>Conversion Value</th>
                                             <th>Unit</th>
                                             <th>Primary Unit</th>
-                                            <th>Remarks</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -177,9 +176,11 @@
                                                 <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
                                             </td>
 
-                                            <td v-show="this.mode === 'edit'">
-                                                <span v-if="c.is_base === 1">YES</span>
-                                                <span v-if="c.is_base === 0">NO</span>
+                                            <td>
+                                                <label class="css-control css-control-primary css-checkbox">
+                                                    <input type="checkbox" class="css-control-input" id="is_base" name="is_base[]" v-model="c.is_base" true-value="1" false-value="0">
+                                                    <span class="css-control-indicator"></span>
+                                                </label>
                                             </td>
 
                                             <td>
@@ -187,12 +188,12 @@
                                             </td>
 
                                             <td>
-                                                <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId" v-show="this.mode === 'create_product' || this.mode === 'edit_product'">
+                                                <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId">
                                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                                 </select>
                                                 <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
                                                     {{ c.unit.name }}
-                                                </div>  
+                                                </div>
                                             </td>
 
                                             <td>
@@ -200,10 +201,6 @@
                                                     <input type="checkbox" class="css-control-input" id="is_primary_unit" name="is_primary_unit[]" v-model="c.is_primary_unit" true-value="1" false-value="0">
                                                     <span class="css-control-indicator"></span>
                                                 </label>
-                                            </td>
-                                        
-                                            <td>
-                                                <input type="text" class="form-control" v-model="c.remark" id="product_unit_remark" name="product_unit_remark[]"/>
                                             </td>
 
                                             <td class="text-center">
@@ -370,11 +367,12 @@ export default {
             product: {
                 code: '',
                 group: {hId: ''},
-                brand: {hId: ''},
+                brand: {hId: ''},   
                 name: '',
                 product_unit: [
                     {
                         hId: '',
+                        conversion_value: '0',
                         unit: {hId: ''}
                     }
                 ],
@@ -382,6 +380,7 @@ export default {
                 supplier: {hId: ''},
                 remarks: '',
                 point: '',
+                is_use_serial: '',
                 product_type: '',
                 status: '',
             },
@@ -398,19 +397,44 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllProduct(1);
+        this.getAllProductGroup();
+        this.getAllProductBrand();
+        this.getAllUnit();
         this.getAllProductUnit();
+        this.getAllSupplier();
         },
     methods: {
         getAllProduct(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.product.read') + '?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.product.read.product') + '?page=' + page).then(response => {
                 this.productList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllProductGroup() {
+            axios.get(route('api.get.dashboard.productgroup.read.all')) .then(response => {
+                this.groupDDL = response.data;
+            });
+        },
+
+        getAllProductBrand() {
+            axios.get(route('api.get.dashboard.productbrand.read.all')).then(response => {
+                this.brandDDL = response.data;
+            });
+        },
+        getAllUnit() {
+            axios.get(route('api.get.dashboard.unit.read.all')).then(response => {
+                this.unitDDL = response.data;
             });
         },
         getAllProductUnit() {
             axios.get(route('api.get.dashboard.productunit.read.all')).then(response => {
                 this.product_unitDDL = response.data;
+            });
+        },
+        getAllSupplier() {
+            axios.get(route('api.get.dashboard.supplier.read.all')).then(response => {
+                this.supplierDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -424,22 +448,26 @@ export default {
         },
         emptyProduct() {
             return {
-                code: '',
+                code: '[AUTO]',
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
                 product_unit: [
                     {
                         hId: '',
+                        code: '[AUTO]',
+                        conversion_value: '1',
+                        is_primary_unit: '1',
                         unit: {hId: ''}
                     }
                 ],
-                tax_status: '',
+                tax_status: '0',
                 supplier: {hId: ''},
                 remarks: '',
                 point: '',
+                is_use_serial: '',
                 product_type: '',
-                status: '',
+                status: '1',
             }
         },
         createNew() {
@@ -469,7 +497,7 @@ export default {
         createNewProductUnit() {
             var product_unit = {
                 hId: '',
-                code: 'AUTO',
+                code: '[AUTO]',
                 conversion_value: '0',
                 unit: {hId: ''}
             };

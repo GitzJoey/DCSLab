@@ -20,6 +20,8 @@ interface SupplierService
 
     public function read();
 
+    public function getAllSupplier();
+
     public function update(
         $id,
         $company_id,

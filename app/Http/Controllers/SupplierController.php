@@ -36,6 +36,11 @@ class SupplierController extends BaseController
         return $this->SupplierService->read();
     }
 
+    public function getAllSupplier()
+    {
+        return $this->SupplierService->getAllSupplier();
+    }
+
     public function store(Request $request)
     {
         $request->validate([

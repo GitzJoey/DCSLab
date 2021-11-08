@@ -45,11 +45,6 @@ class ProductController extends BaseController
         return $this->productService->read_service();
     }
 
-    public function getAllService()
-    {
-        return $this->ProductService->getAllService();
-    }
-
     public function store(Request $request)
     {   
         $request->validate([
@@ -58,41 +53,26 @@ class ProductController extends BaseController
             'status' => 'required',
         ]);
 
-        $is_use_serial = $request['is_use_serial'];
-        $is_use_serial == 'on' ? $is_use_serial = 1 : $is_use_serial = 0;
-        
-        // $product_unit = [];
-        // array_push(
-        //     $product_unit,         
-        //     $product_unit_code, 
-        //     $conv_value, 
-        //     $unit_id, 
-        //     $is_primary_unit, 
-        //     $product_unit_remarks
-        // );
-
-        // $product_unit_code = [];
-        // for($i = 0; $i < count($request['product_unit_code']); $i++) {
-        //     array_push($product_unit_code, array (
-        //         'id' => $request['product_unit_code'][$i]
-        //     ));
-        // }
-
-        $product_unit_code = $request['product_unit_code'];
-        $conv_value = $request['conv_value'];
-        $unit_id = $request['unit_id'];
-        $is_primary_unit = $request['is_primary_unit'];
-        $product_unit_remarks = $request['product_unit_remarks'];
-
-        $product_unit = [];
-        array_push(
-            $product_unit,         
-            $product_unit_code, 
-            $conv_value, 
-            $unit_id, 
-            $is_primary_unit, 
-            $product_unit_remarks
-        );
+        if ($request->product_type != '4') {
+            $company_id = Hashids::decode($request['company_id'])[0];
+            $code = $request->code;
+            $group_id = Hashids::decode($request->group_id)[0];
+            $brand_id = Hashids::decode($request->brand_id)[0];
+            $name = $request->name;
+            $product_unit = array (
+                'code' => $request['code'],
+                'is_base' => $request['is_base'],
+                'unit_id' => $request['unit_id'],
+                'is_primary_unit' => $request['is_primary_unit'],
+            );
+            $tax_status = $request->tax_status;
+            $supplier = Hashids::decode($request->supplier)[0];
+            $remarks = $request->remarks;
+            $point = $request->point;
+            $is_use_serial = $request->is_use_serial;
+            $product_type = $request->product_type;
+            $status = $request->status;
+        }
 
         $result = $this->productService->create(
             Hashids::decode($request['company_id'])[0],

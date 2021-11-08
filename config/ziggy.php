@@ -99,6 +99,7 @@ return [
             'api.get.dashboard.productbrand.read.all',
             'api.get.dashboard.unit.read.all',
             'api.get.dashboard.productunit.read.all',
+            'api.get.dashboard.supplier.read.all',
             'api.post.dashboard.product.*',
         ],
         'service' => [
