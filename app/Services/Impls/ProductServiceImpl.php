@@ -88,11 +88,9 @@ class ProductServiceImpl implements ProductService
         $group_id,
         $brand_id,
         $name,
-        $product_unit,
-        $unit,
         $tax_status,
+        $supplier_id,
         $remarks,
-        $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
@@ -110,16 +108,13 @@ class ProductServiceImpl implements ProductService
                 'group_id' => $group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
-                'product_unit' => $product_unit,
-                'unit' => $unit,
                 'tax_status' => $tax_status,
+                'supplier_id' => $supplier_id,
                 'remarks' => $remarks,
-                'estimated_capital_price' => $estimated_capital_price,
                 'point' => $point,
                 'is_use_serial' => $is_use_serial,
                 'product_type' => $product_type,
                 'status' => $status
-
             ]);
 
             DB::commit();
