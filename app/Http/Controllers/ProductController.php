@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
+use App\Services\ProductUnitService;
 
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
@@ -12,14 +13,16 @@ use App\Services\ActivityLogService;
 class ProductController extends BaseController
 {
     private $productService;
+    private $productUnitService;
     private $activityLogService;
 
-    public function __construct(ProductService $productService, ActivityLogService $activityLogService)
+    public function __construct(ProductService $productService, ProductUnitService $productUnitService, ActivityLogService $activityLogService)
     {
         parent::__construct();
 
         $this->middleware('auth');
         $this->productService = $productService;
+        $this->productUnitService = $productUnitService;
         $this->activityLogService = $activityLogService;
     }
 
@@ -53,20 +56,15 @@ class ProductController extends BaseController
             'status' => 'required',
         ]);
 
-        if ($request->product_type != '4') {
-            $company_id = Hashids::decode($request['company_id'])[0];
+        if ($request->product_type !== '4') {
+            $request->company_id != null ? $company_id = Hashids::decode($request->company_id)[0]:$company_id = null;
+            
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
             $name = $request->name;
-            $product_unit = array (
-                'code' => $request['code'],
-                'is_base' => $request['is_base'],
-                'unit_id' => $request['unit_id'],
-                'is_primary_unit' => $request['is_primary_unit'],
-            );
             $tax_status = $request->tax_status;
-            $supplier = Hashids::decode($request->supplier)[0];
+            $supplier_id = $request->supplier_id != null ? Hashids::decode($request->supplier_id)[0]:$supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
             $is_use_serial = $request->is_use_serial;
@@ -74,23 +72,61 @@ class ProductController extends BaseController
             $status = $request->status;
         }
 
-        $result = $this->productService->create(
-            Hashids::decode($request['company_id'])[0],
-            $request['code'], 
-            Hashids::decode($request['group_id'])[0],
-            Hashids::decode($request['brand_id'])[0],
-            $request['name'],
-            $request['product_unit'],
-            Hashids::decode($request['unit_id'])[0],
-            $request['tax_status'],
-            Hashids::decode($request['supplier_id'])[0],
-            $request['remarks'],
-            $request['point'],
+        $product = $this->productService->create(
+            $company_id,
+            $code, 
+            $group_id,
+            $brand_id,
+            $name,
+            $tax_status,
+            $supplier_id,
+            $remarks,
+            $point,
             $is_use_serial,
-            $request['product_type'],
-            $request['status'],
+            $product_type,
+            $status
         );
-        return $result == 0 ? response()->error():response()->success();
+
+        if ($product == 0) {
+            return response()->error();
+        };
+
+        $product_units = [];
+        $count_unit = count($request['unit_id']);
+        for ($i = 0; $i < $count_unit; $i++) {
+            $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
+            $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+
+            array_push($product_units, array (
+                'code' => $request['product_unit_code'][$i],
+                'company_id' => $request->company_id,
+                'product_id' => Hashids::decode($product)[0],
+                'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
+                'is_base' => $is_base,
+                'conv_value' => $request['conv_value'][$i],
+                'is_primary_unit' => $is_primary_unit,
+                'remarks' => $request['remarks']
+            ));
+        }
+
+        foreach ($product_units as $product_unit) {
+            $result = $this->productUnitService->create(
+                $product_unit['code'],
+                $product_unit['company_id'],
+                $product_unit['product_id'],
+                $product_unit['unit_id'],
+                $product_unit['is_base'],
+                $product_unit['conv_value'],
+                $product_unit['is_primary_unit'],
+                $product_unit['remarks']
+            );
+
+            if ($result == 0) {
+                return response()->error();
+            };
+        }
+        
+        return response()->success();
     }
 
     public function update($id, Request $request)

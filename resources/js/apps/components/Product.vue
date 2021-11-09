@@ -178,9 +178,10 @@
 
                                             <td>
                                                 <label class="css-control css-control-primary css-checkbox">
-                                                    <input type="checkbox" class="css-control-input" id="is_base" name="is_base[]" v-model="c.is_base" true-value="1" false-value="0">
+                                                    <input type="checkbox" class="css-control-input" id="is_base" v-model="c.is_base" true-value="1" false-value="0">
                                                     <span class="css-control-indicator"></span>
                                                 </label>
+                                                <input type="hidden" v-model="c.is_base" name="is_base[]"/>
                                             </td>
 
                                             <td>
@@ -198,9 +199,10 @@
 
                                             <td>
                                                 <label class="css-control css-control-primary css-checkbox">
-                                                    <input type="checkbox" class="css-control-input" id="is_primary_unit" name="is_primary_unit[]" v-model="c.is_primary_unit" true-value="1" false-value="0">
+                                                    <input type="checkbox" class="css-control-input" id="is_primary_unit" v-model="c.is_primary_unit" true-value="1" false-value="0">
                                                     <span class="css-control-indicator"></span>
                                                 </label>
+                                                <input type="hidden" v-model="c.is_primary_unit" name="is_primary_unit[]"/>
                                             </td>
 
                                             <td class="text-center">
@@ -456,6 +458,7 @@ export default {
                     {
                         hId: '',
                         code: '[AUTO]',
+                        is_base: '1',
                         conversion_value: '1',
                         is_primary_unit: '1',
                         unit: {hId: ''}
