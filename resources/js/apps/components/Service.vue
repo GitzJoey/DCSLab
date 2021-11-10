@@ -27,16 +27,16 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.remarks") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in serviceList.data">
                                 <td>{{ c.code }}</td>
-                                <td>{{ c.is_base }}</td>
-                                <td>{{ c.conversion_value }}</td>
-                                <td>{{ c.unit }}</td>
-                                <td>{{ c.primary_unit }}</td>
+                                <td>{{ c.productgroup.name }}</td>
+                                <td>{{ c.unit.name }}</td>
                                 <td>{{ c.remarks }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
@@ -194,14 +194,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">    
-                            <div class="col">
-                                <div v-if="this.mode === 'create' || this.mode === 'edit'">
-                                    <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
-                                    <button type="submit" class="btn btn-primary min-width-125 float-right ml-2" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
-                                </div>
-                            </div>
-                        </div>
                     </Form>
                 </div>
             </transition>
@@ -277,13 +269,25 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllService(1);
+        this.getAllProductGroup();
+        this.getAllUnit(1);
         },
     methods: {
         getAllService(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.service.read') + '?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.product.read.service') + '?page=' + page).then(response => {
                 this.serviceList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllProductGroup() {
+            axios.get(route('api.get.dashboard.productgroup.read.all')) .then(response => {
+                this.groupDDL = response.data;
+            });
+        },
+        getAllUnit() {
+            axios.get(route('api.get.dashboard.unit.read.all')).then(response => {
+                this.unitDDL = response.data;
             });
         },
         onPaginationChangePage(page) {

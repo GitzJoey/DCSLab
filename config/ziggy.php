@@ -103,7 +103,9 @@ return [
             'api.post.dashboard.product.*',
         ],
         'service' => [
-            'api.get.dashboard.service.read',
+            'api.get.dashboard.product.read.service',
+            'api.get.dashboard.productgroup.read.all',
+            'api.get.dashboard.unit.read.all',
             'api.post.dashboard.service.*',
         ],
         'customergroup' => [

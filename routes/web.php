@@ -82,8 +82,8 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product.product_groups');
             Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product.product_brands');
             Route::get('unit', [UnitController::class, 'index'])->name('db.product.units');
-            Route::get('products', [ProductController::class, 'index'])->name('db.product.products');
-            Route::get('services', [ProductController::class, 'index'])->name('db.product.services');
+            Route::get('products', [ProductController::class, 'index_product'])->name('db.product.products');
+            Route::get('services', [ProductController::class, 'index_service'])->name('db.product.services');
         });
 
         Route::group(['prefix' => 'company'], function () {

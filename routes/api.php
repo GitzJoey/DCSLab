@@ -154,10 +154,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::get('read/service', [ProductController::class, 'read_service'])->name('api.get.dashboard.product.read.service');
         });
 
-        Route::group(['prefix' => 'service'], function () {
-            Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.service.read');
-            Route::get('read/all/', [ProductController::class, 'getAllService'])->name('api.get.dashboard.service.read.all');
-        });
+        // Route::group(['prefix' => 'service'], function () {
+        //     Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.service.read');
+        //     Route::get('read/service', [ProductController::class, 'read_service'])->name('api.get.dashboard.product.read.service');
+        // });
 
         Route::group(['prefix' => 'customergroup'], function () {
             Route::get('read', [CustomerGroupController::class, 'read'])->name('api.get.dashboard.customergroup.read');
