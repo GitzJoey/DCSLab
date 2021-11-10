@@ -62,6 +62,21 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        tax_statusDDL: {
+            notax: 'No Tax',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
+            service: 'Service',
+        },
+        statusDDL: {
+            active: 'Active',
+            inactive: 'Inactive'
+        }
     },
     id: {
         table: {
@@ -112,6 +127,21 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
+        tax_statusDDL: {
+            notax: 'No Tax',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
+            service: 'Service',
+        },
+        statusDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif'
+        }
     }
 };
 
@@ -124,4 +154,4 @@ const i18n = createI18n({
 createApp(Service)
     .use(ZiggyVue, Ziggy)
     .use(i18n)
-    .mount('#statusVue')
+    .mount('#serviceVue')

@@ -418,7 +418,6 @@ export default {
                 this.groupDDL = response.data;
             });
         },
-
         getAllProductBrand() {
             axios.get(route('api.get.dashboard.productbrand.read.all')).then(response => {
                 this.brandDDL = response.data;
