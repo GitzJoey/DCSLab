@@ -27,7 +27,6 @@ class ProductServiceImpl implements ProductService
         $status,
     )
     {
-
         DB::beginTransaction();
 
         try {
@@ -54,7 +53,45 @@ class ProductServiceImpl implements ProductService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
+    }
 
+    public function createService(
+        $company_id,
+        $code,
+        $group_id,
+        $name,
+        $unit_id,
+        $tax_status,
+        $remarks,
+        $point,
+        $product_type,
+        $status
+    )
+    {
+        DB::beginTransaction();
+
+        try {
+            $service = new Product();
+            $service->company_id = $company_id;
+            $service->code = $code;
+            $service->group_id = $group_id;
+            $service->name = $name;
+            $service->unit_id = $unit_id;
+            $service->tax_status = $tax_status;
+            $service->remarks = $remarks;
+            $service->point = $point;
+            $service->product_type = $product_type;
+            $service->status = $status;
+            $service->save();
+
+            DB::commit();
+
+            return $service->hId;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
     }
 
     public function read()
@@ -88,11 +125,9 @@ class ProductServiceImpl implements ProductService
         $group_id,
         $brand_id,
         $name,
-        $product_unit,
-        $unit,
         $tax_status,
+        $supplier_id,
         $remarks,
-        $estimated_capital_price,
         $point,
         $is_use_serial,
         $product_type,
@@ -110,16 +145,56 @@ class ProductServiceImpl implements ProductService
                 'group_id' => $group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
-                'product_unit' => $product_unit,
-                'unit' => $unit,
                 'tax_status' => $tax_status,
+                'supplier_id' => $supplier_id,
                 'remarks' => $remarks,
-                'estimated_capital_price' => $estimated_capital_price,
                 'point' => $point,
                 'is_use_serial' => $is_use_serial,
                 'product_type' => $product_type,
                 'status' => $status
+            ]);
 
+            DB::commit();
+
+            return $retval;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        }
+    }
+
+    public function updateService(
+        $id,
+        $company_id,
+        $code,
+        $group_id,
+        $name,
+        $unit_id,
+        $tax_status,
+        $remarks,
+        $point,
+        $product_type,
+        $status
+    )
+    
+    {
+        DB::beginTransaction();
+
+        try {
+            $product = Product::where('id', '=', $id);
+
+            $retval = $product->update([
+                'company_id' => $company_id,
+                'code' => $code,
+                'group_id' => $group_id,
+                'name' => $name,
+                'unit_id' => $unit_id,
+                'tax_status' => $tax_status,
+                'remarks' => $remarks,
+                'point' => $point,
+                'product_type' => $product_type,
+                'status' => $status
             ]);
 
             DB::commit();

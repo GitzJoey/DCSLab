@@ -141,7 +141,7 @@ class EmployeeController extends BaseController
             $profile['img_path'] = $file;
         }
 
-        $user = $this->userService->create(
+        $user = $this->userService->update(
             $request['name'],
             $request['email'],
             '',
@@ -150,7 +150,8 @@ class EmployeeController extends BaseController
         );
         $user_id = Hashids::decode($user)[0];
 
-        $result = $this->employeeService->create(
+        $result = $this->employeeService->update(
+            $id,
             Hashids::decode($request['company_id'])[0],
             $user_id
         );
