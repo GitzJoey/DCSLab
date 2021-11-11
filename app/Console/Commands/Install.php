@@ -161,17 +161,10 @@ class Install extends Command
         $roleService = $container->make(RoleService::class);
 
         $rolesId = [];
-        $parameters = null;
         if ($is_dev) {
-            $parameters = array (
-                'readByName' => Config::get('const.DEFAULT.ROLE.DEV')
-            );
-            array_push($rolesId, $roleService->read($parameters)->id);
+            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.DEV'))->id);
         } else {
-            $parameters = array (
-                'readByName' => Config::get('const.DEFAULT.ROLE.ADMIN')
-            );
-            array_push($rolesId, $roleService->read($parameters)->id);
+            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.ADMIN'))->id);
         }
 
         $profile = [
