@@ -104,48 +104,46 @@ class UserServiceImpl implements UserService
 
     public function flushCache($id)
     {
-        Cache::forget('readAll'.$id);
-        Cache::forget('readById'.$id);
+        Cache::tags([$id])->flush();
     }
 
-    public function read($parameters = null)
+    public function read($search = '', $paginate = true, $perPage = 10)
     {
-        if ($parameters == null) return null;
-
-        if (array_key_exists('readAll', $parameters)) {
-            $perPage = array_key_exists('perPage', $parameters) ? $parameters['perPage'] : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-
-            if (array_key_exists('search', $parameters) && !empty($parameters['search'])) {
-                return User::with('profile')
-                            ->where('email', 'like', '%'.$parameters['search'].'%')
-                            ->orWhere('name', 'like', '%'.$parameters['search'].'%')
-                            ->orWhereHas('profile', function ($query) use($parameters) {
-                                $query->where('first_name', 'like', '%'.$parameters['search'].'%')
-                                    ->orWhere('last_name', 'like', '%'.$parameters['search'].'%');
-                            })->paginate($perPage);
-            }
-
-            return User::with('roles', 'profile', 'settings')->paginate($perPage);
+        if (empty($search)) {
+            $usr = User::with('roles', 'profile', 'settings');
+        } else {
+            $usr = User::with('profile')
+                    ->where('email', 'like', '%'.$search.'%')
+                    ->orWhere('name', 'like', '%'.$search.'%')
+                    ->orWhereHas('profile', function ($query) use($search) {
+                        $query->where('first_name', 'like', '%'.$search.'%')
+                                ->orWhere('last_name', 'like', '%'.$search.'%');
+                    });
         }
 
-        if (array_key_exists('readById', $parameters))  {
-            if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
-                return User::with('roles', 'profile')->find($parameters['readById']);
-
-            return Cache::remember('readById'.$parameters['readById'], Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($parameters) {
-                return User::with('roles', 'profile')->find($parameters['readById']);
-            });
+        if ($paginate) {
+            $perPage = is_numeric($perPage) ?: Config::get('const.DEFAULT.PAGINATION_LIMIT');
+            return $usr->paginate($perPage);
+        } else {
+            return $usr->get();
         }
+    }
 
-        if (array_key_exists('readByEmail', $parameters)) {
-            return User::where('email', '=', $parameters['readByEmail'])->first();
+    public function readBy($key, $value)
+    {
+        switch(strtoupper($key)) {
+            case 'ID':
+                if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
+                    return User::with('roles', 'profile')->find($value);
+
+                return Cache::tags([$value])->remember('readByID'.$value, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($value) {
+                    return User::with('roles', 'profile')->find($value);
+                });
+            case 'EMAIL':
+                return User::where('email', '=', $value)->first();
+            default:
+                return null;
         }
-
-        if (array_key_exists('allExceptMe', $parameters)) {
-            return User::where('email', '!=', $parameters['allExceptMe'])->get();
-        }
-
-        return null;
     }
 
     public function update($id, $name, $rolesId, $profile, $settings)

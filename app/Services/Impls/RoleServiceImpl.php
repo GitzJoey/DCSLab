@@ -51,22 +51,6 @@ class RoleServiceImpl implements RoleService
             return Role::with('permissions')->get();
         }
 
-        if (array_key_exists('readById', $parameters))  {
-            return Role::find($parameters['readById']);
-        }
-
-        if (array_key_exists('readByName', $parameters))  {
-            return Role::where('name', $parameters['readByName'])->first();
-        }
-
-        if (array_key_exists('readByDisplayName', $parameters))  {
-            return Role::whereRaw("UPPER(display_name) = '".strtoupper($parameters['readByDisplayName'])."'")->first();
-        }
-
-        if (array_key_exists('readByDisplayNameCaseSensitive', $parameters)) {
-            return Role::where('display_name', $parameters['readByDisplayNameCaseSensitive'])->first();
-        }
-
         if (array_key_exists('withDefaultRole', $parameters)) {
             if (!$parameters['withDefaultRole'])
                 return Role::whereNotIn('name', ['dev','administrator'])->get()->pluck('display_name', 'hId');
@@ -75,6 +59,22 @@ class RoleServiceImpl implements RoleService
         }
 
         return null;
+    }
+
+    public function readBy($key, $value)
+    {
+        switch(strtoupper($key)) {
+            case 'ID':
+                return Role::find($value);
+            case 'NAME':
+                return Role::where('name', $value)->first();
+            case 'DISPLAY_NAME':
+                return Role::whereRaw("UPPER(display_name) = '".strtoupper($value)."'")->first();
+            case 'DISPLAY_NAME_CASE_SENSITIVE':
+                return Role::where('display_name', $value)->first();
+            default:
+                return null;
+        }
     }
 
     public function update(

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\ProfileController;
@@ -34,6 +35,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         Route::group(['prefix' => 'core', 'as' => '.core'], function() {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function() {
                 Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');
+            });
+
+            Route::group(['prefix' => 'inbox', 'as' => '.inbox'], function() {
+                Route::get('list/threads', [InboxController::class, 'read'])->name('.list.thread');
+
+                Route::get('search/users', [InboxController::class, 'searchUsers'])->name('.search.users');
             });
 
             Route::group(['prefix' => 'activity', 'as' => '.activity'], function() {

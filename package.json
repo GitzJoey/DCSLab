@@ -34,7 +34,7 @@
         "tailwindcss": "^2.2.16",
         "tippy.js": "^6.3.2",
         "toastify-js": "^1.11.2",
-        "tom-select": "^2.0.0-rc.4",
+        "tom-select": "^1.7.8",
         "vee-validate": "^4.5.3",
         "velocity-animate": "^1.5.2",
         "vue": "^3.0.11",

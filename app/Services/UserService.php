@@ -19,7 +19,9 @@ interface UserService
         $profile
     );
 
-    public function read($parameters = null);
+    public function read($search = '', $paginate = true, $perPage = 10);
+
+    public function readBy($key, $value);
 
     public function update(
         $id,

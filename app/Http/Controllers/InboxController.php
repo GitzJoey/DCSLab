@@ -55,18 +55,16 @@ class InboxController extends BaseController
         return rtrim($result, ",");
     }
 
-    public function getUserList()
+    public function searchUsers(Request $request)
     {
         $email = Auth::user()->email;
 
-        $usr = $this->userService->getAllUserExceptMe($email);
+        $usr = $this->userService->read($request->has('search') ? $request['search']:'', false);
 
         $brief = $usr->map(function ($item, $key) {
             return [
-                'hId' => $item->hId,
-                'full_name' => empty($item->profile->first_name) ? $item->name  : $item->profile->first_name . $item->profile->last_name,
-                'img_path' => $item->profile->img_path,
-                'roles' => $item->roles->first()->description
+                'value' => $item->hId,
+                'name' => empty($item->profile->first_name) ? $item->name  : $item->profile->first_name . $item->profile->last_name,
             ];
         });
 

@@ -147,9 +147,7 @@ class UserController extends BaseController
 
     public function resetPassword($id)
     {
-        $parameters['readById'] = $id;
-
-        $usr = $this->userService->read($parameters);
+        $usr = $this->userService->readBy('ID', $id);
 
         $this->userService->resetPassword($usr['email']);
     }
@@ -171,9 +169,7 @@ class UserController extends BaseController
             return redirect('/');
         }
 
-        $parameters['readById'] = $id;
-
-        $usr = $this->userService->read($parameters);
+        $usr = $this->userService->readBy('ID', $id);
 
         $usr->markEmailAsVerified();
 

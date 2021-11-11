@@ -20,9 +20,7 @@ class ProfileController extends BaseController
 
     public function readProfile()
     {
-        $parameters['readById'] = Auth::id();
-
-        return $this->userService->read($parameters);
+        return $this->userService->readBy('ID', Auth::id());
     }
 
     public function updateProfile()

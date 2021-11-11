@@ -76,22 +76,25 @@
                 </div>
             </div>
             <div class="intro-y box mt-5" v-if="mode === 'create'">
-                <div class="m-5 p-3">
-                    <label for="tagsTo" class="form-label">{{ t('views.inbox.fields.to') }}</label>
-                    <TomSelect v-model="tagsTo" :options="{ placeholder: t('components.dropdown.placeholder') }" class="w-full" multiple>
-                        <option value="1">Leonardo DiCaprio</option>
-                        <option value="2">Johnny Deep</option>
-                        <option value="3">Robert Downey, Jr</option>
-                        <option value="4">Samuel L. Jackson</option>
-                        <option value="5">Morgan Freeman</option>
-                    </TomSelect>
+                <div class="container p-5">
+                    <div class="mb-3">
+                        <label for="tagsTo" class="form-label">{{ t('views.inbox.fields.to') }}</label>
+                        <TomSelect v-model="tagsTo" :options="tsOptions" class="w-full" multiple>
+                        </TomSelect>
+                        <TomSelectAjax v-model="tagsTo2" class="w-full" multiple></TomSelectAjax>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">{{ t('views.inbox.fields.subject') }}</label>
+                        <input type="text" id="subject" class="form-control" v-model="inbox.subject" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="messages" class="form-label">{{ t('views.inbox.fields.message') }}</label>
+                        <textarea id="messages" class="form-control" v-model="inbox.message" rows="5"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-outline-primary hover:btn-primary">{{ t('components.buttons.submit') }}</button>
+                    </div>
                 </div>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
             </div>
         </div>
     </div>
@@ -101,13 +104,13 @@
 import { inject, onMounted, ref } from "vue";
 import mainMixins from '../../mixins';
 
-const { t, assetPath } = mainMixins();
+const { t, route, assetPath } = mainMixins();
 
 const mode = ref('list');
-const userList = ref([]);
 const inboxList = ref([]);
 const messageList = ref([]);
-const tagsTo = ref('');
+const tagsTo = ref([]);
+const tagsTo2 = ref([]);
 const inbox = ref({
     hId: '',
     to: '',
@@ -116,14 +119,47 @@ const inbox = ref({
 });
 const newMessage = ref('');
 const subjectEdited = ref('');
+const tsOptions = ref({
+    placeholder: t('components.dropdown.placeholder'),
+    valueField: 'value',
+    labelField: 'name',
+    searchField: 'name',
+    load: function(query, callback) {
+        axios.get(route('api.get.db.core.inbox.search.users', { search: query })).then(response => {
+            callback([
+                { value: 1, name: 'test' }
+            ]);
+        }).catch(e => {
+            return callback();
+        });
+    },
+    render: {
+        option: function(data, escape) {
+            return '<div>' + escape(data.name) + '</div>';
+        },
+        item: function(data, escape) {
+            return '<div>' + escape(data.name) + '</div>';
+        }
+    }
+});
 
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
+
+    getInbox();
 });
 
 function createNew() {
     mode.value = 'create';
+}
+
+function getInbox() {
+    axios.get(route('api.get.db.core.inbox.list.thread')).then(response => {
+        userList.value = response.data;
+    }).catch(e => {
+
+    });
 }
 
 function checkAll() {
