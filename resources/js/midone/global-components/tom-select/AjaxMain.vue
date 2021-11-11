@@ -4,29 +4,39 @@
 </template>
 
 <script setup>
-import { defineComponent, computed, defineProps, ref, onMounted } from 'vue'
+import { computed, defineProps, ref, onMounted, toRef } from 'vue'
 import TomSelect from "tom-select";
 
 const props = defineProps({
     modelValue: {
         type: [String, Number, Array],
         default: ''
+    },
+    initialData: {
+        type: Object,
+        default: {}
+    },
+    searchURL: {
+        type: String,
+        default: ''
     }
 });
 
 const emit = defineEmits(['update:modelValue']);
 
+const initialData = toRef(props, 'initialData');
+const searchURL = toRef(props, 'searchURL');
+
 const el = ref(null);
-const options = ref([]);
-const items = ref([]);
 const defaultOptions = ref({
     persist: false,
-    placeholder: 'Please Select',
+    placeholder: 'Please select...',
     valueField: 'value',
     labelField: 'name',
     searchField: 'name',
     load: function (query, callback) {
-        axios.get('/api/get/dashboard/core/inbox/search/users' + '?search=' + query).then(response => {
+        if (searchURL.value.length === 0) return callback();
+        axios.get(searchURL.value + '?search=' + query).then(response => {
             callback(response.data);
         }).catch(e => {
             return callback();
@@ -46,17 +56,12 @@ const defaultOptions = ref({
             title: 'Remove',
         }
     },
-    options: options.value,
-    items: items.value,
-    onChange: function(values) {
-        //console.log(options.value);
-        //console.log(items.value);
-        //console.log(el.TomSelect.options);
-        //console.log(el.TomSelect.items);
-    }
+    options: [],
+    items: []
 });
 
 onMounted(() => {
+    if (el.TomSelect) el.TomSelect.destroy();
     el.TomSelect = new TomSelect(el.value, defaultOptions.value);
 });
 

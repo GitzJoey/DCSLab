@@ -79,9 +79,7 @@
                 <div class="container p-5">
                     <div class="mb-3">
                         <label for="tagsTo" class="form-label">{{ t('views.inbox.fields.to') }}</label>
-                        <TomSelect v-model="tagsTo" :options="tsOptions" class="w-full" multiple>
-                        </TomSelect>
-                        <TomSelectAjax v-model="tagsTo2" class="w-full" multiple></TomSelectAjax>
+                        <TomSelectAjax v-model="tagsTo" class="w-full" multiple :searchURL="route('api.get.db.core.inbox.search.users')"></TomSelectAjax>
                     </div>
                     <div class="mb-3">
                         <label for="subject" class="form-label">{{ t('views.inbox.fields.subject') }}</label>
@@ -109,8 +107,7 @@ const { t, route, assetPath } = mainMixins();
 const mode = ref('list');
 const inboxList = ref([]);
 const messageList = ref([]);
-const tagsTo = ref([]);
-const tagsTo2 = ref([]);
+const tagsTo = ref({});
 const inbox = ref({
     hId: '',
     to: '',
@@ -119,29 +116,6 @@ const inbox = ref({
 });
 const newMessage = ref('');
 const subjectEdited = ref('');
-const tsOptions = ref({
-    placeholder: t('components.dropdown.placeholder'),
-    valueField: 'value',
-    labelField: 'name',
-    searchField: 'name',
-    load: function(query, callback) {
-        axios.get(route('api.get.db.core.inbox.search.users', { search: query })).then(response => {
-            callback([
-                { value: 1, name: 'test' }
-            ]);
-        }).catch(e => {
-            return callback();
-        });
-    },
-    render: {
-        option: function(data, escape) {
-            return '<div>' + escape(data.name) + '</div>';
-        },
-        item: function(data, escape) {
-            return '<div>' + escape(data.name) + '</div>';
-        }
-    }
-});
 
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');

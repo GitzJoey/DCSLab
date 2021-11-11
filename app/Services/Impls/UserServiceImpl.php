@@ -122,7 +122,7 @@ class UserServiceImpl implements UserService
         }
 
         if ($paginate) {
-            $perPage = is_numeric($perPage) ?: Config::get('const.DEFAULT.PAGINATION_LIMIT');
+            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
             return $usr->paginate($perPage);
         } else {
             return $usr->get();

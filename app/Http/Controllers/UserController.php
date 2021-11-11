@@ -31,10 +31,11 @@ class UserController extends BaseController
 
     public function read(Request $request)
     {
-        $parameters = $request->all();
-        $parameters['readAll'] = Auth::id();
+        $search = $request->has('search') ? $request['search']:'';
+        $paginate = true;
+        $perPage = $request->has('perPage') ? $request['perPage']:null;
 
-        return $this->userService->read($parameters);
+        return $this->userService->read($search, $paginate, $perPage);
     }
 
     public function getAllRoles()
