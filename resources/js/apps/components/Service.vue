@@ -35,14 +35,13 @@
                         <tbody>
                             <tr v-for="(c, cIdx) in serviceList.data">
                                 <td>{{ c.code }}</td>
-                                <td>{{ c.productgroup.name }}</td>
-                                <td>{{ c.unit.name }}</td>
+                                <td>{{ c.group.name }}</td>
+                                <!-- <td>{{ c.unit.name }}</td> -->
                                 <td>{{ c.remarks }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
                                     <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                 </td>
-                                <th></th>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -120,10 +119,10 @@
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="unit_id" name="unit_id" v-model="service.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ service.group.name }}
+                                    {{ service.unit.name }}
                                 </div>
                             </div>
                         </div>
@@ -157,7 +156,7 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ service.point }}</div>
                             </div>
                         </div>
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="product_type" class="col-2 col-form-label">{{ $t('fields.product_type') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <select class="form-control" id="product_type" name="product_type" v-model="service.product_type" v-show="this.mode === 'create' || this.mode === 'edit'">
@@ -172,7 +171,10 @@
                                     <span v-if="service.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
+                        <td>
+                            <input type="hidden" v-model="service.product_type" name="product_type"/>
+                        </td>
                         <div class="form-group row">
                             <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -270,7 +272,7 @@ export default {
         this.mode = 'list';
         this.getAllService(1);
         this.getAllProductGroup();
-        this.getAllUnit(1);
+        this.getAllUnit();
         },
     methods: {
         getAllService(page) {
@@ -281,7 +283,7 @@ export default {
             });
         },
         getAllProductGroup() {
-            axios.get(route('api.get.dashboard.productgroup.read.all')) .then(response => {
+            axios.get(route('api.get.dashboard.productgroup.read.all')).then(response => {
                 this.groupDDL = response.data;
             });
         },
@@ -308,7 +310,7 @@ export default {
                 tax_status: '',
                 remarks: '',
                 point: '',
-                product_type: '',
+                product_type: '4',
                 status: '',
             }
         },

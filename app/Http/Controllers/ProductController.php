@@ -63,7 +63,7 @@ class ProductController extends BaseController
             'status' => 'required',
         ]);
 
-        if ($request->product_type !== '4') {
+        if ($request->product_type[0] !== '4') {
             $company_id = $request->company_id != null ? Hashids::decode($request->company_id)[0]:$company_id = null;          
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
@@ -132,7 +132,7 @@ class ProductController extends BaseController
             }
         }
 
-        if ($request->product_type == '4') {
+        if ($request->product_type[0] == '4') {
             $company_id = $request->company_id != null ? Hashids::decode($request->company_id)[0]:$company_id = null;          
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
@@ -142,7 +142,7 @@ class ProductController extends BaseController
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $is_use_serial = null;
+            $is_use_serial = 0;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -165,40 +165,32 @@ class ProductController extends BaseController
                 return response()->error();
             };
 
-            $product_units = [];
-            $count_unit = count($request['unit_id']);
-            for ($i = 0; $i < $count_unit; $i++) {
-                $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
-                $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+            $product_unit = [];
+            array_push($product_unit, array (
+                'code' => $request->code,
+                'company_id' => $request->company_id,
+                'product_id' => Hashids::decode($service)[0],
+                'unit_id' => Hashids::decode($request->unit_id)[0],
+                'is_base' => 1,
+                'conv_value' => 1,
+                'is_primary_unit' => 1,
+                'remarks' => null
+            ));
     
-                array_push($product_units, array (
-                    'code' => $request['product_unit_code'][$i],
-                    'company_id' => $request->company_id,
-                    'product_id' => Hashids::decode($product)[0],
-                    'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-                    'is_base' => $is_base,
-                    'conv_value' => $request['conv_value'][$i],
-                    'is_primary_unit' => $is_primary_unit,
-                    'remarks' => $request['remarks']
-                ));
-            }
-    
-            foreach ($product_units as $product_unit) {
-                $result = $this->productUnitService->create(
-                    $product_unit['code'],
-                    $product_unit['company_id'],
-                    $product_unit['product_id'],
-                    $product_unit['unit_id'],
-                    $product_unit['is_base'],
-                    $product_unit['conv_value'],
-                    $product_unit['is_primary_unit'],
-                    $product_unit['remarks']
-                );
-    
-                if ($result == 0) {
-                    return response()->error();
-                };
-            }
+            $result = $this->productUnitService->create(
+                $product_unit[0]['code'],
+                $product_unit[0]['company_id'],
+                $product_unit[0]['product_id'],
+                $product_unit[0]['unit_id'],
+                $product_unit[0]['is_base'],
+                $product_unit[0]['conv_value'],
+                $product_unit[0]['is_primary_unit'],
+                $product_unit[0]['remarks']
+            );
+
+            if ($result == 0) {
+                return response()->error();
+            };
         }
         return response()->success();
     }
