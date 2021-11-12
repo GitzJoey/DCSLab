@@ -34,7 +34,7 @@ class mustResetPassword implements Rule
      */
     public function passes($attribute, $value)
     {
-        $userId = $this->userService->read(['readByEmail' => $this->email]);
+        $userId = $this->userService->readBy('EMAIL', $this->email);
 
         if ($userId->password_changed_at == null) return false;
         if (Carbon::now() > Carbon::createFromFormat('Y-m-d H:i:s', $userId->password_changed_at)->addDay(Config::get('const.DEFAULT.PASSWORD_EXPIRY_DAYS'))) return false;

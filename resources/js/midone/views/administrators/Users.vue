@@ -1,5 +1,5 @@
 <template>
-    <AlertPlaceholder :errors="alertErrors" />
+    <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
         <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
             <template v-slot:table="tableProps">
@@ -357,11 +357,6 @@ function onSubmit(values, actions) {
                 'content-type': 'multipart/form-data'
             }
         }).then(response => {
-            actions.resetForm({
-                values: {
-                    remarks: ''
-                }
-            });
             backToList();
         }).catch(e => {
             handleError(e, actions);

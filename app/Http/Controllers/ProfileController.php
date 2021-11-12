@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Fortify\UpdateUserPassword;
+use App\Http\Requests\ProfileRequest;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,12 +25,14 @@ class ProfileController extends BaseController
         return $this->userService->readBy('ID', Auth::id());
     }
 
-    public function updateProfile()
+    public function updateProfile(ProfileRequest $request)
     {
-
+        $usr = Auth::user();
+        $updateActions = new UpdateUserPassword();
+        $updateActions->update($usr, $request->validated());
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(ProfileRequest $request)
     {
 
 
