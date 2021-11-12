@@ -27,14 +27,13 @@ class ProfileController extends BaseController
 
     public function updateProfile(ProfileRequest $request)
     {
-        $usr = Auth::user();
-        $updateActions = new UpdateUserPassword();
-        $updateActions->update($usr, $request->validated());
+
     }
 
     public function changePassword(ProfileRequest $request)
     {
-
-
+        $usr = Auth::user();
+        $updateActions = new UpdateUserPassword();
+        $updateActions->update($usr, $request->validated());
     }
 }

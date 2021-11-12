@@ -144,8 +144,10 @@ export default defineComponent({
 
         function logout() {
             axios.post('/logout').then(response => {
-                window.location.href = '/';
-            }).catch(response, function(e) { });
+                //window.location.href = '/';
+            }).catch(e => {
+                console.log('a');
+            });
         }
 
         return {

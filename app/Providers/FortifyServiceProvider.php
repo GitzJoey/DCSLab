@@ -50,14 +50,6 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.login');
         });
 
-        Fortify::authenticateUsing(function (Request $request) {
-            $request->validate([
-                'password' => new mustResetPassword($request['email'])
-            ]);
-
-            return User::where('email', $request->email)->first();
-        });
-
         Fortify::registerView(function() {
             return view('auth.register');
         });
