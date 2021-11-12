@@ -12,6 +12,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Services\ActivityLogService;
 
+use App\Actions\RandomGenerator;
+
 class ProductController extends BaseController
 {
     private $productService;
@@ -70,7 +72,9 @@ class ProductController extends BaseController
            $request->code = $faker->creditCardNumber();
         };
 
-        # Jika Product... Maka...
+        $tampungsaya = (new RandomGenerator())->generateOne(999999);
+
+        # Jika Product... Maka...Config:get('const.DEFAULT.PRODCUT_TUPE.RAW_MATERIAL,SERVICE)
         if ($request->product_type[0] !== '4') {
             $company_id = $request->company_id != null ? Hashids::decode($request->company_id)[0]:$company_id = null;          
             $code = $request->code;
