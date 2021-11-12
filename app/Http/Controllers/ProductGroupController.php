@@ -64,7 +64,8 @@ class ProductGroupController extends BaseController
         ]);
 
         $result = $this->productGroupService->create(
-            Hashids::decode($request['company_id'])[0],
+            // Hashids::decode($request['company_id'])[0],
+            null,
             $request['code'],
             $request['name'],
             $request['category']

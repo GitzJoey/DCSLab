@@ -48,16 +48,20 @@ class ProductServiceImpl implements ProductService
             $product->status = $status;
             $product->save();
 
-            $pu = new ProductUnit();
-            $pu->code = $product_units['code'];
-            $pu->company_id = $product_units['company_id'];
-            #$pu->product_id = $product_units['product_id'];
-            $pu->unit_id = $product_units['unit_id'];
-            $pu->is_base = $product_units['is_base'];
-            $pu->conv_value = $product_units['conv_value'];
-            $pu->is_primary_unit = $product_units['is_primary_unit'];
-            $pu->remarks = $product_units['remarks'];
-            $product_units->product_unit()->saveMany($pu);
+            $pu = [];   
+            foreach ($product_units as $product_unit) {
+                array_push($pu, new ProductUnit(array (
+                    'code' => $product_unit['code'],
+                    'company_id' => $product_unit['company_id'],
+                    'product_id' => $product['id'],
+                    'unit_id' => $product_unit['unit_id'],
+                    'is_base' => $product_unit['is_base'],
+                    'conversion_value' => $product_unit['conv_value'],
+                    'is_primary_unit' => $product_unit['is_primary_unit'],
+                    'remarks' => $product_unit['remarks']
+                )));
+            }
+            $product->product_unit()->saveMany($pu);
 
             DB::commit();
 

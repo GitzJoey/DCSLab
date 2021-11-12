@@ -99,8 +99,10 @@ class ProductController extends BaseController
 
                 array_push($product_units, array (
                     'code' => $request->product_unit_code[$i],
-                    'company_id' => $request->company_id,
-                    #'product_id' => Hashids::decode($product)[0],
+                    #'company_id' => $request->company_id,
+                    'company_id' => null,
+                    // 'product_id' => Hashids::decode($product)[0],
+                    'product_id' => null,
                     'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                     'is_base' => $is_base,
                     'conv_value' => $request['conv_value'][$i],
