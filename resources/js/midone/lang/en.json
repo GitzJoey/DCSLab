@@ -136,7 +136,9 @@
                     "dateFormat": "Date Format",
                     "timeFormat": "Time Format",
                     "apiToken": "API Token"
-                }
+                },
+                "reset_password": "Reset Password",
+                "email_reset_password": "Send Email"
             }
         },
         "activity": {

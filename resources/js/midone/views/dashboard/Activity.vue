@@ -79,7 +79,7 @@ onMounted(() => {
 });
 
 function getActivity() {
-    axios.get(route('api.get.db.core.log_route.list')).then(response => {
+    axios.get(route('api.get.db.core.activity.route.list')).then(response => {
         activity.value = response.data;
     });
 }

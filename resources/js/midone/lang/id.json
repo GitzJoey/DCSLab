@@ -136,7 +136,9 @@
                     "dateFormat": "Format Tanggal",
                     "timeFormat": "Format Waktu",
                     "apiToken": "API Token"
-                }
+                },
+                "reset_password": "Reset Password",
+                "email_reset_password": "Kirim Email"
             }
         },
         "activity": {

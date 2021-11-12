@@ -127,6 +127,14 @@
                                         <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks"/>
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <div class="form-inline">
+                                        <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
+                                            <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
+                                            <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </VeeForm>
                     </div>
@@ -172,7 +180,10 @@
                             <div class="mb-3">
                                 <div class="form-inline">
                                     <label class="form-label w-40 px-3" for="api_token">{{ t('views.profile.fields.settings.api_token') }}</label>
-                                    <button id="api_token" class="btn">{{ t('components.buttons.reset') }}</button>
+                                    <div class="form-check pr-5">
+                                        <input id="apiToken" name="" class="form-check-input" type="checkbox" value="" />
+                                        <label class="form-check-label" for="apiToken">{{ t('components.buttons.reset') }}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

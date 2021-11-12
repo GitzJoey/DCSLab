@@ -7,7 +7,7 @@
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-3 2xl:col-span-2">
             <div class="intro-y box bg-white p-5 mt-5">
-                <button type="button" class="btn text-gray-700 dark:text-gray-300 w-full bg-white dark:bg-theme-1 mt-1 hover:btn-secondary" @click="createNew">
+                <button type="button" class="btn text-gray-700 dark:text-gray-300 w-full bg-white dark:bg-theme-1 mt-1 btn-secondary" @click="createNew">
                     <Edit3Icon class="w-4 h-4 mr-2" />
                     {{ t('components.buttons.compose')}}
                 </button>
@@ -90,7 +90,7 @@
                         <textarea id="messages" class="form-control" v-model="inbox.message" rows="5"></textarea>
                     </div>
                     <div class="mb-3">
-                        <button class="btn btn-outline-primary hover:btn-primary">{{ t('components.buttons.submit') }}</button>
+                        <button class="btn btn-primary">{{ t('components.buttons.submit') }}</button>
                     </div>
                 </div>
             </div>

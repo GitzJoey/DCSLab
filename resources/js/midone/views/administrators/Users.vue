@@ -247,6 +247,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="mb-3" v-if="this.mode === 'edit'">
+                    <div class="form-inline">
+                        <label for="resetPassword" class="form-label w-40 px-3">{{ t('views.users.fields.reset_password') }}</label>
+                        <div class="form-check pr-5">
+                            <input id="resetPassword" name="resetPassword" class="form-check-input" type="checkbox" value="" />
+                            <label class="form-check-label" for="resetPassword">{{ t('views.users.fields.reset_password') }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="emailResetPassword" name="emailResetPassword" class="form-check-input" type="checkbox" value="" />
+                            <label class="form-check-label" for="emailResetPassword">{{ t('views.users.fields.email_reset_password') }}</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="mb-3" v-if="this.mode === 'create' || this.mode === 'edit'">
                     <div class="form-inline">
                         <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
