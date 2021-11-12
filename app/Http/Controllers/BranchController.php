@@ -6,6 +6,7 @@ use App\Services\ActivityLogService;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -35,7 +36,8 @@ class BranchController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
             return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        return $this->branchService->read();
+        $userId = Auth::user()->id;
+        return $this->branchService->read($userId);
     }
 
     public function store(Request $request)

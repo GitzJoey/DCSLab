@@ -7,6 +7,7 @@ use App\Services\ActivityLogService;
 use App\Services\InvestorService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class InvestorController extends BaseController
@@ -32,7 +33,8 @@ class InvestorController extends BaseController
 
     public function read()
     {
-        return $this->investorService->read();
+        $userId = Auth::user()->id;
+        return $this->investorService->read($userId);
     }
 
     public function getAllActiveInvestor()

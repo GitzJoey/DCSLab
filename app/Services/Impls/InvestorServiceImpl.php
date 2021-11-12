@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\InvestorService;
 use App\Models\Investor;
+use App\Models\User;
 
 class InvestorServiceImpl implements InvestorService
 {
@@ -51,8 +52,9 @@ class InvestorServiceImpl implements InvestorService
 
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return Investor::paginate();
     }
 

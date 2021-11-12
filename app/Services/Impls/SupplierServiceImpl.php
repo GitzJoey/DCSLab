@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\SupplierService;
 use App\Models\Supplier;
+use App\Models\User;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -54,8 +55,9 @@ class SupplierServiceImpl implements SupplierService
 
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return Supplier::paginate();
     }
 

@@ -80,6 +80,9 @@
                                 <li v-for="e in errors">{{ e }}</li>
                             </ul>
                         </div>
+                        <td>
+                            <input type="hidden" v-model="productbrand.company" name="company_id"/>
+                        </td>
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
@@ -158,6 +161,7 @@ export default {
             contentHidden: false,
             productbrandList: [],
             productbrand: {
+                company: {hId: ''},
                 code: '',
                 name: '',
             },
@@ -169,6 +173,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllProductBrand(1);
+        this.getAllCompany();
         },
     methods: {
         getAllProductBrand(page) {
@@ -176,6 +181,11 @@ export default {
             axios.get(route('api.get.dashboard.productbrand.read') + '?page=' + page).then(response => {
                 this.productbrandList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllCompany() {
+            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
+                this.companyDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -189,6 +199,7 @@ export default {
         },
         emptyProductBrand() {
             return {
+                company: {hId: ''},
                 code: '',
                 name: '',
             }

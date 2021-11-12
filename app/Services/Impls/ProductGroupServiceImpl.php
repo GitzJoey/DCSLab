@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ProductGroupService;
 use App\Models\ProductGroup;
+use App\Models\User;
 
 class ProductGroupServiceImpl implements ProductGroupService
 {
     public function create(
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category
@@ -23,7 +24,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
         try {
             $productgroup = new ProductGroup();
-            // $productgroup->company_id = $company_id;
+            $productgroup->company_id = $company_id;
             $productgroup->code = $code;
             $productgroup->name = $name;
             $productgroup->category = $category;
@@ -40,8 +41,9 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return ProductGroup::paginate();
     }
 
@@ -67,7 +69,7 @@ class ProductGroupServiceImpl implements ProductGroupService
     
     public function update(
         $id,
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category
@@ -79,7 +81,7 @@ class ProductGroupServiceImpl implements ProductGroupService
             $productgroup = ProductGroup::where('id', '=', $id);
     
             $retval = $productgroup->update([
-                // 'company_id' => $company_id,
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'category' => $category,

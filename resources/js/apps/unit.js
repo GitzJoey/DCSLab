@@ -51,9 +51,9 @@ const messages = {
             please_select: 'Please Select',
         },
         categoryDDL: {
-            product: 'Product',
-            service: 'Service',
-            productandservice: 'Product and Service'
+            productunit: 'Product',
+            serviceunit: 'Service',
+            productandserviceunit: 'Product and Service'
         },
     },
     id: {
@@ -94,9 +94,9 @@ const messages = {
             please_select: 'Silahkan Pilih',
         },
         categoryDDL: {
-            product: 'Product',
-            service: 'Service',
-            productandservice: 'Product and Service'
+            productunit: 'Product',
+            serviceunit: 'Service',
+            productandserviceunit: 'Product and Service'
         },
     }
 };

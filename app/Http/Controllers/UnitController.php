@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class UnitController extends BaseController
@@ -31,7 +32,8 @@ class UnitController extends BaseController
 
     public function read()
     {
-        return $this->UnitService->read();
+        $userId = Auth::user()->id;
+        return $this->UnitService->read($userId);
     }
 
     public function getAllUnit()
@@ -62,7 +64,7 @@ class UnitController extends BaseController
         ]);
 
         $result = $this->UnitService->create(
-            // Hashids::decode($request['company_id'])[0],
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $request['category']
@@ -79,7 +81,7 @@ class UnitController extends BaseController
 
         $result = $this->UnitService->update(
             $id,
-            // Hashids::decode($request['company_id'])[0],
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $request['category']

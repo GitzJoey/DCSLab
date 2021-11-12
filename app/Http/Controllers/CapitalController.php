@@ -7,6 +7,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 use App\Services\ActivityLogService;
 use App\Services\CapitalService;
+use Illuminate\Support\Facades\Auth;
 
 class CapitalController extends BaseController
 {
@@ -31,7 +32,8 @@ class CapitalController extends BaseController
 
     public function read()
     {
-        return $this->capitalService->read();
+        $userId = Auth::user()->id;
+        return $this->capitalService->read($userId);
     }
 
     public function store(Request $request)

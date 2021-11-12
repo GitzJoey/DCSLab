@@ -7,6 +7,7 @@ use App\Services\ActivityLogService;
 use App\Services\CapitalGroupService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
 
 class CapitalGroupController extends BaseController
 {
@@ -31,7 +32,8 @@ class CapitalGroupController extends BaseController
 
     public function read()
     {
-        return $this->capitalGroupService->read();
+        $userId = Auth::user()->id;
+        return $this->capitalGroupService->read($userId);
     }
 
     public function getAllActiveCapitalGroup()

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ProductBrandService;
 use App\Models\ProductBrand;
+use App\Models\User;
 
 class ProductBrandServiceImpl implements ProductBrandService
 {
@@ -39,8 +40,9 @@ class ProductBrandServiceImpl implements ProductBrandService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return ProductBrand::paginate();
     }
 

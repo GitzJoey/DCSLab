@@ -15,7 +15,7 @@ interface ProductUnitService
         $remarks
     );
 
-    public function read();
+    public function read($userId);
 
     public function getAllProductUnit();
 

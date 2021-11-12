@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\UnitService;
 use App\Models\Unit;
+use App\Models\User;
 
 class UnitServiceImpl implements UnitService
 {
     public function create(
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category
@@ -23,7 +24,7 @@ class UnitServiceImpl implements UnitService
 
         try {
             $unit = new Unit();
-            // $unit->company_id = $company_id;
+            $unit->company_id = $company_id;
             $unit->code = $code;
             $unit->name = $name;
             $unit->category = $category;
@@ -40,8 +41,9 @@ class UnitServiceImpl implements UnitService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return Unit::paginate();
     }
 
@@ -67,7 +69,7 @@ class UnitServiceImpl implements UnitService
 
     public function update(
         $id,
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category
@@ -79,7 +81,7 @@ class UnitServiceImpl implements UnitService
             $unit = Unit::where('id', '=', $id);
     
             $retval = $unit->update([
-                // 'company_id' => $company_id,
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'category' => $category,

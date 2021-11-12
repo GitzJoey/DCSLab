@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\CashService;
 use App\Models\Cash;
+use App\Models\User;
 
 class CashServiceImpl implements CashService
 {
@@ -43,8 +44,9 @@ class CashServiceImpl implements CashService
 
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return Cash::paginate();
     }
 

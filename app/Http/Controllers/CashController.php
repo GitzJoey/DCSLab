@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CashService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CashController extends BaseController
@@ -31,7 +32,8 @@ class CashController extends BaseController
 
     public function read()
     {
-        return $this->CashService->read();
+        $userId = Auth::user()->id;
+        return $this->CashService->read($userId);
     }
 
     public function getAllActiveCash()

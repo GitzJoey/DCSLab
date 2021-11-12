@@ -3,7 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Services\BranchService;
-
+use App\Models\User;
 use App\Models\Branch;
 
 use Illuminate\Support\Facades\Config;
@@ -49,8 +49,10 @@ class BranchServiceImpl implements BranchService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
+        // $branchIds = $usr->branch()->pluck('branch_id');
         return Branch::with('company')->bySelectedCompany()->paginate();
     }
 

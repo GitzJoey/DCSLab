@@ -26,6 +26,7 @@ class ProductBrand extends Model
 
     protected $hidden = [
         'id',
+        'company_id',
         'created_by',
         'updated_by',
         'deleted_by',
