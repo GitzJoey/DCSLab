@@ -5,13 +5,13 @@ namespace App\Services;
 interface ProductGroupService
 {
     public function create(
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category
     );
 
-    public function read();
+    public function read($userId);
 
     public function getAllProductGroup();
 
@@ -23,7 +23,7 @@ interface ProductGroupService
 
     public function update(
         $id,
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category

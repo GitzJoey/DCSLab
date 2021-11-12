@@ -19,7 +19,7 @@ interface ProductService
         $status,
     );
 
-    public function read();
+    public function read($userId);
 
     public function read_product();
 

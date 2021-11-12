@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\CustomerGroupService;
 use App\Models\CustomerGroup;
+use App\Models\User;
 
 class CustomerGroupServiceImpl implements CustomerGroupService
 {
@@ -77,8 +78,9 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return CustomerGroup::with('cash')->paginate();
     }
 

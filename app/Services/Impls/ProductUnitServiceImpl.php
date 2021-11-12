@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ProductUnitService;
 use App\Models\ProductUnit;
+use App\Models\User;
 
 class ProductUnitServiceImpl implements ProductUnitService
 {
@@ -48,8 +49,9 @@ class ProductUnitServiceImpl implements ProductUnitService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return ProductUnit::paginate();
     }
 

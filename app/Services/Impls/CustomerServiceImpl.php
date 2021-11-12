@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 
 use App\Services\CustomerService;
 use App\Models\Customer;
+use App\Models\User;
 
 class CustomerServiceImpl implements CustomerService
 {
@@ -68,8 +69,9 @@ class CustomerServiceImpl implements CustomerService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return Customer::with('customer_group')->paginate();
     }
 

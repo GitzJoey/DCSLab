@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\CustomerService;
-
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
 
@@ -32,7 +32,8 @@ class CustomerController extends BaseController
 
     public function read()
     {
-        return $this->CustomerService->read();
+        $userId = Auth::user()->id;
+        return $this->CustomerService->read($userId);
     }
 
     public function store(Request $request)

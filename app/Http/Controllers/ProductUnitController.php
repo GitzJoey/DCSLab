@@ -6,7 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\ProductUnitService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductUnitController extends BaseController
@@ -32,7 +32,8 @@ class ProductUnitController extends BaseController
 
     public function read()
     {
-        return $this->productUnitService->read();
+        $userId = Auth::user()->id;
+        return $this->productUnitService->read($userId);
     }
 
     public function getAllProductUnit()

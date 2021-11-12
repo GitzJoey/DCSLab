@@ -6,7 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\SupplierService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierController extends BaseController
@@ -33,7 +33,8 @@ class SupplierController extends BaseController
 
     public function read()
     {
-        return $this->SupplierService->read();
+        $userId = Auth::user()->id;
+        return $this->SupplierService->read($userId);
     }
 
     public function getAllSupplier()

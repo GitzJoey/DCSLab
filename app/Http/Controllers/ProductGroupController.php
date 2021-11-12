@@ -7,6 +7,7 @@ use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
 
 class ProductGroupController extends BaseController
 {
@@ -31,7 +32,8 @@ class ProductGroupController extends BaseController
 
     public function read()
     {
-        return $this->productGroupService->read();
+        $userId = Auth::user()->id;
+        return $this->productGroupService->read($userId);
     }
 
     public function getAllProductGroup()
@@ -62,7 +64,7 @@ class ProductGroupController extends BaseController
         ]);
 
         $result = $this->productGroupService->create(
-            // Hashids::decode($request['company_id'])[0],
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $request['category']
@@ -80,7 +82,7 @@ class ProductGroupController extends BaseController
         
         $result = $this->productGroupService->update(
             $id,
-            // Hashids::decode($request['company_id'])[0],
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
             $request['name'],
             $request['category']

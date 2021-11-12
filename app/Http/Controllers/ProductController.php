@@ -11,6 +11,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Services\ActivityLogService;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends BaseController
 {
@@ -44,7 +45,8 @@ class ProductController extends BaseController
 
     public function read()
     {
-        return $this->productService->read();
+        $userId = Auth::user()->id;
+        return $this->productService->read($userId);
     }
 
     public function read_product()

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\CapitalGroupService;
 use App\Models\CapitalGroup;
+use App\Models\User;
 
 class CapitalGroupServiceImpl implements CapitalGroupService
 {
@@ -38,8 +39,9 @@ class CapitalGroupServiceImpl implements CapitalGroupService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
+        $usr = User::find($userId)->first();
         return CapitalGroup::paginate();
     }
 
