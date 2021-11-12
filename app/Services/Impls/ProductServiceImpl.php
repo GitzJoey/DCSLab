@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Product;
 use App\Services\ProductService;
 use App\Models\User;
+use App\Models\ProductUnit;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,6 +27,7 @@ class ProductServiceImpl implements ProductService
         $is_use_serial,
         $product_type,
         $status,
+        $product_units
     )
     {
         DB::beginTransaction();
@@ -45,6 +47,17 @@ class ProductServiceImpl implements ProductService
             $product->product_type = $product_type;
             $product->status = $status;
             $product->save();
+
+            $pu = new ProductUnit();
+            $pu->code = $product_units['code'];
+            $pu->company_id = $product_units['company_id'];
+            #$pu->product_id = $product_units['product_id'];
+            $pu->unit_id = $product_units['unit_id'];
+            $pu->is_base = $product_units['is_base'];
+            $pu->conv_value = $product_units['conv_value'];
+            $pu->is_primary_unit = $product_units['is_primary_unit'];
+            $pu->remarks = $product_units['remarks'];
+            $product_units->product_unit()->saveMany($pu);
 
             DB::commit();
 

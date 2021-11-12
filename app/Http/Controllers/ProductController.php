@@ -91,6 +91,24 @@ class ProductController extends BaseController
             $product_type = $request->product_type;
             $status = $request->status;
 
+            $product_units = [];
+            $count_unit = count($request['unit_id']);
+            for ($i = 0; $i < $count_unit; $i++) {
+                $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
+                $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+
+                array_push($product_units, array (
+                    'code' => $request->product_unit_code[$i],
+                    'company_id' => $request->company_id,
+                    #'product_id' => Hashids::decode($product)[0],
+                    'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
+                    'is_base' => $is_base,
+                    'conv_value' => $request['conv_value'][$i],
+                    'is_primary_unit' => $is_primary_unit,
+                    'remarks' => $request['remarks']
+                ));
+            }
+
             $product = $this->productService->create(
                 $company_id,
                 $code, 
@@ -103,51 +121,52 @@ class ProductController extends BaseController
                 $point,
                 $is_use_serial,
                 $product_type,
-                $status
+                $status,
+                $product_units
             );
     
             if ($product == 0) {
                 return response()->error();
             };
     
-            $product_units = [];
-            $count_unit = count($request['unit_id']);
-            for ($i = 0; $i < $count_unit; $i++) {
-                $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
-                $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+            // $product_units = [];
+            // $count_unit = count($request['unit_id']);
+            // for ($i = 0; $i < $count_unit; $i++) {
+            //     $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
+            //     $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
 
-                array_push($product_units, array (
-                    'code' => $request->product_unit_code[$i],
-                    'company_id' => $request->company_id,
-                    'product_id' => Hashids::decode($product)[0],
-                    'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-                    'is_base' => $is_base,
-                    'conv_value' => $request['conv_value'][$i],
-                    'is_primary_unit' => $is_primary_unit,
-                    'remarks' => $request['remarks']
-                ));
-            }
+            //     array_push($product_units, array (
+            //         'code' => $request->product_unit_code[$i],
+            //         'company_id' => $request->company_id,
+            //         'product_id' => Hashids::decode($product)[0],
+            //         'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
+            //         'is_base' => $is_base,
+            //         'conv_value' => $request['conv_value'][$i],
+            //         'is_primary_unit' => $is_primary_unit,
+            //         'remarks' => $request['remarks']
+            //     ));
+            // }
     
-            foreach ($product_units as $product_unit) {
-                if ($product_unit['code'] == '[AUTO]') {
-                    $product_unit['code'] = $faker->creditCardNumber();
-                };
+            // foreach ($product_units as $product_unit) {
+            //     if ($product_unit['code'] == '[AUTO]') {
+            //         $product_unit['code'] = $faker->creditCardNumber();
+            //     };
 
-                $result = $this->productUnitService->create(
-                    $product_unit['code'],
-                    $product_unit['company_id'],
-                    $product_unit['product_id'],
-                    $product_unit['unit_id'],
-                    $product_unit['is_base'],
-                    $product_unit['conv_value'],
-                    $product_unit['is_primary_unit'],
-                    $product_unit['remarks']
-                );
+            //     $result = $this->productUnitService->create(
+            //         $product_unit['code'],
+            //         $product_unit['company_id'],
+            //         $product_unit['product_id'],
+            //         $product_unit['unit_id'],
+            //         $product_unit['is_base'],
+            //         $product_unit['conv_value'],
+            //         $product_unit['is_primary_unit'],
+            //         $product_unit['remarks']
+            //     );
     
-                if ($result == 0) {
-                    return response()->error();
-                };
-            }
+            //     if ($result == 0) {
+            //         return response()->error();
+            //     };
+            // }
         }
 
         # Jika Service... Maka...
