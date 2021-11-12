@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import { computed, defineProps, ref, onMounted, toRef } from 'vue'
+import { computed, ref, onMounted, toRef } from 'vue'
 import TomSelect from "tom-select";
 
 const props = defineProps({

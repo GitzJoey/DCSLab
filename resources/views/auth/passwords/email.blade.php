@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                         @else
-                            <form class="px-3 py-3" action="{{ route('password.email') }}" method="post">
+                            <form id="emailResetForm" class="px-3 py-3" action="{{ route('password.email') }}" method="post">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-lable" for="email">{{ __('auth.reset_password.email.email') }}</label>

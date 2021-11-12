@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-7"></div>
                     <div class="col-5 bg-white bg-opacity-50 rounded border-1">
-                        <form class="px-3 py-3" action="{{ route('login') }}" method="post">
+                        <form id="loginForm" class="px-3 py-3" action="{{ route('login') }}" method="post">
                             @csrf
                             <div class="mb-2">
                                 <label for="email" class="form-label">{{ __('auth.login.email') }}</label>

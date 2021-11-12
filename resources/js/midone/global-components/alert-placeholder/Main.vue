@@ -29,14 +29,14 @@
 </template>
 
 <script setup>
+import { onBeforeUnmount, onMounted, toRef, ref, watch } from 'vue'
+import mainMixins from '../../mixins';
+
 const props = defineProps({
     alertType: { type: String, default: 'danger' },
     messages: { type: Object, default: {} },
     title: { type: String }
 });
-
-import { onBeforeUnmount, onMounted, toRef, ref, watch } from 'vue'
-import mainMixins from '../../mixins';
 
 const { isEmptyObject } = mainMixins();
 

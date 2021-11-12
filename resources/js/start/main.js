@@ -67,4 +67,9 @@ $(document).ready(function() {
         $('.navbar-toggler').removeClass('active');
         $('.navbar-collapse').removeClass('show');
     });
+
+    $('#loginForm input, #registerForm input, #emailResetForm input, #resetForm input').on('change', function(e) {
+         $(this).removeClass('border-danger');
+         $(this).siblings('div').text('');
+    });
 });

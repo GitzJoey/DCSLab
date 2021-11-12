@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-7"></div>
                     <div class="col-5 bg-white bg-opacity-50 rounded border-1">
-                        <form class="px-3 py-3" action="{{ route('register') }}" method="post">
+                        <form id="registerForm" class="px-3 py-3" action="{{ route('register') }}" method="post">
                             @csrf
                             <div class="mb-2">
                                 <label class="form-label" for="name"> {{ __('auth.register.name') }}</label>
