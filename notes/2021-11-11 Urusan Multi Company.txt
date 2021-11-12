@@ -1,0 +1,16 @@
+Cek CompanyServiceImpl, liat fungsi read
+
+Implementasiin fungsi read kaya gitu ke :
++ Branches
++ Warehouses
++ Cashes
++ Investors
++ Capital Groups
++ Capitals
++ Suppliers
++ Product Groups
++ Product Brands
++ Units
++ Products
++ Customer Groups
++ Customers
