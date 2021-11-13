@@ -8,6 +8,7 @@ use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class ProductGroupController extends BaseController
 {
@@ -32,6 +33,10 @@ class ProductGroupController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany() == false) {
+            return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        }
+        
         $userId = Auth::user()->id;
         return $this->productGroupService->read($userId);
     }
@@ -63,9 +68,11 @@ class ProductGroupController extends BaseController
             'name' => 'required|max:255'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->productGroupService->create(
-            // Hashids::decode($request['company_id'])[0],
-            null,
+            $company_id,
             $request['code'],
             $request['name'],
             $request['category']
