@@ -25,15 +25,32 @@ class ProfileController extends BaseController
         return $this->userService->readBy('ID', Auth::id());
     }
 
-    public function updateProfile(ProfileRequest $request)
+    public function updateProfile(ProfileRequest $profileRequest)
     {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
 
+        $profile = array (
+            'first_name' => $request['first_name'],
+            'last_name' => $request['last_name'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'postal_code' => $request['postal_code'],
+            'country' => $request['country'],
+            'tax_id' => $request['tax_id'],
+            'ic_num' => $request['ic_num'],
+            'remarks' => $request['remarks'],
+        );
+
+        $result = $this->userService->updateProfile($user, $profile, true);
+
+        return $result == null ? response()->error():response()->success();
     }
 
-    public function changePassword(ProfileRequest $request)
+    public function changePassword(ProfileRequest $profileRequest)
     {
         $usr = Auth::user();
         $updateActions = new UpdateUserPassword();
-        $updateActions->update($usr, $request->validated());
+        $updateActions->update($usr, $profileRequest->validated());
     }
 }

@@ -28,7 +28,18 @@ class ProfileRequest extends FormRequest
 
         switch($currentRouteMethod) {
             case 'updateProfile':
-                return [];
+                return [
+                    'name' => 'nullable',
+                    'first_name' => 'nullable',
+                    'last_name' => 'nullable',
+                    'address' => 'nullable',
+                    'city' => 'nullable',
+                    'postal_code' => 'numeric|max:10',
+                    'country' => 'nullable',
+                    'tax_id' => 'required',
+                    'ic_num' => 'required',
+                    'remarks' => 'nullable',
+                ];
             case 'changePassword':
                 return [
                     'current_password' => 'required',

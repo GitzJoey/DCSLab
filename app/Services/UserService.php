@@ -31,6 +31,14 @@ interface UserService
         $settings
     );
 
+    public function updateUser($user, $name, $useTransactions = true);
+
+    public function updateProfile($user, $profile, $useTransactions = true);
+
+    public function updateRoles($user, $rolesId, $useTransactions = true);
+
+    public function updateSettings($user, $settings, $useTransactions = true);
+
     public function resetPassword($email);
 
     public function resetTokens($id);

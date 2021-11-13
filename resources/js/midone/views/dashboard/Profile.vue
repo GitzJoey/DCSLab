@@ -43,100 +43,103 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <VeeForm id="profileForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                            <div class="pt-5 pr-5">
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="name">{{ t('views.profile.fields.name') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" v-model="userContext.name"/>
+                        <div class="loader-container">
+                            <VeeForm id="profileForm" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                                <div class="pt-5 pr-5">
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="name">{{ t('views.profile.fields.name') }}</label>
+                                            <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" v-model="userContext.name"/>
+                                        </div>
+                                        <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                     </div>
-                                    <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="email">{{ t('views.profile.fields.email') }}</label>
-                                        <input type="text" class="form-control" :label="t('views.profile.fields.email')" id="email" name="email" readonly v-model="userContext.email"/>
-                                        <div class="px-5" v-if="userContext.emailVerified"><a class="tooltip" href="javascript:;" :title="t('views.profile.tooltip.email_verified')"><ThumbsUpIcon /></a></div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="email">{{ t('views.profile.fields.email') }}</label>
+                                            <input type="text" class="form-control" :label="t('views.profile.fields.email')" id="email" name="email" readonly v-model="userContext.email"/>
+                                            <div class="px-5" v-if="userContext.emailVerified"><a class="tooltip" href="javascript:;" :title="t('views.profile.tooltip.email_verified')"><ThumbsUpIcon /></a></div>
+                                        </div>
+                                        <div class="sm:ml-40 sm:pl-5 mt-2" v-if="!userContext.emailVerified">
+                                            <button class="btn btn-sm">Send Verification Email</button>
+                                        </div>
                                     </div>
-                                    <div class="sm:ml-40 sm:pl-5 mt-2" v-if="!userContext.emailVerified">
-                                        <button class="btn btn-sm">Send Verification Email</button>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="inputImg"></label>
+                                            <div class="flex-1">
+                                                <img alt="" class="my-1" :src="retrieveImage">
+                                                <input type="file" class="h-full w-full" id="inputImg" name="img_path" data-toggle="custom-file-input" v-on:change="handleUpload"/>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="inputImg"></label>
-                                        <div class="flex-1">
-                                            <img alt="" class="my-1" :src="retrieveImage">
-                                            <input type="file" class="h-full w-full" id="inputImg" name="img_path" data-toggle="custom-file-input" v-on:change="handleUpload"/>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="firstName">{{ t('views.profile.fields.first_name') }}</label>
+                                            <input type="text" class="form-control" id="firstName" name="first_name" v-model="userContext.profile.first_name"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="lastName">{{ t('views.profile.fields.last_name') }}</label>
+                                            <input type="text" class="form-control" id="lastName" name="last_name" v-model="userContext.profile.last_name"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="address">{{ t('views.profile.fields.address') }}</label>
+                                            <input type="text" class="form-control" id="address" name="address" v-model="userContext.profile.address"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="city">{{ t('views.profile.fields.city') }}</label>
+                                            <input type="text" class="form-control" id="city" name="city" v-model="userContext.profile.city"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="postal_code">{{ t('views.profile.fields.postal_code') }}</label>
+                                            <input type="text" class="form-control" id="postal_code" name="postal_code" v-model="userContext.profile.postal_code"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="country">{{ t('views.profile.fields.country') }}</label>
+                                            <input type="text" class="form-control" id="country" name="country" readonly v-model="userContext.profile.country"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
+                                            <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" v-model="userContext.profile.tax_id"/>
+                                        </div>
+                                        <ErrorMessage name="tax_id" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
+                                            <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" v-model="userContext.profile.ic_num"/>
+                                        </div>
+                                        <ErrorMessage name="ic_num" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="remarks">{{ t('views.profile.fields.remarks') }}</label>
+                                            <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
+                                                <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
+                                                <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="firstName">{{ t('views.profile.fields.first_name') }}</label>
-                                        <input type="text" class="form-control" id="firstName" name="first_name" v-model="userContext.profile.first_name"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="lastName">{{ t('views.profile.fields.last_name') }}</label>
-                                        <input type="text" class="form-control" id="lastName" name="last_name" v-model="userContext.profile.last_name"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="address">{{ t('views.profile.fields.address') }}</label>
-                                        <input type="text" class="form-control" id="address" name="address" v-model="userContext.profile.address"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="city">{{ t('views.profile.fields.city') }}</label>
-                                        <input type="text" class="form-control" id="city" name="city" v-model="userContext.profile.city"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="postal_code">{{ t('views.profile.fields.postal_code') }}</label>
-                                        <input type="text" class="form-control" id="postal_code" name="postal_code" v-model="userContext.profile.postal_code"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="country">{{ t('views.profile.fields.country') }}</label>
-                                        <input type="text" class="form-control" id="country" name="country" readonly v-model="userContext.profile.country"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" v-model="userContext.profile.tax_id"/>
-                                    </div>
-                                    <ErrorMessage name="tax_id" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" v-model="userContext.profile.ic_num"/>
-                                    </div>
-                                    <ErrorMessage name="ic_num" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="remarks">{{ t('views.profile.fields.remarks') }}</label>
-                                        <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks"/>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
-                                            <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
-                                            <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </VeeForm>
+                            </VeeForm>
+                            <div class="loader-overlay" v-if="loading"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="intro-y box col-span-12 2xl:col-span-6" v-if="mode === 'account_settings'">
@@ -221,7 +224,7 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <VeeForm id="changePasswordForm" @submit="onSubmit_ChangePassword" @invalid-submit="invalidSubmit_ChangePassword" :validation-schema="schema_changePassword" v-slot="{ handleReset, errors }">
+                        <VeeForm id="changePasswordForm" @submit="onSubmit_ChangePassword" @invalid-submit="invalidSubmit" :validation-schema="schema_changePassword" v-slot="{ handleReset, errors }">
                             <div class="pt-5 pr-5">
                                 <div class="mb-3">
                                     <div class="form-inline">
@@ -278,7 +281,6 @@ const { t, assetPath, isEmptyObject, route } = mainMixins();
 
 const schema = {
     name: 'required',
-    email: 'required|email',
     tax_id: 'required',
     ic_num: 'required',
 };
@@ -292,6 +294,8 @@ const schema_changePassword = {
 const alertErrors = ref({});
 const alertType = ref('');
 const alertTitle = ref('');
+
+const loading = ref(false);
 
 const userContext = computed(() => store.state.main.userContext );
 
@@ -319,9 +323,19 @@ onMounted(() => {
     setDashboardLayout(false);
 });
 
+function onSubmit(values, actions) {
+    axios.post(route('api.post.db.core.profile.update'), new FormData(cash('#profileForm')[0])).then(response => {
+        createSuccessAlert('changeProfile');
+    }).catch(e => {
+        handleError(e, actions);
+    }).finally(() => {
+
+    });
+}
+
 function onSubmit_ChangePassword(values, actions) {
     axios.post(route('api.post.db.core.profile.change_password'), new FormData(cash('#changePasswordForm')[0])).then(response => {
-        createChangePasswordSuccess();
+        createSuccessAlert('changePassword');
     }).catch(e => {
         handleError(e, actions);
     }).finally(() => {
@@ -346,7 +360,7 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit_ChangePassword(e) {
+function invalidSubmit(e) {
     alertErrors.value = e.errors;
 }
 
@@ -356,10 +370,17 @@ function resetAlertErrors() {
     alertTitle.value = '';
 }
 
-function createChangePasswordSuccess() {
-    alertErrors.value = {
-        password: 'Password Changed Successfully!'
-    };
+function createSuccessAlert(type) {
+    if (type === 'changePassword') {
+        alertErrors.value = {
+            password: 'Password Changed Successfully!'
+        };
+    } else if (type === 'changeProfile') {
+        alertErrors.value = {
+            password: 'Profile Changed Successfully!'
+        };
+    }
+
     alertType.value = 'success';
     alertTitle.value = 'Success';
 }
