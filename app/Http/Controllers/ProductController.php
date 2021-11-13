@@ -198,7 +198,8 @@ class ProductController extends BaseController
                 $point,
                 $is_use_serial,
                 $product_type,
-                $status
+                $status,
+                $product_units
             );
     
             if ($service == 0) {
