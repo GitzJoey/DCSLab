@@ -173,8 +173,6 @@ export default {
             dashboardLayout.value = newVal
         });
 
-        created
-
         onMounted(() => {
             cash('body')
                 .removeClass('error-page')
