@@ -64,7 +64,8 @@ class UnitController extends BaseController
         ]);
 
         $result = $this->UnitService->create(
-            Hashids::decode($request['company_id'])[0],
+            // Hashids::decode($request['company_id'])[0],
+            null,
             $request['code'],
             $request['name'],
             $request['category']

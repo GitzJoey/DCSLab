@@ -239,11 +239,12 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="supplier_id">{{ $t('fields.supplier_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.supplier.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.defaultSupplier" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.supplierDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ product.supplier.name }}
+                                    <!-- {{ product.supplier.name }} -->
+                                    {{ product.defaultSupplier }}
                                 </div>            
                             </div>
                         </div>
@@ -379,6 +380,7 @@ export default {
                     }
                 ],
                 tax_status: '',
+                defaultSupplier: '',
                 supplier: {hId: ''},
                 remarks: '',
                 point: '',
@@ -464,6 +466,7 @@ export default {
                     }
                 ],
                 tax_status: '0',
+                defaultSupplier: '',
                 supplier: {hId: ''},
                 remarks: '',
                 point: '',

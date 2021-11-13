@@ -69,7 +69,7 @@ class Product extends Model
         'deleted_at'
     ];
 
-    protected $appends = ['hId'];
+    protected $appends = ['hId', 'defaultSupplier'];
 
     public function getHIdAttribute() : string
     {
@@ -104,5 +104,11 @@ class Product extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function getDefaultSupplierAttribute()
+    {
+        if ($this->supplier) return $this->supplier->hId;
+        else return '';
     }
 }

@@ -49,8 +49,8 @@ class ProductBrandController extends BaseController
         ]);
 
         $result = $this->productBrandService->create(
-            Hashids::decode($request['company_id']),
-            // null,
+            // Hashids::decode($request['company_id']),
+            null,
             $request['code'],
             $request['name']
         );
