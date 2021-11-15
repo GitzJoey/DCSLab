@@ -37,8 +37,11 @@ class AuthenticatedEventListener
         $selectedCompany = null;
         if (empty(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))) {
             if ($usr->companies()->count() != 0) {
-                $selectedCompany = $usr->companies()->where('default', '=', 1)->first()->hId;
-                session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), $selectedCompany);
+                // $selectedCompany = $usr->companies()->where('default', '=', 1)->first()->hId;
+                $selectedCompany = $usr->companies()->where('default', '=', 1)->first();
+                if (is_null($selectedCompany) == false)  {
+                    session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), $selectedCompany->hId);
+                }
             }
         } else {
             $selectedCompany = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
