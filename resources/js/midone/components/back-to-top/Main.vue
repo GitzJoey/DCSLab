@@ -6,25 +6,20 @@
     </div>
 </template>
 
-<script>
-import { defineComponent, toRef } from "vue";
+<script setup>
+import { provide, toRef } from "vue";
 
-export default defineComponent({
-    name: "BackToTop",
-    props: {
-        visible: {type: Boolean, default: false},
-    },
-    setup(props) {
-        const visible = toRef(props, 'visible');
+const props = defineProps({
+    visible: {type: Boolean, default: false},
+});
 
-        function goTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+const visible = toRef(props, 'visible');
 
-        return {
-            goTop,
-            visible
-        }
-    }
+function goTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+provide('triggerBackToTop', () => {
+    goTop();
 });
 </script>

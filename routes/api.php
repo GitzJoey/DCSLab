@@ -70,7 +70,12 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
 
         Route::group(['prefix' => 'core', 'as' => '.core'], function() {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function() {
-                Route::post('update', [ProfileController::class, 'updateProfile'])->name('.update');
+                Route::group(['prefix' => 'update', 'as' => '.update'], function() {
+                    Route::post('profile', [ProfileController::class, 'updateProfile'])->name('.profile');
+                    Route::post('settings', [ProfileController::class, 'updateSettings'])->name('.settings');
+                    Route::post('roles', [ProfileController::class, 'updateRoles'])->name('.roles');
+                });
+
                 Route::post('change/password', [ProfileController::class, 'changePassword'])->name('.change_password');
             });
 

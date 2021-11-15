@@ -40,6 +40,17 @@ class ProfileRequest extends FormRequest
                     'ic_num' => 'required',
                     'remarks' => 'nullable',
                 ];
+            case 'updateRoles':
+                return [
+
+                ];
+            case 'updateSettings':
+                return [
+                    'theme' => 'required',
+                    'dateFormat' => 'required',
+                    'timeFormat' =>  'required',
+                    'apiToken' => 'nullable',
+                ];
             case 'changePassword':
                 return [
                     'current_password' => 'required',

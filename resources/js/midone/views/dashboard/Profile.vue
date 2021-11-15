@@ -150,45 +150,58 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <div class="pt-5 pr-5">
-                            <div class="mb-3">
-                                <div class="form-inline">
-                                    <label class="form-label w-40 px-3" for="inputTheme">{{ t('views.profile.fields.settings.theme') }}</label>
-                                    <select class="form-control form-select" id="inputTheme" name="theme" v-model="userContext.selectedSettings.theme">
-                                        <option value="side-menu-light-full">Menu Light</option>
-                                        <option value="side-menu-light-mini">Mini Menu Light</option>
-                                        <option value="side-menu-dark-full">Menu Dark</option>
-                                        <option value="side-menu-dark-mini">Mini Menu Dark</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="form-inline">
-                                    <label class="form-label w-40 px-3" for="selectDate">{{ t('views.profile.fields.settings.dateFormat') }}</label>
-                                    <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="userContext.selectedSettings.dateFormat">
-                                        <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
-                                        <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="form-inline">
-                                    <label class="form-label w-40 px-3" for="selectTime">{{ t('views.profile.fields.settings.timeFormat') }}</label>
-                                    <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="userContext.selectedSettings.timeFormat">
-                                        <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
-                                        <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="form-inline">
-                                    <label class="form-label w-40 px-3" for="api_token">{{ t('views.profile.fields.settings.api_token') }}</label>
-                                    <div class="form-check pr-5">
-                                        <input id="apiToken" name="" class="form-check-input" type="checkbox" value="" />
-                                        <label class="form-check-label" for="apiToken">{{ t('components.buttons.reset') }}</label>
+                        <div class="loader-container">
+                            <VeeForm id="profileSettingsForm" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_Settings" v-slot="{ handleReset, errors }">
+                                <div class="pt-5 pr-5">
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="inputTheme">{{ t('views.profile.fields.settings.theme') }}</label>
+                                            <select class="form-control form-select" id="inputTheme" name="theme" v-model="userContext.selectedSettings.theme">
+                                                <option value="side-menu-light-full">Menu Light</option>
+                                                <option value="side-menu-light-mini">Mini Menu Light</option>
+                                                <option value="side-menu-dark-full">Menu Dark</option>
+                                                <option value="side-menu-dark-mini">Mini Menu Dark</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="selectDate">{{ t('views.profile.fields.settings.dateFormat') }}</label>
+                                            <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="userContext.selectedSettings.dateFormat">
+                                                <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
+                                                <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="selectTime">{{ t('views.profile.fields.settings.timeFormat') }}</label>
+                                            <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="userContext.selectedSettings.timeFormat">
+                                                <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
+                                                <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <label class="form-label w-40 px-3" for="api_token">{{ t('views.profile.fields.settings.api_token') }}</label>
+                                            <div class="form-check pr-5">
+                                                <input id="apiToken" name="apiToken" class="form-check-input" type="checkbox" value="" />
+                                                <label class="form-check-label" for="apiToken">{{ t('components.buttons.reset') }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-inline">
+                                            <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
+                                                <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
+                                                <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </VeeForm>
+                            <div class="loader-overlay" v-if="loading"></div>
                         </div>
                     </div>
                 </div>
@@ -224,7 +237,7 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <VeeForm id="changePasswordForm" @submit="onSubmit_ChangePassword" @invalid-submit="invalidSubmit" :validation-schema="schema_changePassword" v-slot="{ handleReset, errors }">
+                        <VeeForm id="changePasswordForm" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_changePassword" v-slot="{ handleReset, errors }">
                             <div class="pt-5 pr-5">
                                 <div class="mb-3">
                                     <div class="form-inline">
@@ -285,6 +298,10 @@ const schema = {
     ic_num: 'required',
 };
 
+const schema_Settings = {
+
+};
+
 const schema_changePassword = {
     current_password: 'required',
     password: 'required',
@@ -324,23 +341,33 @@ onMounted(() => {
 });
 
 function onSubmit(values, actions) {
-    axios.post(route('api.post.db.core.profile.update'), new FormData(cash('#profileForm')[0])).then(response => {
-        createSuccessAlert('changeProfile');
-    }).catch(e => {
-        handleError(e, actions);
-    }).finally(() => {
+    if (mode.value === 'personal_info') {
+        axios.post(route('api.post.db.core.profile.update.profile'), new FormData(cash('#profileForm')[0])).then(response => {
+            createSuccessAlert('changeProfile');
+        }).catch(e => {
+            handleError(e, actions);
+        }).finally(() => {
 
-    });
-}
+        });
+    } else if (mode.value === 'account_settings') {
+        axios.post(route('api.post.db.core.profile.update.settings'), new FormData(cash('#profileSettingsForm')[0])).then(response => {
+            createSuccessAlert('changeSettings');
+        }).catch(e => {
+            handleError(e, actions);
+        }).finally(() => {
 
-function onSubmit_ChangePassword(values, actions) {
-    axios.post(route('api.post.db.core.profile.change_password'), new FormData(cash('#changePasswordForm')[0])).then(response => {
-        createSuccessAlert('changePassword');
-    }).catch(e => {
-        handleError(e, actions);
-    }).finally(() => {
+        });
+    } else if (mode.value === 'roles') {
 
-    });
+    } else {
+        axios.post(route('api.post.db.core.profile.change_password'), new FormData(cash('#changePasswordForm')[0])).then(response => {
+            createSuccessAlert('changePassword');
+        }).catch(e => {
+            handleError(e, actions);
+        }).finally(() => {
+
+        });
+    }
 }
 
 function handleError(e, actions) {
@@ -378,6 +405,10 @@ function createSuccessAlert(type) {
     } else if (type === 'changeProfile') {
         alertErrors.value = {
             password: 'Profile Changed Successfully!'
+        };
+    } else if (type === 'changeSettings') {
+        alertErrors.value = {
+            password: 'Settings Changed Successfully!'
         };
     }
 

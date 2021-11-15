@@ -74,11 +74,11 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="userForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+            <VeeForm id="userForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors, validate }">
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" @onBlur="validate"/>
                         <div class="" v-if="mode === 'show'">{{ user.name }}</div>
                     </div>
                     <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />

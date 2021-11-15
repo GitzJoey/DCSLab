@@ -44,13 +44,39 @@ class ProfileController extends BaseController
 
         $result = $this->userService->updateProfile($user, $profile, true);
 
-        return $result == null ? response()->error():response()->success();
+        return is_null($result) ? response()->error():response()->success();
     }
 
     public function changePassword(ProfileRequest $profileRequest)
     {
+        $request = $profileRequest->validated();
+
         $usr = Auth::user();
         $updateActions = new UpdateUserPassword();
         $updateActions->update($usr, $profileRequest->validated());
+    }
+
+    public function updateSettings(ProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+
+        $usr = Auth::user();
+        $settings = [
+            'PREFS.THEME' => $request['theme'],
+            'PREFS.DATE_FORMAT' => $request['dateFormat'],
+            'PREFS.TIME_FORMAT' => $request['timeFormat'],
+        ];
+
+        $result = $this->userService->updateSettings($usr, $settings, true);
+
+        if (array_key_exists('apiToken', $request))
+            $this->userService->resetTokens($usr->id);
+
+        return is_null($result) ? response()->error():response()->success();
+    }
+
+    public function updateRoles(ProfileRequest $profileRequest)
+    {
+
     }
 }

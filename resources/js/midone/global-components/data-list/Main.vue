@@ -89,134 +89,108 @@
     </div>
 </template>
 
-<script>
-import { defineComponent, onMounted, computed, ref, toRef } from 'vue'
+<script setup>
+import { onMounted, computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent( {
-    name: "DataList",
-    props: {
-        title: { type: String },
-        canPrint: { type: Boolean, default: false },
-        canExport: { type: Boolean, default: false },
-        enableSearch: { type: Boolean, default: false },
-        data: { type: Object, default: null },
-        enableCreate: { type: Boolean, default: true },
-        enableEdit: { type: Boolean, default: true },
-        enableDelete: { type: Boolean, default: true },
-        enableDeleteConfirmation: { type: Boolean, default: true },
-        enableView: { type: Boolean, default: true }
-    },
-    emits: [
-        'createNew',
-        'dataListChange',
-        'print',
-        'export'
-    ],
-    setup(props) {
-        const title = toRef(props, 'title');
-        const canPrint = toRef(props, 'canPrint');
-        const canExport = toRef(props, 'canExport');
-        const enableSearch = toRef(props, 'enableSearch');
-        const enableCreate = toRef(props, 'enableCreate');
-        const enableEdit = toRef(props, 'enableEdit');
-        const enableDelete = toRef(props, 'enableDelete');
-        const enableDeleteConfirmation = toRef(props, 'enableDeleteConfirmation');
-        const enableView = toRef(props, 'enableView');
-        const search = ref('');
+const props = defineProps({
+    title: { type: String },
+    canPrint: { type: Boolean, default: false },
+    canExport: { type: Boolean, default: false },
+    enableSearch: { type: Boolean, default: false },
+    data: { type: Object, default: null },
+    enableCreate: { type: Boolean, default: true },
+    enableEdit: { type: Boolean, default: true },
+    enableDelete: { type: Boolean, default: true },
+    enableDeleteConfirmation: { type: Boolean, default: true },
+    enableView: { type: Boolean, default: true }
+});
 
-        const pageSize = ref(10);
-        const data = toRef(props, 'data');
+const emit = defineEmits(['createNew', 'dataListChange', 'print', 'export']);
 
-        const loading = computed(() => {
-            return data.value.data === undefined;
-        });
+const title = toRef(props, 'title');
+const canPrint = toRef(props, 'canPrint');
+const canExport = toRef(props, 'canExport');
+const enableSearch = toRef(props, 'enableSearch');
+const enableCreate = toRef(props, 'enableCreate');
+const enableEdit = toRef(props, 'enableEdit');
+const enableDelete = toRef(props, 'enableDelete');
+const enableDeleteConfirmation = toRef(props, 'enableDeleteConfirmation');
+const enableView = toRef(props, 'enableView');
+const search = ref('');
 
-        const dataNotFound = computed(() => {
-            return data.value.data !== undefined && data.value.data.length === 0;
-        });
+const pageSize = ref(10);
 
-        const pages = computed(() => {
-            if (data.value.current_page !== undefined && data.value.last_page !== undefined) {
-                 return paginate(data.value.total, data.value.current_page, data.value.per_page, 5);
-            } else {
-                return [];
-            }
-        });
+const data = toRef(props, 'data');
 
-        const first = computed(()=> { return 1; });
-        let previous = computed(()=> {
-            if (data.value.current_page === undefined) return 1;
-            if (data.value.current_page === 1) return 1;
-            return data.value.current_page - 1;
-        });
-        const next = computed(()=> {
-            if (data.value.current_page === undefined) return 1;
-            if (data.value.current_page === data.value.last_page) return data.value.last_page;
-            return data.value.current_page + 1;
-        });
-        const last = computed(()=> { return data.value.last_page; });
+const loading = computed(() => {
+    return data.value.data === undefined;
+});
 
-        const { t } = useI18n();
+const dataNotFound = computed(() => {
+    return data.value.data !== undefined && data.value.data.length === 0;
+});
 
-        function paginate(totalItems, currentPage, pageSize, maxPages) {
-            let totalPages = Math.ceil(totalItems / pageSize);
+const pages = computed(() => {
+    if (data.value.current_page !== undefined && data.value.last_page !== undefined) {
+         return paginate(data.value.total, data.value.current_page, data.value.per_page, 5);
+    } else {
+        return [];
+    }
+});
 
-            if (currentPage < 1) {
-                currentPage = 1;
-            } else if (currentPage > totalPages) {
-                currentPage = totalPages;
-            }
+const first = computed(()=> { return 1; });
 
-            let startPage;
-            let endPage;
-            if (totalPages <= maxPages) {
-                startPage = 1;
-                endPage = totalPages;
-            } else {
-                let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
-                let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
-                if (currentPage <= maxPagesBeforeCurrentPage) {
-                    startPage = 1;
-                    endPage = maxPages;
-                } else if (currentPage + maxPagesAfterCurrentPage >= totalPages) {
-                    startPage = totalPages - maxPages + 1;
-                    endPage = totalPages;
-                } else {
-                    startPage = currentPage - maxPagesBeforeCurrentPage;
-                    endPage = currentPage + maxPagesAfterCurrentPage;
-                }
-            }
+let previous = computed(()=> {
+    if (data.value.current_page === undefined) return 1;
+    if (data.value.current_page === 1) return 1;
+    return data.value.current_page - 1;
+});
 
-            let startIndex = (currentPage - 1) * pageSize;
-            let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+const next = computed(()=> {
+    if (data.value.current_page === undefined) return 1;
+    if (data.value.current_page === data.value.last_page) return data.value.last_page;
+    return data.value.current_page + 1;
+});
 
-            let pages = Array.from(Array((endPage + 1) - startPage).keys()).map(i => startPage + i);
+const last = computed(()=> { return data.value.last_page; });
 
-            return pages;
-        }
+const { t } = useI18n();
 
-        return {
-            t,
-            title,
-            canPrint,
-            canExport,
-            enableSearch,
-            enableCreate,
-            enableEdit,
-            enableDelete,
-            enableView,
-            data,
-            loading,
-            pages,
-            pageSize,
-            first,
-            previous,
-            next,
-            last,
-            search,
-            dataNotFound,
+function paginate(totalItems, currentPage, pageSize, maxPages) {
+    let totalPages = Math.ceil(totalItems / pageSize);
+
+    if (currentPage < 1) {
+        currentPage = 1;
+    } else if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    let startPage;
+    let endPage;
+    if (totalPages <= maxPages) {
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
+        let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
+        if (currentPage <= maxPagesBeforeCurrentPage) {
+            startPage = 1;
+            endPage = maxPages;
+        } else if (currentPage + maxPagesAfterCurrentPage >= totalPages) {
+            startPage = totalPages - maxPages + 1;
+            endPage = totalPages;
+        } else {
+            startPage = currentPage - maxPagesBeforeCurrentPage;
+            endPage = currentPage + maxPagesAfterCurrentPage;
         }
     }
-})
+
+    let startIndex = (currentPage - 1) * pageSize;
+    let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+
+    let pages = Array.from(Array((endPage + 1) - startPage).keys()).map(i => startPage + i);
+
+    return pages;
+}
 </script>
