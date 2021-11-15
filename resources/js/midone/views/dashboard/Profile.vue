@@ -352,6 +352,7 @@ function onSubmit(values, actions) {
     } else if (mode.value === 'account_settings') {
         axios.post(route('api.post.db.core.profile.update.settings'), new FormData(cash('#profileSettingsForm')[0])).then(response => {
             createSuccessAlert('changeSettings');
+            store.dispatch('main/fetchUserContext');
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {

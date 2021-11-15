@@ -77,20 +77,24 @@
             </div>
             <div class="intro-y box mt-5" v-if="mode === 'create'">
                 <div class="container p-5">
-                    <div class="mb-3">
-                        <label for="tagsTo" class="form-label">{{ t('views.inbox.fields.to') }}</label>
-                        <TomSelectAjax v-model="tagsTo" class="w-full" multiple :searchURL="route('api.get.db.core.inbox.search.users')"></TomSelectAjax>
-                    </div>
-                    <div class="mb-3">
-                        <label for="subject" class="form-label">{{ t('views.inbox.fields.subject') }}</label>
-                        <input type="text" id="subject" class="form-control" v-model="inbox.subject" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="messages" class="form-label">{{ t('views.inbox.fields.message') }}</label>
-                        <textarea id="messages" class="form-control" v-model="inbox.message" rows="5"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <button class="btn btn-primary">{{ t('components.buttons.submit') }}</button>
+                    <div class="loader-container">
+                        <VeeForm id="inboxForm" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                            <div class="mb-3">
+                                <label for="tagsTo" class="form-label">{{ t('views.inbox.fields.to') }}</label>
+                                <TomSelectAjax v-model="message.to" class="w-full" multiple :searchURL="route('api.get.db.core.inbox.search.users')"></TomSelectAjax>
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">{{ t('views.inbox.fields.subject') }}</label>
+                                <input type="text" id="subject" class="form-control" v-model="message.subject" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="messages" class="form-label">{{ t('views.inbox.fields.message') }}</label>
+                                <textarea id="messages" class="form-control" v-model="message.text" rows="5"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-primary">{{ t('components.buttons.submit') }}</button>
+                            </div>
+                        </VeeForm>
                     </div>
                 </div>
             </div>
@@ -105,17 +109,12 @@ import mainMixins from '../../mixins';
 const { t, route, assetPath } = mainMixins();
 
 const mode = ref('list');
-const inboxList = ref([]);
 const messageList = ref([]);
-const tagsTo = ref({});
-const inbox = ref({
-    hId: '',
-    to: '',
+const message = ref({
+    to: [],
     subject: '',
-    message: ''
+    text: ''
 });
-const newMessage = ref('');
-const subjectEdited = ref('');
 
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
@@ -126,9 +125,20 @@ onMounted(() => {
 
 function createNew() {
     mode.value = 'create';
+    message.value = emptyMessage();
+}
+
+function emptyMessage() {
+    return {
+        to: [],
+        subject: '',
+        text: ''
+    };
 }
 
 function getInbox() {
+
+
     axios.get(route('api.get.db.core.inbox.list.thread')).then(response => {
         userList.value = response.data;
     }).catch(e => {

@@ -73,7 +73,7 @@ class InboxController extends BaseController
 
     public function show($id)
     {
-        $usr = Auth::user()->id;
+        $usr = Auth::id();
 
         $t = $this->inboxService->getThread($id);
 
@@ -91,14 +91,11 @@ class InboxController extends BaseController
         return $mm;
     }
 
-    public function store(Request $request)
+    public function store(InboxRequest $inboxRequest)
     {
-        $request->validate([
-            'to' => 'required',
-            'subject' => 'required'
-        ]);
+        $request = $inboxRequest->validated();
 
-        $usrId = Auth::user()->id;
+        $usrId = Auth::id();
 
         $decryptedTo = [];
 
@@ -109,15 +106,7 @@ class InboxController extends BaseController
 
         $result = $this->inboxService->store($usrId, $decryptedTo, $request['subject'], $request['message']);
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-            'message' => ''
-            ],200);
-        }
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function update(Request $request)

@@ -79,6 +79,11 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
                 Route::post('change/password', [ProfileController::class, 'changePassword'])->name('.change_password');
             });
 
+            Route::group(['prefix' => 'inbox', 'as' => '.inbox'], function() {
+                Route::post('save', [InboxController::class, 'store'])->name('.save');
+                Route::post('edit', [InboxController::class, 'update'])->name('.edit');
+            });
+
             Route::group(['prefix' => 'activity', 'as' => '.activity'], function() {
                 Route::post('log/route', [ActivityLogController::class, 'logRouteActivity'])->name('.log_route');
             });
