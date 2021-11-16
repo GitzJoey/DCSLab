@@ -292,6 +292,8 @@ import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 const store = useStore();
 const { t, assetPath, isEmptyObject, route } = mainMixins();
 
+const rolesList = ref([]);
+
 const schema = {
     name: 'required',
     tax_id: 'required',
@@ -338,7 +340,15 @@ function changeTab(name) {
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
+
+    getRoles();
 });
+
+function getRoles() {
+    axios.get(route('api.get.db.admin.users.roles.read')).then(response => {
+        rolesList.value = response.data;
+    })
+}
 
 function onSubmit(values, actions) {
     if (mode.value === 'personal_info') {
