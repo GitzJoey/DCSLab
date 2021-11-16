@@ -11,7 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 
 use App\Models\Employee;
-use App\Models\ProductGroup;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\ActivityLogger;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -126,9 +125,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Employee::class);
     }
 
-    public function groups()
+    public function productgroups()
     {
-        return $this->belongsTo(ProductGroup::class);
+        return $this->belongsToMany(ProductGroup::class);
     }
 
     public static function boot()

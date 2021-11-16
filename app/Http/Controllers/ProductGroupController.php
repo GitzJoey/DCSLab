@@ -74,11 +74,14 @@ class ProductGroupController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
+        $userId = Auth::user()->id;
+
         $result = $this->productGroupService->create(
             $company_id,
             $request['code'],
             $request['name'],
-            $request['category']
+            $request['category'],
+            $userId
         );
 
         return $result == 0 ? response()->error():response()->success();

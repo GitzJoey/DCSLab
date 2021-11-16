@@ -8,7 +8,8 @@ interface ProductGroupService
         $company_id,
         $code,
         $name,
-        $category
+        $category,
+        $userId
     );
 
     public function read($userId);
