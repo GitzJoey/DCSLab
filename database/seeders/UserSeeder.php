@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Services\RoleService;
 use App\Services\UserService;
 use Exception;
 use Carbon\Carbon;
@@ -11,6 +12,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\User;
 use App\Models\Profile;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -44,6 +46,9 @@ class UserSeeder extends Seeder
                 $usr->profile()->save($profile);
 
                 $setting = $instances->make(UserService::class)->createDefaultSetting();
+                $roles = $instances->make(RoleService::class)->readBy('NAME', Config::get('const.DEFAULT.ROLE.USER'));
+
+                $usr->attachRoles([$roles->id]);
 
                 $usr->settings()->saveMany($setting);
             } catch (Exception $e) {
