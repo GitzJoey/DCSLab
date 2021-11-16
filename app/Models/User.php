@@ -125,6 +125,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Employee::class);
     }
 
+    public function productgroups()
+    {
+        return $this->belongsToMany(ProductGroup::class);
+    }
+
     public static function boot()
     {
         parent::boot();

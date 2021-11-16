@@ -17,12 +17,16 @@ class ProductGroupServiceImpl implements ProductGroupService
         $company_id,
         $code,
         $name,
-        $category
+        $category,
+        $userId
     )
     {
         DB::beginTransaction();
 
         try {
+            $user = User::find($userId);
+            if ($user->productgroups()->count() == 0) $default = 1;
+
             $productgroup = new ProductGroup();
             $productgroup->company_id = $company_id;
             $productgroup->code = $code;
@@ -30,6 +34,8 @@ class ProductGroupServiceImpl implements ProductGroupService
             $productgroup->category = $category;
 
             $productgroup->save();
+
+            $user->productgroups()->attach([$productgroup->id]);
 
             DB::commit();
 
@@ -43,8 +49,11 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        return ProductGroup::paginate();
+        // $usr = User::find($userId)->first();
+        // $productgroup = $usr->productgroups()->where('user_id', '=', $userId)->pluck('productgroup_id');
+        // return ProductGroup::whereIn('id', $productgroup)->paginate();
+        $user = User::find($userId)->first();
+        return ProductGroup::where('created_by', '=', $userId)->paginate();
     }
 
     public function getAllProductGroup()
