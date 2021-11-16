@@ -53,7 +53,8 @@ class ProductController extends BaseController
 
     public function read_product()
     {
-        return $this->productService->read_product();
+        $userId = Auth::user()->id;
+        return $this->productService->read_product($userId);
     }
 
     public function read_service()
