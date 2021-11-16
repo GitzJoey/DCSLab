@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Services\RoleService;
 use App\Services\UserService;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
@@ -58,7 +59,7 @@ class AppHelper extends Command
             $this->info('[1] Update Composer And NPM');
             $this->info('[2] Clear All Cache');
             $this->info('[3] Change User Roles');
-            $this->info('[4] Seed Users');
+            $this->info('[4] Seed Users & Roles');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
@@ -77,7 +78,7 @@ class AppHelper extends Command
                     $this->info('Done!');
                     break;
                 case 4:
-                    $this->seedUser();
+                    $this->seedUserAndRoles();
                     break;
                 case 'X':
                 default:
@@ -89,19 +90,42 @@ class AppHelper extends Command
         $this->info('Bye!');
     }
 
-    private function seedUser()
+    private function seedUserAndRoles()
     {
-        $truncate = $this->confirm('Do you want to truncate the users table first?', false);
-        $count = $this->ask('How many data:', 100);
+        $user = $this->confirm('Do you want to seed users?', true);
+        $roles = $this->confirm('Do you want to seed roles?', true);
 
-        $this->info('Seeding...');
+        if ($user)
+        {
+            $this->info('Starting UserSeeder');
+            $truncate = $this->confirm('Do you want to truncate the users table first?', false);
+            $count = $this->ask('How many data:', 100);
 
-        $seeder = new UserSeeder();
-        $seeder->callWith(UserSeeder::class, [$truncate, $count]);
+            $this->info('Seeding...');
 
-        $this->info('Done.');
+            $seeder = new UserSeeder();
+            $seeder->callWith(UserSeeder::class, [$truncate, $count]);
+
+            $this->info('UserSeeder Finish.');
+        }
 
         sleep(3);
+
+        if ($roles)
+        {
+            $this->info('Starting RoleSeeder');
+            $count = $this->ask('How many data:', 10);
+
+            $this->info('Seeding...');
+
+            $seeder = new RoleSeeder();
+            $seeder->callWith(RoleSeeder::class, [true, $count]);
+
+            $this->info('RoleSeeder Finish.');
+        }
+
+        sleep(3);
+        $this->info('Done.');
     }
 
     private function changeUserRoles()
