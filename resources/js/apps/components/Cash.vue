@@ -204,6 +204,8 @@ export default {
                 is_bank: '',
                 status: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

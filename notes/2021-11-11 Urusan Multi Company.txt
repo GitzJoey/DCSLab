@@ -1,8 +1,7 @@
-Cek CompanyServiceImpl, liat fungsi read
+Cek ProductServiceImpl, liat fungsi read
 
 Implementasiin fungsi read kaya gitu ke :
-+ Branches
-+ Warehouses
+
 + Cashes
 + Investors
 + Capital Groups
@@ -11,6 +10,5 @@ Implementasiin fungsi read kaya gitu ke :
 + Product Groups
 + Product Brands
 + Units
-+ Products
 + Customer Groups
 + Customers

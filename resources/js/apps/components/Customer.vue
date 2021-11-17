@@ -325,6 +325,8 @@ export default {
                 status: '',
             },
             customergroupDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

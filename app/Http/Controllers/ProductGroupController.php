@@ -32,14 +32,11 @@ class ProductGroupController extends BaseController
     }
 
     public function read()
-    {
-        // if (!parent::hasSelectedCompanyOrCompany() == false) {
-        //     return response()->error(trans('error_messages.unable_to_find_selected_company'));
-        // }
+    {        
+        if (!parent::hasSelectedCompanyOrCompany() == false) {
+            return response()->error(trans('error_messages.unable_to_find_selected_company'));          
+        }
 
-        // if (!parent::hasSelectedCompanyOrCompany())
-        // return response()->error(trans('error_messages.unable_to_find_selected_company'));
-        
         $userId = Auth::user()->id;
         return $this->productGroupService->read($userId);
     }
@@ -59,9 +56,9 @@ class ProductGroupController extends BaseController
         return $this->productGroupService->getAllService();
     }
 
-    public function GetAllProductandService()
+    public function getAllProductandService()
     {
-        return $this->productGroupService->GetAllProductandService();
+        return $this->productGroupService->getAllProductandService();
     }
 
     public function store(Request $request)
@@ -74,14 +71,11 @@ class ProductGroupController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $userId = Auth::user()->id;
-
         $result = $this->productGroupService->create(
             $company_id,
             $request['code'],
             $request['name'],
-            $request['category'],
-            $userId
+            $request['category']
         );
 
         return $result == 0 ? response()->error():response()->success();

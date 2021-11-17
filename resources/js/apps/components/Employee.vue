@@ -281,6 +281,8 @@ export default {
             },
             companyDDL: [],
             countriesDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
