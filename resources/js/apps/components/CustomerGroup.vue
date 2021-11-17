@@ -388,6 +388,8 @@ export default {
                 cash: {id:''}
             },
             cashDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

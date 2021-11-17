@@ -9,7 +9,6 @@ interface ProductGroupService
         $code,
         $name,
         $category,
-        $userId
     );
 
     public function read($userId);

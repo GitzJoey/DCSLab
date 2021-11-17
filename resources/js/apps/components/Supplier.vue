@@ -263,6 +263,8 @@ export default {
                 remarks: '',
                 status: '1',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

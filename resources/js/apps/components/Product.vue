@@ -424,6 +424,8 @@ export default {
             unitDDL: [],
             supplierDDL: [],
             statusDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

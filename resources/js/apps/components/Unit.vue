@@ -108,13 +108,13 @@
                                 <select class="form-control" id="category" name="category" v-model="unit.category" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
                                     <option value="1">{{ $t('categoryDDL.productunit') }}</option>
-                                    <option value="2">{{ $t('categoryDDL.servicetunit') }}</option>
-                                    <option value="3">{{ $t('categoryDDL.productandservicetunit') }}</option>
+                                    <option value="2">{{ $t('categoryDDL.serviceunit') }}</option>
+                                    <option value="3">{{ $t('categoryDDL.productandserviceunit') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="unit.category === 1">{{ $t('categoryDDL.producttunit') }}</span>
-                                    <span v-if="unit.category === 2">{{ $t('categoryDDL.servicetunit') }}</span>
-                                    <span v-if="unit.category === 3">{{ $t('categoryDDL.productandservicetunit') }}</span>
+                                    <span v-if="unit.category === 1">{{ $t('categoryDDL.productunit') }}</span>
+                                    <span v-if="unit.category === 2">{{ $t('categoryDDL.serviceunit') }}</span>
+                                    <span v-if="unit.category === 3">{{ $t('categoryDDL.productandserviceunit') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -184,6 +184,8 @@ export default {
                 name: '',
                 category: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

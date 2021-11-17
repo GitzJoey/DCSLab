@@ -237,6 +237,8 @@ export default {
                 status: '',
             },
             companyDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
