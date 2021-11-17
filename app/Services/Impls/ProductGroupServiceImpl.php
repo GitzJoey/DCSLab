@@ -25,7 +25,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
         try {
             $user = User::find($userId);
-            if ($user->productgroups()->count() == 0) $default = 1;
+            if ($user->productgroupsx()->count() == 0) $default = 1;
 
             $productgroup = new ProductGroup();
             $productgroup->company_id = $company_id;
