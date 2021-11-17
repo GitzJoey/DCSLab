@@ -22,7 +22,7 @@ interface ProductService
 
     public function read($userId);
 
-    public function read_product();
+    public function read_product($userId);
 
     public function read_service();
 
