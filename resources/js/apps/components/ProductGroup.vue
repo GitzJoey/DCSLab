@@ -184,6 +184,8 @@ export default {
                 name: '',
                 category: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

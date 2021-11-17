@@ -263,6 +263,8 @@ export default {
             groupDDL: [],
             unitDDL: [],
             statusDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {

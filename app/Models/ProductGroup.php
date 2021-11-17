@@ -45,6 +45,11 @@ class ProductGroup extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
+
+    public function user()
+    {
+        return $this->belongsToMany(User::class);
+    }
     
     public function company()
     {

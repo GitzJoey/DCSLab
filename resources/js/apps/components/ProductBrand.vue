@@ -165,6 +165,8 @@ export default {
                 code: '',
                 name: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
