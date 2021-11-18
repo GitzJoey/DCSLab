@@ -55,8 +55,9 @@ class CapitalServiceImpl implements CapitalService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        return Capital::with('investor', 'group', 'cash')->paginate();
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Capital::with('investor', 'group', 'cash')->whereIn('company_id', $company_list)->paginate();
     }
 
     public function update(

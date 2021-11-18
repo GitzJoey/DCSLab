@@ -51,7 +51,6 @@ class ProductUnitServiceImpl implements ProductUnitService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
         return ProductUnit::paginate();
     }
 

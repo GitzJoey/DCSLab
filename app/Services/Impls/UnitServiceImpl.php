@@ -43,8 +43,9 @@ class UnitServiceImpl implements UnitService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        return Unit::paginate();
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Unit::whereIn('company_id', $company_list)->paginate();
     }
 
     public function getAllUnit()
