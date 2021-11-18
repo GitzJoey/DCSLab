@@ -12,6 +12,18 @@ class BaseController extends Controller
 
     }
 
+    // public function hasSelectedCompanyOrCompany()
+    // {
+    //     $result = true;
+    //     if (empty(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))) {
+    //         $company = auth()->user()->companies();
+    //         if ($company->count() == 0 and $company->where('default', '=', 1)->count() == 0) {
+    //             $result = false;
+    //         }
+    //     }
+    //     return $result;
+    // }
+    
     public function hasSelectedCompanyOrCompany()
     {
         $result = true;
