@@ -33,9 +33,9 @@ class ProductGroupController extends BaseController
 
     public function read()
     {        
-        // if (!parent::hasSelectedCompanyOrCompany() == false) {
-        //     return response()->error(trans('error_messages.unable_to_find_selected_company'));          
-        // }
+        if (!parent::hasSelectedCompanyOrCompany() == true) {
+            return response()->error(trans('error_messages.unable_to_find_selected_company'));          
+        }
 
         $userId = Auth::user()->id;
         return $this->productGroupService->read($userId);

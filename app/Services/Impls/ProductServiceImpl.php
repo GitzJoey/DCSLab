@@ -129,9 +129,12 @@ class ProductServiceImpl implements ProductService
                 ->paginate();
     }
 
-    public function read_service()
+    public function read_service($userId)
     {
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
         return Product::with('group', 'brand', 'product_unit.unit')
+                ->whereIn('company_id', $company_list)
                 ->where('product_type', '=', 4)
                 ->paginate();
     }
