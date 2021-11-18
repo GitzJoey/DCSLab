@@ -46,8 +46,9 @@ class CashServiceImpl implements CashService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        return Cash::paginate();
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Cash::whereIn('company_id', $company_list)->paginate();
     }
 
     public function getAllActiveCash()

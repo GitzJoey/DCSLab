@@ -295,6 +295,9 @@ export default {
             axios.get(route('api.get.dashboard.capital.read') + '?page=' + page) .then(response => {
                 this.capitalList = response.data;
                 this.loading = false;
+            }).catch(e => {
+                this.handleListError(e);
+                this.loading = false;
             });
         },
         getAllInvestor() {
