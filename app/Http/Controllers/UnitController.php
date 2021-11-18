@@ -8,6 +8,7 @@ use App\Services\UnitService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class UnitController extends BaseController
 {
@@ -32,6 +33,9 @@ class UnitController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
         $userId = Auth::user()->id;
         return $this->UnitService->read($userId);
     }
@@ -63,9 +67,11 @@ class UnitController extends BaseController
             'name' => 'required|max:255'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->UnitService->create(
-            // Hashids::decode($request['company_id'])[0],
-            null,
+            $company_id,
             $request['code'],
             $request['name'],
             $request['category']
@@ -80,9 +86,12 @@ class UnitController extends BaseController
             'name' => 'required|max:255',
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->UnitService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['category']

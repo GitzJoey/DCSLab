@@ -8,6 +8,7 @@ use App\Services\SupplierService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class SupplierController extends BaseController
 {
@@ -33,6 +34,9 @@ class SupplierController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
         $userId = Auth::user()->id;
         return $this->SupplierService->read($userId);
     }
@@ -50,13 +54,15 @@ class SupplierController extends BaseController
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
         
         $is_tax = $request['is_tax'];
         $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
 
         $result = $this->SupplierService->create(
-            // Hashids::decode($request['company_id'])[0],
-            null,
+            $company_id,
             $request['code'],
             $request['name'], 
             $request['term'], 
@@ -80,12 +86,15 @@ class SupplierController extends BaseController
             'status' => 'required'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $is_tax = $request['is_tax'];
         $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
 
         $result = $this->SupplierService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['term'],

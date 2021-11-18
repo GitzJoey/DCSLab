@@ -8,6 +8,7 @@ use App\Services\CashService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class CashController extends BaseController
 {
@@ -32,6 +33,9 @@ class CashController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
         $userId = Auth::user()->id;
         return $this->CashService->read($userId);
     }
@@ -48,12 +52,15 @@ class CashController extends BaseController
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
         
         $is_bank = $request['is_bank'];
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
         $result = $this->CashService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'], 
             $request['name'], 
             $is_bank, 
@@ -71,12 +78,15 @@ class CashController extends BaseController
             'status' => 'required'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $is_bank = $request['is_bank'];
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
         $result = $this->CashService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $is_bank,

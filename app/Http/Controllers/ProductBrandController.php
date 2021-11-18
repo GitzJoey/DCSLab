@@ -8,6 +8,7 @@ use App\Services\ProductBrandService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class ProductBrandController extends BaseController
 {
@@ -32,6 +33,9 @@ class ProductBrandController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
         $userId = Auth::user()->id;
         return $this->productBrandService->read($userId);
     }
@@ -47,10 +51,12 @@ class ProductBrandController extends BaseController
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'productbrands')],
             'name' => 'required|max:255'
         ]);
+        
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
         $result = $this->productBrandService->create(
-            // Hashids::decode($request['company_id']),
-            null,
+            $company_id,
             $request['code'],
             $request['name']
         );
@@ -64,9 +70,12 @@ class ProductBrandController extends BaseController
             'name' => 'required|max:255',
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->productBrandService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
         );

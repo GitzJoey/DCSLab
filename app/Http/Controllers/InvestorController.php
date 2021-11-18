@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class InvestorController extends BaseController
 {
@@ -33,6 +34,9 @@ class InvestorController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
         $userId = Auth::user()->id;
         return $this->investorService->read($userId);
     }
@@ -50,8 +54,11 @@ class InvestorController extends BaseController
             'status' => 'required'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->investorService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'], 
             $request['contact'], 
@@ -73,9 +80,12 @@ class InvestorController extends BaseController
             'status' => 'required'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->investorService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['contact'],

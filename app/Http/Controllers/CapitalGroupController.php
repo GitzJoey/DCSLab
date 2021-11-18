@@ -8,6 +8,7 @@ use App\Services\CapitalGroupService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class CapitalGroupController extends BaseController
 {
@@ -32,6 +33,9 @@ class CapitalGroupController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
         $userId = Auth::user()->id;
         return $this->capitalGroupService->read($userId);
     }
@@ -48,8 +52,11 @@ class CapitalGroupController extends BaseController
             'name' => 'required|max:255'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->capitalGroupService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name']
         );
@@ -64,9 +71,12 @@ class CapitalGroupController extends BaseController
             'name' => 'required|max:255',
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->capitalGroupService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
         );
