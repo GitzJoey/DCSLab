@@ -255,7 +255,7 @@ export default {
             contentHidden: false,
             investorList: [],
             investor: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 contact: '',
                 address: '',
@@ -297,7 +297,7 @@ export default {
         },
         emptyInvestor() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 contact: '',
                 address: '',

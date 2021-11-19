@@ -231,7 +231,7 @@ export default {
             contentHidden: false,
             cashList: [],
             cash: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 is_bank: '',
                 status: '',
@@ -269,7 +269,7 @@ export default {
         },
         emptyCash() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 is_bank: '',
                 status: '1',

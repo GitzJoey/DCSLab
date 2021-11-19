@@ -73,6 +73,11 @@ class ProductController extends BaseController
             'name' => 'required|max:255',
             'status' => 'required',
         ]);
+        
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
 
         $faker = \Faker\Factory::create('id_ID');
         if ($request->code == '[AUTO]') {

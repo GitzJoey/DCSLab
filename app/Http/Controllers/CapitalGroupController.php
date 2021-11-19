@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
 
 class CapitalGroupController extends BaseController
 {
@@ -51,6 +52,11 @@ class CapitalGroupController extends BaseController
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'capitalgroups')],
             'name' => 'required|max:255'
         ]);
+
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];

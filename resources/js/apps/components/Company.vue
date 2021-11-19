@@ -261,7 +261,7 @@ export default {
         },
         emptyCompany() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 default: '',
                 status: '1',

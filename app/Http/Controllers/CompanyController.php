@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\RandomGenerator;
 use App\Rules\uniqueCode;
 use App\Services\CompanyService;
 use App\Services\ActivityLogService;
@@ -46,6 +47,12 @@ class CompanyController extends BaseController
 
     public function store(Request $request)
     {
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+            // $request->code = (new RandomGenerator())->generateOne(99999999);
+        };
+
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'companies')],
             'name' => 'required|max:255',

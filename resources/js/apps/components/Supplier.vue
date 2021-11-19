@@ -284,7 +284,7 @@ export default {
             contentHidden: false,
             supplierList: [],
             supplier: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 term: '',
                 contact: '',
@@ -328,7 +328,7 @@ export default {
         },
         emptySupplier() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 term: '',
                 contact: '',

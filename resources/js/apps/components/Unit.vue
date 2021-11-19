@@ -212,7 +212,7 @@ export default {
             contentHidden: false,
             unitList: [],
             unit: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             },
@@ -249,7 +249,7 @@ export default {
         },
         emptyUnit() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             }

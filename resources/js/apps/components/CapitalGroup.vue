@@ -190,7 +190,7 @@ export default {
             contentHidden: false,
             capitalgroupList: [],
             capitalgroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
             },
             listErrors: [],
@@ -226,7 +226,7 @@ export default {
         },
         emptyCapitalGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
             }
         },

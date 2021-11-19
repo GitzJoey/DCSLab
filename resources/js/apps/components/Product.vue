@@ -487,14 +487,14 @@ export default {
         },
         emptyProduct() {
             return {
-                code: '[AUTO]',
+                code: 'AUTO',
                 group: {hId: ''},
                 brand: {hId: ''},
                 name: '',
                 product_unit: [
                     {
                         hId: '',
-                        code: '[AUTO]',
+                        code: 'AUTO',
                         is_base: '1',
                         conversion_value: '1',
                         is_primary_unit: '1',
@@ -538,7 +538,7 @@ export default {
         createNewProductUnit() {
             var product_unit = {
                 hId: '',
-                code: '[AUTO]',
+                code: 'AUTO',
                 conversion_value: '0',
                 unit: {hId: ''}
             };
