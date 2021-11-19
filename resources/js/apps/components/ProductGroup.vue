@@ -212,7 +212,7 @@ export default {
             contentHidden: false,
             productgroupList: [],
             productgroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             },
@@ -249,7 +249,7 @@ export default {
         },
         emptyProductGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             }

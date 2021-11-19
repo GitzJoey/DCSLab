@@ -194,7 +194,7 @@ export default {
             productbrandList: [],
             productbrand: {
                 company: {hId: ''},
-                code: '',
+                code: 'AUTO',
                 name: '',
             },
             listErrors: [],
@@ -231,7 +231,7 @@ export default {
         emptyProductBrand() {
             return {
                 company: {hId: ''},
-                code: '',
+                code: 'AUTO',
                 name: '',
             }
         },

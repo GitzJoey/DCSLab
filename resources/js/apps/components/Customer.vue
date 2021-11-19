@@ -339,7 +339,7 @@ export default {
             contentHidden: false,
             customerList: [],
             customer: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 customer_group: {id:''},
                 sales_territory: '',
@@ -396,7 +396,7 @@ export default {
         },
         emptyCustomer() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 customer_group: {id:''},
                 sales_territory: '',

@@ -396,7 +396,7 @@ export default {
             contentHidden: false,
             customergroupList: [],
             customergroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 is_member_card: '',
                 use_limit_outstanding_notes: '',
@@ -459,7 +459,7 @@ export default {
         },
         emptyCustomerGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 is_member_card: '',
                 use_limit_outstanding_notes: '',
