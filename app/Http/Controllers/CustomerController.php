@@ -8,6 +8,7 @@ use App\Services\CustomerService;
 use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
+use Illuminate\Support\Facades\Config;
 
 class CustomerController extends BaseController
 {
@@ -32,6 +33,9 @@ class CustomerController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+            return response()->error(trans('error_messages.unable_to_find_selected_company'));
+            
         $userId = Auth::user()->id;
         return $this->CustomerService->read($userId);
     }
@@ -44,6 +48,9 @@ class CustomerController extends BaseController
             'status' => 'required',
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
 
@@ -54,7 +61,7 @@ class CustomerController extends BaseController
         $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
 
         $result = $this->CustomerService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 
@@ -84,6 +91,9 @@ class CustomerController extends BaseController
             'status' => 'required',
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
         $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
 
@@ -95,7 +105,7 @@ class CustomerController extends BaseController
 
         $result = $this->CustomerService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 

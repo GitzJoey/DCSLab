@@ -101,7 +101,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div id="crud" v-if="this.mode !== 'list'">
+                <div id="crud" v-if="this.mode !== 'list' && this.mode !== 'error'">
                     <Form id="productbrandForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
@@ -147,7 +147,7 @@
             <div v-if="this.mode === 'list'">
                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNew"><i class="fa fa-plus-square"></i></button>
             </div>
-            <div v-if="this.mode !== 'list'">
+            <div v-if="this.mode !== 'list' && this.mode !== 'error'">
                 <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="backToList">{{ $t("buttons.back") }}</button>
             </div>
         </div>
@@ -207,7 +207,6 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllProductBrand(1);
-        this.getAllCompany();
         },
     methods: {
         getAllProductBrand(page) {
@@ -218,11 +217,6 @@ export default {
             }).catch(e => {
                 this.handleListError(e);
                 this.loading = false;
-            });
-        },
-        getAllCompany() {
-            axios.get(route('api.get.dashboard.company.read.all_active')).then(response => {
-                this.companyDDL = response.data;
             });
         },
         onPaginationChangePage(page) {

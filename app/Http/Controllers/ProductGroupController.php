@@ -88,9 +88,12 @@ class ProductGroupController extends BaseController
             'name' => 'required|max:255',
         ]);
         
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->productGroupService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['category']
