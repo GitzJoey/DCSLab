@@ -11,15 +11,13 @@ use Illuminate\Support\Facades\Auth;
 class ProfileController extends BaseController
 {
     private $userService;
-    private $roleService;
 
-    public function __construct(UserService $userService, RoleService $roleService)
+    public function __construct(UserService $userService)
     {
         parent::__construct();
 
         $this->middleware('auth');
         $this->userService = $userService;
-        $this->roleService = $roleService;
     }
 
     public function readProfile()
@@ -55,7 +53,7 @@ class ProfileController extends BaseController
 
         $usr = Auth::user();
         $updateActions = new UpdateUserPassword();
-        $updateActions->update($usr, $profileRequest->validated());
+        $updateActions->update($usr, $request);
     }
 
     public function updateSettings(ProfileRequest $profileRequest)
@@ -81,6 +79,12 @@ class ProfileController extends BaseController
     {
         $request = $profileRequest->validated();
 
+        $usr = Auth::user();
 
+        $rolesId = [];
+
+        $result = $this->userService->updateRoles($usr, $rolesId, true);
+
+        return is_null($result) ? response()->error():response()->success();
     }
 }

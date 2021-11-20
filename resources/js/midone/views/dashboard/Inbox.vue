@@ -6,11 +6,15 @@
     </div>
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-3 2xl:col-span-2">
-            <div class="intro-y box bg-white p-5 mt-5">
+            <div class="intro-y box bg-theme-1 p-5 mt-5">
                 <button type="button" class="btn text-gray-700 dark:text-gray-300 w-full bg-white dark:bg-theme-1 mt-1 btn-secondary" @click="createNew">
                     <Edit3Icon class="w-4 h-4 mr-2" />
                     {{ t('components.buttons.compose')}}
                 </button>
+                <div class="border-t border-theme-3 dark:border-dark-5 mt-6 pt-6 text-white">
+                    <a href="" @click.prevent="getMessages('inbox')" :class="{'flex items-center px-3 py-2 rounded-md':true, 'bg-theme-25 dark:bg-dark-1 font-medium': messageFolder === 'inbox'}"> <MailIcon class="w-4 h-4 mr-2" /> Inbox </a>
+                    <a href="" @click.prevent="getMessages('trash')" :class="{'flex items-center px-3 py-2 mt-2 rounded-md':true, 'bg-theme-25 dark:bg-dark-1 font-medium': messageFolder === 'trash'}"> <TrashIcon class="w-4 h-4 mr-2" /> Trash </a>
+                </div>
             </div>
         </div>
         <div class="col-span-12 lg:col-span-9 2xl:col-span-10">
@@ -92,7 +96,8 @@
                                 <textarea id="messages" class="form-control" v-model="message.text" rows="5"></textarea>
                             </div>
                             <div class="mb-3">
-                                <button class="btn btn-primary">{{ t('components.buttons.submit') }}</button>
+                                <button class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.submit') }}</button>
+                                <button class="btn btn-secondary" @click="backToList">{{ t('components.buttons.cancel') }}</button>
                             </div>
                         </VeeForm>
                     </div>
@@ -109,6 +114,7 @@ import mainMixins from '../../mixins';
 const { t, route, assetPath } = mainMixins();
 
 const mode = ref('list');
+const messageFolder = ref('inbox');
 const messageList = ref([]);
 const message = ref({
     to: [],
@@ -120,7 +126,7 @@ onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
-    getInbox();
+    getMessages('inbox');
 });
 
 function createNew() {
@@ -136,18 +142,29 @@ function emptyMessage() {
     };
 }
 
-function getInbox() {
+function getMessages(folder) {
+    messageFolder.value = folder;
+    if (folder === 'inbox') {
+        axios.get(route('api.get.db.core.inbox.list.thread')).then(response => {
+            messageList.value = response.data;
+        }).catch(e => {
 
+        });
+    } else if (folder === 'trash') {
+        axios.get(route('api.get.db.core.inbox.list.thread')).then(response => {
+            messageList.value = response.data;
+        }).catch(e => {
 
-    axios.get(route('api.get.db.core.inbox.list.thread')).then(response => {
-        userList.value = response.data;
-    }).catch(e => {
-
-    });
+        });
+    }
 }
 
 function checkAll() {
 
+}
+
+function backToList() {
+    mode.value = 'list';
 }
 
 </script>

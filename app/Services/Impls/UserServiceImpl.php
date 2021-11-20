@@ -173,9 +173,13 @@ class UserServiceImpl implements UserService
         !$useTransactions ?: DB::beginTransaction();
 
         try {
+            //DB::enableQueryLog();
+
             $retval = $user->update([
                 'name' => $name,
             ]);
+
+            //$queryLog = DB::getQueryLog();
 
             !$useTransactions ?: DB::commit();
 
