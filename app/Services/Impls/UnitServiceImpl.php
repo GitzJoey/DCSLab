@@ -48,25 +48,24 @@ class UnitServiceImpl implements UnitService
         return Unit::whereIn('company_id', $company_list)->paginate();
     }
 
-    public function getAllUnit()
+    public function getAllUnit_Product()
     {
-        return Unit::all();
+        return Unit::where('category', '<>', 2)
+            // ->where('category', '=', 3)
+            ->get();
     }
 
-    public function getAllProduct()
+    public function getAllUnit_Service()
     {
-        return Unit::where('category', '=', 1)->get();
+        return Unit::where('category', '<>', 1)
+            // ->where('category', '=', 3)
+            ->get();
     }
 
-    public function getAllService()
-    {
-        return Unit::where('category', '=', 2)->get();
-    }
-
-    public function GetAllProductandService()
-    {
-        return Unit::where('category', '=', 3)->get();
-    }
+    // public function getAllUnit_ProductAndService()
+    // {
+    //     return Unit::where('category', '=', 3)->get();
+    // }
 
     public function update(
         $id,

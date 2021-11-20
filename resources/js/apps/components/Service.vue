@@ -285,12 +285,12 @@ export default {
             });
         },
         getAllProductGroup() {
-            axios.get(route('api.get.dashboard.productgroup.read.all')).then(response => {
+            axios.get(route('api.get.dashboard.productgroup.read.service')).then(response => {
                 this.groupDDL = response.data;
             });
         },
         getAllUnit() {
-            axios.get(route('api.get.dashboard.unit.read.all')).then(response => {
+            axios.get(route('api.get.dashboard.unit.read.service')).then(response => {
                 this.unitDDL = response.data;
             });
         },

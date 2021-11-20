@@ -130,7 +130,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'productgroup'], function () {
             Route::get('read', [ProductGroupController::class, 'read'])->name('api.get.dashboard.productgroup.read');
-            Route::get('read/all/', [ProductGroupController::class, 'getAllProductGroup'])->name('api.get.dashboard.productgroup.read.all');
+            // Route::get('read/all/', [ProductGroupController::class, 'getAllProductGroup'])->name('api.get.dashboard.productgroup.read.all');
+            Route::get('read/product/', [ProductGroupController::class, 'getAllProductGroup_Product'])->name('api.get.dashboard.productgroup.read.product');
+            Route::get('read/service/', [ProductGroupController::class, 'getAllProductGroup_Service'])->name('api.get.dashboard.productgroup.read.service');
+            // Route::get('read/productandservice/', [ProductGroupController::class, 'getAllProductGroup_ProductAndService'])->name('api.get.dashboard.productgroup.read.productandservice');
         });
 
         Route::group(['prefix' => 'productbrand'], function () {
@@ -145,7 +148,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'unit'], function () {
             Route::get('read', [UnitController::class, 'read'])->name('api.get.dashboard.unit.read');
-            Route::get('read/all/', [UnitController::class, 'getAllUnit'])->name('api.get.dashboard.unit.read.all');
+            // Route::get('read/all/', [UnitController::class, 'getAllUnit'])->name('api.get.dashboard.unit.read.all');
+            Route::get('read/product/', [UnitController::class, 'getAllUnit_Product'])->name('api.get.dashboard.unit.read.product');
+            Route::get('read/service/', [UnitController::class, 'getAllUnit_Service'])->name('api.get.dashboard.unit.read.service');
+            // Route::get('read/productandservice/', [UnitController::class, 'getAllUnit_ProductAndService'])->name('api.get.dashboard.unit.read.productandservice');
         });
 
         Route::group(['prefix' => 'product'], function () {

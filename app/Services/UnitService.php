@@ -12,14 +12,12 @@ interface UnitService
     );
 
     public function read($userId);
-
-    public function getAllUnit();
     
-    public function getAllProduct();
+    public function getAllUnit_Product();
 
-    public function getAllService();
+    public function getAllUnit_Service();
 
-    public function GetAllProductandService();
+    // public function getAllUnit_ProductAndService();
 
     public function update(
         $id,
