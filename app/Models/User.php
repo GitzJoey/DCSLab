@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
-use Cmgmyr\Messenger\Traits\Messagable;
-use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 use Laratrust\Traits\LaratrustUserTrait;
+use Cmgmyr\Messenger\Traits\Messagable;
+use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 
 use Laravel\Sanctum\HasApiTokens;
+use Vinkla\Hashids\Facades\Hashids;
 use Spatie\Activitylog\ActivityLogger;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Vinkla\Hashids\Facades\Hashids;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -66,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['hId', 'emailVerified', 'selectedRoles', 'selectedSettings'];
+    protected $appends = ['hId', 'emailVerified', 'selectedRoles', 'selectedSettings', 'passwordExpiryDay'];
 
     public function getHIdAttribute() : string
     {
@@ -104,6 +107,14 @@ class User extends Authenticatable implements MustVerifyEmail
             $settings[$skey] = $s->value;
         }
         return $settings;
+    }
+
+    public function getPasswordExpiryDayAttribute()
+    {
+        if (is_null($this->password_changed_at))
+            return 0;
+
+        return Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(Config::get('const.DEFAULT.PASSWORD_EXPIRY_DAYS')));
     }
 
     public function profile()

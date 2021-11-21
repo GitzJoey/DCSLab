@@ -1,5 +1,13 @@
 {
     "components": {
+        "alert-placeholder": {
+            "success_alert": {
+                "password_changed_successfully": "Password Changed Successfully!",
+                "profile_changed_successfully": "Profile Changed Successfully!",
+                "settings_changed_successfully": "Settings Changed Successfully!",
+                "verification_link_sent_successfully": "Verification Link Sent!"
+            }
+        },
         "buttons": {
             "save": "Save",
             "cancel": "Cancel",
@@ -9,7 +17,8 @@
             "compose": "Compose",
             "revoke": "Revoke",
             "activate": "Activate",
-            "submit": "Submit"
+            "submit": "Submit",
+            "send_verification_email": "Send Verification Email"
         },
         "dropdown": {
             "placeholder": "Please Select",

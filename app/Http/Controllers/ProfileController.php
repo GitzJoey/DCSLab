@@ -6,7 +6,9 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Http\Requests\ProfileRequest;
 use App\Services\UserService;
 use App\Services\RoleService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class ProfileController extends BaseController
 {
@@ -86,5 +88,27 @@ class ProfileController extends BaseController
         $result = $this->userService->updateRoles($usr, $rolesId, true);
 
         return is_null($result) ? response()->error():response()->success();
+    }
+
+    public function sendEmailVerification()
+    {
+        $usr = Auth::user();
+
+        $usr->sendEmailVerificationNotification();
+
+        return response()->success();
+    }
+
+    public function emailVerification(Request $request, $id, $hash)
+    {
+        if (!URL::hasValidSignature($request)) {
+            return redirect('/');
+        }
+
+        $usr = $this->userService->readBy('ID', $id);
+
+        $usr->markEmailAsVerified();
+
+        return redirect('/home');
     }
 }

@@ -60,7 +60,7 @@
                                             <div class="px-5" v-if="userContext.emailVerified"><a class="tooltip" href="javascript:;" :title="t('views.profile.tooltip.email_verified')"><ThumbsUpIcon /></a></div>
                                         </div>
                                         <div class="sm:ml-40 sm:pl-5 mt-2" v-if="!userContext.emailVerified">
-                                            <button class="btn btn-sm">Send Verification Email</button>
+                                            <button type="button" class="btn btn-sm" @click.prevent="sendVerificationLink">{{ t('components.buttons.send_verification_email') }}</button>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -275,7 +275,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script setup>
@@ -402,6 +401,16 @@ function invalidSubmit(e) {
     alertErrors.value = e.errors;
 }
 
+function sendVerificationLink() {
+    axios.post(route('api.post.db.core.profile.send_email_verification')).then(response => {
+        createSuccessAlert('sendVerificationLink');
+    }).catch(e => {
+        handleError(e, actions);
+    }).finally(() => {
+
+    });
+}
+
 function resetAlertErrors() {
     alertErrors.value = [];
     alertType.value = '';
@@ -411,18 +420,23 @@ function resetAlertErrors() {
 function createSuccessAlert(type) {
     if (type === 'changePassword') {
         alertErrors.value = {
-            password: 'Password Changed Successfully!'
+            password: t('components.alert-placeholder.success_alert.password_changed_successfully')
         };
     } else if (type === 'changeProfile') {
         alertErrors.value = {
-            password: 'Profile Changed Successfully!'
+            profile: t('components.alert-placeholder.success_alert.profile_changed_successfully')
         };
     } else if (type === 'changeSettings') {
         alertErrors.value = {
-            password: 'Settings Changed Successfully!'
+            settings: t('components.alert-placeholder.success_alert.settings_changed_successfully')
         };
-    }
+    } else if (type === 'sendVerificationLink') {
+        alertErrors.value = {
+            profile: t('components.alert-placeholder.success_alert.verification_link_sent_successfully')
+        };
+    } else {
 
+    }
     alertType.value = 'success';
     alertTitle.value = 'Success';
 }

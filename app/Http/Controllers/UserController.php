@@ -152,28 +152,4 @@ class UserController extends BaseController
 
         $this->userService->resetPassword($usr['email']);
     }
-
-    public function sendEmailVerification()
-    {
-        $usr = Auth::user();
-
-        $usr->sendEmailVerificationNotification();
-
-        Session::flash('flash-messages', trans('user.flash.email_verification_sent'));
-
-        return redirect()->back();
-    }
-
-    public function emailVerification(Request $request, $id, $hash)
-    {
-        if (!URL::hasValidSignature($request)) {
-            return redirect('/');
-        }
-
-        $usr = $this->userService->readBy('ID', $id);
-
-        $usr->markEmailAsVerified();
-
-        return redirect('/home');
-    }
 }

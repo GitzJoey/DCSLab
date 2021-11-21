@@ -76,6 +76,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
                     Route::post('roles', [ProfileController::class, 'updateRoles'])->name('.roles');
                 });
 
+                Route::post('send/verification', [ProfileController::class, 'sendEmailVerification'])->name('.send_email_verification');
                 Route::post('change/password', [ProfileController::class, 'changePassword'])->name('.change_password');
             });
 

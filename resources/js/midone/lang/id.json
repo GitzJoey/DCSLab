@@ -1,5 +1,13 @@
 {
     "components": {
+        "alert-placeholder": {
+            "success_alert": {
+                "password_changed_successfully": "Password Berhasil Dirubah!",
+                "profile_changed_successfully": "Profil Berhasil Dirubah!",
+                "settings_changed_successfully": "Pengaturan Berhasil Dirubah!",
+                "verification_link_sent_successfully": "Email Verifikasi Terkirim!"
+            }
+        },
         "buttons": {
             "save": "Simpan",
             "cancel": "Batal",
@@ -9,7 +17,8 @@
             "compose": "Pesan Baru",
             "revoke": "Revoke",
             "activate": "Aktifkan",
-            "submit": "Kirim"
+            "submit": "Kirim",
+            "send_verification_email": "Kirim Email Verifikasi"
         },
         "dropdown": {
             "placeholder": "Silahkan Pilih",
