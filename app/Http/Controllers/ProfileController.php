@@ -98,17 +98,4 @@ class ProfileController extends BaseController
 
         return response()->success();
     }
-
-    public function emailVerification(Request $request, $id, $hash)
-    {
-        if (!URL::hasValidSignature($request)) {
-            return redirect('/');
-        }
-
-        $usr = $this->userService->readBy('ID', $id);
-
-        $usr->markEmailAsVerified();
-
-        return redirect('/home');
-    }
 }
