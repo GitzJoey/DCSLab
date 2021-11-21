@@ -34,6 +34,7 @@ const defaultOptions = ref({
     valueField: 'value',
     labelField: 'name',
     searchField: 'name',
+    closeAfterSelect: true,
     load: function (query, callback) {
         if (searchURL.value.length === 0) return callback();
         axios.get(searchURL.value + '?search=' + query).then(response => {
