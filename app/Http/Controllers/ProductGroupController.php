@@ -42,25 +42,20 @@ class ProductGroupController extends BaseController
         return $this->productGroupService->read($userId);
     }
 
-    public function getAllProductGroup()
+    public function getAllProductGroup_Product()
     {
-        return $this->productGroupService->getAllProductGroup();
+        return $this->productGroupService->getAllProductGroup_Product();
     }
 
-    public function getAllProduct()
+    public function getAllProductGroup_Service()
     {
-        return $this->productGroupService->getAllProduct();
+        return $this->productGroupService->getAllProductGroup_Service();
     }
 
-    public function getAllService()
-    {
-        return $this->productGroupService->getAllService();
-    }
-
-    public function getAllProductandService()
-    {
-        return $this->productGroupService->getAllProductandService();
-    }
+    // public function getAllProductGroup_Service()
+    // {
+    //     return $this->productGroupService->getAllProductGroup_Service();
+    // }
 
     public function store(Request $request)
     {

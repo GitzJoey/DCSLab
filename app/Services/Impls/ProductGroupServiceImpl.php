@@ -48,25 +48,24 @@ class ProductGroupServiceImpl implements ProductGroupService
         return ProductGroup::whereIn('company_id', $company_list)->paginate();
     }
 
-    public function getAllProductGroup()
+    public function getAllProductGroup_Product()
     {
-        return ProductGroup::all();
+        return ProductGroup::where('category', '<>', 2)
+        // ->where('category', '=', 3)
+        ->get();
     }
 
-    public function getAllProduct()
+    public function getAllProductGroup_Service()
     {
-        return ProductGroup::where('category', '=', 1)->get();
+        return ProductGroup::where('category', '<>', 1)
+        // ->where('category', '=', 3)
+        ->get();
     }
 
-    public function getAllService()
-    {
-        return ProductGroup::where('category', '=', 2)->get();
-    }
-
-    public function GetAllProductandService()
-    {
-        return ProductGroup::where('category', '=', 3)->get();
-    }
+    // public function getAllProductGroup_ProductAndService()
+    // {
+    //     return ProductGroup::where('category', '=', 3)->get();
+    // }
     
     public function update(
         $id,
