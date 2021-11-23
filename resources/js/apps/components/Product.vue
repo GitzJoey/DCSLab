@@ -202,6 +202,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <input type="hidden" v-model="product.product_unit" name="product_unit_old[]"/>
                                         <tr v-for="(c, cIdx) in product.product_unit">
                                             <td>
                                                 <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>

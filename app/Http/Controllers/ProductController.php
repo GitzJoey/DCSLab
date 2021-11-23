@@ -8,6 +8,7 @@ use App\Services\ProductService;
 use App\Services\ProductUnitService;
 
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Services\ActivityLogService;
@@ -74,21 +75,23 @@ class ProductController extends BaseController
             'status' => 'required',
         ]);
         
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         if ($request['code'] == 'AUTO') {
             $randomGenerator = new randomGenerator();
             $request['code'] = $randomGenerator->generateOne(99999999);
         };
 
-        $faker = \Faker\Factory::create('id_ID');
-        if ($request->code == '[AUTO]') {
-           $request->code = $faker->creditCardNumber();
-        };
+        // $faker = \Faker\Factory::create('id_ID');
+        // if ($request->code == '[AUTO]') {
+        //    $request->code = $faker->creditCardNumber();
+        // };
 
-        $tampungsaya = (new RandomGenerator())->generateOne(999999);
+        // $tampungsaya = (new RandomGenerator())->generateOne(999999);
 
         # Jika Product... Maka...Config:get('const.DEFAULT.PRODCUT_TUPE.RAW_MATERIAL,SERVICE)
         if ($request->product_type[0] !== '4') {
-            $company_id = $request->company_id != null ? Hashids::decode($request->company_id)[0]:$company_id = null;          
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
@@ -109,9 +112,7 @@ class ProductController extends BaseController
 
                 array_push($product_units, array (
                     'code' => $request->product_unit_code[$i],
-                    #'company_id' => $request->company_id,
-                    'company_id' => null,
-                    // 'product_id' => Hashids::decode($product)[0],
+                    'company_id' => $company_id,
                     'product_id' => null,
                     'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                     'is_base' => $is_base,
