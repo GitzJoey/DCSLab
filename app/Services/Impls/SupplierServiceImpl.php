@@ -31,6 +31,7 @@ class SupplierServiceImpl implements SupplierService
 
         try {
             $supplier = new Supplier();
+            $supplier->company_id = $company_id;
             $supplier->code = $code;
             $supplier->name = $name;
             $supplier->term = $term;

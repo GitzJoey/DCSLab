@@ -40,6 +40,7 @@ interface ProductService
         $is_use_serial,
         $product_type,
         $status,
+        $product_units
     );
 
     public function delete($id);
