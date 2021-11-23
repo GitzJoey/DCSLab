@@ -452,7 +452,7 @@ export default {
             });
         },
         getAllProductGroup() {
-            axios.get(route('api.get.dashboard.productgroup.read.all')) .then(response => {
+            axios.get(route('api.get.dashboard.productgroup.read.product')) .then(response => {
                 this.groupDDL = response.data;
             });
         },
@@ -462,7 +462,7 @@ export default {
             });
         },
         getAllUnit() {
-            axios.get(route('api.get.dashboard.unit.read.all')).then(response => {
+            axios.get(route('api.get.dashboard.unit.read.product')).then(response => {
                 this.unitDDL = response.data;
             });
         },
