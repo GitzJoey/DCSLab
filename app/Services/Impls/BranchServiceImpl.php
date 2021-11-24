@@ -51,8 +51,6 @@ class BranchServiceImpl implements BranchService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        // $branchIds = $usr->branch()->pluck('branch_id');
         return Branch::with('company')->bySelectedCompany()->paginate();
     }
 

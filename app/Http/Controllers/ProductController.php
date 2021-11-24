@@ -80,15 +80,8 @@ class ProductController extends BaseController
 
         if ($request['code'] == 'AUTO') {
             $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+            $request['code'] = $randomGenerator->generateNumber(10000, 99999);
         };
-
-        // $faker = \Faker\Factory::create('id_ID');
-        // if ($request->code == '[AUTO]') {
-        //    $request->code = $faker->creditCardNumber();
-        // };
-
-        // $tampungsaya = (new RandomGenerator())->generateOne(999999);
 
         # Jika Product... Maka...Config:get('const.DEFAULT.PRODCUT_TUPE.RAW_MATERIAL,SERVICE)
         if ($request->product_type[0] !== '4') {
@@ -107,11 +100,16 @@ class ProductController extends BaseController
             $product_units = [];
             $count_unit = count($request['unit_id']);
             for ($i = 0; $i < $count_unit; $i++) {
+                if ($request->product_unit_code[$i] == 'AUTO') {
+                    $randomGenerator = new randomGenerator();
+                    $new_product_unit_code = $randomGenerator->generateNumber(10000, 99999);
+                };
+
                 $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
                 $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
 
                 array_push($product_units, array (
-                    'code' => $request->product_unit_code[$i],
+                    'code' => $new_product_unit_code,
                     'company_id' => $company_id,
                     'product_id' => null,
                     'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
@@ -141,45 +139,6 @@ class ProductController extends BaseController
             if ($product == 0) {
                 return response()->error();
             };
-    
-            // $product_units = [];
-            // $count_unit = count($request['unit_id']);
-            // for ($i = 0; $i < $count_unit; $i++) {
-            //     $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
-            //     $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
-
-            //     array_push($product_units, array (
-            //         'code' => $request->product_unit_code[$i],
-            //         'company_id' => $request->company_id,
-            //         'product_id' => Hashids::decode($product)[0],
-            //         'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-            //         'is_base' => $is_base,
-            //         'conv_value' => $request['conv_value'][$i],
-            //         'is_primary_unit' => $is_primary_unit,
-            //         'remarks' => $request['remarks']
-            //     ));
-            // }
-    
-            // foreach ($product_units as $product_unit) {
-            //     if ($product_unit['code'] == '[AUTO]') {
-            //         $product_unit['code'] = $faker->creditCardNumber();
-            //     };
-
-            //     $result = $this->productUnitService->create(
-            //         $product_unit['code'],
-            //         $product_unit['company_id'],
-            //         $product_unit['product_id'],
-            //         $product_unit['unit_id'],
-            //         $product_unit['is_base'],
-            //         $product_unit['conv_value'],
-            //         $product_unit['is_primary_unit'],
-            //         $product_unit['remarks']
-            //     );
-    
-            //     if ($result == 0) {
-            //         return response()->error();
-            //     };
-            // }
         }
 
         # Jika Service... Maka...
