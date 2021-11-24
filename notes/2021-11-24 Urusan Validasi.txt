@@ -1,0 +1,23 @@
+liat masing2 table, liat apa yg harus diisi
+implementasiin validation di controler ke :
+
++ Companies
++ Branches
++ Employees
++ Warehouses
++ Cashes
++ Investors
++ Capital Groups
++ Capitals
++ Suppliers
++ Product Groups
++ Product Brands
++ Units
++ Customer Groups
++ Customers
+
+sambil liat juga apa kolom di databasenya ada yang
+aneh apa gmn. Mudah2an lama2 paham polanya.
+Ngerti mana yg harus diisi, mana yang boleh null
+mana yg ga boleh null. Table apa, tipenya apa,
+max lenghtnya brp, defaultnya apa.

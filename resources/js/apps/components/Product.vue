@@ -194,9 +194,9 @@
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Code</th>
-                                            <th>Is Base</th>
-                                            <th>Conversion Value</th>
                                             <th>Unit</th>
+                                            <th>Conversion Value</th>
+                                            <th>Is Base</th>
                                             <th>Primary Unit</th>
                                             <th></th>
                                         </tr>
@@ -204,22 +204,12 @@
                                     <tbody>
                                         <input type="hidden" v-model="product.product_unit" name="product_unit_old[]"/>
                                         <tr v-for="(c, cIdx) in product.product_unit">
+                                            <!-- Code -->
                                             <td>
                                                 <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
-                                            </td>
+                                            </td>                                          
 
-                                            <td>
-                                                <label class="css-control css-control-primary css-checkbox">
-                                                    <input type="checkbox" class="css-control-input" id="is_base" v-model="c.is_base" true-value="1" false-value="0">
-                                                    <span class="css-control-indicator"></span>
-                                                </label>
-                                                <input type="hidden" v-model="c.is_base" name="is_base[]"/>
-                                            </td>
-
-                                            <td>
-                                                <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
-                                            </td>
-
+                                            <!-- Unit -->
                                             <td>
                                                 <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId">
                                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
@@ -229,6 +219,21 @@
                                                 </div>
                                             </td>
 
+                                            <!-- Conversion Value -->
+                                            <td>
+                                                <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
+                                            </td>
+
+                                            <!-- Is Base -->
+                                            <td>
+                                                <label class="css-control css-control-primary css-checkbox">
+                                                    <input type="checkbox" class="css-control-input" id="is_base" v-model="c.is_base" true-value="1" false-value="0">
+                                                    <span class="css-control-indicator"></span>
+                                                </label>
+                                                <input type="hidden" v-model="c.is_base" name="is_base[]"/>
+                                            </td>
+
+                                            <!-- Is Primary Unit -->
                                             <td>
                                                 <label class="css-control css-control-primary css-checkbox">
                                                     <input type="checkbox" class="css-control-input" id="is_primary_unit" v-model="c.is_primary_unit" true-value="1" false-value="0">
@@ -237,6 +242,7 @@
                                                 <input type="hidden" v-model="c.is_primary_unit" name="is_primary_unit[]"/>
                                             </td>
 
+                                            <!-- Delete Button -->
                                             <td class="text-center">
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedProductUnit(cIdx)">

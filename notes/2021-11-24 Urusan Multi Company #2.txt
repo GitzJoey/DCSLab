@@ -1,0 +1,25 @@
+Cek Branch Model, liat fungsi scopeBySelectedCompany
+copas fungsi itu ke : 
++ Cashes
++ Investors
++ Capital Groups
++ Capitals
++ Suppliers
++ Product Groups
++ Product Brands
++ Units
++ Customer Groups
++ Customers
+
+Cek BranchServiceImpl, liat fungsi read
+implementasiin fungsi read kaya gitu ke :
++ Cashes
++ Investors
++ Capital Groups
++ Capitals
++ Suppliers
++ Product Groups
++ Product Brands
++ Units
++ Customer Groups
++ Customers
