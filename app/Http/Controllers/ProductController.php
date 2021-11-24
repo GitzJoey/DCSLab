@@ -80,7 +80,7 @@ class ProductController extends BaseController
 
         if ($request['code'] == 'AUTO') {
             $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+            $request['code'] = $randomGenerator->generateNumber(10000, 99999);
         };
 
         # Jika Product... Maka...Config:get('const.DEFAULT.PRODCUT_TUPE.RAW_MATERIAL,SERVICE)
@@ -100,11 +100,16 @@ class ProductController extends BaseController
             $product_units = [];
             $count_unit = count($request['unit_id']);
             for ($i = 0; $i < $count_unit; $i++) {
+                if ($request->product_unit_code[$i] == 'AUTO') {
+                    $randomGenerator = new randomGenerator();
+                    $new_product_unit_code = $randomGenerator->generateNumber(10000, 99999);
+                };
+
                 $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
                 $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
 
                 array_push($product_units, array (
-                    'code' => $request->product_unit_code[$i],
+                    'code' => $new_product_unit_code,
                     'company_id' => $company_id,
                     'product_id' => null,
                     'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
