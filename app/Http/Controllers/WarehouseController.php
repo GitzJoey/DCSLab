@@ -7,7 +7,7 @@ use App\Services\ActivityLogService;
 use App\Services\WarehouseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Actions\RandomGenerator;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseController extends BaseController
@@ -33,6 +33,9 @@ class WarehouseController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        
         $userId = Auth::user()->id;
         return $this->warehouseService->read($userId);
     }
@@ -45,6 +48,11 @@ class WarehouseController extends BaseController
             'name' => 'required|max:255',
             'status' => 'required'
         ]);
+
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
 
         $result = $this->warehouseService->create(
             Hashids::decode($request['company_id'])[0], 

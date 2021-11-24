@@ -51,8 +51,9 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        return Warehouse::with('company')->paginate();
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Warehouse::with('company')->whereIn('company_id', $company_list)->paginate();
     }
 
     public function update(
