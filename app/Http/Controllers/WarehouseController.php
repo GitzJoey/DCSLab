@@ -33,9 +33,8 @@ class WarehouseController extends BaseController
 
     public function read()
     {
-        if (!parent::hasSelectedCompanyOrCompany() == true) {
-            return response()->error(trans('error_messages.unable_to_find_selected_company'));
-        }
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
         
         $userId = Auth::user()->id;
         return $this->warehouseService->read($userId);
