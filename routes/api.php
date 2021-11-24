@@ -24,6 +24,17 @@ Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
 
+        /* Ext */
+        Route::group(['prefix' => 'company', 'as' => '.company'], function() {
+            Route::group(['prefix' => 'company', 'as' => '.company'], function() {
+
+            });
+            Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
+
+            });
+        });
+        /* Ext */
+
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
             Route::group(['prefix' => 'users', 'as' => '.users'], function() {
                 Route::get('read', [UserController::class, 'read'])->name('.read');
@@ -60,6 +71,17 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
 Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
+
+        /* Ext */
+        Route::group(['prefix' => 'company', 'as' => '.company'], function() {
+            Route::group(['prefix' => 'company', 'as' => '.company'], function() {
+
+            });
+            Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
+
+            });
+        });
+        /* Ext */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
             Route::group(['prefix' => 'users', 'as' => '.users'], function() {

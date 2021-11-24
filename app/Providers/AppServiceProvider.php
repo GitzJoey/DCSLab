@@ -9,12 +9,18 @@ use App\Services\RoleService;
 use App\Services\InboxService;
 use App\Services\SystemService;
 use App\Services\ActivityLogService;
+/* Ext */
+use App\Services\CompanyService;
+/* Ext */
+
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
 use App\Services\Impls\InboxServiceImpl;
 use App\Services\Impls\SystemServiceImpl;
 use App\Services\Impls\ActivityLogServiceImpl;
-
+/* Ext */
+use App\Services\Impls\CompanyServiceImpl;
+/* Ext */
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,6 +50,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(InboxService::class, function (){
             return new InboxServiceImpl();
         });
+
+        /* Ext */
+        $this->app->singleton(CompanyService::class, function (){
+            return new CompanyServiceImpl();
+        });
+        /* Ext */
     }
 
     /**

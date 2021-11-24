@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\RoleService;
 use App\Services\UserService;
+use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Console\Command;
@@ -59,7 +60,7 @@ class AppHelper extends Command
             $this->info('[1] Update Composer And NPM');
             $this->info('[2] Clear All Cache');
             $this->info('[3] Change User Roles');
-            $this->info('[4] Seed Users & Roles');
+            $this->info('[4] Data Seeding');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
@@ -79,6 +80,9 @@ class AppHelper extends Command
                     break;
                 case 4:
                     $this->seedUserAndRoles();
+                    $this->seedCompanies();
+                    sleep(3);
+                    $this->info('Done.');
                     break;
                 case 'X':
                 default:
@@ -125,7 +129,18 @@ class AppHelper extends Command
         }
 
         sleep(3);
-        $this->info('Done.');
+    }
+
+    private function seedCompanies()
+    {
+        $companies = $this->ask('How many companies for each users?', 5);
+
+        $this->info('Seeding...');
+
+        $seeder = new CompanyTableSeeder();
+        $seeder->callWith(CompanyTableSeeder::class, [$companies]);
+
+        $this->info('CompanyTableSeeder Finish.');
     }
 
     private function changeUserRoles()
