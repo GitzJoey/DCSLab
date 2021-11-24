@@ -258,7 +258,7 @@ export default {
                 remarks: '',
                 point: '',
                 product_type: '',
-                status: '',
+                status: '1',
             },
             groupDDL: [],
             unitDDL: [],
@@ -313,7 +313,7 @@ export default {
                 remarks: '',
                 point: '',
                 product_type: '4',
-                status: '',
+                status: '1',
             }
         },
         createNew() {

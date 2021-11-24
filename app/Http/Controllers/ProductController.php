@@ -270,6 +270,24 @@ class ProductController extends BaseController
             $product_type = $request->product_type;
             $status = $request->status;
 
+            $product_units = [];
+            // $count_unit = count($request['unit_id']);
+            // for ($i = 0; $i < $count_unit; $i++) {
+            //     $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
+            //     $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+
+            //     array_push($product_units, array (
+            //         'code' => $request->product_unit_code[$i],
+            //         'company_id' => $company_id,
+            //         'product_id' => null,
+            //         'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
+            //         'is_base' => $is_base,
+            //         'conv_value' => $request['conv_value'][$i],
+            //         'is_primary_unit' => $is_primary_unit,
+            //         'remarks' => $request['remarks']
+            //     ));
+            // }
+
             $product = $this->productService->update(
                 $id,
                 $company_id,
@@ -283,7 +301,8 @@ class ProductController extends BaseController
                 $point,
                 $is_use_serial,
                 $product_type,
-                $status
+                $status,
+                $product_units
             );
 
             if ($product == 0) {
@@ -352,7 +371,8 @@ class ProductController extends BaseController
                 $point,
                 $is_use_serial,
                 $product_type,
-                $status
+                $status,
+                $product_units
             );
     
             if ($product == 0) {

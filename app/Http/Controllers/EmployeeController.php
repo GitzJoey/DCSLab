@@ -37,6 +37,10 @@ class EmployeeController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany() == true) {
+            return response()->error(trans('error_messages.unable_to_find_selected_company'));          
+        }
+        
         $userId = Auth::user()->id;
         return $this->employeeService->read($userId);
     }
