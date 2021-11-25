@@ -202,8 +202,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <input type="hidden" v-model="product.product_unit" name="product_unit_old[]"/>
+                                        <input type="hidden" v-model="product.product_unit">
                                         <tr v-for="(c, cIdx) in product.product_unit">
+                                            <input type="hidden" v-model="c.hId" name="product_unit_hId[]"/>
+
                                             <!-- Code -->
                                             <td>
                                                 <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
@@ -552,7 +554,18 @@ export default {
             this.product.product_unit.push(product_unit);
         },
         deleteSelectedProductUnit(idx) {
-            this.product.product_unit.splice(idx, 1);
+            this.loading = true;
+            if (this.mode === 'create') {
+                this.product.product_unit.splice(idx, 1);
+            } else if (this.mode === 'edit') {
+                axios.post(route('api.post.dashboard.productunit.delete', this.product.product_unit[idx].hId), new FormData($('#productForm')[0])).then(response => {
+                    this.product.product_unit.splice(idx, 1);
+                    this.loading = false;
+                }).catch(e => {
+                    this.handleError(e, actions);
+                    this.loading = false;
+                });
+            } else { }
         },
         onSubmit(values, actions) {
             this.loading = true;

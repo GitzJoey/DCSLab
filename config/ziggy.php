@@ -92,15 +92,17 @@ return [
             'api.post.dashboard.unit.*',
         ],
         'product' => [
+            'api.get.dashboard.productgroup.read.product',
+            'api.get.dashboard.productbrand.read.all',
             'api.get.dashboard.product.read',
             'api.get.dashboard.product.read.product',
             'api.get.dashboard.product.read.service',
-            'api.get.dashboard.productgroup.read.product',
-            'api.get.dashboard.productbrand.read.all',
             'api.get.dashboard.unit.read.product',
             'api.get.dashboard.productunit.read.all',
             'api.get.dashboard.supplier.read.all',
+
             'api.post.dashboard.product.*',
+            'api.post.dashboard.productunit.delete',
         ],
         'service' => [
             'api.get.dashboard.product.read.service',
