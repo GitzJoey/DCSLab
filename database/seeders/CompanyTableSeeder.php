@@ -22,9 +22,11 @@ class CompanyTableSeeder extends Seeder
 
         $randomGenerator = new randomGenerator();
 
+        if ($companiesPerUsers <= 0) $companiesPerUsers = 3;
+
         foreach ($users as $user)
         {
-            $rand = $randomGenerator->generateOne($companiesPerUsers);
+            $rand = $randomGenerator->generateOne($companiesPerUsers - 1);
 
             $cIds = [];
             for($i = 0; $i < $companiesPerUsers; $i++)

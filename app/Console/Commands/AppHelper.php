@@ -80,9 +80,7 @@ class AppHelper extends Command
                     $this->info('Done!');
                     break;
                 case 4:
-                    $this->seedUserAndRoles();
-                    $this->seedCompanies();
-                    sleep(3);
+                    $this->dataSeeding();
                     $this->info('Done.');
                     break;
                 case 5:
@@ -98,10 +96,11 @@ class AppHelper extends Command
         $this->info('Bye!');
     }
 
-    private function seedUserAndRoles()
+    private function dataSeeding()
     {
         $user = $this->confirm('Do you want to seed users?', true);
         $roles = $this->confirm('Do you want to seed roles?', true);
+        $companies = $this->confirm('Do you want to seed companies for each users?', true);
 
         if ($user)
         {
@@ -133,18 +132,20 @@ class AppHelper extends Command
         }
 
         sleep(3);
-    }
 
-    private function seedCompanies()
-    {
-        $companies = $this->ask('How many companies for each users?', 5);
+        if ($companies)
+        {
+            $this->info('Starting CompanyTableSeeder');
+            $count = $this->ask('How many companies for each users:', 5);
 
-        $this->info('Seeding...');
+            $seeder = new CompanyTableSeeder();
+            $seeder->callWith(CompanyTableSeeder::class, [$count]);
 
-        $seeder = new CompanyTableSeeder();
-        $seeder->callWith(CompanyTableSeeder::class, [$companies]);
+            $this->info('CompanyTableSeeder Finish.');
 
-        $this->info('CompanyTableSeeder Finish.');
+        }
+
+        sleep(3);
     }
 
     private function refreshDatabase()

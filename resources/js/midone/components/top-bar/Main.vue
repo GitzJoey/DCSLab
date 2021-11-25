@@ -1,11 +1,19 @@
 <template>
     <div class="top-bar -mx-4 px-4 md:mx-0 md:px-0">
-        <div class="intro-x dropdown mr-auto sm:mr-6" data-placement="bottom-start">
+        <div id="company-dropdown" class="intro-x dropdown mr-auto sm:mr-6" data-placement="bottom-start">
             <div class="dropdown-toggle notification cursor-pointer" role="button" aria-expanded="false">
-                <UmbrellaIcon class="notification__icon dark:text-gray-300" />
+                <div class="flex flex-row">
+                    <UmbrellaIcon class="notification__icon dark:text-gray-300 mr-2" />
+                    <div>{{ selectedCompany }}</div>
+                </div>
             </div>
             <div class="dropdown-menu w-56">
                 <div class="dropdown-menu__content box dark:bg-dark-6">
+                    <div class="p-2" v-for="(c, cIdx) in userCompanyLists">
+                        <a href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                            <span :class="{ 'underline': c.name === selectedCompany, 'font-medium':c.default === 1 }">{{ c.name }}</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -102,7 +110,7 @@
 </template>
 
 <script>
-import {computed, defineComponent, onMounted, ref} from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { switchLang, getLang } from '../../lang/index';
 import { useStore } from '../../store';
 import mainMixins from '../../mixins/index';
@@ -113,7 +121,26 @@ export default defineComponent({
         const store = useStore();
         const router = useRouter();
 
-        const userContext = computed(() => store.state.main.userContext )
+        const userContext = computed(() => store.state.main.userContext );
+        const selectedUserCompanyContext = computed(() => store.state.main.selectedUserCompany );
+
+        const selectedCompany = ref('');
+
+        const userCompanyLists = computed(() => {
+            if (userContext.value.companies !== undefined && userContext.value.companies.length > 0) {
+                return userContext.value.companies;
+            } else {
+                return [];
+            }
+        });
+
+        watch(userContext, () => {
+            setSelectedCompany(userContext.value.companies, selectedUserCompanyContext.value);
+        });
+
+        watch(selectedUserCompanyContext, () => {
+            setSelectedCompany(userContext.value.companies, selectedUserCompanyContext.value);
+       });
 
         const { t, assetPath } = mainMixins();
 
@@ -142,11 +169,30 @@ export default defineComponent({
             cash('#main-dropdown').dropdown('hide');
         }
 
+        function switchCompany(hId) {
+            store.dispatch('main/setSelectedCompany', hId);
+            cash('#company-dropdown').dropdown('hide');
+        }
+
+        function setSelectedCompany(companyLists, selected) {
+            if (companyLists.length === 0) return;
+
+            if (selected === '') {
+                selectedCompany.value = _.find(companyLists, { default: 1}).name;
+            } else {
+                _.forEach(companyLists, function(item) {
+                    if (selected === item.hId) {
+                        selectedCompany.value = item.name;
+                    }
+                });
+            }
+        }
+
         function logout() {
             axios.post('/logout').then(response => {
-                //window.location.href = '/';
+                window.location.href = '/';
             }).catch(e => {
-                console.log('a');
+
             });
         }
 
@@ -157,6 +203,9 @@ export default defineComponent({
             assetPath,
             switchLanguage,
             currentLanguage,
+            userCompanyLists,
+            selectedCompany,
+            switchCompany,
             logout,
             goTo,
         }

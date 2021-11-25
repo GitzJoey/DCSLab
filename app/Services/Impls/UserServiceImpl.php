@@ -134,10 +134,10 @@ class UserServiceImpl implements UserService
         switch(strtoupper($key)) {
             case 'ID':
                 if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
-                    return User::with('roles', 'profile')->find($value);
+                    return User::with('roles', 'profile', 'companies')->find($value);
 
                 return Cache::tags([$value])->remember('readByID'.$value, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($value) {
-                    return User::with('roles', 'profile')->find($value);
+                    return User::with('roles', 'profile', 'companies')->find($value);
                 });
             case 'EMAIL':
                 return User::where('email', '=', $value)->first();

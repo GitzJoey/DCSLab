@@ -44,6 +44,5 @@ class RandomGenerator
         }
 
         return strtoupper($generatedString);
-
     }
 }

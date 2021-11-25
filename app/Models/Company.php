@@ -33,7 +33,8 @@ class Company extends Model
         'deleted_by',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'pivot',
     ];
 
     protected $appends = ['hId'];

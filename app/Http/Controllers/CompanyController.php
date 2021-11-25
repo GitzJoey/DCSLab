@@ -35,6 +35,14 @@ class CompanyController extends BaseController
         return $this->companyService->getAllActiveCompany($userId);
     }
 
+    public function getDefaultCompany()
+    {
+        $userId = Auth::id();
+        $defaultCompany = $this->companyService->getDefaultCompany($userId);
+
+        return $defaultCompany->hId;
+    }
+
     public function store(CompanyRequest $companyRequest)
     {
         $request = $companyRequest->validated();

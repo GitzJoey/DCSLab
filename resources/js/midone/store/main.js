@@ -1,30 +1,32 @@
-import { SET_DARK_MODE, USERCONTEXT } from './mutation-types';
+import { SET_DARK_MODE, USERCONTEXT, SELECTEDUSERCOMPANY } from './mutation-types';
 
 const state = () => {
     return {
         darkMode: false,
-        userContext: { }
+        userContext: { },
+        selectedUserCompany: '',
     }
 };
 
 const getters = {
     darkMode: state => state.darkMode,
-    userContext: state => state.userContext
+    userContext: state => state.userContext,
+    selectedUserCompany: state => state.selectedUserCompany,
 };
 
 const actions = {
     setDarkMode({ commit }, darkMode) {
         commit(SET_DARK_MODE, { darkMode });
     },
-    setUserContext({ commit }, userPayload) {
-        commit(types.USERCONTEXT, { userPayload });
+    setSelectedCompany({ commit }, payload) {
+        commit(SELECTEDUSERCOMPANY, { payload });
     },
     fetchUserContext({ commit }) {
         axios.get('/api/get/dashboard/core/profile/read').then(response => {
             var userPayload = response.data;
             commit(USERCONTEXT, { userPayload });
         });
-    }
+    },
 };
 
 const mutations = {
@@ -33,6 +35,9 @@ const mutations = {
     },
     [USERCONTEXT](state, { userPayload }) {
         state.userContext = userPayload;
+    },
+    [SELECTEDUSERCOMPANY](state, { payload }) {
+        state.selectedUserCompany = payload;
     }
 };
 
