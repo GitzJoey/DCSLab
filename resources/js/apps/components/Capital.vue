@@ -245,6 +245,9 @@ export default {
     setup() {
         const schema = {
             ref_number: 'required',
+            // group_id: 'required',
+            // capital_status: 'required',
+            // amount: 'required',
         };
 
         return {

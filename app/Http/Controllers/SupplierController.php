@@ -50,9 +50,10 @@ class SupplierController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'suppliers'),
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'suppliers')],
             'name' => 'required|max:255',
+            'term' => 'required',
+            'is_tax' => 'required',
             'status' => 'required'
         ]);
 

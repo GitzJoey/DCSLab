@@ -44,6 +44,9 @@ class CapitalController extends BaseController
     {   
         $request->validate([
             'ref_number' => 'required|max:255',
+            'group_id' => 'required',
+            'capital_status' => 'required',
+            'amount' => 'required',
         ]);
         
         $date = '2021-10-01';

@@ -54,9 +54,7 @@ class InvestorServiceImpl implements InvestorService
 
     public function read($userId)
     {
-        $user = User::find($userId);
-        $company_list = $user->companies()->pluck('company_id');
-        return Investor::whereIn('company_id', $company_list)->paginate();
+        return Investor::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllActiveInvestor()

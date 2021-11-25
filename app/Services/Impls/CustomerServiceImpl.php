@@ -71,9 +71,7 @@ class CustomerServiceImpl implements CustomerService
 
     public function read($userId)
     {
-        $user = User::find($userId);
-        $company_list = $user->companies()->pluck('company_id');
-        return Customer::with('customer_group')->whereIn('company_id', $company_list)->paginate();
+        return Customer::with('customer_group', 'company')->bySelectedCompany()->paginate();
     }
 
     public function update(

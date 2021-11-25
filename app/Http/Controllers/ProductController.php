@@ -72,6 +72,10 @@ class ProductController extends BaseController
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
             'name' => 'required|max:255',
+            'group_id' => 'required',
+            'brand_id' => 'required',
+            'unit_id' => 'required',
+            'supplier_id' => 'required',
             'status' => 'required',
         ]);
         
