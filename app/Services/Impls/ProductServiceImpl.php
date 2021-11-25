@@ -184,6 +184,7 @@ class ProductServiceImpl implements ProductService
             $pu = [];   
             foreach ($product_units as $product_unit) {
                 array_push($pu, new ProductUnit(array (
+                    'id' => $product_unit['id'],
                     'code' => $product_unit['code'],
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $product['id'],
@@ -194,6 +195,20 @@ class ProductServiceImpl implements ProductService
                     'remarks' => $product_unit['remarks']
                 )));
             }
+            ProductUnit::upsert(
+                [
+                    ['departure' => 'Oakland', 'destination' => 'San Diego', 'price' => 99],
+                    ['departure' => 'Chicago', 'destination' => 'New York', 'price' => 150]
+                ], 
+                [
+                    'departure', 
+                    'destination'
+                ], 
+                [
+                    'price'
+                ]
+            );
+
             $product->product_unit()->saveMany($pu);
 
             DB::commit();
