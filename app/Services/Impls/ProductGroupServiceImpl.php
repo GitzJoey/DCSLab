@@ -43,9 +43,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function read($userId)
     {
-        $user = User::find($userId);
-        $company_list = $user->companies()->pluck('company_id');
-        return ProductGroup::whereIn('company_id', $company_list)->paginate();
+        return ProductGroup::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllProductGroup_Product()

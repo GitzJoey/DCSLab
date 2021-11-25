@@ -46,6 +46,9 @@ class CustomerController extends BaseController
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'customers')],
             'name' => 'required|max:255',
+            'limit_outstanding_notes' => 'required',
+            'limit_payable_nominal' => 'required',
+            'limit_age_notes' => 'required',
             'status' => 'required',
         ]);
 

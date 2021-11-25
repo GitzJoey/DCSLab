@@ -60,7 +60,8 @@ class UnitController extends BaseController
     {
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'units')],
-            'name' => 'required|max:255'
+            'name' => 'required|max:255',
+            'category' => 'required'
         ]);
 
         if ($request['code'] == 'AUTO') {

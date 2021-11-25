@@ -80,9 +80,7 @@ class CustomerGroupServiceImpl implements CustomerGroupService
 
     public function read($userId)
     {
-        $user = User::find($userId);
-        $company_list = $user->companies()->pluck('company_id');
-        return CustomerGroup::with('cash')->whereIn('company_id', $company_list)->paginate();
+        return CustomerGroup::with('cash', 'company')->bySelectedCompany()->paginate();
     }
 
     public function getAllCustomerGroup()

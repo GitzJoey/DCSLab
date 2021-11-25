@@ -51,6 +51,19 @@ class CustomerGroupController extends BaseController
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'customergroups')],
             'name' => 'required|max:255',
+            'is_memebr_card' => 'required',
+            'limit_outstanding_notes' => 'required',
+            'limit_payable_nominal' => 'required',
+            'limit_age_notes' => 'required',
+            'term' => 'required',
+            'selling_point' => 'required',
+            'selling_point_multiple' => 'required',
+            'global_markup_percent' => 'required',
+            'global_markup_nominal' => 'required',
+            'global_discount_percent' => 'required',
+            'global_discount_nominal' => 'required',
+            'round on' => 'required',
+            'category' => 'required',
         ]);
 
         if ($request['code'] == 'AUTO') {

@@ -42,8 +42,7 @@ class ProductBrandServiceImpl implements ProductBrandService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        return ProductBrand::paginate();
+        return ProductBrand::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllProductBrand()
