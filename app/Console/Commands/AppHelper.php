@@ -61,6 +61,7 @@ class AppHelper extends Command
             $this->info('[2] Clear All Cache');
             $this->info('[3] Change User Roles');
             $this->info('[4] Data Seeding');
+            $this->info('[5] Refresh Database');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
@@ -83,6 +84,9 @@ class AppHelper extends Command
                     $this->seedCompanies();
                     sleep(3);
                     $this->info('Done.');
+                    break;
+                case 5:
+                    $this->refreshDatabase();
                     break;
                 case 'X':
                 default:
@@ -141,6 +145,12 @@ class AppHelper extends Command
         $seeder->callWith(CompanyTableSeeder::class, [$companies]);
 
         $this->info('CompanyTableSeeder Finish.');
+    }
+
+    private function refreshDatabase()
+    {
+        $this->info('THIS ACTIONS WILL REMOVE ALL DATA AND LEAVING ONLY DEFAULT DATA');
+        $run = $this->confirm('CONFIRM TO REFRESH DATABASE?', false);
     }
 
     private function changeUserRoles()

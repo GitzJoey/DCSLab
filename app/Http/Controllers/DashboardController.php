@@ -7,20 +7,15 @@ use Illuminate\Http\Request;
 
 class DashboardController extends BaseController
 {
-    private $activityLogService;
-
-    public function __construct(ActivityLogService $activityLogService)
+    public function __construct()
     {
         parent::__construct();
 
         $this->middleware('auth');
-        $this->activityLogService = $activityLogService;
     }
 
     public function index(Request $request)
     {
-        $this->activityLogService->RoutingActivity($request->route()->getName(), $request->all());
-
         return view('dashboard.midone');
     }
 
@@ -36,6 +31,18 @@ class DashboardController extends BaseController
                         'icon' => '',
                         'pageName' => 'side-menu-dashboard-maindashboard',
                         'title' => 'Main Dashboard'
+                    )
+                ]
+            ),
+            array(
+                'icon' => 'UmbrellaIcon',
+                'pageName' => 'side-menu-company',
+                'title' => 'Company',
+                'subMenu' => [
+                    array (
+                        'icon' => '',
+                        'pageName' => 'side-menu-company-company',
+                        'title' => 'Company'
                     )
                 ]
             ),

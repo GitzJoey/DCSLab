@@ -108,12 +108,18 @@
 </template>
 
 <script setup>
+// Vue Import
 import { inject, onMounted, ref } from "vue";
+// Helper Import
 import mainMixins from '../../mixins';
 
+// Mixins
 const { t, route, assetPath } = mainMixins();
 
+// Data - UI
 const mode = ref('list');
+
+// Data - Views
 const messageFolder = ref('inbox');
 const messageList = ref([]);
 const message = ref({
@@ -122,6 +128,7 @@ const message = ref({
     text: ''
 });
 
+// onMounted
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
@@ -129,6 +136,7 @@ onMounted(() => {
     getMessages('inbox');
 });
 
+// Methods
 function createNew() {
     mode.value = 'create';
     message.value = emptyMessage();

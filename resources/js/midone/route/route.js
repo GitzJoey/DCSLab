@@ -7,6 +7,10 @@ import Profile from '../views/dashboard/Profile.vue';
 import Inbox from '../views/dashboard/Inbox.vue';
 import Activity from '../views/dashboard/Activity.vue';
 
+/* Ext */
+import Company from '../views/company/Company.vue';
+/* Ext */
+
 import AdminUsers from "../views/administrators/Users";
 
 import DBBackup from "../views/dev/DBBackup";
@@ -44,6 +48,18 @@ const routes = [
                 component: Activity,
                 meta: { remember: true }
             },
+        ],
+    },
+    {
+        path: root + '/company',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/company' + '/company',
+                name: 'side-menu-company-company',
+                component: Company,
+                meta: { remember: true }
+            }
         ],
     },
     {

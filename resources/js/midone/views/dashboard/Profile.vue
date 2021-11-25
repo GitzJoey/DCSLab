@@ -288,11 +288,7 @@ import { useStore } from "../../store";
 // Components Import
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
-const store = useStore();
-const { t, assetPath, isEmptyObject, route } = mainMixins();
-
-const rolesList = ref([]);
-
+// Vee-Validate Schema
 const schema = {
     name: 'required',
     tax_id: 'required',
@@ -309,14 +305,26 @@ const schema_changePassword = {
     password_confirmation: 'required',
 };
 
+// Declarations
+const store = useStore();
+
+// Mixins
+const { t, assetPath, isEmptyObject, route } = mainMixins();
+
+// Data - VueX
+const userContext = computed(() => store.state.main.userContext );
+
+// Data - UI
 const alertErrors = ref({});
 const alertType = ref('');
 const alertTitle = ref('');
-
 const loading = ref(false);
+const mode = ref('personal_info')
 
-const userContext = computed(() => store.state.main.userContext );
+// Data - Views
+const rolesList = ref([]);
 
+// Computed
 const retrieveImage = computed(() => {
     if (userContext.value.profile.img_path && userContext.value.profile.img_path !== '') {
         if (userContext.value.profile.img_path.includes('data:image')) {
@@ -329,19 +337,19 @@ const retrieveImage = computed(() => {
     }
 });
 
-const mode = ref('personal_info')
-
-function changeTab(name) {
-    mode.value = name;
-    resetAlertErrors();
-}
-
+// onMounted
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
     getRoles();
 });
+
+// Methods
+function changeTab(name) {
+    mode.value = name;
+    resetAlertErrors();
+}
 
 function getRoles() {
     axios.get(route('api.get.db.admin.users.roles.read')).then(response => {

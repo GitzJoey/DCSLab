@@ -10,6 +10,9 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
+/* Ext */
+use App\Http\Controllers\CompanyController;
+/* Ext */
 
 Route::bind('id', function ($id) {
     if (!is_numeric($id)) {
@@ -27,7 +30,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         /* Ext */
         Route::group(['prefix' => 'company', 'as' => '.company'], function() {
             Route::group(['prefix' => 'company', 'as' => '.company'], function() {
-
+                Route::get('read', [CompanyController::class, 'read'])->name('read');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
 

@@ -279,6 +279,25 @@
 </template>
 
 <script setup>
+/* Stuctures
+// Vue Import
+// Helper Import
+// Core Components Import
+// Components Import
+
+// Vee-Validate Schema
+// Declarations
+// Mixins
+// Data - VueX
+// Data - UI
+// Data - Views
+
+// onMounted
+// Methods
+// Computed
+// Watcher
+*/
+
 // Vue Import
 import { inject, onMounted, ref, computed } from 'vue'
 // Helper Import
@@ -337,7 +356,7 @@ onMounted(() => {
     loading.value = false;
 });
 
-//Methods
+// Methods
 function getUser(args) {
     userList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -479,7 +498,7 @@ function handleUpload(e) {
     fileReader.readAsDataURL(files[0])
 }
 
-//Computed
+// Computed
 const retrieveImage = computed(() => {
     if (user.value.profile.img_path && user.value.profile.img_path !== '') {
         if (user.value.profile.img_path.includes('data:image')) {
