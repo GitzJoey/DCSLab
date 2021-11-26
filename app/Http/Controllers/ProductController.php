@@ -111,8 +111,11 @@ class ProductController extends BaseController
                     $new_product_unit_code = $request->product_unit_code[$i];
                 };
 
-                $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
-                $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+                $is_base = is_null($request['is_base'][$i]) ? 0 : $request['is_base'][$i];
+                $is_base = is_numeric($is_base) ? $is_base : 0;
+
+                $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : is_null($request['is_primary_unit'][$i]);
+                $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
 
                 array_push($product_units, array (
                     'code' => $new_product_unit_code,
@@ -252,8 +255,11 @@ class ProductController extends BaseController
                     $new_product_unit_code = $request->product_unit_code[$i];
                 };
 
-                // $is_base = is_null($request['is_base'][$i]) ? 0 : 1;
-                // $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
+                $is_base = is_null($request['is_base'][$i]) ? 0 : $request['is_base'][$i];
+                $is_base = is_numeric($is_base) ? $is_base : 0;
+
+                $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : is_null($request['is_primary_unit'][$i]);
+                $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
 
                 array_push($product_units, array (
                     'id' => $product_unit_id,                    
@@ -262,8 +268,8 @@ class ProductController extends BaseController
                     'product_id' => $id,
                     'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                     'conv_value' => $request['conv_value'][$i],
-                    'is_base' => $request['is_base'][$i],
-                    'is_primary_unit' => $request['is_primary_unit'][$i],
+                    'is_base' => $is_base,
+                    'is_primary_unit' => $is_primary_unit,
                     'remarks' => $request['remarks']
                 ));
             }
