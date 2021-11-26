@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\RandomGenerator;
 use Illuminate\Http\Request;
 
 class CommonController extends BaseController
@@ -274,5 +275,10 @@ class CommonController extends BaseController
             ['name' => 'components.dropdown.values.statusDDL.active', 'code' => '1'],
             ['name' => 'components.dropdown.values.statusDDL.inactive', 'code' => '0'],
         ];
+    }
+
+    public function getRandGenerator(Request $request)
+    {
+
     }
 }

@@ -14,33 +14,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="intro-x" v-if="tableProps.dataList !== undefined" v-for="(c, cIdx) in tableProps.dataList.data">
-                            <td>{{ c.code }}</td>
-                            <td>{{ c.name }}</td>
-                            <td>
-                                <CheckCircleIcon v-if="c.default === 1" />
-                                <XIcon v-if="c.default === 0" />
-                            </td>
-                            <td>
-                                <CheckCircleIcon v-if="c.status === 1" />
-                                <XIcon v-if="c.status === 0" />
-                            </td>
-                            <td class="table-report__action w-56">
-                                <div class="flex justify-center items-center">
-                                    <a class="flex items-center mr-3" href="" @click.prevent="showSelected(uIdx)">
-                                        <InfoIcon class="w-4 h-4 mr-1" />
-                                        {{ t('components.data-list.view') }}
-                                    </a>
-                                    <a class="flex items-center mr-3" href="" @click.prevent="editSelected(uIdx)">
-                                        <CheckSquareIcon class="w-4 h-4 mr-1" />
-                                        {{ t('components.data-list.edit') }}
-                                    </a>
-                                    <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(uIdx)">
-                                        <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+                        <template v-if="tableProps.dataList !== undefined" v-for="(c, cIdx) in tableProps.dataList.data">
+                            <tr class="intro-x">
+                                <td>{{ c.code }}</td>
+                                <td><a href="" @click.prevent="toggleDetail(cIdx)" class="hover:animate-pulse">{{ c.name }}</a></td>
+                                <td>
+                                    <CheckCircleIcon v-if="c.default === 1" />
+                                    <XIcon v-if="c.default === 0" />
+                                </td>
+                                <td>
+                                    <CheckCircleIcon v-if="c.status === 1" />
+                                    <XIcon v-if="c.status === 0" />
+                                </td>
+                                <td class="table-report__action w-56">
+                                    <div class="flex justify-center items-center">
+                                        <a class="flex items-center mr-3" href="" @click.prevent="showSelected(cIdx)">
+                                            <InfoIcon class="w-4 h-4 mr-1" />
+                                            {{ t('components.data-list.view') }}
+                                        </a>
+                                        <a class="flex items-center mr-3" href="" @click.prevent="editSelected(cIdx)">
+                                            <CheckSquareIcon class="w-4 h-4 mr-1" />
+                                            {{ t('components.data-list.edit') }}
+                                        </a>
+                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(cIdx)">
+                                            <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr :class="{'intro-x':true, 'hidden': expandDetail !== cIdx}">
+                                <td colspan="5">
+                                    {{ c.name }}
+                                    <br/><br/><br/><br/><br/>
+                                </td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
                 <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
@@ -76,7 +84,55 @@
         </div>
         <div class="loader-container">
             <VeeForm id="companyForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors, validate }">
-
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputCode" class="form-label w-40 px-3">{{ t('views.company.fields.code') }}</label>
+                        <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" />
+                        <div class="" v-if="mode === 'show'">{{ company.code }}</div>
+                    </div>
+                    <ErrorMessage name="code" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputName" class="form-label w-40 px-3">{{ t('views.company.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <div class="" v-if="mode === 'show'">{{ company.name }}</div>
+                    </div>
+                    <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputDefault" class="form-label w-40 px-3">{{ t('views.company.fields.default') }}</label>
+                        <input id="inputDefault" type="checkbox" class="form-check-switch ml-1" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        <div class="" v-if="mode === 'show'">
+                            <span v-if="company.default === 1"><CheckCircleIcon /></span>
+                            <span v-if="company.default === 0"><CircleIcon /></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
+                        <label for="inputStatus" class="form-label w-40 px-3">{{ t('views.company.fields.status') }}</label>
+                        <select class="form-control form-select" id="inputStatus" name="status" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </select>
+                        <div class="" v-if="mode === 'show'">
+                            <span v-if="company.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                            <span v-if="company.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                        </div>
+                        <div class="" v-if="mode === 'show'">{{ company.status }}</div>
+                    </div>
+                    <ErrorMessage name="status" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                </div>
+                <div class="mb-3" v-if="this.mode === 'create' || this.mode === 'edit'">
+                    <div class="form-inline">
+                        <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
+                            <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
+                            <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
+                        </div>
+                    </div>
+                </div>
             </VeeForm>
             <div class="loader-overlay" v-if="loading"></div>
         </div>
@@ -112,6 +168,7 @@ const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
+const expandDetail = ref(null);
 
 // Data - Views
 const companyList = ref([]);
@@ -239,6 +296,14 @@ function backToList() {
     resetAlertErrors();
     mode.value = 'list';
     getAllCompany({ page: companyList.value.current_page, pageSize: companyList.value.per_page });
+}
+
+function toggleDetail(idx) {
+    if (expandDetail.value === idx) {
+        expandDetail.value = null;
+    } else {
+        expandDetail.value = idx;
+    }
 }
 
 // Computed
