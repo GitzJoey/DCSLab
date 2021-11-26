@@ -510,13 +510,13 @@ export default {
                         unit: {hId: ''}
                     }
                 ],
-                tax_status: '0',
+                tax_status: '1',
                 defaultSupplier: '',
                 supplier: {hId: ''},
                 remarks: '',
-                point: '',
+                point: '0',
                 is_use_serial: '',
-                product_type: '',
+                product_type: '3',
                 status: '1',
             }
         },
