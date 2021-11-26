@@ -25,63 +25,63 @@ class DashboardController extends BaseController
             array(
                 'icon' => 'HomeIcon',
                 'pageName' => 'side-menu-dashboard',
-                'title' => 'Dashboard',
+                'title' => 'components.menu.dashboard',
                 'subMenu' => [
                     array (
                         'icon' => '',
                         'pageName' => 'side-menu-dashboard-maindashboard',
-                        'title' => 'Main Dashboard'
+                        'title' => 'components.menu.main-dashboard'
                     )
                 ]
             ),
             array(
                 'icon' => 'UmbrellaIcon',
                 'pageName' => 'side-menu-company',
-                'title' => 'Company',
+                'title' => 'components.menu.company',
                 'subMenu' => [
                     array (
                         'icon' => '',
                         'pageName' => 'side-menu-company-company',
-                        'title' => 'Company'
+                        'title' => 'components.menu.company-company'
                     )
                 ]
             ),
             array(
                 'icon' => 'CpuIcon',
                 'pageName' => 'side-menu-administrators',
-                'title' => 'Administrator',
+                'title' => 'components.menu.administrators',
                 'subMenu' => [
                     array (
                         'icon' => '',
                         'pageName' => 'side-menu-administrators-users',
-                        'title' => 'Users'
+                        'title' => 'components.menu.administrators-users'
                     )
                 ]
             ),
             array(
                 'icon' => 'GithubIcon',
                 'pageName' => 'side-menu-devtools',
-                'title' => 'Dev Tools',
+                'title' => 'components.menu.devtools',
                 'subMenu' => [
                     array (
                         'icon' => '',
                         'pageName' => 'side-menu-devtools-backup',
-                        'title' => 'DB Backup'
+                        'title' => 'components.menu.devtools-dbbackup'
                     ),
                     array (
                         'icon' => '',
                         'pageName' => 'side-menu-devtools-examples',
-                        'title' => 'Playgrounds',
+                        'title' => 'components.menu.devtools-playgrounds',
                         'subMenu' => [
                             array (
                                 'icon' => '',
                                 'pageName' => 'side-menu-devtools-examples-ex1',
-                                'title' => 'Example 1'
+                                'title' => 'components.menu.devtools-playgrounds-ex1'
                             ),
                             array (
                                 'icon' => '',
                                 'pageName' => 'side-menu-devtools-examples-ex2',
-                                'title' => 'Example 2'
+                                'title' => 'components.menu.devtools-playgrounds-ex2'
                             )
                         ]
                     )

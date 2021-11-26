@@ -49,11 +49,25 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function read($userId)
+    public function read($userId, $search = '', $paginate = true, $perPage = 10)
     {
         $usr = User::find($userId)->first();
+        if (!$usr) return null;
+
         $compIds = $usr->companies()->pluck('company_id');
-        return Company::whereIn('id', $compIds)->paginate();
+
+        if (empty($search)) {
+            $companies = Company::whereIn('id', $compIds);
+        } else {
+            $companies = Company::whereIn('id', $compIds)->where('name', 'like', '%'.$search.'%');
+        }
+
+        if ($paginate) {
+            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+            return $companies->paginate($perPage);
+        } else {
+            return $companies->get();
+        }
     }
 
     public function getAllActiveCompany($userId)

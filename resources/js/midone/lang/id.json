@@ -1,5 +1,18 @@
 {
     "components": {
+        "menu": {
+            "dashboard": "Dashboard",
+            "main-dashboard": "Dashboard Utama",
+            "company": "Perusahaan",
+            "company-company": "Perusahaan",
+            "administrators": "Administrators",
+            "administrators-users": "Pengguna",
+            "devtools": "Dev Tools",
+            "devtools-dbbackup": "DB Backup",
+            "devtools-playgrounds": "Playgrounds",
+            "devtools-playgrounds-ex1": "Playground 1",
+            "devtools-playgrounds-ex2": "Playground 2"
+        },
         "alert-placeholder": {
             "success_alert": {
                 "password_changed_successfully": "Password Berhasil Dirubah!",
@@ -113,6 +126,7 @@
         "users": {
             "page_title": "Pengguna",
             "table": {
+                "title": "Daftar Pengguna",
                 "cols": {
                     "name": "Nama",
                     "email": "Email",
@@ -152,6 +166,29 @@
         },
         "activity": {
             "title": "Catatan Aktifitas"
+        },
+        "company": {
+            "table": {
+                "title": "Dafter Perusahaan",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "default": "Default",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Perusahaan",
+                "edit": "Ubah Perusahaan",
+                "show": "Tampilkan Perusahaan",
+                "delete": "Hapus Perusahaan"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "default": "Default",
+                "status": "Status"
+            }
         }
     }
 }

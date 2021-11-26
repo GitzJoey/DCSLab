@@ -12,36 +12,36 @@
                     <template v-for="(menu, menuKey) in formattedMenu">
                         <li v-if="menu == 'devider'" :key="menu + menuKey" class="side-nav__devider my-6"></li>
                         <li v-else :key="menu + menuKey">
-                            <Tippy tag="a" :content="menu.title" :options="{ placement: 'left' }" :href="menu.subMenu ? 'javascript:;' : router.resolve({ name: menu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': menu.active, 'side-menu--open': menu.activeDropdown }" @click="linkTo(menu, router, $event)">
+                            <Tippy tag="a" :content="t(menu.title)" :options="{ placement: 'left' }" :href="menu.subMenu ? 'javascript:;' : router.resolve({ name: menu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': menu.active, 'side-menu--open': menu.activeDropdown }" @click="linkTo(menu, router, $event)">
                                 <div class="side-menu__icon">
                                     <component :is="menu.icon" />
                                 </div>
                                 <div class="side-menu__title">
-                                    {{ menu.title }}
+                                    {{ t(menu.title) }}
                                     <ChevronDownIcon v-if="$h.isset(menu.subMenu)" class="side-menu__sub-icon" :class="{ 'transform rotate-180': menu.activeDropdown }" />
                                 </div>
                             </Tippy>
                             <transition @enter="enter" @leave="leave">
                                 <ul v-if="menu.subMenu && menu.activeDropdown">
                                     <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
-                                        <Tippy tag="a" :content="subMenu.title" :options="{ placement: 'left' }" :href="subMenu.subMenu ? 'javascript:;' : router.resolve({ name: subMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': subMenu.active }" @click="linkTo(subMenu, router, $event)">
+                                        <Tippy tag="a" :content="t(subMenu.title)" :options="{ placement: 'left' }" :href="subMenu.subMenu ? 'javascript:;' : router.resolve({ name: subMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': subMenu.active }" @click="linkTo(subMenu, router, $event)">
                                             <div class="side-menu__icon">
                                                 <ChevronRightIcon />
                                             </div>
                                             <div class="side-menu__title">
-                                                {{ subMenu.title }}
+                                                {{ t(subMenu.title) }}
                                                 <ChevronDownIcon v-if="$h.isset(subMenu.subMenu)" class="side-menu__sub-icon" :class="{ 'transform rotate-180': subMenu.activeDropdown }" />
                                             </div>
                                         </Tippy>
                                         <transition @enter="enter" @leave="leave">
                                             <ul v-if="subMenu.subMenu && subMenu.activeDropdown">
                                                 <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
-                                                    <Tippy tag="a" :content="lastSubMenu.title" :options="{ placement: 'left' }" :href="lastSubMenu.subMenu ? 'javascript:;' : router.resolve({ name: lastSubMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': lastSubMenu.active }" @click="linkTo(lastSubMenu, router, $event)">
+                                                    <Tippy tag="a" :content="t(lastSubMenu.title)" :options="{ placement: 'left' }" :href="lastSubMenu.subMenu ? 'javascript:;' : router.resolve({ name: lastSubMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': lastSubMenu.active }" @click="linkTo(lastSubMenu, router, $event)">
                                                         <div class="side-menu__icon">
                                                             <ChevronsRightIcon />
                                                         </div>
                                                         <div class="side-menu__title">
-                                                            {{ lastSubMenu.title }}
+                                                            {{ t(lastSubMenu.title) }}
                                                         </div>
                                                     </Tippy>
                                                 </li>
@@ -70,12 +70,12 @@
                     <template v-if="formattedMenu.length !== 0" v-for="(menu, menuKey) in formattedMenu">
                         <li v-if="menu === 'devider'" :key="menu + menuKey" class="side-nav__devider my-6"> </li>
                         <li v-else :key="menu + menuKey">
-                            <SideMenuTooltip tag="a" :content="menu.title" :href=" menu.subMenu ? 'javascript:;' : router.resolve({ name: menu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': menu.active, 'side-menu--open': menu.activeDropdown }" @click="linkTo(menu, router, $event)">
+                            <SideMenuTooltip tag="a" :content="t(menu.title)" :href=" menu.subMenu ? 'javascript:;' : router.resolve({ name: menu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': menu.active, 'side-menu--open': menu.activeDropdown }" @click="linkTo(menu, router, $event)">
                                 <div class="side-menu__icon">
                                     <component :is="menu.icon" />
                                 </div>
                                 <div class="side-menu__title">
-                                    {{ menu.title }}
+                                    {{ t(menu.title) }}
                                     <div v-if="menu.subMenu" class="side-menu__sub-icon" :class="{ 'transform rotate-180': menu.activeDropdown }">
                                         <ChevronDownIcon />
                                     </div>
@@ -84,12 +84,12 @@
                             <transition @enter="enter" @leave="leave">
                                 <ul v-if="menu.subMenu && menu.activeDropdown">
                                     <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
-                                        <SideMenuTooltip tag="a" :content="subMenu.title" :href="subMenu.subMenu ? 'javascript:;' : router.resolve({ name: subMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': subMenu.active }" @click="linkTo(subMenu, router, $event)">
+                                        <SideMenuTooltip tag="a" :content="t(subMenu.title)" :href="subMenu.subMenu ? 'javascript:;' : router.resolve({ name: subMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': subMenu.active }" @click="linkTo(subMenu, router, $event)">
                                             <div class="side-menu__icon">
                                                 <ChevronRightIcon />
                                             </div>
                                             <div class="side-menu__title">
-                                                {{ subMenu.title }}
+                                                {{ t(subMenu.title) }}
                                                 <div v-if="subMenu.subMenu" class="side-menu__sub-icon" :class="{ 'transform rotate-180': subMenu.activeDropdown }">
                                                     <ChevronDownIcon />
                                                 </div>
@@ -98,12 +98,12 @@
                                         <transition @enter="enter" @leave="leave">
                                             <ul v-if="subMenu.subMenu && subMenu.activeDropdown">
                                                 <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
-                                                    <SideMenuTooltip tag="a" :content="lastSubMenu.title" :href="lastSubMenu.subMenu ? 'javascript:;' : router.resolve({ name: lastSubMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': lastSubMenu.active }" @click="linkTo(lastSubMenu, router, $event)">
+                                                    <SideMenuTooltip tag="a" :content="t(lastSubMenu.title)" :href="lastSubMenu.subMenu ? 'javascript:;' : router.resolve({ name: lastSubMenu.pageName }).path" class="side-menu" :class="{ 'side-menu--active': lastSubMenu.active }" @click="linkTo(lastSubMenu, router, $event)">
                                                         <div class="side-menu__icon">
                                                             <ChevronsRightIcon />
                                                         </div>
                                                         <div class="side-menu__title">
-                                                            {{ lastSubMenu.title }}
+                                                            {{ t(lastSubMenu.title) }}
                                                         </div>
                                                     </SideMenuTooltip>
                                                 </li>
@@ -167,7 +167,7 @@ export default {
 
         const menuMode = ref('side');
 
-        const { assetPath } = mainMixins();
+        const { t, assetPath } = mainMixins();
 
         provide('setDashboardLayout', newVal => {
             dashboardLayout.value = newVal
@@ -222,6 +222,7 @@ export default {
         });
 
         return {
+            t,
             dashboardLayout,
             formattedMenu,
             router,

@@ -1,5 +1,18 @@
 {
     "components": {
+        "menu": {
+            "dashboard": "Dashboard",
+            "main-dashboard": "Main Dashboard",
+            "company": "Company",
+            "company-company": "Company",
+            "administrators": "Administrators",
+            "administrators-users": "Users",
+            "devtools": "Dev Tools",
+            "devtools-dbbackup": "DB Backup",
+            "devtools-playgrounds": "Playgrounds",
+            "devtools-playgrounds-ex1": "Playground 1",
+            "devtools-playgrounds-ex2": "Playground 2"
+        },
         "alert-placeholder": {
             "success_alert": {
                 "password_changed_successfully": "Password Changed Successfully!",
@@ -113,6 +126,7 @@
         "users": {
             "page_title": "Users",
             "table": {
+                "title": "User Lists",
                 "cols": {
                     "name": "Name",
                     "email": "Email",
@@ -152,6 +166,29 @@
         },
         "activity": {
             "title": "Activity Log"
+        },
+        "company": {
+            "table": {
+                "title": "Company Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "default": "Default",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Company",
+                "edit": "Edit Company",
+                "show": "Show Company",
+                "delete": "Delete Company"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "default": "Default",
+                "status": "Status"
+            }
         }
     }
 }

@@ -12,7 +12,7 @@ interface CompanyService
         $userId
     );
 
-    public function read($userId);
+    public function read($userId, $search = '', $paginate = true, $perPage = 10);
 
     public function getAllActiveCompany($userId);
 

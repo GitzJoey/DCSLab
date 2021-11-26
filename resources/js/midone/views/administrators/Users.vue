@@ -1,7 +1,7 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList title="User Lists" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+        <DataList :title="t('views.users.table.title')" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
             <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
@@ -183,7 +183,7 @@
                         <label for="inputStatus" class="form-label w-40 px-3">{{ t('views.users.fields.status') }}</label>
                         <select class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ c.name }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </select>
                         <div class="" v-if="mode === 'show'">
                             <span v-if="user.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
@@ -368,15 +368,15 @@ function getUser(args) {
 }
 
 function getDDL() {
-    axios.get('/api/get/dashboard/common/ddl/list/countries').then(response => {
+    axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
         countriesDDL.value = response.data;
     });
 
-    axios.get('/api/get/dashboard/common/ddl/list/statuses').then(response => {
+    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 
-    axios.get('/api/get/dashboard/admin/users/roles/read').then(response => {
+    axios.get(route('api.get.db.admin.users.roles.read')).then(response => {
         rolesDDL.value = response.data;
     });
 }

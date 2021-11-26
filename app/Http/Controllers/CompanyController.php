@@ -23,10 +23,14 @@ class CompanyController extends BaseController
         $this->companyService = $companyService;
     }
 
-    public function read()
+    public function read(Request $request)
     {
         $userId = Auth::id();
-        return $this->companyService->read($userId);
+        $search = $request->has('search') ? $request['search']:'';
+        $paginate = true;
+        $perPage = $request->has('perPage') ? $request['perPage']:null;
+
+        return $this->companyService->read($userId, $search, $paginate, $perPage);
     }
 
     public function getAllActiveCompany()
