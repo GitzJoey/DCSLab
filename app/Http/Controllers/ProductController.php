@@ -149,7 +149,9 @@ class ProductController extends BaseController
 
         # Jika Service... Maka...
         if ($request->product_type[0] == '4') {
-            $company_id = $request->company_id != null ? Hashids::decode($request->company_id)[0]:$company_id = null;          
+            $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+            $company_id = Hashids::decode($company_id)[0];
+
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
             $brand_id = null;
@@ -223,7 +225,9 @@ class ProductController extends BaseController
 
         // Jika product maka...
         if ($request->product_type !== '4') {
-            $company_id = $request->company_id != null ? Hashids::decode($request->company_id)[0]:$company_id = null;          
+            $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+            $company_id = Hashids::decode($company_id)[0];
+
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
@@ -239,6 +243,8 @@ class ProductController extends BaseController
             $product_units = [];
             $count_unit = count($request['unit_id']);
             for ($i = 0; $i < $count_unit; $i++) {
+                $product_unit_id = $request['product_unit_hId'][$i] != null ? Hashids::decode($request['product_unit_hId'][$i])[0] : null;
+
                 if ($request->product_unit_code[$i] == 'AUTO') {
                     $randomGenerator = new randomGenerator();
                     $new_product_unit_code = $randomGenerator->generateNumber(10000, 99999);
@@ -250,7 +256,8 @@ class ProductController extends BaseController
                 $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : 1;
 
                 array_push($product_units, array (
-                    'id' => Hashids::decode($request['product_unit_hId'][$i])[0],
+                    // 'id' => Hashids::decode($request['product_unit_hId'][$i])[0],                    
+                    'id' => $product_unit_id,                    
                     'code' => $new_product_unit_code,
                     'company_id' => $company_id,
                     'product_id' => $id,
@@ -286,7 +293,9 @@ class ProductController extends BaseController
 
         // Jika service maka...
         if ($request->product_type == '4') {
-            $company_id = $request->company_id != null ? Hashids::decode($request->company_id)[0]:$company_id = null;          
+            $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+            $company_id = Hashids::decode($company_id)[0];
+
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
             $name = $request->name;

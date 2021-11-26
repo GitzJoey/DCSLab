@@ -183,33 +183,46 @@ class ProductServiceImpl implements ProductService
 
             $pu = [];   
             foreach ($product_units as $product_unit) {
-                array_push($pu, new ProductUnit(array (
+                array_push($pu, array(
                     'id' => $product_unit['id'],
                     'code' => $product_unit['code'],
                     'company_id' => $product_unit['company_id'],
-                    'product_id' => $product['id'],
+                    'product_id' => $id,
                     'unit_id' => $product_unit['unit_id'],
                     'is_base' => $product_unit['is_base'],
                     'conversion_value' => $product_unit['conv_value'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks']
-                )));
+                ));
             }
-            ProductUnit::upsert(
+
+            $retval = ProductUnit::upsert(
+                $pu, 
                 [
-                    ['departure' => 'Oakland', 'destination' => 'San Diego', 'price' => 99],
-                    ['departure' => 'Chicago', 'destination' => 'New York', 'price' => 150]
+                    'id', 
+                    'code',
+                    'company_id',
+                    'product_id',
+                    'unit_id',
+                    'is_base',
+                    'conversion_value',
+                    'is_primary_unit',
+                    'remarks'
                 ], 
                 [
-                    'departure', 
-                    'destination'
-                ], 
-                [
-                    'price'
+                    'id', 
+                    'code',
+                    'company_id',
+                    'product_id',
+                    'unit_id',
+                    'is_base',
+                    'conversion_value',
+                    'is_primary_unit',
+                    'remarks'
                 ]
             );
 
-            $product->product_unit()->saveMany($pu);
+            // $product->product_unit()->saveMany($pu);
 
             DB::commit();
 
