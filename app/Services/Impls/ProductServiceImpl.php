@@ -181,48 +181,84 @@ class ProductServiceImpl implements ProductService
                 'status' => $status
             ]);
 
-            $pu = [];   
+            $new_pu = [];
             foreach ($product_units as $product_unit) {
-                array_push($pu, array(
-                    'id' => $product_unit['id'],
-                    'code' => $product_unit['code'],
-                    'company_id' => $product_unit['company_id'],
-                    'product_id' => $id,
-                    'unit_id' => $product_unit['unit_id'],
-                    'is_base' => $product_unit['is_base'],
-                    'conversion_value' => $product_unit['conv_value'],
-                    'is_primary_unit' => $product_unit['is_primary_unit'],
-                    'remarks' => $product_unit['remarks']
-                ));
+                if (is_null($product_unit['id']) == true) {
+                    array_push($new_pu, new ProductUnit(array(
+                        'code' => $product_unit['code'],
+                        'company_id' => $product_unit['company_id'],
+                        'product_id' => $id,
+                        'unit_id' => $product_unit['unit_id'],
+                        'is_base' => $product_unit['is_base'],
+                        'conversion_value' => $product_unit['conv_value'],
+                        'is_primary_unit' => $product_unit['is_primary_unit'],
+                        'remarks' => $product_unit['remarks']
+                    )));
+                };
+            }
+            if (count($new_pu) > 0) {
+                $old_product = new Product();
+                $old_product->id = $id;
+                $old_product->product_unit()->saveMany($new_pu);
+            };
+
+            foreach ($product_units as $product_unit) {
+                if (is_null($product_unit['id']) == false) {
+                    $old_product_unit = ProductUnit::where('id', '=', $product_unit['id']);
+
+                    $old_product_unit->update([
+                        'code' => $product_unit['code'],
+                        'company_id' => $product_unit['company_id'],
+                        'product_id' => $id,
+                        'unit_id' => $product_unit['unit_id'],
+                        'is_base' => $product_unit['is_base'],
+                        'conversion_value' => $product_unit['conv_value'],
+                        'is_primary_unit' => $product_unit['is_primary_unit'],
+                        'remarks' => $product_unit['remarks']
+                    ]);
+                };
             }
 
-            $retval = ProductUnit::upsert(
-                $pu, 
-                [
-                    'id', 
-                    'code',
-                    'company_id',
-                    'product_id',
-                    'unit_id',
-                    'is_base',
-                    'conversion_value',
-                    'is_primary_unit',
-                    'remarks'
-                ], 
-                [
-                    'id', 
-                    'code',
-                    'company_id',
-                    'product_id',
-                    'unit_id',
-                    'is_base',
-                    'conversion_value',
-                    'is_primary_unit',
-                    'remarks'
-                ]
-            );
+            // $pu = [];
+            // foreach ($product_units as $product_unit) {
+            //     array_push($pu, array(
+            //         'id' => $product_unit['id'],
+            //         'code' => $product_unit['code'],
+            //         'company_id' => $product_unit['company_id'],
+            //         'product_id' => $id,
+            //         'unit_id' => $product_unit['unit_id'],
+            //         'is_base' => $product_unit['is_base'],
+            //         'conversion_value' => $product_unit['conv_value'],
+            //         'is_primary_unit' => $product_unit['is_primary_unit'],
+            //         'remarks' => $product_unit['remarks']
+            //     ));
+            // }
 
-            // $product->product_unit()->saveMany($pu);
+            // $retval = ProductUnit::upsert(
+            //     $pu, 
+            //     [
+            //         'id', 
+            //         'code',
+            //         'company_id',
+            //         'product_id',
+            //         'unit_id',
+            //         'is_base',
+            //         'conversion_value',
+            //         'is_primary_unit',
+            //         'remarks'
+            //     ], 
+            //     [
+            //         'id', 
+            //         'code',
+            //         'company_id',
+            //         'product_id',
+            //         'unit_id',
+            //         'is_base',
+            //         'conversion_value',
+            //         'is_primary_unit',
+            //         'remarks'
+            //     ]
+            // );
 
             DB::commit();
 

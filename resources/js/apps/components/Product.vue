@@ -510,13 +510,13 @@ export default {
                         unit: {hId: ''}
                     }
                 ],
-                tax_status: '0',
+                tax_status: '1',
                 defaultSupplier: '',
                 supplier: {hId: ''},
                 remarks: '',
-                point: '',
+                point: '0',
                 is_use_serial: '',
-                product_type: '',
+                product_type: '3',
                 status: '1',
             }
         },
@@ -557,14 +557,21 @@ export default {
             this.loading = true;
             if (this.mode === 'create') {
                 this.product.product_unit.splice(idx, 1);
+                this.loading = false;
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.productunit.delete', this.product.product_unit[idx].hId), new FormData($('#productForm')[0])).then(response => {
+                // console.log(this.product.product_unit[idx].hId);
+                if (this.product.product_unit[idx].hId !== '') {
+                    axios.post(route('api.post.dashboard.productunit.delete', this.product.product_unit[idx].hId), new FormData($('#productForm')[0])).then(response => {
+                        this.product.product_unit.splice(idx, 1);
+                        this.loading = false;
+                    }).catch(e => {
+                        this.handleError(e, actions);
+                        this.loading = false;
+                    });
+                } else { 
                     this.product.product_unit.splice(idx, 1);
                     this.loading = false;
-                }).catch(e => {
-                    this.handleError(e, actions);
-                    this.loading = false;
-                });
+                }
             } else { }
         },
         onSubmit(values, actions) {
