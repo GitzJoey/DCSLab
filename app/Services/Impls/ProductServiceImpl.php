@@ -48,7 +48,7 @@ class ProductServiceImpl implements ProductService
             $product->status = $status;
             $product->save();
 
-            $pu = [];   
+            $pu = [];
             foreach ($product_units as $product_unit) {
                 array_push($pu, new ProductUnit(array (
                     'code' => $product_unit['code'],
@@ -219,47 +219,6 @@ class ProductServiceImpl implements ProductService
                 };
             }
 
-            // $pu = [];
-            // foreach ($product_units as $product_unit) {
-            //     array_push($pu, array(
-            //         'id' => $product_unit['id'],
-            //         'code' => $product_unit['code'],
-            //         'company_id' => $product_unit['company_id'],
-            //         'product_id' => $id,
-            //         'unit_id' => $product_unit['unit_id'],
-            //         'is_base' => $product_unit['is_base'],
-            //         'conversion_value' => $product_unit['conv_value'],
-            //         'is_primary_unit' => $product_unit['is_primary_unit'],
-            //         'remarks' => $product_unit['remarks']
-            //     ));
-            // }
-
-            // $retval = ProductUnit::upsert(
-            //     $pu, 
-            //     [
-            //         'id', 
-            //         'code',
-            //         'company_id',
-            //         'product_id',
-            //         'unit_id',
-            //         'is_base',
-            //         'conversion_value',
-            //         'is_primary_unit',
-            //         'remarks'
-            //     ], 
-            //     [
-            //         'id', 
-            //         'code',
-            //         'company_id',
-            //         'product_id',
-            //         'unit_id',
-            //         'is_base',
-            //         'conversion_value',
-            //         'is_primary_unit',
-            //         'remarks'
-            //     ]
-            // );
-
             DB::commit();
 
             return $retval;
@@ -283,7 +242,7 @@ class ProductServiceImpl implements ProductService
         $product_type,
         $status
     )
-    
+
     {
         DB::beginTransaction();
 

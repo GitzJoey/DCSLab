@@ -87,7 +87,6 @@ class ProductController extends BaseController
             $request['code'] = $randomGenerator->generateNumber(10000, 99999);
         };
 
-        # Jika Product... Maka...Config:get('const.DEFAULT.PRODCUT_TUPE.RAW_MATERIAL,SERVICE)
         if ($request->product_type[0] !== '4') {
             $code = $request->code;
             $group_id = Hashids::decode($request->group_id)[0];
@@ -150,7 +149,6 @@ class ProductController extends BaseController
             };
         }
 
-        # Jika Service... Maka...
         if ($request->product_type[0] == '4') {
             $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
             $company_id = Hashids::decode($company_id)[0];
@@ -226,7 +224,6 @@ class ProductController extends BaseController
             'status' => 'required',
         ]);
 
-        // Jika product maka...
         if ($request->product_type !== '4') {
             $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
             $company_id = Hashids::decode($company_id)[0];
@@ -290,13 +287,11 @@ class ProductController extends BaseController
                 $status,
                 $product_units
             );
-
             if ($product == 0) {
                 return response()->error();
             };
         }
 
-        // Jika service maka...
         if ($request->product_type == '4') {
             $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
             $company_id = Hashids::decode($company_id)[0];
@@ -327,12 +322,10 @@ class ProductController extends BaseController
                 $status,
                 $product_units
             );
-    
             if ($product == 0) {
                 return response()->error();
             };
         }
-        
         return response()->success();
     }
 

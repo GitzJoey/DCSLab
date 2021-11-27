@@ -41,14 +41,14 @@ class Supplier extends Model
         'updated_at',
         'deleted_at'
     ];
-    
+
     protected $appends = ['hId'];
 
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
     }
-        
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -58,7 +58,7 @@ class Supplier extends Model
     {
         return $this->hasMany(Product::class);
     }
-    
+
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
     {
         return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);

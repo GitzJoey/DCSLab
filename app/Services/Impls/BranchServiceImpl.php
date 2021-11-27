@@ -3,7 +3,6 @@
 namespace App\Services\Impls;
 
 use App\Services\BranchService;
-use App\Models\User;
 use App\Models\Branch;
 
 use Illuminate\Support\Facades\Config;

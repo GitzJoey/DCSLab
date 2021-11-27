@@ -17,8 +17,6 @@ interface ProductGroupService
 
     public function getAllProductGroup_Service();
 
-    // public function getAllProductGroup_ProductAndService();
-
     public function update(
         $id,
         $company_id,

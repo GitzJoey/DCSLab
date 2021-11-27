@@ -66,15 +66,14 @@ class InvestorController extends BaseController
         $result = $this->investorService->create(
             $company_id,
             $request['code'],
-            $request['name'], 
-            $request['contact'], 
-            $request['address'], 
+            $request['name'],
+            $request['contact'],
+            $request['address'],
             $request['city'],
-            $request['tax_number'], 
-            $request['remarks'], 
+            $request['tax_number'],
+            $request['remarks'],
             $request['status']
         );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -101,7 +100,6 @@ class InvestorController extends BaseController
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

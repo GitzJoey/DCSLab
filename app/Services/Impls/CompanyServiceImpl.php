@@ -24,7 +24,6 @@ class CompanyServiceImpl implements CompanyService
         DB::beginTransaction();
 
         try {
-            // $user = User::find($userId)->first();
             $user = User::find($userId);
             if ($user->companies()->count() == 0) $default = 1;
 

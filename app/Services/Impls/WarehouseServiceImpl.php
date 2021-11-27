@@ -91,7 +91,6 @@ class WarehouseServiceImpl implements WarehouseService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
-        
     }
 
 
@@ -100,7 +99,6 @@ class WarehouseServiceImpl implements WarehouseService
         $warehouse = Warehouse::find($id);
 
         return $warehouse->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

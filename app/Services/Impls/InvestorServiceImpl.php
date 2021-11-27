@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\InvestorService;
 use App\Models\Investor;
-use App\Models\User;
 
 class InvestorServiceImpl implements InvestorService
 {
@@ -101,7 +100,6 @@ class InvestorServiceImpl implements InvestorService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-
 
     public function delete($id)
     {

@@ -66,7 +66,6 @@ class CapitalGroupController extends BaseController
             $request['code'],
             $request['name']
         );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 

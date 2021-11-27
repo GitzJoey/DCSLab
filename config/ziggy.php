@@ -18,20 +18,17 @@ return [
         'branch' => [
             'api.get.dashboard.branch.*',
             'api.post.dashboard.company.branches.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'employee' => [
             'api.get.dashboard.employee.read',
             'api.post.dashboard.company.employees.*',
-
             'api.get.dashboard.company.read.all_active',
             'api.get.common.countries.read',
         ],
         'warehouse' => [
             'api.get.dashboard.warehouse.read',
             'api.post.dashboard.company.warehouses.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'cash' => [
@@ -41,7 +38,6 @@ return [
         'capital' => [
             'api.get.dashboard.capital.read',
             'api.post.dashboard.capital.*',
-            
             'api.get.dashboard.company.read.all_active',
             'api.get.dashboard.investor.read.all_active',
             'api.get.dashboard.capitalgroup.read.all_active',
@@ -50,25 +46,21 @@ return [
         'capitalgroup' => [
             'api.get.dashboard.capitalgroup.read',
             'api.post.dashboard.capitalgroup.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'investor' => [
             'api.get.dashboard.investor.read',
             'api.post.dashboard.investor.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'expensegroup' => [
             'api.get.dashboard.expensegroup.read',
             'api.post.dashboard.expensegroup.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'incomegroup' => [
             'api.get.dashboard.incomegroup.read',
             'api.post.dashboard.incomegroup.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'supplier' => [
@@ -100,7 +92,6 @@ return [
             'api.get.dashboard.unit.read.product',
             'api.get.dashboard.productunit.read.all',
             'api.get.dashboard.supplier.read.all',
-
             'api.post.dashboard.product.*',
             'api.post.dashboard.productunit.delete',
         ],

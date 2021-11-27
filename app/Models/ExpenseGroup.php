@@ -24,7 +24,6 @@ class ExpenseGroup extends Model
 
     protected static $logOnlyDirty = true;
 
-
     protected $hidden = [
         'id',
         'created_by',
@@ -41,7 +40,7 @@ class ExpenseGroup extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);

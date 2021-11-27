@@ -24,7 +24,7 @@ interface CapitalService
         $ref_number,
         $investor_id,
         $group_id,
-        $cash_id,    
+        $cash_id,
         $date,
         $capital_status,
         $amount,

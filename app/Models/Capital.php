@@ -83,7 +83,7 @@ class Capital extends Model
     {
         return $this->belongsTo(Cash::class);
     }
-    
+
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
     {
         return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);

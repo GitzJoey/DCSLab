@@ -5,7 +5,6 @@ namespace App\Services\Impls;
 use Exception;
 use App\Models\Capital;
 use App\Services\CapitalService;
-use App\Models\User;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -112,7 +111,6 @@ class CapitalServiceImpl implements CapitalService
     {
         return Capital::find($id);
     }
-
 
     public function delete($id)
     {

@@ -16,7 +16,7 @@ class Unit extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-    
+
     protected $fillable = [
         'code',
         'name',
@@ -50,7 +50,7 @@ class Unit extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -65,7 +65,7 @@ class Unit extends Model
     {
         return $this->hasMany(ProductUnit::class);
     }
-    
+
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
     {
         return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);

@@ -50,10 +50,6 @@ class CapitalController extends BaseController
         ]);
         
         $date = '2021-10-01';
-        // $date = [
-        //     'PREFS.DATE_FORMAT' => $request['dateFormat'],
-        //     'PREFS.TIME_FORMAT' => $request['timeFormat'],
-        // ];
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
@@ -79,10 +75,6 @@ class CapitalController extends BaseController
         ]);
 
         $date = '2021-10-01';
-        // $date = [
-        //     'PREFS.DATE_FORMAT' => $request['dateFormat'],
-        //     'PREFS.TIME_FORMAT' => $request['timeFormat'],
-        // ];
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];

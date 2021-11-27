@@ -55,12 +55,12 @@ class WarehouseController extends BaseController
         };
 
         $result = $this->warehouseService->create(
-            Hashids::decode($request['company_id'])[0], 
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
-            $request['name'], 
+            $request['name'],
             $request['address'],
-            $request['city'], 
-            $request['contact'], 
+            $request['city'],
+            $request['contact'],
             $request['remarks'],
             $request['status']
         );
