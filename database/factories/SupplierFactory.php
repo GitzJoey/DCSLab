@@ -37,7 +37,6 @@ class SupplierFactory extends Factory
             'tax_number' => $faker->creditCardNumber(),
             'remarks' => $faker->word(),
             'status' => '1'
-            
         ];
     }
 }

@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\UnitService;
 use App\Models\Unit;
-use App\Models\User;
 
 class UnitServiceImpl implements UnitService
 {
@@ -49,21 +48,14 @@ class UnitServiceImpl implements UnitService
     public function getAllUnit_Product()
     {
         return Unit::where('category', '<>', 2)
-            // ->where('category', '=', 3)
             ->get();
     }
 
     public function getAllUnit_Service()
     {
         return Unit::where('category', '<>', 1)
-            // ->where('category', '=', 3)
             ->get();
     }
-
-    // public function getAllUnit_ProductAndService()
-    // {
-    //     return Unit::where('category', '=', 3)->get();
-    // }
 
     public function update(
         $id,
@@ -77,7 +69,7 @@ class UnitServiceImpl implements UnitService
 
         try {
             $unit = Unit::where('id', '=', $id);
-    
+
             $retval = $unit->update([
                 'company_id' => $company_id,
                 'code' => $code,
@@ -105,7 +97,7 @@ class UnitServiceImpl implements UnitService
         $unit = Unit::find($id);
 
         return $unit->delete();
-        
+
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

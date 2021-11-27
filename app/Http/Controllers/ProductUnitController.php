@@ -64,7 +64,6 @@ class ProductUnitController extends BaseController
             $is_primary_unit,
             $request['remarks'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

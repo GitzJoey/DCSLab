@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ProductGroupService;
 use App\Models\ProductGroup;
-use App\Models\User;
 
 class ProductGroupServiceImpl implements ProductGroupService
 {
@@ -49,22 +48,15 @@ class ProductGroupServiceImpl implements ProductGroupService
     public function getAllProductGroup_Product()
     {
         return ProductGroup::where('category', '<>', 2)
-        // ->where('category', '=', 3)
         ->get();
     }
 
     public function getAllProductGroup_Service()
     {
         return ProductGroup::where('category', '<>', 1)
-        // ->where('category', '=', 3)
         ->get();
     }
 
-    // public function getAllProductGroup_ProductAndService()
-    // {
-    //     return ProductGroup::where('category', '=', 3)->get();
-    // }
-    
     public function update(
         $id,
         $company_id,
@@ -84,9 +76,9 @@ class ProductGroupServiceImpl implements ProductGroupService
                 'name' => $name,
                 'category' => $category,
             ]);
-    
+
             DB::commit();
-    
+
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();

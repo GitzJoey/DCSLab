@@ -71,17 +71,16 @@ class SupplierController extends BaseController
         $result = $this->SupplierService->create(
             $company_id,
             $request['code'],
-            $request['name'], 
-            $request['term'], 
-            $request['contact'], 
-            $request['address'], 
+            $request['name'],
+            $request['term'],
+            $request['contact'],
+            $request['address'],
             $request['city'],
-            $is_tax, 
-            $request['tax_number'], 
-            $request['remarks'], 
+            $is_tax,
+            $request['tax_number'],
+            $request['remarks'],
             $request['status']
             );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -113,7 +112,6 @@ class SupplierController extends BaseController
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

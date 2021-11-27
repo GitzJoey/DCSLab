@@ -49,7 +49,7 @@ class ProductUnit extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);

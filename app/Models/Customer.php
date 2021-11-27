@@ -37,22 +37,22 @@ class Customer extends Model
     ];
 
     protected static $logAttributes = [
-        'code', 
-        'name', 
-        'customer_group_id', 
-        'sales_territory', 
-        'use_limit_outstanding_notes', 
-        'limit_outstanding_notes', 
-        'use_limit_payable_nominal', 
-        'limit_payable_nominal', 
-        'use_limit_age_notes', 
-        'limit_age_notes', 
-        'term', 
-        'address', 
-        'city', 
-        'contact', 
-        'tax_id', 
-        'remarks', 
+        'code',
+        'name',
+        'customer_group_id',
+        'sales_territory',
+        'use_limit_outstanding_notes',
+        'limit_outstanding_notes',
+        'use_limit_payable_nominal',
+        'limit_payable_nominal',
+        'use_limit_age_notes',
+        'limit_age_notes',
+        'term',
+        'address',
+        'city',
+        'contact',
+        'tax_id',
+        'remarks',
         'status'
     ];
 
@@ -60,7 +60,7 @@ class Customer extends Model
 
     protected $hidden = [
         'id',
-        'customer_group_id', 
+        'customer_group_id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -80,12 +80,12 @@ class Customer extends Model
     {
         return $this->belongsTo(CustomerGroup::class);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
-    
+
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
     {
         return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);

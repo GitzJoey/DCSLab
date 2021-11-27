@@ -52,11 +52,6 @@ class ProductGroupController extends BaseController
         return $this->productGroupService->getAllProductGroup_Service();
     }
 
-    // public function getAllProductGroup_Service()
-    // {
-    //     return $this->productGroupService->getAllProductGroup_Service();
-    // }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -79,7 +74,6 @@ class ProductGroupController extends BaseController
             $request['name'],
             $request['category']
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

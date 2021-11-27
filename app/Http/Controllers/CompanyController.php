@@ -50,7 +50,6 @@ class CompanyController extends BaseController
         if ($request['code'] == 'AUTO') {
             $randomGenerator = new randomGenerator();
             $request['code'] = $randomGenerator->generateOne(99999999);
-            // $request->code = (new RandomGenerator())->generateOne(99999999);
         };
 
         $request->validate([
@@ -77,7 +76,6 @@ class CompanyController extends BaseController
             $request['status'],
             $userId
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -105,7 +103,6 @@ class CompanyController extends BaseController
             $default,
             $request['status']
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

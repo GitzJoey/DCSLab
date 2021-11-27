@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ProductBrandService;
 use App\Models\ProductBrand;
-use App\Models\User;
 
 class ProductBrandServiceImpl implements ProductBrandService
 {
@@ -88,7 +87,6 @@ class ProductBrandServiceImpl implements ProductBrandService
         $productbrand = ProductBrand::find($id);
 
         return $productbrand->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

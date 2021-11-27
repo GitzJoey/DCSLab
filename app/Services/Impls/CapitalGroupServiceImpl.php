@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\CapitalGroupService;
 use App\Models\CapitalGroup;
-use App\Models\User;
 
 class CapitalGroupServiceImpl implements CapitalGroupService
 {

@@ -51,11 +51,6 @@ class UnitController extends BaseController
         return $this->UnitService->getAllUnit_Service();
     }
 
-    // public function getAllUnit_ProductAndService()
-    // {
-    //     return $this->UnitService->getAllUnit_ProductAndService();
-    // }
-
     public function store(Request $request)
     {
         $request->validate([

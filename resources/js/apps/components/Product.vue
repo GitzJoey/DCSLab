@@ -144,6 +144,7 @@
                             <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -155,6 +156,7 @@
                             <label class="col-2 col-form-label" for="brand_id">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="brand_id" name="brand_id" v-model="product.brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -214,6 +216,7 @@
                                             <!-- Unit -->
                                             <td>
                                                 <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId">
+                                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                                 </select>
                                                 <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
@@ -280,6 +283,7 @@
                             <label class="col-2 col-form-label" for="supplier_id">{{ $t('fields.supplier_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.defaultSupplier" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.supplierDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -409,19 +413,19 @@ export default {
             productList: [],
             product: {
                 code: '',
-                group: {hId: ''},
-                brand: {hId: ''},   
+                group: {hId: '0'},
+                brand: {hId: '0'},   
                 name: '',
                 product_unit: [
                     {
                         hId: '',
                         conversion_value: '0',
-                        unit: {hId: ''}
+                        unit: {hId: '0'}
                     }
                 ],
                 tax_status: '',
                 defaultSupplier: '',
-                supplier: {hId: ''},
+                supplier: {hId: '0'},
                 remarks: '',
                 point: '',
                 is_use_serial: '',
@@ -497,8 +501,8 @@ export default {
         emptyProduct() {
             return {
                 code: 'AUTO',
-                group: {hId: ''},
-                brand: {hId: ''},
+                group: {hId: '0'},
+                brand: {hId: '0'},
                 name: '',
                 product_unit: [
                     {
@@ -507,12 +511,12 @@ export default {
                         is_base: '1',
                         conversion_value: '1',
                         is_primary_unit: '1',
-                        unit: {hId: ''}
+                        unit: {hId: '0'}
                     }
                 ],
                 tax_status: '1',
                 defaultSupplier: '',
-                supplier: {hId: ''},
+                supplier: {hId: '0'},
                 remarks: '',
                 point: '0',
                 is_use_serial: '',

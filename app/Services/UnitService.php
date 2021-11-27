@@ -17,8 +17,6 @@ interface UnitService
 
     public function getAllUnit_Service();
 
-    // public function getAllUnit_ProductAndService();
-
     public function update(
         $id,
         $company_id,

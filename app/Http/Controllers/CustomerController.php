@@ -117,7 +117,7 @@ class CustomerController extends BaseController
             $company_id,
             $request['code'],
             $request['name'],
-            Hashids::decode($request['customer_group_id'])[0], 
+            Hashids::decode($request['customer_group_id'])[0],
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],

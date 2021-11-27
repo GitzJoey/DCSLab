@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Config;
 
 use App\Services\CustomerService;
 use App\Models\Customer;
-use App\Models\User;
 
 class CustomerServiceImpl implements CustomerService
 {
@@ -34,7 +33,6 @@ class CustomerServiceImpl implements CustomerService
         $status
     )
     {
-
         DB::beginTransaction();
 
         try {
@@ -138,7 +136,6 @@ class CustomerServiceImpl implements CustomerService
         $customer = Customer::find($id);
 
         return $customer->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

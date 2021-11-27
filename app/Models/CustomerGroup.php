@@ -40,31 +40,30 @@ class CustomerGroup extends Model
         'round_digit',
         'remarks',
         'cash_id'
-
     ];
 
     protected static $logAttributes = [
-        'code', 
-        'name', 
-        'is_member_card', 
-        'use_limit_outstanding_notes', 
-        'limit_outstanding_notes', 
-        'use_limit_payable_nominal', 
-        'limit_payable_nominal', 
-        'use_limit_age_notes', 
-        'limit_age_notes', 
-        'term', 
-        'selling_point', 
-        'selling_point_multiple', 
-        'sell_at_capital_price', 
-        'global_markup_percent', 
-        'global_markup_nominal', 
-        'global_discount_percent', 
-        'global_discount_nominal', 
-        'is_rounding', 
-        'round_on', 
-        'round_digit', 
-        'remarks', 
+        'code',
+        'name',
+        'is_member_card',
+        'use_limit_outstanding_notes',
+        'limit_outstanding_notes',
+        'use_limit_payable_nominal',
+        'limit_payable_nominal',
+        'use_limit_age_notes',
+        'limit_age_notes',
+        'term',
+        'selling_point',
+        'selling_point_multiple',
+        'sell_at_capital_price',
+        'global_markup_percent',
+        'global_markup_nominal',
+        'global_discount_percent',
+        'global_discount_nominal',
+        'is_rounding',
+        'round_on',
+        'round_digit',
+        'remarks',
         'cash_id'
     ];
 
@@ -97,12 +96,12 @@ class CustomerGroup extends Model
     {
         return $this->hasMany(Customer::class);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
-    
+
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
     {
         return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);

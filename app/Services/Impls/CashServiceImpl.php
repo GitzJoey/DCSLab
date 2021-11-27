@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\CashService;
 use App\Models\Cash;
-use App\Models\User;
 
 class CashServiceImpl implements CashService
 {

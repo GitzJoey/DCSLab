@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\CustomerGroupService;
 use App\Models\CustomerGroup;
-use App\Models\User;
 
 class CustomerGroupServiceImpl implements CustomerGroupService
 {
@@ -157,13 +156,11 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         }        
     }
 
-
     public function delete($id)
     {
         $customergroup = CustomerGroup::find($id);
 
         return $customergroup->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

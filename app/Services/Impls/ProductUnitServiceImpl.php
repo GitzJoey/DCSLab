@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\ProductUnitService;
 use App\Models\ProductUnit;
-use App\Models\User;
 
 class ProductUnitServiceImpl implements ProductUnitService
 {

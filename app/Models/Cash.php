@@ -37,7 +37,7 @@ class Cash extends Model
         'updated_at',
         'deleted_at'
     ];
-    
+
     protected $appends = ['hId'];
 
     public function getHIdAttribute() : string
@@ -53,13 +53,13 @@ class Cash extends Model
     public function customergroups()
     {
         return $this->hasMany(CustomerGroup::class);
-    } 
+    }
 
     public function capitals()
     {
         return $this->hasMany(Capital::class);
     }
-    
+
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
     {
         return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);

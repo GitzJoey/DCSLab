@@ -72,7 +72,6 @@ class CashController extends BaseController
             $is_bank, 
             $request['status']
         );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -98,7 +97,6 @@ class CashController extends BaseController
             $is_bank,
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

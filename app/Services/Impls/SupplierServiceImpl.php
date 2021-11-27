@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\SupplierService;
 use App\Models\Supplier;
-use App\Models\User;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -66,7 +65,6 @@ class SupplierServiceImpl implements SupplierService
         return Supplier::get();
     }
 
-
     public function update(
         $id,
         $company_id,
@@ -110,7 +108,6 @@ class SupplierServiceImpl implements SupplierService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-
 
     public function delete($id)
     {
