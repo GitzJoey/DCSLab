@@ -118,11 +118,11 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.product_unit.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ service.unit.name }}
+                                    {{ service.product_unit.unit.name }}
                                 </div>
                             </div>
                         </div>
@@ -253,7 +253,12 @@ export default {
                 code: '',
                 group: {hId: ''},
                 name: '',
-                unit: {hId: ''},
+                product_unit: [
+                    {
+                        hId: '',
+                        unit: {hId: '0'}
+                    }
+                ],
                 tax_status: '',
                 remarks: '',
                 point: '',
@@ -305,13 +310,18 @@ export default {
         },
         emptyService() {
             return {
-                code: '',
+                code: 'AUTO',
                 group: {hId: ''},
                 name: '',
-                unit: {hId: ''},
-                tax_status: '',
+                product_unit: [
+                    {
+                        hId: '',
+                        unit: {hId: ''}
+                    }
+                ],
+                tax_status: '3',
                 remarks: '',
-                point: '',
+                point: '0',
                 product_type: '4',
                 status: '1',
             }

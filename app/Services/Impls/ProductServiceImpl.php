@@ -133,7 +133,7 @@ class ProductServiceImpl implements ProductService
     {
         $user = User::find($userId);
         $company_list = $user->companies()->pluck('company_id');
-        return Product::with('group', 'brand', 'product_unit.unit')
+        return Product::with('group', 'product_unit.unit')
                 ->whereIn('company_id', $company_list)
                 ->where('product_type', '=', 4)
                 ->paginate();
@@ -204,9 +204,7 @@ class ProductServiceImpl implements ProductService
                     'company_id',
                     'product_id',
                     'unit_id',
-                    'is_base',
                     'conversion_value',
-                    'is_primary_unit'
                 ], 
                 [
                     'code',
