@@ -42,7 +42,7 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr :class="{'intro-x':true, 'hidden': expandDetail !== cIdx}">
+                            <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== cIdx}">
                                 <td colspan="5">
                                     {{ c.name }}
                                     <br/><br/><br/><br/><br/>
@@ -87,7 +87,8 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputCode" class="form-label w-40 px-3">{{ t('views.company.fields.code') }}</label>
-                        <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" />
+                        <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="company.code === '[AUTO]'"/>
+                        <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
                         <div class="" v-if="mode === 'show'">{{ company.code }}</div>
                     </div>
                     <ErrorMessage name="code" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -102,8 +103,15 @@
                 </div>
                 <div class="mb-3">
                     <div class="form-inline">
+                        <label for="inputAddress" class="form-label w-40 px-3">{{ t('views.company.fields.address') }}</label>
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                        <div class="" v-if="mode === 'show'">{{ company.address }}</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="form-inline">
                         <label for="inputDefault" class="form-label w-40 px-3">{{ t('views.company.fields.default') }}</label>
-                        <input id="inputDefault" type="checkbox" class="form-check-switch ml-1" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        <input id="inputDefault" type="checkbox" class="form-check-switch ml-1" name="default" v-model="company.default" value="0" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
                         <div class="" v-if="mode === 'show'">
                             <span v-if="company.default === 1"><CheckCircleIcon /></span>
                             <span v-if="company.default === 0"><CircleIcon /></span>
@@ -150,6 +158,8 @@ import { inject, onMounted, ref, computed } from 'vue'
 import { getLang } from '../../lang';
 import mainMixins from '../../mixins';
 import { helper } from '../../utils/helper';
+// Core Components Import
+import { useStore } from '../../store/index';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
@@ -159,6 +169,10 @@ const schema = {
     code: 'required',
     name: 'required',
 };
+
+// Declarations
+const store = useStore();
+
 // Mixins
 const { t, route } = mainMixins();
 
@@ -175,6 +189,7 @@ const companyList = ref([]);
 const company = ref({
     code: '',
     name: '',
+    address: '',
     default: '',
     status: ''
 });
@@ -214,6 +229,7 @@ function onSubmit(values, actions) {
     if (mode.value === 'create') {
         axios.post(route('api.post.db.company.company.save'), new FormData(cash('#companyForm')[0])).then(response => {
             backToList();
+            store.dispatch('main/fetchUserContext');
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
@@ -254,9 +270,10 @@ function invalidSubmit(e) {
 
 function emptyCompany() {
     return {
-        code: '',
+        code: '[AUTO]',
         name: '',
-        default: '',
+        address: '',
+        default: '0',
         status: '1',
     }
 }
@@ -304,6 +321,11 @@ function toggleDetail(idx) {
     } else {
         expandDetail.value = idx;
     }
+}
+
+function generateCode() {
+    if (company.value.code === '[AUTO]') company.value.code = '';
+    else  company.value.code = '[AUTO]'
 }
 
 // Computed

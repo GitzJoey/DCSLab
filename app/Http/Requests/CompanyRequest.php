@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\uniqueCode;
+use App\Rules\deactivateDefaultCompany;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
+
+use App\Rules\validDropDownValue;
 
 class CompanyRequest extends FormRequest
 {
@@ -24,23 +28,31 @@ class CompanyRequest extends FormRequest
      */
     public function rules()
     {
+        $userId = Auth::id();
+
+        $nullableArr = [
+            'address' => 'nullable',
+        ];
+
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
             case 'store':
-                return [
-                    'code' => ['required', 'max:255'],
+                $rules_store = [
+                    'code' => ['required', 'max:255', new uniqueCode('companies', $userId)],
                     'name' => 'required|max:255',
-                    'status' => 'required'
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
                 ];
+                return array_merge($rules_store, $nullableArr);
             case 'update':
-                return [
-                    'code' => 'required',
+                $rules_update = [
+                    'code' => ['required', 'max:255', new uniqueCode('companies', $userId, $this->route('id'))],
                     'name' => 'required|max:255',
-                    'status' => 'required'
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
                 ];
+                return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    //
+                    '' => 'required'
                 ];
         }
     }

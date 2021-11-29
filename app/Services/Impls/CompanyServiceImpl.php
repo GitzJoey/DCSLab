@@ -26,8 +26,10 @@ class CompanyServiceImpl implements CompanyService
         try {
             $usr = User::find($userId)->first();
 
-            if ($usr->companies()->count() == 0)
+            if ($usr->companies()->count() == 0) {
                 $default = 1;
+                $status = 1;
+            }
 
             $company = new Company();
             $company->code = $code;
@@ -41,7 +43,7 @@ class CompanyServiceImpl implements CompanyService
 
             DB::commit();
 
-            return $company->hId;
+            return $company;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -90,7 +92,7 @@ class CompanyServiceImpl implements CompanyService
         try {
             $company = Company::where('id', '=', $id);
 
-            $retval = $company->update([
+            $company->update([
                 'code' => $code,
                 'name' => $name,
                 'default' => $default,
@@ -99,7 +101,7 @@ class CompanyServiceImpl implements CompanyService
 
             DB::commit();
 
-            return $retval;
+            return $company;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -129,21 +131,17 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function checkDuplicatedCode($crud_status, $id, $code)
+    public function isUniqueCode($code, $userId, $exceptId)
     {
-        switch($crud_status) {
-            case 'create':
-                $count = Company::where('code', '=', $code)
-                ->whereNull('deleted_at')
-                ->count();
-                return $count;
-            case 'update':
-                $count = Company::where('id', '<>' , $id)
-                ->where('code', '=', $code)
-                ->whereNull('deleted_at')
-                ->count();
-                return $count;
-        }
+        $usr = User::find($userId);
+        $companies = $usr->companies()->pluck('company_id');
+
+        $result = Company::whereIn('id', $companies)->where('code', '=' , $code);
+
+        if($exceptId)
+            $result = $result->where('id', '<>', $exceptId);
+
+        return $result->count() == 0 ? true:false;
     }
 
     public function isDefaultCompany($companyId)

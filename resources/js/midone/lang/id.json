@@ -31,7 +31,8 @@
             "revoke": "Revoke",
             "activate": "Aktifkan",
             "submit": "Kirim",
-            "send_verification_email": "Kirim Email Verifikasi"
+            "send_verification_email": "Kirim Email Verifikasi",
+            "auto": "Auto"
         },
         "dropdown": {
             "placeholder": "Silahkan Pilih",
@@ -186,6 +187,7 @@
             "fields": {
                 "code": "Kode",
                 "name": "Nama",
+                "address": "Alamat",
                 "default": "Default",
                 "status": "Status"
             }

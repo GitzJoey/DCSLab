@@ -34,6 +34,15 @@ return [
         ]
     ],
 
+    'KEYWORDS' => [
+        'AUTO' => '[AUTO]',
+        'ACTIONS' => [
+            'STORE' => 'store',
+            'UPDATE' => 'update',
+            'DELETE' => 'delete',
+        ]
+    ],
+
     'RULES' => [
         'VALID_DROPDOWN_VALUES' => [
             'ACTIVE_STATUS' => [

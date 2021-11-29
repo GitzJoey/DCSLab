@@ -152,6 +152,8 @@ class AppHelper extends Command
     {
         $this->info('THIS ACTIONS WILL REMOVE ALL DATA AND LEAVING ONLY DEFAULT DATA');
         $run = $this->confirm('CONFIRM TO REFRESH DATABASE?', false);
+
+
     }
 
     private function changeUserRoles()

@@ -31,7 +31,8 @@
             "revoke": "Revoke",
             "activate": "Activate",
             "submit": "Submit",
-            "send_verification_email": "Send Verification Email"
+            "send_verification_email": "Send Verification Email",
+            "auto": "Auto"
         },
         "dropdown": {
             "placeholder": "Please Select",
@@ -186,6 +187,7 @@
             "fields": {
                 "code": "Code",
                 "name": "Name",
+                "address": "Address",
                 "default": "Default",
                 "status": "Status"
             }

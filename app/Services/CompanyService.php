@@ -30,7 +30,7 @@ interface CompanyService
 
     public function delete($userId, $id);
 
-    public function checkDuplicatedCode($crud_status, $id, $code);
+    public function isUniqueCode($code, $userId, $exceptId);
 
     public function resetDefaultCompany($userId);
 

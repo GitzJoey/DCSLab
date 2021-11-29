@@ -85,7 +85,9 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
         /* Ext */
         Route::group(['prefix' => 'company', 'as' => '.company'], function() {
             Route::group(['prefix' => 'company', 'as' => '.company'], function() {
-
+                Route::post('save', [CompanyController::class, 'store'])->name('.save');
+                Route::post('edit/{id}', [CompanyController::class, 'update'])->name('.edit');
+                Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
 

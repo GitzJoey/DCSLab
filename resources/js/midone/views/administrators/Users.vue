@@ -239,7 +239,7 @@
                             <div class="mb-3">
                                 <label for="apiToken">{{ t('views.users.fields.settings.apiToken') }}</label>
                                 <div class="form-check" v-show="this.mode === 'edit'">
-                                    <input id="apiToken" class="form-check-input" type="checkbox" value="" name="apiToken">
+                                    <input id="apiToken" class="form-check-input" type="checkbox" name="apiToken">
                                     <label class="form-check-label" for="apiToken">{{ t('components.buttons.revoke') }}</label>
                                 </div>
                                 <div v-if="this.mode === 'create' || this.mode === 'show'">*************************</div>

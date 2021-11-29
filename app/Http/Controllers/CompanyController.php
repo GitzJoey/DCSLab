@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\RandomGenerator;
 use App\Http\Requests\CompanyRequest;
 use App\Services\CompanyService;
-use App\Services\ActivityLogService;
 
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
@@ -51,19 +51,21 @@ class CompanyController extends BaseController
     {
         $request = $companyRequest->validated();
 
-        $default = $request['default'];
-        if ($default == 'on') {
-            $userId = Auth::user()->id;
+        $userId = Auth::id();
+        $default = 0;
+
+        if (array_key_exists('default', $request)) {
             $this->companyService->resetDefaultCompany($userId);
+            $default = 1;
         };
 
-        $default = $request['default'];
-        $default == 'on' ? $default = 1 : $default = 0;
+        $code = $request['code'];
 
-        $userId = Auth::id();
+        if ($code == config()->get('const.KEYWORDS.AUTO'))
+            $code = (new RandomGenerator())->generateAlphaNumeric(10);
 
         $result = $this->companyService->create(
-            $request['code'],
+            $code,
             $request['name'],
             $default,
             $request['status'],
@@ -77,18 +79,22 @@ class CompanyController extends BaseController
     {
         $request = $companyRequest->validated();
 
-        $default = $request['default'];
-        if ($default == "on") {
-            $userId = Auth::user()->id;
+        $userId = Auth::id();
+        $default = 0;
+
+        if (array_key_exists('default', $request)) {
             $this->companyService->resetDefaultCompany($userId);
+            $default = 1;
         };
 
-        $default = $request['default'];
-        $default == 'on' ? $default = 1 : $default = 0;
+        $code = $request['code'];
+
+        if ($code == config()->get('const.KEYWORDS.AUTO'))
+            $code = (new RandomGenerator())->generateAlphaNumeric(10);
 
         $result = $this->companyService->update(
             $id,
-            $request['code'],
+            $code,
             $request['name'],
             $default,
             $request['status']
@@ -106,16 +112,6 @@ class CompanyController extends BaseController
 
         $result = $this->companyService->delete($userId, $id);
 
-        if ($id == Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0])
-            session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), $this->companyService->getDefaultCompany($userId)->hId);
-
         return is_null($result) ? response()->error():response()->success();
-    }
-
-    public function switchCompany($id)
-    {
-        session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), Hashids::encode($id));
-
-        return redirect()->back();
     }
 }

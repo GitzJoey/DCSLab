@@ -36,7 +36,6 @@ class UserRequest extends FormRequest
             'theme' => 'nullable',
             'dateFormat' => 'nullable',
             'timeFormat' => 'nullable',
-            'apiToken' => 'nullable'
         ];
 
         if ($this->route()->getActionMethod() == 'store') {
