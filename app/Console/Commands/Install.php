@@ -120,6 +120,9 @@ class Install extends Command
         $this->info('Creating Admin/Dev Account ...');
         $is_dev = $this->confirm("Are you a developer?", false);
 
+        if(!$is_dev)
+            $this->info('Setting you account as administrator since you\'re not dev...');
+
         $userName = 'GitzJoey';
         $userEmail = 'gitzjoey@yahoo.com';
         $userPassword = 'thepassword';

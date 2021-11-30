@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Config;
 
 use App\Services\ProductBrandService;
 
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use App\Models\User;
 
 class ProductBrandServiceImpl implements ProductBrandService
@@ -23,7 +23,7 @@ class ProductBrandServiceImpl implements ProductBrandService
         DB::beginTransaction();
 
         try {
-            $productbrand = new ProductBrand();
+            $productbrand = new Brand();
             $productbrand->company_id = $company_id;
             $productbrand->code = $code;
             $productbrand->name = $name;
@@ -43,9 +43,9 @@ class ProductBrandServiceImpl implements ProductBrandService
     public function read($companyId, $search = '', $paginate = true, $perPage = 10)
     {
         if (empty($search)) {
-            $pb = ProductBrand::whereCompanyId($companyId);
+            $pb = Brand::whereCompanyId($companyId);
         } else {
-            $pb = ProductBrand::whereCompanyId($companyId)->where('name', 'like', '%'.$search.'%');
+            $pb = Brand::whereCompanyId($companyId)->where('name', 'like', '%'.$search.'%');
         }
 
         if ($paginate) {
@@ -60,7 +60,7 @@ class ProductBrandServiceImpl implements ProductBrandService
     {
         switch (strtoupper($key)) {
             case 'ID':
-                return ProductBrand::find($value);
+                return Brand::find($value);
                 break;
             default:
                 break;
@@ -77,7 +77,7 @@ class ProductBrandServiceImpl implements ProductBrandService
         DB::beginTransaction();
 
         try {
-            $productbrand = ProductBrand::where('id', '=', $id);
+            $productbrand = Brand::where('id', '=', $id);
 
             $productbrand->update([
                 'company_id' => $company_id,
@@ -97,7 +97,7 @@ class ProductBrandServiceImpl implements ProductBrandService
 
     public function delete($id)
     {
-        $productbrand = ProductBrand::find($id);
+        $productbrand = Brand::find($id);
 
         return $productbrand->delete();
     }
@@ -107,7 +107,7 @@ class ProductBrandServiceImpl implements ProductBrandService
         $usr = User::find($userId);
         $companies = $usr->companies()->pluck('company_id');
 
-        $result = ProductBrand::whereIn('company_id', $companies)->where('code', '=' , $code);
+        $result = Brand::whereIn('company_id', $companies)->where('code', '=' , $code);
 
         if($exceptId)
             $result = $result->where('id', '<>', $exceptId);

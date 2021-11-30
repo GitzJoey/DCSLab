@@ -3,19 +3,19 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProductBrandFactory extends Factory
+class BrandFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = ProductBrand::class;
+    protected $model = Brand::class;
 
     /**
      * Define the model's default state.

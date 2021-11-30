@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Company;
 use App\Models\ProductGroup;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use App\Models\Unit;
 use App\Models\ProductUnit;
 use App\Models\Supplier;
 
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -27,12 +28,12 @@ class Product extends Model
         'brand_id',
         'name',
         'product_unit',
-        'unit',
         'tax_status',
-        'supplier_id',
+        'main_supplier_id',
         'remarks',
         'point',
-        'is_use_serial',
+        'use_serial_number',
+        'has_expiry_date',
         'product_type',
         'status'
     ];
@@ -45,10 +46,11 @@ class Product extends Model
         'product_unit',
         'unit',
         'tax_status',
-        'supplier_id',
+        'main_supplier_id',
         'remarks',
         'point',
-        'is_use_serial',
+        'use_serial_number',
+        'has_expiry_date',
         'product_type',
         'status'
     ];
@@ -60,7 +62,7 @@ class Product extends Model
         'group_id',
         'brand_id',
         'unit_id',
-        'supplier_id',
+        'main_supplier_id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -75,34 +77,45 @@ class Product extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function group()
+    public function productGroup()
     {
         return $this->belongsTo(ProductGroup::class);
     }
 
     public function brand()
     {
-        return $this->belongsTo(ProductBrand::class);
+        return $this->belongsTo(Brand::class);
     }
 
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class);
-    }
-
-    public function product_unit()
+    public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
     }
 
-    public function supplier()
+    public function mainSupplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function scopeWhereCompanyId($query, $companyId = null)
+    {
+        if ($companyId != null) {
+            if (is_array($companyId)) {
+                $query->whereIn('company_id', $companyId);
+            } else {
+                $query->where('company_id', '=', $companyId);
+            }
+        }
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
     }
 }

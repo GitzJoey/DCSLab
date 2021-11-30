@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
-//use App\Models\Product;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class ProductBrand extends Model
+class Brand extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
@@ -48,7 +48,7 @@ class ProductBrand extends Model
 
     public function products()
     {
-        //return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class);
     }
 
     public function scopeWhereCompanyId($query, $companyId = null)

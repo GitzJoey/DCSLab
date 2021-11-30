@@ -56,7 +56,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "artisan_xdebug": "@php -dxdebug.start_with_request=yes -dxdebug.mode=debug -dxdebug.client_port=9000 -dxdebug.client_host=127.0.0.1 artisan"
     },
     "extra": {
         "laravel": {

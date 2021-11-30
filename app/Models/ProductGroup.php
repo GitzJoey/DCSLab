@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -14,7 +15,7 @@ class ProductGroup extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-    
+
     protected $fillable = [
         'code',
         'name',
@@ -26,7 +27,7 @@ class ProductGroup extends Model
         'name',
         'category'
     ];
-    
+
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
@@ -45,7 +46,7 @@ class ProductGroup extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -54,5 +55,21 @@ class ProductGroup extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function scopeWhereCompanyId($query, $companyId = null)
+    {
+        if ($companyId != null) {
+            if (is_array($companyId)) {
+                $query->whereIn('company_id', $companyId);
+            } else {
+                $query->where('company_id', '=', $companyId);
+            }
+        }
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
     }
 }

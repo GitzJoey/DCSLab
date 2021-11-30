@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use Illuminate\Database\Seeder;
 
-class ProductBrandTableSeeder extends Seeder
+class BrandTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,7 +19,7 @@ class ProductBrandTableSeeder extends Seeder
 
         foreach($companies as $c)
         {
-            ProductBrand::factory()->count($brandPerCompany)->create([
+            Brand::factory()->count($brandPerCompany)->create([
                 'company_id' => $c
             ]);
         }

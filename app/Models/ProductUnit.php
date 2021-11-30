@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductUnit extends Model
 {
-    use HasFactory, LogsActivity;
+    use LogsActivity;
     use SoftDeletes;
 
     protected $table = 'product_unit';
-    
+
     protected $fillable = [
         'product_id',
         'unit_id',
@@ -49,7 +49,7 @@ class ProductUnit extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -63,5 +63,10 @@ class ProductUnit extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults();
     }
 }

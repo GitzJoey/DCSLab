@@ -5,9 +5,13 @@ namespace App\Console\Commands;
 use App\Services\RoleService;
 use App\Services\UserService;
 
-use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\RoleSeeder;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\SupplierTableSeeder;
+use Database\Seeders\ProductTableSeeder;
+use Database\Seeders\BrandTableSeeder;
+use Database\Seeders\ProductGroupTableSeeder;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
@@ -105,6 +109,8 @@ class AppHelper extends Command
         $user = $this->confirm('Do you want to seed users?', true);
         $roles = $this->confirm('Do you want to seed roles?', true);
         $companies = $this->confirm('Do you want to seed companies for each users?', true);
+        $supplier = $this->confirm('Do you want to seed dummy suppliers for each companies?', true);
+        $product = $this->confirm('Do you want to seed dummy products for each companies?', true);
 
         if ($user)
         {
@@ -146,10 +152,46 @@ class AppHelper extends Command
             $seeder->callWith(CompanyTableSeeder::class, [$count]);
 
             $this->info('CompanyTableSeeder Finish.');
-
         }
 
         sleep(3);
+
+        if ($supplier)
+        {
+            $this->info('Starting SupplierTableSeeder');
+            $count = $this->ask('How many supplier for each companies:', 5);
+
+            $seeder = new SupplierTableSeeder();
+            $seeder->callWith(SupplierTableSeeder::class, [$count]);
+
+            $this->info('SupplierTableSeeder Finish.');
+        }
+
+        sleep(3);
+
+        if ($product)
+        {
+            $this->info('Starting ProductGroupSeeder, BrandSeeder before ProductTableSeeder');
+
+            $count_pg = $this->ask('How many product groups:', 5);
+            $count_pb = $this->ask('How many brands:', 10);
+
+            $this->info('Starting ProductGroupSeeder and BrandSeeder');
+
+            $seeder_pg = new ProductGroupTableSeeder();
+            $seeder_pg->callWith(ProductGroupTableSeeder::class, [$count_pg]);
+
+            $seeder_pb = new BrandTableSeeder();
+            $seeder_pb->callWith(BrandTableSeeder::class, [$count_pb]);
+
+            $this->info('Starting ProductTableSeeder');
+            $count = $this->ask('How many products for each companies:', 15);
+
+            $seeder = new ProductTableSeeder();
+            $seeder->callWith(ProductTableSeeder::class, [$count]);
+
+            $this->info('ProductTableSeeder Finish.');
+        }
     }
 
     private function refreshDatabase()
@@ -162,7 +204,7 @@ class AppHelper extends Command
         DB::table('activity_log')->truncate();
         DB::table('companies')->truncate();
         DB::table('company_user')->truncate();
-        DB::table('product_brands')->truncate();
+        DB::table('brands')->truncate();
         DB::table('product_groups')->truncate();
         DB::table('product_unit')->truncate();
         DB::table('products')->truncate();

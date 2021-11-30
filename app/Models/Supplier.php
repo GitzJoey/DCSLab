@@ -59,6 +59,17 @@ class Supplier extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function scopeWhereCompanyId($query, $companyId = null)
+    {
+        if ($companyId != null) {
+            if (is_array($companyId)) {
+                $query->whereIn('company_id', $companyId);
+            } else {
+                $query->where('company_id', '=', $companyId);
+            }
+        }
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();

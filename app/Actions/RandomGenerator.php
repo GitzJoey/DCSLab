@@ -16,6 +16,8 @@ class RandomGenerator
 
     public function generateNumber($min = 0, $max = 9999999)
     {
+        if ($max == 0) return 0;
+
         if (self::$RSeed == 0)
             self::seed(mt_rand());
 
@@ -51,5 +53,19 @@ class RandomGenerator
         }
 
         return strtoupper($generatedString);
+    }
+
+    public function randomTrueOrFalse()
+    {
+        return (bool)rand(0,1);
+    }
+
+    public function generateRandomOneZero($maxZero = 1)
+    {
+        if ($maxZero == 1) return 10;
+
+        $rand = rand(2, $maxZero);
+
+        return pow(10, $rand);
     }
 }
