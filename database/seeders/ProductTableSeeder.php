@@ -48,17 +48,17 @@ class ProductTableSeeder extends Seeder
                 $isPrimaryUnitIndex = (new RandomGenerator())->generateNumber(0, $howmanyUnitsPerProduct - 1);
 
                 for($j = 0; $j < $howmanyUnitsPerProduct; $j++) {
-                    $rUnitId = Unit::whereCompanyId($c)->inRandomOrder()->limit(1)->pluck('id');
+                    $rUnitId = Unit::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
 
-                    $pu = ProductUnit::factory()->make([
-                        'company_id' => $c,
-                        'product_id' => $prod->id,
-                        'unit_id' => $rUnitId,
-                        'is_base' => $j == $isbaseIndex ? 1:0,
-                        'conversion_value' => $j == $isbaseIndex ? 1: (new RandomGenerator())->generateRandomOneZero(3),
-                        'is_primary_unit' => $j == $isPrimaryUnitIndex ? 1:0,
-                        'remarks' => '',
-                    ]);
+                    $pu = new ProductUnit();
+
+                    $pu->company_id = $c;
+                    $pu->product_id = $prod->id;
+                    $pu->unit_id = $rUnitId;
+                    $pu->is_base = $j == $isbaseIndex ? 1:0;
+                    $pu->conversion_value = $j == $isbaseIndex ? 1: (new RandomGenerator())->generateRandomOneZero(3);
+                    $pu->is_primary_unit = $j == $isPrimaryUnitIndex ? 1:0;
+                    $pu->remarks = '';
 
                     $prod->productUnits()->save($pu);
                 }
