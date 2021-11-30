@@ -49,6 +49,11 @@ return [
                 'ACTIVE' => 1,
                 'INACTIVE' => 0,
             ],
+            'PRODUCT_CATEGORY' => [
+                'PRODUCT' => 1,
+                'SERVICE' => 2,
+                'PRODUCT_AND_SERVICE' => 3,
+            ]
         ],
     ],
 ];

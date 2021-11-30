@@ -90,7 +90,7 @@ class CompanyController extends BaseController
         $code = $request['code'];
 
         if ($code == config()->get('const.KEYWORDS.AUTO'))
-            $code = (new RandomGenerator())->generateAlphaNumeric(10);
+            $code = (new RandomGenerator())->generateFixedLengthNumber(5);
 
         $result = $this->companyService->update(
             $id,
@@ -108,7 +108,7 @@ class CompanyController extends BaseController
         $userId = Auth::id();
 
         if ($this->companyService->isDefaultCompany($id))
-            return response()->error(trans('rules.company.default_company'));
+            return response()->error(trans('rules.company.delete_default_company'));
 
         $result = $this->companyService->delete($userId, $id);
 

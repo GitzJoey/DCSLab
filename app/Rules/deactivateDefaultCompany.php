@@ -39,6 +39,6 @@ class deactivateDefaultCompany implements Rule
      */
     public function message()
     {
-        return trans('rules.deactivate_default_company');
+        return trans('rules.company.deactivate_default_company');
     }
 }

@@ -173,10 +173,6 @@ export default {
             dashboardLayout.value = newVal
         });
 
-        provide('updateUserContext', () => {
-            store.dispatch('main/fetchUserContext');
-        });
-
         onMounted(() => {
             cash('body')
                 .removeClass('error-page')

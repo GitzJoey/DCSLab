@@ -4,14 +4,18 @@ namespace App\Console\Commands;
 
 use App\Services\RoleService;
 use App\Services\UserService;
+
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\RoleSeeder;
+
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class AppHelper extends Command
 {
@@ -153,7 +157,18 @@ class AppHelper extends Command
         $this->info('THIS ACTIONS WILL REMOVE ALL DATA AND LEAVING ONLY DEFAULT DATA');
         $run = $this->confirm('CONFIRM TO REFRESH DATABASE?', false);
 
+        Schema::disableForeignKeyConstraints();
 
+        DB::table('activity_log')->truncate();
+        DB::table('companies')->truncate();
+        DB::table('company_user')->truncate();
+        DB::table('product_brands')->truncate();
+        DB::table('product_groups')->truncate();
+        DB::table('product_unit')->truncate();
+        DB::table('products')->truncate();
+        DB::table('suppliers')->truncate();
+
+        Schema::enableForeignKeyConstraints();
     }
 
     private function changeUserRoles()

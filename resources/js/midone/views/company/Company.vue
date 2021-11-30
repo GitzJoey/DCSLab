@@ -301,7 +301,13 @@ function deleteSelected(index) {
 }
 
 function confirmDelete() {
+    axios.post(route('api.post.db.company.company.delete', deleteId.value)).then(response => {
+        backToList();
+    }).catch(e => {
+        alertErrors.value = e.response.data;
+    }).finally(() => {
 
+    });
 }
 
 function showSelected(index) {

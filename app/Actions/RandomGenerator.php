@@ -24,6 +24,13 @@ class RandomGenerator
         return self::$RSeed % ($max - $min + 1) + $min;
     }
 
+    public function generateFixedLengthNumber($length = 2)
+    {
+        if ($length < 2) $length = 2;
+
+        return rand(pow(10, $length - 1), pow(10, $length) - 1);
+    }
+
     public function generateOne($max = 0)
     {
         if ($max == 0) {
