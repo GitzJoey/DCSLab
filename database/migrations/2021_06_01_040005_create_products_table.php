@@ -15,16 +15,17 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('group_id')->references('id')->on('product_groups')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('brand_id')->references('id')->on('product_brands')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('supplier_id')->references('id')->on('suppliers')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('company_id')->references('id')->on('companies');
+            $table->foreignId('group_id')->references('id')->on('product_groups')->nullable();
+            $table->foreignId('brand_id')->references('id')->on('product_brands');
+            $table->foreignId('main_supplier_id')->references('id')->on('suppliers')->nullable();
             $table->string('code')->nullable();
             $table->string('name')->nullable();	
 			$table->integer('tax_status')->nullable();
             $table->string('remarks')->nullable();	
-			$table->integer('point')->nullable();
-			$table->integer('is_use_serial')->nullable();
+			$table->integer('point')->nullable()->default(0);
+			$table->integer('use_serial_number')->nullable();
+			$table->integer('has_expiry_date')->nullable();
             $table->integer('product_type')->nullable(); //[RAW, WIP, FINISHED GOOD, SERVICE]           
             $table->integer('status')->nullable();
 			$table->unsignedBigInteger('created_by')->default(0);

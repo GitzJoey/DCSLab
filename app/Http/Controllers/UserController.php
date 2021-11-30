@@ -67,7 +67,7 @@ class UserController extends BaseController
             'name' => 'required|alpha',
             'email' => 'required|email|max:255|unique:users',
             'roles' => 'required',
-            'tax_id' => 'required',
+            'tax_id' => 'required|max:255|min:5',
             'ic_num' => 'required',
         ]);
 
