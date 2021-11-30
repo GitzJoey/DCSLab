@@ -118,6 +118,30 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
+                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.product_unit[0].unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                </select>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                    {{ service.product_unit[0].unit.name }}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group row">
+                            <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
+                            <div class="col-md-10">
+                                <div v-for="(n, nIdx) in service.product_unit">
+                                    <select class="form-control" id="unit_id" name="unit_id" v-model="n.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                    </select>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        {{ n.unit.name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- <div class="form-group row">
+                            <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
+                            <div class="col-md-10">
                                 <select class="form-control" id="unit_id" name="unit_id" v-model="service.product_unit.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
@@ -125,7 +149,7 @@
                                     {{ service.product_unit.unit.name }}
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -256,7 +280,7 @@ export default {
                 product_unit: [
                     {
                         hId: '',
-                        unit: {hId: '0'}
+                        unit: {hId: '0'} 
                     }
                 ],
                 tax_status: '',
@@ -316,7 +340,7 @@ export default {
                 product_unit: [
                     {
                         hId: '',
-                        unit: {hId: ''}
+                        unit: {hId: '0'} 
                     }
                 ],
                 tax_status: '3',
@@ -333,6 +357,7 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.service = this.serviceList.data[idx];
+            console.log(this.service);
         },
         showSelected(idx) {
             this.mode = 'show';
@@ -380,17 +405,6 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
-        },
-        handleUpload(e) {
-            const files = e.target.files;
-
-            let filename = files[0].name;
-
-            const fileReader = new FileReader()
-            fileReader.addEventListener('load', () => {
-                this.service.profile.img_path = fileReader.result
-            })
-            fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
