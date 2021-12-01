@@ -28,7 +28,7 @@ class SupplierFactory extends Factory
 
         return [
             'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $faker->name(),
+            'name' => $faker->company(),
             'term' => $faker->numberBetween(7, 28),
             'contact' => $faker->e164PhoneNumber(),
             'address' => $faker->address(),

@@ -59,14 +59,14 @@ class DashboardController extends BaseController
                 ]
             ),
             array(
-                'icon' => 'GithubIcon',
-                'pageName' => 'side-menu-devtools',
-                'title' => 'components.menu.devtools',
+                'icon' => 'TruckIcon',
+                'pageName' => 'side-menu-supplier',
+                'title' => 'components.menu.supplier',
                 'subMenu' => [
                     array (
                         'icon' => '',
-                        'pageName' => 'side-menu-devtools-backup',
-                        'title' => 'components.menu.devtools-dbbackup'
+                        'pageName' => 'side-menu-supplier-supplier',
+                        'title' => 'components.menu.supplier-supplier'
                     ),
                 ]
             ),

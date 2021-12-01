@@ -5,6 +5,8 @@
             "main-dashboard": "Main Dashboard",
             "company": "Company",
             "company-company": "Company",
+            "supplier": "Supplier",
+            "supplier-supplier": "Supplier",
             "administrators": "Administrators",
             "administrators-users": "Users",
             "devtools": "Dev Tools",
@@ -167,6 +169,35 @@
         },
         "activity": {
             "title": "Activity Log"
+        },
+        "supplier": {
+            "table": {
+                "title": "Supplier Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "poc": "Person In Charge",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Supplier",
+                "edit": "Edit Supplier",
+                "show": "Show Supplier",
+                "delete": "Delete Supplier"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "term": "Term",
+                "contact": "Contact",
+                "address": "Address",
+                "city": "City",
+                "is_tax": "Is Tax",
+                "tax_number": "Tax Number",
+                "remarks": "Remarks",
+                "status": "Status"
+            }
         },
         "company": {
             "table": {

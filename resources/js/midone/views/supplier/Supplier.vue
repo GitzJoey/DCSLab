@@ -1,7 +1,75 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.users.table.title')" :data="userList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+        <DataList :title="t('views.supplier.table.title')" :data="supplierList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+            <template v-slot:table="tableProps">
+                <table class="table table-report -mt-2">
+                    <thead>
+                        <tr>
+                            <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.code') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.name') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.poc') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.company.table.cols.status') }}</th>
+                            <th class="whitespace-nowrap"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
+                            <tr class="intro-x">
+                                <td>{{ item.code }}</td>
+                                <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
+                                <td></td>
+                                <td>
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
+                                </td>
+                                <td class="table-report__action w-56">
+                                    <div class="flex justify-center items-center">
+                                        <a class="flex items-center mr-3" href="" @click.prevent="showSelected(itemIdx)">
+                                            <InfoIcon class="w-4 h-4 mr-1" />
+                                            {{ t('components.data-list.view') }}
+                                        </a>
+                                        <a class="flex items-center mr-3" href="" @click.prevent="editSelected(itemIdx)">
+                                            <CheckSquareIcon class="w-4 h-4 mr-1" />
+                                            {{ t('components.data-list.edit') }}
+                                        </a>
+                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                            <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
+                                <td colspan="5">
+                                    {{ item.name }}
+                                    <br/><br/><br/><br/><br/>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+                <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <div class="p-5 text-center">
+                                    <XCircleIcon class="w-16 h-16 text-theme-21 mx-auto mt-3" />
+                                    <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
+                                    <div class="text-gray-600 mt-2">
+                                        {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
+                                    </div>
+                                </div>
+                                <div class="px-5 pb-8 text-center">
+                                    <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
+                                        {{ t('components.buttons.cancel') }}
+                                    </button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </DataList>
     </div>
 
@@ -42,7 +110,7 @@ const expandDetail = ref(null);
 
 // Data - Views
 const supplierList = ref([]);
-const supplier = reF({
+const supplier = ref({
     code: '',
     name: '',
     term: '',
@@ -54,6 +122,7 @@ const supplier = reF({
     remarks: '',
     status: '1',
 });
+const statusDDL = ref([]);
 
 // onMounted
 onMounted(() => {

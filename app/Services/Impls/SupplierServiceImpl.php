@@ -57,7 +57,21 @@ class SupplierServiceImpl implements SupplierService
 
     public function read($companyId, $search = '', $paginate = true, $perPage = 10)
     {
-        return Supplier::paginate();
+        if (!$companyId) return null;
+
+        if (empty($search)) {
+            $suppliers = Supplier::whereCompanyId($companyId);
+        } else {
+            $suppliers = Supplier::whereCompanyId($companyId)
+                ->where('name', 'like', '%'.$search.'%');
+        }
+
+        if ($paginate) {
+            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+            return $suppliers->paginate($perPage);
+        } else {
+            return $suppliers->get();
+        }
     }
 
     public function update(

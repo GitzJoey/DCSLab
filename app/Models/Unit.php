@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
@@ -15,6 +16,8 @@ class Unit extends Model
 {
     use LogsActivity;
     use SoftDeletes;
+
+    use ScopeableByCompany;
 
     protected $fillable = [
         'code',
@@ -62,17 +65,6 @@ class Unit extends Model
     public function product_unit()
     {
         return $this->hasMany(ProductUnit::class);
-    }
-
-    public function scopeWhereCompanyId($query, $companyId = null)
-    {
-        if ($companyId != null) {
-            if (is_array($companyId)) {
-                $query->whereIn('company_id', $companyId);
-            } else {
-                $query->where('company_id', '=', $companyId);
-            }
-        }
     }
 
     public function getActivitylogOptions(): LogOptions

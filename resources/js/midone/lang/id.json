@@ -5,6 +5,8 @@
             "main-dashboard": "Dashboard Utama",
             "company": "Perusahaan",
             "company-company": "Perusahaan",
+            "supplier": "Supplier",
+            "supplier-supplier": "Supplier",
             "administrators": "Administrators",
             "administrators-users": "Pengguna",
             "devtools": "Dev Tools",
@@ -167,6 +169,26 @@
         },
         "activity": {
             "title": "Catatan Aktifitas"
+        },
+        "supplier": {
+            "table": {
+                "title": "Daftar Supplier",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "poc": "Penanggung Jawab",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Supplier",
+                "edit": "Ubah Supplier",
+                "show": "Tampilkan Supplier",
+                "delete": "Hapus Supplier"
+            },
+            "fields": {
+
+            }
         },
         "company": {
             "table": {

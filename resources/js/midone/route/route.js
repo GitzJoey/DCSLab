@@ -9,6 +9,7 @@ import Activity from '../views/dashboard/Activity.vue';
 
 /* Ext */
 import Company from '../views/company/Company.vue';
+import Supplier from '../views/supplier/Supplier.vue';
 /* Ext */
 
 import AdminUsers from "../views/administrators/Users";
@@ -58,6 +59,18 @@ const routes = [
                 path: root + '/company' + '/company',
                 name: 'side-menu-company-company',
                 component: Company,
+                meta: { remember: true }
+            }
+        ],
+    },
+    {
+        path: root + '/supplier',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/supplier' + '/supplier',
+                name: 'side-menu-supplier-supplier',
+                component: Supplier,
                 meta: { remember: true }
             }
         ],

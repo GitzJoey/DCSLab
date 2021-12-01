@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
@@ -15,6 +16,8 @@ class Supplier extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
+
+    use ScopeableByCompany;
 
     protected $fillable = [
         'code',
@@ -34,6 +37,8 @@ class Supplier extends Model
 
     protected $hidden = [
         'id',
+        'company_id',
+        'user_id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -49,6 +54,11 @@ class Supplier extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -57,17 +67,6 @@ class Supplier extends Model
     public function product()
     {
         return $this->hasMany(Product::class);
-    }
-
-    public function scopeWhereCompanyId($query, $companyId = null)
-    {
-        if ($companyId != null) {
-            if (is_array($companyId)) {
-                $query->whereIn('company_id', $companyId);
-            } else {
-                $query->where('company_id', '=', $companyId);
-            }
-        }
     }
 
     public function getActivitylogOptions(): LogOptions

@@ -132,6 +132,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Company::class);
     }
 
+    public function supplier()
+    {
+        return $this->hasMany(Supplier::class);
+    }
+
     public function getSetting($key)
     {
         return $this->settings()->where('key', $key)->pluck('value')->first();
