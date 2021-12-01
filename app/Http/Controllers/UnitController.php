@@ -54,8 +54,8 @@ class UnitController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'units')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'units')],
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
             'category' => 'required'
         ]);
 
@@ -80,7 +80,7 @@ class UnitController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'units'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
         ]);
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));

@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\ProductBrandService;
-use App\Models\ProductBrand;
+use App\Services\BrandService;
+use App\Models\Brand;
 
-class ProductBrandServiceImpl implements ProductBrandService
+class BrandServiceImpl implements BrandService
 {
     public function create(
         $company_id,
@@ -22,16 +22,16 @@ class ProductBrandServiceImpl implements ProductBrandService
         DB::beginTransaction();
 
         try {
-            $productbrand = new ProductBrand();
-            $productbrand->company_id = $company_id;
-            $productbrand->code = $code;
-            $productbrand->name = $name;
+            $brand = new Brand();
+            $brand->company_id = $company_id;
+            $brand->code = $code;
+            $brand->name = $name;
 
-            $productbrand->save();
+            $brand->save();
 
             DB::commit();
 
-            return $productbrand->hId;
+            return $brand->hId;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -41,12 +41,12 @@ class ProductBrandServiceImpl implements ProductBrandService
 
     public function read($userId)
     {
-        return ProductBrand::with('company')->bySelectedCompany()->paginate();
+        return Brand::with('company')->bySelectedCompany()->paginate();
     }
 
-    public function getAllProductBrand()
+    public function getAllBrand()
     {
-        return ProductBrand::all();
+        return Brand::all();
     }
 
     public function update(
@@ -59,9 +59,9 @@ class ProductBrandServiceImpl implements ProductBrandService
         DB::beginTransaction();
 
         try {
-            $productbrand = ProductBrand::where('id', '=', $id);
+            $brand = Brand::where('id', '=', $id);
 
-            $retval = $productbrand->update([
+            $retval = $brand->update([
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
@@ -77,28 +77,28 @@ class ProductBrandServiceImpl implements ProductBrandService
         }
     }
 
-    public function getProductBrandById($id)
+    public function getBrandById($id)
     {
-        return ProductBrand::find($id);
+        return Brand::find($id);
     }
 
     public function delete($id)
     {
-        $productbrand = ProductBrand::find($id);
+        $brand = Brand::find($id);
 
-        return $productbrand->delete();
+        return $brand->delete();
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)
     {
         switch($crud_status) {
             case 'create': 
-                $count = ProductBrand::where('code', '=', $code)
+                $count = Brand::where('code', '=', $code)
                 ->whereNull('deleted_at')
                 ->count();
                 return $count;
             case 'update':
-                $count = ProductBrand::where('id', '<>' , $id)
+                $count = Brand::where('id', '<>' , $id)
                 ->where('code', '=', $code)
                 ->whereNull('deleted_at')
                 ->count();

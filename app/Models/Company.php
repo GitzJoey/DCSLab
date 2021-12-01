@@ -8,7 +8,7 @@ use App\Models\Branch;
 use App\Models\Warehouse;
 use App\Models\Cash;
 use App\Models\Product;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use App\Models\ProductGroup;
 use App\Models\ProductUnit;
 use App\Models\Unit;
@@ -78,9 +78,9 @@ class Company extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function productbrands()
+    public function brands()
     {
-        return $this->hasMany(ProductBrand::class);
+        return $this->hasMany(Brand::class);
     }
 
     public function productgroups()

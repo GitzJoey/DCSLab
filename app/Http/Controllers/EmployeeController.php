@@ -48,8 +48,8 @@ class EmployeeController extends BaseController
     {
         $request->validate([
             'company_id' => 'required',
-            'name' => 'required|alpha',
-            'email' => 'required|email|max:255|unique:users',
+            'name' => 'required|min:3|max:255|alpha',
+            'email' => 'required|email|min:10|max:255|unique:users',
         ]);
 
         $rolesId = [];
@@ -107,7 +107,8 @@ class EmployeeController extends BaseController
 
         $request->validate([
             'company_id' => 'required',
-            'name' => 'required|alpha',
+            'name' => 'required|min:3|max:255|alpha',
+            'email' => 'required|email|min:10|max:255|unique:users',
         ]);
 
         $rolesId = [];

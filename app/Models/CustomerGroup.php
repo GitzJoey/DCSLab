@@ -92,7 +92,7 @@ class CustomerGroup extends Model
         return $this->belongsTo(Cash::class);
     }
 
-    public function customer_group()
+    public function customerGroup()
     {
         return $this->hasMany(Customer::class);
     }

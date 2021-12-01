@@ -11,7 +11,7 @@ implementasiin validation di controler ke :
 + Capitals
 + Suppliers
 + Product Groups
-+ Product Brands
++ Brands
 + Units
 + Customer Groups
 + Customers

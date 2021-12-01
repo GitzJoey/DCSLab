@@ -22,10 +22,20 @@ class CashFactory extends Factory
      */
     public function definition()
     {
+        $faker = \Faker\Factory::create('id_ID');
+
+        $cashes = [
+            'BCA', 
+            'CIMB',
+            'Mandiri', 
+            'Amex',
+            'Cash', 
+        ];
+        
         return [
             'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $this->faker->numberBetween(01, 10),
-            'name' => $this->faker->creditCardType(),
+            'name' => $faker->randomElement($cashes),
             'is_bank' => '1',
             'status' => '1',
         ];

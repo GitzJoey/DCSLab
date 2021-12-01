@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->bigIncrements('id');
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('group_id')->references('id')->on('product_groups')->nullable();
-            $table->foreignId('brand_id')->references('id')->on('product_brands');
+            $table->foreignId('brand_id')->references('id')->on('brands');
             $table->foreignId('main_supplier_id')->references('id')->on('suppliers')->nullable();
             $table->string('code')->nullable();
             $table->string('name')->nullable();	

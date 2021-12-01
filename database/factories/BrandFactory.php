@@ -2,18 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\ProductGroup;
+use App\Models\Brand;
 use App\Models\Company;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProductGroupFactory extends Factory
+class BrandFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = ProductGroup::class;
+    protected $model = Brand::class;
 
     /**
      * Define the model's default state.
@@ -24,22 +25,26 @@ class ProductGroupFactory extends Factory
     {
         $faker = \Faker\Factory::create('id_ID');
 
-        $groups = [
-            'Rokok', 
-            'Minyak',
-            'Beras', 
-            'Jajan',
-            'Air Mineral', 
-            'Korek',
-            'Mie', 
-            'Tepung Terigu',
+        $brands = [
+            'Sampoerna', 
+            'Bimoli',
+            'Fortune', 
+            'LA',
+            'Tropical', 
+            'Chitato',
+            'Kriket', 
+            'Tokai',
+            'Aqua',
+            'Indomie',
+            'Cleo',
+            'Peperro',
+            'Segitiga Biru',
         ];
 
         return [
             'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $this->faker->numberBetween(01, 10),
-            'name' => $faker->randomElement($groups),
-            'category' => $this->faker->numberBetween(1, 3),
+            'name' => $faker->randomElement($brands),
         ];
     }
 }

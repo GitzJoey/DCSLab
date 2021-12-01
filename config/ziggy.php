@@ -71,9 +71,9 @@ return [
             'api.get.dashboard.productgroup.read',
             'api.post.dashboard.productgroup.*',
         ],
-        'productbrand' => [
-            'api.get.dashboard.productbrand.read',
-            'api.post.dashboard.productbrand.*',
+        'brand' => [
+            'api.get.dashboard.brand.read',
+            'api.post.dashboard.brand.*',
         ],
         'productunit' => [
             'api.get.dashboard.productunit.read',
@@ -85,7 +85,7 @@ return [
         ],
         'product' => [
             'api.get.dashboard.productgroup.read.product',
-            'api.get.dashboard.productbrand.read.all',
+            'api.get.dashboard.brand.read.all',
             'api.get.dashboard.product.read',
             'api.get.dashboard.product.read.product',
             'api.get.dashboard.product.read.service',

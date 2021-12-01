@@ -53,8 +53,8 @@ class CompanyController extends BaseController
         };
 
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'companies')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'companies')],
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 
@@ -83,7 +83,7 @@ class CompanyController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'companies'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 

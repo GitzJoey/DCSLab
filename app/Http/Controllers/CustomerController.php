@@ -44,11 +44,8 @@ class CustomerController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'customers')],
-            'name' => 'required|max:255',
-            'limit_outstanding_notes' => 'required',
-            'limit_payable_nominal' => 'required',
-            'limit_age_notes' => 'required',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'customers')],
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required',
         ]);
 
@@ -96,7 +93,7 @@ class CustomerController extends BaseController
     {
         $request->validate([
             'code' =>  new uniqueCode('update', $id, 'customers'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required',
         ]);
 

@@ -21,7 +21,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\UnitController;
-use App\Http\Controllers\ProductBrandController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
@@ -80,7 +80,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale()], function() {
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('group', [ProductGroupController::class, 'index'])->name('db.product.product_groups');
-            Route::get('brand', [ProductBrandController::class, 'index'])->name('db.product.product_brands');
+            Route::get('brand', [BrandController::class, 'index'])->name('db.product.brands');
             Route::get('unit', [UnitController::class, 'index'])->name('db.product.units');
             Route::get('products', [ProductController::class, 'index_product'])->name('db.product.products');
             Route::get('services', [ProductController::class, 'index_service'])->name('db.product.services');

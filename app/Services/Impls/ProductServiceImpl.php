@@ -312,7 +312,7 @@ class ProductServiceImpl implements ProductService
         return Product::find($id);
     }
 
-    public function getProductBrandById($id)
+    public function getBrandById($id)
     {
         return Product::find($id);
     }

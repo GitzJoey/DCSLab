@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Product;
 use App\Models\Company;
 use App\Models\ProductGroup;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use App\Models\Supplier;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -31,7 +31,7 @@ class ProductFactory extends Factory
         return [
             'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
             'group_id' => ProductGroup::select('id')->inRandomOrder()->limit(1)->get()[0],
-            'brand_id' => ProductBrand::select('id')->inRandomOrder()->limit(1)->get()[0],
+            'brand_id' => Brand::select('id')->inRandomOrder()->limit(1)->get()[0],
             'supplier_id' => Supplier::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $faker->randomDigit(),
             'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
