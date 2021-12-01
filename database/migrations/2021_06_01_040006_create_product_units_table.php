@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductUnitTable extends Migration
+class CreateProductUnitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateProductUnitTable extends Migration
      */
     public function up()
     {
-        Schema::create('product_unit', function (Blueprint $table) {
+        Schema::create('product_units', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('product_id')->references('id')->on('products');
@@ -38,6 +38,6 @@ class CreateProductUnitTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_unit');
+        Schema::dropIfExists('product_units');
     }
 }

@@ -206,7 +206,7 @@ class AppHelper extends Command
         DB::table('company_user')->truncate();
         DB::table('brands')->truncate();
         DB::table('product_groups')->truncate();
-        DB::table('product_unit')->truncate();
+        DB::table('product_units')->truncate();
         DB::table('products')->truncate();
         DB::table('suppliers')->truncate();
 

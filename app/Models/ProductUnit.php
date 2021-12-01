@@ -16,7 +16,7 @@ class ProductUnit extends Model
     use LogsActivity;
     use SoftDeletes;
 
-    protected $table = 'product_unit';
+    protected $table = 'product_units';
 
     protected $fillable = [
         'product_id',

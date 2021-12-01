@@ -16,9 +16,9 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('company_id')->references('id')->on('companies');
-            $table->foreignId('product_group_id')->references('id')->on('product_groups')->nullable();
+            $table->foreignId('product_group_id')->nullable()->references('id')->on('product_groups');
             $table->foreignId('brand_id')->references('id')->on('brands');
-            $table->foreignId('main_supplier_id')->references('id')->on('suppliers')->nullable();
+            $table->foreignId('main_supplier_id')->nullable()->references('id')->on('suppliers');
             $table->string('code')->nullable();
             $table->string('name')->nullable();
             $table->integer('tax_status')->nullable();
