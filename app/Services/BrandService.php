@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface ProductBrandService
+interface BrandService
 {
     public function create(
         $company_id,

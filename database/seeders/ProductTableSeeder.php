@@ -35,7 +35,7 @@ class ProductTableSeeder extends Seeder
                     'company_id' => $c,
                     'product_group_id' => (new RandomGenerator())->randomTrueOrFalse() ? null : $gId,
                     'brand_id' => $pbId,
-                    'main_supplier_id' => (new RandomGenerator())->randomTrueOrFalse() ? null : $sId,
+                    'supplier_id' => (new RandomGenerator())->randomTrueOrFalse() ? null : $sId,
                 ]);
 
                 $prod->save();

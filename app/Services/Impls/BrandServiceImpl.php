@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 
-use App\Services\ProductBrandService;
+use App\Services\BrandService;
 
 use App\Models\Brand;
 use App\Models\User;
 
-class ProductBrandServiceImpl implements ProductBrandService
+class BrandServiceImpl implements BrandService
 {
     public function create(
         $company_id,

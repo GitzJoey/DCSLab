@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
 /* Ext */
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\SupplierController;
 /* Ext */
 
 Route::bind('id', function ($id) {
@@ -36,6 +37,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
 
+            });
+        });
+
+        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
+                Route::get('read', [SupplierController::class, 'read'])->name('.read');
             });
         });
         /* Ext */
@@ -93,6 +100,15 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
 
             });
         });
+
+        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
+                Route::post('save', [SupplierController::class, 'store'])->name('.save');
+                Route::post('edit/{id}', [SupplierController::class, 'update'])->name('.edit');
+                Route::post('delete/{id}', [SupplierController::class, 'delete'])->name('.delete');
+            });
+        });
+
         /* Ext */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {

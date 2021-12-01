@@ -68,6 +68,18 @@ class DashboardController extends BaseController
                         'pageName' => 'side-menu-devtools-backup',
                         'title' => 'components.menu.devtools-dbbackup'
                     ),
+                ]
+            ),
+            array(
+                'icon' => 'GithubIcon',
+                'pageName' => 'side-menu-devtools',
+                'title' => 'components.menu.devtools',
+                'subMenu' => [
+                    array (
+                        'icon' => '',
+                        'pageName' => 'side-menu-devtools-backup',
+                        'title' => 'components.menu.devtools-dbbackup'
+                    ),
                     array (
                         'icon' => '',
                         'pageName' => 'side-menu-devtools-examples',

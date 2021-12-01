@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Services\RoleService;
 use App\Services\UserService;
 
+use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\CompanyTableSeeder;
@@ -116,7 +117,7 @@ class AppHelper extends Command
         {
             $this->info('Starting UserSeeder');
             $truncate = $this->confirm('Do you want to truncate the users table first?', false);
-            $count = $this->ask('How many data:', 100);
+            $count = $this->ask('How many data:', 10);
 
             $this->info('Seeding...');
 
@@ -131,7 +132,7 @@ class AppHelper extends Command
         if ($roles)
         {
             $this->info('Starting RoleSeeder');
-            $count = $this->ask('How many data:', 10);
+            $count = $this->ask('How many data:', 5);
 
             $this->info('Seeding...');
 
@@ -146,7 +147,7 @@ class AppHelper extends Command
         if ($companies)
         {
             $this->info('Starting CompanyTableSeeder');
-            $count = $this->ask('How many companies for each users:', 5);
+            $count = $this->ask('How many companies for each users:', 3);
 
             $seeder = new CompanyTableSeeder();
             $seeder->callWith(CompanyTableSeeder::class, [$count]);
@@ -171,18 +172,31 @@ class AppHelper extends Command
 
         if ($product)
         {
-            $this->info('Starting ProductGroupSeeder, BrandSeeder before ProductTableSeeder');
+            $this->info('Starting UnitTableSeeder');
+            $seeder_unit = new UnitTableSeeder();
+            $seeder_unit->callWith(UnitTableSeeder::class);
+            $this->info('UnitTableSeeder Finish.');
 
-            $count_pg = $this->ask('How many product groups:', 5);
-            $count_pb = $this->ask('How many brands:', 10);
+            $this->info('Starting ProductGroupTableSeeder');
+            $count_pg = $this->ask('How many product groups (0 to skip):', 3);
 
-            $this->info('Starting ProductGroupSeeder and BrandSeeder');
+            if ($count_pg != 0) {
+                $seeder_pg = new ProductGroupTableSeeder();
+                $seeder_pg->callWith(ProductGroupTableSeeder::class, [$count_pg]);
 
-            $seeder_pg = new ProductGroupTableSeeder();
-            $seeder_pg->callWith(ProductGroupTableSeeder::class, [$count_pg]);
+                $this->info('ProductGroupTableSeeder Finish.');
+            }
 
-            $seeder_pb = new BrandTableSeeder();
-            $seeder_pb->callWith(BrandTableSeeder::class, [$count_pb]);
+            $this->info('Starting BrandTableSeeder');
+            $count_pb = $this->ask('How many brands (0 to skip):', 5);
+
+            if ($count_pb != 0) {
+
+                $seeder_pb = new BrandTableSeeder();
+                $seeder_pb->callWith(BrandTableSeeder::class, [$count_pb]);
+
+                $this->info('BrandTableSeeder Finish.');
+            }
 
             $this->info('Starting ProductTableSeeder');
             $count = $this->ask('How many products for each companies:', 15);
@@ -209,6 +223,7 @@ class AppHelper extends Command
         DB::table('product_units')->truncate();
         DB::table('products')->truncate();
         DB::table('suppliers')->truncate();
+        DB::table('units')->truncate();
 
         Schema::enableForeignKeyConstraints();
     }

@@ -11,6 +11,8 @@ use App\Services\SystemService;
 use App\Services\ActivityLogService;
 /* Ext */
 use App\Services\CompanyService;
+use App\Services\BrandService;
+use App\Services\SupplierService;
 /* Ext */
 
 use App\Services\Impls\UserServiceImpl;
@@ -20,6 +22,8 @@ use App\Services\Impls\SystemServiceImpl;
 use App\Services\Impls\ActivityLogServiceImpl;
 /* Ext */
 use App\Services\Impls\CompanyServiceImpl;
+use App\Services\Impls\BrandServiceImpl;
+use App\Services\Impls\SupplierServiceImpl;
 /* Ext */
 
 class AppServiceProvider extends ServiceProvider
@@ -55,6 +59,15 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(CompanyService::class, function (){
             return new CompanyServiceImpl();
         });
+
+        $this->app->singleton(BrandService::class, function (){
+            return new BrandServiceImpl();
+        });
+
+        $this->app->singleton(SupplierService::class, function (){
+            return new SupplierServiceImpl();
+        });
+
         /* Ext */
     }
 
