@@ -43,10 +43,10 @@ class CapitalController extends BaseController
     public function store(Request $request)
     {   
         $request->validate([
-            'ref_number' => 'required|max:255',
+            'ref_number' => 'required|min:5|max:255|numeric',
             'group_id' => 'required',
             'capital_status' => 'required',
-            'amount' => 'required',
+            'amount' => 'required|min:2|max:255|numeric',
         ]);
         
         $date = '2021-10-01';
@@ -71,7 +71,10 @@ class CapitalController extends BaseController
     public function update($id, Request $request)
     {
         $request->validate([
-            'ref_number' => 'required|max:255',
+            'ref_number' => 'required|min:5|max:255|numeric',
+            'group_id' => 'required',
+            'capital_status' => 'required',
+            'amount' => 'required|min:2|max:255|numeric',
         ]);
 
         $date = '2021-10-01';

@@ -44,8 +44,8 @@ class ProductUnitController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'productunits')],
-            'name' => 'required|max:255'
+            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'productunits')],
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
         ]);
 
         $is_base = $request['is_base'];
@@ -71,7 +71,7 @@ class ProductUnitController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'productunits'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
         ]);
         
         $is_base = $request['is_base'];

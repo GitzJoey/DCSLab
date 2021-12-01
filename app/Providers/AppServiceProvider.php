@@ -27,7 +27,7 @@ use App\Services\IncomeGroupService;
 use App\Services\ExpenseGroupService;
 use App\Services\SupplierService;
 use App\Services\ProductGroupService;
-use App\Services\ProductBrandService;
+use App\Services\BrandService;
 use App\Services\ProductService;
 use App\Services\UnitService;
 use App\Services\ProductUnitService;
@@ -46,7 +46,7 @@ use App\Services\Impls\IncomeGroupServiceImpl;
 use App\Services\Impls\ExpenseGroupServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
-use App\Services\Impls\ProductBrandServiceImpl;
+use App\Services\Impls\BrandServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\ProductUnitServiceImpl;
@@ -86,8 +86,8 @@ class AppServiceProvider extends ServiceProvider
             return new ProductGroupServiceImpl();
         });
 
-        $this->app->singleton(ProductBrandService::class, function (){
-            return new ProductBrandServiceImpl();
+        $this->app->singleton(BrandService::class, function (){
+            return new BrandServiceImpl();
         });
 
         $this->app->singleton(UnitService::class, function (){

@@ -155,12 +155,12 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="brand_id">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="brand_id" name="brand_id" v-model="product.brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="brand_id" name="brand_id" v-model="brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ product.brand.name }}
+                                    {{ brand.name }}
                                 </div>            
                             </div>
                         </div>
@@ -448,7 +448,7 @@ export default {
         this.mode = 'list';
         this.getAllProduct(1);
         this.getAllProductGroup();
-        this.getAllProductBrand();
+        this.getAllBrand();
         this.getAllUnit();
         this.getAllProductUnit();
         this.getAllSupplier();
@@ -469,8 +469,8 @@ export default {
                 this.groupDDL = response.data;
             });
         },
-        getAllProductBrand() {
-            axios.get(route('api.get.dashboard.productbrand.read.all')).then(response => {
+        getAllBrand() {
+            axios.get(route('api.get.dashboard.brand.read.all')).then(response => {
                 this.brandDDL = response.data;
             });
         },

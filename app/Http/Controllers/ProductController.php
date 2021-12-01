@@ -73,7 +73,7 @@ class ProductController extends BaseController
         if ($request->product_type[0] !== '4') {
             $request->validate([
                 'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
-                'name' => 'required|max:255',
+                'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
                 'group_id' => 'required',
                 'brand_id' => 'required',
                 'unit_id' => 'required',
@@ -86,7 +86,7 @@ class ProductController extends BaseController
         if ($request->product_type[0] == '4') {
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
             'group_id' => 'required',
             'unit_id' => 'required',
             'status' => 'required',
@@ -221,7 +221,7 @@ class ProductController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'products'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
             'status' => 'required',
         ]);
 

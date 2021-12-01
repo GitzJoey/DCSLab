@@ -63,7 +63,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(c, cIdx) in productbrandList.data">
+                            <tr v-for="(c, cIdx) in brandList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
                                 <td class="text-center">
@@ -84,13 +84,13 @@
                     </table>
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-sm justify-content-end">
-                            <li :class="{'page-item':true, 'disabled': this.productbrandList.prev_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.brandList.prev_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Previous" v-on:click="onPaginationChangePage('prev')">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
                             </li>
-                            <li :class="{'page-item':true, 'disabled': this.productbrandList.next_page_url == null}">
+                            <li :class="{'page-item':true, 'disabled': this.brandList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
                                     <span aria-hidden="true">&raquo;</span>
                                     <span class="sr-only">Next</span>
@@ -102,7 +102,7 @@
             </transition>
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list' && this.mode !== 'error'">
-                    <Form id="productbrandForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                    <Form id="brandForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
                                 <span aria-hidden="true">&times;</span>
@@ -113,22 +113,22 @@
                             </ul>
                         </div>
                         <td>
-                            <input type="hidden" v-model="productbrand.company" name="company_id"/>
+                            <input type="hidden" v-model="brand.company" name="company_id"/>
                         </td>
                         <div class="form-group row">
                             <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="productbrand.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="brand.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productbrand.code }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ brand.code }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="productbrand.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="brand.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ productbrand.name }}</div>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ brand.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">    
@@ -191,8 +191,8 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            productbrandList: [],
-            productbrand: {
+            brandList: [],
+            brand: {
                 company: {hId: ''},
                 code: 'AUTO',
                 name: '',
@@ -206,13 +206,13 @@ export default {
 
     mounted() {
         this.mode = 'list';
-        this.getAllProductBrand(1);
+        this.getAllBrand(1);
         },
     methods: {
-        getAllProductBrand(page) {
+        getAllBrand(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.productbrand.read') + '?page=' + page).then(response => {
-                this.productbrandList = response.data;
+            axios.get(route('api.get.dashboard.brand.read') + '?page=' + page).then(response => {
+                this.brandList = response.data;
                 this.loading = false;
             }).catch(e => {
                 this.handleListError(e);
@@ -221,14 +221,14 @@ export default {
         },
         onPaginationChangePage(page) {
             if (page === 'next') {
-                this.getAllProductBrand(this.productbrandList.current_page + 1);
+                this.getAllBrand(this.brandList.current_page + 1);
             } else if (page === 'prev') {
-                this.getAllProductBrand(this.productbrandList.current_page - 1);
+                this.getAllBrand(this.brandList.current_page - 1);
             } else {
-                this.getAllProductBrand(page);
+                this.getAllBrand(page);
             }
         },
-        emptyProductBrand() {
+        emptyBrand() {
             return {
                 company: {hId: ''},
                 code: 'AUTO',
@@ -237,22 +237,22 @@ export default {
         },
         createNew() {
             this.mode = 'create';
-            this.productbrand = this.emptyProductBrand();
+            this.brand = this.emptyBrand();
         },
         editSelected(idx) {
             this.mode = 'edit';
-            this.productbrand = this.productbrandList.data[idx];
+            this.brand = this.brandList.data[idx];
         },
         showSelected(idx) {
             this.mode = 'show';
-            this.productbrand = this.productbrandList.data[idx];
+            this.brand = this.brandList.data[idx];
         },
         deleteSelected(idx) {
             this.mode = 'delete';
-            this.productbrand = this.productbrandList.data[idx];
+            this.brand = this.brandList.data[idx];
 
             this.loading = true;
-            axios.post(route('api.post.dashboard.productbrand.delete', this.productbrand.hId)).then(response => {
+            axios.post(route('api.post.dashboard.brand.delete', this.brand.hId)).then(response => {
                 this.backToList();
             }).catch(e => {
                 this.handleError(e, actions);
@@ -262,14 +262,14 @@ export default {
         onSubmit(values, actions) {
             this.loading = true;
             if (this.mode === 'create') {
-                axios.post(route('api.post.dashboard.productbrand.save'), new FormData($('#productbrandForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.brand.save'), new FormData($('#brandForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
             } else if (this.mode === 'edit') {
-                axios.post(route('api.post.dashboard.productbrand.edit', this.productbrand.hId), new FormData($('#productbrandForm')[0])).then(response => {
+                axios.post(route('api.post.dashboard.brand.edit', this.brand.hId), new FormData($('#brandForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
@@ -314,14 +314,14 @@ export default {
 
             const fileReader = new FileReader()
             fileReader.addEventListener('load', () => {
-                this.productbrand.profile.img_path = fileReader.result
+                this.brand.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';
-            this.getAllProductBrand(this.productbrandList.current_page);
-            this.productbrand = this.emptyProductBrand();
+            this.getAllBrand(this.brandList.current_page);
+            this.brand = this.emptyBrand();
         },
         toggleFullScreen() {
             this.fullscreen = !this.fullscreen;
@@ -330,25 +330,25 @@ export default {
             this.contentHidden = !this.contentHidden;
         },
         refreshList() {
-            this.getAllProductBrand(this.productbrandList.current_page);
+            this.getAllBrand(this.brandList.current_page);
         },
     },
     computed: {
         getPages() {
-            if (this.productbrandList.current_page == null) return 0;
+            if (this.brandList.current_page == null) return 0;
 
-            return Math.ceil(this.productbrandList.total / this.productbrandList.per_page);
+            return Math.ceil(this.brandList.total / this.brandList.per_page);
         },
         retrieveImage()
         {
-            if (this.productbrand.profile.img_path && this.productbrand.profile.img_path !== '') {
-                if (this.productbrand.profile.img_path.includes('data:image')) {
-                    return this.productbrand.profile.img_path;
+            if (this.brand.profile.img_path && this.brand.profile.img_path !== '') {
+                if (this.brand.profile.img_path.includes('data:image')) {
+                    return this.brand.profile.img_path;
                 } else {
-                    return '/storage/' + this.productbrand.profile.img_path;
+                    return '/storage/' + this.brand.profile.img_path;
                 }
             } else {
-                return '/images/def-productbrand.png';
+                return '/images/def-brand.png';
             }
         }
     }

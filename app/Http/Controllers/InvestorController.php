@@ -50,8 +50,8 @@ class InvestorController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'investors')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'investors')],
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required'
         ]);
 
@@ -81,7 +81,7 @@ class InvestorController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'investors'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required'
         ]);
 

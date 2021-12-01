@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { ZiggyVue } from 'ziggy';
 import { Ziggy } from '../ziggy';
 import { createI18n }from 'vue-i18n';
-import ProductBrand from './components/ProductBrand';
+import Brand from './components/Brand';
 
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -15,7 +15,7 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Product Brand Lists',
+            title: 'Brand Lists',
             cols: {
                 code: 'Code',
                 name: 'Name',
@@ -27,7 +27,7 @@ const messages = {
             back: 'Back',
         },
         actions: {
-            create: 'Create Product Brand',
+            create: 'Create Brand',
             edit: 'Edit Product Group',
             show: 'Show Product Group',
             delete: 'Delete',
@@ -93,7 +93,7 @@ const i18n = createI18n({
     messages,
 });
 
-createApp(ProductBrand)
+createApp(Brand)
     .use(ZiggyVue, Ziggy)
     .use(i18n)
-    .mount('#productbrandVue')
+    .mount('#brandVue')

@@ -38,8 +38,8 @@ class ExpenseGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'expensegroups')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'expensegroups')],
+            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
         ]);
 
         $result = $this->expenseGroupService->create(
@@ -55,7 +55,7 @@ class ExpenseGroupController extends BaseController
         $request->validate([
             'company_id' => 'required',
             'code' => new uniqueCode('update', $id, 'expensegroups'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
         ]);
 
         $result = $this->expenseGroupService->update(

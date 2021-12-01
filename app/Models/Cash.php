@@ -50,7 +50,7 @@ class Cash extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function customergroups()
+    public function customerGroups()
     {
         return $this->hasMany(CustomerGroup::class);
     }

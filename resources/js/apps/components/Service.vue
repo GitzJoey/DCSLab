@@ -126,30 +126,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="form-group row">
-                            <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
-                            <div class="col-md-10">
-                                <div v-for="(n, nIdx) in service.product_unit">
-                                    <select class="form-control" id="unit_id" name="unit_id" v-model="n.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        {{ n.unit.name }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- <div class="form-group row">
-                            <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
-                            <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.product_unit.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                </select>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ service.product_unit.unit.name }}
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -180,22 +156,6 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ service.point }}</div>
                             </div>
                         </div>
-                        <!-- <div class="form-group row">
-                            <label for="product_type" class="col-2 col-form-label">{{ $t('fields.product_type') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <select class="form-control" id="product_type" name="product_type" v-model="service.product_type" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('product_typeDDL.rawmaterial') }}</option>
-                                    <option value="2">{{ $t('product_typeDDL.wip') }}</option>
-                                    <option value="3">{{ $t('product_typeDDL.finishedgoods') }}</option>
-                                </select>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="service.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
-                                    <span v-if="service.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
-                                    <span v-if="service.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
-                                </div>
-                            </div>
-                        </div> -->
                         <td>
                             <input type="hidden" v-model="service.product_type" name="product_type"/>
                         </td>

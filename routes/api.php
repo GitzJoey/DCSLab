@@ -18,7 +18,7 @@ use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductGroupController;
-use App\Http\Controllers\ProductBrandController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductController;
@@ -136,9 +136,9 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:1000
             // Route::get('read/productandservice/', [ProductGroupController::class, 'getAllProductGroup_ProductAndService'])->name('api.get.dashboard.productgroup.read.productandservice');
         });
 
-        Route::group(['prefix' => 'productbrand'], function () {
-            Route::get('read', [ProductBrandController::class, 'read'])->name('api.get.dashboard.productbrand.read');
-            Route::get('read/all/', [ProductBrandController::class, 'getAllProductBrand'])->name('api.get.dashboard.productbrand.read.all');
+        Route::group(['prefix' => 'brand'], function () {
+            Route::get('read', [BrandController::class, 'read'])->name('api.get.dashboard.brand.read');
+            Route::get('read/all/', [BrandController::class, 'getAllBrand'])->name('api.get.dashboard.brand.read.all');
         });
 
         Route::group(['prefix' => 'productunit'], function () {
@@ -271,10 +271,10 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:1000
                 Route::post('delete/{id}', [ProductGroupController::class, 'delete'])->name('api.post.dashboard.productgroup.delete');
             });
 
-            Route::group(['prefix' => 'productbrand'], function () {
-                Route::post('save', [ProductBrandController::class, 'store'])->name('api.post.dashboard.productbrand.save');
-                Route::post('edit/{id}', [ProductBrandController::class, 'update'])->name('api.post.dashboard.productbrand.edit');
-                Route::post('delete/{id}', [ProductBrandController::class, 'delete'])->name('api.post.dashboard.productbrand.delete');
+            Route::group(['prefix' => 'brand'], function () {
+                Route::post('save', [BrandController::class, 'store'])->name('api.post.dashboard.brand.save');
+                Route::post('edit/{id}', [BrandController::class, 'update'])->name('api.post.dashboard.brand.edit');
+                Route::post('delete/{id}', [BrandController::class, 'delete'])->name('api.post.dashboard.brand.delete');
             });
 
             Route::group(['prefix' => 'productunit'], function () {

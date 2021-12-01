@@ -76,7 +76,7 @@ class Customer extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function customer_group()
+    public function customerGroup()
     {
         return $this->belongsTo(CustomerGroup::class);
     }

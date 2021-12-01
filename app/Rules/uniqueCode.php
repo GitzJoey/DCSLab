@@ -16,7 +16,7 @@ use App\Services\CustomerGroupService;
 use App\Services\ExpenseGroupService;
 use App\Services\IncomeGroupService;
 use App\Services\ProductService;
-use App\Services\ProductBrandService;
+use App\Services\BrandService;
 use App\Services\ProductGroupService;
 use App\Services\UnitService;
 use App\Services\ProductUnitService;
@@ -42,7 +42,7 @@ class uniqueCode implements Rule
     private $SupplierService;
     private $productGroupService;
     private $productUnitService;
-    private $productBrandService;
+    private $brandService;
     private $UnitService;
     private $productService;
     private $CustomerGroupService;
@@ -92,8 +92,8 @@ class uniqueCode implements Rule
             case 'productgroups':
                 $this->productGroupService = Container::getInstance()->make(ProductGroupService::class);
                 break;
-            case 'productbrands':
-                $this->productBrandService = Container::getInstance()->make(ProductBrandService::class);
+            case 'brands':
+                $this->brandService = Container::getInstance()->make(BrandService::class);
                 break;
             case 'productunits':
                 $this->productUnitService = Container::getInstance()->make(ProductUnitService::class);
@@ -156,8 +156,8 @@ class uniqueCode implements Rule
             case 'productgroups':
                 $count = $this->productGroupService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
-            case 'productbrands':
-                $count = $this->productBrandService->checkDuplicatedCode($this->crud_status, $this->id, $code);
+            case 'brands':
+                $count = $this->brandService->checkDuplicatedCode($this->crud_status, $this->id, $code);
                 break;
             case 'units':
                 $count = $this->UnitService->checkDuplicatedCode($this->crud_status, $this->id, $code);

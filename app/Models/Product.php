@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Company;
 use App\Models\ProductGroup;
-use App\Models\ProductBrand;
+use App\Models\Brand;
 use App\Models\Unit;
 use App\Models\ProductUnit;
 use App\Models\Supplier;
@@ -81,17 +81,17 @@ class Product extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function group()
+    public function productGroup()
     {
         return $this->belongsTo(ProductGroup::class);
     }
 
     public function brand()
     {
-        return $this->belongsTo(ProductBrand::class);
+        return $this->belongsTo(Brand::class);
     }
 
-    public function product_unit()
+    public function productUnit()
     {
         return $this->hasMany(ProductUnit::class);
     }

@@ -14,6 +14,6 @@ class ProductGroupTableSeeder extends Seeder
      */
     public function run()
     {
-        ProductGroup::factory()->count(15)->create();
+        ProductGroup::factory()->count(10)->create();
     }
 }

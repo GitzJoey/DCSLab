@@ -6,7 +6,7 @@ copas fungsi itu ke :
 + Capitals
 + Suppliers
 + Product Groups
-+ Product Brands
++ Brands
 + Units
 + Customer Groups
 + Customers
@@ -19,7 +19,7 @@ implementasiin fungsi read kaya gitu ke :
 + Capitals
 + Suppliers
 + Product Groups
-+ Product Brands
++ Brands
 + Units
 + Customer Groups
 + Customers

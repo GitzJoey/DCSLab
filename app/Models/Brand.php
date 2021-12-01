@@ -11,7 +11,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Config;
 
-class ProductBrand extends Model
+class Brand extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;

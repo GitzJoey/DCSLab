@@ -16,7 +16,7 @@ Implementasiin fungsi kaya diatas ke :
 + Capitals
 + Suppliers
 + Product Groups
-+ Product Brands
++ Brands
 + Units
 + Customer Groups
 + Customers

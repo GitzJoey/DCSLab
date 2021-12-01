@@ -49,8 +49,8 @@ class CapitalGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'capitalgroups')],
-            'name' => 'required|max:255'
+            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'capitalgroups')],
+            'name' => 'required|min:3|max:255|alpha|alpha_dash',
         ]);
 
         if ($request['code'] == 'AUTO') {
@@ -73,7 +73,7 @@ class CapitalGroupController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'capitalgroups'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha|alpha_dash',
         ]);
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));

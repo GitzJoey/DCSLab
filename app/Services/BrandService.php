@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-interface ProductBrandService
+interface BrandService
 {
     public function create(
         $company_id,
@@ -12,7 +12,7 @@ interface ProductBrandService
 
     public function read($userId);
 
-    public function getAllProductBrand();
+    public function getAllBrand();
 
     public function update(
         $id,

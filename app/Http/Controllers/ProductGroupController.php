@@ -55,8 +55,8 @@ class ProductGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'productgroups')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'productgroups')],
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
             'category' => 'required'
         ]);
 
@@ -81,7 +81,8 @@ class ProductGroupController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'productgroups'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
+            'category' => 'required'
         ]);
         
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
