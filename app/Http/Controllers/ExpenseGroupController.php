@@ -38,7 +38,7 @@ class ExpenseGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'expensegroups')],
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'expensegroups')],
             'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
         ]);
 

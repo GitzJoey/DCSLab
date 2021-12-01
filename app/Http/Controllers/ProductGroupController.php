@@ -55,7 +55,7 @@ class ProductGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'productgroups')],
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'productgroups')],
             'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
             'category' => 'required'
         ]);

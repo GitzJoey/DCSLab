@@ -49,7 +49,7 @@ class CapitalGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'capitalgroups')],
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'capitalgroups')],
             'name' => 'required|min:3|max:255|alpha|alpha_dash',
         ]);
 

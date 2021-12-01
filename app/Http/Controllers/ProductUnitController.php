@@ -44,7 +44,7 @@ class ProductUnitController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'productunits')],
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'productunits')],
             'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
         ]);
 

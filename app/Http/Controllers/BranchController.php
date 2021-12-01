@@ -45,7 +45,7 @@ class BranchController extends BaseController
     {
         $request->validate([
             'company_id' => 'required',
-            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'branches')],
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'branches')],
             'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
             'status' => 'required'
         ]);

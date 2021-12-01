@@ -38,7 +38,7 @@ class IncomeGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'min:1', 'max:255', 'numeric', new uniqueCode('create', '', 'incomegroups')],
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'incomegroups')],
             'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
         ]);
 
