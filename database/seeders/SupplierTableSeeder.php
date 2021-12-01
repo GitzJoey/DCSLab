@@ -3,8 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Profile;
 use App\Models\Supplier;
 
+use App\Models\User;
+use App\Services\RoleService;
+use App\Services\UserService;
+use Illuminate\Container\Container;
 use Illuminate\Database\Seeder;
 
 class SupplierTableSeeder extends Seeder
@@ -20,8 +25,16 @@ class SupplierTableSeeder extends Seeder
 
         foreach($companies as $c)
         {
+            $usr = User::factory()->count(1)->create()[0];
+
+            $profile = Profile::factory()->setFirstName($usr->name);
+            $usr->profile()->save($profile);
+
+            $usr->companies()->attach($c);
+
             Supplier::factory()->count($supplierPerCompany)->create([
-                'company_id' => $c
+                'company_id' => $c,
+                'user_id' => $usr->id
             ]);
         }
     }

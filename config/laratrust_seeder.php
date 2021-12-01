@@ -16,7 +16,8 @@ return [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
-            'users' => 'c,r,u'
+            'users' => 'c,r,u',
+            'devtools' => 'c,r,u,d',
         ],
         'administrator' => [
             'profile' => 'r,u',
@@ -28,7 +29,22 @@ return [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
-        ]
+        ],
+        /* Ext */
+        'POS-owner' => [
+            'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'settings' => 'r,u',
+
+            'supplier' => 'c,r,u,d',
+            'product' => 'c,r,u,d',
+        ],
+        'POS-supplier' => [
+            'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'settings' => 'r,u',
+        ],
+        /* Ext */
     ],
 
     'permissions_map' => [
