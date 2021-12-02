@@ -18,7 +18,7 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
-                                <td></td>
+                                <td>{{ item.user.name }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 1" />
                                     <XIcon v-if="item.status === 0" />
@@ -74,7 +74,21 @@
     </div>
 
     <div class="intro-y box" v-if="mode !== 'list'">
-
+        <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.supplier.actions.create') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.supplier.actions.edit') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.supplier.actions.show') }}</h2>
+        </div>
+        <div class="loader-container">
+            <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                
+            </VeeForm>
+            <div class="loader-overlay" v-if="loading"></div>
+        </div>
+        <hr/>
+        <div>
+            <button type="button" class="btn btn-secondary w-15 m-3" @click="backToList">{{ t('components.buttons.back') }}</button>
+        </div>
     </div>
 </template>
 

@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import {defineComponent, computed, provide, onMounted, ref, watch, onBeforeMount} from 'vue';
+import { computed, provide, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '../../store/index';
 import { switchLang, getLang } from '../../lang';

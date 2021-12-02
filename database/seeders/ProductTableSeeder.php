@@ -20,7 +20,7 @@ class ProductTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($productPerCompany = 15)
+    public function run($productPerCompany = 5)
     {
         $companies = Company::get()->pluck('id');
 

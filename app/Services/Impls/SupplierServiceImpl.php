@@ -60,9 +60,9 @@ class SupplierServiceImpl implements SupplierService
         if (!$companyId) return null;
 
         if (empty($search)) {
-            $suppliers = Supplier::whereCompanyId($companyId);
+            $suppliers = Supplier::with('user', 'company')->whereCompanyId($companyId);
         } else {
-            $suppliers = Supplier::whereCompanyId($companyId)
+            $suppliers = Supplier::with('user', 'company')->whereCompanyId($companyId)
                 ->where('name', 'like', '%'.$search.'%');
         }
 

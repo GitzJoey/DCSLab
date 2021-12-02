@@ -117,7 +117,7 @@ class AppHelper extends Command
         {
             $this->info('Starting UserSeeder');
             $truncate = $this->confirm('Do you want to truncate the users table first?', false);
-            $count = $this->ask('How many data:', 10);
+            $count = $this->ask('How many data:', 5);
 
             $this->info('Seeding...');
 
@@ -199,7 +199,7 @@ class AppHelper extends Command
             }
 
             $this->info('Starting ProductTableSeeder');
-            $count = $this->ask('How many products for each companies:', 15);
+            $count = $this->ask('How many products for each companies:', 5);
 
             $seeder = new ProductTableSeeder();
             $seeder->callWith(ProductTableSeeder::class, [$count]);
