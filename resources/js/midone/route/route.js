@@ -10,6 +10,7 @@ import Activity from '../views/dashboard/Activity.vue';
 /* Ext */
 import Company from '../views/company/Company.vue';
 import Supplier from '../views/supplier/Supplier.vue';
+import Product from '../views/product/Product.vue';
 /* Ext */
 
 import AdminUsers from "../views/administrators/Users";
@@ -71,6 +72,18 @@ const routes = [
                 path: root + '/supplier' + '/supplier',
                 name: 'side-menu-supplier-supplier',
                 component: Supplier,
+                meta: { remember: true }
+            }
+        ],
+    },
+    {
+        path: root + '/product',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/product' + '/product',
+                name: 'side-menu-product-product',
+                component: Product,
                 meta: { remember: true }
             }
         ],

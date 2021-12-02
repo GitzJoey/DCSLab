@@ -45,6 +45,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [SupplierController::class, 'read'])->name('.read');
             });
         });
+
+        Route::group(['prefix' => 'product', 'as' => '.product'], function() {
+            Route::group(['prefix' => 'product', 'as' => '.product'], function() {
+            });
+        });
+        
         /* Ext */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
@@ -106,6 +112,11 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
                 Route::post('save', [SupplierController::class, 'store'])->name('.save');
                 Route::post('edit/{id}', [SupplierController::class, 'update'])->name('.edit');
                 Route::post('delete/{id}', [SupplierController::class, 'delete'])->name('.delete');
+            });
+        });
+
+        Route::group(['prefix' => 'product', 'as' => '.product'], function() {
+            Route::group(['prefix' => 'product', 'as' => '.product'], function() {
             });
         });
 

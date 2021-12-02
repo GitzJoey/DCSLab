@@ -7,6 +7,8 @@
             "company-company": "Company",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
+            "product": "Product",
+            "product-product": "Product",
             "administrators": "Administrators",
             "administrators-users": "Users",
             "devtools": "Dev Tools",
@@ -169,6 +171,26 @@
         },
         "activity": {
             "title": "Activity Log"
+        },
+        "product": {
+            "table": {
+                "title": "",
+                "cols": {
+                    "code": "Code",
+                    "brand_id": "Brand Name",
+                    "name": "Name",    
+                    "product_type": "Product Type"
+                }
+            },
+            "actions": {
+                "create": "Create Product",
+                "edit": "Edit Product",
+                "show": "Show Product",
+                "delete": "Delete Product"
+            },
+            "fields": {
+                
+            }
         },
         "supplier": {
             "table": {

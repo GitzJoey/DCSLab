@@ -7,6 +7,8 @@
             "company-company": "Perusahaan",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
+            "product": "Product",
+            "product-product": "Product",
             "administrators": "Administrators",
             "administrators-users": "Pengguna",
             "devtools": "Dev Tools",
@@ -169,6 +171,26 @@
         },
         "activity": {
             "title": "Catatan Aktifitas"
+        },
+        "product": {
+            "table": {
+                "title": "",
+                "cols": {
+                    "code": "Kode",
+                    "brand_id": "Merk",
+                    "name": "Nama",    
+                    "product_type": "Tipe Produk"
+                }
+            },
+            "actions": {
+                "create": "Tambah Produk",
+                "edit": "Ubah Produk",
+                "show": "Tampilkan Produk",
+                "delete": "Hapus Produk"
+            },
+            "fields": {
+
+            }
         },
         "supplier": {
             "table": {

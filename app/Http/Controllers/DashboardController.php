@@ -71,6 +71,18 @@ class DashboardController extends BaseController
                 ]
             ),
             array(
+                'icon' => 'PackageIcon',
+                'pageName' => 'side-menu-product',
+                'title' => 'components.menu.product',
+                'subMenu' => [
+                    array (
+                        'icon' => '',
+                        'pageName' => 'side-menu-product-product',
+                        'title' => 'components.menu.product-product'
+                    ),
+                ]
+            ),
+            array(
                 'icon' => 'GithubIcon',
                 'pageName' => 'side-menu-devtools',
                 'title' => 'components.menu.devtools',
