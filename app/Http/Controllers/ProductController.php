@@ -73,7 +73,7 @@ class ProductController extends BaseController
         if ($request->product_type[0] !== '4') {
             $request->validate([
                 'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
-                'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
+                'name' => 'required|min:3|max:255',
                 'group_id' => 'required',
                 'brand_id' => 'required',
                 'unit_id' => 'required',
@@ -86,7 +86,7 @@ class ProductController extends BaseController
         if ($request->product_type[0] == '4') {
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
-            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
+            'name' => 'required|min:3|max:255',
             'group_id' => 'required',
             'unit_id' => 'required',
             'status' => 'required',
@@ -101,6 +101,12 @@ class ProductController extends BaseController
             $request['code'] = $randomGenerator->generateNumber(10000, 99999);
         };
 
+        $use_serial_number = $request['use_serial_number'];
+        $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
+
+        $has_expiry_date = $request['has_expiry_date'];
+        $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
+
         // apabila product maka...
         if ($request->product_type[0] !== '4') {
             $code = $request->code;
@@ -111,7 +117,8 @@ class ProductController extends BaseController
             $supplier_id = $request->supplier_id != null ? Hashids::decode($request->supplier_id)[0]:$supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $is_use_serial = $request->is_use_serial;
+            $use_serial_number;
+            $has_expiry_date;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -153,7 +160,8 @@ class ProductController extends BaseController
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units
@@ -166,9 +174,6 @@ class ProductController extends BaseController
 
         // apabila service maka...
         if ($request->product_type[0] == '4') {
-            $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
-            $company_id = Hashids::decode($company_id)[0];
-
             $code = $request['code'];
             $group_id = Hashids::decode($request->group_id)[0];
             $brand_id = null;
@@ -177,7 +182,8 @@ class ProductController extends BaseController
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $is_use_serial = 0;
+            $use_serial_number = null;
+            $has_expiry_date = null;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -203,7 +209,8 @@ class ProductController extends BaseController
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units
@@ -237,7 +244,8 @@ class ProductController extends BaseController
             $supplier_id = $request->supplier_id != null ? Hashids::decode($request->supplier_id)[0]:$supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $is_use_serial = $request->is_use_serial;
+            $use_serial_number = $request->use_serial_number;
+            $has_expiry_date = $request->has_expiry_date;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -283,7 +291,8 @@ class ProductController extends BaseController
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units
@@ -318,7 +327,8 @@ class ProductController extends BaseController
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units

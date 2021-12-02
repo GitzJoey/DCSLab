@@ -14,7 +14,8 @@ interface ProductService
         $supplier_id,
         $remarks,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
         $product_units
@@ -37,7 +38,8 @@ interface ProductService
         $supplier_id,
         $remarks,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
         $product_units

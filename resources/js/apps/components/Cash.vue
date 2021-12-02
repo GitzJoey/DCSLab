@@ -234,7 +234,7 @@ export default {
                 code: 'AUTO',
                 name: '',
                 is_bank: '',
-                status: '',
+                status: '1',
             },
             listErrors: [],
             tableListErrors: [],

@@ -26,7 +26,8 @@ const messages = {
                 remarks: 'Remarks',
                 estimated_capital_price: 'Estimated Capital Price',
                 point: 'Point',
-                is_use_serial: 'Is Use Serial',
+                use_serial_number: 'Use Serial Number',
+                has_expiry_date: 'Has Expiry Date',
                 product_type: 'Product Type',
                 status: 'Status',
                 
@@ -53,7 +54,8 @@ const messages = {
             remarks: 'Remarks',
             estimated_capital_price: 'Estimated Capital Price',
             point: 'Point',
-            is_use_serial: 'Is Use Serial',
+            use_serial_number: 'Is Use Serial',
+            has_expiry_date: 'Has Expiry Date',
             product_type: 'Product Type',
             status: 'Status',
             settings: {
@@ -80,7 +82,11 @@ const messages = {
             finishedgoods: 'Finished Goods',
             service: 'Service',
         },
-        is_use_serial: {
+        use_serial_number: {
+            active: 'Yes',
+            inactive: 'No',
+        },
+        has_expiry_date: {
             active: 'Yes',
             inactive: 'No',
         },
@@ -102,7 +108,8 @@ const messages = {
                 remarks: 'Remarks',
                 estimated_capital_price: 'Perkiraan Harga Modal',
                 point: 'Poin',
-                is_use_serial: 'Memakai Nomor Serial',
+                use_serial_number: 'Memakai Nomor Serial',
+                has_expiry_date: 'Tanggal Expire',
                 product_type: 'Tipe Produk',
                 status: 'Status',
             }
@@ -128,7 +135,8 @@ const messages = {
             remarks: 'Remarks',
             estimated_capital_price: 'Perkiraan Harga Modal',
             point: 'Poin',
-            is_use_serial: 'Memakai Nomor Serial',
+            use_serial_number: 'Memakai Nomor Serial',
+            has_expiry_date: 'Tanggal Expire',
             product_type: 'Tipe Produk',
             status: 'Status',
             settings: {
@@ -155,7 +163,11 @@ const messages = {
             finishedgoods: 'Finished Goods',
             service: 'Service',
         },
-        is_use_serial: {
+        use_serial_number: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif',
+        },
+        has_expiry_date: {
             active: 'Aktif',
             inactive: 'Tidak Aktif',
         },

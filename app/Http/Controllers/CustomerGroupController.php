@@ -52,8 +52,6 @@ class CustomerGroupController extends BaseController
             'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'customergroups')],
             'name' => 'required|min:3|max:255|alpha',
             'is_member_card' => 'required',
-            'round on' => 'required',
-            'category' => 'required',
         ]);
 
         if ($request['code'] == 'AUTO') {
@@ -116,8 +114,6 @@ class CustomerGroupController extends BaseController
             'code' =>  new uniqueCode('update', $id, 'customergroups'),
             'name' => 'required|min:3|max:255|alpha',
             'is_member_card' => 'required',
-            'round on' => 'required',
-            'category' => 'required',
         ]);
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));

@@ -64,23 +64,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(b, bIdx) in productgroupList.data">
-                                <td>{{ b.code }}</td>
-                                <td>{{ b.name }}</td>
+                            <tr v-for="(c, cIdx) in productgroupList.data">
+                                <td>{{ c.code }}</td>
+                                <td>{{ c.name }}</td>
                                 <td>
-                                    <span v-if="b.category === 1">{{ $t('categoryDDL.product') }}</span>
-                                    <span v-if="b.category === 2">{{ $t('categoryDDL.service') }}</span>
-                                    <span v-if="b.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
+                                    <span v-if="c.category === 1">{{ $t('categoryDDL.product') }}</span>
+                                    <span v-if="c.category === 2">{{ $t('categoryDDL.service') }}</span>
+                                    <span v-if="c.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>

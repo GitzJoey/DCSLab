@@ -50,7 +50,7 @@ class BrandController extends BaseController
     {
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'brands')],
-            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
+            'name' => 'required|min:3|max:255',
         ]);
 
         if ($request['code'] == 'AUTO') {

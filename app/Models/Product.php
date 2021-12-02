@@ -32,7 +32,8 @@ class Product extends Model
         'supplier_id',
         'remarks',
         'point',
-        'is_use_serial',
+        'use_serial_number',
+        'has_expiry_date',
         'product_type',
         'status'
     ];
@@ -48,7 +49,8 @@ class Product extends Model
         'supplier_id',
         'remarks',
         'point',
-        'is_use_serial',
+        'use_serial_number',
+        'has_expiry_date',
         'product_type',
         'status'
     ];
