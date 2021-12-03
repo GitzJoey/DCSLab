@@ -15,30 +15,27 @@ class UnitTableSeeder extends Seeder
      */
     public function run()
     {
-        //ini unit2 ny di checkdi google
-        //list of unit of measurement, check bahasa nya, tulisannya, etc
-
         $faker = \Faker\Factory::create('id_ID');
 
         $units = [
-            ['code' => "", 'name' => "GR", 'category' => "1"],
-            ['code' => "",'name' => "ONS", 'category' => "1"],
-            ['code' => "", 'name' => "KG", 'category' => "1"],
-            ['code' => "", 'name' => "MTR", 'category' => "1"],
-            ['code' => "", 'name' => "PCS", 'category' => "1"],
-            ['code' => "", 'name' => "PACK", 'category' => "1"],
-            ['code' => "", 'name' => "SAK", 'category' => "1"],
-            ['code' => "", 'name' => "KRT", 'category' => "1"],
-            ['code' => "", 'name' => "BKS", 'category' => "1"],
-            ['code' => "", 'name' => "SLOP", 'category' => "1"],
-            ['code' => "", 'name' => "DUS", 'category' => "1"],
-            ['code' => "", 'name' => "ROLL", 'category' => "1"],
-            ['code' => "", 'name' => "BTG", 'category' => "1"],
-            ['code' => "", 'name' => "m1", 'category' => "2"], // meter lari
-            ['code' => "", 'name' => "m2", 'category' => "2"], // meter persegi
-            ['code' => "", 'name' => "m3", 'category' => "3"], // meter kubik : bata ringan, pembangunan per volume
-            ['code' => "", 'name' => "UNIT", 'category' => "3"],
-            ['code' => "", 'name' => "TITIK", 'category' => "2"],
+            ['name' => "GR", 'category' => "1"],
+            ['name' => "ONS", 'category' => "1"],
+            ['name' => "KG", 'category' => "1"],
+            ['name' => "MTR", 'category' => "1"],
+            ['name' => "PCS", 'category' => "1"],
+            ['name' => "PACK", 'category' => "1"],
+            ['name' => "SAK", 'category' => "1"],
+            ['name' => "KRT", 'category' => "1"],
+            ['name' => "BKS", 'category' => "1"],
+            ['name' => "SLOP", 'category' => "1"],
+            ['name' => "DUS", 'category' => "1"],
+            ['name' => "ROLL", 'category' => "1"],
+            ['name' => "BTG", 'category' => "1"],
+            ['name' => "m1", 'category' => "2"], // meter lari
+            ['name' => "m2", 'category' => "2"], // meter persegi
+            ['name' => "m3", 'category' => "3"], // meter kubik : bata ringan, pembangunan per volume
+            ['name' => "UNIT", 'category' => "3"],
+            ['name' => "TITIK", 'category' => "2"],
         ];
 
         $companies = Company::get()->pluck('id');
