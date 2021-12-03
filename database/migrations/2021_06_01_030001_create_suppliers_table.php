@@ -22,8 +22,8 @@ class CreateSuppliersTable extends Migration
             $table->string('contact')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
-            $table->integer('is_tax')->default(0);
-            $table->string('tax_number')->nullable();
+            $table->integer('taxable_enterprice')->default(0);
+            $table->string('tax_id')->nullable();
             $table->string('remarks')->nullable();
             $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);

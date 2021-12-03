@@ -75,44 +75,44 @@ class ProductServiceImpl implements ProductService
         }
     }
 
-    public function createService(
-        $company_id,
-        $code,
-        $product_group_id,
-        $name,
-        $unit_id,
-        $tax_status,
-        $remarks,
-        $point,
-        $product_type,
-        $status
-    )
-    {
-        DB::beginTransaction();
+    // public function createService(
+    //     $company_id,
+    //     $code,
+    //     $product_group_id,
+    //     $name,
+    //     $unit_id,
+    //     $tax_status,
+    //     $remarks,
+    //     $point,
+    //     $product_type,
+    //     $status
+    // )
+    // {
+    //     DB::beginTransaction();
 
-        try {
-            $service = new Product();
-            $service->company_id = $company_id;
-            $service->code = $code;
-            $service->product_group_id = $product_group_id;
-            $service->name = $name;
-            $service->unit_id = $unit_id;
-            $service->tax_status = $tax_status;
-            $service->remarks = $remarks;
-            $service->point = $point;
-            $service->product_type = $product_type;
-            $service->status = $status;
-            $service->save();
+    //     try {
+    //         $service = new Product();
+    //         $service->company_id = $company_id;
+    //         $service->code = $code;
+    //         $service->product_group_id = $product_group_id;
+    //         $service->name = $name;
+    //         $service->unit_id = $unit_id;
+    //         $service->tax_status = $tax_status;
+    //         $service->remarks = $remarks;
+    //         $service->point = $point;
+    //         $service->product_type = $product_type;
+    //         $service->status = $status;
+    //         $service->save();
 
-            DB::commit();
+    //         DB::commit();
 
-            return $service->hId;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        }
-    }
+    //         return $service->hId;
+    //     } catch (Exception $e) {
+    //         DB::rollBack();
+    //         Log::debug($e);
+    //         return Config::get('const.ERROR_RETURN_VALUE');
+    //     }
+    // }
 
     public function read($userId)
     {
