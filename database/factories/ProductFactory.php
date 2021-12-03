@@ -30,7 +30,7 @@ class ProductFactory extends Factory
 
         return [
             'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
-            'group_id' => ProductGroup::select('id')->inRandomOrder()->limit(1)->get()[0],
+            'product_group_id' => ProductGroup::select('id')->inRandomOrder()->limit(1)->get()[0],
             'brand_id' => Brand::select('id')->inRandomOrder()->limit(1)->get()[0],
             'supplier_id' => Supplier::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $faker->randomDigit(),
