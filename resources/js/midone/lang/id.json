@@ -49,6 +49,14 @@
                     "product": "Produk",
                     "service": "Jasa",
                     "product_and_service": "Produk Dan Jasa"
+                },
+                "paymentTermTypeDDL": {
+                    "pia": "Pembayaran Dimuka",
+                    "net30": "Pembayaran 30 Hari Setelah Tgl Invoice",
+                    "eom": "Akhir Bulan",
+                    "cod": "Cash On Delivery",
+                    "cnd": "Cash Di Pengiriman Selanjutnya",
+                    "cbs": "Cash Sebelum Pengiriman"
                 }
             }
         },
@@ -203,6 +211,11 @@
             }
         },
         "supplier": {
+            "tabs": {
+                "supplier": "Supplier",
+                "poc": "Penanggung Jawab",
+                "products": "Produk"
+            },
             "table": {
                 "title": "Daftar Supplier",
                 "cols": {
@@ -226,6 +239,7 @@
                 "address": "Alamat",
                 "city": "Kota",
                 "taxable_enterprise": "Pengusaha Kena Pajak",
+                "payment_term_type": "Ketentuan Pembayaran",
                 "tax_id": "NPWP",
                 "remarks": "Remarks",
                 "status": "Status",

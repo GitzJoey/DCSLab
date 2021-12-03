@@ -49,6 +49,14 @@
                     "product": "Product",
                     "service": "Service",
                     "product_and_service": "Product And Service"
+                },
+                "paymentTermTypeDDL": {
+                    "pia": "Payment In Advance",
+                    "net30": "Payment 30 Days After Invoice Date",
+                    "eom": "End Of Month",
+                    "cod": "Cash On Delivery",
+                    "cnd": "Cash Next Delivery",
+                    "cbs": "Cash Before Shipment"
                 }
             }
         },
@@ -226,6 +234,7 @@
                 "address": "Address",
                 "city": "City",
                 "taxable_enterprise": "Taxable Enterprise",
+                "payment_term_type": "Term of Payment",
                 "tax_id": "Tax ID",
                 "remarks": "Remarks",
                 "status": "Status",

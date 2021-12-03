@@ -286,6 +286,17 @@ class CommonController extends BaseController
         ];
     }
 
+    public function getPaymentTermType()
+    {
+        return [
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => 'PIA'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net30', 'code' => 'NET30'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => 'EOM'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => 'COD'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => 'CND']            
+        ];
+    }
+
     public function getRandGenerator(Request $request)
     {
 

@@ -129,13 +129,32 @@
                     </div>
                     <div class="mb-3">
                         <div class="form-inline">
-                            <label for="inputTaxableEnterprise" class="form-label w-40 px-3">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
+                            <label for="inputTaxableEnterprise" class="form-label w-52 px-3">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
                             <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch ml-1" name="taxable_enterprise" v-model="supplier.taxable_enterprise" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
                             <div class="" v-if="mode === 'show'">
                                 <span v-if="supplier.taxable_enterprise === 1"><CheckCircleIcon /></span>
                                 <span v-if="supplier.taxable_enterprise === 0"><CircleIcon /></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputPaymnetTermType" class="form-label w-40 px-3">{{ t('views.supplier.fields.payment_term_type') }}</label>
+                            <select class="form-control form-select" id="inputPaymnetTermType" name="payment_term_type" v-model="supplier.payment_term_type" v-show="mode === 'create' || mode === 'edit'">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            </select>
+                            <div class="" v-if="mode === 'show'">
+                                <span v-if="supplier.payment_term_type === 'pia'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
+                                <span v-if="supplier.payment_term_type === 'net30'">{{ t('components.dropdown.values.paymentTermTypeDDL.net30') }}</span>
+                                <span v-if="supplier.payment_term_type === 'eom'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
+                                <span v-if="supplier.payment_term_type === 'cod'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
+                                <span v-if="supplier.payment_term_type === 'cnd'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
+                                <span v-if="supplier.payment_term_type === 'cbs'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
+                            </div>
+                            <div class="" v-if="mode === 'show'">{{ supplier.status }}</div>
+                        </div>
+                        <ErrorMessage name="status" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                     </div>
                     <div class="mb-3">
                         <div class="form-inline">
@@ -254,9 +273,11 @@ const supplier = ref({
     taxable_enterprise: 1,
     tax_id: '',
     remarks: '',
+    payment_term_type: '',
     status: 1,
 });
 const statusDDL = ref([]);
+const paymentTermDDL = ref([]);
 
 // onMounted
 onMounted(() => {
@@ -284,6 +305,10 @@ function getAllSupplier(args) {
 function getDDL() {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
+    });
+
+    axios.get(route('api.get.db.common.ddl.list.payment_term')).then(response => {
+        paymentTermDDL.value = response.data;
     });
 }
 
@@ -347,6 +372,7 @@ function emptySupplier() {
         taxable_enterprise: 1,
         tax_id: '',
         remarks: '',
+        payment_term_type: '',
         status: 1,
     }
 }
