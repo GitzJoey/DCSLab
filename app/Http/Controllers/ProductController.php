@@ -9,8 +9,6 @@ use App\Services\ProductUnitService;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,6 +61,9 @@ class ProductController extends BaseController
 
     public function read_service()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        
         $userId = Auth::user()->id;
         return $this->productService->read_service($userId);
     }
@@ -73,8 +74,8 @@ class ProductController extends BaseController
         if ($request->product_type[0] !== '4') {
             $request->validate([
                 'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
-                'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
-                'group_id' => 'required',
+                'name' => 'required|min:3|max:255',
+                'product_group_id' => 'required',
                 'brand_id' => 'required',
                 'unit_id' => 'required',
                 'supplier_id' => 'required',
@@ -86,8 +87,8 @@ class ProductController extends BaseController
         if ($request->product_type[0] == '4') {
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
-            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
-            'group_id' => 'required',
+            'name' => 'required|min:3|max:255',
+            'product_group_id' => 'required',
             'unit_id' => 'required',
             'status' => 'required',
         ]);
@@ -101,17 +102,24 @@ class ProductController extends BaseController
             $request['code'] = $randomGenerator->generateNumber(10000, 99999);
         };
 
+        $use_serial_number = $request['use_serial_number'];
+        $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
+
+        $has_expiry_date = $request['has_expiry_date'];
+        $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
+
         // apabila product maka...
         if ($request->product_type[0] !== '4') {
             $code = $request->code;
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
             $name = $request->name;
             $tax_status = $request->tax_status;
             $supplier_id = $request->supplier_id != null ? Hashids::decode($request->supplier_id)[0]:$supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $is_use_serial = $request->is_use_serial;
+            $use_serial_number;
+            $has_expiry_date;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -146,14 +154,15 @@ class ProductController extends BaseController
             $product = $this->productService->create(
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units
@@ -166,18 +175,16 @@ class ProductController extends BaseController
 
         // apabila service maka...
         if ($request->product_type[0] == '4') {
-            $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
-            $company_id = Hashids::decode($company_id)[0];
-
             $code = $request['code'];
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = null;
             $name = $request->name;
             $tax_status = $request->tax_status;
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $is_use_serial = 0;
+            $use_serial_number = null;
+            $has_expiry_date = null;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -196,14 +203,15 @@ class ProductController extends BaseController
             $service = $this->productService->create(
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units
@@ -230,14 +238,15 @@ class ProductController extends BaseController
             $company_id = Hashids::decode($company_id)[0];
 
             $code = $request->code;
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
             $name = $request->name;
             $tax_status = $request->tax_status;
             $supplier_id = $request->supplier_id != null ? Hashids::decode($request->supplier_id)[0]:$supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $is_use_serial = $request->is_use_serial;
+            $use_serial_number = $request->use_serial_number;
+            $has_expiry_date = $request->has_expiry_date;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -276,14 +285,15 @@ class ProductController extends BaseController
                 $id,
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units
@@ -298,9 +308,9 @@ class ProductController extends BaseController
             $company_id = Hashids::decode($company_id)[0];
 
             $code = $request->code;
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $name = $request->name;
-            $unit_id = Hashids::decode($request->unit_id)[0];
+            // $unit_id = Hashids::decode($request->unit_id)[0];
             $tax_status = $request->tax_status;
             $remarks = $request->remarks;
             $point = $request->point;
@@ -311,14 +321,15 @@ class ProductController extends BaseController
                 $id,
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,
                 $supplier_id,
                 $remarks,
                 $point,
-                $is_use_serial,
+                $use_serial_number,
+                $has_expiry_date,
                 $product_type,
                 $status,
                 $product_units

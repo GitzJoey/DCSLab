@@ -69,7 +69,7 @@ class CustomerServiceImpl implements CustomerService
 
     public function read($userId)
     {
-        return Customer::with('customer_group', 'company')->bySelectedCompany()->paginate();
+        return Customer::with('customerGroup', 'company')->bySelectedCompany()->paginate();
     }
 
     public function update(

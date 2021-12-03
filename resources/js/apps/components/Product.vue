@@ -57,7 +57,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
-                                <th>{{ $t("table.cols.group_id") }}</th>
+                                <th>{{ $t("table.cols.product_group_id") }}</th>
                                 <th>{{ $t("table.cols.brand_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
@@ -69,7 +69,7 @@
                         <tbody>
                             <tr v-for="(c, cIdx) in productList.data">
                                 <td>{{ c.code }}</td>
-                                <td>{{ c.group.name }}</td>
+                                <td>{{ c.product_group.name }}</td>
                                 <td>{{ c.brand.name }} </td>
                                 <td>{{ c.name }}</td>
                                 <td>
@@ -141,26 +141,26 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
+                            <label class="col-2 col-form-label" for="product_group_id">{{ $t('fields.product_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="group_id" name="group_id" v-model="product.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="product_group_id" name="product_group_id" v-model="product.product_group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="0">{{ $t('placeholder.please_select') }}</option>
-                                    <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                    <option :value="c.hId" v-for="c in this.groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ product.group.name }}
+                                    {{ product.product_group.name }}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="brand_id">{{ $t('fields.brand_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="brand_id" name="brand_id" v-model="brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="brand_id" name="brand_id" v-model="product.brand.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.brandDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ brand.name }}
+                                    {{ product.brand.name }}
                                 </div>            
                             </div>
                         </div>
@@ -307,16 +307,31 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="is_use_serial" class="col-2 col-form-label">{{ $t('fields.is_use_serial') }}</label>
+                            <label for="use_serial_number" class="col-2 col-form-label">{{ $t('fields.use_serial_number') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="is_use_serial" name="is_use_serial" v-model="product.is_use_serial" true-value="1" false-value="0">
+                                        <input type="checkbox" class="css-control-input" id="use_serial_number" name="use_serial_number" v-model="product.use_serial_number" true-value="1" false-value="0">
                                         <span class="css-control-indicator"></span>
                                     </span>
                                     <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="product.is_use_serial === 1">{{ $t('is_use_serial.active') }}</span>
-                                        <span v-if="product.is_use_serial === 0">{{ $t('is_use_serial.inactive') }}</span>
+                                        <span v-if="product.use_serial_number === 1">{{ $t('use_serial_number.active') }}</span>
+                                        <span v-if="product.use_serial_number === 0">{{ $t('use_serial_number.inactive') }}</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="has_expiry_date" class="col-2 col-form-label">{{ $t('fields.has_expiry_date') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <label class="css-control css-control-primary css-checkbox">
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="has_expiry_date" name="has_expiry_date" v-model="product.has_expiry_date" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="product.has_expiry_date === 1">{{ $t('has_expiry_date.active') }}</span>
+                                        <span v-if="product.has_expiry_date === 0">{{ $t('has_expiry_date.inactive') }}</span>
                                     </div>
                                 </label>
                             </div>
@@ -413,7 +428,7 @@ export default {
             productList: [],
             product: {
                 code: '',
-                group: {hId: '0'},
+                product_group: {hId: '0'},
                 brand: {hId: '0'},   
                 name: '',
                 product_unit: [
@@ -428,7 +443,8 @@ export default {
                 supplier: {hId: '0'},
                 remarks: '',
                 point: '',
-                is_use_serial: '',
+                use_serial_number: '',
+                has_expiry_date: '',
                 product_type: '',
                 status: '',
             },
@@ -501,7 +517,7 @@ export default {
         emptyProduct() {
             return {
                 code: 'AUTO',
-                group: {hId: '0'},
+                product_group : {hId: '0'},
                 brand: {hId: '0'},
                 name: '',
                 product_unit: [
@@ -519,7 +535,8 @@ export default {
                 supplier: {hId: '0'},
                 remarks: '',
                 point: '0',
-                is_use_serial: '',
+                use_serial_number: '',
+                has_expiry_date: '',
                 product_type: '3',
                 status: '1',
             }

@@ -55,7 +55,7 @@ class UnitController extends BaseController
     {
         $request->validate([
             'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'units')],
-            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
+            'name' => 'required|min:3|max:255',
             'category' => 'required'
         ]);
 

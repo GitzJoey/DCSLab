@@ -15,7 +15,7 @@ tax_status      P & S
 supplier_id     P
 remarks         P & S
 point           P & S
-is_use_serial   P
+use_serial_number   P
 product_type    P & S
 status          P & S
 

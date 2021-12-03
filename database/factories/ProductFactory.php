@@ -38,7 +38,7 @@ class ProductFactory extends Factory
             'tax_status' => $faker->numberBetween(1, 3),
             'remarks' => $faker->word(),
             'point' => 0,
-            'is_use_serial' => $faker->numberBetween(0, 1),
+            'use_serial_number' => $faker->numberBetween(0, 1),
             'product_type' => $faker->numberBetween(1, 3),
             'status' => 1
             

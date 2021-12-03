@@ -17,17 +17,18 @@ class ProductServiceImpl implements ProductService
     public function create(
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,
         $supplier_id,
         $remarks,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
-        $product_units
+        $product_unit
     )
     {
         DB::beginTransaction();
@@ -36,20 +37,21 @@ class ProductServiceImpl implements ProductService
             $product = new Product();
             $product->company_id = $company_id;
             $product->code = $code;
-            $product->group_id = $group_id;
+            $product->product_group_id = $product_group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
             $product->tax_status = $tax_status;
             $product->supplier_id = $supplier_id;
             $product->remarks = $remarks;
             $product->point = $point;
-            $product->is_use_serial = $is_use_serial;
+            $product->use_serial_number = $use_serial_number;
+            $product->has_expiry_date = $has_expiry_date;
             $product->product_type = $product_type;
             $product->status = $status;
             $product->save();
 
             $pu = [];
-            foreach ($product_units as $product_unit) {
+            foreach ($pu as $product_unit) {
                 array_push($pu, new ProductUnit(array (
                     'code' => $product_unit['code'],
                     'company_id' => $product_unit['company_id'],
@@ -61,7 +63,7 @@ class ProductServiceImpl implements ProductService
                     'remarks' => $product_unit['remarks']
                 )));
             }
-            $product->product_unit()->saveMany($pu);
+            $product->productUnit()->saveMany($pu);
 
             DB::commit();
 
@@ -76,7 +78,7 @@ class ProductServiceImpl implements ProductService
     public function createService(
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $name,
         $unit_id,
         $tax_status,
@@ -92,7 +94,7 @@ class ProductServiceImpl implements ProductService
             $service = new Product();
             $service->company_id = $company_id;
             $service->code = $code;
-            $service->group_id = $group_id;
+            $service->product_group_id = $product_group_id;
             $service->name = $name;
             $service->unit_id = $unit_id;
             $service->tax_status = $tax_status;
@@ -116,14 +118,14 @@ class ProductServiceImpl implements ProductService
     {
         $user = User::find($userId);
         $company_list = $user->companies()->pluck('company_id');
-        return Product::with('group', 'brand', 'product_unit.unit')->whereIn('company_id', $company_list)->paginate();
+        return Product::with('productGroup', 'brand', 'productUnit.unit')->whereIn('company_id', $company_list)->paginate();
     }
 
     public function read_product($userId)
     {
         $user = User::find($userId);
         $company_list = $user->companies()->pluck('company_id');
-        return Product::with('group', 'brand', 'product_unit.unit', 'supplier')
+        return Product::with('productGroup', 'brand', 'productUnit.unit')
                 ->whereIn('company_id', $company_list)
                 ->where('product_type', '<>', 4)
                 ->paginate();
@@ -133,7 +135,7 @@ class ProductServiceImpl implements ProductService
     {
         $user = User::find($userId);
         $company_list = $user->companies()->pluck('company_id');
-        return Product::with('group', 'product_unit.unit')
+        return Product::with('productGroup', 'productUnit.unit')
                 ->whereIn('company_id', $company_list)
                 ->where('product_type', '=', 4)
                 ->paginate();
@@ -148,14 +150,15 @@ class ProductServiceImpl implements ProductService
         $id,
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,
         $supplier_id,
         $remarks,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
         $product_units
@@ -169,14 +172,15 @@ class ProductServiceImpl implements ProductService
             $retval = $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
-                'group_id' => $group_id,
+                'product_group_id' => $product_group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
                 'tax_status' => $tax_status,
                 'supplier_id' => $supplier_id,
                 'remarks' => $remarks,
                 'point' => $point,
-                'is_use_serial' => $is_use_serial,
+                'use_serial_number' => $use_serial_number,
+                'has_expiry_date' => $has_expiry_date,
                 'product_type' => $product_type,
                 'status' => $status
             ]);
@@ -268,7 +272,7 @@ class ProductServiceImpl implements ProductService
         $id,
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $name,
         $unit_id,
         $tax_status,
@@ -287,7 +291,7 @@ class ProductServiceImpl implements ProductService
             $retval = $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
-                'group_id' => $group_id,
+                'product_group_id' => $product_group_id,
                 'name' => $name,
                 'unit_id' => $unit_id,
                 'tax_status' => $tax_status,
