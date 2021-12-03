@@ -52,7 +52,7 @@ class SupplierController extends BaseController
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'suppliers')],
             'name' => 'required|min:3|max:255|alpha',
-            'is_tax' => 'required',
+            'taxable_enterprice' => 'required',
             'status' => 'required'
         ]);
 
@@ -64,8 +64,8 @@ class SupplierController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
         
-        $is_tax = $request['is_tax'];
-        $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
+        $taxable_enterprice = $request['taxable_enterprice'];
+        $taxable_enterprice == 'on' ? $taxable_enterprice = 1 : $taxable_enterprice = 0;
 
         $result = $this->SupplierService->create(
             $company_id,
@@ -75,8 +75,8 @@ class SupplierController extends BaseController
             $request['contact'],
             $request['address'],
             $request['city'],
-            $is_tax,
-            $request['tax_number'],
+            $taxable_enterprice,
+            $request['tax_id'],
             $request['remarks'],
             $request['status']
             );
@@ -94,8 +94,8 @@ class SupplierController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $is_tax = $request['is_tax'];
-        $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
+        $taxable_enterprice = $request['taxable_enterprice'];
+        $taxable_enterprice == 'on' ? $taxable_enterprice = 1 : $taxable_enterprice = 0;
 
         $result = $this->SupplierService->update(
             $id,
@@ -106,8 +106,8 @@ class SupplierController extends BaseController
             $request['contact'],
             $request['address'],
             $request['city'],
-            $is_tax,
-            $request['tax_number'],
+            $taxable_enterprice,
+            $request['tax_id'],
             $request['remarks'],
             $request['status'],
         );

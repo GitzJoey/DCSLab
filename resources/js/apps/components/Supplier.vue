@@ -63,8 +63,8 @@
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
-                                <th>{{ $t("table.cols.is_tax") }}</th>
-                                <th>{{ $t("table.cols.tax_number") }}</th>
+                                <th>{{ $t("table.cols.taxable_enterprice") }}</th>
+                                <th>{{ $t("table.cols.tax_id") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
@@ -79,10 +79,10 @@
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
                                 <td>
-                                    <span v-if="c.is_tax === 1">{{ $t('is_tax.active') }}</span>
-                                    <span v-if="c.is_tax === 0">{{ $t('is_tax.inactive') }}</span>
+                                    <span v-if="c.taxable_enterprice === 1">{{ $t('taxable_enterprice.active') }}</span>
+                                    <span v-if="c.taxable_enterprice === 0">{{ $t('taxable_enterprice.inactive') }}</span>
                                 </td>
-                                <td>{{ c.tax_number }}</td>
+                                <td>{{ c.tax_id }}</td>
                                 <td>{{ c.remarks }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
@@ -179,25 +179,25 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputIs_Tax" class="col-2 col-form-label">{{ $t('fields.is_tax') }}</label>
+                            <label for="inputTaxable_Enterprice" class="col-2 col-form-label">{{ $t('fields.taxable_enterprice') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="is_tax" name="is_tax" v-model="supplier.is_tax" true-value="1" false-value="0">
+                                        <input type="checkbox" class="css-control-input" id="taxable_enterprice" name="taxable_enterprice" v-model="supplier.taxable_enterprice" true-value="1" false-value="0">
                                         <span class="css-control-indicator"></span>
                                     </span>
                                     <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="supplier.is_tax === 1">{{ $t('is_tax.active') }}</span>
-                                        <span v-if="supplier.is_tax === 0">{{ $t('is_tax.inactive') }}</span>
+                                        <span v-if="supplier.taxable_enterprice === 1">{{ $t('taxable_enterprice.active') }}</span>
+                                        <span v-if="supplier.taxable_enterprice === 0">{{ $t('taxable_enterprice.inactive') }}</span>
                                     </div>
                                 </label>
                             </div>
                         </div> 
                         <div class="form-group row">
-                            <label for="inputTax_Number" class="col-2 col-form-label">{{ $t('fields.tax_number') }}</label>
+                            <label for="inputTax_Id" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTax_Number" name="tax_number" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_number']}" :placeholder="$t('fields.tax_number')" :label="$t('fields.tax_number')" v-model="supplier.tax_number" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.tax_number }}</div>
+                                <Field id="inputTax_Id" name="tax_id" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_id']}" :placeholder="$t('fields.tax_id')" :label="$t('fields.tax_id')" v-model="supplier.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.tax_id }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -290,8 +290,8 @@ export default {
                 contact: '',
                 address: '',
                 city: '',
-                is_tax: '1',
-                tax_number: '',
+                taxable_enterprice: '1',
+                tax_id: '',
                 remarks: '',
                 status: '1',
             },
@@ -334,8 +334,8 @@ export default {
                 contact: '',
                 address: '',
                 city: '',
-                is_tax: '1',
-                tax_number: '',
+                taxable_enterprice: '1',
+                tax_id: '',
                 remarks: '',
                 status: '1',
             }

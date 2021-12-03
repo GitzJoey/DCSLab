@@ -23,12 +23,13 @@ class Supplier extends Model
         'contact',
         'address',
         'city',
-        'tax_number',
+        'taxable_enterprice',
+        'tax_id',
         'remarks',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'term', 'contact', 'address', 'city', 'tax_number', 'remarks', 'status'];
+    protected static $logAttributes = ['code', 'name', 'term', 'contact', 'address', 'city', 'taxable_enterprice', 'tax_id', 'remarks', 'status'];
 
     protected static $logOnlyDirty = true;
 

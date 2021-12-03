@@ -12,8 +12,8 @@ interface SupplierService
         $contact,
         $address,
         $city,
-        $is_tax,
-        $tax_number,
+        $taxable_enterprice,
+        $tax_id,
         $remarks,
         $status
     );
@@ -31,8 +31,8 @@ interface SupplierService
         $contact,
         $address,
         $city,
-        $is_tax,
-        $tax_number,
+        $taxable_enterprice,
+        $tax_id,
         $remarks,
         $status
     );
