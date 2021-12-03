@@ -78,7 +78,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputName" class="form-label w-40 px-3">{{ t('views.users.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" />
                         <div class="" v-if="mode === 'show'">{{ user.name }}</div>
                     </div>
                     <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -86,7 +86,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputEmail" class="form-label w-40 px-3">{{ t('views.users.fields.email') }}</label>
-                        <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
                         <div class="" v-if="mode === 'show'">{{ user.email }}</div>
                     </div>
                     <ErrorMessage name="email" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />

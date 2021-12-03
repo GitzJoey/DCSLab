@@ -277,12 +277,12 @@ class CommonController extends BaseController
         ];
     }
 
-    public function getProductCategory()
+    public function getProductOrServiceCategory()
     {
         return [
-            ['name' => 'components.dropdown.values.productCategoryDDL.product', 'code' => '1'],
-            ['name' => 'components.dropdown.values.productCategoryDDL.service', 'code' => '2'],
-            ['name' => 'components.dropdown.values.productCategoryDDL.product_and_servive', 'code' => '3']
+            ['name' => 'components.dropdown.values.productOrServiceCategoryDDL.product', 'code' => '1'],
+            ['name' => 'components.dropdown.values.productOrServiceCategoryDDL.service', 'code' => '2'],
+            ['name' => 'components.dropdown.values.productOrServiceCategoryDDL.product_and_service', 'code' => '3']
         ];
     }
 

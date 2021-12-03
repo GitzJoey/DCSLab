@@ -101,7 +101,7 @@ class Product extends Model
         return $this->hasMany(ProductUnit::class);
     }
 
-    public function mainSupplier()
+    public function supplier()
     {
         return $this->belongsTo(Supplier::class);
     }

@@ -87,7 +87,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputCode" class="form-label w-40 px-3">{{ t('views.company.fields.code') }}</label>
-                        <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="company.code === '[AUTO]'"/>
+                        <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="company.code === '[AUTO]'"/>
                         <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
                         <div class="" v-if="mode === 'show'">{{ company.code }}</div>
                     </div>
@@ -96,7 +96,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputName" class="form-label w-40 px-3">{{ t('views.company.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
                         <div class="" v-if="mode === 'show'">{{ company.name }}</div>
                     </div>
                     <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
@@ -111,7 +111,7 @@
                 <div class="mb-3">
                     <div class="form-inline">
                         <label for="inputDefault" class="form-label w-40 px-3">{{ t('views.company.fields.default') }}</label>
-                        <input id="inputDefault" type="checkbox" class="form-check-switch ml-1" name="default" v-model="company.default" value="0" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        <input id="inputDefault" type="checkbox" class="form-check-switch ml-1" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
                         <div class="" v-if="mode === 'show'">
                             <span v-if="company.default === 1"><CheckCircleIcon /></span>
                             <span v-if="company.default === 0"><CircleIcon /></span>
@@ -273,8 +273,8 @@ function emptyCompany() {
         code: '[AUTO]',
         name: '',
         address: '',
-        default: '0',
-        status: '1',
+        default: 0,
+        status: 1,
     }
 }
 

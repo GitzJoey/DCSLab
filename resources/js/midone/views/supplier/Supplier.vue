@@ -9,7 +9,7 @@
                             <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.name') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.poc') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.company.table.cols.status') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
                     </thead>
@@ -81,7 +81,120 @@
         </div>
         <div class="loader-container">
             <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                
+                <div class="border-b border-gray mb-3"> 
+                    <ul class="flex cursor-pointer">
+                        <li :class="{'py-2 px-6 bg-white rounded-t-lg':true, 'text-gray-500 bg-gray-200':activeTab !== 'supplier'}" @click="switchTabs('supplier')">{{ t('views.supplier.tabs.supplier') }}</li>
+                        <li :class="{'py-2 px-6 bg-white rounded-t-lg':true, 'text-gray-500 bg-gray-200':activeTab !== 'poc'}" @click="switchTabs('poc')">{{ t('views.supplier.tabs.poc') }}</li>
+                        <li :class="{'py-2 px-6 bg-white rounded-t-lg':true, 'text-gray-500 bg-gray-200':activeTab !== 'products'}" @click="switchTabs('products')">{{ t('views.supplier.tabs.products') }}</li>
+                    </ul>
+                </div>
+                <div class="intro-x" v-show="activeTab === 'supplier'">
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputCode" class="form-label w-40 px-3">{{ t('views.supplier.fields.code') }}</label>
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" v-model="supplier.code" v-show="mode === 'create' || mode === 'edit'" :readonly="supplier.code === '[AUTO]'"/>
+                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
+                            <div class="" v-if="mode === 'show'">{{ supplier.code }}</div>
+                        </div>
+                        <ErrorMessage name="code" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputName" class="form-label w-40 px-3">{{ t('views.supplier.fields.name') }}</label>
+                            <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" v-model="supplier.name" v-show="mode === 'create' || mode === 'edit'" />
+                            <div class="" v-if="mode === 'show'">{{ supplier.name }}</div>
+                        </div>
+                        <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputAddress" class="form-label w-40 px-3">{{ t('views.supplier.fields.address') }}</label>
+                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                            <div class="" v-if="mode === 'show'">{{ supplier.address }}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputContact" class="form-label w-40 px-3">{{ t('views.supplier.fields.contact') }}</label>
+                            <input id="inputContact" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
+                            <div class="" v-if="mode === 'show'">{{ supplier.contact }}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputCity" class="form-label w-40 px-3">{{ t('views.supplier.fields.city') }}</label>
+                            <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
+                            <div class="" v-if="mode === 'show'">{{ supplier.city }}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputTaxableEnterprise" class="form-label w-40 px-3">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
+                            <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch ml-1" name="taxable_enterprise" v-model="supplier.taxable_enterprise" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                            <div class="" v-if="mode === 'show'">
+                                <span v-if="supplier.taxable_enterprise === 1"><CheckCircleIcon /></span>
+                                <span v-if="supplier.taxable_enterprise === 0"><CircleIcon /></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputStatus" class="form-label w-40 px-3">{{ t('views.supplier.fields.status') }}</label>
+                            <select class="form-control form-select" id="inputStatus" name="status" v-model="supplier.status" v-show="mode === 'create' || mode === 'edit'">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            </select>
+                            <div class="" v-if="mode === 'show'">
+                                <span v-if="supplier.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                <span v-if="supplier.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                            </div>
+                            <div class="" v-if="mode === 'show'">{{ supplier.status }}</div>
+                        </div>
+                        <ErrorMessage name="status" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputRemarks" class="form-label w-40 px-3">{{ t('views.supplier.fields.remarks') }}</label>
+                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                            <div class="" v-if="mode === 'show'">{{ supplier.remarks }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-x" v-show="activeTab === 'poc'">
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputPOCName" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.name') }}</label>
+                            <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" v-model="supplier.user.name" v-show="mode === 'create' || mode === 'edit'" />
+                            <div class="" v-if="mode === 'show'">{{ supplier.user.name }}</div>
+                        </div>
+                        <ErrorMessage name="poc_name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputEmail" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.email') }}</label>
+                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" v-model="supplier.user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                            <div class="" v-if="mode === 'show'">{{ supplier.user.email }}</div>
+                        </div>
+                        <ErrorMessage name="email" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputFirstName" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.first_name') }}</label>
+                            <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.supplier.fields.poc.first_name')" v-model="supplier.user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
+                            <div class="" v-if="mode === 'show'">{{ supplier.user.profile.first_name }}</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-inline">
+                            <label for="inputLastName" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.last_name') }}</label>
+                            <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.supplier.fields.poc.last_name')" v-model="supplier.user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
+                            <div class="" v-if="mode === 'show'">{{ supplier.user.profile.last_name }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="intro-x" v-show="activeTab === 'products'">
+                    products
+                </div>
             </VeeForm>
             <div class="loader-overlay" v-if="loading"></div>
         </div>
@@ -121,6 +234,7 @@ const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
+const activeTab = ref('supplier');
 
 // Data - Views
 const supplierList = ref([]);
@@ -130,11 +244,17 @@ const supplier = ref({
     term: '',
     contact: '',
     address: '',
+    user: {
+        hId: '',
+        profile: {
+            first_name: ''
+        }
+    },
     city: '',
-    is_tax: '1',
-    tax_number: '',
+    taxable_enterprise: 1,
+    tax_id: '',
     remarks: '',
-    status: '1',
+    status: 1,
 });
 const statusDDL = ref([]);
 
@@ -218,10 +338,16 @@ function emptySupplier() {
         contact: '',
         address: '',
         city: '',
-        is_tax: '1',
-        tax_number: '',
+        user: {
+            hId: '',
+            profile: {
+                first_name: ''
+            }
+        },
+        taxable_enterprise: 1,
+        tax_id: '',
         remarks: '',
-        status: '1',
+        status: 1,
     }
 }
 
@@ -279,6 +405,10 @@ function toggleDetail(idx) {
 function generateCode() {
     if (supplier.value.code === '[AUTO]') supplier.value.code = '';
     else  supplier.value.code = '[AUTO]'
+}
+
+function switchTabs(name) {
+    activeTab.value = name;    
 }
 
 // Computed

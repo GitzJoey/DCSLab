@@ -31,6 +31,7 @@ class UnitTableSeeder extends Seeder
                 $newUnit->code = (new RandomGenerator())->generateFixedLengthNumber(5);
                 $newUnit->name = $u['name'];
                 $newUnit->description = $u['description'];
+                $newUnit->category = (new RandomGenerator())->generateNumber(1,3);
 
                 $newUnit->save();
             }

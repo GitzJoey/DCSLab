@@ -44,6 +44,11 @@
                 "statusDDL": {
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
+                },
+                "productOrServiceCategoryDDL": {
+                    "product": "Produk",
+                    "service": "Jasa",
+                    "product_and_service": "Produk Dan Jasa"
                 }
             }
         },
@@ -173,6 +178,11 @@
             "title": "Catatan Aktifitas"
         },
         "product": {
+            "tabs": {
+                "supplier": "Supplier",
+                "poc": "Penanggung Jawab",
+                "products": "Produk"
+            },
             "table": {
                 "title": "",
                 "cols": {
@@ -209,7 +219,23 @@
                 "delete": "Hapus Supplier"
             },
             "fields": {
-
+                "code": "Kode",
+                "name": "Nama",
+                "term": "Tempo",
+                "contact": "",
+                "address": "Alamat",
+                "city": "Kota",
+                "taxable_enterprise": "Pengusaha Kena Pajak",
+                "tax_id": "NPWP",
+                "remarks": "Remarks",
+                "status": "Status",
+                "poc": {
+                    "name": "Nama",
+                    "email": "Email",
+                    "roles": "Peran",
+                    "first_name": "Nama Depan",
+                    "last_name": "Nama Belakang"    
+                }
             }
         },
         "company": {

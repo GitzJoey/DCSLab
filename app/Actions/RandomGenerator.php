@@ -11,7 +11,7 @@ class RandomGenerator
     public function seed($s = 0)
     {
         self::$RSeed = abs(intval($s)) % 9999999 + 1;
-        self::generateNumber();
+        $this->generateNumber();
     }
 
     public function generateNumber($min = 0, $max = 9999999)
@@ -19,7 +19,7 @@ class RandomGenerator
         if ($max == 0) return 0;
 
         if (self::$RSeed == 0)
-            self::seed(mt_rand());
+            $this->seed(mt_rand());
 
         self::$RSeed = (self::$RSeed * 125) % 2796203;
 
@@ -36,9 +36,9 @@ class RandomGenerator
     public function generateOne($max = 0)
     {
         if ($max == 0) {
-            return self::generateNumber(0, 9999999);
+            return $this->generateNumber(0, 9999999);
         } else {
-            return self::generateNumber(0, $max);
+            return $this->generateNumber(0, $max);
         }
     }
 
@@ -55,9 +55,17 @@ class RandomGenerator
         return strtoupper($generatedString);
     }
 
-    public function randomTrueOrFalse()
+    public function randomTrueOrFalse($howManyTimes = 1)
     {
-        return (bool)rand(0,1);
+        if ($howManyTimes <= 1) return (bool)rand(0,1);
+
+        $result = array();
+        
+        for($i = 0; $i < $howManyTimes; $i++) {
+            $result[$i] = (bool)rand(0,1);
+        }
+
+        return $result;
     }
 
     public function generateRandomOneZero($maxZero = 1)

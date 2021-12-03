@@ -44,6 +44,11 @@
                 "statusDDL": {
                     "active": "Active",
                     "inactive": "Inactive"
+                },
+                "productOrServiceCategoryDDL": {
+                    "product": "Product",
+                    "service": "Service",
+                    "product_and_service": "Product And Service"
                 }
             }
         },
@@ -193,6 +198,11 @@
             }
         },
         "supplier": {
+            "tabs": {
+                "supplier": "Supplier",
+                "poc": "Person In Charge",
+                "products": "Products"
+            },
             "table": {
                 "title": "Supplier Lists",
                 "cols": {
@@ -215,10 +225,17 @@
                 "contact": "Contact",
                 "address": "Address",
                 "city": "City",
-                "is_tax": "Is Tax",
-                "tax_number": "Tax Number",
+                "taxable_enterprise": "Taxable Enterprise",
+                "tax_id": "Tax ID",
                 "remarks": "Remarks",
-                "status": "Status"
+                "status": "Status",
+                "poc": {
+                    "name": "Name",
+                    "email": "Email",
+                    "roles": "Roles",
+                    "first_name": "First Name",
+                    "last_name": "Last Name"                        
+                }
             }
         },
         "company": {
