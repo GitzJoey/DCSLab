@@ -17,7 +17,7 @@ class ProductServiceImpl implements ProductService
     public function create(
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,
@@ -37,7 +37,7 @@ class ProductServiceImpl implements ProductService
             $product = new Product();
             $product->company_id = $company_id;
             $product->code = $code;
-            $product->group_id = $group_id;
+            $product->product_group_id = $product_group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
             $product->tax_status = $tax_status;
@@ -78,7 +78,7 @@ class ProductServiceImpl implements ProductService
     public function createService(
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $name,
         $unit_id,
         $tax_status,
@@ -94,7 +94,7 @@ class ProductServiceImpl implements ProductService
             $service = new Product();
             $service->company_id = $company_id;
             $service->code = $code;
-            $service->group_id = $group_id;
+            $service->product_group_id = $product_group_id;
             $service->name = $name;
             $service->unit_id = $unit_id;
             $service->tax_status = $tax_status;
@@ -150,7 +150,7 @@ class ProductServiceImpl implements ProductService
         $id,
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,
@@ -172,7 +172,7 @@ class ProductServiceImpl implements ProductService
             $retval = $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
-                'group_id' => $group_id,
+                'product_group_id' => $product_group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
                 'tax_status' => $tax_status,
@@ -272,7 +272,7 @@ class ProductServiceImpl implements ProductService
         $id,
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $name,
         $unit_id,
         $tax_status,
@@ -291,7 +291,7 @@ class ProductServiceImpl implements ProductService
             $retval = $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
-                'group_id' => $group_id,
+                'product_group_id' => $product_group_id,
                 'name' => $name,
                 'unit_id' => $unit_id,
                 'tax_status' => $tax_status,

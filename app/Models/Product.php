@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\ProductGroup;
 use App\Models\Brand;
-use App\Models\Unit;
 use App\Models\ProductUnit;
 use App\Models\Supplier;
 
@@ -23,7 +22,7 @@ class Product extends Model
 
     protected $fillable = [
         'code',
-        'group_id',
+        'product_group_id',
         'brand_id',
         'name',
         'product_unit',
@@ -40,7 +39,7 @@ class Product extends Model
 
     protected static $logAttributes = [
         'code',
-        'group_id',
+        'product_group_id',
         'brand_id',
         'name',
         'product_unit',
@@ -59,7 +58,7 @@ class Product extends Model
 
     protected $hidden = [
         'id',
-        'group_id',
+        'product_group_id',
         'brand_id',
         'unit_id',
         'supplier_id',

@@ -19,7 +19,7 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
-                group_id: 'Product Group',
+                product_group_id: 'Product Group',
                 unit_id: 'Unit',
                 tax_status: 'Tax Status',
                 remarks: 'Remarks',
@@ -42,7 +42,7 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
-            group_id: 'Product Group',
+            product_group_id: 'Product Group',
             unit_id: 'Unit',
             tax_status: 'Tax Status',
             remarks: 'Remarks',
@@ -84,7 +84,7 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
-                group_id: 'Produk Grup',
+                product_group_id: 'Produk Grup',
                 unit_id: 'Satuan',
                 tax_status: 'Status Pajak',
                 remarks: 'Remarks',
@@ -107,7 +107,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Nama',
-            group_id: 'Produk Grup',
+            product_group_id: 'Produk Grup',
             unit_id: 'Satuan',
             tax_status: 'Status Pajak',
             remarks: 'Remarks',

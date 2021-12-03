@@ -7,7 +7,7 @@ interface ProductService
     public function create(
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,
@@ -31,7 +31,7 @@ interface ProductService
         $id,
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,

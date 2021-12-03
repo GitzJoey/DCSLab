@@ -35,7 +35,7 @@
                         <tbody>
                             <tr v-for="(c, cIdx) in serviceList.data">
                                 <td>{{ c.code }}</td>
-                                <td>{{ c.group.name }}</td>
+                                <td>{{ c.product_group.name }}</td>
                                 <!-- <td>{{ c.unit.name }}</td> -->
                                 <td>{{ c.remarks }}</td>
                                 <td>
@@ -97,13 +97,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
+                            <label class="col-2 col-form-label" for="product_group_id">{{ $t('fields.product_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="group_id" name="group_id" v-model="service.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                <select class="form-control" id="product_group_id" name="product_group_id" v-model="service.product_group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option :value="c.hId" v-for="c in this.groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ service.group.name }}
+                                    {{ service.product_group.name }}
                                 </div>
                             </div>
                         </div>
@@ -235,7 +235,7 @@ export default {
             serviceList: [],
             service: {
                 code: '',
-                group: {hId: ''},
+                product_group: {hId: ''},
                 name: '',
                 product_unit: [
                     {
@@ -295,7 +295,7 @@ export default {
         emptyService() {
             return {
                 code: 'AUTO',
-                group: {hId: ''},
+                product_group: {hId: ''},
                 name: '',
                 product_unit: [
                     {

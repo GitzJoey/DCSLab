@@ -9,8 +9,6 @@ use App\Services\ProductUnitService;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 
@@ -63,6 +61,9 @@ class ProductController extends BaseController
 
     public function read_service()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        
         $userId = Auth::user()->id;
         return $this->productService->read_service($userId);
     }
@@ -74,7 +75,7 @@ class ProductController extends BaseController
             $request->validate([
                 'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
                 'name' => 'required|min:3|max:255',
-                'group_id' => 'required',
+                'product_group_id' => 'required',
                 'brand_id' => 'required',
                 'unit_id' => 'required',
                 'supplier_id' => 'required',
@@ -87,7 +88,7 @@ class ProductController extends BaseController
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
             'name' => 'required|min:3|max:255',
-            'group_id' => 'required',
+            'product_group_id' => 'required',
             'unit_id' => 'required',
             'status' => 'required',
         ]);
@@ -110,7 +111,7 @@ class ProductController extends BaseController
         // apabila product maka...
         if ($request->product_type[0] !== '4') {
             $code = $request->code;
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
             $name = $request->name;
             $tax_status = $request->tax_status;
@@ -153,7 +154,7 @@ class ProductController extends BaseController
             $product = $this->productService->create(
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,
@@ -175,7 +176,7 @@ class ProductController extends BaseController
         // apabila service maka...
         if ($request->product_type[0] == '4') {
             $code = $request['code'];
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = null;
             $name = $request->name;
             $tax_status = $request->tax_status;
@@ -202,7 +203,7 @@ class ProductController extends BaseController
             $service = $this->productService->create(
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,
@@ -237,7 +238,7 @@ class ProductController extends BaseController
             $company_id = Hashids::decode($company_id)[0];
 
             $code = $request->code;
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
             $name = $request->name;
             $tax_status = $request->tax_status;
@@ -284,7 +285,7 @@ class ProductController extends BaseController
                 $id,
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,
@@ -307,9 +308,9 @@ class ProductController extends BaseController
             $company_id = Hashids::decode($company_id)[0];
 
             $code = $request->code;
-            $group_id = Hashids::decode($request->group_id)[0];
+            $product_group_id = Hashids::decode($request->product_group_id)[0];
             $name = $request->name;
-            $unit_id = Hashids::decode($request->unit_id)[0];
+            // $unit_id = Hashids::decode($request->unit_id)[0];
             $tax_status = $request->tax_status;
             $remarks = $request->remarks;
             $point = $request->point;
@@ -320,7 +321,7 @@ class ProductController extends BaseController
                 $id,
                 $company_id,
                 $code, 
-                $group_id,
+                $product_group_id,
                 $brand_id,
                 $name,
                 $tax_status,

@@ -57,7 +57,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
-                                <th>{{ $t("table.cols.group_id") }}</th>
+                                <th>{{ $t("table.cols.product_group_id") }}</th>
                                 <th>{{ $t("table.cols.brand_id") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
                                 <th>{{ $t("table.cols.tax_status") }}</th>
@@ -141,9 +141,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
+                            <label class="col-2 col-form-label" for="product_group_id">{{ $t('fields.product_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="group_id" name="group_id" v-model="product.product_group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="product_group_id" name="product_group_id" v-model="product.product_group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
@@ -517,7 +517,7 @@ export default {
         emptyProduct() {
             return {
                 code: 'AUTO',
-                product_group: {hId: '0'},
+                product_group : {hId: '0'},
                 brand: {hId: '0'},
                 name: '',
                 product_unit: [

@@ -18,7 +18,7 @@ const messages = {
             title: 'Product Lists',
             cols: {
                 code: 'Code',
-                group_id: 'Group Name',
+                product_group_id: 'Group Name',
                 brand_id: 'Brand Name',
                 name: 'Name',
                 supplier_id: 'Supplier',
@@ -46,7 +46,7 @@ const messages = {
         },
         fields: {
             code: 'Code',
-            group_id: 'Group Name',
+            product_group_id: 'Group Name',
             brand_id: 'Brand Name',
             name: 'Name',
             supplier_id: 'Supplier',
@@ -100,7 +100,7 @@ const messages = {
             title: 'Daftar Product',
             cols: {
                 code: 'Kode',
-                group_id: 'Kelompok',
+                product_group_id: 'Kelompok',
                 brand_id: 'Merk',
                 name: 'Nama',
                 supplier_id: 'Pemasok',
@@ -127,7 +127,7 @@ const messages = {
         },
         fields: {
             code: 'Kode',
-            group_id: 'Nama Group',
+            product_group_id: 'Nama Group',
             brand_id: 'Nama Merk',
             name: 'Nama',
             supplier_id: 'Pemasok',
