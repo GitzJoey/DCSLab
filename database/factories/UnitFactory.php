@@ -42,7 +42,7 @@ class UnitFactory extends Factory
         ];
         
         return [
-            'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
+            'company_id' =>  Company::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $faker->numberBetween(01, 10),
             'name' => $faker->randomElement($units),
             'description' => '',
