@@ -141,6 +141,7 @@
                             <label class="col-2 col-form-label" for="customer_group_id">{{ $t('fields.customer_group_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="customer_group_id" name="customer_group_id" v-model="customer.customer_group" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.customergroupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -341,7 +342,7 @@ export default {
             customer: {
                 code: 'AUTO',
                 name: '',
-                customer_group: {id:''},
+                customer_group: { hId: '0' },
                 sales_territory: '',
                 use_limit_outstanding_notes: '0',
                 limit_outstanding_notes: '0',
@@ -398,7 +399,7 @@ export default {
             return {
                 code: 'AUTO',
                 name: '',
-                customer_group: {id:''},
+                customer_group: { hId: '0' },
                 sales_territory: '',
                 use_limit_outstanding_notes: '0',
                 limit_outstanding_notes: '0',

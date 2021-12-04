@@ -327,6 +327,7 @@
                             <label class="col-2 col-form-label" for="cash_id">{{ $t('fields.cash_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="cash_id" name="cash_id" v-model="customergroup.cash.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.cashDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select> 
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -417,7 +418,7 @@ export default {
                 round_on: '',
                 round_digit: '0',
                 remarks: '',
-                cash: {id:''}
+                cash: { hId: '0' }
             },
             cashDDL: [],
             listErrors: [],
@@ -480,7 +481,7 @@ export default {
                 round_on: '',
                 round_digit: '0',
                 remarks: '',
-                cash: {id:''}
+                cash: { hId: '0' }
             }
         },
         createNew() {

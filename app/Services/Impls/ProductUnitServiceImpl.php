@@ -50,7 +50,7 @@ class ProductUnitServiceImpl implements ProductUnitService
 
     public function read($userId)
     {
-        return ProductUnit::paginate();
+        return ProductUnit::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllProductUnit()

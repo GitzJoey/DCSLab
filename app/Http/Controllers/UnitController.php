@@ -80,7 +80,7 @@ class UnitController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'units'),
-            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
+            'name' => 'required|min:3|max:255',
         ]);
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));

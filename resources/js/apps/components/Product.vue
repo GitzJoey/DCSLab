@@ -176,7 +176,7 @@
                         <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
                             <div class="block-header bg-gray-dark">
                                 <h3 class="block-title"><strong>Product Unit</strong></h3>
-
+<!-- 
                                 <div class="block-options">
                                     <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                                         <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
@@ -189,7 +189,7 @@
                                         <i class="icon icon-arrow-down" v-if="this.contentHidden === true"></i>
                                         <i class="icon icon-arrow-up" v-if="this.contentHidden === false"></i>
                                     </button>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="block-content">
                                 <table class="table table-vcenter">
@@ -219,7 +219,7 @@
                                                     <option value="0">{{ $t('placeholder.please_select') }}</option>
                                                     <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                                 </select>
-                                                <div class="form-control-plaintext" v-show="this.mode === 'show_product'">
+                                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                                     {{ c.unit.name }}
                                                 </div>
                                             </td>
@@ -282,13 +282,13 @@
                         <div class="form-group row">
                             <label class="col-2 col-form-label" for="supplier_id">{{ $t('fields.supplier_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.defaultSupplier" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.supplier.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.supplierDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <!-- {{ product.supplier.name }} -->
-                                    {{ product.defaultSupplier }}
+                                    {{ product.supplier.name }}
+                                    <!-- {{ product.defaultSupplier }} -->
                                 </div>            
                             </div>
                         </div>
@@ -439,7 +439,7 @@ export default {
                     }
                 ],
                 tax_status: '',
-                defaultSupplier: '',
+                // defaultSupplier: '',
                 supplier: {hId: '0'},
                 remarks: '',
                 point: '',
@@ -531,7 +531,7 @@ export default {
                     }
                 ],
                 tax_status: '1',
-                defaultSupplier: '',
+                // defaultSupplier: '',
                 supplier: {hId: '0'},
                 remarks: '',
                 point: '0',

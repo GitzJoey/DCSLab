@@ -158,7 +158,7 @@ export default {
             contentHidden: false,
             expensegroupList: [],
             expensegroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
             },
             listErrors: [],
@@ -191,7 +191,7 @@ export default {
         },
         emptyExpenseGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
             }
         },

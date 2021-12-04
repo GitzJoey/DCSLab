@@ -59,7 +59,7 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.term") }}</th>
+                                <th>{{ $t("table.cols.payment_term_type") }}</th>
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
@@ -74,7 +74,7 @@
                             <tr v-for="(c, cIdx) in supplierList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.term }}</td>
+                                <td>{{ c.payment_term_type }}</td>
                                 <td>{{ c.contact }}</td>
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
@@ -151,9 +151,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
+                            <label for="inputPaymentTermType" class="col-2 col-form-label">{{ $t('fields.payment_term_type') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="supplier.term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputPaymentTermType" name="payment_term_type" as="input" :class="{'form-control':true, 'is-invalid': errors['payment_term_type']}" :placeholder="$t('fields.payment_term_type')" :label="$t('fields.payment_term_type')" v-model="supplier.payment_term_type" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.code }}</div>
                             </div>
                         </div>
@@ -286,7 +286,7 @@ export default {
             supplier: {
                 code: 'AUTO',
                 name: '',
-                term: '',
+                payment_term_type: '',
                 contact: '',
                 address: '',
                 city: '',
@@ -330,7 +330,7 @@ export default {
             return {
                 code: 'AUTO',
                 name: '',
-                term: '',
+                payment_term_type: '',
                 contact: '',
                 address: '',
                 city: '',

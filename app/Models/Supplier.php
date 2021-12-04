@@ -19,7 +19,7 @@ class Supplier extends Model
     protected $fillable = [
         'code',
         'name',
-        'term',
+        'payment_term_type',
         'contact',
         'address',
         'city',
@@ -29,7 +29,7 @@ class Supplier extends Model
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'term', 'contact', 'address', 'city', 'taxable_enterprice', 'tax_id', 'remarks', 'status'];
+    protected static $logAttributes = ['code', 'name', 'payment_term_type', 'contact', 'address', 'city', 'taxable_enterprice', 'tax_id', 'remarks', 'status'];
 
     protected static $logOnlyDirty = true;
 

@@ -158,7 +158,7 @@ export default {
             contentHidden: false,
             incomegroupList: [],
             incomegroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
             },
             listErrors: [],
@@ -191,7 +191,7 @@ export default {
         },
         emptyIncomeGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
             }
         },
