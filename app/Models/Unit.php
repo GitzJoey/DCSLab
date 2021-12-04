@@ -55,7 +55,7 @@ class Unit extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function productUnit()
+    public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
     }

@@ -17,9 +17,9 @@ class SupplierTableSeeder extends Seeder
     {
         for($i = 0; $i < 10; $i++)
         {
-            $branch = Supplier::factory()->make();
+            $supplier = Supplier::factory()->make();
 
-            $branch->save();
+            $supplier->save();
         }
     }
 }

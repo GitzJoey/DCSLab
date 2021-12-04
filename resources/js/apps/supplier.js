@@ -19,7 +19,7 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
-                term: 'Term',
+                payment_term_type: 'Payment Term Type',
                 contact: 'Contact',
                 address: 'Address',
                 city: 'City',
@@ -43,7 +43,7 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
-            term: 'Term',
+            payment_term_type: 'Payment Term Type',
             contact: 'Contact',
             address: 'Address',
             city: 'City',
@@ -79,7 +79,7 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
-                term: 'Term',
+                payment_term_type: 'Payment Term Type',
                 contact: 'Kontak',
                 address: 'Alamat',
                 city: 'Kota',
@@ -103,7 +103,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Nama',
-            term: 'Term',
+            payment_term_type: 'Payment Term Type',
             contact: 'Kontak',
             address: 'Alamat',
             city: 'Kota',

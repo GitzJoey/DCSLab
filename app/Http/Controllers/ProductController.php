@@ -190,14 +190,14 @@ class ProductController extends BaseController
 
             $product_units = [];
             array_push($product_units, array (
-                'code' => $request['code'],
-                'company_id' => $company_id,
-                'product_id' => null,
+                // 'code' => $request['code'],
+                // 'company_id' => $company_id,
+                // 'product_id' => null,
                 'unit_id' => Hashids::decode($request->unit_id)[0],
-                'is_base' => 1,
-                'conv_value' => 1,
-                'is_primary_unit' => 1,
-                'remarks' => $request['remarks']
+                // 'is_base' => 1,
+                // 'conv_value' => 1,
+                // 'is_primary_unit' => 1,
+                // 'remarks' => $request['remarks']
             ));
 
             $service = $this->productService->create(
@@ -229,7 +229,7 @@ class ProductController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'products'),
-            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
+            'name' => 'required|min:3|max:255',
             'status' => 'required',
         ]);
 

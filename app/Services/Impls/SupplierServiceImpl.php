@@ -16,7 +16,7 @@ class SupplierServiceImpl implements SupplierService
         $company_id,
         $code,
         $name,
-        $term,
+        $payment_term_type,
         $contact,
         $address,
         $city,
@@ -33,7 +33,7 @@ class SupplierServiceImpl implements SupplierService
             $supplier->company_id = $company_id;
             $supplier->code = $code;
             $supplier->name = $name;
-            $supplier->term = $term;
+            $supplier->payment_term_type = $payment_term_type;
             $supplier->contact = $contact;
             $supplier->address = $address;
             $supplier->city = $city;
@@ -70,7 +70,7 @@ class SupplierServiceImpl implements SupplierService
         $company_id,
         $code,
         $name,
-        $term,
+        $payment_term_type,
         $contact,
         $address,
         $city,
@@ -89,7 +89,7 @@ class SupplierServiceImpl implements SupplierService
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
-                'term' => $term,
+                'payment_term_type' => $payment_term_type,
                 'contact' => $contact,
                 'address' => $address,
                 'city' => $city,

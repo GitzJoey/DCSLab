@@ -32,6 +32,9 @@ class ProductUnitController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
         $userId = Auth::user()->id;
         return $this->productUnitService->read($userId);
     }
@@ -45,7 +48,7 @@ class ProductUnitController extends BaseController
     {
         $request->validate([
             'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'productunits')],
-            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
+            'name' => 'required|min:3|max:255',
         ]);
 
         $is_base = $request['is_base'];

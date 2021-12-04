@@ -71,10 +71,10 @@ class CapitalController extends BaseController
     public function update($id, Request $request)
     {
         $request->validate([
-            'ref_number' => 'required|min:5|max:255|numeric',
+            'ref_number' => 'required|min:5|max:255',
             'group_id' => 'required',
             'capital_status' => 'required',
-            'amount' => 'required|min:2|max:255|numeric',
+            'amount' => 'required|min:2|max:255',
         ]);
 
         $date = '2021-10-01';
