@@ -48,12 +48,14 @@ class UnitServiceImpl implements UnitService
     public function getAllUnit_Product()
     {
         return Unit::where('category', '<>', 2)
+            ->bySelectedCompany()
             ->get();
     }
 
     public function getAllUnit_Service()
     {
         return Unit::where('category', '<>', 1)
+            ->bySelectedCompany()
             ->get();
     }
 
