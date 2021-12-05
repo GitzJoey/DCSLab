@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Actions\RandomGenerator;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,9 +24,9 @@ class CompanyFactory extends Factory
     {
         $faker = \Faker\Factory::create('id_ID');
         return [
-            'code' => $faker->numberBetween(01, 10),
+            'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->company(),
-            'status' => '1',
+            'status' => 1,
         ];
     }
 }

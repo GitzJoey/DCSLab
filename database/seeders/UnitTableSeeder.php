@@ -18,8 +18,11 @@ class UnitTableSeeder extends Seeder
     public function run()
     {
         $units = [
-            ['name' => 'kg', 'description' => 'kilogram (kg)'],
-            ['name' => 'g', 'description' => 'gram (g)']
+            ['name' => 'kg', 'description' => 'kilogram (kg)', 'category' => 1],
+            ['name' => 'g', 'description' => 'gram (g)', 'category' => 1],
+            ['name' => 'pcs', 'description' => 'Pieces', 'category' => 1],
+            ['name' => 'pk', 'description' => 'Pack', 'category' => 1],
+            ['name' => 'dz', 'description' => 'Dozen', 'category' => 1]            
         ];
 
         $companies = Company::get()->pluck('id');

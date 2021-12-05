@@ -18,7 +18,7 @@
                                 <component :is="menu.icon" />
                             </div>
                             <div class="menu__title">
-                                {{ menu.title }}
+                                {{ t(menu.title) }}
                                 <div v-if="menu.subMenu" class="menu__sub-icon" :class="{ 'transform rotate-180': menu.activeDropdown }">
                                     <ChevronDownIcon />
                                 </div>
@@ -29,10 +29,10 @@
                                 <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                                     <a href="javascript:;" class="menu" :class="{ 'menu--active': subMenu.active }" @click="linkTo(subMenu, router)">
                                         <div class="menu__icon">
-                                            <ActivityIcon />
+                                            <ChevronRightIcon />
                                         </div>
                                         <div class="menu__title">
-                                            {{ subMenu.title }}
+                                            {{ t(subMenu.title) }}
                                             <div v-if="subMenu.subMenu" class="menu__sub-icon" :class="{ 'transform rotate-180': subMenu.activeDropdown }">
                                                 <ChevronDownIcon />
                                             </div>
@@ -43,10 +43,10 @@
                                             <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                                                 <a href="javascript:;" class="menu" :class="{ 'menu--active': lastSubMenu.active }" @click="linkTo(lastSubMenu, router)">
                                                     <div class="menu__icon">
-                                                        <ZapIcon />
+                                                        <ChevronsRightIcon />
                                                     </div>
                                                     <div class="menu__title">
-                                                        {{ lastSubMenu.title }}
+                                                        {{ t(lastSubMenu.title) }}
                                                     </div>
                                                 </a>
                                             </li>
@@ -75,6 +75,7 @@ import {
     leave
 } from './index';
 import { nestedMenu } from '../../layouts/side-menu';
+import mainMixins from '../../mixins/index';
 
 export default defineComponent({
     props: {
@@ -92,6 +93,11 @@ export default defineComponent({
         const router = useRouter();
         const store = useStore();
         const formattedMenu = ref([]);
+
+        const { t } = mainMixins();
+
+        const menuContext = computed(() => store.state.sideMenu.menu );
+
         const mobileMenu = computed(() =>
             nestedMenu(store.state.sideMenu.menu, route)
         );
@@ -102,6 +108,11 @@ export default defineComponent({
             formattedMenu.value = $h.toRaw(mobileMenu.value)
           }
         );
+
+        watch(
+            menuContext,() => {
+                formattedMenu.value = nestedMenu(store.state.sideMenu.menu, route);
+        });
 
         onMounted(() => {
             formattedMenu.value = $h.toRaw(mobileMenu.value)
@@ -114,7 +125,8 @@ export default defineComponent({
             router,
             linkTo,
             enter,
-            leave
+            leave,
+            t
         }
     }
 })

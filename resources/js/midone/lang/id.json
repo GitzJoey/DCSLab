@@ -57,6 +57,10 @@
                     "cod": "Cash On Delivery",
                     "cnd": "Cash Di Pengiriman Selanjutnya",
                     "cbs": "Cash Sebelum Pengiriman"
+                },
+                "yesNoDDL": {
+                    "yes": "Ya",
+                    "no": "Tidak"
                 }
             }
         },
@@ -161,6 +165,7 @@
                 "name": "Nama",
                 "email": "Email",
                 "roles": "Peran",
+                "picture": "Foto",
                 "first_name": "Nama Depan",
                 "last_name": "Nama Belakang",
                 "address": "Alamat",
@@ -234,7 +239,6 @@
             "fields": {
                 "code": "Kode",
                 "name": "Nama",
-                "term": "Tempo",
                 "contact": "",
                 "address": "Alamat",
                 "city": "Kota",
@@ -244,11 +248,11 @@
                 "remarks": "Remarks",
                 "status": "Status",
                 "poc": {
+                    "label": "Penanggung Jawab",
                     "name": "Nama",
                     "email": "Email",
-                    "roles": "Peran",
-                    "first_name": "Nama Depan",
-                    "last_name": "Nama Belakang"    
+                    "ic_num": "No KTP",
+                    "tax_id": "NPWP"
                 }
             }
         },

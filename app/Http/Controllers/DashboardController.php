@@ -47,18 +47,6 @@ class DashboardController extends BaseController
                 ]
             ),
             array(
-                'icon' => 'CpuIcon',
-                'pageName' => 'side-menu-administrators',
-                'title' => 'components.menu.administrators',
-                'subMenu' => [
-                    array (
-                        'icon' => '',
-                        'pageName' => 'side-menu-administrators-users',
-                        'title' => 'components.menu.administrators-users'
-                    )
-                ]
-            ),
-            array(
                 'icon' => 'TruckIcon',
                 'pageName' => 'side-menu-supplier',
                 'title' => 'components.menu.supplier',
@@ -80,6 +68,18 @@ class DashboardController extends BaseController
                         'pageName' => 'side-menu-product-product',
                         'title' => 'components.menu.product-product'
                     ),
+                ]
+            ),
+            array(
+                'icon' => 'CpuIcon',
+                'pageName' => 'side-menu-administrators',
+                'title' => 'components.menu.administrators',
+                'subMenu' => [
+                    array (
+                        'icon' => '',
+                        'pageName' => 'side-menu-administrators-users',
+                        'title' => 'components.menu.administrators-users'
+                    )
                 ]
             ),
             array(

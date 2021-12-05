@@ -26,17 +26,27 @@ class SupplierFactory extends Factory
     {
         $faker = \Faker\Factory::create('id_ID');
 
+        $array_term = [
+            'PIA',
+            'NET30',
+            'EOM',
+            'COD',
+            'CND'
+        ];
+
+        shuffle($array_term);
+
         return [
             'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->company(),
-            'term' => $faker->numberBetween(7, 28),
+            'payment_term_type' => $array_term[0],
             'contact' => $faker->e164PhoneNumber(),
             'address' => $faker->address(),
             'city' => $faker->city(),
-            'is_tax' => $faker->numberBetween(0, 1),
-            'tax_number' => $faker->creditCardNumber(),
+            'taxable_enterprise' => $faker->numberBetween(0, 1),
+            'tax_id' => $faker->creditCardNumber(),
             'remarks' => $faker->word(),
-            'status' => '1'
+            'status' => 1
         ];
     }
 }

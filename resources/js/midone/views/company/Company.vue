@@ -14,38 +14,62 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-if="tableProps.dataList !== undefined" v-for="(c, cIdx) in tableProps.dataList.data">
+                        <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
-                                <td>{{ c.code }}</td>
-                                <td><a href="" @click.prevent="toggleDetail(cIdx)" class="hover:animate-pulse">{{ c.name }}</a></td>
+                                <td>{{ item.code }}</td>
+                                <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>
-                                    <CheckCircleIcon v-if="c.default === 1" />
-                                    <XIcon v-if="c.default === 0" />
+                                    <CheckCircleIcon v-if="item.default === 1" />
+                                    <XIcon v-if="item.default === 0" />
                                 </td>
                                 <td>
-                                    <CheckCircleIcon v-if="c.status === 1" />
-                                    <XIcon v-if="c.status === 0" />
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
-                                        <a class="flex items-center mr-3" href="" @click.prevent="showSelected(cIdx)">
+                                        <a class="flex items-center mr-3" href="" @click.prevent="showSelected(itemIdx)">
                                             <InfoIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.view') }}
                                         </a>
-                                        <a class="flex items-center mr-3" href="" @click.prevent="editSelected(cIdx)">
+                                        <a class="flex items-center mr-3" href="" @click.prevent="editSelected(itemIdx)">
                                             <CheckSquareIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.edit') }}
                                         </a>
-                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(cIdx)">
+                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
                                             <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                         </a>
                                     </div>
                                 </td>
                             </tr>
-                            <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== cIdx}">
+                            <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
                                 <td colspan="5">
-                                    {{ c.name }}
-                                    <br/><br/><br/><br/><br/>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.code') }}</div>
+                                        <div class="flex-1">{{ item.code }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.name') }}</div>
+                                        <div class="flex-1">{{ item.name }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.address') }}</div>
+                                        <div class="flex-1">{{ item.address }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.default') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.default === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-if="item.default === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.status') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         </template>
@@ -80,66 +104,43 @@
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.company.actions.create') }}</h2>
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.company.actions.edit') }}</h2>
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.company.actions.show') }}</h2>
         </div>
         <div class="loader-container">
             <VeeForm id="companyForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors, validate }">
                 <div class="mb-3">
+                    <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
                     <div class="form-inline">
-                        <label for="inputCode" class="form-label w-40 px-3">{{ t('views.company.fields.code') }}</label>
                         <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="company.code === '[AUTO]'"/>
                         <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
-                        <div class="" v-if="mode === 'show'">{{ company.code }}</div>
                     </div>
-                    <ErrorMessage name="code" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    <ErrorMessage name="code" class="text-theme-21" />
                 </div>
                 <div class="mb-3">
-                    <div class="form-inline">
-                        <label for="inputName" class="form-label w-40 px-3">{{ t('views.company.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
-                        <div class="" v-if="mode === 'show'">{{ company.name }}</div>
-                    </div>
-                    <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
+                    <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
+                    <ErrorMessage name="name" class="text-theme-21" />
                 </div>
                 <div class="mb-3">
-                    <div class="form-inline">
-                        <label for="inputAddress" class="form-label w-40 px-3">{{ t('views.company.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
-                        <div class="" v-if="mode === 'show'">{{ company.address }}</div>
-                    </div>
+                    <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
+                    <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
-                    <div class="form-inline">
-                        <label for="inputDefault" class="form-label w-40 px-3">{{ t('views.company.fields.default') }}</label>
-                        <input id="inputDefault" type="checkbox" class="form-check-switch ml-1" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
-                        <div class="" v-if="mode === 'show'">
-                            <span v-if="company.default === 1"><CheckCircleIcon /></span>
-                            <span v-if="company.default === 0"><CircleIcon /></span>
-                        </div>
+                    <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
+                    <div class="mt-2">
+                        <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <div class="form-inline">
-                        <label for="inputStatus" class="form-label w-40 px-3">{{ t('views.company.fields.status') }}</label>
-                        <select class="form-control form-select" id="inputStatus" name="status" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </select>
-                        <div class="" v-if="mode === 'show'">
-                            <span v-if="company.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                            <span v-if="company.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
-                        </div>
-                        <div class="" v-if="mode === 'show'">{{ company.status }}</div>
-                    </div>
-                    <ErrorMessage name="status" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                    <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
+                    <select class="form-control form-select" id="inputStatus" name="status" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
+                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                        <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                    </select>
+                    <ErrorMessage name="status" class="text-theme-21" />
                 </div>
-                <div class="mb-3" v-if="this.mode === 'create' || this.mode === 'edit'">
-                    <div class="form-inline">
-                        <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
-                            <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
-                            <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
-                        </div>
-                    </div>
+                <div class="mt-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                    <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
+                    <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
             </VeeForm>
             <div class="loader-overlay" v-if="loading"></div>
@@ -311,8 +312,7 @@ function confirmDelete() {
 }
 
 function showSelected(index) {
-    mode.value = 'show';
-    company.value = companyList.value.data[index];
+    toggleDetail(index);
 }
 
 function backToList() {

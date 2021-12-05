@@ -22,16 +22,17 @@ class Supplier extends Model
     protected $fillable = [
         'code',
         'name',
-        'term',
         'contact',
         'address',
         'city',
-        'tax_number',
+        'payment_term_type',
+        'taxable_enterprise',
+        'tax_id',
         'remarks',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'term', 'contact', 'address', 'city', 'tax_number', 'remarks', 'status'];
+    protected static $logAttributes = ['code', 'name', 'payment_term_type', 'contact', 'address', 'city', 'tax_id', 'taxable_enterprise', 'remarks', 'status'];
 
     protected static $logOnlyDirty = true;
 

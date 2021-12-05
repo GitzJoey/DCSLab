@@ -57,6 +57,10 @@
                     "cod": "Cash On Delivery",
                     "cnd": "Cash Next Delivery",
                     "cbs": "Cash Before Shipment"
+                },
+                "yesNoDDL": {
+                    "yes": "Yes",
+                    "no": "No"
                 }
             }
         },
@@ -161,6 +165,7 @@
                 "name": "Name",
                 "email": "Email",
                 "roles": "Roles",
+                "picture": "Picture",
                 "first_name": "First Name",
                 "last_name": "Last Name",
                 "address": "Address",
@@ -229,7 +234,6 @@
             "fields": {
                 "code": "Code",
                 "name": "Name",
-                "term": "Term",
                 "contact": "Contact",
                 "address": "Address",
                 "city": "City",
@@ -239,11 +243,11 @@
                 "remarks": "Remarks",
                 "status": "Status",
                 "poc": {
+                    "label": "Person In Charge",
                     "name": "Name",
                     "email": "Email",
-                    "roles": "Roles",
-                    "first_name": "First Name",
-                    "last_name": "Last Name"                        
+                    "ic_num": "IC Number",
+                    "tax_id": "Tax ID"
                 }
             }
         },

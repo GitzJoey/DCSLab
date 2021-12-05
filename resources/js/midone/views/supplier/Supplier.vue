@@ -41,8 +41,59 @@
                             </tr>
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
                                 <td colspan="5">
-                                    {{ item.name }}
-                                    <br/><br/><br/><br/><br/>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.code') }}</div>
+                                        <div class="flex-1">{{ item.code }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.name') }}</div>
+                                        <div class="flex-1">{{ item.name }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.address') }}</div>
+                                        <div class="flex-1">{{ item.address }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.city') }}</div>
+                                        <div class="flex-1">{{ item.city }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.taxable_enterprise') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.taxable_enterprise === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-if="item.taxable_enterprise === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.payment_term_type') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.payment_term_type === 'PIA'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
+                                            <span v-if="item.payment_term_type === 'NET30'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
+                                            <span v-if="item.payment_term_type === 'EOM'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
+                                            <span v-if="item.payment_term_type === 'COD'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
+                                            <span v-if="item.payment_term_type === 'CND'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
+                                            <span v-if="item.payment_term_type === 'CBS'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.tax_id') }}</div>
+                                        <div class="flex-1">{{ item.tax_id }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.remarks') }}</div>
+                                        <div class="flex-1">{{ item.remarks }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.status') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.poc.label') }}</div>
+                                        <div class="flex-1">{{ item.user.name }} - {{ item.user.email }}</div>
+                                    </div>                                    
                                 </td>
                             </tr>
                         </template>
@@ -77,7 +128,6 @@
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.supplier.actions.create') }}</h2>
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.supplier.actions.edit') }}</h2>
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.supplier.actions.show') }}</h2>
         </div>
         <div class="loader-container">
             <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
@@ -90,129 +140,88 @@
                 </div>
                 <div class="intro-x" v-show="activeTab === 'supplier'">
                     <div class="mb-3">
+                        <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
                         <div class="form-inline">
-                            <label for="inputCode" class="form-label w-40 px-3">{{ t('views.supplier.fields.code') }}</label>
                             <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" v-model="supplier.code" v-show="mode === 'create' || mode === 'edit'" :readonly="supplier.code === '[AUTO]'"/>
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
-                            <div class="" v-if="mode === 'show'">{{ supplier.code }}</div>
                         </div>
-                        <ErrorMessage name="code" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                        <ErrorMessage name="code" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputName" class="form-label w-40 px-3">{{ t('views.supplier.fields.name') }}</label>
-                            <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" v-model="supplier.name" v-show="mode === 'create' || mode === 'edit'" />
-                            <div class="" v-if="mode === 'show'">{{ supplier.name }}</div>
-                        </div>
-                        <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                        <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" v-model="supplier.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputAddress" class="form-label w-40 px-3">{{ t('views.supplier.fields.address') }}</label>
-                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
-                            <div class="" v-if="mode === 'show'">{{ supplier.address }}</div>
-                        </div>
+                        <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputContact" class="form-label w-40 px-3">{{ t('views.supplier.fields.contact') }}</label>
-                            <input id="inputContact" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
-                            <div class="" v-if="mode === 'show'">{{ supplier.contact }}</div>
-                        </div>
+                        <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
+                        <input id="inputContact" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputCity" class="form-label w-40 px-3">{{ t('views.supplier.fields.city') }}</label>
-                            <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
-                            <div class="" v-if="mode === 'show'">{{ supplier.city }}</div>
+                        <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
+                        <div class="" v-if="mode === 'show'">{{ supplier.city }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
+                        <div class="mt-2">
+                            <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch" name="taxable_enterprise" v-model="supplier.taxable_enterprise" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
                         </div>
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputTaxableEnterprise" class="form-label w-52 px-3">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
-                            <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch ml-1" name="taxable_enterprise" v-model="supplier.taxable_enterprise" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
-                            <div class="" v-if="mode === 'show'">
-                                <span v-if="supplier.taxable_enterprise === 1"><CheckCircleIcon /></span>
-                                <span v-if="supplier.taxable_enterprise === 0"><CircleIcon /></span>
-                            </div>
+                        <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
+                        <select class="form-control form-select" id="inputPaymnetTermType" name="payment_term_type" v-model="supplier.payment_term_type" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </select>
+                        <div class="" v-if="mode === 'show'">
+                            <span v-if="supplier.payment_term_type === 'pia'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
+                            <span v-if="supplier.payment_term_type === 'net30'">{{ t('components.dropdown.values.paymentTermTypeDDL.net30') }}</span>
+                            <span v-if="supplier.payment_term_type === 'eom'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
+                            <span v-if="supplier.payment_term_type === 'cod'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
+                            <span v-if="supplier.payment_term_type === 'cnd'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
+                            <span v-if="supplier.payment_term_type === 'cbs'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
                         </div>
+                        <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputPaymnetTermType" class="form-label w-40 px-3">{{ t('views.supplier.fields.payment_term_type') }}</label>
-                            <select class="form-control form-select" id="inputPaymnetTermType" name="payment_term_type" v-model="supplier.payment_term_type" v-show="mode === 'create' || mode === 'edit'">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                            </select>
-                            <div class="" v-if="mode === 'show'">
-                                <span v-if="supplier.payment_term_type === 'pia'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
-                                <span v-if="supplier.payment_term_type === 'net30'">{{ t('components.dropdown.values.paymentTermTypeDDL.net30') }}</span>
-                                <span v-if="supplier.payment_term_type === 'eom'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
-                                <span v-if="supplier.payment_term_type === 'cod'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
-                                <span v-if="supplier.payment_term_type === 'cnd'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
-                                <span v-if="supplier.payment_term_type === 'cbs'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
-                            </div>
-                            <div class="" v-if="mode === 'show'">{{ supplier.status }}</div>
+                        <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
+                        <select class="form-control form-select" id="inputStatus" name="status" v-model="supplier.status" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </select>
+                        <div class="" v-if="mode === 'show'">
+                            <span v-if="supplier.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                            <span v-if="supplier.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                         </div>
-                        <ErrorMessage name="status" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                        <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputStatus" class="form-label w-40 px-3">{{ t('views.supplier.fields.status') }}</label>
-                            <select class="form-control form-select" id="inputStatus" name="status" v-model="supplier.status" v-show="mode === 'create' || mode === 'edit'">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                            </select>
-                            <div class="" v-if="mode === 'show'">
-                                <span v-if="supplier.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                <span v-if="supplier.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
-                            </div>
-                            <div class="" v-if="mode === 'show'">{{ supplier.status }}</div>
-                        </div>
-                        <ErrorMessage name="status" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputRemarks" class="form-label w-40 px-3">{{ t('views.supplier.fields.remarks') }}</label>
-                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
-                            <div class="" v-if="mode === 'show'">{{ supplier.remarks }}</div>
-                        </div>
+                        <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="intro-x" v-show="activeTab === 'poc'">
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputPOCName" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.name') }}</label>
-                            <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" v-model="supplier.user.name" v-show="mode === 'create' || mode === 'edit'" />
-                            <div class="" v-if="mode === 'show'">{{ supplier.user.name }}</div>
-                        </div>
-                        <ErrorMessage name="poc_name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                        <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
+                        <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" v-model="supplier.user.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <ErrorMessage name="poc_name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputEmail" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.email') }}</label>
-                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" v-model="supplier.user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
-                            <div class="" v-if="mode === 'show'">{{ supplier.user.email }}</div>
-                        </div>
-                        <ErrorMessage name="email" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputFirstName" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.first_name') }}</label>
-                            <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.supplier.fields.poc.first_name')" v-model="supplier.user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
-                            <div class="" v-if="mode === 'show'">{{ supplier.user.profile.first_name }}</div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-inline">
-                            <label for="inputLastName" class="form-label w-40 px-3">{{ t('views.supplier.fields.poc.last_name') }}</label>
-                            <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.supplier.fields.poc.last_name')" v-model="supplier.user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
-                            <div class="" v-if="mode === 'show'">{{ supplier.user.profile.last_name }}</div>
-                        </div>
+                        <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
+                        <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" v-model="supplier.user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <ErrorMessage name="email" class="text-theme-21" />
                     </div>
                 </div>
                 <div class="intro-x" v-show="activeTab === 'products'">
                     products
+                </div>
+                <div class="mt-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                    <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
+                    <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
             </VeeForm>
             <div class="loader-overlay" v-if="loading"></div>
@@ -410,8 +419,7 @@ function confirmDelete() {
 }
 
 function showSelected(index) {
-    mode.value = 'show';
-    supplier.value = supplierList.value.data[index];
+    toggleDetail(index);
 }
 
 function backToList() {
