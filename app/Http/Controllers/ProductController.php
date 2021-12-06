@@ -102,14 +102,16 @@ class ProductController extends BaseController
             $request['code'] = $randomGenerator->generateNumber(10000, 99999);
         };
 
-        $use_serial_number = $request['use_serial_number'];
-        $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
-
-        $has_expiry_date = $request['has_expiry_date'];
-        $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
-
         // apabila product maka...
         if ($request->product_type[0] !== '4') {
+            $use_serial_number = is_null($request['use_serial_number']) ? 0 : $request['use_serial_number'];
+            $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
+            $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
+    
+            $has_expiry_date = is_null($request['has_expiry_date']) ? 0 : $request['has_expiry_date'];
+            $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
+            $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
+            
             $code = $request->code;
             $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
@@ -183,21 +185,21 @@ class ProductController extends BaseController
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $use_serial_number = null;
-            $has_expiry_date = null;
+            $use_serial_number = 0;
+            $has_expiry_date = 0;
             $product_type = $request->product_type;
             $status = $request->status;
 
             $product_units = [];
             array_push($product_units, array (
-                // 'code' => $request['code'],
-                // 'company_id' => $company_id,
-                // 'product_id' => null,
+                'code' => $request['code'],
+                'company_id' => $company_id,
+                'product_id' => null,
                 'unit_id' => Hashids::decode($request->unit_id)[0],
-                // 'is_base' => 1,
-                // 'conv_value' => 1,
-                // 'is_primary_unit' => 1,
-                // 'remarks' => $request['remarks']
+                'is_base' => 1,
+                'conv_value' => 1,
+                'is_primary_unit' => 1,
+                'remarks' => $request['remarks']
             ));
 
             $service = $this->productService->create(

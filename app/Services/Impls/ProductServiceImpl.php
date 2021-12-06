@@ -28,7 +28,7 @@ class ProductServiceImpl implements ProductService
         $has_expiry_date,
         $product_type,
         $status,
-        $product_unit
+        $product_units
     )
     {
         DB::beginTransaction();
@@ -51,7 +51,7 @@ class ProductServiceImpl implements ProductService
             $product->save();
 
             $pu = [];
-            foreach ($pu as $product_unit) {
+            foreach ($product_units as $product_unit) {
                 array_push($pu, new ProductUnit(array (
                     'code' => $product_unit['code'],
                     'company_id' => $product_unit['company_id'],
