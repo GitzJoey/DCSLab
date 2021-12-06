@@ -78,7 +78,6 @@ class ProductController extends BaseController
                 'product_group_id' => 'required',
                 'brand_id' => 'required',
                 'unit_id' => 'required',
-                'supplier_id' => 'required',
                 'status' => 'required',
             ]);
         }
@@ -117,7 +116,10 @@ class ProductController extends BaseController
             $brand_id = Hashids::decode($request->brand_id)[0];
             $name = $request->name;
             $tax_status = $request->tax_status;
-            $supplier_id = $request->supplier_id != null ? Hashids::decode($request->supplier_id)[0]:$supplier_id = null;
+            
+            $supplier_id = $request->supplier_id != null ? $request->supplier_id : null;
+            $supplier_id = $request->supplier_id != '' ? Hashids::decode($request->supplier_id)[0] : $supplier_id = null;
+            
             $remarks = $request->remarks;
             $point = $request->point;
             $use_serial_number;
@@ -149,7 +151,7 @@ class ProductController extends BaseController
                     'is_base' => $is_base,
                     'conv_value' => $request['conv_value'][$i],
                     'is_primary_unit' => $is_primary_unit,
-                    'remarks' => $request['remarks']
+                    'remarks' => ''
                 ));
             }
 
@@ -199,7 +201,7 @@ class ProductController extends BaseController
                 'is_base' => 1,
                 'conv_value' => 1,
                 'is_primary_unit' => 1,
-                'remarks' => $request['remarks']
+                'remarks' => ''
             ));
 
             $service = $this->productService->create(
@@ -309,15 +311,33 @@ class ProductController extends BaseController
             $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
             $company_id = Hashids::decode($company_id)[0];
 
+            $product_unit_id = $request['product_unit_hId'] != null ? Hashids::decode($request['product_unit_hId'])[0] : null;
+
             $code = $request->code;
             $product_group_id = Hashids::decode($request->product_group_id)[0];
+            $brand_id = null;
             $name = $request->name;
-            // $unit_id = Hashids::decode($request->unit_id)[0];
             $tax_status = $request->tax_status;
+            $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $product_type = $request->product_type;
+            $use_serial_number = 0;
+            $has_expiry_date = 0;
+            $product_type = 4;
             $status = $request->status;
+
+            $product_units = [];
+            array_push($product_units, array (
+                'id' => $product_unit_id,                    
+                'code' => $request->code,
+                'company_id' => $company_id,
+                'product_id' => $id,
+                'unit_id' => Hashids::decode($request->unit_id)[0],
+                'conv_value' => 1,
+                'is_base' => 1,
+                'is_primary_unit' => 1,
+                'remarks' => ''
+            ));
 
             $product = $this->productService->update(
                 $id,
@@ -336,6 +356,7 @@ class ProductController extends BaseController
                 $status,
                 $product_units
             );
+
             if ($product == 0) {
                 return response()->error();
             };

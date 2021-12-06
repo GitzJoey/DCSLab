@@ -115,6 +115,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <input type="hidden" v-model="service.product_unit[0].unit.hId" name="product_unit_hId"/>
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="unit_id" name="unit_id" v-model="service.product_unit[0].unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
