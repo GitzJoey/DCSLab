@@ -131,95 +131,108 @@
         </div>
         <div class="loader-container">
             <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                <div class="border-b border-gray mb-3"> 
-                    <ul class="flex cursor-pointer">
-                        <li :class="{'py-2 px-6 bg-white rounded-t-lg':true, 'text-gray-500 bg-gray-200':activeTab !== 'supplier'}" @click="switchTabs('supplier')">{{ t('views.supplier.tabs.supplier') }}</li>
-                        <li :class="{'py-2 px-6 bg-white rounded-t-lg':true, 'text-gray-500 bg-gray-200':activeTab !== 'poc'}" @click="switchTabs('poc')">{{ t('views.supplier.tabs.poc') }}</li>
-                        <li :class="{'py-2 px-6 bg-white rounded-t-lg':true, 'text-gray-500 bg-gray-200':activeTab !== 'products'}" @click="switchTabs('products')">{{ t('views.supplier.tabs.products') }}</li>
-                    </ul>
+                <div class="nav nav-tabs flex-col sm:flex-row bg-gray-300 dark:bg-dark-2 text-gray-600" role="tablist">
+                    <Tippy id="supplier-tab" tag="a" :content="t('views.supplier.tabs.supplier')" data-toggle="tab" data-target="#supplier" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center active" role="tab" aria-controls="content" aria-selected="true">
+                        <span :class="{'text-theme-21':}">{{ t('views.supplier.tabs.supplier') }}</span>
+                    </Tippy>
+                    <Tippy id="poc-tab" tag="a" :content="t('views.supplier.tabs.poc')" data-toggle="tab" data-target="#poc" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-selected="false">
+                        {{ t('views.supplier.tabs.poc') }}
+                    </Tippy>
+                    <Tippy id="products-tab" tag="a" :content="t('views.supplier.tabs.products')" data-toggle="tab" data-target="#products" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-selected="false">
+                        {{ t('views.supplier.tabs.products') }}
+                    </Tippy>
                 </div>
-                <div class="intro-x" v-show="activeTab === 'supplier'">
-                    <div class="mb-3">
-                        <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
-                        <div class="form-inline">
-                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" v-model="supplier.code" v-show="mode === 'create' || mode === 'edit'" :readonly="supplier.code === '[AUTO]'"/>
-                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
+                <div class="tab-content">
+                    <div id="supplier" class="tab-pane p-5 active" role="tabpanel" aria-labelledby="supplier-tab">
+                        <div class="mb-3">
+                            <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
+                            <div class="form-inline">
+                                <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" v-model="supplier.code" v-show="mode === 'create' || mode === 'edit'" :readonly="supplier.code === '[AUTO]'"/>
+                                <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
+                            </div>
+                            <ErrorMessage name="code" class="text-theme-21" />
                         </div>
-                        <ErrorMessage name="code" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" v-model="supplier.name" v-show="mode === 'create' || mode === 'edit'" />
-                        <ErrorMessage name="name" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
-                        <input id="inputContact" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
-                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
-                        <div class="" v-if="mode === 'show'">{{ supplier.city }}</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
-                        <div class="mt-2">
-                            <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch" name="taxable_enterprise" v-model="supplier.taxable_enterprise" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        <div class="mb-3">
+                            <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
+                            <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" v-model="supplier.name" v-show="mode === 'create' || mode === 'edit'" />
+                            <ErrorMessage name="name" class="text-theme-21" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
+                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
+                            <input id="inputContact" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
+                            <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
+                            <div class="" v-if="mode === 'show'">{{ supplier.city }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
+                            <div class="mt-2">
+                                <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch" name="taxable_enterprise" v-model="supplier.taxable_enterprise" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
+                            <select class="form-control form-select" id="inputPaymnetTermType" name="payment_term_type" v-model="supplier.payment_term_type" v-show="mode === 'create' || mode === 'edit'">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            </select>
+                            <div class="" v-if="mode === 'show'">
+                                <span v-if="supplier.payment_term_type === 'pia'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
+                                <span v-if="supplier.payment_term_type === 'net30'">{{ t('components.dropdown.values.paymentTermTypeDDL.net30') }}</span>
+                                <span v-if="supplier.payment_term_type === 'eom'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
+                                <span v-if="supplier.payment_term_type === 'cod'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
+                                <span v-if="supplier.payment_term_type === 'cnd'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
+                                <span v-if="supplier.payment_term_type === 'cbs'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
+                            </div>
+                            <ErrorMessage name="status" class="text-theme-21" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
+                            <select class="form-control form-select" id="inputStatus" name="status" v-model="supplier.status" v-show="mode === 'create' || mode === 'edit'">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            </select>
+                            <div class="" v-if="mode === 'show'">
+                                <span v-if="supplier.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                <span v-if="supplier.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                            </div>
+                            <ErrorMessage name="status" class="text-theme-21" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
+                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
-                        <select class="form-control form-select" id="inputPaymnetTermType" name="payment_term_type" v-model="supplier.payment_term_type" v-show="mode === 'create' || mode === 'edit'">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </select>
-                        <div class="" v-if="mode === 'show'">
-                            <span v-if="supplier.payment_term_type === 'pia'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
-                            <span v-if="supplier.payment_term_type === 'net30'">{{ t('components.dropdown.values.paymentTermTypeDDL.net30') }}</span>
-                            <span v-if="supplier.payment_term_type === 'eom'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
-                            <span v-if="supplier.payment_term_type === 'cod'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
-                            <span v-if="supplier.payment_term_type === 'cnd'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
-                            <span v-if="supplier.payment_term_type === 'cbs'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
+                    <div id="poc" class="tab-pane p-5" role="tabpanel" aria-labelledby="poc-tab">
+                        <div class="mb-3">
+                            <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
+                            <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" v-model="supplier.user.name" v-show="mode === 'create' || mode === 'edit'" />
+                            <ErrorMessage name="poc_name" class="text-theme-21" />
                         </div>
-                        <ErrorMessage name="status" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
-                        <select class="form-control form-select" id="inputStatus" name="status" v-model="supplier.status" v-show="mode === 'create' || mode === 'edit'">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </select>
-                        <div class="" v-if="mode === 'show'">
-                            <span v-if="supplier.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                            <span v-if="supplier.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
+                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" v-model="supplier.user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                            <ErrorMessage name="email" class="text-theme-21" />
                         </div>
-                        <ErrorMessage name="status" class="text-theme-21" />
                     </div>
-                    <div class="mb-3">
-                        <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
-                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                    <div id="products" class="tab-pane p-5" role="tabpanel" aria-labelledby="products-tab">
+                        <div class="mb-3">
+                            <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>
+                            <div>
+                                <div v-for="(p, pIdx) in supplier.products">
+                                    {{ p.name }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="intro-x" v-show="activeTab === 'poc'">
-                    <div class="mb-3">
-                        <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
-                        <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" v-model="supplier.user.name" v-show="mode === 'create' || mode === 'edit'" />
-                        <ErrorMessage name="poc_name" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
-                        <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" v-model="supplier.user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
-                        <ErrorMessage name="email" class="text-theme-21" />
-                    </div>
-                </div>
-                <div class="intro-x" v-show="activeTab === 'products'">
-                    products
-                </div>
-                <div class="mt-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                <div class="pl-5" v-if="this.mode === 'create' || this.mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
@@ -241,6 +254,7 @@ import { getLang } from '../../lang';
 import mainMixins from '../../mixins';
 import { helper } from '../../utils/helper';
 // Core Components Import
+import { useStore } from '../../store/index';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
@@ -249,20 +263,25 @@ import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 const schema = {
     code: 'required',
     name: 'required',
+    poc_name: 'required',
+    email: 'required|email',
 };
 
 // Declarations
+const store = useStore();
+
 // Mixins
 const { t, route } = mainMixins();
 
 // Data - VueX
+const selectedUserCompany = computed(() => store.state.main.selectedUserCompany );
+
 // Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
-const activeTab = ref('supplier');
 
 // Data - Views
 const supplierList = ref([]);
@@ -323,8 +342,12 @@ function getDDL() {
 
 function onSubmit(values, actions) {
     loading.value = true;
+
+    var formData = Object.fromEntries(new FormData(cash('#supplierForm')[0])); 
+    formData.company_id = selectedUserCompany.value;
+
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.supplier.supplier.save'), new FormData(cash('#supplierForm')[0])).then(response => {
+        axios.post(route('api.post.db.supplier.supplier.save'), formData).then(response => {
             backToList();
         }).catch(e => {
             handleError(e, actions);
@@ -332,7 +355,7 @@ function onSubmit(values, actions) {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.supplier.supplier.edit', supplier.value.hId), new FormData(cash('#supplierForm')[0])).then(response => {
+        axios.post(route('api.post.db.supplier.supplier.edit', supplier.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -439,10 +462,6 @@ function toggleDetail(idx) {
 function generateCode() {
     if (supplier.value.code === '[AUTO]') supplier.value.code = '';
     else  supplier.value.code = '[AUTO]'
-}
-
-function switchTabs(name) {
-    activeTab.value = name;    
 }
 
 // Computed
