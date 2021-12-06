@@ -54,7 +54,7 @@ class UserServiceImpl implements UserService
         return $usr;
     }
 
-    public function create($name, $email, $password = '', $rolesId, $profile)
+    public function create($name, $email, $password, $rolesId, $profile)
     {
         DB::beginTransaction();
 

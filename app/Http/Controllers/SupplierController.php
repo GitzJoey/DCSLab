@@ -24,14 +24,13 @@ class SupplierController extends BaseController
 
     public function read(Request $request)
     {
-        $userId = Auth::user();
         $search = $request->has('search') ? $request['search']:'';
         $paginate = true;
         $perPage = $request->has('perPage') ? $request['perPage']:null;
 
-        $companyIds = $userId->companies()->pluck('company_id');
+        $companyId = Hashids::decode($request['companyId'])[0];
 
-        return $this->supplierService->read($companyIds, $search, $paginate, $perPage);
+        return $this->supplierService->read($companyId, $search, $paginate, $perPage);
     }
 
     public function store(SupplierRequest $supplierRequest)

@@ -14,7 +14,7 @@ interface UserService
     public function create(
         $name,
         $email,
-        $password = '',
+        $password,
         $rolesId,
         $profile
     );

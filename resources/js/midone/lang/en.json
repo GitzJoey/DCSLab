@@ -9,6 +9,7 @@
             "supplier-supplier": "Supplier",
             "product": "Product",
             "product-product": "Product",
+            "product-service": "Service",
             "administrators": "Administrators",
             "administrators-users": "Users",
             "devtools": "Dev Tools",

@@ -170,7 +170,7 @@ export default defineComponent({
         }
 
         function switchCompany(hId) {
-            setSelectedCompany(companyLists, hId);
+            setSelectedCompany(userCompanyLists.value, hId);
             cash('#company-dropdown').dropdown('hide');
         }
 

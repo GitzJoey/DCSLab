@@ -68,6 +68,11 @@ class DashboardController extends BaseController
                         'pageName' => 'side-menu-product-product',
                         'title' => 'components.menu.product-product'
                     ),
+                    array (
+                        'icon' => '',
+                        'pageName' => 'side-menu-product-service',
+                        'title' => 'components.menu.product-service'
+                    )
                 ]
             ),
             array(

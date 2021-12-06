@@ -133,10 +133,10 @@
             <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                 <div class="nav nav-tabs flex-col sm:flex-row bg-gray-300 dark:bg-dark-2 text-gray-600" role="tablist">
                     <Tippy id="supplier-tab" tag="a" :content="t('views.supplier.tabs.supplier')" data-toggle="tab" data-target="#supplier" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center active" role="tab" aria-controls="content" aria-selected="true">
-                        <span :class="{'text-theme-21':}">{{ t('views.supplier.tabs.supplier') }}</span>
+                        <span :class="{'text-theme-21':errors['code']||errors['name']}">{{ t('views.supplier.tabs.supplier') }}</span>
                     </Tippy>
                     <Tippy id="poc-tab" tag="a" :content="t('views.supplier.tabs.poc')" data-toggle="tab" data-target="#poc" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-selected="false">
-                        {{ t('views.supplier.tabs.poc') }}
+                        <span :class="{'text-theme-21':errors['poc_name']||errors['email']}">{{ t('views.supplier.tabs.poc') }}</span>
                     </Tippy>
                     <Tippy id="products-tab" tag="a" :content="t('views.supplier.tabs.products')" data-toggle="tab" data-target="#products" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-selected="false">
                         {{ t('views.supplier.tabs.products') }}
@@ -248,7 +248,7 @@
 
 <script setup>
 // Vue Import
-import { inject, onMounted, ref, computed } from 'vue'
+import { inject, onMounted, ref, computed, watch } from 'vue'
 // Helper Import
 import { getLang } from '../../lang';
 import mainMixins from '../../mixins';
@@ -312,7 +312,6 @@ onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
-    getAllSupplier({ page: 1 });
     getDDL();
 
     loading.value = false;
@@ -324,7 +323,9 @@ function getAllSupplier(args) {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    axios.get(route('api.get.db.supplier.supplier.read', { "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    let companyId = selectedUserCompany.value;
+
+    axios.get(route('api.get.db.supplier.supplier.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         supplierList.value = response.data;
         loading.value = false;
     });
@@ -466,4 +467,9 @@ function generateCode() {
 
 // Computed
 // Watcher
+watch(selectedUserCompany, () => {
+    if (selectedUserCompany.value !== '') {
+        getAllSupplier({ page: 1 });
+    }
+});
 </script>
