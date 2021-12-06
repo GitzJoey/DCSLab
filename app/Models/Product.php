@@ -71,7 +71,8 @@ class Product extends Model
         'deleted_by',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'pivot'
     ];
 
     protected $appends = ['hId'];
@@ -101,9 +102,9 @@ class Product extends Model
         return $this->hasMany(ProductUnit::class);
     }
 
-    public function supplier()
+    public function suppliers()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsToMany(Supplier::class);
     }
 
     public function getActivitylogOptions(): LogOptions

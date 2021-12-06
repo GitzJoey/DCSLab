@@ -107,38 +107,40 @@
         </div>
         <div class="loader-container">
             <VeeForm id="companyForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors, validate }">
-                <div class="mb-3">
-                    <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
-                    <div class="form-inline">
-                        <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="company.code === '[AUTO]'"/>
-                        <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
+                <div class="p-5">
+                    <div class="mb-3">
+                        <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
+                        <div class="form-inline">
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="company.code === '[AUTO]'"/>
+                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
+                        </div>
+                        <ErrorMessage name="code" class="text-theme-21" />
                     </div>
-                    <ErrorMessage name="code" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
-                    <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
-                    <ErrorMessage name="name" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
-                    <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
-                    <div class="mt-2">
-                        <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <ErrorMessage name="name" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
+                        <div class="mt-2">
+                            <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
+                        <select class="form-control form-select" id="inputStatus" name="status" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </select>
+                        <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
-                    <select class="form-control form-select" id="inputStatus" name="status" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
-                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                        <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                    </select>
-                    <ErrorMessage name="status" class="text-theme-21" />
-                </div>
-                <div class="mt-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                <div class="pl-5" v-if="this.mode === 'create' || this.mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
@@ -227,8 +229,11 @@ function getDDL() {
 
 function onSubmit(values, actions) {
     loading.value = true;
+
+    var formData = Object.fromEntries(new FormData(cash('#companyForm')[0])); 
+
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.company.company.save'), new FormData(cash('#companyForm')[0])).then(response => {
+        axios.post(route('api.post.db.company.company.save'), formData).then(response => {
             backToList();
             store.dispatch('main/fetchUserContext');
         }).catch(e => {
@@ -237,7 +242,7 @@ function onSubmit(values, actions) {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.company.company.edit', company.value.hId), new FormData(cash('#companyForm')[0])).then(response => {
+        axios.post(route('api.post.db.company.company.edit', company.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {

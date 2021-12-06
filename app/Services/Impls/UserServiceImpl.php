@@ -2,6 +2,8 @@
 
 namespace App\Services\Impls;
 
+use App\Actions\RandomGenerator;
+
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -52,7 +54,7 @@ class UserServiceImpl implements UserService
         return $usr;
     }
 
-    public function create($name, $email, $password, $rolesId, $profile)
+    public function create($name, $email, $password = '', $rolesId, $profile)
     {
         DB::beginTransaction();
 
@@ -62,9 +64,14 @@ class UserServiceImpl implements UserService
             $usr = new User();
             $usr->name = $name;
             $usr->email = $email;
-            $usr->password = Hash::make($password);
 
-            $usr->password_changed_at = Carbon::now();
+            if (empty($password)) {
+                $usr->password = (new RandomGenerator())->generateAlphaNumeric(5);
+                $usr->password_changed_at = null;
+            } else {
+                $usr->password = Hash::make($password);
+                $usr->password_changed_at = Carbon::now();
+            }
 
             $usr->save();
 
@@ -110,7 +117,7 @@ class UserServiceImpl implements UserService
     public function read($search = '', $paginate = true, $perPage = 10)
     {
         if (empty($search)) {
-            $usr = User::with('roles', 'profile', 'settings');
+            $usr = User::with('roles', 'profile', 'settings')->latest();
         } else {
             $usr = User::with('profile')
                     ->where('email', 'like', '%'.$search.'%')
@@ -118,7 +125,7 @@ class UserServiceImpl implements UserService
                     ->orWhereHas('profile', function ($query) use($search) {
                         $query->where('first_name', 'like', '%'.$search.'%')
                                 ->orWhere('last_name', 'like', '%'.$search.'%');
-                    });
+                    })->latest();
         }
 
         if ($paginate) {

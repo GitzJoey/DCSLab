@@ -8,14 +8,16 @@ interface SupplierService
         $company_id,
         $code,
         $name,
-        $term,
+        $payment_term_type,
         $contact,
         $address,
         $city,
         $is_tax,
-        $tax_number,
+        $tax_id,
         $remarks,
-        $status
+        $status,
+        $poc,
+        $products
     );
 
     public function read($companyId, $search = '', $paginate = true, $perPage = 10);

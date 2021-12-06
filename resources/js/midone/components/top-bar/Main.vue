@@ -140,7 +140,7 @@ export default defineComponent({
 
         watch(selectedUserCompanyContext, () => {
             setSelectedCompany(userContext.value.companies, selectedUserCompanyContext.value);
-       });
+        });
 
         const { t, assetPath } = mainMixins();
 
@@ -170,7 +170,7 @@ export default defineComponent({
         }
 
         function switchCompany(hId) {
-            store.dispatch('main/setSelectedCompany', hId);
+            setSelectedCompany(companyLists, hId);
             cash('#company-dropdown').dropdown('hide');
         }
 
@@ -178,11 +178,14 @@ export default defineComponent({
             if (companyLists.length === 0) return;
 
             if (selected === '') {
-                selectedCompany.value = _.find(companyLists, { default: 1}).name;
+                let defaultCompany = _.find(companyLists, { default: 1 });
+                selectedCompany.value = defaultCompany.name;
+                store.dispatch('main/setSelectedCompany', defaultCompany.hId);
             } else {
                 _.forEach(companyLists, function(item) {
                     if (selected === item.hId) {
                         selectedCompany.value = item.name;
+                        store.dispatch('main/setSelectedCompany', item.hId);
                     }
                 });
             }

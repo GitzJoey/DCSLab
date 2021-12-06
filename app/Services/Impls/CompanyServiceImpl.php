@@ -59,9 +59,9 @@ class CompanyServiceImpl implements CompanyService
         $compIds = $usr->companies()->pluck('company_id');
 
         if (empty($search)) {
-            $companies = Company::whereIn('id', $compIds);
+            $companies = Company::whereIn('id', $compIds)->latest();
         } else {
-            $companies = Company::whereIn('id', $compIds)->where('name', 'like', '%'.$search.'%');
+            $companies = Company::whereIn('id', $compIds)->where('name', 'like', '%'.$search.'%')->latest();
         }
 
         if ($paginate) {

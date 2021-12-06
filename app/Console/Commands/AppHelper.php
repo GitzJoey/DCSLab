@@ -157,19 +157,6 @@ class AppHelper extends Command
 
         sleep(3);
 
-        if ($supplier)
-        {
-            $this->info('Starting SupplierTableSeeder');
-            $count = $this->ask('How many supplier for each companies:', 5);
-
-            $seeder = new SupplierTableSeeder();
-            $seeder->callWith(SupplierTableSeeder::class, [$count]);
-
-            $this->info('SupplierTableSeeder Finish.');
-        }
-
-        sleep(3);
-
         if ($product)
         {
             $this->info('Starting UnitTableSeeder');
@@ -205,6 +192,19 @@ class AppHelper extends Command
             $seeder->callWith(ProductTableSeeder::class, [$count]);
 
             $this->info('ProductTableSeeder Finish.');
+        }
+
+        sleep(3);
+
+        if ($supplier)
+        {
+            $this->info('Starting SupplierTableSeeder');
+            $count = $this->ask('How many supplier for each companies:', 5);
+
+            $seeder = new SupplierTableSeeder();
+            $seeder->callWith(SupplierTableSeeder::class, [$count]);
+
+            $this->info('SupplierTableSeeder Finish.');
         }
     }
 

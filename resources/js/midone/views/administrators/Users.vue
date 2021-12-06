@@ -82,138 +82,140 @@
         </div>
         <div class="loader-container">
             <VeeForm id="userForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                <div class="mb-3">
-                    <label for="inputName" class="form-label">{{ t('views.users.fields.name') }}</label>
-                    <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" />
-                    <ErrorMessage name="name" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label">{{ t('views.users.fields.email') }}</label>
-                    <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
-                    <ErrorMessage name="email" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputImg" class="form-label">{{ t('views.users.fields.picture') }}</label>
-                    <div class="">
-                        <div class="my-1">
-                            <img id="inputImg" alt="" class="" :src="retrieveImage">
-                        </div>
+                <div class="p-5">
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">{{ t('views.users.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <ErrorMessage name="name" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputEmail" class="form-label">{{ t('views.users.fields.email') }}</label>
+                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <ErrorMessage name="email" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputImg" class="form-label">{{ t('views.users.fields.picture') }}</label>
                         <div class="">
-                            <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload"/>
+                            <div class="my-1">
+                                <img id="inputImg" alt="" class="" :src="retrieveImage">
+                            </div>
+                            <div class="">
+                                <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload"/>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label for="inputFirstName" class="form-label">{{ t('views.users.fields.first_name') }}</label>
-                    <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.users.fields.first_name')" v-model="user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
-                </div>
-                <div class="mb-3">
-                    <label for="inputLastName" class="form-label">{{ t('views.users.fields.last_name') }}</label>
-                    <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.users.fields.last_name')" v-model="user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
-                </div>
-                <div class="mb-3">
-                    <label for="inputAddress" class="form-label">{{ t('views.users.fields.address') }}</label>
-                    <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.users.fields.address')" v-model="user.profile.address" v-show="mode === 'create' || mode === 'edit'"/>
-                </div>
-                <div class="mb-3">
-                    <label for="inputCity" class="form-label">{{ t('views.users.fields.city') }}</label>
-                    <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.users.fields.city')" v-model="user.profile.city" v-show="mode === 'create' || mode === 'edit'"/>
-                </div>
-                <div class="mb-3">
-                    <label for="inputPostalCode" class="form-label">{{ t('views.users.fields.postal_code') }}</label>
-                    <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.users.fields.postal_code')" v-model="user.profile.postal_code" v-show="mode === 'create' || mode === 'edit'"/>
-                </div>
-                <div class="mb-3">
-                    <label for="inputCountry" class="form-label">{{ t('views.users.fields.country') }}</label>
-                    <select id="inputCountry" name="country" class="form-control form-select" v-model="user.profile.country" :placeholder="t('views.users.fields.country')" v-show="mode === 'create' || mode === 'edit'">
-                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                        <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
-                    </select>
-                    <ErrorMessage name="country" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputTaxId" class="form-label">{{ t('views.users.fields.tax_id') }}</label>
-                    <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
-                    <ErrorMessage name="tax_id" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputICNum" class="form-label">{{ t('views.users.fields.ic_num') }}</label>
-                    <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
-                    <ErrorMessage name="ic_num" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputRoles" class="form-label">{{ t('views.users.fields.roles') }}</label>
-                    <select multiple :class="{'form-control':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
-                        <option v-for="(value, name) in rolesDDL" :value="name">{{ value }}</option>
-                    </select>
-                    <div class="" v-if="mode === 'show'">
-                        <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
-                    </div>
-                    <ErrorMessage name="roles" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputStatus" class="form-label">{{ t('views.users.fields.status') }}</label>
-                    <select class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" v-show="mode === 'create' || mode === 'edit'">
-                        <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                        <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                    </select>
-                    <ErrorMessage name="status" class="text-theme-21" />
-                </div>
-                <div class="mb-3">
-                    <label for="inputRemarks" class="form-label">{{ t('views.users.fields.remarks') }}</label>
-                    <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.users.fields.remarks')" v-model="user.profile.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
-                </div>
-                <hr class="mb-3"/>
-                <div class="mb-3">
-                    <label for="inputSettings" class="form-label">{{ t('views.users.fields.settings.settings') }}</label>
                     <div class="mb-3">
-                        <label for="selectTheme" class="form-label">{{ t('views.users.fields.settings.theme') }}</label>
-                        <select class="form-control form-select" id="selectTheme" name="theme" v-model="user.selectedSettings.theme" v-show="this.mode === 'create' || this.mode === 'edit'">
-                            <option value="side-menu-light-full">Menu Light</option>
-                            <option value="side-menu-light-mini">Mini Menu Light</option>
-                            <option value="side-menu-dark-full">Menu Dark</option>
-                            <option value="side-menu-dark-mini">Mini Menu Dark</option>
+                        <label for="inputFirstName" class="form-label">{{ t('views.users.fields.first_name') }}</label>
+                        <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.users.fields.first_name')" v-model="user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputLastName" class="form-label">{{ t('views.users.fields.last_name') }}</label>
+                        <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.users.fields.last_name')" v-model="user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputAddress" class="form-label">{{ t('views.users.fields.address') }}</label>
+                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.users.fields.address')" v-model="user.profile.address" v-show="mode === 'create' || mode === 'edit'"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputCity" class="form-label">{{ t('views.users.fields.city') }}</label>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.users.fields.city')" v-model="user.profile.city" v-show="mode === 'create' || mode === 'edit'"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPostalCode" class="form-label">{{ t('views.users.fields.postal_code') }}</label>
+                        <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.users.fields.postal_code')" v-model="user.profile.postal_code" v-show="mode === 'create' || mode === 'edit'"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputCountry" class="form-label">{{ t('views.users.fields.country') }}</label>
+                        <select id="inputCountry" name="country" class="form-control form-select" v-model="user.profile.country" :placeholder="t('views.users.fields.country')" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
                         </select>
+                        <ErrorMessage name="country" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label for="selectDate">{{ t('views.users.fields.settings.dateFormat') }}</label>
-                                <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
-                                    <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="selectTime">{{ t('views.users.fields.settings.timeFormat') }}</label>
-                                <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
-                                    <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
-                                </select>
-                            </div>
-                        </div>
+                        <label for="inputTaxId" class="form-label">{{ t('views.users.fields.tax_id') }}</label>
+                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
+                        <ErrorMessage name="tax_id" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <label for="apiToken">{{ t('views.users.fields.settings.apiToken') }}</label>
-                        <div class="form-check" v-show="this.mode === 'edit'">
-                            <input id="apiToken" class="form-check-input" type="checkbox" name="apiToken">
-                            <label class="form-check-label" for="apiToken">{{ t('components.buttons.revoke') }}</label>
+                        <label for="inputICNum" class="form-label">{{ t('views.users.fields.ic_num') }}</label>
+                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
+                        <ErrorMessage name="ic_num" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputRoles" class="form-label">{{ t('views.users.fields.roles') }}</label>
+                        <select multiple :class="{'form-control':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
+                            <option v-for="(value, name) in rolesDDL" :value="name">{{ value }}</option>
+                        </select>
+                        <div class="" v-if="mode === 'show'">
+                            <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
                         </div>
-                        <div v-if="this.mode === 'create'">*************************</div>
+                        <ErrorMessage name="roles" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputStatus" class="form-label">{{ t('views.users.fields.status') }}</label>
+                        <select class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </select>
+                        <ErrorMessage name="status" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputRemarks" class="form-label">{{ t('views.users.fields.remarks') }}</label>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.users.fields.remarks')" v-model="user.profile.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                    </div>
+                    <hr class="mb-3"/>
+                    <div class="mb-3">
+                        <label for="inputSettings" class="form-label">{{ t('views.users.fields.settings.settings') }}</label>
+                        <div class="mb-3">
+                            <label for="selectTheme" class="form-label">{{ t('views.users.fields.settings.theme') }}</label>
+                            <select class="form-control form-select" id="selectTheme" name="theme" v-model="user.selectedSettings.theme" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                <option value="side-menu-light-full">Menu Light</option>
+                                <option value="side-menu-light-mini">Mini Menu Light</option>
+                                <option value="side-menu-dark-full">Menu Dark</option>
+                                <option value="side-menu-dark-mini">Mini Menu Dark</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label for="selectDate">{{ t('views.users.fields.settings.dateFormat') }}</label>
+                                    <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
+                                        <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="selectTime">{{ t('views.users.fields.settings.timeFormat') }}</label>
+                                    <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
+                                        <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apiToken">{{ t('views.users.fields.settings.apiToken') }}</label>
+                            <div class="form-check" v-show="this.mode === 'edit'">
+                                <input id="apiToken" class="form-check-input" type="checkbox" name="apiToken">
+                                <label class="form-check-label" for="apiToken">{{ t('components.buttons.revoke') }}</label>
+                            </div>
+                            <div v-if="this.mode === 'create'">*************************</div>
+                        </div>
+                    </div>
+                    <div class="mb-3" v-if="this.mode === 'edit'">
+                        <label for="resetPassword" class="form-label">{{ t('views.users.fields.reset_password') }}</label>
+                        <div class="form-check pr-5">
+                            <input id="resetPassword" name="resetPassword" class="form-check-input" type="checkbox" value="" />
+                            <label class="form-check-label" for="resetPassword">{{ t('views.users.fields.reset_password') }}</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="emailResetPassword" name="emailResetPassword" class="form-check-input" type="checkbox" value="" />
+                            <label class="form-check-label" for="emailResetPassword">{{ t('views.users.fields.email_reset_password') }}</label>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-3" v-if="this.mode === 'edit'">
-                    <label for="resetPassword" class="form-label">{{ t('views.users.fields.reset_password') }}</label>
-                    <div class="form-check pr-5">
-                        <input id="resetPassword" name="resetPassword" class="form-check-input" type="checkbox" value="" />
-                        <label class="form-check-label" for="resetPassword">{{ t('views.users.fields.reset_password') }}</label>
-                    </div>
-                    <div class="form-check">
-                        <input id="emailResetPassword" name="emailResetPassword" class="form-check-input" type="checkbox" value="" />
-                        <label class="form-check-label" for="emailResetPassword">{{ t('views.users.fields.email_reset_password') }}</label>
-                    </div>
-                </div>
-                <div class="mt-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                <div class="pl-5" v-if="this.mode === 'create' || this.mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
@@ -333,8 +335,11 @@ function getDDL() {
 
 function onSubmit(values, actions) {
     loading.value = true;
+
+    var formData = Object.fromEntries(new FormData(cash('#userForm')[0])); 
+
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.admin.users.save'), new FormData(cash('#userForm')[0]), {
+        axios.post(route('api.post.db.admin.users.save'), formData, {
             headers: {
                 'content-type': 'multipart/form-data'
             }
@@ -346,7 +351,7 @@ function onSubmit(values, actions) {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.admin.users.edit', user.value.hId), new FormData(cash('#userForm')[0]), {
+        axios.post(route('api.post.db.admin.users.edit', user.value.hId), formData, {
             headers: {
                 'content-type': 'multipart/form-data'
             }

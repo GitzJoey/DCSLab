@@ -14,7 +14,7 @@ class CreateProductUnitsTable extends Migration
     public function up()
     {
         Schema::create('product_units', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('unit_id')->references('id')->on('units');

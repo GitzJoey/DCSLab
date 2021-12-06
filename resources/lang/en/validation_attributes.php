@@ -8,4 +8,5 @@ return [
     'ic_num' => 'IC Num',
     'status' => 'Status',
     'country' => 'Country',
+    'company' => 'Company',
 ];

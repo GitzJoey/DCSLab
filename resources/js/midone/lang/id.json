@@ -253,6 +253,9 @@
                     "email": "Email",
                     "ic_num": "No KTP",
                     "tax_id": "NPWP"
+                },
+                "products": {
+                    "product_lists": "Daftar Produk"
                 }
             }
         },

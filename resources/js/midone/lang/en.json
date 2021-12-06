@@ -248,6 +248,9 @@
                     "email": "Email",
                     "ic_num": "IC Number",
                     "tax_id": "Tax ID"
+                },
+                "products": {
+                    "product_lists": "Product Lists"
                 }
             }
         },

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 use Illuminate\Container\Container;
 use App\Services\CompanyService;
+use App\Services\SupplierService;
 
 class uniqueCode implements Rule
 {
@@ -14,6 +15,7 @@ class uniqueCode implements Rule
     private $table;
 
     private $companyService;
+    private $supplierService;
 
     /**
      * Create a new rule instance.
@@ -29,6 +31,9 @@ class uniqueCode implements Rule
         switch($this->table) {
             case 'companies':
                 $this->companyService = Container::getInstance()->make(CompanyService::class);
+                break;
+            case 'suppliers':
+                $this->supplierService = Container::getInstance()->make(SupplierService::class);
                 break;
             default:
                 break;
@@ -48,6 +53,9 @@ class uniqueCode implements Rule
         switch($this->table) {
             case 'companies':
                 $is_duplicate = $this->companyService->isUniqueCode($value, $this->userId, $this->exceptId);
+                break;
+            case 'suppliers':
+                $is_duplicate = $this->supplierService->isUniqueCode($value, $this->userId, $this->exceptId);
                 break;
             default:
                 break;

@@ -36,6 +36,7 @@ class SupplierRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
+                    'company_id' => 'required',
                     'code' => ['required', 'max:255', new uniqueCode('suppliers', $userId)],
                     'name' => 'required|max:255',
                     'status' => 'required'
@@ -43,6 +44,7 @@ class SupplierRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
+                    'company_id' => 'required',
                     'code' => new uniqueCode('suppliers', $userId, $this->route('id')),
                     'name' => 'required|max:255',
                     'status' => 'required'
@@ -53,5 +55,12 @@ class SupplierRequest extends FormRequest
                     '' => 'required'
                 ];
         }
+    }
+
+    public function attributes()
+    {
+        return [
+            'company_id' => trans('validation_attributes.company'),
+        ];
     }
 }

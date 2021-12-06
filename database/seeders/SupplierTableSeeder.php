@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Actions\RandomGenerator;
 use App\Models\Company;
+use App\Models\Product;
 use App\Models\Profile;
 use App\Models\Supplier;
 
@@ -23,6 +25,8 @@ class SupplierTableSeeder extends Seeder
     {
         $companies = Company::get()->pluck('id');
 
+        $products = Product::get()->pluck('id');
+
         foreach($companies as $c)
         {
             for ($i = 0; $i < $supplierPerCompany; $i++) {
@@ -33,10 +37,14 @@ class SupplierTableSeeder extends Seeder
     
                 $usr->companies()->attach($c);
     
-                Supplier::factory()->create([
+                $supplier = Supplier::factory()->create([
                     'company_id' => $c,
                     'user_id' => $usr->id
-                ]);    
+                ]);
+
+                $some_prods = $products->shuffle()->take((new RandomGenerator())->generateNumber(1, $products->count() - 1));
+
+                $supplier->products()->attach($some_prods);
             }
         }
     }

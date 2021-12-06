@@ -43,9 +43,9 @@ class BrandServiceImpl implements BrandService
     public function read($companyId, $search = '', $paginate = true, $perPage = 10)
     {
         if (empty($search)) {
-            $pb = Brand::whereCompanyId($companyId);
+            $pb = Brand::whereCompanyId($companyId)->latest();
         } else {
-            $pb = Brand::whereCompanyId($companyId)->where('name', 'like', '%'.$search.'%');
+            $pb = Brand::whereCompanyId($companyId)->where('name', 'like', '%'.$search.'%')->latest();
         }
 
         if ($paginate) {

@@ -2,14 +2,20 @@
 
 namespace App\Services\Impls;
 
-use App\Models\User;
+use App\Actions\RandomGenerator;
+
 use Exception;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Services\SupplierService;
+use App\Models\User;
 use App\Models\Supplier;
+
+use App\Services\SupplierService;
+use App\Services\UserService;
+use App\Services\RoleService;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -22,27 +28,34 @@ class SupplierServiceImpl implements SupplierService
         $address,
         $city,
         $is_tax,
-        $tax_number,
+        $tax_id,
         $remarks,
-        $status
+        $status,
+        $poc,
+        $products
     )
     {
         DB::beginTransaction();
 
         try {
+            $usr = $this->createUserPOC($poc);
+
             $supplier = new Supplier();
             $supplier->code = $code;
             $supplier->name = $name;
-            $supplier->term = $term;
+            $supplier->payment_term_type = $term;
             $supplier->contact = $contact;
             $supplier->address = $address;
             $supplier->city = $city;
             $supplier->is_tax = $is_tax;
-            $supplier->tax_number = $tax_number;
+            $supplier->tax_id = $tax_id;
             $supplier->remarks = $remarks;
             $supplier->status = $status;
+            $supplier->user_id = $usr->id;
 
             $supplier->save();
+
+            $supplier->products->attach($products);
 
             DB::commit();
 
@@ -52,7 +65,24 @@ class SupplierServiceImpl implements SupplierService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
+    }
 
+    private function createUserPOC($poc)
+    {
+        $container = Container::getInstance();
+        $userService = $container->make(UserService::class);
+        $roleService = $container->make(RoleService::class);
+
+        $rolesId = $roleService->readBy('name', 'POS-supplier')->id;
+
+        $profile = [
+            'first_name' => $poc['name'],
+            'status' => 1
+        ];
+
+        $usr = $userService->create($poc['name'], $poc['email'], '', $rolesId, $profile);
+
+        return $usr;
     }
 
     public function read($companyId, $search = '', $paginate = true, $perPage = 10)
@@ -60,10 +90,10 @@ class SupplierServiceImpl implements SupplierService
         if (!$companyId) return null;
 
         if (empty($search)) {
-            $suppliers = Supplier::with('user.profile', 'company')->whereCompanyId($companyId);
+            $suppliers = Supplier::with('user.profile', 'company', 'products')->whereCompanyId($companyId)->latest();
         } else {
-            $suppliers = Supplier::with('user.profile', 'company')->whereCompanyId($companyId)
-                ->where('name', 'like', '%'.$search.'%');
+            $suppliers = Supplier::with('user.profile', 'company', 'products')->whereCompanyId($companyId)
+                ->where('name', 'like', '%'.$search.'%')->latest();
         }
 
         if ($paginate) {

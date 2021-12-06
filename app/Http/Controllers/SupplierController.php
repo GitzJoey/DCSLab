@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SupplierRequest;
-use App\Rules\uniqueCode;
+use App\Actions\RandomGenerator;
 use App\Services\SupplierService;
 use Illuminate\Http\Request;
 
@@ -37,23 +37,40 @@ class SupplierController extends BaseController
     public function store(SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
+        
+        $userId = Auth::id();
+        
+        $code = $request['code'];
 
-        $is_tax = $request['is_tax'];
-        $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
+        if ($code == config()->get('const.KEYWORDS.AUTO'))
+            $code = (new RandomGenerator())->generateAlphaNumeric(10);
+
+        $is_tax = array_key_exists('taxable_enterprise', $request);
+
+        $poc = [
+
+        ];
+
+        $products = [
+
+        ];
+
 
         $result = $this->supplierService->create(
             Hashids::decode($request['company_id'])[0],
-            $request['code'],
+            $code,
             $request['name'],
-            $request['term'],
+            $request['payment_term_type'],
             $request['contact'],
             $request['address'],
             $request['city'],
             $is_tax,
-            $request['tax_number'],
+            $request['tax_id'],
             $request['remarks'],
-            $request['status']
-            );
+            $request['status'],
+            $poc,
+            $products
+        );
 
         return is_null($result) ? response()->error():response()->success();
     }
