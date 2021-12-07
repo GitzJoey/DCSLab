@@ -35,7 +35,7 @@
             </transition>
             <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
-                                        <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -173,96 +173,85 @@
                             </div>
                         </div>
 
-                        <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
-                            <div class="block-header bg-gray-dark">
-                                <h3 class="block-title"><strong>Product Unit</strong></h3>
-<!-- 
-                                <div class="block-options">
-                                    <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
-                                        <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
-                                        <i class="icon icon-size-fullscreen" v-if="this.fullscreen === false"></i>
-                                    </button>
-                                    <button type="button" class="btn-block-option" v-on:click="refreshList" v-if="this.mode === 'list'">
-                                        <i class="icon icon-refresh"></i>
-                                    </button>
-                                    <button type="button" class="btn-block-option" v-on:click="toggleContentHidden">
-                                        <i class="icon icon-arrow-down" v-if="this.contentHidden === true"></i>
-                                        <i class="icon icon-arrow-up" v-if="this.contentHidden === false"></i>
-                                    </button>
-                                </div> -->
+                        <div class="form-group row">
+                            <label for="inputName" class="col-2 col-form-label">Units</label>
+                            <div class="col-md-10">
+                                <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
+                                    <div class="block-content">
+                                        <table class="table table-vcenter">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Code</th>
+                                                    <th>Unit</th>
+                                                    <th>Conversion Value</th>
+                                                    <th>Is Base</th>
+                                                    <th>Primary Unit</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <input type="hidden" v-model="product.product_unit">
+                                                <tr v-for="(c, cIdx) in product.product_unit">
+                                                    <input type="hidden" v-model="c.hId" name="product_unit_hId[]"/>
+
+                                                    <!-- Code -->
+                                                    <td>
+                                                        <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
+                                                    </td>                                          
+
+                                                    <!-- Unit -->
+                                                    <td>
+                                                        <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId">
+                                                            <option value="0">{{ $t('placeholder.please_select') }}</option>
+                                                            <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                                                        </select>
+                                                        <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                                            {{ c.unit.name }}
+                                                        </div>
+                                                    </td>
+
+                                                    <!-- Conversion Value -->
+                                                    <td>
+                                                        <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
+                                                    </td>
+
+                                                    <!-- Is Base -->
+                                                    <td>
+                                                        <label class="css-control css-control-primary css-checkbox">
+                                                            <input type="checkbox" class="css-control-input" id="is_base" v-model="c.is_base" true-value="1" false-value="0">
+                                                            <span class="css-control-indicator"></span>
+                                                        </label>
+                                                        <input type="hidden" v-model="c.is_base" name="is_base[]"/>
+                                                    </td>
+
+                                                    <!-- Is Primary Unit -->
+                                                    <td>
+                                                        <label class="css-control css-control-primary css-checkbox">
+                                                            <input type="checkbox" class="css-control-input" id="is_primary_unit" v-model="c.is_primary_unit" true-value="1" false-value="0">
+                                                            <span class="css-control-indicator"></span>
+                                                        </label>
+                                                        <input type="hidden" v-model="c.is_primary_unit" name="is_primary_unit[]"/>
+                                                    </td>
+
+                                                    <!-- Delete Button -->
+                                                    <td class="text-center">
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedProductUnit(cIdx)">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
+                                        <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
+                                    </div> 
+                                </div>
                             </div>
-                            <div class="block-content">
-                                <table class="table table-vcenter">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Unit</th>
-                                            <th>Conversion Value</th>
-                                            <th>Is Base</th>
-                                            <th>Primary Unit</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <input type="hidden" v-model="product.product_unit">
-                                        <tr v-for="(c, cIdx) in product.product_unit">
-                                            <input type="hidden" v-model="c.hId" name="product_unit_hId[]"/>
-
-                                            <!-- Code -->
-                                            <td>
-                                                <input type="text" class="form-control" v-model="c.code" id="product_unit_code" name="product_unit_code[]"/>
-                                            </td>                                          
-
-                                            <!-- Unit -->
-                                            <td>
-                                                <select class="form-control" id="unit_id" name="unit_id[]" v-model="c.unit.hId">
-                                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
-                                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
-                                                </select>
-                                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                                    {{ c.unit.name }}
-                                                </div>
-                                            </td>
-
-                                            <!-- Conversion Value -->
-                                            <td>
-                                                <input type="text" class="form-control" v-model="c.conversion_value" id="conv_value" name="conv_value[]"/>
-                                            </td>
-
-                                            <!-- Is Base -->
-                                            <td>
-                                                <label class="css-control css-control-primary css-checkbox">
-                                                    <input type="checkbox" class="css-control-input" id="is_base" v-model="c.is_base" true-value="1" false-value="0">
-                                                    <span class="css-control-indicator"></span>
-                                                </label>
-                                                <input type="hidden" v-model="c.is_base" name="is_base[]"/>
-                                            </td>
-
-                                            <!-- Is Primary Unit -->
-                                            <td>
-                                                <label class="css-control css-control-primary css-checkbox">
-                                                    <input type="checkbox" class="css-control-input" id="is_primary_unit" v-model="c.is_primary_unit" true-value="1" false-value="0">
-                                                    <span class="css-control-indicator"></span>
-                                                </label>
-                                                <input type="hidden" v-model="c.is_primary_unit" name="is_primary_unit[]"/>
-                                            </td>
-
-                                            <!-- Delete Button -->
-                                            <td class="text-center">
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedProductUnit(cIdx)">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
-                                <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewProductUnit"><i class="fa fa-plus-square"></i></button>
-                            </div> 
                         </div>
+
                         <div class="form-group row">
                             <label for="tax_status" class="col-2 col-form-label">{{ $t('fields.tax_status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -439,7 +428,7 @@ export default {
                     }
                 ],
                 tax_status: '',
-                // defaultSupplier: '',
+                defaultSupplier: '',
                 supplier: {hId: '0'},
                 remarks: '',
                 point: '',
@@ -531,7 +520,7 @@ export default {
                     }
                 ],
                 tax_status: '1',
-                // defaultSupplier: '',
+                defaultSupplier: '',
                 supplier: {hId: '0'},
                 remarks: '',
                 point: '0',
@@ -580,15 +569,18 @@ export default {
                 this.product.product_unit.splice(idx, 1);
                 this.loading = false;
             } else if (this.mode === 'edit') {
-                // console.log(this.product.product_unit[idx].hId);
+                // Kalo hId ga kosong maka...
                 if (this.product.product_unit[idx].hId !== '') {
-                    axios.post(route('api.post.dashboard.productunit.delete', this.product.product_unit[idx].hId), new FormData($('#productForm')[0])).then(response => {
-                        this.product.product_unit.splice(idx, 1);
-                        this.loading = false;
-                    }).catch(e => {
-                        this.handleError(e, actions);
-                        this.loading = false;
-                    });
+                    // axios.post(route('api.post.dashboard.productunit.delete', this.product.product_unit[idx].hId), new FormData($('#productForm')[0])).then(response => {
+                    //     this.product.product_unit.splice(idx, 1);
+                    //     this.loading = false;
+                    // }).catch(e => {
+                    //     this.handleError(e, actions);
+                    //     this.loading = false;
+                    // });
+                    this.product.product_unit.splice(idx, 1);
+                    this.loading = false;
+                // Kalo hId kosong maka...    
                 } else { 
                     this.product.product_unit.splice(idx, 1);
                     this.loading = false;

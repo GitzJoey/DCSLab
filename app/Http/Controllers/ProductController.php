@@ -103,14 +103,6 @@ class ProductController extends BaseController
 
         // apabila product maka...
         if ($request->product_type[0] !== '4') {
-            $use_serial_number = is_null($request['use_serial_number']) ? 0 : $request['use_serial_number'];
-            $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
-            $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
-    
-            $has_expiry_date = is_null($request['has_expiry_date']) ? 0 : $request['has_expiry_date'];
-            $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
-            $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
-            
             $code = $request->code;
             $product_group_id = Hashids::decode($request->product_group_id)[0];
             $brand_id = Hashids::decode($request->brand_id)[0];
@@ -122,8 +114,15 @@ class ProductController extends BaseController
             
             $remarks = $request->remarks;
             $point = $request->point;
-            $use_serial_number;
-            $has_expiry_date;
+
+            $use_serial_number = is_null($request['use_serial_number']) ? 0 : $request['use_serial_number'];
+            $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
+            $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
+    
+            $has_expiry_date = is_null($request['has_expiry_date']) ? 0 : $request['has_expiry_date'];
+            $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
+            $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
+            
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -144,12 +143,12 @@ class ProductController extends BaseController
                 $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
 
                 array_push($product_units, array (
-                    'code' => $new_product_unit_code,
                     'company_id' => $company_id,
                     'product_id' => null,
+                    'code' => $new_product_unit_code,
                     'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-                    'is_base' => $is_base,
                     'conv_value' => $request['conv_value'][$i],
+                    'is_base' => $is_base,
                     'is_primary_unit' => $is_primary_unit,
                     'remarks' => ''
                 ));
@@ -194,12 +193,12 @@ class ProductController extends BaseController
 
             $product_units = [];
             array_push($product_units, array (
-                'code' => $request['code'],
                 'company_id' => $company_id,
                 'product_id' => null,
+                'code' => $request['code'],
                 'unit_id' => Hashids::decode($request->unit_id)[0],
-                'is_base' => 1,
                 'conv_value' => 1,
+                'is_base' => 1,
                 'is_primary_unit' => 1,
                 'remarks' => ''
             ));
@@ -273,10 +272,10 @@ class ProductController extends BaseController
                 $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
 
                 array_push($product_units, array (
-                    'id' => $product_unit_id,                    
-                    'code' => $new_product_unit_code,
+                    'id' => $product_unit_id,
                     'company_id' => $company_id,
-                    'product_id' => $id,
+                    'product_id' => $id,             
+                    'code' => $new_product_unit_code,
                     'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                     'conv_value' => $request['conv_value'][$i],
                     'is_base' => $is_base,
@@ -302,6 +301,7 @@ class ProductController extends BaseController
                 $status,
                 $product_units
             );
+
             if ($product == 0) {
                 return response()->error();
             };
@@ -310,8 +310,6 @@ class ProductController extends BaseController
         if ($request->product_type == '4') {
             $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
             $company_id = Hashids::decode($company_id)[0];
-
-            $product_unit_id = $request['product_unit_hId'] != null ? Hashids::decode($request['product_unit_hId'])[0] : null;
 
             $code = $request->code;
             $product_group_id = Hashids::decode($request->product_group_id)[0];
@@ -327,6 +325,7 @@ class ProductController extends BaseController
             $status = $request->status;
 
             $product_units = [];
+            $product_unit_id = $request['product_unit_hId'] != null ? Hashids::decode($request['product_unit_hId'])[0] : null;
             array_push($product_units, array (
                 'id' => $product_unit_id,                    
                 'code' => $request->code,

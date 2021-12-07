@@ -53,12 +53,12 @@ class ProductServiceImpl implements ProductService
             $pu = [];
             foreach ($product_units as $product_unit) {
                 array_push($pu, new ProductUnit(array (
-                    'code' => $product_unit['code'],
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $product['id'],
+                    'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
-                    'is_base' => $product_unit['is_base'],
                     'conversion_value' => $product_unit['conv_value'],
+                    'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks']
                 )));
@@ -74,45 +74,6 @@ class ProductServiceImpl implements ProductService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-
-    // public function createService(
-    //     $company_id,
-    //     $code,
-    //     $product_group_id,
-    //     $name,
-    //     $unit_id,
-    //     $tax_status,
-    //     $remarks,
-    //     $point,
-    //     $product_type,
-    //     $status
-    // )
-    // {
-    //     DB::beginTransaction();
-
-    //     try {
-    //         $service = new Product();
-    //         $service->company_id = $company_id;
-    //         $service->code = $code;
-    //         $service->product_group_id = $product_group_id;
-    //         $service->name = $name;
-    //         $service->unit_id = $unit_id;
-    //         $service->tax_status = $tax_status;
-    //         $service->remarks = $remarks;
-    //         $service->point = $point;
-    //         $service->product_type = $product_type;
-    //         $service->status = $status;
-    //         $service->save();
-
-    //         DB::commit();
-
-    //         return $service->hId;
-    //     } catch (Exception $e) {
-    //         DB::rollBack();
-    //         Log::debug($e);
-    //         return Config::get('const.ERROR_RETURN_VALUE');
-    //     }
-    // }
 
     public function read($userId)
     {
@@ -167,8 +128,10 @@ class ProductServiceImpl implements ProductService
         DB::beginTransaction();
 
         try {
+            //ini retrieve datanya
             $product = Product::where('id', '=', $id);
 
+            //ini di update table product
             $retval = $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
@@ -185,20 +148,43 @@ class ProductServiceImpl implements ProductService
                 'status' => $status
             ]);
 
+            //ini yg baru
             $pu = [];
             foreach ($product_units as $product_unit) {
                 array_push($pu, array(
                     'id' => $product_unit['id'],
-                    'code' => $product_unit['code'],
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $id,
+                    'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
-                    'is_base' => $product_unit['is_base'],
                     'conversion_value' => $product_unit['conv_value'],
+                    'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks']
                 ));
             }
+
+            //disini compare yg baru dengan yang lama
+            $user = User::find($userId);
+            $company_list = $user->companies()->pluck('company_id');
+            $pu_lama = Product::with('productUnit')->find($id);
+            $pu_lama = $pu_lama->ToArray()['product_unit'];
+
+            //compare array cari di google "compare 2 array"
+            $pu_baru = [];
+            $pu_baru = array_diff($pu, $pu_lama);
+
+            //yg ilang artinya delete
+
+            //ini pake upsert jg bisa
+
+            //dah
+            
+
+            // foreach ($deletedProductUnits as $deletedProductUnit) {
+            //     $productUnit = ProductUnit::find($deletedProductUnit['id']);
+            //     $retval = $productUnit->delete();
+            // }
 
             $retval = ProductUnit::upsert(
                 $pu, 
@@ -219,87 +205,6 @@ class ProductServiceImpl implements ProductService
                     'remarks'
                 ]
             );
-
-            // $new_pu = [];
-            // foreach ($product_units as $product_unit) {
-            //     if (is_null($product_unit['id']) == true) {
-            //         array_push($new_pu, new ProductUnit(array(
-            //             'code' => $product_unit['code'],
-            //             'company_id' => $product_unit['company_id'],
-            //             'product_id' => $id,
-            //             'unit_id' => $product_unit['unit_id'],
-            //             'is_base' => $product_unit['is_base'],
-            //             'conversion_value' => $product_unit['conv_value'],
-            //             'is_primary_unit' => $product_unit['is_primary_unit'],
-            //             'remarks' => $product_unit['remarks']
-            //         )));
-            //     };
-            // }
-            // if (count($new_pu) > 0) {
-            //     $old_product = new Product();
-            //     $old_product->id = $id;
-            //     $old_product->product_unit()->saveMany($new_pu);
-            // };
-
-            // foreach ($product_units as $product_unit) {
-            //     if (is_null($product_unit['id']) == false) {
-            //         $old_product_unit = ProductUnit::where('id', '=', $product_unit['id']);
-
-            //         $old_product_unit->update([
-            //             'code' => $product_unit['code'],
-            //             'company_id' => $product_unit['company_id'],
-            //             'product_id' => $id,
-            //             'unit_id' => $product_unit['unit_id'],
-            //             'is_base' => $product_unit['is_base'],
-            //             'conversion_value' => $product_unit['conv_value'],
-            //             'is_primary_unit' => $product_unit['is_primary_unit'],
-            //             'remarks' => $product_unit['remarks']
-            //         ]);
-            //     };
-            // }
-
-            DB::commit();
-
-            return $retval;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        }
-    }
-
-    public function updateService(
-        $id,
-        $company_id,
-        $code,
-        $product_group_id,
-        $name,
-        $unit_id,
-        $tax_status,
-        $remarks,
-        $point,
-        $product_type,
-        $status
-    )
-
-    {
-        DB::beginTransaction();
-
-        try {
-            $product = Product::where('id', '=', $id);
-
-            $retval = $product->update([
-                'company_id' => $company_id,
-                'code' => $code,
-                'product_group_id' => $product_group_id,
-                'name' => $name,
-                'unit_id' => $unit_id,
-                'tax_status' => $tax_status,
-                'remarks' => $remarks,
-                'point' => $point,
-                'product_type' => $product_type,
-                'status' => $status
-            ]);
 
             DB::commit();
 
