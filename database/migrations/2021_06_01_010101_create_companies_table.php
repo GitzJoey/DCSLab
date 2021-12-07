@@ -20,12 +20,13 @@ class CreateCompaniesTable extends Migration
             $table->string('address')->nullable();
             $table->integer('default')->default(0);
 			$table->integer('status')->nullable();
-
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['created_at']);
         });
     }
 
