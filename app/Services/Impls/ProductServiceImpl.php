@@ -175,7 +175,6 @@ class ProductServiceImpl implements ProductService
             $puIdsOld = $puOld->productUnit()->pluck('id')->ToArray();
 
             //compare array cari di google "compare 2 array"
-y
             $deletedProductUnitIds = [];
             $deletedProductUnitIds = array_diff($puIdsOld, $puIds);            
 
