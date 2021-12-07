@@ -80,6 +80,14 @@ class SupplierController extends BaseController
 
         $is_tax = array_key_exists('taxable_enterprise', $request);
 
+        $poc = [
+
+        ];
+
+        $products = [
+
+        ];
+
         $result = $this->supplierService->update(
             $id,
             $request['code'],
@@ -92,6 +100,8 @@ class SupplierController extends BaseController
             $request['tax_id'],
             $request['remarks'],
             $request['status'],
+            $poc,
+            $products
         );
 
         return is_null($result) ? response()->error():response()->success();

@@ -24,7 +24,7 @@ use App\Services\UserService;
 
 class UserServiceImpl implements UserService
 {
-    public function register($name, $email, $password, $terms)
+    public function register(string $name, string $email, string $password, string $terms): User
     {
         if ($name == trim($name) && strpos($name, ' ') !== false) {
             $pieces = explode(" ", $name);
@@ -54,7 +54,7 @@ class UserServiceImpl implements UserService
         return $usr;
     }
 
-    public function create($name, $email, $password, $rolesId, $profile)
+    public function create(string $name, string $email, string $password, array $rolesId, array $profile): User
     {
         DB::beginTransaction();
 
@@ -109,12 +109,12 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function flushCache($id)
+    public function flushCache(int $id): void
     {
         Cache::tags([$id])->flush();
     }
 
-    public function read($search = '', $paginate = true, $perPage = 10)
+    public function read(string $search = '', bool $paginate = true, int $perPage = 10)
     {
         if (empty($search)) {
             $usr = User::with('roles', 'profile', 'settings')->latest();
@@ -136,7 +136,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function readBy($key, $value)
+    public function readBy(string $key, string $value)
     {
         switch(strtoupper($key)) {
             case 'ID':
@@ -153,7 +153,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function update($id, $name, $rolesId, $profile, $settings)
+    public function update(int $id, string $name, array $rolesId, array $profile, array $settings): User
     {
         DB::beginTransaction();
 
@@ -175,9 +175,9 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateUser($user, $name, $useTransactions = true)
+    public function updateUser(User $user, string $name, bool $useTransactions = true)
     {
-        !$useTransactions ?: DB::beginTransaction();
+        !$useTransactions ? : DB::beginTransaction();
 
         try {
             //DB::enableQueryLog();
@@ -188,19 +188,19 @@ class UserServiceImpl implements UserService
 
             //$queryLog = DB::getQueryLog();
 
-            !$useTransactions ?: DB::commit();
+            !$useTransactions ? : DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 
-    public function updateProfile($user, $profile, $useTransactions = true)
+    public function updateProfile(User $user, array $profile, bool $useTransactions = true)
     {
-        !$useTransactions ?: DB::beginTransaction();
+        !$useTransactions ? : DB::beginTransaction();
 
         try {
             if ($profile != null) {
@@ -221,39 +221,39 @@ class UserServiceImpl implements UserService
                 ]);
             }
 
-            !$useTransactions ?: DB::commit();
+            !$useTransactions ? : DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 
-    public function updateRoles($user, $rolesId, $useTransactions = true)
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true)
     {
-        !$useTransactions ?: DB::beginTransaction();
+        !$useTransactions ? : DB::beginTransaction();
 
         try {
-            !$useTransactions ?: DB::commit();
+            !$useTransactions ? : DB::commit();
 
             $retval = $user->syncRoles($rolesId);
 
             return $retval;
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 
-    public function updateSettings($user, $settings, $useTransactions = true)
+    public function updateSettings(User $user, array $settings, bool $useTransactions = true)
     {
-        !$useTransactions ?: DB::beginTransaction();
+        !$useTransactions ? : DB::beginTransaction();
 
         try {
-            !$useTransactions ?: DB::commit();
+            !$useTransactions ? : DB::commit();
 
             $retval = 0;
             foreach ($settings as $key => $value) {
@@ -268,27 +268,27 @@ class UserServiceImpl implements UserService
 
             return $retval;
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
 
-    public function resetPassword($email)
+    public function resetPassword(string $email): void
     {
-        $response = Password::sendResetLink(['email' => $email], function (Message $message) {
+        Password::sendResetLink(['email' => $email], function (Message $message) {
             $message->subject('Reset Password');
         });
     }
 
-    public function resetTokens($id)
+    public function resetTokens(int $id): void
     {
         $usr = User::find($id);
 
         $usr->tokens()->delete();
     }
 
-    public function createDefaultSetting()
+    public function createDefaultSetting(): array
     {
         $list = array (
             new Setting(array(

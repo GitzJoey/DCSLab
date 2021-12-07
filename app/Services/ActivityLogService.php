@@ -2,16 +2,18 @@
 
 namespace App\Services;
 
+use Spatie\Activitylog\Models\Activity;
+
 interface ActivityLogService
 {
     public function RoutingActivity(
-        $routeName,
-        $routeParameters
-    );
+        string $routeName,
+        string $routeParameters
+    ): void;
 
     public function AuthActivity(
-        $type
-    );
+        string $type
+    ): void;
 
-    public function getAuthUserActivities($maxRecords = 25);
+    public function getAuthUserActivities(int $maxRecords = 25): Activity;
 }

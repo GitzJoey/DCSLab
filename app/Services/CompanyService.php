@@ -2,41 +2,43 @@
 
 namespace App\Services;
 
+use App\Models\Company;
+
 interface CompanyService
 {
     public function create(
-        $code,
-        $name,
-        $address,
-        $default,
-        $status,
-        $userId
-    );
+        string $code,
+        string $name,
+        string $address,
+        int $default,
+        int $status,
+        int $userId
+    ) : Company;
 
-    public function read($userId, $search = '', $paginate = true, $perPage = 10);
+    public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10);
 
-    public function getAllActiveCompany($userId);
+    public function getAllActiveCompany(int $userId);
 
-    public function getCompanyById($companyId);
+    public function getCompanyById(int $companyId): Company;
 
-    public function getDefaultCompany($userId);
+    public function getDefaultCompany(int $userId): Company;
 
     public function update(
-        $id,
-        $code,
-        $name,
-        $address,
-        $default,
-        $status
-    );
+        int $id,
+        string $code,
+        string $name,
+        string $address,
+        int $default,
+        int $status
+    ) : Company;
 
-    public function delete($userId, $id);
+    public function delete(int $userId, int $id): bool;
 
-    public function generateUniqueCode();
+    public function generateUniqueCode(): string;
 
-    public function isUniqueCode($code, $userId, $exceptId);
+    public function isUniqueCode(string $code, int $userId, int $exceptId): string;
 
-    public function resetDefaultCompany($userId);
+    public function resetDefaultCompany(int $userId): bool;
 
-    public function isDefaultCompany($companyId);
+    public function isDefaultCompany(int $companyId): bool;
 }

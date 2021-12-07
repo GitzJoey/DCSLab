@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class InboxServiceImpl implements InboxService
 {
-    public function getThreads($userId)
+    public function getThreads(int $userId)
     {
         $t = Thread::with('participants')
             ->whereHas('participants', function($p) use ($userId) {
@@ -24,14 +24,14 @@ class InboxServiceImpl implements InboxService
         return $t;
     }
 
-    public function getThread($id)
+    public function getThread(int $id)
     {
         $m = Message::with('user')->where('thread_id', '=', $id)->get();
 
         return $m;
     }
 
-    public function store($userId, $to, $subject, $message)
+    public function store(int $userId, array $to, string $subject, string $message)
     {
         DB::beginTransaction();
 
@@ -69,7 +69,7 @@ class InboxServiceImpl implements InboxService
         }
     }
 
-    public function update($treadId, $userId, $to, $subject, $message)
+    public function update(int $treadId, int $userId, array $to, string $subject, string $message)
     {
         DB::beginTransaction();
 

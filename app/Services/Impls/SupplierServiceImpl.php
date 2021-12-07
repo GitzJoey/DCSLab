@@ -20,20 +20,20 @@ use App\Services\RoleService;
 class SupplierServiceImpl implements SupplierService
 {
     public function create(
-        $company_id,
-        $code,
-        $name,
-        $term,
-        $contact,
-        $address,
-        $city,
-        $is_tax,
-        $tax_id,
-        $remarks,
-        $status,
-        $poc,
-        $products
-    )
+        int $company_id,
+        string $code,
+        string $name,
+        string $term,
+        string $contact,
+        string $address,
+        string $city,
+        bool $is_tax,
+        string $tax_id,
+        string $remarks,
+        int $status,
+        array $poc,
+        array $products
+    ): Supplier
     {
         DB::beginTransaction();
 
@@ -67,7 +67,7 @@ class SupplierServiceImpl implements SupplierService
         }
     }
 
-    private function createUserPOC($poc)
+    private function createUserPOC(array $poc): User
     {
         $container = Container::getInstance();
         $userService = $container->make(UserService::class);
@@ -85,7 +85,7 @@ class SupplierServiceImpl implements SupplierService
         return $usr;
     }
 
-    public function read($companyId, $search = '', $paginate = true, $perPage = 10)
+    public function read(int $companyId, string $search = '', bool $paginate = true, int $perPage = 10)
     {
         if (!$companyId) return null;
 
@@ -105,18 +105,20 @@ class SupplierServiceImpl implements SupplierService
     }
 
     public function update(
-        $id,
-        $code,
-        $name,
-        $term,
-        $contact,
-        $address,
-        $city,
-        $is_tax,
-        $tax_number,
-        $remarks,
-        $status
-    )
+        int $id,
+        string $code,
+        string $name,
+        string $term,
+        string $contact,
+        string $address,
+        string $city,
+        bool $is_tax,
+        string $tax_id,
+        string $remarks,
+        int $status,
+        array $poc,
+        array $products
+    ): Supplier
     {
         DB::beginTransaction();
 
@@ -130,8 +132,8 @@ class SupplierServiceImpl implements SupplierService
                 'contact' => $contact,
                 'address' => $address,
                 'city' => $city,
-                'is_tax' => $is_tax,
-                'tax_number' => $tax_number,
+                'taxable_enterprise' => $is_tax,
+                'tax_id' => $tax_id,
                 'remarks' => $remarks,
                 'status' => $status
             ]);
@@ -147,7 +149,7 @@ class SupplierServiceImpl implements SupplierService
     }
 
 
-    public function delete($id)
+    public function delete(int $id): bool
     {
         $supplier = Supplier::find($id);
 
@@ -156,12 +158,12 @@ class SupplierServiceImpl implements SupplierService
         return $retval;
     }
 
-    public function generateUniqueCode($companyId)
+    public function generateUniqueCode(int $companyId): string
     {
-        
+        return '';
     }
 
-    public function isUniqueCode($code, $companyId, $exceptId)
+    public function isUniqueCode(string $code, int $companyId, int $exceptId): bool
     {
         $result = Supplier::whereCompanyId($companyId)->where('code', '=' , $code);
 

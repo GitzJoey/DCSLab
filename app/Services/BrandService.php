@@ -2,26 +2,28 @@
 
 namespace App\Services;
 
+use App\Models\Brand;
+
 interface BrandService
 {
     public function create(
-        $company_id,
-        $code,
-        $name
-    );
+        int $company_id,
+        string $code,
+        string $name
+    ): Brand;
 
-    public function read($companyId, $search = '', $paginate = true, $perPage = 10);
+    public function read(int $companyId, string $search = '', bool $paginate = true, int $perPage = 10);
 
-    public function readBy($key, $value);
+    public function readBy(string $key, string $value);
 
     public function update(
-        $id,
-        $company_id,
-        $code,
-        $name
-    );
+        int $id,
+        int $company_id,
+        string $code,
+        string $name
+    ): Brand;
 
-    public function delete($id);
+    public function delete(int $id): bool;
 
-    public function isUniqueCode($code, $userId, $exceptId);
+    public function isUniqueCode(string $code, int $userId, int $exceptId): string;
 }

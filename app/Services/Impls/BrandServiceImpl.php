@@ -14,11 +14,7 @@ use App\Models\User;
 
 class BrandServiceImpl implements BrandService
 {
-    public function create(
-        $company_id,
-        $code,
-        $name
-    )
+    public function create(int $company_id, string $code, string $name): Brand
     {
         DB::beginTransaction();
 
@@ -40,7 +36,7 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function read($companyId, $search = '', $paginate = true, $perPage = 10)
+    public function read(int $companyId, string $search = '', bool $paginate = true, int $perPage = 10)
     {
         if (empty($search)) {
             $pb = Brand::whereCompanyId($companyId)->latest();
@@ -56,7 +52,7 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function readBy($key, $value)
+    public function readBy(string $key, string $value)
     {
         switch (strtoupper($key)) {
             case 'ID':
@@ -67,12 +63,7 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function update(
-        $id,
-        $company_id,
-        $code,
-        $name
-    )
+    public function update(int $id, int $company_id, string $code, string $name): Brand
     {
         DB::beginTransaction();
 
@@ -95,14 +86,14 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function delete($id)
+    public function delete(int $id): bool
     {
         $productbrand = Brand::find($id);
 
         return $productbrand->delete();
     }
 
-    public function isUniqueCode($code, $userId, $exceptId)
+    public function isUniqueCode(string $code, int $userId, int $exceptId): string
     {
         $usr = User::find($userId);
         $companies = $usr->companies()->pluck('company_id');

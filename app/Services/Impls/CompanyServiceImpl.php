@@ -14,13 +14,13 @@ use App\Models\Company;
 class CompanyServiceImpl implements CompanyService
 {
     public function create(
-        $code,
-        $name,
-        $address,
-        $default,
-        $status,
-        $userId
-    )
+        string $code, 
+        string $name, 
+        string $address, 
+        int $default, 
+        int $status, 
+        int $userId
+    ): Company
     {
         DB::beginTransaction();
 
@@ -53,7 +53,7 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function read($userId, $search = '', $paginate = true, $perPage = 10)
+    public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10)
     {
         $usr = User::find($userId)->first();
         if (!$usr) return null;
@@ -74,7 +74,7 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function getAllActiveCompany($userId)
+    public function getAllActiveCompany(int $userId)
     {
         $usr = User::find($userId)->first();
         $compIds = $usr->companies()->pluck('company_id');
@@ -82,13 +82,13 @@ class CompanyServiceImpl implements CompanyService
     }
 
     public function update(
-        $id,
-        $code,
-        $name,
-        $address,
-        $default,
-        $status
-    )
+        int $id, 
+        string $code, 
+        string $name, 
+        string $address, 
+        int $default, 
+        int $status
+    ): Company
     {
         DB::beginTransaction();
 
@@ -113,7 +113,7 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function delete($userId, $id)
+    public function delete(int $userId, int $id): bool
     {
         DB::beginTransaction();
 
@@ -135,12 +135,12 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function generateUniqueCode()
+    public function generateUniqueCode(): string
     {
-        
+        return '';
     }
 
-    public function isUniqueCode($code, $userId, $exceptId)
+    public function isUniqueCode(string $code, int $userId, int $exceptId): string
     {
         $usr = User::find($userId);
         $companies = $usr->companies()->pluck('company_id');
@@ -153,12 +153,12 @@ class CompanyServiceImpl implements CompanyService
         return $result->count() == 0 ? true:false;
     }
 
-    public function isDefaultCompany($companyId)
+    public function isDefaultCompany(int $companyId): bool
     {
         return Company::where('id', '=', $companyId)->first()->default == 1 ? true:false;
     }
 
-    public function resetDefaultCompany($userId)
+    public function resetDefaultCompany(int $userId): bool
     {
         DB::beginTransaction();
 
@@ -179,12 +179,12 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function getCompanyById($companyId)
+    public function getCompanyById(int $companyId): Company
     {
         return Company::find($companyId)->first();
     }
 
-    public function getDefaultCompany($userId)
+    public function getDefaultCompany(int $userId): Company
     {
         $usr = User::find($userId);
         return $usr->companies()->where('default','=', 1)->first();

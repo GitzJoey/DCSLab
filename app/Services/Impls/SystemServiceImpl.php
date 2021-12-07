@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Schema;
 class SystemServiceImpl implements SystemService
 {
 
-    public function checkDBConnection()
+    public function checkDBConnection(): bool
     {
         try {
             DB::connection()->getPdo();
@@ -20,7 +20,7 @@ class SystemServiceImpl implements SystemService
         }
     }
 
-    public function isExistTable($tableName = null)
+    public function isExistTable(string $tableName = null): bool
     {
         if ($tableName == null) {
             return Schema::hasTable('users');

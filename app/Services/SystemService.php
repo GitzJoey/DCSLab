@@ -4,7 +4,7 @@ namespace App\Services;
 
 interface SystemService
 {
-    public function checkDBConnection();
+    public function checkDBConnection(): bool;
 
-    public function isExistTable($tableName);
+    public function isExistTable(string $tableName): bool;
 }

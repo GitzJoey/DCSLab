@@ -2,43 +2,47 @@
 
 namespace App\Services;
 
+use App\Models\Supplier;
+
 interface SupplierService
 {
     public function create(
-        $company_id,
-        $code,
-        $name,
-        $payment_term_type,
-        $contact,
-        $address,
-        $city,
-        $is_tax,
-        $tax_id,
-        $remarks,
-        $status,
-        $poc,
-        $products
-    );
+        int $company_id,
+        string $code,
+        string $name,
+        string $payment_term_type,
+        string $contact,
+        string $address,
+        string $city,
+        bool $is_tax,
+        string $tax_id,
+        string $remarks,
+        int $status,
+        array $poc,
+        array $products
+    ): Supplier;
 
-    public function read($companyId, $search = '', $paginate = true, $perPage = 10);
+    public function read(int $companyId, string $search = '', bool $paginate = true, int $perPage = 10);
 
     public function update(
-        $id,
-        $code,
-        $name,
-        $term,
-        $contact,
-        $address,
-        $city,
-        $is_tax,
-        $tax_number,
-        $remarks,
-        $status
-    );
+        int $id,
+        string $code,
+        string $name,
+        string $term,
+        string $contact,
+        string $address,
+        string $city,
+        bool $is_tax,
+        string $tax_id,
+        string $remarks,
+        int $status,
+        array $poc,
+        array $products
+    ): Supplier;
 
-    public function delete($id);
+    public function delete(int $id): bool;
 
-    public function generateUniqueCode($companyId);
+    public function generateUniqueCode(int $companyId): string;
 
-    public function isUniqueCode($code, $userId, $exceptId);
+    public function isUniqueCode(string $code, int $companyId, int $exceptId): bool;
 }

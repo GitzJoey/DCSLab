@@ -10,7 +10,7 @@ use Spatie\Activitylog\Models\Activity;
 class ActivityLogServiceImpl implements ActivityLogService
 {
 
-    public function RoutingActivity($routeName, $routeParameters)
+    public function RoutingActivity(string $routeName, string $routeParameters): void
     {
         switch ($routeName) {
             case 'side-menu-dashboard-maindashboard':
@@ -25,16 +25,16 @@ class ActivityLogServiceImpl implements ActivityLogService
             case 'side-menu-dashboard-inbox':
                 $friendlyName = 'Inbox';
                 break;
-            case 'side-menu-administrators-users':
-                $friendlyName = 'Users';
+            case 'side-menu-administrator-user':
+                $friendlyName = 'User';
                 break;
-            case 'side-menu-devtools-backup':
+            case 'side-menu-devtool-backup':
                 $friendlyName = 'DB Backup';
                 break;
-            case 'side-menu-devtools-examples-ex1':
+            case 'side-menu-devtool-example-ex1':
                 $friendlyName = 'Example 1';
                 break;
-            case 'side-menu-devtools-examples-ex2':
+            case 'side-menu-devtool-example-ex2':
                 $friendlyName = 'Example 2';
                 break;
             default:
@@ -54,13 +54,13 @@ class ActivityLogServiceImpl implements ActivityLogService
         }
     }
 
-    public function AuthActivity($type)
+    public function AuthActivity(string $type): void
     {
         activity('AuthActivity')
             ->log(ucfirst($type));
     }
 
-    public function getAuthUserActivities($maxRecords = 25)
+    public function getAuthUserActivities(int $maxRecords = 25): Activity
     {
         $id = Auth::user();
 

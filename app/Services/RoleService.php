@@ -2,26 +2,28 @@
 
 namespace App\Services;
 
+use App\Models\Role;
+
 interface RoleService
 {
     public function create(
-        $name,
-        $display_name,
-        $description,
-        $permissions
-    );
+        string $name,
+        string $display_name,
+        string $description,
+        array $permissions
+    ): Role;
 
-    public function read($parameters = null);
+    public function read(array $parameters = null);
 
-    public function readBy($key, $value);
+    public function readBy(string $key, string $value);
 
     public function update(
-        $id,
-        $name,
-        $display_name,
-        $description,
-        $inputtedPermissions
-    );
+        int $id,
+        string $name,
+        string $display_name,
+        string $description,
+        array $inputtedPermissions
+    ): Role;
 
     public function getAllPermissions();
 }

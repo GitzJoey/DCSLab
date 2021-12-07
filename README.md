@@ -77,3 +77,6 @@ Recompile
 * **2021-10-07**
     * Embrace the Laravel + VueJS Style
     * Slimmer landing page and template dependent
+
+* **2021-12-07**
+    * Embrace PHP 8 (named arguments, arguments types, return types)

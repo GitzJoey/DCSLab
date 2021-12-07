@@ -15,11 +15,11 @@ use App\Services\RoleService;
 class RoleServiceImpl implements RoleService
 {
     public function create(
-        $name,
-        $display_name,
-        $description,
-        $permissions
-    )
+        string $name,
+        string $display_name,
+        string $description,
+        array $permissions
+    ): Role
     {
         DB::beginTransaction();
 
@@ -45,7 +45,7 @@ class RoleServiceImpl implements RoleService
         }
     }
 
-    public function read($parameters = null)
+    public function read(array $parameters = null)
     {
         if ($parameters == null) {
             return Role::with('permissions')->latest()->get();
@@ -61,7 +61,7 @@ class RoleServiceImpl implements RoleService
         return null;
     }
 
-    public function readBy($key, $value)
+    public function readBy(string $key, string $value)
     {
         switch(strtoupper($key)) {
             case 'ID':
@@ -78,12 +78,12 @@ class RoleServiceImpl implements RoleService
     }
 
     public function update(
-        $id,
-        $name,
-        $display_name,
-        $description,
-        $inputtedPermissions
-    )
+        int $id,
+        string $name,
+        string $display_name,
+        string $description,
+        array $inputtedPermissions
+    ): Role
     {
         DB::beginTransaction();
 
@@ -93,7 +93,7 @@ class RoleServiceImpl implements RoleService
 
             $role->syncPermissions($pl);
 
-            $retval = $role->update([
+            $role->update([
                 'name' => $name,
                 'display_name' => $display_name,
                 'description' => $description,
@@ -101,7 +101,7 @@ class RoleServiceImpl implements RoleService
 
             DB::commit();
 
-            return $retval;
+            return $role;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);

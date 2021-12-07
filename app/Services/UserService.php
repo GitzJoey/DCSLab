@@ -2,46 +2,48 @@
 
 namespace App\Services;
 
+use App\Models\User;
+
 interface UserService
 {
     public function register(
-        $name,
-        $email,
-        $password,
-        $terms
-    );
+        string $name,
+        string $email,
+        string $password,
+        string $terms
+    ): User;
 
     public function create(
-        $name,
-        $email,
-        $password,
-        $rolesId,
-        $profile
-    );
+        string $name,
+        string $email,
+        string $password,
+        array $rolesId,
+        array $profile
+    ): User ;
 
-    public function read($search = '', $paginate = true, $perPage = 10);
+    public function read(string $search = '', bool $paginate = true, int $perPage = 10);
 
-    public function readBy($key, $value);
+    public function readBy(string $key, string $value);
 
     public function update(
-        $id,
-        $name,
-        $rolesId,
-        $profile,
-        $settings
-    );
+        int $id,
+        string $name,
+        array $rolesId,
+        array $profile,
+        array $settings
+    ): User;
 
-    public function updateUser($user, $name, $useTransactions = true);
+    public function updateUser(User $user, string $name, bool $useTransactions = true);
 
-    public function updateProfile($user, $profile, $useTransactions = true);
+    public function updateProfile(User $user, array $profile, bool $useTransactions = true);
 
-    public function updateRoles($user, $rolesId, $useTransactions = true);
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true);
 
-    public function updateSettings($user, $settings, $useTransactions = true);
+    public function updateSettings(User $user, array $settings, bool $useTransactions = true);
 
-    public function resetPassword($email);
+    public function resetPassword(string $email): void;
 
-    public function resetTokens($id);
+    public function resetTokens(int $id): void;
 
-    public function createDefaultSetting();
+    public function createDefaultSetting(): array;
 }
