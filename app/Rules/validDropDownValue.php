@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Config;
 
 class validDropDownValue implements Rule
 {
-    private $dropDownType;
+    private string $dropDownType;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($dropDownType)
+    public function __construct(string $dropDownType)
     {
         $this->dropDownType = $dropDownType;
     }

@@ -6,14 +6,14 @@ use Illuminate\Contracts\Validation\Rule;
 
 class deactivateDefaultCompany implements Rule
 {
-    private $isDefault;
-    private $status;
+    private bool $isDefault;
+    private int $status;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($isDefault, $status)
+    public function __construct(bool $isDefault, int $status)
     {
         $this->isDefault = $isDefault;
         $this->status = $status;

@@ -10,7 +10,7 @@ use Spatie\Activitylog\Models\Activity;
 class ActivityLogServiceImpl implements ActivityLogService
 {
 
-    public function RoutingActivity(string $routeName, string $routeParameters): void
+    public function RoutingActivity(string $routeName, array $routeParameters): void
     {
         switch ($routeName) {
             case 'side-menu-dashboard-maindashboard':

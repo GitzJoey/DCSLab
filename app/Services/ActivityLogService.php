@@ -8,7 +8,7 @@ interface ActivityLogService
 {
     public function RoutingActivity(
         string $routeName,
-        string $routeParameters
+        array $routeParameters
     ): void;
 
     public function AuthActivity(

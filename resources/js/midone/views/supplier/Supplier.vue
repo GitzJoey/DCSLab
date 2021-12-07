@@ -319,6 +319,9 @@ onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
+    if (selectedUserCompany.value !== '')
+        getAllSupplier({ page: 1});
+
     getDDL();
 
     loading.value = false;

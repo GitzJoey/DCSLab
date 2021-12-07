@@ -10,23 +10,25 @@ use App\Services\SupplierService;
 
 class uniqueCode implements Rule
 {
-    private $userId;
-    private $exceptId;
-    private $table;
+    private int $userId;
+    private int $companyId;
+    private int $exceptId;
+    private string $table;
 
-    private $companyService;
-    private $supplierService;
+    private CompanyService $companyService;
+    private SupplierService $supplierService;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($table, $userId, $exceptId = null)
+    public function __construct(string $table, int $userId, int $companyId, int $exceptId = null)
     {
-        $this->userId = $userId;
-        $this->exceptId = $exceptId;
         $this->table = $table;
+        $this->userId = $userId;
+        $this->companyId = $companyId;
+        $this->exceptId = $exceptId;
 
         switch($this->table) {
             case 'companies':
@@ -55,7 +57,7 @@ class uniqueCode implements Rule
                 $is_duplicate = $this->companyService->isUniqueCode($value, $this->userId, $this->exceptId);
                 break;
             case 'suppliers':
-                $is_duplicate = $this->supplierService->isUniqueCode($value, $this->userId, $this->exceptId);
+                $is_duplicate = $this->supplierService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;
             default:
                 break;

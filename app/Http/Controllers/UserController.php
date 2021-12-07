@@ -31,7 +31,7 @@ class UserController extends BaseController
 
     public function read(Request $request)
     {
-        $search = $request->has('search') ? $request['search']:'';
+        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $paginate = true;
         $perPage = $request->has('perPage') ? $request['perPage']:null;
 

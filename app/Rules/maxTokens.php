@@ -8,16 +8,16 @@ use Illuminate\Contracts\Validation\Rule;
 
 class maxTokens implements Rule
 {
-    private $email;
-    private $maxCount;
-    private $userService;
+    private string $email;
+    private int $maxCount;
+    private UserService $userService;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($email = '', $maxCount = 2)
+    public function __construct(string $email = '', int $maxCount = 2)
     {
         $this->email = $email;
         $this->maxCount = $maxCount;
