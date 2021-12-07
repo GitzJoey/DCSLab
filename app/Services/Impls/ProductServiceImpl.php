@@ -164,27 +164,25 @@ class ProductServiceImpl implements ProductService
                 ));
             }
 
+            $puIds = [];
+            foreach ($pu as $puId)
+            {
+                array_push($puIds, $puId['id']);
+            }
+
             //disini compare yg baru dengan yang lama
-            $user = User::find($userId);
-            $company_list = $user->companies()->pluck('company_id');
-            $pu_lama = Product::with('productUnit')->find($id);
-            $pu_lama = $pu_lama->ToArray()['product_unit'];
+            $puOld = Product::find($id);
+            $puIdsOld = $puOld->productUnit()->pluck('id')->ToArray();
 
             //compare array cari di google "compare 2 array"
-            $pu_baru = [];
-            $pu_baru = array_diff($pu, $pu_lama);
 
-            //yg ilang artinya delete
+            $deletedProductUnitIds = [];
+            $deletedProductUnitIds = array_diff($puIdsOld, $puIds);            
 
-            //ini pake upsert jg bisa
-
-            //dah
-            
-
-            // foreach ($deletedProductUnits as $deletedProductUnit) {
-            //     $productUnit = ProductUnit::find($deletedProductUnit['id']);
-            //     $retval = $productUnit->delete();
-            // }
+            foreach ($deletedProductUnitIds as $deletedProductUnitId) {
+                $productUnit = ProductUnit::find($deletedProductUnitId);
+                $retval = $productUnit->delete();
+            }
 
             $retval = ProductUnit::upsert(
                 $pu, 
