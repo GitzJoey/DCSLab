@@ -77,40 +77,40 @@ class DashboardController extends BaseController
             ),
             array(
                 'icon' => 'CpuIcon',
-                'pageName' => 'side-menu-administrators',
-                'title' => 'components.menu.administrators',
+                'pageName' => 'side-menu-administrator',
+                'title' => 'components.menu.administrator',
                 'subMenu' => [
                     array (
                         'icon' => '',
-                        'pageName' => 'side-menu-administrators-users',
-                        'title' => 'components.menu.administrators-users'
+                        'pageName' => 'side-menu-administrator-user',
+                        'title' => 'components.menu.administrator-user'
                     )
                 ]
             ),
             array(
                 'icon' => 'GithubIcon',
-                'pageName' => 'side-menu-devtools',
-                'title' => 'components.menu.devtools',
+                'pageName' => 'side-menu-devtool',
+                'title' => 'components.menu.devtool',
                 'subMenu' => [
                     array (
                         'icon' => '',
-                        'pageName' => 'side-menu-devtools-backup',
-                        'title' => 'components.menu.devtools-dbbackup'
+                        'pageName' => 'side-menu-devtool-backup',
+                        'title' => 'components.menu.devtool-dbbackup'
                     ),
                     array (
                         'icon' => '',
-                        'pageName' => 'side-menu-devtools-examples',
-                        'title' => 'components.menu.devtools-playgrounds',
+                        'pageName' => 'side-menu-devtool-example',
+                        'title' => 'components.menu.devtool-playground',
                         'subMenu' => [
                             array (
                                 'icon' => '',
-                                'pageName' => 'side-menu-devtools-examples-ex1',
-                                'title' => 'components.menu.devtools-playgrounds-ex1'
+                                'pageName' => 'side-menu-devtool-example-ex1',
+                                'title' => 'components.menu.devtool-playground-ex1'
                             ),
                             array (
                                 'icon' => '',
-                                'pageName' => 'side-menu-devtools-examples-ex2',
-                                'title' => 'components.menu.devtools-playgrounds-ex2'
+                                'pageName' => 'side-menu-devtool-example-ex2',
+                                'title' => 'components.menu.devtool-playground-ex2'
                             )
                         ]
                     )

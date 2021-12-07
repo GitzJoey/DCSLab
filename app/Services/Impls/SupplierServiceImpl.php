@@ -156,12 +156,14 @@ class SupplierServiceImpl implements SupplierService
         return $retval;
     }
 
-    public function isUniqueCode($code, $userId, $exceptId)
+    public function generateUniqueCode($companyId)
     {
-        $usr = User::find($userId);
-        $companies = $usr->companies()->pluck('company_id');
+        
+    }
 
-        $result = Supplier::whereIn('id', $companies)->where('code', '=' , $code);
+    public function isUniqueCode($code, $companyId, $exceptId)
+    {
+        $result = Supplier::whereCompanyId($companyId)->where('code', '=' , $code);
 
         if($exceptId)
             $result = $result->where('id', '<>', $exceptId);

@@ -7,6 +7,7 @@ interface CompanyService
     public function create(
         $code,
         $name,
+        $address,
         $default,
         $status,
         $userId
@@ -24,11 +25,14 @@ interface CompanyService
         $id,
         $code,
         $name,
+        $address,
         $default,
         $status
     );
 
     public function delete($userId, $id);
+
+    public function generateUniqueCode();
 
     public function isUniqueCode($code, $userId, $exceptId);
 

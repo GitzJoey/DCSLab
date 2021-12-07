@@ -78,19 +78,18 @@ class SupplierController extends BaseController
     {
         $request = $supplierRequest->validated();
 
-        $is_tax = $request['is_tax'];
-        $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
+        $is_tax = array_key_exists('taxable_enterprise', $request);
 
         $result = $this->supplierService->update(
             $id,
             $request['code'],
             $request['name'],
-            $request['term'],
+            $request['payment_term_type'],
             $request['contact'],
             $request['address'],
             $request['city'],
             $is_tax,
-            $request['tax_number'],
+            $request['tax_id'],
             $request['remarks'],
             $request['status'],
         );

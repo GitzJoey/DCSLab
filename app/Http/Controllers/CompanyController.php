@@ -67,6 +67,7 @@ class CompanyController extends BaseController
         $result = $this->companyService->create(
             $code,
             $request['name'],
+            $request['address'],
             $default,
             $request['status'],
             $userId
@@ -96,6 +97,7 @@ class CompanyController extends BaseController
             $id,
             $code,
             $request['name'],
+            $request['address'],
             $default,
             $request['status']
         );

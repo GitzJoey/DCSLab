@@ -14,7 +14,7 @@ import Product from '../views/product/Product.vue';
 import Service from '../views/product/Service.vue';
 /* Ext */
 
-import AdminUsers from "../views/administrators/Users";
+import AdminUser from "../views/administrator/User";
 
 import DBBackup from "../views/dev/DBBackup";
 import Ex1 from "../views/dev/Ex1";
@@ -100,9 +100,9 @@ const routes = [
         component: SideMenu,
         children: [
             {
-                path: root + '/admin' + '/users',
-                name: 'side-menu-administrators-users',
-                component: AdminUsers,
+                path: root + '/admin' + '/user',
+                name: 'side-menu-administrator-user',
+                component: AdminUser,
                 meta: { remember: true }
             }
         ],
@@ -113,26 +113,26 @@ const routes = [
         children: [
             {
                 path: root + '/dev' + '/tools/db_backup',
-                name: 'side-menu-devtools-backup',
+                name: 'side-menu-devtool-backup',
                 component: DBBackup,
                 meta: { remember: true }
             }
         ],
     },
     {
-        path: root + '/dev' + '/examples',
-        name: 'side-menu-devtools-examples',
+        path: root + '/dev' + '/example',
+        name: 'side-menu-devtool-example',
         component: SideMenu,
         children: [
             {
-                path: root + '/dev' + '/examples' + '/ex1',
-                name: 'side-menu-devtools-examples-ex1',
+                path: root + '/dev' + '/example' + '/ex1',
+                name: 'side-menu-devtool-example-ex1',
                 component: Ex1,
                 meta: { remember: true }
             },
             {
-                path: root + '/dev' + '/examples' + '/ex2',
-                name: 'side-menu-devtools-examples-ex2',
+                path: root + '/dev' + '/example' + '/ex2',
+                name: 'side-menu-devtool-example-ex2',
                 component: Ex2,
                 meta: { remember: true }
             }

@@ -148,7 +148,7 @@
                             <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
                             <div class="form-inline">
                                 <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" v-model="supplier.code" v-show="mode === 'create' || mode === 'edit'" :readonly="supplier.code === '[AUTO]'"/>
-                                <button type="button" class="btn btn-secondary mx-1" @click="generateCode">{{ t('components.buttons.auto') }}</button>
+                                <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                             </div>
                             <ErrorMessage name="code" class="text-theme-21" />
                         </div>
@@ -223,12 +223,19 @@
                     </div>
                     <div id="products" class="tab-pane p-5" role="tabpanel" aria-labelledby="products-tab">
                         <div class="mb-3">
-                            <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>
-                            <div>
-                                <div v-for="(p, pIdx) in supplier.products">
-                                    {{ p.name }}
-                                </div>
-                            </div>
+                            <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>                            
+                            <table class="table table--sm">
+                                <tbody>
+                                    <tr v-for="(p, pIdx) in supplier.products">
+                                        <td class="border-b dark:border-dark-5">
+                                            <input :id="'inputProduct_' + p.hId" type="checkbox" class="form-check-switch" name="productIds">
+                                        </td>
+                                        <td>
+                                            {{ p.name }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

@@ -10,13 +10,13 @@
             "product": "Product",
             "product-product": "Product",
             "product-service": "Service",
-            "administrators": "Administrators",
-            "administrators-users": "Pengguna",
-            "devtools": "Dev Tools",
-            "devtools-dbbackup": "DB Backup",
-            "devtools-playgrounds": "Playgrounds",
-            "devtools-playgrounds-ex1": "Playground 1",
-            "devtools-playgrounds-ex2": "Playground 2"
+            "administrator": "Administrator",
+            "administrator-user": "Pengguna",
+            "devtool": "Dev Tool",
+            "devtool-dbbackup": "DB Backup",
+            "devtool-playground": "Playground",
+            "devtool-playground-ex1": "Playground 1",
+            "devtool-playground-ex2": "Playground 2"
         },
         "alert-placeholder": {
             "success_alert": {

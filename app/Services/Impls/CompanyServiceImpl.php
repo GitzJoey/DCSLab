@@ -16,6 +16,7 @@ class CompanyServiceImpl implements CompanyService
     public function create(
         $code,
         $name,
+        $address,
         $default,
         $status,
         $userId
@@ -34,6 +35,7 @@ class CompanyServiceImpl implements CompanyService
             $company = new Company();
             $company->code = $code;
             $company->name = $name;
+            $company->address = $address;
             $company->default = $default;
             $company->status = $status;
 
@@ -83,6 +85,7 @@ class CompanyServiceImpl implements CompanyService
         $id,
         $code,
         $name,
+        $address,
         $default,
         $status
     )
@@ -95,6 +98,7 @@ class CompanyServiceImpl implements CompanyService
             $company->update([
                 'code' => $code,
                 'name' => $name,
+                'address' => $address,
                 'default' => $default,
                 'status' => $status
             ]);
@@ -129,6 +133,11 @@ class CompanyServiceImpl implements CompanyService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
+    }
+
+    public function generateUniqueCode()
+    {
+        
     }
 
     public function isUniqueCode($code, $userId, $exceptId)
