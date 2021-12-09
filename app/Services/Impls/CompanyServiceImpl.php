@@ -56,7 +56,7 @@ class CompanyServiceImpl implements CompanyService
 
     public function getAllActiveCompany($userId)
     {
-        $usr = User::find($userId)->first();
+        $usr = User::find($userId);
         $compIds = $usr->companies()->pluck('company_id');
         return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();
     }

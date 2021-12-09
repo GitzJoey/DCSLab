@@ -186,8 +186,8 @@ class ProductController extends BaseController
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $use_serial_number = 0;
-            $has_expiry_date = 0;
+            $use_serial_number;
+            $has_expiry_date;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -271,6 +271,14 @@ class ProductController extends BaseController
                 $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : $request['is_primary_unit'][$i];
                 $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
 
+                $use_serial_number = is_null($request['use_serial_number']) ? 0 : $request['use_serial_number'];
+                $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
+                $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
+        
+                $has_expiry_date = is_null($request['has_expiry_date']) ? 0 : $request['has_expiry_date'];
+                $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
+                $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
+
                 array_push($product_units, array (
                     'id' => $product_unit_id,
                     'company_id' => $company_id,
@@ -319,8 +327,8 @@ class ProductController extends BaseController
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $use_serial_number = 0;
-            $has_expiry_date = 0;
+            $use_serial_number;
+            $has_expiry_date;
             $product_type = 4;
             $status = $request->status;
 
