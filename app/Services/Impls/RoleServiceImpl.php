@@ -45,9 +45,9 @@ class RoleServiceImpl implements RoleService
         }
     }
 
-    public function read(array $parameters = null)
+    public function read(array $parameters = [])
     {
-        if ($parameters == null) {
+        if ($parameters == []) {
             return Role::with('permissions')->latest()->get();
         }
 

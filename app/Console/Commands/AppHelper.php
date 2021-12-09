@@ -71,7 +71,6 @@ class AppHelper extends Command
             $this->info('[3] Change User Roles');
             $this->info('[4] Data Seeding');
             $this->info('[5] Refresh Database');
-            $this->info('[6] Create Fresh Testing Database');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
@@ -95,9 +94,6 @@ class AppHelper extends Command
                     break;
                 case 5:
                     $this->refreshDatabase();
-                    break;
-                case 6:
-                    $this->createFreshTestingDatabase();
                     break;
                 case 'X':
                 default:
@@ -222,27 +218,6 @@ class AppHelper extends Command
 
         $this->info('Done.');
         sleep(3);
-    }
-
-    private function createFreshTestingDatabase()
-    {
-        if (file_exists(database_path('database.sqlite'))) {
-            $this->info('Testing database is found in /database/database.sqlite, deleting...');
-            File::delete(database_path('database.sqlite'));
-        }
-
-        File::put(database_path('database.sqlite'), '');
-        $this->info('Testing database created in /database/database.sqlite');
-
-        $migrate = $this->confirm('Do you want to migrate and seed to tessting database?', true);
-    
-        if ($migrate) {
-            Artisan::call('migrate', [
-                '--env' => 'testing',
-                '--path' => '/database/migrations/testdb',
-                '--seed' => ''
-            ]);
-        }
     }
 
     private function changeUserRoles()
