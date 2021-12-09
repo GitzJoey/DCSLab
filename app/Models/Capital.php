@@ -13,6 +13,7 @@ use App\Models\Company;
 
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class Capital extends Model
 {
@@ -81,5 +82,15 @@ class Capital extends Model
     public function cash()
     {
         return $this->belongsTo(Cash::class);
+    }
+
+    public function scopeBySelectedCompany($query, $overrideCompanyId = '')
+    {
+        return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);
+    }
+
+    public function scopeStatusActive($query, $overrideStatus = '')
+    {
+        return $query->where('status', '=', empty($overrideStatus) ? 1:$overrideStatus);
     }
 }

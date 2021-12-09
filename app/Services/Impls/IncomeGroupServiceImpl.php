@@ -69,7 +69,6 @@ class IncomeGroupServiceImpl implements IncomeGroupService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
-        
     }
 
     public function delete($id)

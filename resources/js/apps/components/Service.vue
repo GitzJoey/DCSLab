@@ -26,23 +26,21 @@
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
-                                <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.product_group_id") }}</th>
+                                <th>{{ $t("table.cols.unit_id") }}</th>
+                                <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(c, cIdx) in serviceList.data">
                                 <td>{{ c.code }}</td>
-                                <td>{{ c.is_base }}</td>
-                                <td>{{ c.conversion_value }}</td>
-                                <td>{{ c.unit }}</td>
-                                <td>{{ c.primary_unit }}</td>
-                                <td>{{ c.remarks }}</td>
+                                <td>{{ c.product_group.name }}</td>
+                                <td>{{ c.product_unit[0].unit.name }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
                                     <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>
                                 </td>
-                                <th></th>
                                 <td class="text-center">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
@@ -98,13 +96,14 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-2 col-form-label" for="group_id">{{ $t('fields.group_id') }}</label>
+                            <label class="col-2 col-form-label" for="product_group_id">{{ $t('fields.product_group_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="group_id" name="group_id" v-model="service.group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="b.hId" v-for="b in this.groupDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                <select class="form-control" id="product_group_id" name="product_group_id" v-model="service.product_group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option :value="c.hId" v-for="c in this.groupDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ service.group.name }}
+                                    {{ service.product_group.name }}
                                 </div>
                             </div>
                         </div>
@@ -117,13 +116,15 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <input type="hidden" v-model="service.product_unit[0].unit.hId" name="product_unit_hId"/>
                             <label class="col-2 col-form-label" for="unit_id">{{ $t('fields.unit_id') }}</label>
                             <div class="col-md-10">
-                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option :value="b.hId" v-for="b in this.unitDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                                <select class="form-control" id="unit_id" name="unit_id" v-model="service.product_unit[0].unit.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="">{{ $t('placeholder.please_select') }}</option>
+                                    <option :value="c.hId" v-for="c in this.unitDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    {{ service.group.name }}
+                                    {{ service.product_unit[0].unit.name }}
                                 </div>
                             </div>
                         </div>
@@ -157,22 +158,9 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ service.point }}</div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="product_type" class="col-2 col-form-label">{{ $t('fields.product_type') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <select class="form-control" id="product_type" name="product_type" v-model="service.product_type" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                    <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('product_typeDDL.rawmaterial') }}</option>
-                                    <option value="2">{{ $t('product_typeDDL.wip') }}</option>
-                                    <option value="3">{{ $t('product_typeDDL.finishedgoods') }}</option>
-                                </select>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="service.product_type === 1">{{ $t('product_typeDDL.rawmaterial') }}</span>
-                                    <span v-if="service.product_type === 2">{{ $t('product_typeDDL.wip') }}</span>
-                                    <span v-if="service.product_type === 3">{{ $t('product_typeDDL.finishedgoods') }}</span>
-                                </div>
-                            </div>
-                        </div>
+                        <td>
+                            <input type="hidden" v-model="service.product_type" name="product_type"/>
+                        </td>
                         <div class="form-group row">
                             <label for="status" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
@@ -183,14 +171,6 @@
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
                                     <span v-if="service.status === 1">{{ $t('statusDDL.active') }}</span>
                                     <span v-if="service.status === 0">{{ $t('statusDDL.inactive') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">    
-                            <div class="col">
-                                <div v-if="this.mode === 'create' || this.mode === 'edit'">
-                                    <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
-                                    <button type="submit" class="btn btn-primary min-width-125 float-right ml-2" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>
                         </div>
@@ -257,18 +237,25 @@ export default {
             serviceList: [],
             service: {
                 code: '',
-                group: {hId: ''},
+                product_group: {hId: ''},
                 name: '',
-                unit: {hId: ''},
+                product_unit: [
+                    {
+                        hId: '',
+                        unit: {hId: ''} 
+                    }
+                ],
                 tax_status: '',
                 remarks: '',
                 point: '',
                 product_type: '',
-                status: '',
+                status: '1',
             },
             groupDDL: [],
             unitDDL: [],
             statusDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
@@ -277,13 +264,25 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllService(1);
+        this.getAllProductGroup();
+        this.getAllUnit();
         },
     methods: {
         getAllService(page) {
             this.loading = true;
-            axios.get(route('api.get.dashboard.service.read') + '?page=' + page).then(response => {
+            axios.get(route('api.get.dashboard.product.read.service') + '?page=' + page).then(response => {
                 this.serviceList = response.data;
                 this.loading = false;
+            });
+        },
+        getAllProductGroup() {
+            axios.get(route('api.get.dashboard.productgroup.read.service')).then(response => {
+                this.groupDDL = response.data;
+            });
+        },
+        getAllUnit() {
+            axios.get(route('api.get.dashboard.unit.read.service')).then(response => {
+                this.unitDDL = response.data;
             });
         },
         onPaginationChangePage(page) {
@@ -297,15 +296,20 @@ export default {
         },
         emptyService() {
             return {
-                code: '',
-                group: {hId: ''},
+                code: 'AUTO',
+                product_group: {hId: ''},
                 name: '',
-                unit: {hId: ''},
-                tax_status: '',
+                product_unit: [
+                    {
+                        hId: '',
+                        unit: {hId: ''} 
+                    }
+                ],
+                tax_status: '3',
                 remarks: '',
-                point: '',
-                product_type: '',
-                status: '',
+                point: '0',
+                product_type: '4',
+                status: '1',
             }
         },
         createNew() {
@@ -315,6 +319,7 @@ export default {
         editSelected(idx) {
             this.mode = 'edit';
             this.service = this.serviceList.data[idx];
+            console.log(this.service);
         },
         showSelected(idx) {
             this.mode = 'show';
@@ -362,17 +367,6 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
-        },
-        handleUpload(e) {
-            const files = e.target.files;
-
-            let filename = files[0].name;
-
-            const fileReader = new FileReader()
-            fileReader.addEventListener('load', () => {
-                this.service.profile.img_path = fileReader.result
-            })
-            fileReader.readAsDataURL(files[0])
         },
         backToList() {
             this.mode = 'list';

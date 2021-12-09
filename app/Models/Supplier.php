@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class Supplier extends Model
 {
@@ -18,16 +19,17 @@ class Supplier extends Model
     protected $fillable = [
         'code',
         'name',
-        'term',
+        'payment_term_type',
         'contact',
         'address',
         'city',
-        'tax_number',
+        'taxable_enterprice',
+        'tax_id',
         'remarks',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'term', 'contact', 'address', 'city', 'tax_number', 'remarks', 'status'];
+    protected static $logAttributes = ['code', 'name', 'payment_term_type', 'contact', 'address', 'city', 'taxable_enterprice', 'tax_id', 'remarks', 'status'];
 
     protected static $logOnlyDirty = true;
 
@@ -40,14 +42,14 @@ class Supplier extends Model
         'updated_at',
         'deleted_at'
     ];
-    
+
     protected $appends = ['hId'];
 
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
     }
-        
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -56,5 +58,15 @@ class Supplier extends Model
     public function product()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function scopeBySelectedCompany($query, $overrideCompanyId = '')
+    {
+        return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);
+    }
+
+    public function scopeStatusActive($query, $overrideStatus = '')
+    {
+        return $query->where('status', '=', empty($overrideStatus) ? 1:$overrideStatus);
     }
 }

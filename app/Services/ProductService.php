@@ -7,40 +7,42 @@ interface ProductService
     public function create(
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,
         $supplier_id,
         $remarks,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
+        $product_units
     );
 
-    public function read();
+    public function read($userId);
 
-    public function read_product();
+    public function read_product($userId);
 
-    public function read_service();
+    public function read_service($userId);
 
     public function update(
         $id,
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
-        $product_unit,
-        $unit,
         $tax_status,
+        $supplier_id,
         $remarks,
-        $estimated_capital_price,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
+        $product_units
     );
 
     public function delete($id);

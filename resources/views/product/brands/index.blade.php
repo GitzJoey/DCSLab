@@ -5,13 +5,13 @@
 @endsection
 
 @section('content')
-    <div id="productbrandVue"></div>
+    <div id="brandVue"></div>
 @endsection
 
 @section('ziggy')
-    @routes('productbrand')
+    @routes('brand')
 @endsection
 
 @section('js_after')
-    <script src="{{ mix('js/apps/productbrand.js') }}"></script>
+    <script src="{{ mix('js/apps/brand.js') }}"></script>
 @endsection

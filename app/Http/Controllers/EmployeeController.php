@@ -37,6 +37,9 @@ class EmployeeController extends BaseController
 
     public function read()
     {
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        
         $userId = Auth::user()->id;
         return $this->employeeService->read($userId);
     }
@@ -45,8 +48,8 @@ class EmployeeController extends BaseController
     {
         $request->validate([
             'company_id' => 'required',
-            'name' => 'required|alpha',
-            'email' => 'required|email|max:255|unique:users',
+            'name' => 'required|min:3|max:255|alpha',
+            'email' => 'required|email|min:10|max:255|unique:users',
         ]);
 
         $rolesId = [];
@@ -104,7 +107,8 @@ class EmployeeController extends BaseController
 
         $request->validate([
             'company_id' => 'required',
-            'name' => 'required|alpha',
+            'name' => 'required|min:3|max:255|alpha',
+            'email' => 'required|email|min:10|max:255|unique:users',
         ]);
 
         $rolesId = [];
@@ -141,7 +145,7 @@ class EmployeeController extends BaseController
             $profile['img_path'] = $file;
         }
 
-        $user = $this->userService->create(
+        $user = $this->userService->update(
             $request['name'],
             $request['email'],
             '',
@@ -150,7 +154,8 @@ class EmployeeController extends BaseController
         );
         $user_id = Hashids::decode($user)[0];
 
-        $result = $this->employeeService->create(
+        $result = $this->employeeService->update(
+            $id,
             Hashids::decode($request['company_id'])[0],
             $user_id
         );

@@ -158,9 +158,11 @@ export default {
             contentHidden: false,
             incomegroupList: [],
             incomegroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
@@ -189,7 +191,7 @@ export default {
         },
         emptyIncomeGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
             }
         },

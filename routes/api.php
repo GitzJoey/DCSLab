@@ -18,7 +18,7 @@ use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductGroupController;
-use App\Http\Controllers\ProductBrandController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\ProductController;
@@ -47,9 +47,9 @@ Route::bind('id', function ($id) {
     }
 });
 
-Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
+Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3000,1'])->name('api.auth');
 
-Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1']], function () {
+Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:10000,1']], function () {
     Route::get('profile/read', [DashboardController::class, 'readProfile'])->name('api.get.profile.read');
 
     Route::get('menu', [DashboardController::class, 'menu'])->name('api.get.menu');
@@ -130,12 +130,13 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'productgroup'], function () {
             Route::get('read', [ProductGroupController::class, 'read'])->name('api.get.dashboard.productgroup.read');
-            Route::get('read/all/', [ProductGroupController::class, 'getAllProductGroup'])->name('api.get.dashboard.productgroup.read.all');
+            Route::get('read/product/', [ProductGroupController::class, 'getAllProductGroup_Product'])->name('api.get.dashboard.productgroup.read.product');
+            Route::get('read/service/', [ProductGroupController::class, 'getAllProductGroup_Service'])->name('api.get.dashboard.productgroup.read.service');
         });
 
-        Route::group(['prefix' => 'productbrand'], function () {
-            Route::get('read', [ProductBrandController::class, 'read'])->name('api.get.dashboard.productbrand.read');
-            Route::get('read/all/', [ProductBrandController::class, 'getAllProductBrand'])->name('api.get.dashboard.productbrand.read.all');
+        Route::group(['prefix' => 'brand'], function () {
+            Route::get('read', [BrandController::class, 'read'])->name('api.get.dashboard.brand.read');
+            Route::get('read/all/', [BrandController::class, 'getAllBrand'])->name('api.get.dashboard.brand.read.all');
         });
 
         Route::group(['prefix' => 'productunit'], function () {
@@ -145,18 +146,14 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'unit'], function () {
             Route::get('read', [UnitController::class, 'read'])->name('api.get.dashboard.unit.read');
-            Route::get('read/all/', [UnitController::class, 'getAllUnit'])->name('api.get.dashboard.unit.read.all');
+            Route::get('read/product/', [UnitController::class, 'getAllUnit_Product'])->name('api.get.dashboard.unit.read.product');
+            Route::get('read/service/', [UnitController::class, 'getAllUnit_Service'])->name('api.get.dashboard.unit.read.service');
         });
 
         Route::group(['prefix' => 'product'], function () {
             Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.product.read');
             Route::get('read/product', [ProductController::class, 'read_product'])->name('api.get.dashboard.product.read.product');
             Route::get('read/service', [ProductController::class, 'read_service'])->name('api.get.dashboard.product.read.service');
-        });
-
-        Route::group(['prefix' => 'service'], function () {
-            Route::get('read', [ProductController::class, 'read'])->name('api.get.dashboard.service.read');
-            Route::get('read/all/', [ProductController::class, 'getAllService'])->name('api.get.dashboard.service.read.all');
         });
 
         Route::group(['prefix' => 'customergroup'], function () {
@@ -170,7 +167,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
     });
 });
 
-Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1']], function () {
+Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:1000,1']], function () {
     Route::post('profile/update', [DashboardController::class, 'updateProfile'])->name('api.post.profile.update');
 
     Route::group(['prefix' => 'inbox'], function () {
@@ -265,10 +262,10 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
                 Route::post('delete/{id}', [ProductGroupController::class, 'delete'])->name('api.post.dashboard.productgroup.delete');
             });
 
-            Route::group(['prefix' => 'productbrand'], function () {
-                Route::post('save', [ProductBrandController::class, 'store'])->name('api.post.dashboard.productbrand.save');
-                Route::post('edit/{id}', [ProductBrandController::class, 'update'])->name('api.post.dashboard.productbrand.edit');
-                Route::post('delete/{id}', [ProductBrandController::class, 'delete'])->name('api.post.dashboard.productbrand.delete');
+            Route::group(['prefix' => 'brand'], function () {
+                Route::post('save', [BrandController::class, 'store'])->name('api.post.dashboard.brand.save');
+                Route::post('edit/{id}', [BrandController::class, 'update'])->name('api.post.dashboard.brand.edit');
+                Route::post('delete/{id}', [BrandController::class, 'delete'])->name('api.post.dashboard.brand.delete');
             });
 
             Route::group(['prefix' => 'productunit'], function () {

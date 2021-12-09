@@ -16,7 +16,7 @@ interface CapitalService
         $remarks,
     );
 
-    public function read();
+    public function read($userId);
 
     public function update(
         $id,
@@ -24,7 +24,7 @@ interface CapitalService
         $ref_number,
         $investor_id,
         $group_id,
-        $cash_id,    
+        $cash_id,
         $date,
         $capital_status,
         $amount,

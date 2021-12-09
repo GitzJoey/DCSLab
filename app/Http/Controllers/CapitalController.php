@@ -7,6 +7,8 @@ use Vinkla\Hashids\Facades\Hashids;
 
 use App\Services\ActivityLogService;
 use App\Services\CapitalService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class CapitalController extends BaseController
 {
@@ -31,23 +33,29 @@ class CapitalController extends BaseController
 
     public function read()
     {
-        return $this->capitalService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
+        $userId = Auth::user()->id;
+        return $this->capitalService->read($userId);
     }
 
     public function store(Request $request)
     {   
         $request->validate([
-            'ref_number' => 'required|max:255',
+            'ref_number' => 'required|min:5|max:255',
+            'group_id' => 'required',
+            'capital_status' => 'required',
+            'amount' => 'required|min:2|max:255',
         ]);
         
         $date = '2021-10-01';
-        // $date = [
-        //     'PREFS.DATE_FORMAT' => $request['dateFormat'],
-        //     'PREFS.TIME_FORMAT' => $request['timeFormat'],
-        // ];
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
         $result = $this->capitalService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['ref_number'],
             Hashids::decode($request['investor_id'])[0], 
             Hashids::decode($request['group_id'])[0], 
@@ -63,18 +71,20 @@ class CapitalController extends BaseController
     public function update($id, Request $request)
     {
         $request->validate([
-            'ref_number' => 'required|max:255',
+            'ref_number' => 'required|min:5|max:255',
+            'group_id' => 'required',
+            'capital_status' => 'required',
+            'amount' => 'required|min:2|max:255',
         ]);
 
         $date = '2021-10-01';
-        // $date = [
-        //     'PREFS.DATE_FORMAT' => $request['dateFormat'],
-        //     'PREFS.TIME_FORMAT' => $request['timeFormat'],
-        // ];
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
         $result = $this->capitalService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['ref_number'], 
             Hashids::decode($request['investor_id'])[0], 
             Hashids::decode($request['group_id'])[0], 
