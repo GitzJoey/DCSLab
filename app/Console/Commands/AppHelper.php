@@ -16,11 +16,9 @@ use Database\Seeders\ProductGroupTableSeeder;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Schema;
 
 class AppHelper extends Command
 {

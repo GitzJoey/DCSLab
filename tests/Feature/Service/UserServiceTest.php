@@ -61,4 +61,24 @@ class UserServiceTest extends TestCase
 
         $this->service->read(null, null, null);
     }
+
+    public function test_call_register()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function test_call_create()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function test_call_update()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function test_call_delete()
+    {
+        $this->assertTrue(true);
+    }
 }

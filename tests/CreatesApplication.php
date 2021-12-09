@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\File;
 
 trait CreatesApplication
 {
-    protected static $hasRunOnce = false;
-
     /**
      * Creates the application.
      *
@@ -21,18 +19,14 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
-        if (!static::$hasRunOnce) {
-            if (!file_exists(database_path('database.sqlite'))) {
-                File::put(database_path('database.sqlite'), null);   
+        if (!file_exists(database_path('database.sqlite'))) {
+            File::put(database_path('database.sqlite'), null);   
 
-                Artisan::call('migrate', [
-                    '--env' => 'testing',
-                    '--path' => 'database/migrations/testdb',
-                    '--seed' => true
-                ]);    
-            }
-
-            static::$hasRunOnce = true;
+            Artisan::call('migrate', [
+                '--env' => 'testing',
+                '--path' => 'database/migrations/testdb',
+                '--seed' => true
+            ]);    
         }
 
         return $app;
