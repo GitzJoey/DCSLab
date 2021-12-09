@@ -80,3 +80,4 @@ Recompile
 
 * **2021-12-07**
     * Embrace PHP 8 (named arguments, arguments types, return types)
+    * Adding test unit for service layers and api code

@@ -71,6 +71,7 @@ class AppHelper extends Command
             $this->info('[3] Change User Roles');
             $this->info('[4] Data Seeding');
             $this->info('[5] Refresh Database');
+            $this->info('[6] Create Fresh Testing Database');
             $this->info('[X] Exit');
 
             $choose = $this->ask('Choose Helper','X');
@@ -94,6 +95,9 @@ class AppHelper extends Command
                     break;
                 case 5:
                     $this->refreshDatabase();
+                    break;
+                case 6:
+                    $this->createFreshTestingDatabase();
                     break;
                 case 'X':
                 default:
@@ -213,19 +217,32 @@ class AppHelper extends Command
         $this->info('THIS ACTIONS WILL REMOVE ALL DATA AND LEAVING ONLY DEFAULT DATA');
         $run = $this->confirm('CONFIRM TO REFRESH DATABASE?', false);
 
-        Schema::disableForeignKeyConstraints();
+        Artisan::call('migrate:fresh');
+        Artisan::call('db:seed', ['--class' => 'DatabaseSeeder']);
 
-        DB::table('activity_log')->truncate();
-        DB::table('companies')->truncate();
-        DB::table('company_user')->truncate();
-        DB::table('brands')->truncate();
-        DB::table('product_groups')->truncate();
-        DB::table('product_units')->truncate();
-        DB::table('products')->truncate();
-        DB::table('suppliers')->truncate();
-        DB::table('units')->truncate();
+        $this->info('Done.');
+        sleep(3);
+    }
 
-        Schema::enableForeignKeyConstraints();
+    private function createFreshTestingDatabase()
+    {
+        if (file_exists(database_path('database.sqlite'))) {
+            $this->info('Testing database is found in /database/database.sqlite, deleting...');
+            File::delete(database_path('database.sqlite'));
+        }
+
+        File::put(database_path('database.sqlite'), '');
+        $this->info('Testing database created in /database/database.sqlite');
+
+        $migrate = $this->confirm('Do you want to migrate and seed to tessting database?', true);
+    
+        if ($migrate) {
+            Artisan::call('migrate', [
+                '--env' => 'testing',
+                '--path' => '/database/migrations/testdb',
+                '--seed' => ''
+            ]);
+        }
     }
 
     private function changeUserRoles()

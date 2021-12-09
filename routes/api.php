@@ -23,6 +23,8 @@ Route::bind('id', function ($id) {
     }
 });
 
+Route::get('/test', function() { return ''; });
+
 Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
 
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
