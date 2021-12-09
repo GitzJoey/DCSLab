@@ -77,9 +77,9 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return CustomerGroup::with('cash')->paginate();
+        return CustomerGroup::with('cash', 'company')->bySelectedCompany()->paginate();
     }
 
     public function getAllCustomerGroup()
@@ -156,13 +156,11 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         }        
     }
 
-
     public function delete($id)
     {
         $customergroup = CustomerGroup::find($id);
 
         return $customergroup->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

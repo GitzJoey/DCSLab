@@ -15,19 +15,19 @@ class ProductUnit extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-
-    protected $table = 'product_unit';
     
     protected $fillable = [
+        'company_id',
         'product_id',
         'unit_id',
+        'code',
         'is_base',
         'conversion_value',
         'is_primary_unit',
         'remarks'
     ];
 
-    protected static $logAttributes = ['product_id', 'unit_id', 'is_base', 'conversion_value', 'is_primary_unit', 'remarks'];
+    protected static $logAttributes = ['company_id', 'product_id', 'unit_id', 'code', 'is_base', 'conversion_value', 'is_primary_unit', 'remarks'];
 
     protected static $logOnlyDirty = true;
 
@@ -49,7 +49,7 @@ class ProductUnit extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);

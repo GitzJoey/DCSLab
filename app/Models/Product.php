@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Company;
 use App\Models\ProductGroup;
-use App\Models\ProductBrand;
-use App\Models\Unit;
+use App\Models\Brand;
 use App\Models\ProductUnit;
 use App\Models\Supplier;
 
@@ -23,7 +22,7 @@ class Product extends Model
 
     protected $fillable = [
         'code',
-        'group_id',
+        'product_group_id',
         'brand_id',
         'name',
         'product_unit',
@@ -32,14 +31,15 @@ class Product extends Model
         'supplier_id',
         'remarks',
         'point',
-        'is_use_serial',
+        'use_serial_number',
+        'has_expiry_date',
         'product_type',
         'status'
     ];
 
     protected static $logAttributes = [
         'code',
-        'group_id',
+        'product_group_id',
         'brand_id',
         'name',
         'product_unit',
@@ -48,7 +48,8 @@ class Product extends Model
         'supplier_id',
         'remarks',
         'point',
-        'is_use_serial',
+        'use_serial_number',
+        'has_expiry_date',
         'product_type',
         'status'
     ];
@@ -57,7 +58,7 @@ class Product extends Model
 
     protected $hidden = [
         'id',
-        'group_id',
+        'product_group_id',
         'brand_id',
         'unit_id',
         'supplier_id',
@@ -69,7 +70,7 @@ class Product extends Model
         'deleted_at'
     ];
 
-    protected $appends = ['hId'];
+    protected $appends = ['hId', 'defaultSupplier'];
 
     public function getHIdAttribute() : string
     {
@@ -81,22 +82,17 @@ class Product extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function group()
+    public function productGroup()
     {
         return $this->belongsTo(ProductGroup::class);
     }
 
     public function brand()
     {
-        return $this->belongsTo(ProductBrand::class);
+        return $this->belongsTo(Brand::class);
     }
 
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class);
-    }
-
-    public function product_unit()
+    public function productUnit()
     {
         return $this->hasMany(ProductUnit::class);
     }
@@ -104,5 +100,11 @@ class Product extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+
+    public function getDefaultSupplierAttribute()
+    {
+        if ($this->supplier) return $this->supplier->hId;
+        else return '';
     }
 }

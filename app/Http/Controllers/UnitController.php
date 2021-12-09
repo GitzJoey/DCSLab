@@ -6,7 +6,10 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
 
 class UnitController extends BaseController
 {
@@ -31,38 +34,41 @@ class UnitController extends BaseController
 
     public function read()
     {
-        return $this->UnitService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
+        $userId = Auth::user()->id;
+        return $this->UnitService->read($userId);
     }
 
-    public function getAllUnit()
+    public function getAllUnit_Product()
     {
-        return $this->UnitService->getAllUnit();
+        return $this->UnitService->getAllUnit_Product();
     }
 
-    public function getAllProduct()
+    public function getAllUnit_Service()
     {
-        return $this->UnitService->getAllProduct();
-    }
-
-    public function getAllService()
-    {
-        return $this->UnitService->getAllService();
-    }
-
-    public function GetAllProductandService()
-    {
-        return $this->UnitService->GetAllProductandService();
+        return $this->UnitService->getAllUnit_Service();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'units')],
-            'name' => 'required|max:255'
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'units')],
+            'name' => 'required|min:3|max:255',
+            'category' => 'required'
         ]);
 
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->UnitService->create(
-            // Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['category']
@@ -74,12 +80,15 @@ class UnitController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'units'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255',
         ]);
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
         $result = $this->UnitService->update(
             $id,
-            // Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['category']

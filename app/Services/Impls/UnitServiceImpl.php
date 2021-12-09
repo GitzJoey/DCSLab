@@ -13,7 +13,7 @@ use App\Models\Unit;
 class UnitServiceImpl implements UnitService
 {
     public function create(
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category
@@ -23,7 +23,7 @@ class UnitServiceImpl implements UnitService
 
         try {
             $unit = new Unit();
-            // $unit->company_id = $company_id;
+            $unit->company_id = $company_id;
             $unit->code = $code;
             $unit->name = $name;
             $unit->category = $category;
@@ -40,34 +40,28 @@ class UnitServiceImpl implements UnitService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Unit::paginate();
+        return Unit::with('company')->bySelectedCompany()->paginate();
     }
 
-    public function getAllUnit()
+    public function getAllUnit_Product()
     {
-        return Unit::all();
+        return Unit::where('category', '<>', 2)
+            ->bySelectedCompany()
+            ->get();
     }
 
-    public function getAllProduct()
+    public function getAllUnit_Service()
     {
-        return Unit::where('category', '=', 1)->get();
-    }
-
-    public function getAllService()
-    {
-        return Unit::where('category', '=', 2)->get();
-    }
-
-    public function GetAllProductandService()
-    {
-        return Unit::where('category', '=', 3)->get();
+        return Unit::where('category', '<>', 1)
+            ->bySelectedCompany()
+            ->get();
     }
 
     public function update(
         $id,
-        // $company_id,
+        $company_id,
         $code,
         $name,
         $category
@@ -77,9 +71,9 @@ class UnitServiceImpl implements UnitService
 
         try {
             $unit = Unit::where('id', '=', $id);
-    
+
             $retval = $unit->update([
-                // 'company_id' => $company_id,
+                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
                 'category' => $category,
@@ -105,7 +99,7 @@ class UnitServiceImpl implements UnitService
         $unit = Unit::find($id);
 
         return $unit->delete();
-        
+
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

@@ -18,20 +18,17 @@ return [
         'branch' => [
             'api.get.dashboard.branch.*',
             'api.post.dashboard.company.branches.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'employee' => [
             'api.get.dashboard.employee.read',
             'api.post.dashboard.company.employees.*',
-
             'api.get.dashboard.company.read.all_active',
             'api.get.common.countries.read',
         ],
         'warehouse' => [
             'api.get.dashboard.warehouse.read',
             'api.post.dashboard.company.warehouses.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'cash' => [
@@ -41,7 +38,6 @@ return [
         'capital' => [
             'api.get.dashboard.capital.read',
             'api.post.dashboard.capital.*',
-            
             'api.get.dashboard.company.read.all_active',
             'api.get.dashboard.investor.read.all_active',
             'api.get.dashboard.capitalgroup.read.all_active',
@@ -50,25 +46,21 @@ return [
         'capitalgroup' => [
             'api.get.dashboard.capitalgroup.read',
             'api.post.dashboard.capitalgroup.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'investor' => [
             'api.get.dashboard.investor.read',
             'api.post.dashboard.investor.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'expensegroup' => [
             'api.get.dashboard.expensegroup.read',
             'api.post.dashboard.expensegroup.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'incomegroup' => [
             'api.get.dashboard.incomegroup.read',
             'api.post.dashboard.incomegroup.*',
-
             'api.get.dashboard.company.read.all_active',
         ],
         'supplier' => [
@@ -79,9 +71,9 @@ return [
             'api.get.dashboard.productgroup.read',
             'api.post.dashboard.productgroup.*',
         ],
-        'productbrand' => [
-            'api.get.dashboard.productbrand.read',
-            'api.post.dashboard.productbrand.*',
+        'brand' => [
+            'api.get.dashboard.brand.read',
+            'api.post.dashboard.brand.*',
         ],
         'productunit' => [
             'api.get.dashboard.productunit.read',
@@ -92,18 +84,21 @@ return [
             'api.post.dashboard.unit.*',
         ],
         'product' => [
+            'api.get.dashboard.productgroup.read.product',
+            'api.get.dashboard.brand.read.all',
             'api.get.dashboard.product.read',
             'api.get.dashboard.product.read.product',
             'api.get.dashboard.product.read.service',
-            'api.get.dashboard.productgroup.read.all',
-            'api.get.dashboard.productbrand.read.all',
-            'api.get.dashboard.unit.read.all',
+            'api.get.dashboard.unit.read.product',
             'api.get.dashboard.productunit.read.all',
             'api.get.dashboard.supplier.read.all',
             'api.post.dashboard.product.*',
+            'api.post.dashboard.productunit.delete',
         ],
         'service' => [
-            'api.get.dashboard.service.read',
+            'api.get.dashboard.product.read.service',
+            'api.get.dashboard.productgroup.read.service',
+            'api.get.dashboard.unit.read.service',
             'api.post.dashboard.service.*',
         ],
         'customergroup' => [

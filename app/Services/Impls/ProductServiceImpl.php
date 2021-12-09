@@ -2,9 +2,13 @@
 
 namespace App\Services\Impls;
 
+use App\Models\Brand;
 use Exception;
 use App\Models\Product;
+use App\Models\ProductGroup;
 use App\Services\ProductService;
+use App\Models\User;
+use App\Models\ProductUnit;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,38 +19,53 @@ class ProductServiceImpl implements ProductService
     public function create(
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
         $tax_status,
         $supplier_id,
         $remarks,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
+        $product_units
     )
     {
-
         DB::beginTransaction();
 
         try {
             $product = new Product();
             $product->company_id = $company_id;
             $product->code = $code;
-            $product->group_id = $group_id;
+            $product->product_group_id = $product_group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
             $product->tax_status = $tax_status;
             $product->supplier_id = $supplier_id;
             $product->remarks = $remarks;
             $product->point = $point;
-            $product->is_use_serial = $is_use_serial;
+            $product->use_serial_number = $use_serial_number;
+            $product->has_expiry_date = $has_expiry_date;
             $product->product_type = $product_type;
             $product->status = $status;
             $product->save();
 
-            
+            $pu = [];
+            foreach ($product_units as $product_unit) {
+                array_push($pu, new ProductUnit(array (
+                    'company_id' => $product_unit['company_id'],
+                    'product_id' => $product['id'],
+                    'code' => $product_unit['code'],
+                    'unit_id' => $product_unit['unit_id'],
+                    'conversion_value' => $product_unit['conv_value'],
+                    'is_base' => $product_unit['is_base'],
+                    'is_primary_unit' => $product_unit['is_primary_unit'],
+                    'remarks' => $product_unit['remarks']
+                )));
+            }
+            $product->productUnit()->saveMany($pu);
 
             DB::commit();
 
@@ -56,24 +75,31 @@ class ProductServiceImpl implements ProductService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
-
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Product::with('group', 'brand', 'product_unit.unit')->paginate();
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Product::with('productGroup', 'brand', 'productUnit.unit')->whereIn('company_id', $company_list)->paginate();
     }
 
-    public function read_product()
+    public function read_product($userId)
     {
-        return Product::with('group', 'brand', 'product_unit.unit', 'supplier')
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Product::with('productGroup', 'brand', 'productUnit.unit')
+                ->whereIn('company_id', $company_list)
                 ->where('product_type', '<>', 4)
                 ->paginate();
     }
 
-    public function read_service()
+    public function read_service($userId)
     {
-        return Product::with('group', 'brand', 'product_unit.unit')
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Product::with('productGroup', 'productUnit.unit')
+                ->whereIn('company_id', $company_list)
                 ->where('product_type', '=', 4)
                 ->paginate();
     }
@@ -87,42 +113,112 @@ class ProductServiceImpl implements ProductService
         $id,
         $company_id,
         $code,
-        $group_id,
+        $product_group_id,
         $brand_id,
         $name,
-        $product_unit,
-        $unit,
         $tax_status,
+        $supplier_id,
         $remarks,
-        $estimated_capital_price,
         $point,
-        $is_use_serial,
+        $use_serial_number,
+        $has_expiry_date,
         $product_type,
         $status,
+        $product_units
     )
     {
         DB::beginTransaction();
 
         try {
+            //ini retrieve datanya
             $product = Product::where('id', '=', $id);
 
+            //ini di update table product
             $retval = $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
-                'group_id' => $group_id,
+                'product_group_id' => $product_group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
-                'product_unit' => $product_unit,
-                'unit' => $unit,
                 'tax_status' => $tax_status,
+                'supplier_id' => $supplier_id,
                 'remarks' => $remarks,
-                'estimated_capital_price' => $estimated_capital_price,
                 'point' => $point,
-                'is_use_serial' => $is_use_serial,
+                'use_serial_number' => $use_serial_number,
+                'has_expiry_date' => $has_expiry_date,
                 'product_type' => $product_type,
                 'status' => $status
-
             ]);
+
+            //ini yg baru
+            $pu = [];
+            foreach ($product_units as $product_unit) {
+                array_push($pu, array(
+                    'id' => $product_unit['id'],
+                    'company_id' => $product_unit['company_id'],
+                    'product_id' => $id,
+                    'code' => $product_unit['code'],
+                    'unit_id' => $product_unit['unit_id'],
+                    'conversion_value' => $product_unit['conv_value'],
+                    'is_base' => $product_unit['is_base'],
+                    'is_primary_unit' => $product_unit['is_primary_unit'],
+                    'remarks' => $product_unit['remarks']
+                ));
+            }
+
+            $puIds = [];
+            foreach ($pu as $puId)
+            {
+                array_push($puIds, $puId['id']);
+            }
+
+            //disini compare yg baru dengan yang lama
+            $puOld = Product::find($id);
+            $puIdsOld = $puOld->productUnit()->pluck('id')->ToArray();
+
+            //compare array cari di google "compare 2 array"
+            $deletedProductUnitIds = [];
+            $deletedProductUnitIds = array_diff($puIdsOld, $puIds);            
+
+            foreach ($deletedProductUnitIds as $deletedProductUnitId) {
+                $productUnit = ProductUnit::find($deletedProductUnitId);
+                $retval = $productUnit->delete();
+            }
+
+            // $retval = ProductUnit::upsert(
+            //     $pu, 
+            //     [
+            //         'id', 
+            //         'code',
+            //         'company_id',
+            //         'product_id',
+            //         'unit_id',
+            //         'conversion_value',
+            //     ], 
+            //     [
+            //         'code',
+            //         'unit_id',
+            //         'is_base',
+            //         'conversion_value',
+            //         'is_primary_unit',
+            //         'remarks'
+            //     ]
+            // );
+
+            $retval = ProductUnit::upsert(
+                $pu, 
+                [
+                    'id'
+                ], 
+                [
+                    'code',
+                    'unit_id',
+                    'is_base',
+                    'conversion_value',
+                    'is_primary_unit',
+                    'remarks'
+                ]
+            );
 
             DB::commit();
 
@@ -136,12 +232,12 @@ class ProductServiceImpl implements ProductService
 
     public function getProductGroupById($id)
     {
-        return Product::find($id);
+        return ProductGroup::find($id);
     }
 
-    public function getProductBrandById($id)
+    public function getBrandById($id)
     {
-        return Product::find($id);
+        return Brand::find($id);
     }
 
     public function delete($id)

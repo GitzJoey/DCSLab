@@ -43,9 +43,9 @@ class CashServiceImpl implements CashService
 
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Cash::paginate();
+        return Cash::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllActiveCash()

@@ -51,9 +51,9 @@ class InvestorServiceImpl implements InvestorService
 
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Investor::paginate();
+        return Investor::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllActiveInvestor()
@@ -100,7 +100,6 @@ class InvestorServiceImpl implements InvestorService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-
 
     public function delete($id)
     {

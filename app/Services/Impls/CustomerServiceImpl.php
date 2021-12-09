@@ -33,7 +33,6 @@ class CustomerServiceImpl implements CustomerService
         $status
     )
     {
-
         DB::beginTransaction();
 
         try {
@@ -68,9 +67,9 @@ class CustomerServiceImpl implements CustomerService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Customer::with('customer_group')->paginate();
+        return Customer::with('customerGroup', 'company')->bySelectedCompany()->paginate();
     }
 
     public function update(
@@ -137,7 +136,6 @@ class CustomerServiceImpl implements CustomerService
         $customer = Customer::find($id);
 
         return $customer->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

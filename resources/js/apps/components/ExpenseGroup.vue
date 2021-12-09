@@ -158,9 +158,11 @@ export default {
             contentHidden: false,
             expensegroupList: [],
             expensegroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
@@ -189,7 +191,7 @@ export default {
         },
         emptyExpenseGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
             }
         },

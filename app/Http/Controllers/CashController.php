@@ -6,7 +6,10 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\CashService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
 
 class CashController extends BaseController
 {
@@ -31,7 +34,11 @@ class CashController extends BaseController
 
     public function read()
     {
-        return $this->CashService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
+        $userId = Auth::user()->id;
+        return $this->CashService->read($userId);
     }
 
     public function getAllActiveCash()
@@ -42,22 +49,29 @@ class CashController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'cashes')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'cashes')],
+            'name' => 'required|min:2|max:255|alpha|alpha_dash',
             'status' => 'required'
         ]);
+
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
         
         $is_bank = $request['is_bank'];
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
         $result = $this->CashService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'], 
             $request['name'], 
             $is_bank, 
             $request['status']
         );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -65,22 +79,24 @@ class CashController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'cashes'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:2|max:255|alpha|alpha_dash',
             'status' => 'required'
         ]);
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
         $is_bank = $request['is_bank'];
         $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
 
         $result = $this->CashService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $is_bank,
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

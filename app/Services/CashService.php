@@ -12,7 +12,7 @@ interface CashService
         $status
     );
 
-    public function read();
+    public function read($userId);
 
     public function getAllActiveCash();
 

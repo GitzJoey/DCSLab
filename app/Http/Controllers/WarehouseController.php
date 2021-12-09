@@ -6,7 +6,8 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\WarehouseService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use App\Actions\RandomGenerator;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseController extends BaseController
@@ -32,25 +33,34 @@ class WarehouseController extends BaseController
 
     public function read()
     {
-        return $this->warehouseService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        
+        $userId = Auth::user()->id;
+        return $this->warehouseService->read($userId);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'company_id' => 'required',
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'warehouses')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'warehouses')],
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
             'status' => 'required'
         ]);
 
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
+
         $result = $this->warehouseService->create(
-            Hashids::decode($request['company_id'])[0], 
+            Hashids::decode($request['company_id'])[0],
             $request['code'],
-            $request['name'], 
+            $request['name'],
             $request['address'],
-            $request['city'], 
-            $request['contact'], 
+            $request['city'],
+            $request['contact'],
             $request['remarks'],
             $request['status']
         );
@@ -62,7 +72,7 @@ class WarehouseController extends BaseController
         $request->validate([
             'company_id' => 'required',
             'code' => new uniqueCode('update', $id, 'warehouses'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
             'status' => 'required'
         ]);
 

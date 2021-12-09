@@ -22,30 +22,36 @@ class UserServiceImpl implements UserService
 {
     public function register($name, $email, $password, $terms)
     {
+        $usr = new User();
+        $usr->name = $name;
+        $usr->email = $email;
+        $usr->password = Hash::make($password);
+
+        $usr->save();
+
+        $profile = new Profile();
         if ($name == trim($name) && strpos($name, ' ') !== false) {
             $pieces = explode(" ", $name);
-            $first_name = $pieces[0];
-            $last_name = $pieces[1];
+            $profile->first_name = $pieces[0];
+            $profile->last_name = $pieces[1];
         } else {
-            $first_name = $name;
-            $last_name = '';
+            $profile->first_name = $name;
         }
 
-        $profile = array (
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'status' => 1,
-        );
+        $profile->status = 1;
 
-        $rolesId = array(Role::where('name', Config::get('const.DEFAULT.ROLE.USER'))->first()->id);
+        $usr->profile()->save($profile);
 
-        $usr = $this->create(
-            $name,
-            $email,
-            $password,
-            $rolesId,
-            $profile
-        );
+        $settings = $this->createDefaultSetting();
+
+        $usr->settings()->saveMany($settings);
+
+        $user_role = Role::where('name', Config::get('const.DEFAULT.ROLE.USER'))->first();
+
+        $usr->attachRole($user_role);
+
+        if (env('AUTO_VERIFY_EMAIL', true))
+            $usr->markEmailAsVerified();
 
         return $usr;
     }
@@ -88,7 +94,7 @@ class UserServiceImpl implements UserService
 
             DB::commit();
 
-            return $usr;
+            return $usr->hId;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);

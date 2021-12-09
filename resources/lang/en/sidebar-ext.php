@@ -23,7 +23,7 @@ return [
     'db.purchase.suppliers' => 'Purchase Suppliers',
     'db.product' => 'Product',
     'db.product.product_groups' => 'Product Groups',
-    'db.product.product_brands' => 'Product Brands',
+    'db.product.brands' => 'Brands',
     'db.product.units' => 'Units',
     'db.product.products' => 'Products',
     'db.product.services' => 'Services',

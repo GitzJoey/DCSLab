@@ -6,8 +6,10 @@ use App\Services\ActivityLogService;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Actions\RandomGenerator;
 
 class BranchController extends BaseController
 {
@@ -35,17 +37,23 @@ class BranchController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
             return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        return $this->branchService->read();
+        $userId = Auth::user()->id;
+        return $this->branchService->read($userId);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'company_id' => 'required',
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'branches')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'branches')],
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
+
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
 
         $result = $this->branchService->create(
             Hashids::decode($request['company_id'])[0],
@@ -65,7 +73,7 @@ class BranchController extends BaseController
         $request->validate([
             'company_id' => 'required|max:255' ,
             'code' => new uniqueCode('update', $id, 'branches'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 

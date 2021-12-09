@@ -5,6 +5,7 @@
             <h3 class="block-title" v-if="this.mode === 'create'"><strong>{{ $t('actions.create') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'edit'"><strong>{{ $t('actions.edit') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'show'"><strong>{{ $t('actions.show') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'error'"><strong>&nbsp;</strong></h3>
             <div class="block-options">
                 <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
@@ -21,7 +22,38 @@
         </div>
         <div class="block-content">
             <transition name="fade">
+                <div id="error" v-if="this.mode === 'error'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.listErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.listErrors">{{ e }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </transition>
+            <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.tableListErrors">{{ e }}</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.tableListErrors">{{ e }}</li>
+                        </ul>
+                    </div>
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
@@ -32,23 +64,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(b, bIdx) in productgroupList.data">
-                                <td>{{ b.code }}</td>
-                                <td>{{ b.name }}</td>
+                            <tr v-for="(c, cIdx) in productgroupList.data">
+                                <td>{{ c.code }}</td>
+                                <td>{{ c.name }}</td>
                                 <td>
-                                    <span v-if="b.category === 1">{{ $t('categoryDDL.product') }}</span>
-                                    <span v-if="b.category === 2">{{ $t('categoryDDL.service') }}</span>
-                                    <span v-if="b.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
+                                    <span v-if="c.category === 1">{{ $t('categoryDDL.product') }}</span>
+                                    <span v-if="c.category === 2">{{ $t('categoryDDL.service') }}</span>
+                                    <span v-if="c.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.show')" v-on:click="showSelected(cIdx)">
                                             <i class="fa fa-info"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.edit')" v-on:click="editSelected(cIdx)">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(bIdx)">
+                                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelected(cIdx)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -75,7 +107,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div id="crud" v-if="this.mode !== 'list'">
+                <div id="crud" v-if="this.mode !== 'list' && this.mode !== 'error'">
                     <Form id="productgroupForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
@@ -134,7 +166,7 @@
             <div v-if="this.mode === 'list'">
                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNew"><i class="fa fa-plus-square"></i></button>
             </div>
-            <div v-if="this.mode !== 'list'">
+            <div v-if="this.mode !== 'list' && this.mode !== 'error'">
                 <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="backToList">{{ $t("buttons.back") }}</button>
             </div>
         </div>
@@ -180,10 +212,12 @@ export default {
             contentHidden: false,
             productgroupList: [],
             productgroup: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
@@ -199,6 +233,9 @@ export default {
             axios.get(route('api.get.dashboard.productgroup.read') + '?page=' + page).then(response => {
                 this.productgroupList = response.data;
                 this.loading = false;
+            }).catch(e => {
+                this.handleListError(e);
+                this.loading = false;
             });
         },
         onPaginationChangePage(page) {
@@ -212,7 +249,7 @@ export default {
         },
         emptyProductGroup() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             }
@@ -271,6 +308,23 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
+        },
+        handleListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.mode = 'error';
+                this.listErrors.push(e.response.data.message);
+            }
+        },
+        resetListErrors() {
+            this.listErrors = [];
+        },
+        handleTableListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.tableListErrors.push(e.response.data.message);
+            }
+        },
+        resetTableListErrors() {
+            this.tableListErrors = [];
         },
         handleUpload(e) {
             const files = e.target.files;

@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\ProductUnitService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductUnitController extends BaseController
@@ -31,7 +32,11 @@ class ProductUnitController extends BaseController
 
     public function read()
     {
-        return $this->productUnitService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
+        $userId = Auth::user()->id;
+        return $this->productUnitService->read($userId);
     }
 
     public function getAllProductUnit()
@@ -42,8 +47,8 @@ class ProductUnitController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'productunits')],
-            'name' => 'required|max:255'
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'productunits')],
+            'name' => 'required|min:3|max:255',
         ]);
 
         $is_base = $request['is_base'];
@@ -62,7 +67,6 @@ class ProductUnitController extends BaseController
             $is_primary_unit,
             $request['remarks'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -70,7 +74,7 @@ class ProductUnitController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'productunits'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_num|alpha_dash',
         ]);
         
         $is_base = $request['is_base'];

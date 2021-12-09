@@ -29,7 +29,7 @@ class SupplierFactory extends Factory
             'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
             'code' => $faker->numberBetween(01, 10),
             'name' => $faker->name(),
-            'term' => $faker->numberBetween(7, 28),
+            'payment_term_type' => $faker->numberBetween(7, 28),
             'contact' => $faker->e164PhoneNumber(),
             'address' => $faker->address(),
             'city' => $faker->city(),
@@ -37,7 +37,6 @@ class SupplierFactory extends Factory
             'tax_number' => $faker->creditCardNumber(),
             'remarks' => $faker->word(),
             'status' => '1'
-            
         ];
     }
 }

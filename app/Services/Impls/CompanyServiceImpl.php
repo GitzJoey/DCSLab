@@ -24,10 +24,8 @@ class CompanyServiceImpl implements CompanyService
         DB::beginTransaction();
 
         try {
-            $usr = User::find($userId)->first();
-
-            if ($usr->companies()->count() == 0)
-                $default = 1;
+            $user = User::find($userId);
+            if ($user->companies()->count() == 0) $default = 1;
 
             $company = new Company();
             $company->code = $code;
@@ -37,7 +35,7 @@ class CompanyServiceImpl implements CompanyService
 
             $company->save();
 
-            $usr->companies()->attach([$company->id]);
+            $user->companies()->attach([$company->id]);
 
             DB::commit();
 
@@ -51,8 +49,8 @@ class CompanyServiceImpl implements CompanyService
 
     public function read($userId)
     {
-        $usr = User::find($userId)->first();
-        $compIds = $usr->companies()->pluck('company_id');
+        $usr = User::find($userId);
+        $compIds = $usr->companies()->where('user_id', '=', $userId)->pluck('company_id');
         return Company::whereIn('id', $compIds)->paginate();
     }
 

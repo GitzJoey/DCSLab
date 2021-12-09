@@ -6,7 +6,8 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\IncomeGroupService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
 use Vinkla\Hashids\Facades\Hashids;
 
 class IncomeGroupController extends BaseController
@@ -38,12 +39,20 @@ class IncomeGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'incomegroups')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'incomegroups')],
+            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
         ]);
 
+        if ($request['code'] == 'AUTO') {
+            $randomGenerator = new randomGenerator();
+            $request['code'] = $randomGenerator->generateOne(99999999);
+        };
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->incomeGroupService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'], 
         );
@@ -54,12 +63,15 @@ class IncomeGroupController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'incomegroups'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
         ]);
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
         $result = $this->incomeGroupService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
         );

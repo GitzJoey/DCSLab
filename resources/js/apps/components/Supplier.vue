@@ -5,6 +5,7 @@
             <h3 class="block-title" v-if="this.mode === 'create'"><strong>{{ $t('actions.create') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'edit'"><strong>{{ $t('actions.edit') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'show'"><strong>{{ $t('actions.show') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'error'"><strong>&nbsp;</strong></h3>
             <div class="block-options">
                 <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
@@ -21,18 +22,49 @@
         </div>
         <div class="block-content">
             <transition name="fade">
+                <div id="error" v-if="this.mode === 'error'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.listErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.listErrors">{{ e }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </transition>
+            <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.tableListErrors">{{ e }}</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.tableListErrors">{{ e }}</li>
+                        </ul>
+                    </div>
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
-                                <th>{{ $t("table.cols.term") }}</th>
+                                <th>{{ $t("table.cols.payment_term_type") }}</th>
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
-                                <th>{{ $t("table.cols.is_tax") }}</th>
-                                <th>{{ $t("table.cols.tax_number") }}</th>
+                                <th>{{ $t("table.cols.taxable_enterprice") }}</th>
+                                <th>{{ $t("table.cols.tax_id") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
@@ -42,15 +74,15 @@
                             <tr v-for="(c, cIdx) in supplierList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
-                                <td>{{ c.term }}</td>
+                                <td>{{ c.payment_term_type }}</td>
                                 <td>{{ c.contact }}</td>
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
                                 <td>
-                                    <span v-if="c.is_tax === 1">{{ $t('is_tax.active') }}</span>
-                                    <span v-if="c.is_tax === 0">{{ $t('is_tax.inactive') }}</span>
+                                    <span v-if="c.taxable_enterprice === 1">{{ $t('taxable_enterprice.active') }}</span>
+                                    <span v-if="c.taxable_enterprice === 0">{{ $t('taxable_enterprice.inactive') }}</span>
                                 </td>
-                                <td>{{ c.tax_number }}</td>
+                                <td>{{ c.tax_id }}</td>
                                 <td>{{ c.remarks }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
@@ -91,7 +123,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div id="crud" v-if="this.mode !== 'list'">
+                <div id="crud" v-if="this.mode !== 'list' && this.mode !== 'error'">
                     <Form id="supplierForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
@@ -119,9 +151,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
+                            <label for="inputPaymentTermType" class="col-2 col-form-label">{{ $t('fields.payment_term_type') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="supplier.term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <Field id="inputPaymentTermType" name="payment_term_type" as="input" :class="{'form-control':true, 'is-invalid': errors['payment_term_type']}" :placeholder="$t('fields.payment_term_type')" :label="$t('fields.payment_term_type')" v-model="supplier.payment_term_type" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.code }}</div>
                             </div>
                         </div>
@@ -147,25 +179,25 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputIs_Tax" class="col-2 col-form-label">{{ $t('fields.is_tax') }}</label>
+                            <label for="inputTaxable_Enterprice" class="col-2 col-form-label">{{ $t('fields.taxable_enterprice') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="is_tax" name="is_tax" v-model="supplier.is_tax" true-value="1" false-value="0">
+                                        <input type="checkbox" class="css-control-input" id="taxable_enterprice" name="taxable_enterprice" v-model="supplier.taxable_enterprice" true-value="1" false-value="0">
                                         <span class="css-control-indicator"></span>
                                     </span>
                                     <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="supplier.is_tax === 1">{{ $t('is_tax.active') }}</span>
-                                        <span v-if="supplier.is_tax === 0">{{ $t('is_tax.inactive') }}</span>
+                                        <span v-if="supplier.taxable_enterprice === 1">{{ $t('taxable_enterprice.active') }}</span>
+                                        <span v-if="supplier.taxable_enterprice === 0">{{ $t('taxable_enterprice.inactive') }}</span>
                                     </div>
                                 </label>
                             </div>
                         </div> 
                         <div class="form-group row">
-                            <label for="inputTax_Number" class="col-2 col-form-label">{{ $t('fields.tax_number') }}</label>
+                            <label for="inputTax_Id" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTax_Number" name="tax_number" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_number']}" :placeholder="$t('fields.tax_number')" :label="$t('fields.tax_number')" v-model="supplier.tax_number" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.tax_number }}</div>
+                                <Field id="inputTax_Id" name="tax_id" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_id']}" :placeholder="$t('fields.tax_id')" :label="$t('fields.tax_id')" v-model="supplier.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.tax_id }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -206,7 +238,7 @@
             <div v-if="this.mode === 'list'">
                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNew"><i class="fa fa-plus-square"></i></button>
             </div>
-            <div v-if="this.mode !== 'list'">
+            <div v-if="this.mode !== 'list' && this.mode !== 'error'">
                 <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="backToList">{{ $t("buttons.back") }}</button>
             </div>
         </div>
@@ -252,17 +284,19 @@ export default {
             contentHidden: false,
             supplierList: [],
             supplier: {
-                code: '',
+                code: 'AUTO',
                 name: '',
-                term: '',
+                payment_term_type: '',
                 contact: '',
                 address: '',
                 city: '',
-                is_tax: '1',
-                tax_number: '',
+                taxable_enterprice: '1',
+                tax_id: '',
                 remarks: '',
                 status: '1',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
@@ -278,6 +312,9 @@ export default {
             axios.get(route('api.get.dashboard.supplier.read') + '?page=' + page).then(response => {
                 this.supplierList = response.data;
                 this.loading = false;
+            }).catch(e => {
+                this.handleListError(e);
+                this.loading = false;
             });
         },
         onPaginationChangePage(page) {
@@ -291,14 +328,14 @@ export default {
         },
         emptySupplier() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
-                term: '',
+                payment_term_type: '',
                 contact: '',
                 address: '',
                 city: '',
-                is_tax: '1',
-                tax_number: '',
+                taxable_enterprice: '1',
+                tax_id: '',
                 remarks: '',
                 status: '1',
             }
@@ -357,6 +394,23 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
+        },
+        handleListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.mode = 'error';
+                this.listErrors.push(e.response.data.message);
+            }
+        },
+        resetListErrors() {
+            this.listErrors = [];
+        },
+        handleTableListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.tableListErrors.push(e.response.data.message);
+            }
+        },
+        resetTableListErrors() {
+            this.tableListErrors = [];
         },
         handleUpload(e) {
             const files = e.target.files;

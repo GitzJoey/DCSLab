@@ -11,7 +11,7 @@ class BaseController extends Controller
     {
 
     }
-
+    
     public function hasSelectedCompanyOrCompany()
     {
         $result = true;

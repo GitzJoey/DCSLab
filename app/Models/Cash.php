@@ -10,6 +10,7 @@ use App\Models\Company;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class Cash extends Model
 {
@@ -36,7 +37,7 @@ class Cash extends Model
         'updated_at',
         'deleted_at'
     ];
-    
+
     protected $appends = ['hId'];
 
     public function getHIdAttribute() : string
@@ -49,13 +50,23 @@ class Cash extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function customergroups()
+    public function customerGroups()
     {
         return $this->hasMany(CustomerGroup::class);
-    } 
+    }
 
     public function capitals()
     {
         return $this->hasMany(Capital::class);
+    }
+
+    public function scopeBySelectedCompany($query, $overrideCompanyId = '')
+    {
+        return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);
+    }
+
+    public function scopeStatusActive($query, $overrideStatus = '')
+    {
+        return $query->where('status', '=', empty($overrideStatus) ? 1:$overrideStatus);
     }
 }

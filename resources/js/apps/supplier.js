@@ -19,12 +19,12 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
-                term: 'Term',
+                payment_term_type: 'Payment Term Type',
                 contact: 'Contact',
                 address: 'Address',
                 city: 'City',
-                is_tax: 'Is Tax',
-                tax_number: 'Tax Number',
+                taxable_enterprice: 'Taxable Enterprice',
+                tax_id: 'Tax Number',
                 remarks: 'Remarks',
                 status: 'Status',
             }
@@ -42,15 +42,15 @@ const messages = {
         },
         fields: {
             code: 'Code',
-                name: 'Name',
-                term: 'Term',
-                contact: 'Contact',
-                address: 'Address',
-                city: 'City',
-                is_tax: 'Is Tax',
-                tax_number: 'Tax Number',
-                remarks: 'Remarks',
-                status: 'Status',
+            name: 'Name',
+            payment_term_type: 'Payment Term Type',
+            contact: 'Contact',
+            address: 'Address',
+            city: 'City',
+            taxable_enterprice: 'Taxable Enterprice',
+            tax_id: 'Tax Number',
+            remarks: 'Remarks',
+            status: 'Status',
             settings: {
                 settings: 'Settings',
                 theme: 'Themes',
@@ -64,7 +64,7 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
-        is_tax: {
+        taxable_enterprice: {
             active: 'Yes',
             inactive: 'No',
         },
@@ -79,12 +79,12 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
-                term: 'Term',
+                payment_term_type: 'Payment Term Type',
                 contact: 'Kontak',
                 address: 'Alamat',
                 city: 'Kota',
-                is_tax: 'Ppn',
-                tax_number: 'Nomor Pajak',
+                taxable_enterprice: 'Ppn',
+                tax_id: 'Nomor Pajak',
                 remarks: 'Remarks',
                 status: 'Status',
             }
@@ -102,15 +102,15 @@ const messages = {
         },
         fields: {
             code: 'Kode',
-                name: 'Nama',
-                term: 'Term',
-                contact: 'Kontak',
-                address: 'Alamat',
-                city: 'Kota',
-                is_tax: 'Ppn',
-                tax_number: 'Nomor Pajak',
-                remarks: 'Remarks',
-                status: 'Status',
+            name: 'Nama',
+            payment_term_type: 'Payment Term Type',
+            contact: 'Kontak',
+            address: 'Alamat',
+            city: 'Kota',
+            taxable_enterprice: 'Ppn',
+            tax_id: 'Nomor Pajak',
+            remarks: 'Remarks',
+            status: 'Status',
             settings: {
                 settings: 'Pengaturan',
                 theme: 'Tema',
@@ -124,7 +124,7 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
-        is_tax: {
+        taxable_enterprice: {
             active: 'Ya',
             inactive: 'Tidak',
         },
