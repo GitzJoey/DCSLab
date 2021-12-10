@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Permission;
 use App\Services\RoleService;
 use App\Services\UserService;
 
@@ -110,6 +111,11 @@ class AppHelper extends Command
         $companies = $this->confirm('Do you want to seed companies for each users?', true);
         $supplier = $this->confirm('Do you want to seed dummy suppliers for each companies?', true);
         $product = $this->confirm('Do you want to seed dummy products for each companies?', true);
+
+        if (Permission::count() == 0) {
+            $this->info('Roles and Permissions table is empty. seeding...');
+            Artisan::call('db:seed');
+        }
 
         if ($user)
         {

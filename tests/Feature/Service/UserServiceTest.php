@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,6 +13,8 @@ use TypeError;
 
 class UserServiceTest extends TestCase
 {
+    use WithFaker;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -64,7 +67,34 @@ class UserServiceTest extends TestCase
 
     public function test_call_register()
     {
-        $this->assertTrue(true);
+        $email = $this->faker->email;
+        $usr = $this->service->register('normaluser', $email, 'password', 'on');
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'normaluser',
+            'email' => $email
+        ]);
+
+        $this->assertDatabaseHas('role_user', [
+            'user_id' => $usr->id
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $usr->id
+        ]);
+
+        $this->assertDatabaseHas('settings', [
+            'user_id' => $usr->id
+        ]);
+    }
+
+    public function test_call_register_with_existing_email()
+    {
+        $usr = User::inRandomOrder()->first();
+
+        $usr = $this->service->register('normaluser', $usr->email, 'password', 'on');
+
+        $this->assertTrue(is_null($usr));
     }
 
     public function test_call_create()

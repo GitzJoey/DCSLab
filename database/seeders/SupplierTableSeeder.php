@@ -42,7 +42,9 @@ class SupplierTableSeeder extends Seeder
                     'user_id' => $usr->id
                 ]);
 
-                $some_prods = $products->shuffle()->take((new RandomGenerator())->generateNumber(1, $products->count() - 1));
+                $some_prods = $products->shuffle()
+                                ->take((new RandomGenerator())
+                                            ->generateNumber(1, $products->count() > 10 ? 10 : $products->count() - 1));
 
                 $supplier->products()->attach($some_prods);
             }

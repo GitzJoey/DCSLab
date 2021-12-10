@@ -24,7 +24,7 @@ use App\Services\UserService;
 
 class UserServiceImpl implements UserService
 {
-    public function register(string $name, string $email, string $password, string $terms): User
+    public function register(string $name, string $email, string $password, string $terms): ?User
     {
         if ($name == trim($name) && strpos($name, ' ') !== false) {
             $pieces = explode(" ", $name);
@@ -54,7 +54,7 @@ class UserServiceImpl implements UserService
         return $usr;
     }
 
-    public function create(string $name, string $email, string $password, array $rolesId, array $profile): User
+    public function create(string $name, string $email, string $password, array $rolesId, array $profile): ?User
     {
         DB::beginTransaction();
 

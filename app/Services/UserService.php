@@ -11,7 +11,7 @@ interface UserService
         string $email,
         string $password,
         string $terms
-    ): User;
+    ): ?User;
 
     public function create(
         string $name,
@@ -19,7 +19,7 @@ interface UserService
         string $password,
         array $rolesId,
         array $profile
-    ): User ;
+    ): ?User ;
 
     public function read(string $search = '', bool $paginate = true, int $perPage = 10);
 
