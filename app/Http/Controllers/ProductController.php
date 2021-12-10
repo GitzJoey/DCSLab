@@ -17,7 +17,6 @@ use App\Actions\RandomGenerator;
 class ProductController extends BaseController
 {
     private $productService;
-    private $productUnitService;
     private $activityLogService;
 
     public function __construct(ProductService $productService, ProductUnitService $productUnitService, ActivityLogService $activityLogService)

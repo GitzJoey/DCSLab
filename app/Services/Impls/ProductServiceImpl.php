@@ -185,26 +185,6 @@ class ProductServiceImpl implements ProductService
                 $retval = $productUnit->delete();
             }
 
-            // $retval = ProductUnit::upsert(
-            //     $pu, 
-            //     [
-            //         'id', 
-            //         'code',
-            //         'company_id',
-            //         'product_id',
-            //         'unit_id',
-            //         'conversion_value',
-            //     ], 
-            //     [
-            //         'code',
-            //         'unit_id',
-            //         'is_base',
-            //         'conversion_value',
-            //         'is_primary_unit',
-            //         'remarks'
-            //     ]
-            // );
-
             $retval = ProductUnit::upsert(
                 $pu, 
                 [
