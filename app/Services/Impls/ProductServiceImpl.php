@@ -130,10 +130,8 @@ class ProductServiceImpl implements ProductService
         DB::beginTransaction();
 
         try {
-            //ini retrieve datanya
             $product = Product::where('id', '=', $id);
 
-            //ini di update table product
             $retval = $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
@@ -150,7 +148,6 @@ class ProductServiceImpl implements ProductService
                 'status' => $status
             ]);
 
-            //ini yg baru
             $pu = [];
             foreach ($product_units as $product_unit) {
                 array_push($pu, array(
@@ -172,11 +169,9 @@ class ProductServiceImpl implements ProductService
                 array_push($puIds, $puId['id']);
             }
 
-            //disini compare yg baru dengan yang lama
             $puOld = Product::find($id);
             $puIdsOld = $puOld->productUnit()->pluck('id')->ToArray();
 
-            //compare array cari di google "compare 2 array"
             $deletedProductUnitIds = [];
             $deletedProductUnitIds = array_diff($puIdsOld, $puIds);            
 
@@ -184,26 +179,6 @@ class ProductServiceImpl implements ProductService
                 $productUnit = ProductUnit::find($deletedProductUnitId);
                 $retval = $productUnit->delete();
             }
-
-            // $retval = ProductUnit::upsert(
-            //     $pu, 
-            //     [
-            //         'id', 
-            //         'code',
-            //         'company_id',
-            //         'product_id',
-            //         'unit_id',
-            //         'conversion_value',
-            //     ], 
-            //     [
-            //         'code',
-            //         'unit_id',
-            //         'is_base',
-            //         'conversion_value',
-            //         'is_primary_unit',
-            //         'remarks'
-            //     ]
-            // );
 
             $retval = ProductUnit::upsert(
                 $pu, 
