@@ -17,7 +17,6 @@ use App\Actions\RandomGenerator;
 class ProductController extends BaseController
 {
     private $productService;
-    private $productUnitService;
     private $activityLogService;
 
     public function __construct(ProductService $productService, ProductUnitService $productUnitService, ActivityLogService $activityLogService)
@@ -186,8 +185,8 @@ class ProductController extends BaseController
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $use_serial_number;
-            $has_expiry_date;
+            $use_serial_number = null;
+            $has_expiry_date = null;
             $product_type = $request->product_type;
             $status = $request->status;
 
@@ -271,13 +270,13 @@ class ProductController extends BaseController
                 $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : $request['is_primary_unit'][$i];
                 $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
 
-                $use_serial_number = is_null($request['use_serial_number']) ? 0 : $request['use_serial_number'];
+                $use_serial_number = $use_serial_number == 'on' ? 1 : $use_serial_number;
+                $use_serial_number = is_null($use_serial_number) ? 0 : $use_serial_number;
                 $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
-                $use_serial_number == 'on' ? $use_serial_number = 1 : $use_serial_number = 0;
-        
-                $has_expiry_date = is_null($request['has_expiry_date']) ? 0 : $request['has_expiry_date'];
+                
+                $has_expiry_date = $has_expiry_date == 'on' ? 1 : $has_expiry_date;
+                $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
                 $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
-                $has_expiry_date == 'on' ? $has_expiry_date = 1 : $has_expiry_date = 0;
 
                 array_push($product_units, array (
                     'id' => $product_unit_id,
@@ -327,10 +326,18 @@ class ProductController extends BaseController
             $supplier_id = null;
             $remarks = $request->remarks;
             $point = $request->point;
-            $use_serial_number;
-            $has_expiry_date;
+            $use_serial_number = null;
+            $has_expiry_date = null;
             $product_type = 4;
             $status = $request->status;
+
+            $use_serial_number = $use_serial_number == 'on' ? 1 : $use_serial_number;
+            $use_serial_number = is_null($use_serial_number) ? 0 : $use_serial_number;
+            $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
+            
+            $has_expiry_date = $has_expiry_date == 'on' ? 1 : $has_expiry_date;
+            $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
+            $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
 
             $product_units = [];
             $product_unit_id = $request['product_unit_hId'] != null ? Hashids::decode($request['product_unit_hId'])[0] : null;

@@ -63,7 +63,7 @@
                                 <th>{{ $t("table.cols.contact") }}</th>
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
-                                <th>{{ $t("table.cols.taxable_enterprice") }}</th>
+                                <th>{{ $t("table.cols.taxable_enterprise") }}</th>
                                 <th>{{ $t("table.cols.tax_id") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
@@ -79,8 +79,8 @@
                                 <td>{{ c.address }}</td>
                                 <td>{{ c.city }}</td>
                                 <td>
-                                    <span v-if="c.taxable_enterprice === 1">{{ $t('taxable_enterprice.active') }}</span>
-                                    <span v-if="c.taxable_enterprice === 0">{{ $t('taxable_enterprice.inactive') }}</span>
+                                    <span v-if="c.taxable_enterprise === 1">{{ $t('taxable_enterprise.active') }}</span>
+                                    <span v-if="c.taxable_enterprise === 0">{{ $t('taxable_enterprise.inactive') }}</span>
                                 </td>
                                 <td>{{ c.tax_id }}</td>
                                 <td>{{ c.remarks }}</td>
@@ -179,16 +179,16 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputTaxable_Enterprice" class="col-2 col-form-label">{{ $t('fields.taxable_enterprice') }}</label>
+                            <label for="inputTaxable_Enterprise" class="col-2 col-form-label">{{ $t('fields.taxable_enterprise') }}</label>
                             <div class="col-md-10 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="taxable_enterprice" name="taxable_enterprice" v-model="supplier.taxable_enterprice" true-value="1" false-value="0">
+                                        <input type="checkbox" class="css-control-input" id="taxable_enterprise" name="taxable_enterprise" v-model="supplier.taxable_enterprise" true-value="1" false-value="0">
                                         <span class="css-control-indicator"></span>
                                     </span>
                                     <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="supplier.taxable_enterprice === 1">{{ $t('taxable_enterprice.active') }}</span>
-                                        <span v-if="supplier.taxable_enterprice === 0">{{ $t('taxable_enterprice.inactive') }}</span>
+                                        <span v-if="supplier.taxable_enterprise === 1">{{ $t('taxable_enterprise.active') }}</span>
+                                        <span v-if="supplier.taxable_enterprise === 0">{{ $t('taxable_enterprise.inactive') }}</span>
                                     </div>
                                 </label>
                             </div>
@@ -290,7 +290,7 @@ export default {
                 contact: '',
                 address: '',
                 city: '',
-                taxable_enterprice: '1',
+                taxable_enterprise: '1',
                 tax_id: '',
                 remarks: '',
                 status: '1',
@@ -334,7 +334,7 @@ export default {
                 contact: '',
                 address: '',
                 city: '',
-                taxable_enterprice: '1',
+                taxable_enterprise: '1',
                 tax_id: '',
                 remarks: '',
                 status: '1',

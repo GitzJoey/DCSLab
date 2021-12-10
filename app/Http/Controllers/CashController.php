@@ -61,9 +61,10 @@ class CashController extends BaseController
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
-        
-        $is_bank = $request['is_bank'];
-        $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
+
+        $is_bank = $request['is_bank'] == 'on' ? 1 : $request['is_bank'];
+        $is_bank = is_null($is_bank) ? 0 : $is_bank;
+        $is_bank = is_numeric($is_bank) ? $is_bank : 0;
 
         $result = $this->CashService->create(
             $company_id,
@@ -86,8 +87,9 @@ class CashController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $is_bank = $request['is_bank'];
-        $is_bank == 'on' ? $is_bank = 1 : $is_bank = 0;
+        $is_bank = $request['is_bank'] == 'on' ? 1 : $request['is_bank'];
+        $is_bank = is_null($is_bank) ? 0 : $is_bank;
+        $is_bank = is_numeric($is_bank) ? $is_bank : 0;
 
         $result = $this->CashService->update(
             $id,

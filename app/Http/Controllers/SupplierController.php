@@ -52,7 +52,7 @@ class SupplierController extends BaseController
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'suppliers')],
             'name' => 'required|min:3|max:255|alpha',
-            'taxable_enterprice' => 'required',
+            'taxable_enterprise' => 'required',
             'status' => 'required'
         ]);
 
@@ -64,8 +64,8 @@ class SupplierController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
         
-        $taxable_enterprice = $request['taxable_enterprice'];
-        $taxable_enterprice == 'on' ? $taxable_enterprice = 1 : $taxable_enterprice = 0;
+        $taxable_enterprise = $request['taxable_enterprise'];
+        $taxable_enterprise == 'on' ? $taxable_enterprise = 1 : $taxable_enterprise = 0;
 
         $result = $this->SupplierService->create(
             $company_id,
@@ -75,7 +75,7 @@ class SupplierController extends BaseController
             $request['contact'],
             $request['address'],
             $request['city'],
-            $taxable_enterprice,
+            $taxable_enterprise,
             $request['tax_id'],
             $request['remarks'],
             $request['status']
@@ -94,8 +94,8 @@ class SupplierController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $taxable_enterprice = $request['taxable_enterprice'];
-        $taxable_enterprice == 'on' ? $taxable_enterprice = 1 : $taxable_enterprice = 0;
+        $taxable_enterprise = $request['taxable_enterprise'];
+        $taxable_enterprise == 'on' ? $taxable_enterprise = 1 : $taxable_enterprise = 0;
 
         $result = $this->SupplierService->update(
             $id,
@@ -106,7 +106,7 @@ class SupplierController extends BaseController
             $request['contact'],
             $request['address'],
             $request['city'],
-            $taxable_enterprice,
+            $taxable_enterprise,
             $request['tax_id'],
             $request['remarks'],
             $request['status'],

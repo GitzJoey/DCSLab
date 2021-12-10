@@ -57,14 +57,17 @@ class CustomerController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
+        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
+        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
+        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
 
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
+        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
+        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
+        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
 
-        $use_limit_age_notes = $request['use_limit_age_notes'];
-        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
+        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
+        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
+        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
 
         $result = $this->CustomerService->create(
             $company_id,
@@ -100,14 +103,17 @@ class CustomerController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
+        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
+        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
+        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
 
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
+        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
+        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
+        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
 
-        $use_limit_age_notes = $request['use_limit_age_notes'];
-        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
+        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
+        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
+        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
 
         $result = $this->CustomerService->update(
             $id,
