@@ -23,7 +23,7 @@ const messages = {
                 contact: 'Contact',
                 address: 'Address',
                 city: 'City',
-                taxable_enterprice: 'Taxable Enterprice',
+                taxable_enterprise: 'Taxable Enterprise',
                 tax_id: 'Tax Number',
                 remarks: 'Remarks',
                 status: 'Status',
@@ -47,7 +47,7 @@ const messages = {
             contact: 'Contact',
             address: 'Address',
             city: 'City',
-            taxable_enterprice: 'Taxable Enterprice',
+            taxable_enterprise: 'Taxable Enterprise',
             tax_id: 'Tax Number',
             remarks: 'Remarks',
             status: 'Status',
@@ -64,7 +64,7 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
-        taxable_enterprice: {
+        taxable_enterprise: {
             active: 'Yes',
             inactive: 'No',
         },
@@ -83,7 +83,7 @@ const messages = {
                 contact: 'Kontak',
                 address: 'Alamat',
                 city: 'Kota',
-                taxable_enterprice: 'Ppn',
+                taxable_enterprise: 'Ppn',
                 tax_id: 'Nomor Pajak',
                 remarks: 'Remarks',
                 status: 'Status',
@@ -107,7 +107,7 @@ const messages = {
             contact: 'Kontak',
             address: 'Alamat',
             city: 'Kota',
-            taxable_enterprice: 'Ppn',
+            taxable_enterprise: 'Ppn',
             tax_id: 'Nomor Pajak',
             remarks: 'Remarks',
             status: 'Status',
@@ -124,7 +124,7 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
-        taxable_enterprice: {
+        taxable_enterprise: {
             active: 'Ya',
             inactive: 'Tidak',
         },

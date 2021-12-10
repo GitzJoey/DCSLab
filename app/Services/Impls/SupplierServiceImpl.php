@@ -20,7 +20,7 @@ class SupplierServiceImpl implements SupplierService
         $contact,
         $address,
         $city,
-        $taxable_enterprice,
+        $taxable_enterprise,
         $tax_id,
         $remarks,
         $status
@@ -37,7 +37,7 @@ class SupplierServiceImpl implements SupplierService
             $supplier->contact = $contact;
             $supplier->address = $address;
             $supplier->city = $city;
-            $supplier->taxable_enterprice = $taxable_enterprice;
+            $supplier->taxable_enterprise = $taxable_enterprise;
             $supplier->tax_id = $tax_id;
             $supplier->remarks = $remarks;
             $supplier->status = $status;
@@ -74,7 +74,7 @@ class SupplierServiceImpl implements SupplierService
         $contact,
         $address,
         $city,
-        $taxable_enterprice,
+        $taxable_enterprise,
         $tax_id,
         $remarks,
         $status
@@ -93,7 +93,7 @@ class SupplierServiceImpl implements SupplierService
                 'contact' => $contact,
                 'address' => $address,
                 'city' => $city,
-                'taxable_enterprice' => $taxable_enterprice,
+                'taxable_enterprise' => $taxable_enterprise,
                 'tax_id' => $tax_id,
                 'remarks' => $remarks,
                 'status' => $status
