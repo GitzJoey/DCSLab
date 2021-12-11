@@ -10,6 +10,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use App\Actions\RandomGenerator;
+use App\Models\CapitalGroup;
 
 class CapitalGroupController extends BaseController
 {
@@ -53,9 +54,15 @@ class CapitalGroupController extends BaseController
             'name' => 'required|min:3|max:255|alpha|alpha_dash',
         ]);
 
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = CapitalGroup::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
@@ -63,7 +70,7 @@ class CapitalGroupController extends BaseController
 
         $result = $this->capitalGroupService->create(
             $company_id,
-            $request['code'],
+            $code,
             $request['name']
         );
         return $result == 0 ? response()->error():response()->success();

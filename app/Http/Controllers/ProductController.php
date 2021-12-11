@@ -13,6 +13,7 @@ use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 
 use App\Actions\RandomGenerator;
+use App\Models\Product;
 
 class ProductController extends BaseController
 {
@@ -95,9 +96,15 @@ class ProductController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateNumber(10000, 99999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Product::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         // apabila product maka...

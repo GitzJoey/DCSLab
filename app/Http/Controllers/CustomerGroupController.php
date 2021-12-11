@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Config;
 use App\Actions\RandomGenerator;
+use App\Models\CustomerGroup;
 
 class CustomerGroupController extends BaseController
 {
@@ -53,9 +54,15 @@ class CustomerGroupController extends BaseController
             'name' => 'required|min:3|max:255|alpha',
         ]);
 
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = CustomerGroup::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
@@ -87,7 +94,7 @@ class CustomerGroupController extends BaseController
 
         $result = $this->CustomerGroupService->create(
             $company_id,
-            $request['code'],
+            $code,
             $request['name'],
             $is_member_card,
             $use_limit_outstanding_notes,
