@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\RandomGenerator;
+use App\Models\Company;
 use App\Rules\uniqueCode;
-use App\Services\CompanyService;
-use App\Services\ActivityLogService;
-
 use Illuminate\Http\Request;
+use App\Actions\RandomGenerator;
+
+use App\Services\CompanyService;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
@@ -47,9 +48,15 @@ class CompanyController extends BaseController
 
     public function store(Request $request)
     {
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Company::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         $request->validate([
@@ -70,7 +77,7 @@ class CompanyController extends BaseController
         $userId = Auth::user()->id;
 
         $result = $this->companyService->create(
-            $request['code'],
+            $code,
             $request['name'],
             $default,
             $request['status'],
