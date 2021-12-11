@@ -69,7 +69,7 @@ class Install extends Command
         $systemService = $container->make(SystemService::class);
 
         if (!$systemService->checkDBConnection()) {
-            $this->error('Database Connection Fail');
+            $this->error('Database Connection Fail. Message: ' . $systemService->getDBConnectionError());
             $this->error('Aborted');
             return false;
         }

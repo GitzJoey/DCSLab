@@ -22,4 +22,9 @@ class UserAPITest extends TestCase
         $api->assertStatus(401);
 
     }
+
+    public function test_api_call_authd_read_user()
+    {
+        $this->assertTrue(true);
+    }
 }

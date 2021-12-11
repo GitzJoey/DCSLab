@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Schema;
 
 class SystemServiceImpl implements SystemService
 {
-
     public function checkDBConnection(): bool
     {
         try {
@@ -18,6 +17,16 @@ class SystemServiceImpl implements SystemService
             return true;
         } catch (Exception $e) {
             return false;
+        }
+    }
+
+    public function getDBConnectionError(): string
+    {
+        try {
+            $this->getConnection()->getPdo();
+            return 'success';
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 
