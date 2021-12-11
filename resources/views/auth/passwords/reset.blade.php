@@ -9,8 +9,8 @@
         <div class="container">
             <div class="auth-header-content">
                 <div class="row">
-                    <div class="col-7"></div>
-                    <div class="col-5 bg-white bg-opacity-50 rounded border-1">
+                    <div class="col-md-7"></div>
+                    <div class="col-xs-12 col-sm-12 col-md-5 bg-white bg-opacity-50 rounded border-1">
                         <form id="resetForm" class="px-3 py-3" action="{{ route('password.update') }}" method="post">
                             @csrf
                             <input type="hidden" name="token" value="{{ $token }}">

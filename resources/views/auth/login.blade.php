@@ -9,8 +9,8 @@
         <div class="container">
             <div class="auth-header-content">
                 <div class="row">
-                    <div class="col-7"></div>
-                    <div class="col-5 bg-white bg-opacity-50 rounded border-1">
+                    <div class="col-md-7"></div>
+                    <div class="col-xs-12 col-sm-12 col-md-5 bg-white bg-opacity-50 rounded border-1">
                         <form id="loginForm" class="px-3 py-3" action="{{ route('login') }}" method="post">
                             @csrf
                             <div class="mb-2">

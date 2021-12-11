@@ -7,10 +7,10 @@
                         <div class="footer-logo d-flex align-items-end">
                             <a class="mt-30" href=""><img src="{{ asset('images/g_logo.png') }}" alt="Logo" width="35px" height="35px"></a>
                             <ul class="social mt-30">
-                                <li><a href="#"><i class="icon icon-social-facebook"></i></a></li>
-                                <li><a href="#"><i class="icon icon-social-twitter"></i></a></li>
-                                <li><a href="#"><i class="icon icon-social-instagram"></i></a></li>
-                                <li><a href="#"><i class="icon icon-social-linkedin"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-facebook"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-twitter"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-instagram"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-linkedin"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -21,9 +21,9 @@
                     <div class="footer-link">
                         <h6 class="footer-title">{{ __('front.footer.company.title') }}</h6>
                         <ul>
-                            <li><a href="#">{{ __('front.footer.company.about') }}</a></li>
-                            <li><a href="#">{{ __('front.footer.company.contact') }}</a></li>
-                            <li><a href="#">{{ __('front.footer.company.career') }}</a></li>
+                            <li><a href="">{{ __('front.footer.company.about') }}</a></li>
+                            <li><a href="">{{ __('front.footer.company.contact') }}</a></li>
+                            <li><a href="">{{ __('front.footer.company.career') }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -31,9 +31,9 @@
                     <div class="footer-link">
                         <h6 class="footer-title">{{ __('front.footer.product_service.title') }}</h6>
                         <ul>
-                            <li><a href="#">{{ __('front.footer.product_service.products') }}</a></li>
-                            <li><a href="#">{{ __('front.footer.product_service.business') }}</a></li>
-                            <li><a href="#">{{ __('front.footer.product_service.developer') }}</a></li>
+                            <li><a href="">{{ __('front.footer.product_service.products') }}</a></li>
+                            <li><a href="">{{ __('front.footer.product_service.business') }}</a></li>
+                            <li><a href="">{{ __('front.footer.product_service.developer') }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -41,9 +41,9 @@
                     <div class="footer-link">
                         <h6 class="footer-title">{{ __('front.footer.help_support.title') }}</h6>
                         <ul>
-                            <li><a href="#">{{ __('front.footer.help_support.support') }}</a></li>
-                            <li><a href="#">{{ __('front.footer.help_support.faq') }}</a></li>
-                            <li><a href="#">{{ __('front.footer.help_support.terms') }}</a></li>
+                            <li><a href="">{{ __('front.footer.help_support.support') }}</a></li>
+                            <li><a href="">{{ __('front.footer.help_support.faq') }}</a></li>
+                            <li><a href="">{{ __('front.footer.help_support.terms') }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -78,4 +78,4 @@
     </div>
 </footer>
 
-<a class="back-to-top hide" href="#"><i class="icon icon-arrow-up"></i></a>
+<a class="back-to-top hide" href=""><i class="icon icon-arrow-up"></i></a>
