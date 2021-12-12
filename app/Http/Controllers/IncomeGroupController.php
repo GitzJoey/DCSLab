@@ -8,6 +8,7 @@ use App\Services\IncomeGroupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use App\Actions\RandomGenerator;
+use App\Models\IncomeGroup;
 use Vinkla\Hashids\Facades\Hashids;
 
 class IncomeGroupController extends BaseController
@@ -43,9 +44,15 @@ class IncomeGroupController extends BaseController
             'name' => 'required|min:3|max:255|alpha_dash|alpha_num',
         ]);
 
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = IncomeGroup::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
@@ -53,7 +60,7 @@ class IncomeGroupController extends BaseController
 
         $result = $this->incomeGroupService->create(
             $company_id,
-            $request['code'],
+            $code,
             $request['name'], 
         );
         return $result == 0 ? response()->error():response()->success();

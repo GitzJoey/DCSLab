@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Actions\RandomGenerator;
+use App\Models\Branch;
 
 class BranchController extends BaseController
 {
@@ -50,14 +51,20 @@ class BranchController extends BaseController
             'status' => 'required'
         ]);
 
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Branch::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         $result = $this->branchService->create(
             Hashids::decode($request['company_id'])[0],
-            $request['code'],
+            $code,
             $request['name'],
             $request['address'],
             $request['city'],
