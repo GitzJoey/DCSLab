@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductBrand;
 use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\ProductBrandService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Actions\RandomGenerator;
 
 class ProductBrandController extends BaseController
 {
@@ -42,14 +44,24 @@ class ProductBrandController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'productbrands'),
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'productbrands')],
             'name' => 'required|max:255'
         ]);
 
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = ProductBrand::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
+
         $result = $this->productBrandService->create(
             Hashids::decode($request['company_id'])[0],
-            $request['code'],
+            $code,
             $request['name']
         );
         

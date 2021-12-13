@@ -10,6 +10,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Config;
 use App\Actions\RandomGenerator;
+use App\Models\Customer;
 
 class CustomerController extends BaseController
 {
@@ -49,9 +50,15 @@ class CustomerController extends BaseController
             'status' => 'required',
         ]);
 
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Customer::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
@@ -71,7 +78,7 @@ class CustomerController extends BaseController
 
         $result = $this->CustomerService->create(
             $company_id,
-            $request['code'],
+            $code,
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],

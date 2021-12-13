@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Config;
 use App\Actions\RandomGenerator;
+use App\Models\Cash;
 
 class CashController extends BaseController
 {
@@ -54,9 +55,15 @@ class CashController extends BaseController
             'status' => 'required'
         ]);
 
-        if ($request['code'] == 'AUTO') {
-            $randomGenerator = new randomGenerator();
-            $request['code'] = $randomGenerator->generateOne(99999999);
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Cash::where('code', $code)->count();
+            }
+            while ($code_count != 0);
         };
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
@@ -68,7 +75,7 @@ class CashController extends BaseController
 
         $result = $this->CashService->create(
             $company_id,
-            $request['code'], 
+            $code,
             $request['name'], 
             $is_bank, 
             $request['status']
