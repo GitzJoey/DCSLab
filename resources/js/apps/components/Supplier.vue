@@ -64,8 +64,6 @@
                                 <th>{{ $t("table.cols.address") }}</th>
                                 <th>{{ $t("table.cols.city") }}</th>
                                 <th>{{ $t("table.cols.taxable_enterprise") }}</th>
-                                <th>{{ $t("table.cols.tax_id") }}</th>
-                                <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
                                 <th></th>
                             </tr>
@@ -82,8 +80,6 @@
                                     <span v-if="c.taxable_enterprise === 1">{{ $t('taxable_enterprise.active') }}</span>
                                     <span v-if="c.taxable_enterprise === 0">{{ $t('taxable_enterprise.inactive') }}</span>
                                 </td>
-                                <td>{{ c.tax_id }}</td>
-                                <td>{{ c.remarks }}</td>
                                 <td>
                                     <span v-if="c.status === 1">{{ $t('statusDDL.active') }}</span>
                                     <span v-if="c.status === 0">{{ $t('statusDDL.inactive') }}</span>

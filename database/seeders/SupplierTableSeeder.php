@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use App\Models\Supplier;
 
 use Illuminate\Database\Seeder;
@@ -15,11 +16,37 @@ class SupplierTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 0; $i < 10; $i++)
-        {
-            $supplier = Supplier::factory()->make();
+        $companies = Company::get()->pluck('id');
 
-            $supplier->save();
+        foreach($companies as $company) {
+            // foreach ($productGroups as $productGroup) {
+            //     $newProductGroup = new ProductGroup();
+            //     $newProductGroup->company_id = $company;
+            //     $newProductGroup->code = $faker->unique()->numberBetween(001, 9999);
+            //     $newProductGroup->name = $productGroup['name'];
+            //     $newProductGroup->category = $productGroup['category'];
+
+            //     $newProductGroup->save();
+            // }
+
+            for($i = 0; $i < 10000; $i++)
+            {
+                $supplier = Supplier::factory()->make([
+                    'company_id' => $company,
+                ]);
+
+                $supplier->save();
+            }
         }
+
+        // for($i = 0; $i < 100; $i++)
+        // {
+        //     $supplier = Supplier::factory()->make([
+        //         'business_id' => $business->id,
+        //     ]);
+
+        //     $supplier->save();
+
+        // }
     }
 }

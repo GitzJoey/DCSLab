@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
 
         $instances = Container::getInstance();
 
-        for ($i = 0; $i < 19; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             try {
                 $usr = User::factory()->make();
 

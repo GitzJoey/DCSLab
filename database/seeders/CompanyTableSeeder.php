@@ -28,7 +28,7 @@ class CompanyTableSeeder extends Seeder
             $rand = $randomGenerator->generateOne(5);
 
             $cIds = [];
-            for($i = 0; $i < 2; $i++)
+            for($i = 0; $i < 1; $i++)
             {
                 $comp = Company::factory()->make();
 
