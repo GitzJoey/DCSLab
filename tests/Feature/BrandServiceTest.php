@@ -54,6 +54,7 @@ class BrandServiceTest extends TestCase
     public function test_update()
     {
         //create dulu
+        $id = '';
         $company_id = 1;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
@@ -64,7 +65,7 @@ class BrandServiceTest extends TestCase
 
         //edit name
         $name_new = $this->faker->name;
-        $response = $this->service->update($company_id, $code, $name);
+        $response = $this->service->update($id, $company_id, $code, $name);
 
         $this->assertDatabaseHas('brands', [
             'name' => $this->faker->name
