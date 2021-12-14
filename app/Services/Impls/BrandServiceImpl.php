@@ -38,7 +38,7 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return Brand::with('company')->bySelectedCompany()->paginate();
     }

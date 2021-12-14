@@ -54,6 +54,10 @@ class Brand extends Model
     
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
     {
+        // $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        // $company_id = is_null($company_id) ? '' : Hashids::decode($company_id)[0];
+
+        // return $query->where('company_id', '=', empty($overrideCompanyId) ? $company_id : $overrideCompanyId);
         return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);
     }
 

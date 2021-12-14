@@ -10,7 +10,7 @@ interface BrandService
         $name
     );
 
-    public function read($userId);
+    public function read();
 
     public function getAllBrand();
 
