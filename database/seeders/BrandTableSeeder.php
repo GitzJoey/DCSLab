@@ -52,7 +52,7 @@ class BrandTableSeeder extends Seeder
             foreach ($brands as $brand) {
                 $newBrand = new Brand();
                 $newBrand->company_id = $company;
-                $newBrand->code = $faker->unique()->numberBetween(001, 999);
+                $newBrand->code = $faker->unique()->numberBetween(001, 9999);
                 $newBrand->name = $brand['name'];
 
                 $newBrand->save();

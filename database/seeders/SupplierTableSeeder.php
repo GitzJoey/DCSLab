@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Company;
 use App\Models\Supplier;
 
 use Illuminate\Database\Seeder;
@@ -15,11 +16,17 @@ class SupplierTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 0; $i < 10; $i++)
-        {
-            $supplier = Supplier::factory()->make();
+        $companies = Company::get()->pluck('id');
 
-            $supplier->save();
+        foreach($companies as $company) {
+            for($i = 0; $i < 10000; $i++)
+            {
+                $supplier = Supplier::factory()->make([
+                    'company_id' => $company,
+                ]);
+
+                $supplier->save();
+            }
         }
     }
 }

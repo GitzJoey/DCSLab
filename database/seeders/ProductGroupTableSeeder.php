@@ -44,7 +44,7 @@ class ProductGroupTableSeeder extends Seeder
             foreach ($productGroups as $productGroup) {
                 $newProductGroup = new ProductGroup();
                 $newProductGroup->company_id = $company;
-                $newProductGroup->code = $faker->unique()->numberBetween(001, 999);
+                $newProductGroup->code = $faker->unique()->numberBetween(001, 9999);
                 $newProductGroup->name = $productGroup['name'];
                 $newProductGroup->category = $productGroup['category'];
 

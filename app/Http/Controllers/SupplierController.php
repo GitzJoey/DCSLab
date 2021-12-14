@@ -52,8 +52,7 @@ class SupplierController extends BaseController
     {
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'suppliers')],
-            'name' => 'required|min:3|max:255|alpha',
-            'taxable_enterprise' => 'required',
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 
