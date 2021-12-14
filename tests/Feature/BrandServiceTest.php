@@ -12,6 +12,7 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 
 class BrandServiceTest extends TestCase
 {
@@ -31,9 +32,8 @@ class BrandServiceTest extends TestCase
      */
     public function test_read()
     {
-        // Session::put('variableName', $value);
         $selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
-        session()->put('__SELECTED__COMPANY', Hashids::encode($selectedCompanyId));
+        session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), Hashids::encode($selectedCompanyId));
         $response = $this->service->read();
 
         $this->assertInstanceOf(Paginator::class, $response);
