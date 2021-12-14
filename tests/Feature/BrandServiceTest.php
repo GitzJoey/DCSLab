@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Company;
+use App\Models\Brand;
 use App\Services\BrandService;
 use App\Actions\RandomGenerator;
 use Vinkla\Hashids\Facades\Hashids;
@@ -85,9 +86,11 @@ class BrandServiceTest extends TestCase
         $rId = Hashids::decode($response)[0];
 
         $response = $this->service->delete($rId);
-
+        $deleted_at = Brand::withTrashed()->find($rId)->deleted_at->format('Y-m-d H:i:s');
+        
         $this->assertDatabaseHas('brands', [
-            'id' => $rId
+            'id' => $rId,
+            'deleted_at' => $deleted_at
         ]);
     }
 }
