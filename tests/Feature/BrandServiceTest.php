@@ -53,17 +53,14 @@ class BrandServiceTest extends TestCase
 
     public function test_update()
     {
-        //create dulu
         $id = '';
         $company_id = 1;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
         $response = $this->service->create($company_id, $code, $name);
 
-        //ini dpt id nya
         $rId = Hashids::decode($response)[0];
 
-        //edit name
         $name_new = $this->faker->name;
         $response = $this->service->update($id, $company_id, $code, $name);
 
@@ -74,17 +71,7 @@ class BrandServiceTest extends TestCase
 
     public function test_delete()
     {
-        //create
-
-
-        //ambil id nyapake hsids
-        // $rId = Hashids::decode($response)[0];
-
-        //paggilg delete
-
-
         $this->assertDatabaseHas('brands', [
-            // 'id' => $rId
         ]);
 
     }

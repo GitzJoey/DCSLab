@@ -569,18 +569,10 @@ export default {
                 this.product.product_unit.splice(idx, 1);
                 this.loading = false;
             } else if (this.mode === 'edit') {
-                // Kalo hId ga kosong maka...
                 if (this.product.product_unit[idx].hId !== '') {
-                    // axios.post(route('api.post.dashboard.productunit.delete', this.product.product_unit[idx].hId), new FormData($('#productForm')[0])).then(response => {
-                    //     this.product.product_unit.splice(idx, 1);
-                    //     this.loading = false;
-                    // }).catch(e => {
-                    //     this.handleError(e, actions);
-                    //     this.loading = false;
-                    // });
+
                     this.product.product_unit.splice(idx, 1);
                     this.loading = false;
-                // Kalo hId kosong maka...    
                 } else { 
                     this.product.product_unit.splice(idx, 1);
                     this.loading = false;

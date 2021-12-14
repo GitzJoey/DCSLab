@@ -70,7 +70,6 @@ class ProductController extends BaseController
 
     public function store(Request $request)
     {   
-        // apabila product maka...
         if ($request->product_type[0] !== '4') {
             $request->validate([
                 'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
@@ -82,7 +81,6 @@ class ProductController extends BaseController
             ]);
         }
 
-        // apabila service maka...
         if ($request->product_type[0] == '4') {
         $request->validate([
             'code' => ['required', 'max:255', new uniqueCode('create', '', 'products')],
@@ -107,7 +105,6 @@ class ProductController extends BaseController
             while ($code_count != 0);
         };
 
-        // apabila product maka...
         if ($request->product_type[0] !== '4') {
             $code = $request->code;
             $product_group_id = Hashids::decode($request->product_group_id)[0];
@@ -182,7 +179,6 @@ class ProductController extends BaseController
             };
         }
 
-        // apabila service maka...
         if ($request->product_type[0] == '4') {
             $code = $request['code'];
             $product_group_id = Hashids::decode($request->product_group_id)[0];

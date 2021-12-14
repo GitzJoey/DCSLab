@@ -31,9 +31,9 @@ class UnitTableSeeder extends Seeder
             ['name' => "DUS", 'category' => "1"],
             ['name' => "ROLL", 'category' => "1"],
             ['name' => "BTG", 'category' => "1"],
-            ['name' => "m1", 'category' => "2"], // meter lari
-            ['name' => "m2", 'category' => "2"], // meter persegi
-            ['name' => "m3", 'category' => "3"], // meter kubik : bata ringan, pembangunan per volume
+            ['name' => "m1", 'category' => "2"],
+            ['name' => "m2", 'category' => "2"],
+            ['name' => "m3", 'category' => "3"],
             ['name' => "UNIT", 'category' => "3"],
             ['name' => "TITIK", 'category' => "2"],
         ];
