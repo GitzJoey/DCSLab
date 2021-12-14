@@ -1,0 +1,8 @@
+[3/15/2021, 11:1:4] === Logging started: 2021/03/15 11:01:04 ===
+[3/15/2021, 11:1:4] Executable: D:\b967db4056a5b2004b2a\TMP1166.tmp.exe v4.6.1055.0
+[3/15/2021, 11:1:4] --- logging level: standard ---
+[3/15/2021, 11:1:4] Directory 'D:\b967db4056a5b2004b2a\TMP1166.tmp.exe.tmp' has been selected for file extraction
+[3/15/2021, 11:1:4] Extracting files to: D:\b967db4056a5b2004b2a\TMP1166.tmp.exe.tmp
+[3/15/2021, 11:1:11] Extraction took 7.207 seconds
+[3/15/2021, 11:1:11] Exiting with result code: 0x0
+[3/15/2021, 11:1:11] === Logging stopped: 2021/03/15 11:01:11 ===

@@ -1,0 +1,186 @@
+﻿2021-04-05 13:43:59.962   Log opened. (Time zone: UTC+07:00)
+2021-04-05 13:43:59.962   Setup version: Inno Setup version 6.0.5 (u)
+2021-04-05 13:43:59.962   Original Setup EXE: C:\Users\User\Downloads\Programs\Composer-Setup.exe
+2021-04-05 13:43:59.962   Setup command line: /SL5="$40788,956903,780800,C:\Users\User\Downloads\Programs\Composer-Setup.exe" /SPAWNWND=$3076E /NOTIFYWND=$160624  /ALLUSERS
+2021-04-05 13:43:59.962   Windows version: 6.1.7601 SP1  (NT platform: Yes)
+2021-04-05 13:43:59.962   64-bit Windows: Yes
+2021-04-05 13:43:59.962   Processor architecture: x64
+2021-04-05 13:43:59.962   User privileges: Administrative
+2021-04-05 13:43:59.968   Administrative install mode: Yes
+2021-04-05 13:43:59.968   Install mode root key: HKEY_LOCAL_MACHINE
+2021-04-05 13:43:59.968   64-bit install mode: No
+2021-04-05 13:43:59.970   Created temporary directory: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp
+2021-04-05 13:43:59.976   -- DLL function import --
+2021-04-05 13:43:59.976   Function name: SetEnvironmentVariableW
+2021-04-05 13:43:59.976   DLL name: kernel32.dll
+2021-04-05 13:43:59.976   Dest DLL name: kernel32.dll
+2021-04-05 13:43:59.976   Importing the DLL function.
+2021-04-05 13:43:59.976   Successfully imported the DLL function. Delay loaded? Yes
+2021-04-05 13:43:59.976   -- DLL function import --
+2021-04-05 13:43:59.976   Function name: ExpandEnvironmentStringsW
+2021-04-05 13:43:59.976   DLL name: kernel32.dll
+2021-04-05 13:43:59.976   Dest DLL name: kernel32.dll
+2021-04-05 13:43:59.976   Importing the DLL function.
+2021-04-05 13:43:59.976   Successfully imported the DLL function. Delay loaded? Yes
+2021-04-05 13:43:59.976   -- DLL function import --
+2021-04-05 13:43:59.976   Function name: SendMessageTimeoutW
+2021-04-05 13:43:59.976   DLL name: user32.dll
+2021-04-05 13:43:59.976   Dest DLL name: user32.dll
+2021-04-05 13:43:59.976   Importing the DLL function.
+2021-04-05 13:43:59.976   Successfully imported the DLL function. Delay loaded? Yes
+2021-04-05 13:43:59.976   -- DLL function import --
+2021-04-05 13:43:59.976   Function name: DeleteData
+2021-04-05 13:43:59.976   DLL name: uninstall:{app}\userdata.dll
+2021-04-05 13:43:59.976   Skipping.
+2021-04-05 13:43:59.976   -- DLL function import --
+2021-04-05 13:43:59.976   Function name: GetResult
+2021-04-05 13:43:59.976   DLL name: uninstall:{app}\userdata.dll
+2021-04-05 13:43:59.976   Skipping.
+2021-04-05 13:43:59.977   Extracting temporary file: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\acls.bat
+2021-04-05 13:43:59.993   Extracting temporary file: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\runphp.exe
+2021-04-05 13:44:00.018   Extracting temporary file: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\check.php
+2021-04-05 13:44:00.018   Extracting temporary file: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\inicheck.php
+2021-04-05 13:44:00.030   Extracting temporary file: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\installer.php
+2021-04-05 13:44:00.045   Extracting temporary file: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\composer
+2021-04-05 13:44:00.048   $ Initializing ComposerSetup 6.1.0 for user: User
+2021-04-05 13:44:00.048   $ Params: dev=, php=, proxy=, loadinf=
+2021-04-05 13:44:00.048   $ Getting path info from registry
+2021-04-05 13:44:00.050   $ Searching for PHP in common locations
+2021-04-05 13:44:00.052   $ PHP found in 1 location
+2021-04-05 13:44:00.134   $ WizardPage [001]: Welcome
+2021-04-05 13:44:00.134   $ WizardPage [100]: Installation Options
+2021-04-05 13:44:06.683   $ WizardPage [101]: Settings Check
+2021-04-05 13:44:09.463   $ Error, confirmation missing for : C:\xampp\php\php.exe
+2021-04-05 13:44:09.463   Message box (OK):
+                          Please confirm you want to use:
+                          C:\xampp\php\php.exe
+2021-04-05 13:44:10.908   User chose OK.
+2021-04-05 13:44:14.408   $ Error, confirmation missing for : C:\xampp\php\php.exe
+2021-04-05 13:44:14.408   Message box (OK):
+                          Please confirm you want to use:
+                          C:\xampp\php\php.exe
+2021-04-05 13:44:16.573   User chose OK.
+2021-04-05 13:44:34.507   $ Error, confirmation missing for : C:\xampp\php\php.exe
+2021-04-05 13:44:34.507   Message box (OK):
+                          Please confirm you want to use:
+                          C:\xampp\php\php.exe
+2021-04-05 13:44:35.297   User chose OK.
+2021-04-05 13:44:38.390   $ WizardPage [102]: Running Settings Check
+2021-04-05 13:44:38.391   $ Checking cmd.exe: C:\Windows\system32\cmd.exe
+2021-04-05 13:44:38.392   $ -- Execute File --
+2021-04-05 13:44:38.392   $ Working directory: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp
+2021-04-05 13:44:38.392   $ Running C:\Windows\system32\cmd.exe /s /c "cd > C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stdout.txt 2> C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stderr.txt"
+2021-04-05 13:44:38.412   $ Success: exit code [0]
+2021-04-05 13:44:38.413   $ Output from stdout [45 bytes]
+                          C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp
+2021-04-05 13:44:38.413   $ Output from stderr [0 bytes]
+2021-04-05 13:44:38.413   $ Directory from cmd.exe: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp [C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp]
+2021-04-05 13:44:38.413   $ Checking selected php: C:\xampp\php\php.exe
+2021-04-05 13:44:38.413   $ Env: PHPRC=, PHP_INI_SCAN_DIR=
+2021-04-05 13:44:38.413   $ Reading VersionInfo data from exe
+2021-04-05 13:44:38.414   $ Config: version=8.0.2, id=80002
+2021-04-05 13:44:38.414   $ Checking if php will execute
+2021-04-05 13:44:38.414   $ -- Execute File --
+2021-04-05 13:44:38.414   $ Working directory: C:\xampp\php
+2021-04-05 13:44:38.414   $ Running C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\runphp.exe C:\xampp\php\php.exe
+2021-04-05 13:44:39.666   $ Success: exit code [0]
+2021-04-05 13:44:39.666   $ Checking php configuration
+2021-04-05 13:44:39.667   $ -- Execute File --
+2021-04-05 13:44:39.667   $ Working directory: C:\xampp\php
+2021-04-05 13:44:39.667   $ Running C:\Windows\system32\cmd.exe /s /c "C:\xampp\php\php.exe -d error_reporting="E_ALL & ~E_DEPRECATED" -d display_errors=Off -d display_startup_errors=Off -d error_log= -d log_errors=On C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\check.php > C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stdout.txt 2> C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stderr.txt"
+2021-04-05 13:44:39.814   $ Success: exit code [0]
+2021-04-05 13:44:39.815   $ Output from stdout [93 bytes]
+                          <ComposerSetup:>8.0.2|80002|C:\xampp\php\php.ini||1|C:\xampp\apache\bin\curl-ca-bundle.crt||1
+2021-04-05 13:44:39.815   $ Output from stderr [0 bytes]
+2021-04-05 13:44:39.815   $ Config: version=8.0.2, id=80002, ini=C:\xampp\php\php.ini, other=, tls=1, cafile=C:\xampp\apache\bin\curl-ca-bundle.crt, capath=, compat=1
+2021-04-05 13:44:39.815   $ PhpIni: Checking if ini needs updating: C:\xampp\php\php.ini
+2021-04-05 13:44:39.816   $ -- Execute File --
+2021-04-05 13:44:39.816   $ Working directory: C:\xampp\php
+2021-04-05 13:44:39.816   $ Running C:\Windows\system32\cmd.exe /s /c "C:\xampp\php\php.exe -d error_reporting="E_ALL & ~E_DEPRECATED" -d display_errors=Off -d display_startup_errors=Off -d error_log= -d log_errors=On C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\inicheck.php C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\php.ini C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\php.ini.backup > C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stdout.txt 2> C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stderr.txt"
+2021-04-05 13:44:39.877   $ Success: exit code [0]
+2021-04-05 13:44:39.878   $ Output from stdout [49 bytes]
+                          <ComposerSetup:>0|No changes to ini file required
+2021-04-05 13:44:39.878   $ Output from stderr [0 bytes]
+2021-04-05 13:44:39.878   $ PhpIni: modify=0, status=No changes to ini file required
+2021-04-05 13:44:39.881   $ Checking php path
+2021-04-05 13:44:39.881   $ Registering: Add to System path: C:\xampp\php
+2021-04-05 13:44:39.881   $ Checking composer bin path
+2021-04-05 13:44:39.881   $ Registering: Add to System path: C:\ProgramData\ComposerSetup\bin
+2021-04-05 13:44:39.881   $ Checking PathExt values for .BAT
+2021-04-05 13:44:39.881   $ Registering: Add to User [User] path: C:\Users\User\AppData\Roaming\Composer\vendor\bin
+2021-04-05 13:44:39.884   $ WizardPage [101]: Settings Check
+2021-04-05 13:44:39.887   $ No proxy found
+2021-04-05 13:44:39.896   $ WizardPage [105]: Proxy Settings
+2021-04-05 13:44:43.218   $ UpdateReadyMemo
+                          PHP version 8.0.2
+                                C:\xampp\php\php.exe
+                          
+                          Proxy: none
+                          
+                          Add to System path: 
+                                C:\xampp\php
+2021-04-05 13:44:43.221   $ WizardPage [010]: Ready to Install
+2021-04-05 13:44:43.969   $ WizardPage [106]: Running Composer Install
+2021-04-05 13:44:43.970   $ Running Composer installer script
+2021-04-05 13:44:43.971   $ -- Execute File --
+2021-04-05 13:44:43.971   $ Working directory: C:\xampp\php
+2021-04-05 13:44:43.971   $ Running C:\Windows\system32\cmd.exe /s /c "C:\xampp\php\php.exe -d error_reporting="E_ALL & ~E_DEPRECATED" -d display_errors=Off -d display_startup_errors=Off -d error_log= -d log_errors=On C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\installer.php -- --no-ansi --quiet --install-dir C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp > C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stdout.txt 2> C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\stderr.txt"
+2021-04-05 13:44:49.455   $ Success: exit code [0]
+2021-04-05 13:44:49.456   $ Output from stdout [0 bytes]
+2021-04-05 13:44:49.456   $ Output from stderr [0 bytes]
+2021-04-05 13:44:49.460   $ WizardPage [010]: Ready to Install
+2021-04-05 13:44:49.461   $ WizardPage [011]: Preparing to Install
+2021-04-05 13:44:49.463   $ Running PrepareToInstall tasks...
+2021-04-05 13:44:49.463   $ Writing Unix line-endings to C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\composer
+2021-04-05 13:44:49.465   $ Adding 'C:\xampp\php' to [HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\PATH]
+2021-04-05 13:44:49.467   $ Adding 'C:\ProgramData\ComposerSetup\bin' to [HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\PATH]
+2021-04-05 13:44:49.468   $ Adding 'C:\Users\User\AppData\Roaming\Composer\vendor\bin' to [HKCU\Environment\PATH]
+2021-04-05 13:44:49.473   $ WizardPage [012]: Installing
+2021-04-05 13:44:49.719   Starting the installation process.
+2021-04-05 13:44:49.722   Creating directory: C:\Program Files (x86)\ComposerSetup
+2021-04-05 13:44:49.722   Directory for uninstall files: C:\Program Files (x86)\ComposerSetup
+2021-04-05 13:44:49.722   Creating new uninstall log: C:\Program Files (x86)\ComposerSetup\unins000.dat
+2021-04-05 13:44:49.723   -- File entry --
+2021-04-05 13:44:49.724   Dest filename: C:\Program Files (x86)\ComposerSetup\unins000.exe
+2021-04-05 13:44:49.726   Time stamp of our file: 2021-04-05 13:43:59.876
+2021-04-05 13:44:49.726   Installing the file.
+2021-04-05 13:44:49.793   Successfully installed the file.
+2021-04-05 13:44:49.794   -- File entry --
+2021-04-05 13:44:49.794   Dest filename: C:\Program Files (x86)\ComposerSetup\userdata.dll
+2021-04-05 13:44:49.794   Time stamp of our file: 2016-11-27 19:09:58.000
+2021-04-05 13:44:49.794   Installing the file.
+2021-04-05 13:44:49.805   Successfully installed the file.
+2021-04-05 13:44:49.805   -- File entry --
+2021-04-05 13:44:49.806   Dest filename: C:\ProgramData\ComposerSetup\bin\composer.bat
+2021-04-05 13:44:49.806   Time stamp of our file: 2016-11-27 19:09:58.000
+2021-04-05 13:44:49.806   Installing the file.
+2021-04-05 13:44:49.807   Creating directory: C:\ProgramData\ComposerSetup
+2021-04-05 13:44:49.807   Creating directory: C:\ProgramData\ComposerSetup\bin
+2021-04-05 13:44:49.808   Successfully installed the file.
+2021-04-05 13:44:49.809   -- File entry --
+2021-04-05 13:44:49.809   Dest filename: C:\ProgramData\ComposerSetup\bin\composer
+2021-04-05 13:44:49.809   Time stamp of our file: 2021-04-05 13:44:49.464
+2021-04-05 13:44:49.809   Installing the file.
+2021-04-05 13:44:49.810   Successfully installed the file.
+2021-04-05 13:44:49.811   -- File entry --
+2021-04-05 13:44:49.811   Dest filename: C:\ProgramData\ComposerSetup\bin\composer.phar
+2021-04-05 13:44:49.811   Time stamp of our file: 2021-04-05 13:44:49.437
+2021-04-05 13:44:49.811   Installing the file.
+2021-04-05 13:44:49.815   Successfully installed the file.
+2021-04-05 13:44:49.816   Saving uninstall information.
+2021-04-05 13:44:49.816   Writing uninstaller messages: C:\Program Files (x86)\ComposerSetup\unins000.msg
+2021-04-05 13:44:49.819   Creating new uninstall key: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Uninstall\{7315AF68-E777-496A-A6A2-4763A98ED35A}_is1
+2021-04-05 13:44:49.820   Writing uninstall key values.
+2021-04-05 13:44:49.822   Detected previous non administrative install? No
+2021-04-05 13:44:49.822   Detected previous administrative 64-bit install? No
+2021-04-05 13:44:49.831   Installation process succeeded.
+2021-04-05 13:44:49.832   -- Run entry --
+2021-04-05 13:44:49.832   Run as: Current user
+2021-04-05 13:44:49.832   Type: Exec
+2021-04-05 13:44:49.832   Filename: C:\Users\User\AppData\Local\Temp\is-3B5CO.tmp\acls.bat
+2021-04-05 13:44:49.959   Process exit code: 0
+2021-04-05 13:44:49.959   Need to restart Windows? No
+2021-04-05 13:44:49.963   $ WizardPage [108]: Information
+2021-04-05 13:44:51.358   $ WizardPage [014]: Setup Completed
+2021-04-05 13:44:52.541   Deinitializing Setup.
+2021-04-05 13:44:52.558   Log closed.

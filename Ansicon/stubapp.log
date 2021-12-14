@@ -1,0 +1,114 @@
+WinMain - StubApp: Entering
+ ParseCommandLine: Entering
+  lptWorkingPath: C:\Program Files (x86)\HP\HPLJUT
+  found -i: stubapp.ini
+  found -m: launchscheduler
+  lptIniFileName: C:\Program Files (x86)\HP\HPLJUT\stubapp.ini
+  1: ini file found: C:\Program Files (x86)\HP\HPLJUT\stubapp.ini
+ ParseCommandLine: Leaving
+ tcIniFile: C:\Program Files (x86)\HP\HPLJUT\stubapp.ini
+ tcSection: launchscheduler
+ CIniFile::CIniFile: Entering
+  CIniFile::LoadIniFile: Entering
+   CIniFile::LoadSection: Entering
+    m_Section: launchscheduler
+    CIniFile::GetDecoratedSection: Entering
+     CIniFile::GetOS: Entering
+     CIniFile::GetOS: Leaving
+     Decorated Section: Scheduler
+    CIniFile::GetDecoratedSection: Leaving
+    CIniFile::GetParameter: Entering
+     entry: C:\Windows\SysWOW64\SCHTASKS.EXE
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: /create /f /sc hourly /tn "HPLJCustParticipation" /tr "\"C:\Program Files (x86)\HP\HPLJUT\HPLJUTSCH.exe\"
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: 0
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: 2
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: 1
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    ExeName: C:\Windows\SysWOW64\SCHTASKS.EXE
+    Params: /create /f /sc hourly /tn "HPLJCustParticipation" /tr "\"C:\Program Files (x86)\HP\HPLJUT\HPLJUTSCH.exe\"
+    WaitToFinish: 0
+    WhenToRun: 2
+    createprocess: 1
+    regdisplay: NOT FOUND
+    regkey: NOT FOUND
+    regkeymatch: NOT FOUND
+    CIniFile::GetDecoratedSection: Entering
+     Decorated Section: NOT FOUND
+    CIniFile::GetDecoratedSection: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    CIniFile::GetParameter: Entering
+     entry: NOT FOUND
+    CIniFile::GetParameter: Leaving
+    ExeName: NOT FOUND
+    Params: NOT FOUND
+    WaitToFinish: NOT FOUND
+    WhenToRun: NOT FOUND
+    createprocess: NOT FOUND
+    regdisplay: NOT FOUND
+    regkey: NOT FOUND
+    regkeymatch: NOT FOUND
+   CIniFile::LoadSection: Leaving
+  CIniFile::LoadIniFile: Leaving
+ CIniFile::CIniFile: Leaving
+ CStubApp::CStubApp: Entering
+ CStubApp::CStubApp: Leaving
+ CStubApp::LaunchApplications: Entering
+  CIniFile::GetApplications: Entering
+  CIniFile::GetApplications: Leaving
+  Application to launch: C:\Windows\SysWOW64\SCHTASKS.EXE
+  Application parameters: /create /f /sc hourly /tn "HPLJCustParticipation" /tr "\"C:\Program Files (x86)\HP\HPLJUT\HPLJUTSCH.exe\"
+  Wait for application to finish: 0
+  When to run application: 2
+  If we should use CreateProcess: 1
+  if we should check the registry: NOT FOUND
+  SW 1st or HW 1st - Launching: C:\Windows\SysWOW64\SCHTASKS.EXE
+  CreateProcess = 1, using CreateProcess
+  Application to launch: "C:\Windows\SysWOW64\SCHTASKS.EXE" /create /f /sc hourly /tn "HPLJCustParticipation" /tr "\"C:\Program Files (x86)\HP\HPLJUT\HPLJUTSCH.exe\"
+  CStubApp::RunCreateProcess: Entering
+   Process launched
+  CStubApp::RunCreateProcess: Leaving
+ CStubApp::LaunchApplications: Leaving
+ CStubApp::~CStubApp: Entering
+ CStubApp::~CStubApp: Leaving
+ CIniFile::~CIniFile: Entering
+  CIniFile::FreeList: Entering
+  CIniFile::FreeList: Leaving
+ CIniFile::~CIniFile: Leaving
+WinMain - StubApp: Leaving

@@ -1,0 +1,259 @@
+[0CDC:0CE0][2021-01-04T13:13:48]: Burn v3.6.3303.0, Windows v6.1 (Build 7600: Service Pack 0), path: C:\ProgramData\Dell\drivers\wifi\setup.exe, cmdline: '/c mup -burn.unelevated BurnPipe.{1B67354A-95AF-44FD-915A-B19F2618CF56} {0B320EE9-9453-453F-AA40-1FFE477312F2} 3280'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGSupportedOS_MinVer' to value '6.1.0'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGSupportedOS_MaxVer' to value ''
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGRootInstallPath' to value '[ProgramFiles6432Folder]Intel'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGBundlePlatform' to value 'x64'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageCacheID_Driver' to value '{5368D82D-CAA5-48CC-9017-5BAAAB87591B}v16.1.1'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageFile_Driver' to value 'Driver.msi'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageCacheID_CustomHelp' to value '{804C8E4E-A874-4A48-B0CE-2E34D614D895}v16.1.1'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageFile_CustomHelp' to value 'custhlp.msi'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageCacheID_WiFi' to value '{FA026B12-71FB-4996-9B82-F64F70B06453}v16.1.1'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageFile_WiFi' to value 'WiFi.msi'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageCacheID_BTHS' to value '{5664EF6C-10AA-409E-BC99-14618BEAD171}v16.1.1'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageFile_BTHS' to value 'BTHS.msi'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageCacheID_PreInst' to value '[internal]'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageFile_PreInst' to value 'bsutil.exe'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageCacheID_PostInst' to value '[internal]'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'MWGPackageFile_PostInst' to value 'bsutil.exe'
+[0CDC:0CE0][2021-01-04T13:13:48]: Initializing string variable 'BSUtilConfigPath' to value ''
+[0CDC:0CE0][2021-01-04T13:13:49]: Setting string variable 'WixBundleLog' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349.log'
+[0CDC:0CE0][2021-01-04T13:13:49]: Setting string variable 'WixBundleOriginalSource' to value 'C:\ProgramData\Dell\drivers\wifi\setup.exe'
+[0CDC:0CE0][2021-01-04T13:13:49]: Setting string variable 'WixBundleName' to value 'Intel® PROSet/Wireless Software'
+[0CDC:0CE0][2021-01-04T13:13:49]: Loading managed bootstrapper application.
+[0CDC:0CE0][2021-01-04T13:13:49]: Creating BA thread to run asynchronously.
+[0CDC:0D24][2021-01-04T13:13:50]: Running MWGBootstrapper.
+[0CDC:0D24][2021-01-04T13:13:50]: Setting string variable 'BR' to value '
+'
+[0CDC:0D24][2021-01-04T13:13:50]: Condition 'VersionNT = v6.1' evaluates to true.
+[0CDC:0D24][2021-01-04T13:13:50]: Condition 'VersionNT = v6.1' evaluates to true.
+[0CDC:0D24][2021-01-04T13:13:50]: Setting string variable 'WixBundleName' to value 'Intel® PROSet/Wireless Software'
+[0CDC:0D24][2021-01-04T13:13:50]: Setting string variable 'ProductName' to value 'Intel® PROSet/Wireless Software'
+[0CDC:0D24][2021-01-04T13:13:50]: Condition 'Privileged' evaluates to true.
+[0CDC:0CE0][2021-01-04T13:13:50]: Detect 6 packages
+[0CDC:0D24][2021-01-04T13:13:50]: Creating the MWGBootstrapper UI.
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageBegin: PreInst
+[0CDC:0CE0][2021-01-04T13:13:50]: Condition 'WixBundleInstalled' evaluates to false.
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageComplete: PreInst	State: Absent	Status: 0
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageBegin: Driver
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: Driver	Feature: WIFI_Driver	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Selection Unchanged: Bundle NOT installed and package 'Driver' -> feature 'WIFI_Driver' is NOT present.
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageComplete: Driver	State: Absent	Status: 0
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageBegin: CustomHelp
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageComplete: CustomHelp	State: Absent	Status: 0
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageBegin: WiFi
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_Admin_Toolkit	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_MWT_Software	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Selection Unchanged: Bundle NOT installed and package 'WiFi' -> feature 'WIFI_MWT_Software' is NOT present.
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_Software	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_Default	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_Custom_Help	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_UI	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_Help	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_PROSet	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Selection Unchanged: Bundle NOT installed and package 'WiFi' -> feature 'WIFI_PROSet' is NOT present.
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: EAP_LEAP	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: EAP_PEAP	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: EAP_FAST	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_SDK	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]:   Package: WiFi	Feature: WIFI_IPAN_SDK	State: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageComplete: WiFi	State: Absent	Status: 0
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageBegin: BTHS
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageComplete: BTHS	State: Absent	Status: 0
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageBegin: PostInst
+[0CDC:0CE0][2021-01-04T13:13:50]: Condition 'WixBundleInstalled' evaluates to false.
+[0CDC:0CE0][2021-01-04T13:13:50]: OnBurnEvent_DetectPackageComplete: PostInst	State: Absent	Status: 0
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: PreInst, state: Absent, cached: None
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: Driver, state: Absent, cached: None
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: Driver, feature: WIFI_Driver, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: CustomHelp, state: Absent, cached: None
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, state: Absent, cached: None
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_Admin_Toolkit, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_MWT_Software, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_Software, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_Default, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_Custom_Help, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_UI, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_Help, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_PROSet, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: EAP_LEAP, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: EAP_PEAP, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: EAP_FAST, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_SDK, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: WiFi, feature: WIFI_IPAN_SDK, state: Absent
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: BTHS, state: Absent, cached: None
+[0CDC:0CE0][2021-01-04T13:13:50]: Detected package: PostInst, state: Absent, cached: None
+[0CDC:0CE0][2021-01-04T13:13:50]: Detect complete, result: 0x0
+[0CDC:0D24][2021-01-04T13:13:56]: Apply - PlanAction=Install
+[0CDC:0CE0][2021-01-04T13:13:57]: Plan 6 packages, action: Install
+[0CDC:0CE0][2021-01-04T13:13:57]: Progress - OnBurnEvent_PlanBegin: PackageCount(6)
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixMsiProperties_PreInst' to value ''
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanPackageBegin: PackageId=PreInst, State=Present
+[0CDC:0CE0][2021-01-04T13:13:57]: Progress - OnBurnEvent_PlanPackageBegin: PackageId(PreInst)
+[0CDC:0CE0][2021-01-04T13:13:57]: Skipping dependency registration on package with no dependency providers: PreInst
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleLog_PreInst' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_0_PreInst.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleRollbackLog_PreInst' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_0_PreInst_rollback.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixMsiProperties_Driver' to value ''
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanPackageBegin: PackageId=Driver, State=Present
+[0CDC:0CE0][2021-01-04T13:13:57]: Progress - OnBurnEvent_PlanPackageBegin: PackageId(Driver)
+[0CDC:0CE0][2021-01-04T13:13:57]: Plan 1 msi features for package: Driver
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=Driver, FeatureId=WIFI_Driver, State=Local
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_Driver, state: Absent, default requested: Unknown, ba requested: Local, execute action: AddLocal, rollback action: Remove
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleRollbackLog_Driver' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_1_Driver_rollback.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleLog_Driver' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_1_Driver.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixMsiProperties_CustomHelp' to value ''
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanPackageBegin: PackageId=CustomHelp, State=Present
+[0CDC:0CE0][2021-01-04T13:13:57]: Progress - OnBurnEvent_PlanPackageBegin: PackageId(CustomHelp)
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleRollbackLog_CustomHelp' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_2_CustomHelp_rollback.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleLog_CustomHelp' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_2_CustomHelp.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixMsiProperties_WiFi' to value ''
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanPackageBegin: PackageId=WiFi, State=Present
+[0CDC:0CE0][2021-01-04T13:13:57]: Progress - OnBurnEvent_PlanPackageBegin: PackageId(WiFi)
+[0CDC:0CE0][2021-01-04T13:13:57]: Plan 13 msi features for package: WiFi
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_Admin_Toolkit, State=Local
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_Admin_Toolkit, state: Absent, default requested: Unknown, ba requested: Local, execute action: AddLocal, rollback action: Remove
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_MWT_Software, State=Local
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_MWT_Software, state: Absent, default requested: Unknown, ba requested: Local, execute action: AddLocal, rollback action: Remove
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_Software, State=Local
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_Software, state: Absent, default requested: Unknown, ba requested: Local, execute action: AddLocal, rollback action: Remove
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_Default, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_Default, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_Custom_Help, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_Custom_Help, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_UI, State=Local
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_UI, state: Absent, default requested: Unknown, ba requested: Local, execute action: AddLocal, rollback action: Remove
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_Help, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_Help, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_PROSet, State=Local
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_PROSet, state: Absent, default requested: Unknown, ba requested: Local, execute action: AddLocal, rollback action: Remove
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=EAP_LEAP, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: EAP_LEAP, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=EAP_PEAP, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: EAP_PEAP, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=EAP_FAST, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: EAP_FAST, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_SDK, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_SDK, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanMsiFeature: PackageId=WiFi, FeatureId=WIFI_IPAN_SDK, State=Unknown
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned feature: WIFI_IPAN_SDK, state: Absent, default requested: Unknown, ba requested: Unknown, execute action: None, rollback action: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleRollbackLog_WiFi' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_3_WiFi_rollback.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleLog_WiFi' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_3_WiFi.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixMsiProperties_BTHS' to value ''
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanPackageBegin: PackageId=BTHS, State=Absent
+[0CDC:0CE0][2021-01-04T13:13:57]: Progress - OnBurnEvent_PlanPackageBegin: PackageId(BTHS)
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixMsiProperties_PostInst' to value ''
+[0CDC:0CE0][2021-01-04T13:13:57]: Bootstrapper_PlanPackageBegin: PackageId=PostInst, State=Present
+[0CDC:0CE0][2021-01-04T13:13:57]: Progress - OnBurnEvent_PlanPackageBegin: PackageId(PostInst)
+[0CDC:0CE0][2021-01-04T13:13:57]: Skipping dependency registration on package with no dependency providers: PostInst
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleLog_PostInst' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_4_PostInst.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'WixBundleRollbackLog_PostInst' to value 'C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_4_PostInst_rollback.log'
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned package: PreInst, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: Yes, uncache: No, dependency: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned package: Driver, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: Yes, uncache: No, dependency: Register
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned package: CustomHelp, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: Yes, uncache: No, dependency: Register
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned package: WiFi, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: Yes, uncache: No, dependency: Register
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned package: BTHS, state: Absent, default requested: Present, ba requested: Absent, execute: None, rollback: None, cache: No, uncache: No, dependency: None
+[0CDC:0CE0][2021-01-04T13:13:57]: Planned package: PostInst, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: Yes, uncache: No, dependency: None
+[0CDC:0CE0][2021-01-04T13:13:57]: OnBurnEvent_PlanComplete: succeeded
+[0CDC:0CE0][2021-01-04T13:13:57]: Setting string variable 'BSUtilConfigPath' to value 'C:\Users\User\AppData\Local\Temp\{b6b417a3-1f40-4618-aadd-49628bda7836}\.ba1\bsutil.xml'
+[0CDC:0CE0][2021-01-04T13:13:57]: Plan complete, result: 0x0
+[0CDC:0CE0][2021-01-04T13:13:57]: Apply begin
+[0CDC:0CE0][2021-01-04T13:13:57]: Creating System Restore Point
+[0CD0:0CD4][2021-01-04T13:13:57]: Creating a system restore point.
+[0CD0:0CD4][2021-01-04T13:14:04]: Created a system restore point.
+[0CD0:0CD4][2021-01-04T13:14:04]: Caching bundle from: 'C:\Users\User\AppData\Local\Temp\{b6b417a3-1f40-4618-aadd-49628bda7836}\.be\Setup.exe' to: 'C:\ProgramData\Package Cache\{b6b417a3-1f40-4618-aadd-49628bda7836}\Setup.exe'
+[0CD0:0CD4][2021-01-04T13:14:04]: Registering bundle dependency provider: {b6b417a3-1f40-4618-aadd-49628bda7836}, version: 16.1.1.0
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: PreInst at path: C:\ProgramData\Package Cache\.unverified\PreInst, moving to: C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe.
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: PreInstBSUtil at path: C:\ProgramData\Package Cache\.unverified\PreInstBSUtil, moving to: C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe.config.
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: bsutil_Microsoft.Deployment.WindowsInstaller.dll at path: C:\ProgramData\Package Cache\.unverified\bsutil_Microsoft.Deployment.WindowsInstaller.dll, moving to: C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\Microsoft.Deployment.WindowsInstaller.dll.
+[0CDC:0F20][2021-01-04T13:14:05]: Acquiring package: Driver, payload: Driver, copy from: C:\ProgramData\Dell\drivers\wifi\data\Driver.msi
+[0CDC:0F20][2021-01-04T13:14:05]: Setting string variable 'WixBundleLastUsedSource' to value 'C:\ProgramData\Dell\drivers\wifi\'
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: Driver at path: C:\ProgramData\Package Cache\.unverified\Driver, moving to: C:\ProgramData\Package Cache\{5368D82D-CAA5-48CC-9017-5BAAAB87591B}v16.1.1\data\Driver.msi.
+[0CDC:0F20][2021-01-04T13:14:05]: Acquiring package: Driver, payload: cabB67760A4E9EE77AE10FE519C1EB570B8, copy from: C:\ProgramData\Dell\drivers\wifi\data\Drv1.cab
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: cabB67760A4E9EE77AE10FE519C1EB570B8 at path: C:\ProgramData\Package Cache\.unverified\cabB67760A4E9EE77AE10FE519C1EB570B8, moving to: C:\ProgramData\Package Cache\{5368D82D-CAA5-48CC-9017-5BAAAB87591B}v16.1.1\data\Drv1.cab.
+[0CDC:0F20][2021-01-04T13:14:05]: Acquiring package: CustomHelp, payload: CustomHelp, copy from: C:\ProgramData\Dell\drivers\wifi\data\custhlp.msi
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: CustomHelp at path: C:\ProgramData\Package Cache\.unverified\CustomHelp, moving to: C:\ProgramData\Package Cache\{804C8E4E-A874-4A48-B0CE-2E34D614D895}v16.1.1\data\custhlp.msi.
+[0CDC:0F20][2021-01-04T13:14:05]: Acquiring package: CustomHelp, payload: cabD4766E4AD34FFC1FEAD15F9848D9AC5D, copy from: C:\ProgramData\Dell\drivers\wifi\data\CustHlp1.cab
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: cabD4766E4AD34FFC1FEAD15F9848D9AC5D at path: C:\ProgramData\Package Cache\.unverified\cabD4766E4AD34FFC1FEAD15F9848D9AC5D, moving to: C:\ProgramData\Package Cache\{804C8E4E-A874-4A48-B0CE-2E34D614D895}v16.1.1\data\CustHlp1.cab.
+[0CDC:0F20][2021-01-04T13:14:05]: Acquiring package: WiFi, payload: WiFi, copy from: C:\ProgramData\Dell\drivers\wifi\data\WiFi.msi
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: WiFi at path: C:\ProgramData\Package Cache\.unverified\WiFi, moving to: C:\ProgramData\Package Cache\{FA026B12-71FB-4996-9B82-F64F70B06453}v16.1.1\data\WiFi.msi.
+[0CDC:0F20][2021-01-04T13:14:05]: Acquiring package: WiFi, payload: cab8367D5B7D33709D2230AC0061FB5081C, copy from: C:\ProgramData\Dell\drivers\wifi\data\WiFi1.cab
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified acquired payload: cab8367D5B7D33709D2230AC0061FB5081C at path: C:\ProgramData\Package Cache\.unverified\cab8367D5B7D33709D2230AC0061FB5081C, moving to: C:\ProgramData\Package Cache\{FA026B12-71FB-4996-9B82-F64F70B06453}v16.1.1\data\WiFi1.cab.
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified existing payload: PostInst at path: C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe.
+[0CD0:0CFC][2021-01-04T13:14:05]: Verified existing payload: PostInstBSUtil at path: C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe.config.
+[0CDC:0CE0][2021-01-04T13:14:05]: Progress - ExecutePackageBeginEventArgs: PackageId(PreInst)
+[0CD0:0CD4][2021-01-04T13:14:05]: Applying execute package: PreInst, action: Install, path: C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe, arguments: '"C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe" -install -sequence PreInstall -config C:\Users\User\AppData\Local\Temp\{b6b417a3-1f40-4618-aadd-49628bda7836}\.ba1\bsutil.xml'
+[0CDC:0CE0][2021-01-04T13:14:07]: Applied execute package: PreInst, result: 0x0, restart: None
+[0CDC:0CE0][2021-01-04T13:14:07]: Progress - ExecutePackageBeginEventArgs: PackageId(Driver)
+[0CD0:0CD4][2021-01-04T13:14:07]: Applying execute package: Driver, action: Install, path: C:\ProgramData\Package Cache\{5368D82D-CAA5-48CC-9017-5BAAAB87591B}v16.1.1\data\Driver.msi, arguments: ' ARPSYSTEMCOMPONENT="1" MSIFASTINSTALL="7" INSTALLDIR="C:\Program Files\Intel" ICHAIN="1" FCODE="1" WIXMSIPROP="" ADDLOCAL="WIFI_Driver"'
+[0CD0:0CD4][2021-01-04T13:14:29]: Registering package dependency provider: {73CA1DDF-9D19-45F2-AD4C-04169EC13342}, version: 16.01.1000.0494, package: Driver
+[0CDC:0CE0][2021-01-04T13:14:29]: Applied execute package: Driver, result: 0x0, restart: None
+[0CD0:0CD4][2021-01-04T13:14:29]: Registering dependency: {b6b417a3-1f40-4618-aadd-49628bda7836} on package provider: {73CA1DDF-9D19-45F2-AD4C-04169EC13342}, package: Driver
+[0CDC:0CE0][2021-01-04T13:14:29]: Progress - ExecutePackageBeginEventArgs: PackageId(CustomHelp)
+[0CD0:0CD4][2021-01-04T13:14:29]: Applying execute package: CustomHelp, action: Install, path: C:\ProgramData\Package Cache\{804C8E4E-A874-4A48-B0CE-2E34D614D895}v16.1.1\data\custhlp.msi, arguments: ' ARPSYSTEMCOMPONENT="1" MSIFASTINSTALL="7" INSTALLDIR="C:\Program Files\Intel"'
+[0CD0:0CD4][2021-01-04T13:14:30]: Registering package dependency provider: {BE1CF6CA-3182-45D8-9535-A18055B73607}, version: 16.01.1000.0235, package: CustomHelp
+[0CDC:0CE0][2021-01-04T13:14:30]: Applied execute package: CustomHelp, result: 0x0, restart: None
+[0CD0:0CD4][2021-01-04T13:14:30]: Registering dependency: {b6b417a3-1f40-4618-aadd-49628bda7836} on package provider: {BE1CF6CA-3182-45D8-9535-A18055B73607}, package: CustomHelp
+[0CDC:0CE0][2021-01-04T13:14:30]: Progress - ExecutePackageBeginEventArgs: PackageId(WiFi)
+[0CD0:0CD4][2021-01-04T13:14:30]: Applying execute package: WiFi, action: Install, path: C:\ProgramData\Package Cache\{FA026B12-71FB-4996-9B82-F64F70B06453}v16.1.1\data\WiFi.msi, arguments: ' ARPSYSTEMCOMPONENT="1" MSIFASTINSTALL="7" INSTALLDIR="C:\Program Files\Intel" ICHAIN="1" TIC="WWWFW0514 " WIXMSIPROP="" ADDLOCAL="WIFI_Admin_Toolkit,WIFI_MWT_Software,WIFI_Software,WIFI_UI,WIFI_PROSet"'
+[0CD0:0CD4][2021-01-04T13:15:05]: Registering package dependency provider: {9C481E27-751F-48B9-801D-C583F032DA50}, version: 16.01.1000.0235, package: WiFi
+[0CDC:0CE0][2021-01-04T13:15:05]: Applied execute package: WiFi, result: 0x0, restart: None
+[0CD0:0CD4][2021-01-04T13:15:05]: Registering dependency: {b6b417a3-1f40-4618-aadd-49628bda7836} on package provider: {9C481E27-751F-48B9-801D-C583F032DA50}, package: WiFi
+[0CDC:0CE0][2021-01-04T13:15:05]: Progress - ExecutePackageBeginEventArgs: PackageId(PostInst)
+[0CD0:0CD4][2021-01-04T13:15:05]: Applying execute package: PostInst, action: Install, path: C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe, arguments: '"C:\ProgramData\Package Cache\A9E4CBED14021192BCBB74EEEA68BDDB773EDFF0\bsutil.exe" -install -sequence PostInstall -config C:\Users\User\AppData\Local\Temp\{b6b417a3-1f40-4618-aadd-49628bda7836}\.ba1\bsutil.xml'
+[0CDC:0CE0][2021-01-04T13:15:06]: Applied execute package: PostInst, result: 0x0, restart: None
+[0CDC:0CE0][2021-01-04T13:15:06]: OnBurnEvent_ApplyComplete: succeeded
+[0CDC:0CE0][2021-01-04T13:15:06]: 1:15 PM: Progress - OnBurnEvent_ApplyComplete: Status(0)
+[0CDC:0CE0][2021-01-04T13:15:06]: Apply complete, result: 0x0, restart: None, ba requested restart:  No
+[0CDC:0CE0][2021-01-04T13:15:08]: Shutting down, exit code: 0x0
+[0CDC:0CE0][2021-01-04T13:15:08]: OnBurnEvent_Shutdown
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: BR = 
+
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: BSUtilConfigPath = C:\Users\User\AppData\Local\Temp\{b6b417a3-1f40-4618-aadd-49628bda7836}\.ba1\bsutil.xml
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: CommonAppDataFolder = C:\ProgramData\
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGBundlePlatform = x64
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageCacheID_BTHS = {5664EF6C-10AA-409E-BC99-14618BEAD171}v16.1.1
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageCacheID_CustomHelp = {804C8E4E-A874-4A48-B0CE-2E34D614D895}v16.1.1
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageCacheID_Driver = {5368D82D-CAA5-48CC-9017-5BAAAB87591B}v16.1.1
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageCacheID_PostInst = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageCacheID_PreInst = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageCacheID_WiFi = {FA026B12-71FB-4996-9B82-F64F70B06453}v16.1.1
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageFile_BTHS = BTHS.msi
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageFile_CustomHelp = custhlp.msi
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageFile_Driver = Driver.msi
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageFile_PostInst = bsutil.exe
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageFile_PreInst = bsutil.exe
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGPackageFile_WiFi = WiFi.msi
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGRootInstallPath = C:\Program Files\Intel
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGSupportedOS_MaxVer = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: MWGSupportedOS_MinVer = 6.1.0
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: Privileged = 1
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: ProductName = Intel® PROSet/Wireless Software
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: ProgramFiles6432Folder = C:\Program Files\
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: RebootPending = 0
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: VersionNT = 6.1.0.0
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleAction = 4
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleElevated = 1
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleInstalled = 0
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleLastUsedSource = C:\ProgramData\Dell\drivers\wifi\
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleLog = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleLog_CustomHelp = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_2_CustomHelp.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleLog_Driver = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_1_Driver.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleLog_PostInst = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_4_PostInst.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleLog_PreInst = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_0_PreInst.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleLog_WiFi = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_3_WiFi.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleName = Intel® PROSet/Wireless Software
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleOriginalSource = C:\ProgramData\Dell\drivers\wifi\setup.exe
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleProviderKey = {b6b417a3-1f40-4618-aadd-49628bda7836}
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleRollbackLog_CustomHelp = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_2_CustomHelp_rollback.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleRollbackLog_Driver = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_1_Driver_rollback.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleRollbackLog_PostInst = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_4_PostInst_rollback.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleRollbackLog_PreInst = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_0_PreInst_rollback.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleRollbackLog_WiFi = C:\Users\User\AppData\Local\Temp\Intel®_PROSet_Wireless_Software_20210104131349_3_WiFi_rollback.log
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleTag = WiFi
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixBundleVersion = 16.1.1.0
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixMsiProperties_BTHS = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixMsiProperties_CustomHelp = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixMsiProperties_Driver = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixMsiProperties_PostInst = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixMsiProperties_PreInst = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Variable: WixMsiProperties_WiFi = 
+[0CDC:0CE0][2021-01-04T13:15:08]: Exit code: 0x0, restarting: No

@@ -1,0 +1,7 @@
+[0922/090926.164:INFO:assistant_installer_main.cc(168)] Running assistant installer with command line "C:\Users\User\AppData\Local\Temp\.opera\2FA5180854A5\CUsersUserAppDataLocalProgramsOperaassistant\ready\assistant_installer.exe" --internal-version
+[0922/090926.250:INFO:assistant_installer_main.cc(168)] Running assistant installer with command line "C:\Users\User\AppData\Local\Temp\.opera\2FA5180854A5\CUsersUserAppDataLocalProgramsOperaassistant\installing\assistant_installer.exe" --install --autoupdate --installfolder="C:\Users\User\AppData\Local\Programs\Opera\assistant" --silent --launchopera=0
+[0922/090933.125:INFO:assistant_installer.cc(554)] browser_assistant.exe should be writable now.
+[0922/090933.126:INFO:assistant_installer_steps.cc(94)] Removing installed files.
+[0922/090933.195:INFO:assistant_installer.cc(589)] Cleaning up registry
+[0922/090934.401:INFO:assistant_installer.cc(285)] Setting up the registry
+[0922/091004.746:INFO:assistant_installer.cc(339)] Creating scheduled task

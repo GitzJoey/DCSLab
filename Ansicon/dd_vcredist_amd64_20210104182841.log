@@ -1,0 +1,40 @@
+[1AA8:18C8][2021-01-04T18:28:41]: Burn v3.6.3542.0, Windows v6.1 (Build 7601: Service Pack 1), path: C:\Program Files (x86)\Doctor Accounting 2\Installer Package\vcredist_x64.exe, cmdline: '-burn.unelevated BurnPipe.{4D4681C3-61E8-4B48-B573-E279C170C1D2} {A6051BFE-AC22-4A03-AC51-4A2736FD0062} 7120'
+[1AA8:18C8][2021-01-04T18:28:41]: Setting string variable 'WixBundleLog' to value 'C:\Users\User\AppData\Local\Temp\dd_vcredist_amd64_20210104182841.log'
+[1AA8:18C8][2021-01-04T18:28:41]: Setting string variable 'WixBundleOriginalSource' to value 'C:\Program Files (x86)\Doctor Accounting 2\Installer Package\vcredist_x64.exe'
+[1AA8:18C8][2021-01-04T18:28:41]: Setting string variable 'WixBundleName' to value 'Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030'
+[1AA8:18C8][2021-01-04T18:28:41]: Detect 2 packages
+[1AA8:18C8][2021-01-04T18:28:41]: Detected package: vcRuntimeMinimum_x64, state: Present, cached: None
+[1AA8:18C8][2021-01-04T18:28:41]: Detected package: vcRuntimeAdditional_x64, state: Present, cached: None
+[1AA8:18C8][2021-01-04T18:28:41]: Condition 'VersionNT64 >= v6.0 OR (VersionNT64 = v5.2 AND ServicePackLevel >= 1)' evaluates to true.
+[1AA8:18C8][2021-01-04T18:28:41]: Detect complete, result: 0x0
+[1AA8:18C8][2021-01-04T18:28:43]: Plan 2 packages, action: Install
+[1AA8:18C8][2021-01-04T18:28:43]: Condition 'VersionNT64 AND (VersionNT > v6.2 OR (VersionNT = v6.2 AND (NTProductType = 1)) OR (VersionNT = v6.2 AND NOT (NTProductType = 1)) OR (VersionNT = v6.0 AND NOT (NTProductType = 1)) OR (VersionNT = v6.1 AND (NTProductType = 1)) OR (VersionNT = v6.1 AND NOT (NTProductType = 1)) OR (VersionNT = v6.0 AND (NTProductType = 1)) OR (VersionNT = v5.1) OR (VersionNT = v5.2 AND NOT (NTProductType = 1)) OR (VersionNT = v5.2 AND (NTProductType = 1)))' evaluates to true.
+[1AA8:18C8][2021-01-04T18:28:43]: Condition 'VersionNT64 AND (VersionNT > v6.2 OR (VersionNT = v6.2 AND (NTProductType = 1)) OR (VersionNT = v6.2 AND NOT (NTProductType = 1)) OR (VersionNT = v6.0 AND NOT (NTProductType = 1)) OR (VersionNT = v6.1 AND (NTProductType = 1)) OR (VersionNT = v6.1 AND NOT (NTProductType = 1)) OR (VersionNT = v6.0 AND (NTProductType = 1)) OR (VersionNT = v5.1) OR (VersionNT = v5.2 AND NOT (NTProductType = 1)) OR (VersionNT = v5.2 AND (NTProductType = 1)))' evaluates to true.
+[1AA8:18C8][2021-01-04T18:28:43]: Planned package: vcRuntimeMinimum_x64, state: Present, default requested: Present, ba requested: Present, execute: None, rollback: None, cache: No, uncache: No, dependency: Register
+[1AA8:18C8][2021-01-04T18:28:43]: Planned package: vcRuntimeAdditional_x64, state: Present, default requested: Present, ba requested: Present, execute: None, rollback: None, cache: No, uncache: No, dependency: Register
+[1AA8:18C8][2021-01-04T18:28:43]: Plan complete, result: 0x0
+[1AA8:18C8][2021-01-04T18:28:43]: Apply begin
+[1BD0:1450][2021-01-04T18:28:43]: Creating a system restore point.
+[1BD0:1450][2021-01-04T18:28:49]: Created a system restore point.
+[1BD0:1450][2021-01-04T18:28:49]: Caching bundle from: 'C:\Users\User\AppData\Local\Temp\{ca67548a-5ebe-413a-b50c-4b9ceb6d66c6}\.be\vcredist_x64.exe' to: 'C:\ProgramData\Package Cache\{ca67548a-5ebe-413a-b50c-4b9ceb6d66c6}\vcredist_x64.exe'
+[1BD0:1450][2021-01-04T18:28:49]: Registering bundle dependency provider: {ca67548a-5ebe-413a-b50c-4b9ceb6d66c6}, version: 11.0.61030.0
+[1BD0:1450][2021-01-04T18:28:49]: Registering dependency: {ca67548a-5ebe-413a-b50c-4b9ceb6d66c6} on package provider: Microsoft.VS.VC_RuntimeMinimum_amd64,v11, package: vcRuntimeMinimum_x64
+[1BD0:1450][2021-01-04T18:28:49]: Registering dependency: {ca67548a-5ebe-413a-b50c-4b9ceb6d66c6} on package provider: Microsoft.VS.VC_RuntimeMinimumVSU_amd64,v11, package: vcRuntimeMinimum_x64
+[1BD0:1450][2021-01-04T18:28:49]: Registering dependency: {ca67548a-5ebe-413a-b50c-4b9ceb6d66c6} on package provider: Microsoft.VS.VC_RuntimeAdditional_amd64,v11, package: vcRuntimeAdditional_x64
+[1BD0:1450][2021-01-04T18:28:49]: Registering dependency: {ca67548a-5ebe-413a-b50c-4b9ceb6d66c6} on package provider: Microsoft.VS.VC_RuntimeAdditionalVSU_amd64,v11, package: vcRuntimeAdditional_x64
+[1AA8:18C8][2021-01-04T18:28:49]: Apply complete, result: 0x0, restart: None, ba requested restart:  No
+[1AA8:18C8][2021-01-04T18:29:11]: Shutting down, exit code: 0x0
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: NTProductType = 1
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: ServicePackLevel = 1
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: VersionNT = 6.1.0.0
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: VersionNT64 = 6.1.0.0
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleAction = 4
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleElevated = 1
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleInstalled = 0
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleLog = C:\Users\User\AppData\Local\Temp\dd_vcredist_amd64_20210104182841.log
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleName = Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleOriginalSource = C:\Program Files (x86)\Doctor Accounting 2\Installer Package\vcredist_x64.exe
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleProviderKey = {ca67548a-5ebe-413a-b50c-4b9ceb6d66c6}
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleTag = 
+[1AA8:18C8][2021-01-04T18:29:11]: Variable: WixBundleVersion = 11.0.61030.0
+[1AA8:18C8][2021-01-04T18:29:11]: Exit code: 0x0, restarting: No
