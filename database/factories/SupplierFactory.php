@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Supplier;
-use App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,18 +25,17 @@ class SupplierFactory extends Factory
         $faker = \Faker\Factory::create('id_ID');
 
         return [
-            'company_id' => Company::select('id')->inRandomOrder()->limit(1)->get()[0],
-            'code' => $faker->numberBetween(01, 10),
+            'company_id' => '',
+            'code' => $faker->unique()->numberBetween(001, 99999),
             'name' => $faker->name(),
-            'term' => $faker->numberBetween(7, 28),
+            'payment_term_type' => $faker->numberBetween(0, 28),
             'contact' => $faker->e164PhoneNumber(),
             'address' => $faker->address(),
             'city' => $faker->city(),
-            'is_tax' => $faker->numberBetween(0, 1),
-            'tax_number' => $faker->creditCardNumber(),
+            'taxable_enterprise' => $faker->numberBetween(0, 1),
+            'tax_id' => $faker->creditCardNumber(),
             'remarks' => $faker->word(),
             'status' => '1'
-            
         ];
     }
 }

@@ -24,7 +24,6 @@ class IncomeGroup extends Model
 
     protected static $logOnlyDirty = true;
 
-
     protected $hidden = [
         'id',
         'created_by',

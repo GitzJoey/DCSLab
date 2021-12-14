@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Rules\uniqueCode;
-use App\Services\CompanyService;
-use App\Services\ActivityLogService;
-
 use Illuminate\Http\Request;
+use App\Actions\RandomGenerator;
+
+use App\Services\CompanyService;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
@@ -46,9 +48,20 @@ class CompanyController extends BaseController
 
     public function store(Request $request)
     {
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Company::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
+
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'companies')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'companies')],
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 
@@ -64,13 +77,12 @@ class CompanyController extends BaseController
         $userId = Auth::user()->id;
 
         $result = $this->companyService->create(
-            $request['code'],
+            $code,
             $request['name'],
             $default,
             $request['status'],
             $userId
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -78,7 +90,7 @@ class CompanyController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'companies'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 
@@ -98,7 +110,6 @@ class CompanyController extends BaseController
             $default,
             $request['status']
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

@@ -7,7 +7,11 @@ use App\Services\ActivityLogService;
 use App\Services\InvestorService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
+use App\Models\Investor;
 
 class InvestorController extends BaseController
 {
@@ -32,7 +36,11 @@ class InvestorController extends BaseController
 
     public function read()
     {
-        return $this->investorService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
+        $userId = Auth::user()->id;
+        return $this->investorService->read($userId);
     }
 
     public function getAllActiveInvestor()
@@ -43,23 +51,36 @@ class InvestorController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'investors')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'investors')],
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required'
         ]);
 
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Investor::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->investorService->create(
-            Hashids::decode($request['company_id'])[0],
-            $request['code'],
-            $request['name'], 
-            $request['contact'], 
-            $request['address'], 
+            $company_id,
+            $code,
+            $request['name'],
+            $request['contact'],
+            $request['address'],
             $request['city'],
-            $request['tax_number'], 
-            $request['remarks'], 
+            $request['tax_number'],
+            $request['remarks'],
             $request['status']
         );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -67,13 +88,16 @@ class InvestorController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'investors'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required'
         ]);
 
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->investorService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['contact'],
@@ -83,7 +107,6 @@ class InvestorController extends BaseController
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

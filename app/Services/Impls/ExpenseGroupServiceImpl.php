@@ -72,13 +72,11 @@ class ExpenseGroupServiceImpl implements ExpenseGroupService
         
     }
 
-
     public function delete($id)
     {
         $expensegroup = ExpenseGroup::find($id);
 
         return $expensegroup->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

@@ -20,18 +20,18 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
 
             CompanyTableSeeder::class,
-            BranchTableSeeder::class,
-            WarehouseTableSeeder::class,
+            // BranchTableSeeder::class,
+            // WarehouseTableSeeder::class,
             
-            CashTableSeeder::class,
+            // CashTableSeeder::class,
             ProductGroupTableSeeder::class,
-            ProductBrandTableSeeder::class,
+            BrandTableSeeder::class,
             UnitTableSeeder::class,
 
             SupplierTableSeeder::class,
 
-            ProductTableSeeder::class,
-            ProductUnitTableSeeder::class,
+            // ProductTableSeeder::class,
+            // ProductUnitTableSeeder::class,
         ]);
     }
 }

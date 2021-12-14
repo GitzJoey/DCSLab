@@ -84,7 +84,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div id="crud" v-if="this.mode !== 'list'">
+                <div id="crud" v-if="this.mode !== 'list' && this.mode !== 'error'">
                     <Form id="warehouseForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
@@ -99,6 +99,7 @@
                             <label class="col-2 col-form-label" for="company_id">{{ $t('fields.company_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="company_id" name="company_id" v-model="warehouse.company.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <option value="0">{{ $t('placeholder.please_select') }}</option>
                                     <option :value="c.hId" v-for="c in this.companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
@@ -181,7 +182,7 @@
             <div v-if="this.mode === 'list'">
                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNew"><i class="fa fa-plus-square"></i></button>
             </div>
-            <div v-if="this.mode !== 'list'">
+            <div v-if="this.mode !== 'list' && this.mode !== 'error'">
                 <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="backToList">{{ $t("buttons.back") }}</button>
             </div>
         </div>
@@ -228,7 +229,7 @@ export default {
             warehouseList: [],
             warehouse: {
                 company: { hId: '0'},
-                code: '',
+                code: 'AUTO',
                 name: '',
                 address: '',
                 city: '',
@@ -237,6 +238,8 @@ export default {
                 status: '',
             },
             companyDDL: [],
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
@@ -272,7 +275,7 @@ export default {
         emptyWarehouse() {
             return {
                 company: { hId: '0'},
-                code: '',
+                code: 'AUTO',
                 name: '',
                 address: '',
                 city: '',

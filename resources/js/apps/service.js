@@ -19,7 +19,7 @@ const messages = {
             cols: {
                 code: 'Code',
                 name: 'Name',
-                group_id: 'Product Group',
+                product_group_id: 'Product Group',
                 unit_id: 'Unit',
                 tax_status: 'Tax Status',
                 remarks: 'Remarks',
@@ -42,7 +42,7 @@ const messages = {
         fields: {
             code: 'Code',
             name: 'Name',
-            group_id: 'Product Group',
+            product_group_id: 'Product Group',
             unit_id: 'Unit',
             tax_status: 'Tax Status',
             remarks: 'Remarks',
@@ -62,6 +62,21 @@ const messages = {
         placeholder: {
             please_select: 'Please Select',
         },
+        tax_statusDDL: {
+            notax: 'No Tax',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
+            service: 'Service',
+        },
+        statusDDL: {
+            active: 'Active',
+            inactive: 'Inactive'
+        }
     },
     id: {
         table: {
@@ -69,7 +84,7 @@ const messages = {
             cols: {
                 code: 'Kode',
                 name: 'Nama',
-                group_id: 'Produk Grup',
+                product_group_id: 'Produk Grup',
                 unit_id: 'Satuan',
                 tax_status: 'Status Pajak',
                 remarks: 'Remarks',
@@ -92,7 +107,7 @@ const messages = {
         fields: {
             code: 'Kode',
             name: 'Nama',
-            group_id: 'Produk Grup',
+            product_group_id: 'Produk Grup',
             unit_id: 'Satuan',
             tax_status: 'Status Pajak',
             remarks: 'Remarks',
@@ -112,6 +127,21 @@ const messages = {
         placeholder: {
             please_select: 'Silahkan Pilih',
         },
+        tax_statusDDL: {
+            notax: 'No Tax',
+            excudetax: 'Exclude Tax',
+            includetax: 'Include Tax'
+        },
+        product_typeDDL: {
+            rawmaterial: 'RAW Material',
+            wip: 'WIP',
+            finishedgoods: 'Finished Goods',
+            service: 'Service',
+        },
+        statusDDL: {
+            active: 'Aktif',
+            inactive: 'Tidak Aktif'
+        }
     }
 };
 
@@ -124,4 +154,4 @@ const i18n = createI18n({
 createApp(Service)
     .use(ZiggyVue, Ziggy)
     .use(i18n)
-    .mount('#statusVue')
+    .mount('#serviceVue')

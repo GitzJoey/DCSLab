@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\CustomerService;
-
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
+use App\Models\Customer;
 
 class CustomerController extends BaseController
 {
@@ -32,29 +35,50 @@ class CustomerController extends BaseController
 
     public function read()
     {
-        return $this->CustomerService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+            return response()->error(trans('error_messages.unable_to_find_selected_company'));
+            
+        $userId = Auth::user()->id;
+        return $this->CustomerService->read($userId);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'customers')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'customers')],
+            'name' => 'required|min:3|max:255',
             'status' => 'required',
         ]);
 
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Customer::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
 
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
-        $use_limit_age_notes = $request['use_limit_age_notes'];
-        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
+        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
+        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
+        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
+
+        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
+        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
+        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
+
+        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
+        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
+        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
 
         $result = $this->CustomerService->create(
-            Hashids::decode($request['company_id'])[0],
-            $request['code'],
+            $company_id,
+            $code,
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],
@@ -79,25 +103,31 @@ class CustomerController extends BaseController
     {
         $request->validate([
             'code' =>  new uniqueCode('update', $id, 'customers'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required',
         ]);
 
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes == 'on' ? $use_limit_outstanding_notes = 1 : $use_limit_outstanding_notes = 0;
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal == 'on' ? $use_limit_payable_nominal = 1 : $use_limit_payable_nominal = 0;
+        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
+        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
+        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
 
-        $use_limit_age_notes = $request['use_limit_age_notes'];
-        $use_limit_age_notes == 'on' ? $use_limit_age_notes = 1 : $use_limit_age_notes = 0;
+        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
+        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
+        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
+
+        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
+        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
+        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
 
         $result = $this->CustomerService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
-            Hashids::decode($request['customer_group_id'])[0], 
+            Hashids::decode($request['customer_group_id'])[0],
             $request['sales_territory'],
             $use_limit_outstanding_notes,
             $request['limit_outstanding_notes'],

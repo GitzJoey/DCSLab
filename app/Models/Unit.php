@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
-use App\Models\Product;
 use App\Models\ProductUnit;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
 
 class Unit extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-    
+
     protected $fillable = [
         'code',
         'name',
@@ -49,19 +49,24 @@ class Unit extends Model
     {
         return HashIds::encode($this->attributes['id']);
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
-
-    public function product_unit()
+    public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
+    }
+
+    public function scopeBySelectedCompany($query, $overrideCompanyId = '')
+    {
+        return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);
+    }
+
+    public function scopeStatusActive($query, $overrideStatus = '')
+    {
+        return $query->where('status', '=', empty($overrideStatus) ? 1:$overrideStatus);
     }
 }

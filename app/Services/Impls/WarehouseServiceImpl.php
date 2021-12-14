@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\WarehouseService;
 use App\Models\Warehouse;
+use App\Models\User;
 
 class WarehouseServiceImpl implements WarehouseService
 {
@@ -48,9 +49,11 @@ class WarehouseServiceImpl implements WarehouseService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Warehouse::with('company')->paginate();
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Warehouse::with('company')->whereIn('company_id', $company_list)->paginate();
     }
 
     public function update(
@@ -88,7 +91,6 @@ class WarehouseServiceImpl implements WarehouseService
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
-        
     }
 
 
@@ -97,7 +99,6 @@ class WarehouseServiceImpl implements WarehouseService
         $warehouse = Warehouse::find($id);
 
         return $warehouse->delete();
-        
     }
 
     public function checkDuplicatedCode($crud_status, $id, $code)

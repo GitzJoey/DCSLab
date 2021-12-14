@@ -8,17 +8,17 @@ interface SupplierService
         $company_id,
         $code,
         $name,
-        $term,
+        $payment_term_type,
         $contact,
         $address,
         $city,
-        $is_tax,
-        $tax_number,
+        $taxable_enterprise,
+        $tax_id,
         $remarks,
         $status
     );
 
-    public function read();
+    public function read($userId);
 
     public function getAllSupplier();
 
@@ -27,12 +27,12 @@ interface SupplierService
         $company_id,
         $code,
         $name,
-        $term,
+        $payment_term_type,
         $contact,
         $address,
         $city,
-        $is_tax,
-        $tax_number,
+        $taxable_enterprise,
+        $tax_id,
         $remarks,
         $status
     );

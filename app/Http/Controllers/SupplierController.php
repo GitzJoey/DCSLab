@@ -6,8 +6,11 @@ use App\Rules\uniqueCode;
 use App\Services\ActivityLogService;
 use App\Services\SupplierService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
+use App\Models\Supplier;
 
 class SupplierController extends BaseController
 {
@@ -33,7 +36,11 @@ class SupplierController extends BaseController
 
     public function read()
     {
-        return $this->SupplierService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
+        $userId = Auth::user()->id;
+        return $this->SupplierService->read($userId);
     }
 
     public function getAllSupplier()
@@ -44,29 +51,41 @@ class SupplierController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|max:255',
-            'code' => new uniqueCode('create', '', 'suppliers'),
-            'name' => 'required|max:255',
+            'code' => ['required', 'max:255', new uniqueCode('create', '', 'suppliers')],
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
+
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Supplier::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
         
-        $is_tax = $request['is_tax'];
-        $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
+        $taxable_enterprise = $request['taxable_enterprise'];
+        $taxable_enterprise == 'on' ? $taxable_enterprise = 1 : $taxable_enterprise = 0;
 
         $result = $this->SupplierService->create(
-            Hashids::decode($request['company_id'])[0],
-            $request['code'],
-            $request['name'], 
-            $request['term'], 
-            $request['contact'], 
-            $request['address'], 
+            $company_id,
+            $code,
+            $request['name'],
+            $request['payment_term_type'],
+            $request['contact'],
+            $request['address'],
             $request['city'],
-            $is_tax, 
-            $request['tax_number'], 
-            $request['remarks'], 
+            $taxable_enterprise,
+            $request['tax_id'],
+            $request['remarks'],
             $request['status']
             );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -74,28 +93,30 @@ class SupplierController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'suppliers'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha',
             'status' => 'required'
         ]);
 
-        $is_tax = $request['is_tax'];
-        $is_tax == 'on' ? $is_tax = 1 : $is_tax = 0;
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
+        $taxable_enterprise = $request['taxable_enterprise'];
+        $taxable_enterprise == 'on' ? $taxable_enterprise = 1 : $taxable_enterprise = 0;
 
         $result = $this->SupplierService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
-            $request['term'],
+            $request['payment_term_type'],
             $request['contact'],
             $request['address'],
             $request['city'],
-            $is_tax,
-            $request['tax_number'],
+            $taxable_enterprise,
+            $request['tax_id'],
             $request['remarks'],
             $request['status'],
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 

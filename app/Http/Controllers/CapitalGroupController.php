@@ -7,6 +7,10 @@ use App\Services\ActivityLogService;
 use App\Services\CapitalGroupService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
+use App\Models\CapitalGroup;
 
 class CapitalGroupController extends BaseController
 {
@@ -31,7 +35,11 @@ class CapitalGroupController extends BaseController
 
     public function read()
     {
-        return $this->capitalGroupService->read();
+        if (!parent::hasSelectedCompanyOrCompany())
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
+
+        $userId = Auth::user()->id;
+        return $this->capitalGroupService->read($userId);
     }
 
     public function getAllActiveCapitalGroup()
@@ -42,16 +50,29 @@ class CapitalGroupController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'capitalgroups')],
-            'name' => 'required|max:255'
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'capitalgroups')],
+            'name' => 'required|min:3|max:255|alpha|alpha_dash',
         ]);
 
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = CapitalGroup::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->capitalGroupService->create(
-            Hashids::decode($request['company_id'])[0],
-            $request['code'],
+            $company_id,
+            $code,
             $request['name']
         );
-        
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -59,12 +80,15 @@ class CapitalGroupController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'capitalgroups'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255|alpha|alpha_dash',
         ]);
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
 
         $result = $this->capitalGroupService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
         );

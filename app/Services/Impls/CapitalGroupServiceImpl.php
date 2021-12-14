@@ -38,9 +38,9 @@ class CapitalGroupServiceImpl implements CapitalGroupService
         }
     }
 
-    public function read()
+    public function read($userId)
     {
-        return CapitalGroup::paginate();
+        return CapitalGroup::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllActiveCapitalGroup()

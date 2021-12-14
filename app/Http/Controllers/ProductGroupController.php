@@ -7,6 +7,10 @@ use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use App\Actions\RandomGenerator;
+use App\Models\ProductGroup;
 
 class ProductGroupController extends BaseController
 {
@@ -30,44 +34,53 @@ class ProductGroupController extends BaseController
     }
 
     public function read()
-    {
-        return $this->productGroupService->read();
+    {        
+        if (!parent::hasSelectedCompanyOrCompany() == true) {
+            return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        }
+
+        $userId = Auth:: user()->id;
+        return $this->productGroupService->read($userId);
     }
 
-    public function getAllProductGroup()
+    public function getAllProductGroup_Product()
     {
-        return $this->productGroupService->getAllProductGroup();
+        return $this->productGroupService->getAllProductGroup_Product();
     }
 
-    public function getAllProduct()
+    public function getAllProductGroup_Service()
     {
-        return $this->productGroupService->getAllProduct();
-    }
-
-    public function getAllService()
-    {
-        return $this->productGroupService->getAllService();
-    }
-
-    public function GetAllProductandService()
-    {
-        return $this->productGroupService->GetAllProductandService();
+        return $this->productGroupService->getAllProductGroup_Service();
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'productgroups')],
-            'name' => 'required|max:255'
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'productgroups')],
+            'name' => 'required|min:3|max:255',
+            'category' => 'required'
         ]);
 
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = ProductGroup::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
+
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->productGroupService->create(
-            // Hashids::decode($request['company_id'])[0],
-            $request['code'],
+            $company_id,
+            $code,
             $request['name'],
             $request['category']
         );
-
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -75,12 +88,16 @@ class ProductGroupController extends BaseController
     {
         $request->validate([
             'code' => new uniqueCode('update', $id, 'productgroups'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255',
+            'category' => 'required'
         ]);
         
+        $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
+        $company_id = Hashids::decode($company_id)[0];
+
         $result = $this->productGroupService->update(
             $id,
-            // Hashids::decode($request['company_id'])[0],
+            $company_id,
             $request['code'],
             $request['name'],
             $request['category']

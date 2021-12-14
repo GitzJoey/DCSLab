@@ -18,12 +18,12 @@ class CreateSuppliersTable extends Migration
             $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->string('code');
             $table->string('name')->nullable();
-            $table->integer('term');
+            $table->string('payment_term_type');
             $table->string('contact')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
-            $table->integer('is_tax')->nullable();
-            $table->string('tax_number')->nullable();
+            $table->integer('taxable_enterprise')->default(0);
+            $table->string('tax_id')->nullable();
             $table->string('remarks')->nullable();
             $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);

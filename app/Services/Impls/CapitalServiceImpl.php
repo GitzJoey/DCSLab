@@ -4,6 +4,9 @@ namespace App\Services\Impls;
 
 use Exception;
 use App\Models\Capital;
+use App\Models\CapitalGroup;
+use App\Models\Cash;
+use App\Models\Investor;
 use App\Services\CapitalService;
 
 use Illuminate\Support\Facades\DB;
@@ -52,9 +55,9 @@ class CapitalServiceImpl implements CapitalService
 
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Capital::with('investor', 'group', 'cash')->paginate();
+        return Capital::with('investor', 'group', 'cash', 'company')->bySelectedCompany()->paginate();
     }
 
     public function update(
@@ -99,19 +102,18 @@ class CapitalServiceImpl implements CapitalService
 
     public function getInvestorById($id)
     {
-        return Capital::find($id);
+        return Investor::find($id);
     }
 
     public function getCapitalGroupById($id)
     {
-        return Capital::find($id);
+        return CapitalGroup::find($id);
     }
 
     public function getCashById($id)
     {
-        return Capital::find($id);
+        return Cash::find($id);
     }
-
 
     public function delete($id)
     {

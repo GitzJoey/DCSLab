@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\EmployeeService;
 use App\Models\Employee;
+use App\Models\User;
 use App\Models\Setting;
 
 class EmployeeServiceImpl implements EmployeeService
@@ -38,7 +39,9 @@ class EmployeeServiceImpl implements EmployeeService
 
     public function read($userId)
     {
-        return Employee::with('company', 'user.profile')->paginate();
+        $user = User::find($userId);
+        $company_list = $user->companies()->pluck('company_id');
+        return Employee::with('company', 'user.profile')->whereIn('company_id', $company_list)->paginate();
     }
 
     public function getEmployeeByEmail($email)

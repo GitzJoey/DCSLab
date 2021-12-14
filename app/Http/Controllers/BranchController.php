@@ -6,8 +6,11 @@ use App\Services\ActivityLogService;
 use App\Services\BranchService;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use App\Rules\uniqueCode;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Actions\RandomGenerator;
+use App\Models\Branch;
 
 class BranchController extends BaseController
 {
@@ -35,21 +38,33 @@ class BranchController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
             return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        return $this->branchService->read();
+        $userId = Auth::user()->id;
+        return $this->branchService->read($userId);
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'company_id' => 'required',
-            'code' => ['required', 'max:255', new uniqueCode('create', '', 'branches')],
-            'name' => 'required|max:255',
+            'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'branches')],
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 
+        $randomGenerator = new randomGenerator();
+        $code = $request['code'];
+        if ($code == 'AUTO') {
+            $code_count = 1;
+            do {
+                $code = $randomGenerator->generateOne(99999999);
+                $code_count = Branch::where('code', $code)->count();
+            }
+            while ($code_count != 0);
+        };
+
         $result = $this->branchService->create(
             Hashids::decode($request['company_id'])[0],
-            $request['code'],
+            $code,
             $request['name'],
             $request['address'],
             $request['city'],
@@ -65,7 +80,7 @@ class BranchController extends BaseController
         $request->validate([
             'company_id' => 'required|max:255' ,
             'code' => new uniqueCode('update', $id, 'branches'),
-            'name' => 'required|max:255',
+            'name' => 'required|min:3|max:255',
             'status' => 'required'
         ]);
 

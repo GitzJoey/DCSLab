@@ -16,12 +16,12 @@ class SupplierServiceImpl implements SupplierService
         $company_id,
         $code,
         $name,
-        $term,
+        $payment_term_type,
         $contact,
         $address,
         $city,
-        $is_tax,
-        $tax_number,
+        $taxable_enterprise,
+        $tax_id,
         $remarks,
         $status
     )
@@ -30,14 +30,15 @@ class SupplierServiceImpl implements SupplierService
 
         try {
             $supplier = new Supplier();
+            $supplier->company_id = $company_id;
             $supplier->code = $code;
             $supplier->name = $name;
-            $supplier->term = $term;
+            $supplier->payment_term_type = $payment_term_type;
             $supplier->contact = $contact;
             $supplier->address = $address;
             $supplier->city = $city;
-            $supplier->is_tax = $is_tax;
-            $supplier->tax_number = $tax_number;
+            $supplier->taxable_enterprise = $taxable_enterprise;
+            $supplier->tax_id = $tax_id;
             $supplier->remarks = $remarks;
             $supplier->status = $status;
 
@@ -54,9 +55,9 @@ class SupplierServiceImpl implements SupplierService
 
     }
 
-    public function read()
+    public function read($userId)
     {
-        return Supplier::paginate();
+        return Supplier::with('company')->bySelectedCompany()->paginate();
     }
 
     public function getAllSupplier()
@@ -64,18 +65,17 @@ class SupplierServiceImpl implements SupplierService
         return Supplier::get();
     }
 
-
     public function update(
         $id,
         $company_id,
         $code,
         $name,
-        $term,
+        $payment_term_type,
         $contact,
         $address,
         $city,
-        $is_tax,
-        $tax_number,
+        $taxable_enterprise,
+        $tax_id,
         $remarks,
         $status
     )
@@ -89,12 +89,12 @@ class SupplierServiceImpl implements SupplierService
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
-                'term' => $term,
+                'payment_term_type' => $payment_term_type,
                 'contact' => $contact,
                 'address' => $address,
                 'city' => $city,
-                'is_tax' => $is_tax,
-                'tax_number' => $tax_number,
+                'taxable_enterprise' => $taxable_enterprise,
+                'tax_id' => $tax_id,
                 'remarks' => $remarks,
                 'status' => $status
             ]);
@@ -108,7 +108,6 @@ class SupplierServiceImpl implements SupplierService
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
-
 
     public function delete($id)
     {

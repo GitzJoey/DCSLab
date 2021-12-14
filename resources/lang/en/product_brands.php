@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'title' => 'Product Brands'
+    'title' => 'Brands'
 ];

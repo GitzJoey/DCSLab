@@ -1,0 +1,14 @@
+Cek ProductServiceImpl, liat fungsi read
+
+Implementasiin fungsi read kaya gitu ke :
+
++ Cashes
++ Investors
++ Capital Groups
++ Capitals
++ Suppliers
++ Product Groups
++ Brands
++ Units
++ Customer Groups
++ Customers

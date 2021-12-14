@@ -5,6 +5,7 @@
             <h3 class="block-title" v-if="this.mode === 'create'"><strong>{{ $t('actions.create') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'edit'"><strong>{{ $t('actions.edit') }}</strong></h3>
             <h3 class="block-title" v-if="this.mode === 'show'"><strong>{{ $t('actions.show') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'error'"><strong>&nbsp;</strong></h3>
             <div class="block-options">
                 <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
@@ -21,7 +22,38 @@
         </div>
         <div class="block-content">
             <transition name="fade">
+                <div id="error" v-if="this.mode === 'error'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.listErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.listErrors">{{ e }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </transition>
+            <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.tableListErrors">{{ e }}</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                        <ul>
+                            <li v-for="e in this.tableListErrors">{{ e }}</li>
+                        </ul>
+                    </div>
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
@@ -75,7 +107,7 @@
                 </div>
             </transition>
             <transition name="fade">
-                <div id="crud" v-if="this.mode !== 'list'">
+                <div id="crud" v-if="this.mode !== 'list' && this.mode !== 'error'">
                     <Form id="unitForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
                         <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
@@ -107,14 +139,14 @@
                             <div class="col-md-10 d-flex align-items-center">
                                 <select class="form-control" id="category" name="category" v-model="unit.category" v-show="this.mode === 'create' || this.mode === 'edit'">
                                     <option value="">{{ $t('placeholder.please_select') }}</option>
-                                    <option value="1">{{ $t('categoryDDL.product') }}</option>
-                                    <option value="2">{{ $t('categoryDDL.service') }}</option>
-                                    <option value="3">{{ $t('categoryDDL.productandservice') }}</option>
+                                    <option value="1">{{ $t('categoryDDL.productunit') }}</option>
+                                    <option value="2">{{ $t('categoryDDL.serviceunit') }}</option>
+                                    <option value="3">{{ $t('categoryDDL.productandserviceunit') }}</option>
                                 </select>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                    <span v-if="unit.category === 1">{{ $t('categoryDDL.product') }}</span>
-                                    <span v-if="unit.category === 2">{{ $t('categoryDDL.service') }}</span>
-                                    <span v-if="unit.category === 3">{{ $t('categoryDDL.productandservice') }}</span>
+                                    <span v-if="unit.category === 1">{{ $t('categoryDDL.productunit') }}</span>
+                                    <span v-if="unit.category === 2">{{ $t('categoryDDL.serviceunit') }}</span>
+                                    <span v-if="unit.category === 3">{{ $t('categoryDDL.productandserviceunit') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +166,7 @@
             <div v-if="this.mode === 'list'">
                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNew"><i class="fa fa-plus-square"></i></button>
             </div>
-            <div v-if="this.mode !== 'list'">
+            <div v-if="this.mode !== 'list' && this.mode !== 'error'">
                 <button type="button" class="btn btn-secondary min-width-125" data-toggle="click-ripple" v-on:click="backToList">{{ $t("buttons.back") }}</button>
             </div>
         </div>
@@ -180,10 +212,12 @@ export default {
             contentHidden: false,
             unitList: [],
             unit: {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             },
+            listErrors: [],
+            tableListErrors: [],
         }
     },
     created() {
@@ -199,6 +233,9 @@ export default {
             axios.get(route('api.get.dashboard.unit.read') + '?page=' + page).then(response => {
                 this.unitList = response.data;
                 this.loading = false;
+            }).catch(e => {
+                this.handleListError(e);
+                this.loading = false;
             });
         },
         onPaginationChangePage(page) {
@@ -212,7 +249,7 @@ export default {
         },
         emptyUnit() {
             return {
-                code: '',
+                code: 'AUTO',
                 name: '',
                 category: '',
             }
@@ -271,6 +308,23 @@ export default {
                 //Catch From Controller
                 actions.setFieldError('', e.response.data.message + ' (' + e.response.status + ' ' + e.response.statusText + ')');
             }
+        },
+        handleListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.mode = 'error';
+                this.listErrors.push(e.response.data.message);
+            }
+        },
+        resetListErrors() {
+            this.listErrors = [];
+        },
+        handleTableListError(e) {
+            if (e.response.data.message !== undefined) {
+                this.tableListErrors.push(e.response.data.message);
+            }
+        },
+        resetTableListErrors() {
+            this.tableListErrors = [];
         },
         handleUpload(e) {
             const files = e.target.files;
