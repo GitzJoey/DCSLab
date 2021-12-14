@@ -36,7 +36,7 @@ interface CompanyService
 
     public function generateUniqueCode(): string;
 
-    public function isUniqueCode(string $code, int $userId, int $exceptId): string;
+    public function isUniqueCode(string $code, int $userId, ?int $exceptId = null): bool;
 
     public function resetDefaultCompany(int $userId): bool;
 

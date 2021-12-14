@@ -21,13 +21,15 @@ class CreateProductsTable extends Migration
             $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers');
             $table->string('code')->nullable();
             $table->string('name')->nullable();
-            $table->integer('tax_status')->nullable();
-            $table->string('remarks')->nullable();
+            $table->integer('product_type')->nullable(); //[RAW, WIP, FINISHED GOOD, SERVICE]
+            $table->boolean('taxable_supplies')->default(false);
+            $table->integer('rate_supplies')->default(0);
+            $table->boolean('price_include_vat')->default(false);
             $table->integer('point')->nullable();
             $table->integer('use_serial_number')->nullable();
             $table->integer('has_expiry_date')->nullable();
-            $table->integer('product_type')->nullable(); //[RAW, WIP, FINISHED GOOD, SERVICE]
             $table->integer('status')->nullable();
+            $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

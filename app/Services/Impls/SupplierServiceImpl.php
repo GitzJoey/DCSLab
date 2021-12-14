@@ -148,7 +148,6 @@ class SupplierServiceImpl implements SupplierService
         }
     }
 
-
     public function delete(int $id): bool
     {
         $supplier = Supplier::find($id);
@@ -160,10 +159,16 @@ class SupplierServiceImpl implements SupplierService
 
     public function generateUniqueCode(int $companyId): string
     {
-        return '';
+        $rand = new RandomGenerator();
+        
+        do {
+            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        } while (!$this->isUniqueCode($code, $companyId));
+
+        return $code;
     }
 
-    public function isUniqueCode(string $code, int $companyId, int $exceptId): bool
+    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
         $result = Supplier::whereCompanyId($companyId)->where('code', '=' , $code);
 

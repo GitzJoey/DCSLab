@@ -13,7 +13,7 @@ This project is inspired by the desire to create an up to date web app boilerpla
 * Secure Coding Paradigm
 * and more...
 
-## Requirement
+## Minimal Requirement
 * [PHP](https://www.php.net/downloads.php) (8.0.2)
 * [Laravel](https://laravel.com/) (8.55.0)
 * [MySQL](https://www.mysql.com/downloads/) (8.0.21)

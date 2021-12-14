@@ -6,29 +6,30 @@ use Illuminate\Contracts\Validation\Rule;
 
 use Illuminate\Container\Container;
 use App\Services\CompanyService;
+use App\Services\ProductService;
 use App\Services\SupplierService;
+use Illuminate\Support\Facades\Config;
 
 class uniqueCode implements Rule
 {
-    private int $userId;
     private int $companyId;
     private int $exceptId;
     private string $table;
 
     private CompanyService $companyService;
     private SupplierService $supplierService;
+    private ProductService $productService;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct(string $table, int $userId, int $companyId, int $exceptId = null)
+    public function __construct(string $table, int $companyId, ?int $exceptId = null)
     {
         $this->table = $table;
-        $this->userId = $userId;
         $this->companyId = $companyId;
-        $this->exceptId = $exceptId;
+        $this->exceptId = $exceptId ? $exceptId : null;
 
         switch($this->table) {
             case 'companies':
@@ -36,6 +37,9 @@ class uniqueCode implements Rule
                 break;
             case 'suppliers':
                 $this->supplierService = Container::getInstance()->make(SupplierService::class);
+                break;
+            case 'products':
+                $this->productService = Container::getInstance()->make(ProductService::class);
                 break;
             default:
                 break;
@@ -51,14 +55,19 @@ class uniqueCode implements Rule
      */
     public function passes($attribute, $value)
     {
+        if ($value == Config::get('const.KEYWORDS.AUTO')) return true;
+
         $is_duplicate = false;
+
         switch($this->table) {
             case 'companies':
-                $is_duplicate = $this->companyService->isUniqueCode($value, $this->userId, $this->exceptId);
+                $is_duplicate = $this->companyService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;
             case 'suppliers':
                 $is_duplicate = $this->supplierService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;
+            case 'products':
+                $is_duplicate = $this->productService->isUniqueCode($value, $this->companyId, $this->exceptId);
             default:
                 break;
         }

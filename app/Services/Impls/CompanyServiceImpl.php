@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Actions\RandomGenerator;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,10 @@ class CompanyServiceImpl implements CompanyService
             if ($usr->companies()->count() == 0) {
                 $default = 1;
                 $status = 1;
+            }
+
+            if ($code == Config::get('const.KEYWORDS.AUTO')) {
+                $code = $this->generateUniqueCode();
             }
 
             $company = new Company();
@@ -95,6 +100,10 @@ class CompanyServiceImpl implements CompanyService
         try {
             $company = Company::where('id', '=', $id);
 
+            if ($code == Config::get('const.KEYWORDS.AUTO')) {
+                $code = $this->generateUniqueCode($company->id);
+            }
+
             $company->update([
                 'code' => $code,
                 'name' => $name,
@@ -137,15 +146,14 @@ class CompanyServiceImpl implements CompanyService
 
     public function generateUniqueCode(): string
     {
-        return '';
+        $rand = new RandomGenerator();
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        return $code;
     }
 
-    public function isUniqueCode(string $code, int $userId, int $exceptId): string
+    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $usr = User::find($userId);
-        $companies = $usr->companies()->pluck('company_id');
-
-        $result = Company::whereIn('id', $companies)->where('code', '=' , $code);
+        $result = Company::where('id', '=', $companyId)->where('code', '=' , $code);
 
         if($exceptId)
             $result = $result->where('id', '<>', $exceptId);

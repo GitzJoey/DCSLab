@@ -9,7 +9,7 @@ use App\Models\Role;
 use Illuminate\Container\Container;
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class RoleTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

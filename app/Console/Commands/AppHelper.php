@@ -7,8 +7,8 @@ use App\Services\RoleService;
 use App\Services\UserService;
 
 use Database\Seeders\UnitTableSeeder;
-use Database\Seeders\UserSeeder;
-use Database\Seeders\RoleSeeder;
+use Database\Seeders\UserTableSeeder;
+use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\ProductTableSeeder;
@@ -125,8 +125,8 @@ class AppHelper extends Command
 
             $this->info('Seeding...');
 
-            $seeder = new UserSeeder();
-            $seeder->callWith(UserSeeder::class, [$truncate, $count]);
+            $seeder = new UserTableSeeder();
+            $seeder->callWith(UserTableSeeder::class, [$truncate, $count]);
 
             $this->info('UserSeeder Finish.');
         }
@@ -140,8 +140,8 @@ class AppHelper extends Command
 
             $this->info('Seeding...');
 
-            $seeder = new RoleSeeder();
-            $seeder->callWith(RoleSeeder::class, [true, $count]);
+            $seeder = new RoleTableSeeder();
+            $seeder->callWith(RoleTableSeeder::class, [true, $count]);
 
             $this->info('RoleSeeder Finish.');
         }

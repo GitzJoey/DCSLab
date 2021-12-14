@@ -3,11 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Rules\uniqueCode;
-use App\Rules\validDropDownValue;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class SupplierRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,25 +29,28 @@ class SupplierRequest extends FormRequest
         $companyId = $this['company_id'];
 
         $nullableArr = [
-            'address' => 'nullable',
+            '' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
-                    'company_id' => 'required',
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'suppliers', companyId: $companyId)],
-                    'name' => 'required|max:255',
-                    'status' => 'required'
+                    'code' => ['required', 'max:255', new uniqueCode(table: 'products', userId: $userId, companyId: $companyId)],
+                    'name' => 'required|min:3|max:255',
+                    'product_group_id' => 'required',
+                    'brand_id' => 'required',
+                    'unit_id' => 'required',
+                    'status' => 'required',    
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'company_id' => 'required',
-                    'code' => new uniqueCode(table: 'suppliers', companyId: $companyId, exceptId: $this->route('id')),
-                    'name' => 'required|max:255',
-                    'status' => 'required'
+                    'code' => ['required', 'max:255', new uniqueCode(table: 'products', userId: $userId, companyId: $companyId, exceptId: $this->route('id'))],
+                    'name' => 'required|min:3|max:255',
+                    'product_group_id' => 'required',
+                    'unit_id' => 'required',
+                    'status' => 'required',        
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

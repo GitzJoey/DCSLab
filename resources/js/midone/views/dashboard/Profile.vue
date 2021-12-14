@@ -44,28 +44,26 @@
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
                         <div class="loader-container">
-                            <VeeForm id="profileForm" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                                <div class="pt-5 pr-5">
+                            <VeeForm id="profileForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                                <div class="p-5">
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="name">{{ t('views.profile.fields.name') }}</label>
-                                            <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" v-model="userContext.name"/>
-                                        </div>
-                                        <ErrorMessage name="name" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                        <label class="form-label" for="name">{{ t('views.profile.fields.name') }}</label>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" v-model="userContext.name"/>
+                                        <ErrorMessage name="name" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="email">{{ t('views.profile.fields.email') }}</label>
-                                            <input type="text" class="form-control" :label="t('views.profile.fields.email')" id="email" name="email" readonly v-model="userContext.email"/>
-                                            <div class="px-5" v-if="userContext.emailVerified"><a class="tooltip" href="javascript:;" :title="t('views.profile.tooltip.email_verified')"><ThumbsUpIcon /></a></div>
+                                        <label class="form-label" for="email">{{ t('views.profile.fields.email') }}</label>
+                                        <div class="flex items-center">
+                                            <input type="text" class="form-control" :label="t('views.profile.fields.email')" id="email" name="email" readonly v-model="userContext.email" />
+                                            <a class="tooltip px-2" href="javascript:;" :title="t('views.profile.tooltip.email_verified')" v-if="userContext.emailVerified"><ThumbsUpIcon /></a>
                                         </div>
-                                        <div class="sm:ml-40 sm:pl-5 mt-2" v-if="!userContext.emailVerified">
+                                        <div class="mt-2" v-if="!userContext.emailVerified">
                                             <button type="button" class="btn btn-sm" @click.prevent="sendVerificationLink">{{ t('components.buttons.send_verification_email') }}</button>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="inputImg"></label>
+                                        <label class="form-label" for="inputImg"></label>
+                                        <div class="form-inline">                                            
                                             <div class="flex-1">
                                                 <img alt="" class="my-1" :src="retrieveImage">
                                                 <input type="file" class="h-full w-full" id="inputImg" name="img_path" data-toggle="custom-file-input" v-on:change="handleUpload"/>
@@ -73,68 +71,48 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="firstName">{{ t('views.profile.fields.first_name') }}</label>
-                                            <input type="text" class="form-control" id="firstName" name="first_name" v-model="userContext.profile.first_name"/>
-                                        </div>
+                                        <label class="form-label" for="firstName">{{ t('views.profile.fields.first_name') }}</label>
+                                        <input type="text" class="form-control" id="firstName" name="first_name" v-model="userContext.profile.first_name"/>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="lastName">{{ t('views.profile.fields.last_name') }}</label>
-                                            <input type="text" class="form-control" id="lastName" name="last_name" v-model="userContext.profile.last_name"/>
-                                        </div>
+                                        <label class="form-label" for="lastName">{{ t('views.profile.fields.last_name') }}</label>
+                                        <input type="text" class="form-control" id="lastName" name="last_name" v-model="userContext.profile.last_name"/>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="address">{{ t('views.profile.fields.address') }}</label>
-                                            <input type="text" class="form-control" id="address" name="address" v-model="userContext.profile.address"/>
-                                        </div>
+                                        <label class="form-label" for="address">{{ t('views.profile.fields.address') }}</label>
+                                        <input type="text" class="form-control" id="address" name="address" v-model="userContext.profile.address"/>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="city">{{ t('views.profile.fields.city') }}</label>
-                                            <input type="text" class="form-control" id="city" name="city" v-model="userContext.profile.city"/>
-                                        </div>
+                                        <label class="form-label" for="city">{{ t('views.profile.fields.city') }}</label>
+                                        <input type="text" class="form-control" id="city" name="city" v-model="userContext.profile.city"/>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="postal_code">{{ t('views.profile.fields.postal_code') }}</label>
-                                            <input type="text" class="form-control" id="postal_code" name="postal_code" v-model="userContext.profile.postal_code"/>
-                                        </div>
+                                        <label class="form-label" for="postal_code">{{ t('views.profile.fields.postal_code') }}</label>
+                                        <input type="text" class="form-control" id="postal_code" name="postal_code" v-model="userContext.profile.postal_code"/>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="country">{{ t('views.profile.fields.country') }}</label>
-                                            <input type="text" class="form-control" id="country" name="country" readonly v-model="userContext.profile.country"/>
-                                        </div>
+                                        <label class="form-label" for="country">{{ t('views.profile.fields.country') }}</label>
+                                        <input type="text" class="form-control" id="country" name="country" readonly v-model="userContext.profile.country"/>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
-                                            <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" v-model="userContext.profile.tax_id"/>
-                                        </div>
-                                        <ErrorMessage name="tax_id" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                        <label class="form-label" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" v-model="userContext.profile.tax_id"/>
+                                        <ErrorMessage name="tax_id" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
-                                            <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" v-model="userContext.profile.ic_num"/>
-                                        </div>
-                                        <ErrorMessage name="ic_num" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                        <label class="form-label" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" v-model="userContext.profile.ic_num"/>
+                                        <ErrorMessage name="ic_num" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="remarks">{{ t('views.profile.fields.remarks') }}</label>
-                                            <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks"/>
-                                        </div>
+                                        <label class="form-label" for="remarks">{{ t('views.profile.fields.remarks') }}</label>
+                                        <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks"/>
                                     </div>
-                                    <div class="mb-3">
-                                        <div class="form-inline">
-                                            <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
-                                                <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
-                                                <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="pl-5">
+                                    <div class="form-inline">
+                                        <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
+                                        <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                                     </div>
                                 </div>
                             </VeeForm>
@@ -151,53 +129,43 @@
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
                         <div class="loader-container">
-                            <VeeForm id="profileSettingsForm" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_Settings" v-slot="{ handleReset, errors }">
-                                <div class="pt-5 pr-5">
+                            <VeeForm id="profileSettingsForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_Settings" v-slot="{ handleReset, errors }">
+                                <div class="p-5">
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="inputTheme">{{ t('views.profile.fields.settings.theme') }}</label>
-                                            <select class="form-control form-select" id="inputTheme" name="theme" v-model="userContext.selectedSettings.theme">
-                                                <option value="side-menu-light-full">Menu Light</option>
-                                                <option value="side-menu-light-mini">Mini Menu Light</option>
-                                                <option value="side-menu-dark-full">Menu Dark</option>
-                                                <option value="side-menu-dark-mini">Mini Menu Dark</option>
-                                            </select>
-                                        </div>
+                                        <label class="form-label" for="inputTheme">{{ t('views.profile.fields.settings.theme') }}</label>
+                                        <select class="form-control form-select" id="inputTheme" name="theme" v-model="userContext.selectedSettings.theme">
+                                            <option value="side-menu-light-full">Menu Light</option>
+                                            <option value="side-menu-light-mini">Mini Menu Light</option>
+                                            <option value="side-menu-dark-full">Menu Dark</option>
+                                            <option value="side-menu-dark-mini">Mini Menu Dark</option>
+                                        </select>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="selectDate">{{ t('views.profile.fields.settings.dateFormat') }}</label>
-                                            <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="userContext.selectedSettings.dateFormat">
-                                                <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
-                                                <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
-                                            </select>
-                                        </div>
+                                        <label class="form-label" for="selectDate">{{ t('views.profile.fields.settings.dateFormat') }}</label>
+                                        <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="userContext.selectedSettings.dateFormat">
+                                            <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
+                                            <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
+                                        </select>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="selectTime">{{ t('views.profile.fields.settings.timeFormat') }}</label>
-                                            <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="userContext.selectedSettings.timeFormat">
-                                                <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
-                                                <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
-                                            </select>
-                                        </div>
+                                        <label class="form-label" for="selectTime">{{ t('views.profile.fields.settings.timeFormat') }}</label>
+                                        <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="userContext.selectedSettings.timeFormat">
+                                            <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
+                                            <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
+                                        </select>
                                     </div>
                                     <div class="mb-3">
-                                        <div class="form-inline">
-                                            <label class="form-label w-40 px-3" for="api_token">{{ t('views.profile.fields.settings.api_token') }}</label>
-                                            <div class="form-check pr-5">
-                                                <input id="apiToken" name="apiToken" class="form-check-input" type="checkbox" value="" />
-                                                <label class="form-check-label" for="apiToken">{{ t('components.buttons.reset') }}</label>
-                                            </div>
+                                        <label class="form-label" for="api_token">{{ t('views.profile.fields.settings.api_token') }}</label>
+                                        <div class="form-check pr-5">
+                                            <input id="apiToken" name="apiToken" class="form-check-input" type="checkbox" value="" />
+                                            <label class="form-check-label" for="apiToken">{{ t('components.buttons.reset') }}</label>
                                         </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <div class="form-inline">
-                                            <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
-                                                <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
-                                                <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="pl-5">
+                                    <div class="form-inline">
+                                        <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
+                                        <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                                     </div>
                                 </div>
                             </VeeForm>
@@ -213,7 +181,7 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <div class="pt-5 pr-5">
+                        <div class="p-5">
                             <div class="mb-3">
                                 <div class="grid grid-cols-2 gap-2 place-items-center">
                                     <div class="text-center">
@@ -237,36 +205,28 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <VeeForm id="changePasswordForm" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_changePassword" v-slot="{ handleReset, errors }">
-                            <div class="pt-5 pr-5">
+                        <VeeForm id="changePasswordForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_changePassword" v-slot="{ handleReset, errors }">
+                            <div class="p-5">
                                 <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="current_pwd">{{ t('views.profile.fields.change_password.current_password') }}</label>
-                                        <VeeField id="current_pwd" v-bind="field" name="current_password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.current_password')"/>
-                                    </div>
+                                    <label class="form-label" for="current_pwd">{{ t('views.profile.fields.change_password.current_password') }}</label>
+                                    <VeeField id="current_pwd" v-bind="field" name="current_password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.current_password')"/>
                                     <ErrorMessage name="current_password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="new_pwd">{{ t('views.profile.fields.change_password.new_password') }}</label>
-                                        <VeeField id="new_pwd" name="password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.new_password')" />
-                                    </div>
+                                    <label class="form-label" for="new_pwd">{{ t('views.profile.fields.change_password.new_password') }}</label>
+                                    <VeeField id="new_pwd" name="password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.new_password')" />
                                     <ErrorMessage name="password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
-                                    <div class="form-inline">
-                                        <label class="form-label w-40 px-3" for="confirm_pwd">{{ t('views.profile.fields.change_password.confirm_password') }}</label>
-                                        <VeeField id="confirm_pwd" name="password_confirmation" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.confirm_password')" />
-                                    </div>
+                                    <label class="form-label" for="confirm_pwd">{{ t('views.profile.fields.change_password.confirm_password') }}</label>
+                                    <VeeField id="confirm_pwd" name="password_confirmation" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.confirm_password')" />
                                     <ErrorMessage name="password_confirmation" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
-                                <div class="mb-3">
-                                    <div class="form-inline">
-                                        <div class="ml-40 sm:ml-40 sm:pl-5 mt-2">
-                                            <button type="submit" class="btn btn-primary mt-5 mr-3">{{ t('components.buttons.save') }}</button>
-                                            <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="pl-5">
+                                <div class="form-inline">
+                                    <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
+                                    <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                                 </div>
                             </div>
                         </VeeForm>

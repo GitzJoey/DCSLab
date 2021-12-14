@@ -2,48 +2,50 @@
 
 namespace App\Services;
 
+use App\Models\Product;
+
 interface ProductService
 {
     public function create(
-        $company_id,
-        $code,
-        $group_id,
-        $brand_id,
-        $name,
-        $tax_status,
-        $supplier_id,
-        $remarks,
-        $point,
-        $is_use_serial,
-        $product_type,
-        $status,
-    );
+        int $company_id,
+        string $code,
+        int $product_group_id,
+        int $brand_id,
+        string $name,
+        int $tax_status,
+        int $supplier_id,
+        string $remarks,
+        int $point,
+        bool $use_serial_number,
+        bool $has_expiry_date,
+        string $product_type,
+        string $status,
+        array $product_units
+    ): ?Product;
 
-    public function read();
-
-    public function read_product();
-
-    public function read_service();
+    public function read(int $companyId, int $productType, string $search = '', bool $paginate = true, int $perPage = 10);
 
     public function update(
-        $id,
-        $company_id,
-        $code,
-        $group_id,
-        $brand_id,
-        $name,
-        $product_unit,
-        $unit,
-        $tax_status,
-        $remarks,
-        $estimated_capital_price,
-        $point,
-        $is_use_serial,
-        $product_type,
-        $status,
-    );
+        int $id,
+        int $company_id,
+        string $code,
+        int $product_group_id,
+        int $brand_id,
+        string $name,
+        int $tax_status,
+        int $supplier_id,
+        string $remarks,
+        int $point,
+        bool $use_serial_number,
+        bool $has_expiry_date,
+        string $product_type,
+        string $status,
+        array $product_units
+    ): ?Product;
 
-    public function delete($id);
+    public function delete(int $id): bool;
 
-    public function checkDuplicatedCode($crud_status, $id, $code);
+    public function generateUniqueCode(int $companyId): string;
+
+    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;
 }
