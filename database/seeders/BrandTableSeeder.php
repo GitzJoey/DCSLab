@@ -15,8 +15,6 @@ class BrandTableSeeder extends Seeder
      */
     public function run()
     {
-        // Brand::factory()->count(10)->create();
-
         $faker = \Faker\Factory::create('id_ID');
 
         $brands = [
