@@ -39,8 +39,7 @@ class SupplierController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
         return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        $userId = Auth::user()->id;
-        return $this->SupplierService->read($userId);
+        return $this->SupplierService->read();
     }
 
     public function getAllSupplier()

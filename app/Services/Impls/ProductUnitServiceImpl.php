@@ -48,7 +48,7 @@ class ProductUnitServiceImpl implements ProductUnitService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return ProductUnit::with('company')->bySelectedCompany()->paginate();
     }

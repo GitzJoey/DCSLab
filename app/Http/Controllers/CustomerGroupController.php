@@ -38,8 +38,7 @@ class CustomerGroupController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
             return response()->error(trans('error_messages.unable_to_find_selected_company'));
             
-        $userId = Auth::user()->id;
-        return $this->CustomerGroupService->read($userId);
+        return $this->CustomerGroupService->read();
     }
 
     public function getAllCustomerGroup()

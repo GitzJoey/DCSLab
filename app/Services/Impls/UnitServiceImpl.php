@@ -40,7 +40,7 @@ class UnitServiceImpl implements UnitService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return Unit::with('company')->bySelectedCompany()->paginate();
     }

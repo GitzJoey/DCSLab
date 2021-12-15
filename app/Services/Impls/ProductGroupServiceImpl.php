@@ -40,7 +40,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return ProductGroup::with('company')->bySelectedCompany()->paginate();
     }

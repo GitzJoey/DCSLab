@@ -38,8 +38,7 @@ class UnitController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
         return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        $userId = Auth::user()->id;
-        return $this->UnitService->read($userId);
+        return $this->UnitService->read();
     }
 
     public function getAllUnit_Product()

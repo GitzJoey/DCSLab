@@ -38,8 +38,7 @@ class CapitalGroupController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
         return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        $userId = Auth::user()->id;
-        return $this->capitalGroupService->read($userId);
+        return $this->capitalGroupService->read();
     }
 
     public function getAllActiveCapitalGroup()

@@ -35,8 +35,7 @@ class ProductUnitController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
         return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        $userId = Auth::user()->id;
-        return $this->productUnitService->read($userId);
+        return $this->productUnitService->read();
     }
 
     public function getAllProductUnit()

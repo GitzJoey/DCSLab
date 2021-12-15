@@ -55,7 +55,7 @@ class SupplierServiceImpl implements SupplierService
 
     }
 
-    public function read($userId)
+    public function read()
     {
         return Supplier::with('company')->bySelectedCompany()->paginate();
     }

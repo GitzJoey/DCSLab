@@ -30,7 +30,7 @@ interface CustomerGroupService
         $cash_id
     );
 
-    public function read($userId);
+    public function read();
 
     public function getAllCustomerGroup();
 

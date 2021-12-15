@@ -77,16 +77,16 @@ class ProductServiceImpl implements ProductService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
-        $user = User::find($userId);
+        $user = User::find();
         $company_list = $user->companies()->pluck('company_id');
         return Product::with('productGroup', 'brand', 'productUnit.unit')->whereIn('company_id', $company_list)->paginate();
     }
 
-    public function read_product($userId)
+    public function read_product()
     {
-        $user = User::find($userId);
+        $user = User::find();
         $company_list = $user->companies()->pluck('company_id');
         return Product::with('productGroup', 'brand', 'productUnit.unit')
                 ->whereIn('company_id', $company_list)
@@ -94,9 +94,9 @@ class ProductServiceImpl implements ProductService
                 ->paginate();
     }
 
-    public function read_service($userId)
+    public function read_service()
     {
-        $user = User::find($userId);
+        $user = User::find();
         $company_list = $user->companies()->pluck('company_id');
         return Product::with('productGroup', 'productUnit.unit')
                 ->whereIn('company_id', $company_list)

@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\WarehouseService;
 use App\Models\Warehouse;
-use App\Models\User;
 
 class WarehouseServiceImpl implements WarehouseService
 {
@@ -49,11 +48,9 @@ class WarehouseServiceImpl implements WarehouseService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
-        $user = User::find($userId);
-        $company_list = $user->companies()->pluck('company_id');
-        return Warehouse::with('company')->whereIn('company_id', $company_list)->paginate();
+        return Warehouse::with('company')->bySelectedCompany()->paginate();
     }
 
     public function update(

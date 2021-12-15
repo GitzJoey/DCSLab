@@ -21,11 +21,11 @@ interface ProductService
         $product_units
     );
 
-    public function read($userId);
+    public function read();
 
-    public function read_product($userId);
+    public function read_product();
 
-    public function read_service($userId);
+    public function read_service();
 
     public function update(
         $id,

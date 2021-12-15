@@ -46,8 +46,7 @@ class ProductController extends BaseController
 
     public function read()
     {
-        $userId = Auth::user()->id;
-        return $this->productService->read($userId);
+        return $this->productService->read();
     }
 
     public function read_product()
@@ -55,8 +54,7 @@ class ProductController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
         return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        $userId = Auth::user()->id;
-        return $this->productService->read_product($userId);
+        return $this->productService->read_product();
     }
 
     public function read_service()
@@ -64,8 +62,7 @@ class ProductController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
         return response()->error(trans('error_messages.unable_to_find_selected_company'));
         
-        $userId = Auth::user()->id;
-        return $this->productService->read_service($userId);
+        return $this->productService->read_service();
     }
 
     public function store(Request $request)
