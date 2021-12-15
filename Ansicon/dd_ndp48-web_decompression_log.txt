@@ -1,0 +1,17 @@
+[3/15/2021, 10:57:14] === Logging started: 2021/03/15 10:57:14 ===
+[3/15/2021, 10:57:14] Executable: C:\Users\User\Downloads\Programs\ndp48-web.exe v4.8.3928.0
+[3/15/2021, 10:57:14] --- logging level: standard ---
+[3/15/2021, 10:57:14] Successfully bound to the ClusApi.dll
+[3/15/2021, 10:57:14] Error 0x80070424: Failed to open the current cluster
+[3/15/2021, 10:57:14] Cluster drive map: ''
+[3/15/2021, 10:57:14] Considering drive: 'C:\'...
+[3/15/2021, 10:57:14] Considering drive: 'D:\'...
+[3/15/2021, 10:57:14] Considering drive: 'E:\'...
+[3/15/2021, 10:57:14] Drive 'E:\' is rejected because of the unknown or unsuitable drive type
+[3/15/2021, 10:57:14] Drive 'D:\' has been selected as the largest fixed drive
+[3/15/2021, 10:57:14] Directory 'D:\b124c7055f5162fdaa58\' has been selected for file extraction
+[3/15/2021, 10:57:14] Extracting files to: D:\b124c7055f5162fdaa58\
+[3/15/2021, 10:57:14] Extraction took 624 milliseconds
+[3/15/2021, 10:57:14] Executing command line: 'D:\b124c7055f5162fdaa58\\Setup.exe   /x86 /x64 /web'
+[3/15/2021, 10:58:4] Exiting with result code: 0x0
+[3/15/2021, 10:58:4] === Logging stopped: 2021/03/15 10:58:04 ===

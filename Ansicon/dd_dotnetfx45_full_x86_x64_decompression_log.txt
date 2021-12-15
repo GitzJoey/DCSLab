@@ -1,0 +1,17 @@
+[1/4/2021, 18:29:11] === Logging started: 2021/01/04 18:29:11 ===
+[1/4/2021, 18:29:11] Executable: C:\Program Files (x86)\Doctor Accounting 2\Installer Package\dotnetfx45_full_x86_x64.exe v4.5.50709.17929
+[1/4/2021, 18:29:11] --- logging level: standard ---
+[1/4/2021, 18:29:11] Successfully bound to the ClusApi.dll
+[1/4/2021, 18:29:11] Error 0x80070424: Failed to open the current cluster
+[1/4/2021, 18:29:11] Cluster drive map: ''
+[1/4/2021, 18:29:11] Considering drive: 'C:\'...
+[1/4/2021, 18:29:11] Considering drive: 'D:\'...
+[1/4/2021, 18:29:11] Considering drive: 'E:\'...
+[1/4/2021, 18:29:11] Drive 'E:\' is rejected because of the unknown or unsuitable drive type
+[1/4/2021, 18:29:11] Drive 'C:\' has been selected as the largest fixed drive
+[1/4/2021, 18:29:11] Directory 'C:\0a8331e35d4bb340e53783\' has been selected for file extraction
+[1/4/2021, 18:29:11] Extracting files to: C:\0a8331e35d4bb340e53783\
+[1/4/2021, 18:29:20] Extraction took 8.830 seconds
+[1/4/2021, 18:29:20] Executing command line: 'C:\0a8331e35d4bb340e53783\\Setup.exe   /x86 /x64'
+[1/4/2021, 18:29:25] Exiting with result code: 0x0
+[1/4/2021, 18:29:25] === Logging stopped: 2021/01/04 18:29:25 ===

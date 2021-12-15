@@ -1,0 +1,70 @@
+********************************************************************************
+**** Starting ASP.NET Setup at: 2021-03-15 11:02:09
+**** Registering ASP.NET isapi: C:\Windows\Microsoft.NET\Framework64\v4.0.30319\aspnet_isapi.dll
+**** Internal flags: 0x00000404
+********************************************************************************
+
+2021-03-15 11:02:09	Starting	Stopping service: aspnet_state
+2021-03-15 11:02:09		Starting	Connecting to Service Manager
+2021-03-15 11:02:09		Success 	Connecting to Service Manager
+2021-03-15 11:02:09		Starting	Opening Service handle
+2021-03-15 11:02:09		Success 	Opening Service handle
+2021-03-15 11:02:09		Starting	Stopping service
+2021-03-15 11:02:09			Starting	Finding out service state
+2021-03-15 11:02:09			Success 	Finding out service state
+2021-03-15 11:02:09			Starting	Shutting down service
+2021-03-15 11:02:09			Success 	Shutting down service
+2021-03-15 11:02:09			Starting	Waiting for service to shut down
+2021-03-15 11:02:09			Success 	Waiting for service to shut down
+2021-03-15 11:02:09		Success 	Stopping service
+2021-03-15 11:02:09	Success 	Stopping service: aspnet_state
+2021-03-15 11:02:09	Starting	Changing IIS ApplicationHost.config
+2021-03-15 11:02:09	Success 	Changing IIS ApplicationHost.config
+2021-03-15 11:02:09	Starting	Registering the Asp.Net Event log source
+2021-03-15 11:02:09	Success 	Registering the Asp.Net Event log source
+2021-03-15 11:02:09	Starting	Determining if current ASP.NET isapi has the highest version
+2021-03-15 11:02:09	Success 	Determining if current ASP.NET isapi has the highest version
+2021-03-15 11:02:09	Starting	Installing WMI file:aspnet.mof
+2021-03-15 11:02:09	Success 	Installing WMI file:aspnet.mof
+2021-03-15 11:02:09	Starting	Setting ACLs on dirs and WMI
+2021-03-15 11:02:09		Starting	Getting location of Temporary ASP.Net directory
+2021-03-15 11:02:09		Success 	Getting location of Temporary ASP.Net directory
+2021-03-15 11:02:09		Starting	Setting ACLs on Temporary ASP.Net directory
+2021-03-15 11:02:09		Success 	Setting ACLs on Temporary ASP.Net directory
+2021-03-15 11:02:09		Starting	Setting ACLs on install root directory
+2021-03-15 11:02:09		Success 	Setting ACLs on install root directory
+2021-03-15 11:02:09		Starting	Setting ACLs on config directory
+2021-03-15 11:02:09		Success 	Setting ACLs on config directory
+2021-03-15 11:02:09		Starting	Grant access to WMI namespace: root\aspnet
+2021-03-15 11:02:09		Success 	Grant access to WMI namespace: root\aspnet
+2021-03-15 11:02:09	Success 	Setting ACLs on dirs and WMI
+2021-03-15 11:02:09	Starting	Install all ASP.NET Services
+2021-03-15 11:02:09		Starting	Getting credentials for the service account
+2021-03-15 11:02:09		Success 	Getting credentials for the service account
+2021-03-15 11:02:09		Starting	Connecting to Service Manager
+2021-03-15 11:02:09		Success 	Connecting to Service Manager
+2021-03-15 11:02:09		Starting	aspnet_state
+2021-03-15 11:02:09		Success 	aspnet_state
+2021-03-15 11:02:09		Starting	Reading various service settings for: aspnet_state
+2021-03-15 11:02:09		Success 	Reading various service settings for: aspnet_state
+2021-03-15 11:02:09		Starting	Executing inf section: StateService.Install
+2021-03-15 11:02:10		Success 	Executing inf section: 
+2021-03-15 11:02:10		Starting	Locking service database
+2021-03-15 11:02:10		Success 	Locking service database
+2021-03-15 11:02:10		Starting	Opening Service handle
+2021-03-15 11:02:10		Success 	Opening Service handle
+2021-03-15 11:02:10		Starting	Writing back various service settings for: aspnet_state
+2021-03-15 11:02:10			Starting	Changing the service startup type
+2021-03-15 11:02:10			Success 	Changing the service startup type
+2021-03-15 11:02:10		Success 	Writing back various service settings for: aspnet_state
+2021-03-15 11:02:10		Starting	Changing service account and password
+2021-03-15 11:02:10		Success 	Changing service account and password
+2021-03-15 11:02:10	Success 	Install all ASP.NET Services
+2021-03-15 11:02:10	Starting	Executing inf section: MmcAspNetExtCOMComponents.Install
+2021-03-15 11:02:10	Success 	Executing inf section: MmcAspNetExtCOMComponents.Install
+2021-03-15 11:02:10	Starting	Install the ASP.NET Performance counters
+2021-03-15 11:02:10	Success 	Install the ASP.NET Performance counters
+2021-03-15 11:02:10	Starting	Install common performance counters
+2021-03-15 11:02:11	Success 	Install common performance counters
+2021-03-15 11:02:11	Starting	Starting service: aspnet_state
+2021-03-15 11:02:11	Success 	Starting service: aspnet_state

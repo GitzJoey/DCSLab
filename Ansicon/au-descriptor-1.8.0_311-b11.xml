@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- XML file to be staged anywhere, and pointed to by map.xml file -->
+<java-update>
+	<information version="1.0" xml:lang="en">
+		<caption>Java Update - Update Available</caption>
+		<title>Java Update Available</title>
+		<description>Click Update to continue</description>
+		<descriptionfrom8>Click Update to continue</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Java Update Available</AlertTitle>
+		<AlertText>A new version of Java is ready to be installed.</AlertText>
+		<moreinfotxt>More information...</moreinfotxt>
+		<url>https://javadl.oracle.com/webapps/download/GetFile/1.8.0_311-b11/4d5417147a92418ea8b615e228bb6935/windows-i586/jre-8u311-windows-au.exe</url>
+		<version>1.8.0_311-b11</version>
+		<post-status>https://sjremetrics.java.com/b/ss//6</post-status>
+		<cntry-lookup>https://rps-svcs.oracle.com/services/countrylookup</cntry-lookup>
+		<predownload></predownload>
+		<options>/installmethod=jau FAMILYUPGRADE=1</options>
+		<urlinfo>cd49ada5ce9ed8e9fba841fba747735f5492fd53</urlinfo>
+		<urlinfo256>7a12e61a5776387ddb5e85e54b222ffa652046462cb33bea8337b6506018ab58</urlinfo256>
+	</information>
+	<information version="1.1" xml:lang="zh">
+		<caption>Java Update - 更新可用</caption>
+		<title>Java Update 可用</title>
+		<description>单击“更新”以继续</description>
+		<descriptionfrom8>单击“更新”以继续</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Java Update 可用</AlertTitle>
+		<AlertText>新版本的 Java 已就绪, 可以安装。</AlertText>
+		<moreinfotxt>详细信息...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="zh_TW">
+		<caption>Java 更新 - 有可用的更新程式</caption>
+		<title>有可用的 Java 更新程式</title>
+		<description>請按一下「更新」以繼續進行作業</description>
+		<descriptionfrom8>請按一下「更新」以繼續進行作業</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>有可用的 Java 更新程式</AlertTitle>
+		<AlertText>有新版本的 Java 可供安裝。</AlertText>
+		<moreinfotxt>更多資訊...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="ja">
+		<caption>Java Update - 更新を利用可能</caption>
+		<title>Java Update利用可能</title>
+		<description>続行するには「更新」をクリックしてください</description>
+		<descriptionfrom8>続行するには「更新」をクリックしてください</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Java Update利用可能</AlertTitle>
+		<AlertText>Javaの最新版のインストール準備完了。</AlertText>
+		<moreinfotxt>詳細情報 ...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="ko">
+		<caption>Java Update - 업데이트 사용 가능</caption>
+		<title>Java Update 사용 가능</title>
+		<description>계속하려면 [업데이트]를 누르십시오</description>
+		<descriptionfrom8>계속하려면 [업데이트]를 누르십시오</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Java Update 사용 가능</AlertTitle>
+		<AlertText>새 버전의 Java를 설치할 준비가 되었습니다.</AlertText>
+		<moreinfotxt>추가 정보...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="de">
+		<caption>Java-Update - Update verfügbar</caption>
+		<title>Java-Update verfügbar</title>
+		<description>Klicken Sie auf "Aktualisieren", um fortzufahren</description>
+		<descriptionfrom8>Klicken Sie auf "Aktualisieren", um fortzufahren</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Java-Update verfügbar</AlertTitle>
+		<AlertText>Eine neue Java-Version kann installiert werden.</AlertText>
+		<moreinfotxt>Weitere Informationen...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="es">
+		<caption>Java Update - Actualización disponible</caption>
+		<title>Actualización Java disponible</title>
+		<description>Haga clic en Actualizar para continuar</description>
+		<descriptionfrom8>Haga clic en Actualizar para continuar</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Actualización Java disponible</AlertTitle>
+		<AlertText>Hay una nueva versión de Java lista para instalarse.</AlertText>
+		<moreinfotxt>Más información...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="fr">
+		<caption>Java Update - Mise à jour disponible</caption>
+		<title>Mise à jour Java disponible</title>
+		<description>Cliquez sur Mettre à jour pour continuer</description>
+		<descriptionfrom8>Cliquez sur Mettre à jour pour continuer</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Mise à jour Java disponible</AlertTitle>
+		<AlertText>Une nouvelle version de Java est prête à être installée.</AlertText>
+		<moreinfotxt>Plus d'informations...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="it">
+		<caption>Aggiornamento Java - Aggiornamento disponibile</caption>
+		<title>Aggiornamento Java disponibile</title>
+		<description>Fare clic su Aggiorna per continuare</description>
+		<descriptionfrom8>Fare clic su Aggiorna per continuare</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Aggiornamento Java disponibile</AlertTitle>
+		<AlertText>Nuova versione di Java pronta per l'installazione.</AlertText>
+		<moreinfotxt>Ulteriori informazioni...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="pt_BR">
+		<caption>Java Update - Atualização Disponível</caption>
+		<title>Atualização do Java Disponível</title>
+		<description>Clique em Atualizar para continuar</description>
+		<descriptionfrom8>Clique em Atualizar para continuar</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Atualização do Java Disponível</AlertTitle>
+		<AlertText>Há uma nova versão do Java pronta para ser instalada.</AlertText>
+		<moreinfotxt>Mais informações...</moreinfotxt>
+	</information>
+	<information version="1.1" xml:lang="sv">
+		<caption>Java Update - uppdatering tillgänglig</caption>
+		<title>Java-uppdatering är tillgänglig</title>
+		<description>Klicka på Uppdatera för att fortsätta</description>
+		<descriptionfrom8>Klicka på Uppdatera för att fortsätta</descriptionfrom8>
+		<moreinfo>https://java.com/moreinfo8</moreinfo>
+		<AlertTitle>Java-uppdatering är tillgänglig</AlertTitle>
+		<AlertText>En ny version av Java är färdig för installation.</AlertText>
+		<moreinfotxt>Mer information...</moreinfotxt>
+	</information>
+</java-update>

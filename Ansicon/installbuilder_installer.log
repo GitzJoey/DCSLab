@@ -1,0 +1,99 @@
+Log started 03/05/2021 at 12:35:27
+Preferred installation mode : qt
+Trying to init installer in mode qt
+Mode qt successfully initialized
+Current working directory changed to D:\Belajar Website
+Launching https://bitnami.com/stack/xampp?utm_source=bitnami&utm_medium=installer&utm_campaign=XAMPP%2BInstaller
+Preparing to Install
+Preparing to Install
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Unpacking files
+Could not find registry key HKEY_LOCAL_MACHINE\SOFTWARE\xampp Install_Dir. Setting variable xampp_root to empty value
+Could not find registry key HKEY_LOCAL_MACHINE\SOFTWARE\xampp Install_Dir. Setting variable xampp_root to empty value
+Could not find registry key HKEY_LOCAL_MACHINE\SOFTWARE\xampp Install_Dir. Setting variable xampp_root to empty value
+File C:\xampp/htdocs/xampp/navi.php not readable
+Executing C:\xampp\apache\scripts\ctl.bat STOP
+Script exit code: 0
+
+Script output:
+ 
+
+Script stderr:
+ 
+
+Executing C:\xampp\apache\scripts\ctl.bat START
+Script exit code: 0
+
+Script output:
+ 
+
+Script stderr:
+ 
+
+Executing ./vcredist_x64.exe /q
+Script exit code: 0
+
+Script output:
+ 
+
+Script stderr:
+ 
+
+Executing cmd.exe /C start /MIN "" "C:\xampp/php/php.exe" -n -d output_buffering=0 -f "install/install.php"
+Script exit code: 0
+
+Script output:
+ 
+
+Script stderr:
+ 
+
+Cannot revoke Wow64 redirection
+Executing C:\xampp\apache\scripts\ctl.bat STOP
+Script exit code: 0
+
+Script output:
+ 
+
+Script stderr:
+ 
+
+Executing cmd.exe /C start /MIN net stop ***unknown variable apache_unique_service_name***
+Script exit code: 0
+
+Script output:
+ 
+
+Script stderr:
+ 
+
+Creating Uninstaller
+Creating uninstaller 25%
+Creating uninstaller 50%
+Creating uninstaller 75%
+Creating uninstaller 100%
+Installation completed
+Log finished 03/05/2021 at 12:38:20
+Executing explorer "C:\xampp\xampp-control.exe" >NUL 2>NUL &
+Script exit code: 0
+
+Script output:
+ 
+
+Script stderr:
+ 
+
+Exiting with code 0
