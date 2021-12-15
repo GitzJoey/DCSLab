@@ -22,7 +22,7 @@ class ProductServiceTest extends TestCase
 
     /**
      * A basic feature test example.
-     *
+    *
      * @return void
      */
     public function test_read()
@@ -30,6 +30,28 @@ class ProductServiceTest extends TestCase
         $selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
         session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), Hashids::encode($selectedCompanyId));
         $response = $this->service->read();
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertTrue(!is_null($response));
+        // $this->assertTrue(true);
+    }
+
+    public function test_read_product()
+    {
+        $selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
+        session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), Hashids::encode($selectedCompanyId));
+        $response = $this->service->read_product();
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertTrue(!is_null($response));
+        // $this->assertTrue(true);
+    }
+
+    public function test_read_service()
+    {
+        $selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
+        session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), Hashids::encode($selectedCompanyId));
+        $response = $this->service->read_service();
 
         $this->assertInstanceOf(Paginator::class, $response);
         $this->assertTrue(!is_null($response));
