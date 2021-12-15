@@ -23,7 +23,14 @@ interface ProductService
         array $product_units
     ): ?Product;
 
-    public function read(int $companyId, int $productType, string $search = '', bool $paginate = true, int $perPage = 10);
+    public function read(
+        int $companyId,
+        bool $isProduct = true, 
+        bool $isService = true,
+        string $search = '',
+        bool $paginate = true,
+        int $perPage = 10
+    );
 
     public function update(
         int $id,

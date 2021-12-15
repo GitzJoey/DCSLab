@@ -2,6 +2,59 @@
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
         <DataList :title="t('views.product.table.title')" :data="productList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+           <template v-slot:table="tableProps">
+                <table class="table table-report -mt-2">
+                    <thead>
+                        <tr>
+                            <th class="whitespace-nowrap">{{ t('views.product.table.cols.code') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.product.table.cols.name') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.product.table.cols.supplier') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.product.table.cols.status') }}</th>
+                            <th class="whitespace-nowrap"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
+                            <tr class="intro-x">
+                                <td>{{ item.code }}</td>
+                                <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
+                                <td>{{ item.supplier !== null ? item.supplier.name : '' }}</td>
+                                <td>
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
+                                </td>
+                                <td class="table-report__action w-56">
+                                    <div class="flex justify-center items-center">
+                                        <a class="flex items-center mr-3" href="" @click.prevent="showSelected(itemIdx)">
+                                            <InfoIcon class="w-4 h-4 mr-1" />
+                                            {{ t('components.data-list.view') }}
+                                        </a>
+                                        <a class="flex items-center mr-3" href="" @click.prevent="editSelected(itemIdx)">
+                                            <CheckSquareIcon class="w-4 h-4 mr-1" />
+                                            {{ t('components.data-list.edit') }}
+                                        </a>
+                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                            <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
+                                <td colspan="5">
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.code') }}</div>
+                                        <div class="flex-1">{{ item.code }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.name') }}</div>
+                                        <div class="flex-1">{{ item.name }}</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
         </DataList>
     </div>
 
@@ -26,10 +79,11 @@
 
 <script setup>
 // Vue Import
-import { inject, onMounted, ref, computed } from 'vue'
+import { inject, onMounted, ref, computed, watch } from 'vue'
 // Helper Import
 import mainMixins from '../../mixins';
 // Core Components Import
+import { useStore } from '../../store/index';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
@@ -40,9 +94,14 @@ const schema = {
     name: 'required',
 };
 // Declarations
+const store = useStore();
+
 // Mixins
 const { t, route } = mainMixins();
+
 // Data - VueX
+const selectedUserCompany = computed(() => store.state.main.selectedUserCompany );
+
 // Data - UI
 const mode = ref('list');
 const loading = ref(false);
@@ -76,13 +135,16 @@ const groupDDL = ref([]);
 const brandDDL = ref([]);
 const unitDDL = ref([]);
 const supplierDDL = ref([]);
+const productTypeDDL = ref([]);
 
 // onMounted
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
-    getAllProducts({ page: 1 });
+    if (selectedUserCompany.value !== '')
+        getAllProducts({ page: 1 });
+    
     getDDL();
 
     loading.value = false;
@@ -94,7 +156,9 @@ function getAllProducts(args) {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    axios.get(route('api.get.db.product.product.read', { "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    let companyId = selectedUserCompany.value;
+
+    axios.get(route('api.get.db.product.product.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         productList.value = response.data;
         loading.value = false;
     });
@@ -103,6 +167,10 @@ function getAllProducts(args) {
 function getDDL() {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
+    });
+
+    axios.get(route('api.get.db.product.common.list.product_type')).then(response => {
+        productTypeDDL.value = response.data;
     });
 }
 
@@ -234,4 +302,9 @@ function generateCode() {
 
 // Computed
 // Watcher
+watch(selectedUserCompany, () => {
+    if (selectedUserCompany.value !== '') {
+        getAllProducts({ page: 1 });
+    }
+});
 </script>

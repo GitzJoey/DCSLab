@@ -61,9 +61,6 @@ class CompanyController extends BaseController
 
         $code = $request['code'];
 
-        if ($code == config()->get('const.KEYWORDS.AUTO'))
-            $code = (new RandomGenerator())->generateAlphaNumeric(10);
-
         $result = $this->companyService->create(
             $code,
             $request['name'],
@@ -89,9 +86,6 @@ class CompanyController extends BaseController
         };
 
         $code = $request['code'];
-
-        if ($code == config()->get('const.KEYWORDS.AUTO'))
-            $code = (new RandomGenerator())->generateFixedLengthNumber(5);
 
         $result = $this->companyService->update(
             $id,

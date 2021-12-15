@@ -13,6 +13,7 @@ use App\Http\Controllers\ActivityLogController;
 /* Ext */
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ProductController;
 /* Ext */
 
 Route::bind('id', function ($id) {
@@ -46,10 +47,22 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
                 Route::get('read', [SupplierController::class, 'read'])->name('.read');
             });
+
+            Route::group(['prefix' => 'common', 'as' => '.common'], function() {
+                Route::get('list/payment_term', [SupplierController::class, 'getPaymentTermType'])->name('.list.payment_term');
+            });
         });
 
         Route::group(['prefix' => 'product', 'as' => '.product'], function() {
             Route::group(['prefix' => 'product', 'as' => '.product'], function() {
+                Route::get('read', [ProductController::class, 'readProducts'])->name('.read');
+            });
+            Route::group(['prefix' => 'service', 'as' => '.service'], function() {
+                Route::get('read', [ProductController::class, 'readServices'])->name('.read');
+            });
+
+            Route::group(['prefix' => 'common', 'as' => '.common'], function() {
+                Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
             });
         });
         
@@ -85,7 +98,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function() {
                 Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
                 Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
-                Route::get('list/payment_term', [CommonController::class, 'getPaymentTermType'])->name('.list.payment_term');
             });
 
             Route::group(['prefix' => 'tools', 'as' => '.tools'], function() {

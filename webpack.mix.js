@@ -43,7 +43,7 @@ if (mix.inProduction()) {
         .sass('resources/sass/start/main.scss', 'public/css/start/main.css')
         .js('resources/js/start/main.js', 'public/js/start/main.js')
         .sourceMaps()
-        .copy('node_modules/bootstrap/dist/js/bootstrap.esm.js.map', 'public/js/start/bootstrap.esm.js.map')
+        //.copy('node_modules/bootstrap/dist/js/bootstrap.esm.js.map', 'public/js/start/bootstrap.esm.js.map')
     ;
 
     mix
@@ -70,7 +70,7 @@ if (mix.inProduction()) {
         .js('resources/js/midone/app.js','public/js/midone/main.js')
         .sourceMaps()
         .vue()
-        .copy('node_modules/zoom-vanilla.js/dist/zoom-vanilla.min.js.map', 'public/js/midone/zoom-vanilla.min.js.map')
+        //.copy('node_modules/zoom-vanilla.js/dist/zoom-vanilla.min.js.map', 'public/js/midone/zoom-vanilla.min.js.map')
     ;
 }
 

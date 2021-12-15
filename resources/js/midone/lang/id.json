@@ -62,6 +62,12 @@
                 "yesNoDDL": {
                     "yes": "Ya",
                     "no": "Tidak"
+                },
+                "productTypeDDL": {
+                    "raw": "Bahan Baku",
+                    "wip": "Barang Setengah Jadi",
+                    "fg": "Barang Jadi",
+                    "svc": "Jasa"
                 }
             }
         },
@@ -192,18 +198,13 @@
             "title": "Catatan Aktifitas"
         },
         "product": {
-            "tabs": {
-                "supplier": "Supplier",
-                "poc": "Penanggung Jawab",
-                "products": "Produk"
-            },
             "table": {
-                "title": "",
+                "title": "Daftar Produk",
                 "cols": {
                     "code": "Kode",
-                    "brand_id": "Merk",
                     "name": "Nama",    
-                    "product_type": "Tipe Produk"
+                    "supplier": "Supplier Utama",
+                    "status": "Status"
                 }
             },
             "actions": {

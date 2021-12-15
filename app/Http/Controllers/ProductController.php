@@ -29,7 +29,7 @@ class ProductController extends BaseController
         $this->productService = $productService;
     }
 
-    public function read(Request $request)
+    public function readProducts(Request $request)
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $paginate = true;
@@ -37,9 +37,30 @@ class ProductController extends BaseController
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
-        $productType = $request->has('productType') ? $request['productType'] : 4;
+        return $this->productService->read(
+                    companyId: $companyId, 
+                    isProduct: true, 
+                    isService: false, 
+                    search: $search, 
+                    paginate: $paginate, 
+                    perPage: $perPage);
+    }
 
-        return $this->productService->read($companyId, $productType, $search, $paginate, $perPage);
+    public function readServices(Request $request)
+    {
+        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
+        $paginate = true;
+        $perPage = $request->has('perPage') ? $request['perPage']:null;
+
+        $companyId = Hashids::decode($request['companyId'])[0];
+
+        return $this->productService->read(
+                    companyId: $companyId, 
+                    isProduct: false, 
+                    isService: true, 
+                    search: $search, 
+                    paginate: $paginate, 
+                    perPage: $perPage);
     }
 
     public function store(ProductRequest $productRequest)
@@ -70,7 +91,7 @@ class ProductController extends BaseController
         $count_unit = count($request['unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
 
-            if ($request['product_unit_code'][$i] == Config::get('const.KEYWORDS.AUTO')) {
+            if ($request['product_unit_code'][$i] == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
                 $new_product_unit_code = $this->productService->generateUniqueCode($company_id);
             } else {
                 $new_product_unit_code = $request['product_unit_code'][$i];
@@ -268,5 +289,15 @@ class ProductController extends BaseController
         $result = $this->productService->delete($id);
 
         return $result ? response()->error():response()->success();
+    }
+
+    public function getProductType()
+    {
+        return [
+            ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => 1],
+            ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => 2],
+            ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => 3],
+            ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => 4]            
+        ];
     }
 }

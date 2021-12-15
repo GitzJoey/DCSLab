@@ -62,6 +62,12 @@
                 "yesNoDDL": {
                     "yes": "Yes",
                     "no": "No"
+                },
+                "productTypeDDL": {
+                    "raw": "Raw Material",
+                    "wip": "Work In Progress",
+                    "fg": "Finished Good",
+                    "svc": "Service"
                 }
             }
         },
@@ -193,12 +199,12 @@
         },
         "product": {
             "table": {
-                "title": "",
+                "title": "Product Lists",
                 "cols": {
                     "code": "Code",
-                    "brand_id": "Brand Name",
                     "name": "Name",    
-                    "product_type": "Product Type"
+                    "supplier": "Main Supplier",
+                    "status": "Status"
                 }
             },
             "actions": {

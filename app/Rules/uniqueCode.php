@@ -16,7 +16,6 @@ class uniqueCode implements Rule
     private int $exceptId;
     private string $table;
 
-    private CompanyService $companyService;
     private SupplierService $supplierService;
     private ProductService $productService;
 
@@ -32,9 +31,6 @@ class uniqueCode implements Rule
         $this->exceptId = $exceptId ? $exceptId : null;
 
         switch($this->table) {
-            case 'companies':
-                $this->companyService = Container::getInstance()->make(CompanyService::class);
-                break;
             case 'suppliers':
                 $this->supplierService = Container::getInstance()->make(SupplierService::class);
                 break;
@@ -55,14 +51,11 @@ class uniqueCode implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($value == Config::get('const.KEYWORDS.AUTO')) return true;
+        if ($value == Config::get('const.DEFAULT.KEYWORDS.AUTO')) return true;
 
         $is_duplicate = false;
 
         switch($this->table) {
-            case 'companies':
-                $is_duplicate = $this->companyService->isUniqueCode($value, $this->companyId, $this->exceptId);
-                break;
             case 'suppliers':
                 $is_duplicate = $this->supplierService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;

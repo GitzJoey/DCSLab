@@ -33,7 +33,7 @@ class CompanyServiceImpl implements CompanyService
                 $status = 1;
             }
 
-            if ($code == Config::get('const.KEYWORDS.AUTO')) {
+            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
                 $code = $this->generateUniqueCode();
             }
 
@@ -98,9 +98,9 @@ class CompanyServiceImpl implements CompanyService
         DB::beginTransaction();
 
         try {
-            $company = Company::where('id', '=', $id);
+            $company = Company::find($id);
 
-            if ($code == Config::get('const.KEYWORDS.AUTO')) {
+            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
                 $code = $this->generateUniqueCode($company->id);
             }
 
@@ -114,7 +114,7 @@ class CompanyServiceImpl implements CompanyService
 
             DB::commit();
 
-            return $company;
+            return $company->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);

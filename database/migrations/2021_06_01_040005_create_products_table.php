@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers');
             $table->string('code')->nullable();
             $table->string('name')->nullable();
-            $table->integer('product_type')->nullable(); //[RAW, WIP, FINISHED GOOD, SERVICE]
+            $table->integer('product_type')->nullable();
             $table->boolean('taxable_supplies')->default(false);
             $table->integer('rate_supplies')->default(0);
             $table->boolean('price_include_vat')->default(false);

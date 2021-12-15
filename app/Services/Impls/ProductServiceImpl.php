@@ -35,7 +35,7 @@ class ProductServiceImpl implements ProductService
         DB::beginTransaction();
 
         try {
-            if ($code == Config::get('const.KEYWORDS.AUTO')) {
+            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
                 $code = $this->generateUniqueCode($company_id);
             }
 
@@ -82,13 +82,27 @@ class ProductServiceImpl implements ProductService
         }
     }
 
-    public function read(int $companyId, int $productType, string $search = '', bool $paginate = true, int $perPage = 10)
+    public function read(
+        int $companyId,
+        bool $isProduct = true, 
+        bool $isService = true,
+        string $search = '',
+        bool $paginate = true,
+        int $perPage = 10
+    )
     {
         if (!$companyId) return null;
 
-        $product = Product::with('productGroup', 'brand', 'productUnit.unit')
-                    ->whereCompanyId($companyId)
-                    ->where('product_type', '=', $productType);
+        $product = Product::with('productGroup', 'brand', 'supplier', 'productUnits.unit')
+                    ->whereCompanyId($companyId);
+
+        if (!$isProduct && $isService) {
+            $product = $product->where('product_type', '=', Config::get('const.ENUMS.PRODUCT_TYPE.SVC'));
+        } else if ($isProduct && !$isService) {
+            $product = $product->where('product_type', '<>', Config::get('const.ENUMS.PRODUCT_TYPE.SVC'));
+        } else {
+            return null;
+        }
 
         if (empty($search)) {
             $product = $product->latest();
@@ -127,7 +141,7 @@ class ProductServiceImpl implements ProductService
         try {
             $product = Product::where('id', '=', $id);
 
-            if ($code == Config::get('const.KEYWORDS.AUTO')) {
+            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
                 $code = $this->generateUniqueCode($company_id);
             }
 

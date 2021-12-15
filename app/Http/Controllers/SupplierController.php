@@ -41,9 +41,6 @@ class SupplierController extends BaseController
         
         $code = $request['code'];
 
-        if ($code == config()->get('const.KEYWORDS.AUTO'))
-            $code = (new RandomGenerator())->generateAlphaNumeric(10);
-
         $is_tax = array_key_exists('taxable_enterprise', $request);
 
         $poc = [
@@ -112,5 +109,16 @@ class SupplierController extends BaseController
         $result = $this->supplierService->delete($id);
 
         return is_null($result) ? response()->error():response()->success();
+    }
+
+    public function getPaymentTermType()
+    {
+        return [
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => 'PIA'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net30', 'code' => 'NET30'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => 'EOM'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => 'COD'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => 'CND']            
+        ];
     }
 }

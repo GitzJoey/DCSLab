@@ -26,46 +26,47 @@ class Product extends Model
     use ScopeableByCompany;
 
     protected $fillable = [
-        'code',
-        'group_id',
+        'product group_id',
         'brand_id',
-        'name',
-        'product_unit',
-        'tax_status',
         'supplier_id',
-        'remarks',
+        'code',
+        'name',
+        'product_type',
+        'taxable_supplies',
+        'rate_supplies',
+        'price_include_vat',
         'point',
         'use_serial_number',
         'has_expiry_date',
-        'product_type',
-        'status'
+        'status',       
+        'remarks'
     ];
 
     protected static $logAttributes = [
-        'code',
-        'group_id',
+        'product group_id',
         'brand_id',
-        'name',
-        'product_unit',
-        'unit',
-        'tax_status',
         'supplier_id',
-        'remarks',
+        'code',
+        'name',
+        'product_type',
+        'taxable_supplies',
+        'rate_supplies',
+        'price_include_vat',
         'point',
         'use_serial_number',
         'has_expiry_date',
-        'product_type',
-        'status'
+        'status',       
+        'remarks'
     ];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
         'id',
-        'group_id',
+        'product_group_id',
         'brand_id',
-        'unit_id',
         'supplier_id',
+        'unit_id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -102,9 +103,9 @@ class Product extends Model
         return $this->hasMany(ProductUnit::class);
     }
 
-    public function suppliers()
+    public function supplier()
     {
-        return $this->belongsToMany(Supplier::class);
+        return $this->belongsTo(Supplier::class);
     }
 
     public function getActivitylogOptions(): LogOptions

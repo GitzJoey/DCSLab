@@ -31,29 +31,31 @@ return [
         'RANDOMSTRINGRANGE' => [
             'ALPHABET' => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
             'NUMERIC' => [3,4,7,9],
+        ],
+
+        'KEYWORDS' => [
+            'AUTO' => '[AUTO]',
         ]
     ],
 
-    'KEYWORDS' => [
-        'AUTO' => '[AUTO]',
-        'ACTIONS' => [
-            'STORE' => 'store',
-            'UPDATE' => 'update',
-            'DELETE' => 'delete',
-        ]
-    ],
-
-    'RULES' => [
-        'VALID_DROPDOWN_VALUES' => [
-            'ACTIVE_STATUS' => [
-                'ACTIVE' => 1,
-                'INACTIVE' => 0,
-            ],
-            'PRODUCT_CATEGORY' => [
-                'PRODUCT' => 1,
-                'SERVICE' => 2,
-                'PRODUCT_AND_SERVICE' => 3,
-            ]
+    'ENUMS' => [
+        'ACTIVE_STATUS' => [
+            'ACTIVE' => 1,
+            'INACTIVE' => 0
+        ],
+        'PRODUCT_TYPE' => [
+            'RAW_MATERIAL' => 1,
+            'WORK_IN_PROGRESS' => 2,
+            'FINISHED_GOODS' => 3,
+            'SERVICE' => 4
+        ],
+        'PAYMENT_TERM' => [
+            'PAYMENT_IN_ADVANCE' => 'PIA',
+            '30DAYS_AFTER_INVOICE' => 'NET30',
+            'END_OF_MONTH' => 'EOM',
+            'CASH_ON_DELIVERY' => 'COD',
+            'CASH_ON_NEXT_DELIVERY' => 'CND',
+            'CASH_BEFORE_SHIPMENT' => 'CBS'
         ],
     ],
 ];

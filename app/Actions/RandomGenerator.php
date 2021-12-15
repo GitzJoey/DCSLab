@@ -8,13 +8,13 @@ class RandomGenerator
 {
     private static $RSeed = 0;
 
-    public function seed($s = 0)
+    public function seed(int $s = 0): int 
     {
         self::$RSeed = abs(intval($s)) % 9999999 + 1;
-        $this->generateNumber();
+        return $this->generateNumber();
     }
 
-    public function generateNumber($min = 0, $max = 9999999)
+    public function generateNumber(int $min = 0, int $max = 9999999): int
     {
         if ($max == 0) return 0;
 
@@ -26,23 +26,23 @@ class RandomGenerator
         return self::$RSeed % ($max - $min + 1) + $min;
     }
 
-    public function generateFixedLengthNumber($length = 2)
+    public function generateFixedLengthNumber(int $length = 2): int
     {
         if ($length < 2) $length = 2;
 
-        return rand(pow(10, $length - 1), pow(10, $length) - 1);
+        return rand(intVal(pow(10, $length - 1)), intVal(pow(10, $length) - 1));
     }
 
-    public function generateOne($max = 0)
+    public function generateOne(int $max = 0): int
     {
         if ($max == 0) {
             return $this->generateNumber(0, 9999999);
         } else {
-            return $this->generateNumber(0, $max);
+            return $this->generateNumber(0, intVal($max));
         }
     }
 
-    public function generateAlphaNumeric($length)
+    public function generateAlphaNumeric(int $length): string
     {
         $generatedString = '';
         $characters = array_merge(Config::get('const.DEFAULT.RANDOMSTRINGRANGE.ALPHABET'), Config::get('const.DEFAULT.RANDOMSTRINGRANGE.NUMERIC'));
@@ -55,7 +55,7 @@ class RandomGenerator
         return strtoupper($generatedString);
     }
 
-    public function randomTrueOrFalse($howManyTimes = 1)
+    public function randomTrueOrFalse(int $howManyTimes = 1): bool
     {
         if ($howManyTimes <= 1) return (bool)rand(0,1);
 
@@ -68,7 +68,7 @@ class RandomGenerator
         return $result;
     }
 
-    public function generateRandomOneZero($maxZero = 1)
+    public function generateRandomOneZero(int $maxZero = 1): int
     {
         if ($maxZero == 1) return 10;
 
