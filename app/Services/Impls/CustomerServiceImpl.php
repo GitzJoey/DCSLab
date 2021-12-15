@@ -67,7 +67,7 @@ class CustomerServiceImpl implements CustomerService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return Customer::with('customerGroup', 'company')->bySelectedCompany()->paginate();
     }

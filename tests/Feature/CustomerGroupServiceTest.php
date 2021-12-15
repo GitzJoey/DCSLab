@@ -3,6 +3,10 @@
 namespace Tests\Feature;
 
 use App\Services\CustomerGroupService;
+use App\Models\Company;
+use Illuminate\Support\Facades\Config;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -23,9 +27,13 @@ class CustomerGroupServiceTest extends TestCase
      */
     public function test_read()
     {
-        $response = $this->get('/');
+        $selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
+        session()->put(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'), Hashids::encode($selectedCompanyId));
+        $response = $this->service->read();
 
-        $response->assertStatus(200);
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertTrue(!is_null($response));
+        // $this->assertTrue(true);
     }
     
     public function test_create()

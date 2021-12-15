@@ -48,7 +48,7 @@ class BranchServiceImpl implements BranchService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return Branch::with('company')->bySelectedCompany()->paginate();
     }

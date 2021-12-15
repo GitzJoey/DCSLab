@@ -11,7 +11,7 @@ interface ProductGroupService
         $category,
     );
 
-    public function read($userId);
+    public function read();
 
     public function getAllProductGroup_Product();
 

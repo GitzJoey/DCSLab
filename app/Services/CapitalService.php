@@ -16,7 +16,7 @@ interface CapitalService
         $remarks,
     );
 
-    public function read($userId);
+    public function read();
 
     public function update(
         $id,

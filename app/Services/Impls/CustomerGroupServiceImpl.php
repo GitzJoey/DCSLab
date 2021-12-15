@@ -77,7 +77,7 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return CustomerGroup::with('cash', 'company')->bySelectedCompany()->paginate();
     }

@@ -51,7 +51,7 @@ class InvestorServiceImpl implements InvestorService
 
     }
 
-    public function read($userId)
+    public function read()
     {
         return Investor::with('company')->bySelectedCompany()->paginate();
     }

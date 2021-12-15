@@ -25,7 +25,7 @@ interface CustomerService
         $status
     );
 
-    public function read($userId);
+    public function read();
 
     public function update(
         $id,

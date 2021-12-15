@@ -43,7 +43,7 @@ class CashServiceImpl implements CashService
 
     }
 
-    public function read($userId)
+    public function read()
     {
         return Cash::with('company')->bySelectedCompany()->paginate();
     }

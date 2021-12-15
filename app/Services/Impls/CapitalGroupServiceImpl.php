@@ -38,7 +38,7 @@ class CapitalGroupServiceImpl implements CapitalGroupService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
         return CapitalGroup::with('company')->bySelectedCompany()->paginate();
     }

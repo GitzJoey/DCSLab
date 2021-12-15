@@ -39,8 +39,7 @@ class ProductGroupController extends BaseController
             return response()->error(trans('error_messages.unable_to_find_selected_company'));
         }
 
-        $userId = Auth:: user()->id;
-        return $this->productGroupService->read($userId);
+        return $this->productGroupService->read();
     }
 
     public function getAllProductGroup_Product()

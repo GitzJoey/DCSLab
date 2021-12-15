@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\User;
 use App\Models\Company;
 use App\Models\Brand;
 use App\Services\BrandService;
@@ -38,7 +37,7 @@ class BrandServiceTest extends TestCase
 
         $this->assertInstanceOf(Paginator::class, $response);
         $this->assertTrue(!is_null($response));
-        $this->assertTrue(true);
+        // $this->assertTrue(true);
     }
 
     public function test_create()

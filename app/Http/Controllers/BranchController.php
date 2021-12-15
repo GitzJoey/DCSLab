@@ -36,10 +36,9 @@ class BranchController extends BaseController
     public function read()
     {
         if (!parent::hasSelectedCompanyOrCompany())
-            return response()->error(trans('error_messages.unable_to_find_selected_company'));
+        return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        $userId = Auth::user()->id;
-        return $this->branchService->read($userId);
+        return $this->branchService->read();
     }
 
     public function store(Request $request)

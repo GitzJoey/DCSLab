@@ -38,8 +38,7 @@ class CashController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
         return response()->error(trans('error_messages.unable_to_find_selected_company'));
 
-        $userId = Auth::user()->id;
-        return $this->CashService->read($userId);
+        return $this->CashService->read();
     }
 
     public function getAllActiveCash()

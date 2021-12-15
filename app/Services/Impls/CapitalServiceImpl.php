@@ -55,7 +55,7 @@ class CapitalServiceImpl implements CapitalService
 
     }
 
-    public function read($userId)
+    public function read()
     {
         return Capital::with('investor', 'group', 'cash', 'company')->bySelectedCompany()->paginate();
     }
