@@ -13,6 +13,8 @@ use Tests\TestCase;
 
 class SupplierServiceTest extends TestCase
 {
+    use WithFaker;
+    
     protected function setUp(): void
     {
         parent::setUp();

@@ -37,7 +37,6 @@ class BrandServiceTest extends TestCase
 
         $this->assertInstanceOf(Paginator::class, $response);
         $this->assertTrue(!is_null($response));
-        // $this->assertTrue(true);
     }
 
     public function test_create()

@@ -37,26 +37,39 @@ class WarehouseServiceTest extends TestCase
 
         $this->assertInstanceOf(Paginator::class, $response);
         $this->assertTrue(!is_null($response));
-        // $this->assertTrue(true);
     }
     
     public function test_create()
     {
         $company_id = Company::inRandomOrder()->get()[0]->id;
-        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
-        $address = $this->$faker->address();
-        $city = $this->$warehouse_name;
-        $contact = $this->$faker->e164PhoneNumber();
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
-        $status = '1';
+        $status = (new RandomGenerator())->generateNumber(0, 1);
 
-        $this->service->create($company_id, $code, $name);
+        $this->service->create(
+            $company_id,
+            $code,
+            $name,
+            $address,
+            $city,
+            $contact,
+            $remarks,
+            $status
+        );
     
-        $this->assertDatabaseHas('brands', [
+        $this->assertDatabaseHas('warehouses', [
             'company_id' => $company_id,
             'code' => $code,
-            'name' => $name
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'remarks' => $remarks,
+            'status' => $status,
             
         ]);
     }
@@ -66,15 +79,44 @@ class WarehouseServiceTest extends TestCase
         $company_id = Company::inRandomOrder()->get()[0]->id;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
-        $response = $this->service->create($company_id, $code, $name);
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $remarks = null;
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $response = $this->service->create(
+            $company_id,
+            $code,
+            $name,
+            $address,
+            $city,
+            $contact,
+            $remarks,
+            $status
+        );
         $rId = Hashids::decode($response)[0];
 
         $company_id_new = Company::inRandomOrder()->get()[0]->id;
         $code_new = (new RandomGenerator())->generateNumber(1,9999);
         $name_new = $this->faker->name;
-        $response = $this->service->update($rId, $company_id_new, $code_new, $name_new);
+        $address_new = $this->faker->address;
+        $city_new = $this->faker->city;
+        $contact_new = $this->faker->e164PhoneNumber;
+        $remarks_new = null;
+        $status_new = (new RandomGenerator())->generateNumber(0, 1);
+        $response = $this->service->update(
+            $rId, 
+            $company_id_new, 
+            $code_new, 
+            $name_new,
+            $address_new,
+            $city_new,
+            $contact_new,
+            $remarks_new,
+            $status_new
+        );
 
-        $this->assertDatabaseHas('brands', [
+        $this->assertDatabaseHas('warehouses', [
             'id' => $rId,
             'company_id' => $company_id_new,
             'code' => $code_new,
@@ -87,13 +129,27 @@ class WarehouseServiceTest extends TestCase
         $company_id = Company::inRandomOrder()->get()[0]->id;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
-        $response = $this->service->create($company_id, $code, $name);
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $remarks = null;
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $response = $this->service->create(
+            $company_id,
+            $code,
+            $name,
+            $address,
+            $city,
+            $contact,
+            $remarks,
+            $status
+        );
         $rId = Hashids::decode($response)[0];
 
         $response = $this->service->delete($rId);
         $deleted_at = Warehouse::withTrashed()->find($rId)->deleted_at->format('Y-m-d H:i:s');
         
-        $this->assertDatabaseHas('brands', [
+        $this->assertDatabaseHas('warehouses', [
             'id' => $rId,
             'deleted_at' => $deleted_at
         ]);

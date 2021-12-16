@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class ExpenseGroupServiceTest extends TestCase
 {
+    use WithFaker;
+    
     protected function setUp(): void
     {
         parent::setUp();
