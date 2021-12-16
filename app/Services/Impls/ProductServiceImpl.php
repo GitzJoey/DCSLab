@@ -79,28 +79,24 @@ class ProductServiceImpl implements ProductService
 
     public function read()
     {
-        $user = User::find();
-        $company_list = $user->companies()->pluck('company_id');
-        return Product::with('productGroup', 'brand', 'productUnit.unit')->whereIn('company_id', $company_list)->paginate();
+        return Product::with('productGroup', 'brand', 'productUnit.unit')
+                ->bySelectedCompany()
+                ->paginate();
     }
 
     public function read_product()
     {
-        $user = User::find();
-        $company_list = $user->companies()->pluck('company_id');
         return Product::with('productGroup', 'brand', 'productUnit.unit')
-                ->whereIn('company_id', $company_list)
                 ->where('product_type', '<>', 4)
+                ->bySelectedCompany()
                 ->paginate();
     }
 
     public function read_service()
     {
-        $user = User::find();
-        $company_list = $user->companies()->pluck('company_id');
         return Product::with('productGroup', 'productUnit.unit')
-                ->whereIn('company_id', $company_list)
                 ->where('product_type', '=', 4)
+                ->bySelectedCompany()
                 ->paginate();
     }
 
