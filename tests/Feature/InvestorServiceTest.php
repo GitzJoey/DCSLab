@@ -13,6 +13,8 @@ use Tests\TestCase;
 
 class InvestorServiceTest extends TestCase
 {
+    use WithFaker;
+    
     protected function setUp(): void
     {
         parent::setUp();

@@ -13,6 +13,8 @@ use Tests\TestCase;
 
 class UnitServiceTest extends TestCase
 {
+    use WithFaker;
+    
     protected function setUp(): void
     {
         parent::setUp();
