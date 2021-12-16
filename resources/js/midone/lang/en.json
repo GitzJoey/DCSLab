@@ -214,7 +214,32 @@
                 "delete": "Delete Product"
             },
             "fields": {
-                
+                "code": "Code",
+                "product_group_id": "Group Name",
+                "brand_id": "Brand Name",
+                "name": "Name",
+                "supplier_id": "Supplier",
+                "taxable_supplies": "Taxable Supplies",
+                "rate_supplies": "Rate Supplies",
+                "price_include_vat": "Price Include VAT",
+                "remarks": "Remarks",
+                "point": "Point",
+                "use_serial_number": "Is Use Serial",
+                "has_expiry_date": "Has Expiry Date",
+                "product_type": "Product Type",
+                "status": "Status",
+                "units": {
+                    "title": "Units",
+                    "table": {
+                        "cols": {
+                            "code": "Code",
+                            "unit": "Unit",
+                            "conversion_value": "Conversion Value",
+                            "is_base": "Base Unit",
+                            "is_primary": "Primary Unit"    
+                        }
+                    }
+                }
             }
         },
         "supplier": {

@@ -66,7 +66,141 @@
         </div>
         <div class="loader-container">
             <VeeForm id="productForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                
+                <div class="p-5">
+                    <div class="mb-3">
+                        <label for="inputCode" class="form-label">{{ t('views.product.fields.code') }}</label>
+                        <div class="flex items-center">
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.product.fields.code')" :label="t('views.product.fields.code')" v-model="product.code" v-show="mode === 'create' || mode === 'edit'" :readonly="product.code === '[AUTO]'"/>
+                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                        </div>
+                        <ErrorMessage name="code" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
+                        <select id="product_group_id" name="product_group_id" :class="{'form-control form-select':true, 'border-theme-21': errors['product_group_id']}" :label="t('views.product.fields.product_group_id')" v-model="product.product_group.hId" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option :value="g.hId" v-for="g in groupDDL" v-bind:key="g.hId">{{ g.name }}</option>
+                        </select>
+                        <ErrorMessage name="product_group_id" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="brand_id">{{ t('views.product.fields.brand_id') }}</label>
+                        <select id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-theme-21': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option :value="b.hId" v-for="b in brandDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                        </select>
+                        <ErrorMessage name="brand_id" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">{{ t('views.product.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" v-model="product.name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <ErrorMessage name="name" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="supplier_id">{{ t('views.product.fields.supplier_id') }}</label>
+                        <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.supplier.hId" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option :value="s.hId" v-for="s in supplierDDL" v-bind:key="s.hId">{{ s.name }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
+                        <select id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-theme-21': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" v-show="mode === 'create' || mode === 'edit'">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ pt.name }}</option>
+                        </select>
+                        <ErrorMessage name="product_type" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputUnit" class="form-label">{{ t('views.product.fields.units.title') }}</label>
+                        <table class="table table-report">
+                            <thead>
+                                <tr class="bg-gray-700 dark:bg-dark-1 text-white">
+                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.code') }}</th>
+                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.unit') }}</th>
+                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.conversion_value') }}</th>
+                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.is_base') }}</th>
+                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.is_primary') }}</th>
+                                    <th class="whitespace-nowrap"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(pu, puIdx) in product.product_units">
+                                    <td class="whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <input type="text" class="form-control" v-model="pu.code" id="product_units_code" name="product_units_code[]" :readonly="pu.code == '[AUTO]'"/>
+                                            <button type="button" class="btn btn-secondary mx-1" @click="generateCodeUnit(puIdx)" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                                        </div>
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                        <select class="form-control form-select" id="unit_id" name="unit_id[]" v-model="pu.unit.hId">
+                                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                            <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
+                                        </select>
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                       <input type="text" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" name="conv_value[]"/>
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                        <div class="flex justify-center">
+                                            <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" true-value="1" false-value="0"> 
+                                        </div>
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                        <div class="flex justify-center">
+                                            <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary" true-value="1" false-value="0">
+                                        </div>
+                                    </td>
+                                    <td class="whitespace-nowrap">
+                                        <div class="flex justify-center">
+                                            <button class="btn btn-sm btn-secondary" @click="deleteUnitSelected(pu.puIdx)"><TrashIcon class="w-3 h-4"/></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="whitespace-nowrap" colspan="6">
+                                        <button class="btn btn-sm btn-secondary w-24" @click="createNewUnit"><PlusIcon class="w-3 h-4" /></button>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
+                        <VeeField id="inputPoint" name="point" as="input" :class="{'form-control':true, 'border-theme-21': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" v-model="product.point" v-show="mode === 'create' || mode === 'edit'"/>
+                        <ErrorMessage name="point" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputUseSerialNumber" class="form-label">{{ t('views.product.fields.use_serial_number') }}</label>
+                        <div class="mt-2">
+                            <input id="inputUseSerialNumber" type="checkbox" class="form-check-switch" name="use_serial_number" v-model="product.use_serial_number" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputHasExpiryDate" class="form-label">{{ t('views.product.fields.has_expiry_date') }}</label>
+                        <div class="mt-2">
+                            <input id="inputHasExpiryDate" type="checkbox" class="form-check-switch" name="has_expiry_date" v-model="product.has_expiry_date" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">{{ t('views.product.fields.status') }}</label>
+                        <select id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="product.status" v-show="mode === 'create' || mode === 'edit'">
+                            <option value='1'>{{ t('components.dropdown.values.statusDDL.active') }}</option>
+                            <option value='0'>{{ t('components.dropdown.values.statusDDL.inactive') }}</option>
+                        </select>
+                        <ErrorMessage name="status" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputRemarks" class="form-label">{{ t('views.product.fields.remarks') }}</label>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.product.fields.remarks')" v-model="product.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="pl-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                    <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
+                    <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
+                </div>
             </VeeForm>
             <div class="loader-overlay" v-if="loading"></div>
         </div>
@@ -92,7 +226,9 @@ import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 const schema = {
     code: 'required',
     name: 'required',
+    point: 'required'
 };
+
 // Declarations
 const store = useStore();
 
@@ -112,13 +248,13 @@ const expandDetail = ref(null);
 const productList = ref([]);
 const product = ref({
     code: '',
-    group: { hId: '' },
+    product_group: { hId: '' },
     brand: { hId: '' },
     name: '',
     product_units: [
         {
             hId: '',
-            conversion_value: '0',
+            conversion_value: 0,
             unit: { hId: '' }
         }
     ],
@@ -220,10 +356,10 @@ function invalidSubmit(e) {
 function emptyProduct() {
     return {
         code: '[AUTO]',
-        group: { hId: '' },
+        product_group: { hId: '' },
         brand: { hId: '' },
         name: '',
-        product_unit: [
+        product_units: [
             {
                 hId: '',
                 code: '[AUTO]',
@@ -253,6 +389,17 @@ function createNew() {
     product.value = emptyProduct();
 }
 
+function createNewUnit() {
+    let product_unit = {
+        hId: '',
+        code: '[AUTO]',
+        conversion_value: 0,
+        unit: { hId: '' }
+    };
+
+    product.value.product_units.push(product_unit);
+}
+
 function onDataListChange({page, pageSize, search}) {
     getAllProducts({page, pageSize, search});
 }
@@ -260,10 +407,20 @@ function onDataListChange({page, pageSize, search}) {
 function editSelected(index) {
     mode.value = 'edit';
     product.value = productList.value.data[index];
+
+    if (product.value.supplier === null) {
+        product.value.supplier = {
+            hId: ''
+        };
+    }
 }
 
 function deleteSelected(index) {
     deleteId.value = productList.value.data[index].hId;
+}
+
+function deleteUnitSelected(index) {
+    product.value.product_units.splice(index, 1);
 }
 
 function confirmDelete() {
@@ -298,6 +455,11 @@ function toggleDetail(idx) {
 function generateCode() {
     if (product.value.code === '[AUTO]') product.value.code = '';
     else  product.value.code = '[AUTO]'
+}
+
+function generateCodeUnit(idx) {
+    if (product.value.product_units[idx].code === '[AUTO]') product.value.product_units[idx].code = '';
+    else  product.value.product_units[idx].code = '[AUTO]'
 }
 
 // Computed

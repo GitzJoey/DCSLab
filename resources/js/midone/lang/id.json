@@ -214,7 +214,32 @@
                 "delete": "Hapus Produk"
             },
             "fields": {
-
+                "code": "Kode",
+                "product_group_id": "Nama Group",
+                "brand_id": "Nama Merk",
+                "name": "Nama",
+                "supplier_id": "Pemasok",
+                "taxable_supplies": "Produk Kena Pajak",
+                "rate_supplies": "PPN",
+                "price_include_vat": "Harga Termasuk Pajak",
+                "remarks": "Remarks",
+                "point": "Poin",
+                "use_serial_number": "Memakai Nomor Serial",
+                "has_expiry_date": "Tanggal Kadaluarsa",
+                "product_type": "Tipe Produk",
+                "status": "Status",
+                "units": {
+                    "title": "Satuan",
+                    "table": {
+                        "cols": {
+                            "code": "Kode",
+                            "unit": "Satuan",
+                            "conversion_value": "Nilai Tukar",
+                            "is_base": "Satuan Dasar",
+                            "is_primary": "Satuan Utama"    
+                        }
+                    }
+                }
             }
         },
         "supplier": {

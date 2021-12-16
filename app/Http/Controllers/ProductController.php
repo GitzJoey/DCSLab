@@ -291,13 +291,25 @@ class ProductController extends BaseController
         return $result ? response()->error():response()->success();
     }
 
-    public function getProductType()
+    public function getProductType(Request $request)
     {
-        return [
-            ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => 1],
-            ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => 2],
-            ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => 3],
-            ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => 4]            
-        ];
+        if ($request->has('type') && $request['type'] == 'products') {
+            return [
+                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => 1],
+                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => 2],
+                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => 3],
+            ];
+        } else if ($request->has('type') && $request['type'] == 'service'){
+            return [
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => 4]            
+            ];
+        } else {
+            return [
+                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => 1],
+                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => 2],
+                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => 3],
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => 4]            
+            ];
+        }
     }
 }
