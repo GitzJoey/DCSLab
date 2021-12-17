@@ -153,7 +153,7 @@
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <div class="flex justify-center">
-                                            <button class="btn btn-sm btn-secondary" @click="deleteUnitSelected(pu.puIdx)"><TrashIcon class="w-3 h-4"/></button>
+                                            <button class="btn btn-sm btn-secondary" @click="deleteUnitSelected(puIdx)"><TrashIcon class="w-3 h-4"/></button>
                                         </div>
                                     </td>
                                 </tr>

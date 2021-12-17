@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Actions\RandomGenerator;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +20,10 @@ class BrandServiceImpl implements BrandService
         DB::beginTransaction();
 
         try {
+            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
+                $code = $this->generateUniqueCode($company_id);
+            }
+
             $productbrand = new Brand();
             $productbrand->company_id = $company_id;
             $productbrand->code = $code;
@@ -68,7 +73,7 @@ class BrandServiceImpl implements BrandService
         DB::beginTransaction();
 
         try {
-            $productbrand = Brand::where('id', '=', $id);
+            $productbrand = Brand::find($id);
 
             $productbrand->update([
                 'company_id' => $company_id,
@@ -78,7 +83,7 @@ class BrandServiceImpl implements BrandService
 
             DB::commit();
 
-            return $productbrand;
+            return $productbrand->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -93,12 +98,20 @@ class BrandServiceImpl implements BrandService
         return $productbrand->delete();
     }
 
-    public function isUniqueCode(string $code, int $userId, int $exceptId): string
+    public function generateUniqueCode(int $companyId): string
     {
-        $usr = User::find($userId);
-        $companies = $usr->companies()->pluck('company_id');
+        $rand = new RandomGenerator();
+        
+        do {
+            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        } while (!$this->isUniqueCode($code, $companyId));
 
-        $result = Brand::whereIn('company_id', $companies)->where('code', '=' , $code);
+        return $code;
+    }
+
+    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
+    {
+        $result = Brand::whereCompanyId($companyId)->where('code', '=' , $code);
 
         if($exceptId)
             $result = $result->where('id', '<>', $exceptId);

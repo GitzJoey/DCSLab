@@ -14,6 +14,8 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ProductGroupController;
 /* Ext */
 
 Route::bind('id', function ($id) {
@@ -54,6 +56,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         });
 
         Route::group(['prefix' => 'product', 'as' => '.product'], function() {
+            Route::group(['prefix' => 'brand', 'as' => '.brand'], function() {
+                Route::get('read', [BrandController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function() {
+                Route::get('read', [ProductGroupController::class, 'read'])->name('.read');
+            });
             Route::group(['prefix' => 'product', 'as' => '.product'], function() {
                 Route::get('read', [ProductController::class, 'readProducts'])->name('.read');
             });
