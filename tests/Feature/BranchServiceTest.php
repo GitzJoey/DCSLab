@@ -118,14 +118,14 @@ class BranchServiceTest extends TestCase
 
         $this->assertDatabaseHas('branches', [
             'id' => $rId,
-            'company_id' => $company_id,
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status,
+            'company_id' => $company_id_new,
+            'code' => $code_new,
+            'name' => $name_new,
+            'address' => $address_new,
+            'city' => $city_new,
+            'contact' => $contact_new,
+            'remarks' => $remarks_new,
+            'status' => $status_new,
         ]);
     }
 
