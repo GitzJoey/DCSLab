@@ -1,5 +1,0 @@
-[0915/164839.300:INFO:assistant_installer_main.cc(168)] Running assistant installer with command line "C:\Users\User\AppData\Local\Temp\.opera\Opera Installer Temp\opera_package_202109151646341\assistant\assistant_installer.exe" --installfolder="C:\Users\User\AppData\Local\Programs\Opera\assistant" --copyonly=0 --allusers=0
-[0915/164839.311:INFO:assistant_installer.cc(285)] Setting up the registry
-[0915/164839.403:INFO:assistant_installer.cc(339)] Creating scheduled task
-[0915/164839.436:INFO:assistant_installer_main.cc(168)] Running assistant installer with command line "C:\Users\User\AppData\Local\Programs\Opera\assistant\assistant_installer.exe" --installfolder="C:\Users\User\AppData\Local\Programs\Opera\assistant" --run-assistant --allusers=0
-[0915/164839.436:INFO:assistant_installer.cc(244)] Running Assistant
