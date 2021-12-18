@@ -1010,7 +1010,6 @@ export default {
         this.getAllUnit();
     },
     methods: {
-        // Global --------------------------------------------
         getAllProductGroup() {
             axios.get(route('api.get.dashboard.productgroup.read.all')) .then(response => {
                 this.groupDDL = response.data;
@@ -1035,8 +1034,6 @@ export default {
             });
         },
 
-        // Product --------------------------------------------
-        
         getAllProduct(page) {
             this.loading = true;
             axios.get(route('api.get.dashboard.product.read.product') + '?page=' + page) .then(response => {
@@ -1117,7 +1114,6 @@ export default {
             this.product.product_unit.splice(idx, 1);
         },
 
-        // Service --------------------------------------------
         getAllService(page) {
             this.loading = true;
             axios.get(route('api.get.dashboard.product.read.service') + '?page=' + page) .then(response => {
