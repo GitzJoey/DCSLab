@@ -1,7 +1,0 @@
-1. model, tambahin kolom category
-2. service impl, tambahin kolom category
-3. service impl, bikin fungsi getAllProductGroup, getAllServiceGroup, GetAllProductandServiceGroup
-4. service, tambahin kolom kategori dan fungsi yang nomer 3
-5. bikin dropdown buat category
-6. tampilkan di listnya
-7. dicoba create, update, delete
