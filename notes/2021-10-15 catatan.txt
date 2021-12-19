@@ -1,4 +1,0 @@
-1. bikin table relasi product_units
-2. benerin relasi (hapus units, harga di product)
-3. bikin list unit di tambah product
-

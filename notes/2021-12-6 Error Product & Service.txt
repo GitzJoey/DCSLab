@@ -1,4 +1,0 @@
-Yang masih error:
--Service masiih belum bisa di buka
--Product Unit masiih belom keluar di show nya Product
--Supplier di Product keluarnya code yang belum di decode (Kayane gara" di Vue nya itu defaultSupplier)

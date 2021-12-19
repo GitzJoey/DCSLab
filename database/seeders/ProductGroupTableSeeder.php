@@ -15,8 +15,6 @@ class ProductGroupTableSeeder extends Seeder
      */
     public function run()
     {
-        // ProductGroup::factory()->count(10)->create();
-
         $faker = \Faker\Factory::create('id_ID');
 
         $productGroups = [

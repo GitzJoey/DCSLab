@@ -18,20 +18,6 @@ class DatabaseSeeder extends Seeder
             LaratrustSeeder::class,
             UserSeeder::class,
             RoleSeeder::class,
-
-            CompanyTableSeeder::class,
-            // BranchTableSeeder::class,
-            // WarehouseTableSeeder::class,
-            
-            // CashTableSeeder::class,
-            ProductGroupTableSeeder::class,
-            BrandTableSeeder::class,
-            UnitTableSeeder::class,
-
-            SupplierTableSeeder::class,
-
-            // ProductTableSeeder::class,
-            // ProductUnitTableSeeder::class,
         ]);
     }
 }

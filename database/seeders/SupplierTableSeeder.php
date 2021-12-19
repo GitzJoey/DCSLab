@@ -19,16 +19,6 @@ class SupplierTableSeeder extends Seeder
         $companies = Company::get()->pluck('id');
 
         foreach($companies as $company) {
-            // foreach ($productGroups as $productGroup) {
-            //     $newProductGroup = new ProductGroup();
-            //     $newProductGroup->company_id = $company;
-            //     $newProductGroup->code = $faker->unique()->numberBetween(001, 9999);
-            //     $newProductGroup->name = $productGroup['name'];
-            //     $newProductGroup->category = $productGroup['category'];
-
-            //     $newProductGroup->save();
-            // }
-
             for($i = 0; $i < 10000; $i++)
             {
                 $supplier = Supplier::factory()->make([
@@ -38,15 +28,5 @@ class SupplierTableSeeder extends Seeder
                 $supplier->save();
             }
         }
-
-        // for($i = 0; $i < 100; $i++)
-        // {
-        //     $supplier = Supplier::factory()->make([
-        //         'business_id' => $business->id,
-        //     ]);
-
-        //     $supplier->save();
-
-        // }
     }
 }
