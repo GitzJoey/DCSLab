@@ -41,7 +41,7 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function read(int $companyId, string $search = '', bool $paginate = true, int $perPage = 10)
+    public function read(int $companyId, string $search = '', bool $paginate = true, ?int $perPage = 10)
     {
         if (empty($search)) {
             $pb = Brand::whereCompanyId($companyId)->latest();

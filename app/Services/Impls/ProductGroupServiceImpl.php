@@ -52,7 +52,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
-    public function read(int $companyId, ?string $category = null, string $search = '', bool $paginate = true, int $perPage = 10)
+    public function read(int $companyId, ?string $category = null, string $search = '', bool $paginate = true, ?int $perPage = 10)
     {
         $productGroup = ProductGroup::whereCompanyId($companyId);
 

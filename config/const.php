@@ -57,5 +57,10 @@ return [
             'CASH_ON_NEXT_DELIVERY' => 'CND',
             'CASH_BEFORE_SHIPMENT' => 'CBS'
         ],
+        'UNIT_CATEGORY' => [
+            'PRODUCTS' => 1,
+            'SERVICES' => 2,
+            'PRODUCTS_AND_SERVICES' => 3
+        ]
     ],
 ];

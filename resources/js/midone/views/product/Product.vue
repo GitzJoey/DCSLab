@@ -79,7 +79,7 @@
                         <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
                         <select id="product_group_id" name="product_group_id" :class="{'form-control form-select':true, 'border-theme-21': errors['product_group_id']}" :label="t('views.product.fields.product_group_id')" v-model="product.product_group.hId" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="g.hId" v-for="g in groupDDL" v-bind:key="g.hId">{{ g.name }}</option>
+                            <option :value="g.hId" v-for="g in productGroupDDL" v-bind:key="g.hId">{{ g.code }} - {{ g.name }}</option>
                         </select>
                         <ErrorMessage name="product_group_id" class="text-theme-21" />
                     </div>
@@ -87,7 +87,7 @@
                         <label class="form-label" for="brand_id">{{ t('views.product.fields.brand_id') }}</label>
                         <select id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-theme-21': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="b.hId" v-for="b in brandDDL" v-bind:key="b.hId">{{ b.name }}</option>
+                            <option :value="b.hId" v-for="b in brandDDL" v-bind:key="b.hId">{{ b.code }} - {{ b.name }}</option>
                         </select>
                         <ErrorMessage name="brand_id" class="text-theme-21" />
                     </div>
@@ -100,14 +100,14 @@
                         <label class="form-label" for="supplier_id">{{ t('views.product.fields.supplier_id') }}</label>
                         <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.supplier.hId" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="s.hId" v-for="s in supplierDDL" v-bind:key="s.hId">{{ s.name }}</option>
+                            <option :value="s.hId" v-for="s in supplierDDL" v-bind:key="s.hId">{{ s.code }} - {{ s.name }}</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
                         <select id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-theme-21': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ pt.name }}</option>
+                            <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ t(pt.name) }}</option>
                         </select>
                         <ErrorMessage name="product_type" class="text-theme-21" />
                     </div>
@@ -153,7 +153,7 @@
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <div class="flex justify-center">
-                                            <button class="btn btn-sm btn-secondary" @click="deleteUnitSelected(puIdx)"><TrashIcon class="w-3 h-4"/></button>
+                                            <button class="btn btn-sm btn-secondary" @click.prevent="deleteUnitSelected(puIdx)"><TrashIcon class="w-3 h-4"/></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -161,7 +161,7 @@
                             <tfoot>
                                 <tr>
                                     <th class="whitespace-nowrap" colspan="6">
-                                        <button class="btn btn-sm btn-secondary w-24" @click="createNewUnit"><PlusIcon class="w-3 h-4" /></button>
+                                        <button class="btn btn-sm btn-secondary w-24" @click.prevent="createNewUnit"><PlusIcon class="w-3 h-4" /></button>
                                     </th>
                                 </tr>
                             </tfoot>
@@ -258,7 +258,9 @@ const product = ref({
             unit: { hId: '' }
         }
     ],
-    tax_status: '',
+    taxable_supplies: '',
+    rate_supplies: '',
+    price_include_vat: '',
     supplier: { hId: '' },
     remarks: '',
     point: '',
@@ -267,7 +269,7 @@ const product = ref({
     status: '',
 });
 const statusDDL = ref([]);
-const groupDDL = ref([]);
+const productGroupDDL = ref([]);
 const brandDDL = ref([]);
 const unitDDL = ref([]);
 const supplierDDL = ref([]);
@@ -278,9 +280,11 @@ onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
-    if (selectedUserCompany.value !== '')
+    if (selectedUserCompany.value !== '') {
         getAllProducts({ page: 1 });
-    
+        getDDLSync();
+    }
+
     getDDL();
 
     loading.value = false;
@@ -307,6 +311,30 @@ function getDDL() {
 
     axios.get(route('api.get.db.product.common.list.product_type')).then(response => {
         productTypeDDL.value = response.data;
+    });
+}
+
+function getDDLSync() {
+    axios.get(route('api.get.db.product.brand.read', {
+            companyId: selectedUserCompany.value,
+            paginate: false
+        })).then(response => {
+            brandDDL.value = response.data;
+    });
+
+    axios.get(route('api.get.db.product.product_group.read', {
+            companyId: selectedUserCompany.value,
+            paginate: false
+        })).then(response => {
+            productGroupDDL.value = response.data;
+    });
+
+    axios.get(route('api.get.db.product.unit.read', {
+            companyId: selectedUserCompany.value,
+            category: 1,
+            paginate: false
+        })).then(response => {
+            unitDDL.value = response.data;
     });
 }
 
@@ -369,7 +397,9 @@ function emptyProduct() {
                 unit: { hId: '' }
             }
         ],
-        tax_status: 0,
+        taxable_supplies: '',
+        rate_supplies: '',
+        price_include_vat: '',
         supplier: { hId: '' },
         remarks: '',
         point: '',
@@ -467,6 +497,7 @@ function generateCodeUnit(idx) {
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
         getAllProducts({ page: 1 });
+        getDDLSync();
     }
 });
 </script>

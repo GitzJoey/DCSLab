@@ -16,6 +16,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductGroupController;
+use App\Http\Controllers\UnitController;
 /* Ext */
 
 Route::bind('id', function ($id) {
@@ -67,6 +68,9 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
             Route::group(['prefix' => 'service', 'as' => '.service'], function() {
                 Route::get('read', [ProductController::class, 'readServices'])->name('.read');
+            });
+            Route::group(['prefix' => 'unit', 'as' => '.unit'], function() {
+                Route::get('read', [UnitController::class, 'read'])->name('.read');
             });
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function() {

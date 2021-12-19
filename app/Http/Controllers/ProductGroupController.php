@@ -29,6 +29,6 @@ class ProductGroupController extends BaseController
 
         $category = '';
 
-        return $this->brandService->read($companyId, $category, $search, $paginate, $perPage);
+        return $this->productGroupService->read($companyId, $category, $search, $paginate, $perPage);
     }
 }

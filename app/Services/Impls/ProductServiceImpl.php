@@ -21,7 +21,9 @@ class ProductServiceImpl implements ProductService
         int $product_group_id,
         int $brand_id,
         string $name,
-        int $tax_status,
+        bool $taxable_supplies,
+        int $rate_supplies,
+        bool $price_include_vat,
         int $supplier_id,
         string $remarks,
         int $point,
@@ -45,7 +47,9 @@ class ProductServiceImpl implements ProductService
             $product->product_group_id = $product_group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
-            $product->tax_status = $tax_status;
+            $product->taxable_supplies = $taxable_supplies;
+            $product->rate_supplies = $rate_supplies;
+            $product->price_include_vat = $price_include_vat;
             $product->supplier_id = $supplier_id;
             $product->remarks = $remarks;
             $product->point = $point;
@@ -125,7 +129,9 @@ class ProductServiceImpl implements ProductService
         int $product_group_id,
         int $brand_id,
         string $name,
-        int $tax_status,
+        bool $taxable_supplies,
+        int $rate_supplies,
+        bool $price_include_vat,
         int $supplier_id,
         string $remarks,
         int $point,
@@ -139,7 +145,7 @@ class ProductServiceImpl implements ProductService
         DB::beginTransaction();
 
         try {
-            $product = Product::where('id', '=', $id);
+            $product = Product::find($id);
 
             if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
                 $code = $this->generateUniqueCode($company_id);
@@ -151,7 +157,9 @@ class ProductServiceImpl implements ProductService
                 'product_group_id' => $product_group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
-                'tax_status' => $tax_status,
+                'taxable_supplies' => $taxable_supplies,
+                'rate_supplies' => $rate_supplies,
+                'price_include_vat' => $price_include_vat,
                 'supplier_id' => $supplier_id,
                 'remarks' => $remarks,
                 'point' => $point,

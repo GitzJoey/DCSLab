@@ -14,6 +14,8 @@ use App\Services\CompanyService;
 use App\Services\BrandService;
 use App\Services\SupplierService;
 use App\Services\ProductService;
+use App\Services\ProductGroupService;
+use App\Services\UnitService;
 /* Ext */
 
 use App\Services\Impls\UserServiceImpl;
@@ -26,6 +28,8 @@ use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\BrandServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
+use App\Services\Impls\ProductGroupServiceImpl;
+use App\Services\Impls\UnitServiceImpl;
 /* Ext */
 
 class AppServiceProvider extends ServiceProvider
@@ -72,6 +76,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ProductService::class, function (){
             return new ProductServiceImpl();
+        });
+
+        $this->app->singleton(ProductGroupService::class, function (){
+            return new ProductGroupServiceImpl();
+        });
+
+        $this->app->singleton(UnitService::class, function (){
+            return new UnitServiceImpl();
         });
 
         /* Ext */
