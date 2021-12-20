@@ -26,7 +26,6 @@ class SupplierRequest extends FormRequest
      */
     public function rules()
     {
-        $userId = Auth::id();
         $companyId = $this['company_id'];
 
         $nullableArr = [
@@ -37,7 +36,7 @@ class SupplierRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
-                    'company_id' => 'required',
+                    'company_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'suppliers', companyId: $companyId)],
                     'name' => 'required|max:255',
                     'status' => 'required'
@@ -45,7 +44,7 @@ class SupplierRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'company_id' => 'required',
+                    'company_id' => ['required', 'bail'],
                     'code' => new uniqueCode(table: 'suppliers', companyId: $companyId, exceptId: $this->route('id')),
                     'name' => 'required|max:255',
                     'status' => 'required'

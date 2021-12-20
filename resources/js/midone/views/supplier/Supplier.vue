@@ -354,8 +354,8 @@ function getDDL() {
 function onSubmit(values, actions) {
     loading.value = true;
 
-    var formData = Object.fromEntries(new FormData(cash('#supplierForm')[0])); 
-    formData.company_id = selectedUserCompany.value;
+    var formData = new FormData(cash('#supplierForm')[0]); 
+    formData.append('company_id', selectedUserCompany.value);
 
     if (mode.value === 'create') {
         axios.post(route('api.post.db.supplier.supplier.save'), formData).then(response => {

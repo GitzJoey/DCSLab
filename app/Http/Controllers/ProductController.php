@@ -59,14 +59,14 @@ class ProductController extends BaseController
     {   
         $request = $productRequest->validated();
         
-        $company_id = $request['company_id'];
+        $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
         $product_group_id = Hashids::decode($request['product_group_id'])[0];
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
 
-        if (!is_null($request['supplier_id']) && $request['supplier_id'] != '') {
+        if (array_key_exists('supplier_id', $request) && $request['supplier_id'] != '') {
             $supplier_id =  Hashids::decode($request['supplier_id'])[0];
         }
 
@@ -79,27 +79,20 @@ class ProductController extends BaseController
         $product_type = $request['product_type'];
         $status = $request['status'];
 
-        $taxable_supplies = $request['taxable_supplies'];
-        $rate_supplies = $request['rate_supplies'];
-        $price_include_vat = $request['price_include_vat'];
+        $taxable_supplies = array_key_exists('taxable_supplies', $request) ? boolVal($request['taxable_supplies']) : false;
+        $rate_supplies = array_key_exists('rate_supplies', $request) ? intVal($request['rate_supplies']) : 0;
+        $price_include_vat = array_key_exists('price_include_vat', $request) ? boolVal($request['price_include_vat']) : false;
 
         $product_units = [];
         $count_unit = count($request['unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
+            $is_base = $request['is_base'][$i] == '1' ? true : false;
 
-            if ($request['product_unit_code'][$i] == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $new_product_unit_code = $this->productService->generateUniqueCode($company_id);
-            } else {
-                $new_product_unit_code = $request['product_unit_code'][$i];
-            };
-
-            $is_base = array_key_exists('is_base', $request['is_base']) ? true : false;
-
-            $is_primary_unit = array_key_exists('is_primary_unit', $request) ? true : false;
+            $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
 
             array_push($product_units, array (
                 'company_id' => $company_id,
-                'code' => $new_product_unit_code,
+                'code' => $code,
                 'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                 'conv_value' => $request['conv_value'][$i],
                 'is_base' => $is_base,

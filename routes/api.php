@@ -144,6 +144,9 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:10,1
 
         Route::group(['prefix' => 'product', 'as' => '.product'], function() {
             Route::group(['prefix' => 'product', 'as' => '.product'], function() {
+                Route::post('save', [ProductController::class, 'store'])->name('.save');
+                Route::post('edit/{id}', [ProductController::class, 'update'])->name('.edit');
+                Route::post('delete/{id}', [ProductController::class, 'delete'])->name('.delete');
             });
         });
 

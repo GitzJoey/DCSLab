@@ -5,7 +5,6 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 
 use Illuminate\Container\Container;
-use App\Services\CompanyService;
 use App\Services\ProductService;
 use App\Services\SupplierService;
 use Illuminate\Support\Facades\Config;
@@ -13,7 +12,7 @@ use Illuminate\Support\Facades\Config;
 class uniqueCode implements Rule
 {
     private int $companyId;
-    private int $exceptId;
+    private ?int $exceptId;
     private string $table;
 
     private SupplierService $supplierService;

@@ -224,7 +224,7 @@
                 "price_include_vat": "Price Include VAT",
                 "remarks": "Remarks",
                 "point": "Point",
-                "use_serial_number": "Is Use Serial",
+                "use_serial_number": "Use Serial Number",
                 "has_expiry_date": "Has Expiry Date",
                 "product_type": "Product Type",
                 "status": "Status",

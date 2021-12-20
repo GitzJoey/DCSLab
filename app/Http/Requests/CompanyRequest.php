@@ -28,10 +28,6 @@ class CompanyRequest extends FormRequest
      */
     public function rules()
     {
-        $userId = Auth::id();
-
-        $companyId = $this['company_id'];
-
         $nullableArr = [
             'address' => 'nullable',
         ];

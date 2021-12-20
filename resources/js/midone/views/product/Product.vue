@@ -139,16 +139,18 @@
                                         </select>
                                     </td>
                                     <td class="whitespace-nowrap">
-                                       <input type="text" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" name="conv_value[]"/>
+                                       <input type="text" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" name="conv_value[]" :readonly="pu.is_base"/>
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <div class="flex justify-center">
-                                            <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" true-value="1" false-value="0"> 
+                                            <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" true-value="1" false-value="0" @click="changeIsBase(puIdx)"> 
+                                            <input type="hidden" v-model="pu.is_base" name="is_base[]"/>
                                         </div>
                                     </td>
                                     <td class="whitespace-nowrap">
                                         <div class="flex justify-center">
-                                            <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary" true-value="1" false-value="0">
+                                            <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary_unit" true-value="1" false-value="0" @click="changeIsPrimary(puIdx)">
+                                            <input type="hidden" v-model="pu.is_primary_unit" name="is_primary_unit[]"/>
                                         </div>
                                     </td>
                                     <td class="whitespace-nowrap">
@@ -182,6 +184,12 @@
                         <label for="inputHasExpiryDate" class="form-label">{{ t('views.product.fields.has_expiry_date') }}</label>
                         <div class="mt-2">
                             <input id="inputHasExpiryDate" type="checkbox" class="form-check-switch" name="has_expiry_date" v-model="product.has_expiry_date" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPriceIncludeVAT" class="form-label">{{ t('views.product.fields.price_include_vat') }}</label>
+                        <div class="mt-2">
+                            <input id="inputPriceIncludeVAT" type="checkbox" class="form-check-switch" name="price_include_vat" v-model="product.price_include_vat" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -309,8 +317,10 @@ function getDDL() {
         statusDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.product.common.list.product_type')).then(response => {
-        productTypeDDL.value = response.data;
+    axios.get(route('api.get.db.product.common.list.product_type', {
+            type: 'products'
+        })).then(response => {
+            productTypeDDL.value = response.data;
     });
 }
 
@@ -340,8 +350,12 @@ function getDDLSync() {
 
 function onSubmit(values, actions) {
     loading.value = true;
+
+    var formData = new FormData(cash('#productForm')[0]); 
+    formData.append('company_id', selectedUserCompany.value);
+    
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.product.product.save'), new FormData(cash('#productForm')[0])).then(response => {
+        axios.post(route('api.post.db.product.product.save'), formData).then(response => {
             backToList();
         }).catch(e => {
             handleError(e, actions);
@@ -349,7 +363,7 @@ function onSubmit(values, actions) {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.product.product.edit', supplier.value.hId), new FormData(cash('#productForm')[0])).then(response => {
+        axios.post(route('api.post.db.product.product.edit', product.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -424,6 +438,8 @@ function createNewUnit() {
         hId: '',
         code: '[AUTO]',
         conversion_value: 0,
+        is_base: 0,
+        is_primary_unit: 0,
         unit: { hId: '' }
     };
 
@@ -490,6 +506,22 @@ function generateCode() {
 function generateCodeUnit(idx) {
     if (product.value.product_units[idx].code === '[AUTO]') product.value.product_units[idx].code = '';
     else  product.value.product_units[idx].code = '[AUTO]'
+}
+
+function changeIsBase(idx) {
+    for (let i = 0; i < product.value.product_units.length; i++) {
+        if (i === idx) {
+            product.value.product_units[i].conversion_value = 1;
+        }
+        product.value.product_units[i].is_base = 0;
+    }
+}
+
+function changeIsPrimary(idx) {
+    for (let i = 0; i < product.value.product_units.length; i++) {
+        if (i === idx) continue;
+        product.value.product_units[i].is_primary_unit = 0;
+    }
 }
 
 // Computed
