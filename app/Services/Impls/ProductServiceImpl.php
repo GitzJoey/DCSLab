@@ -90,7 +90,7 @@ class ProductServiceImpl implements ProductService
         bool $isService = true,
         string $search = '',
         bool $paginate = true,
-        int $perPage = 10
+        ?int $perPage = 10
     )
     {
         if (!$companyId) return null;

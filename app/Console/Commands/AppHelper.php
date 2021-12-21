@@ -239,7 +239,7 @@ class AppHelper extends Command
         while (!$valid) {
             $email = $this->ask('Email:', $email);
 
-            $usr = $userService->getUserByEmail($email);
+            $usr = $userService->readby('EMAIL', $email);
 
             if ($usr) {
                 $this->info('User Name: '.$usr->name.'. Current Roles: '.$usr->roles()->pluck('display_name'));
@@ -249,7 +249,7 @@ class AppHelper extends Command
                 $this->info('Available Roles: '.$roleService->read()->pluck('display_name'));
                 $roleDisplayName = $this->ask('Please Select From Available Roles: ');
 
-                $role = $roleService->getRoleByDisplayName($roleDisplayName, false);
+                $role = $roleService->readBy('DISPLAY_NAME', $roleDisplayName);
 
                 if (!$role) {
                     $this->error('Invalid Role');

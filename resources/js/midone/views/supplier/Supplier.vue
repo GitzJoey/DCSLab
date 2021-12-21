@@ -226,12 +226,12 @@
                             <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>                            
                             <table class="table table--sm">
                                 <tbody>
-                                    <tr v-for="(p, pIdx) in supplier.products">
+                                    <tr v-for="(p, pIdx) in supplier.supplier_products">
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputProduct_' + p.hId" type="checkbox" class="form-check-switch" name="productIds">
+                                            <input :id="'inputProduct_' + p.product.hId" type="checkbox" class="form-check-switch" name="productIds">
                                         </td>
                                         <td>
-                                            {{ p.name }}
+                                            {{ p.product.name }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -265,6 +265,7 @@ import { useStore } from '../../store/index';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+import axios from 'axios';
 
 // Vee-Validate Schema
 const schema = {
@@ -308,19 +309,23 @@ const supplier = ref({
     taxable_enterprise: 1,
     tax_id: '',
     remarks: '',
+    supplier_products: [],
     payment_term_type: '',
     status: 1,
 });
 const statusDDL = ref([]);
 const paymentTermDDL = ref([]);
+const productLists = ref([]);
 
 // onMounted
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
 
-    if (selectedUserCompany.value !== '')
+    if (selectedUserCompany.value !== '') {
         getAllSupplier({ page: 1});
+        getDDLSync();
+    }
 
     getDDL();
 
@@ -346,8 +351,14 @@ function getDDL() {
         statusDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.common.ddl.list.payment_term')).then(response => {
+    axios.get(route('api.get.db.supplier.common.list.payment_term')).then(response => {
         paymentTermDDL.value = response.data;
+    });
+}
+
+function getDDLSync() {
+    axios.get(route('api.get.db.product.product.read', { "companyId": selectedUserCompany.value, "paginate": false })).then(response => {
+        productLists.value = response.data;
     });
 }
 
@@ -412,6 +423,7 @@ function emptySupplier() {
                 first_name: ''
             }
         },
+        supplier_products: [],
         taxable_enterprise: 1,
         tax_id: '',
         remarks: '',
@@ -480,6 +492,7 @@ function generateCode() {
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
         getAllSupplier({ page: 1 });
+        getDDLSync();
     }
 });
 </script>

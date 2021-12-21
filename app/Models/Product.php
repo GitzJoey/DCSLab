@@ -25,6 +25,7 @@ class Product extends Model
     use ScopeableByCompany;
 
     protected $fillable = [
+        'company_id',
         'product group_id',
         'brand_id',
         'code',
@@ -41,6 +42,7 @@ class Product extends Model
     ];
 
     protected static $logAttributes = [
+        'company_id',
         'product group_id',
         'brand_id',
         'code',
@@ -60,6 +62,7 @@ class Product extends Model
 
     protected $hidden = [
         'id',
+        'company_id',
         'product_group_id',
         'brand_id',
         'unit_id',

@@ -51,7 +51,6 @@ class SupplierController extends BaseController
 
         ];
 
-
         $result = $this->supplierService->create(
             Hashids::decode($request['company_id'])[0],
             $code,

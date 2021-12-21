@@ -24,7 +24,7 @@ class ProductController extends BaseController
     public function readProducts(Request $request)
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        $paginate = true;
+        $paginate = $request->has('paginate') ? boolVal($request['paginate']):true;
         $perPage = $request->has('perPage') ? $request['perPage']:null;
 
         $companyId = Hashids::decode($request['companyId'])[0];

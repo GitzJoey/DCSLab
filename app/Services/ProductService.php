@@ -30,7 +30,7 @@ interface ProductService
         bool $isService = true,
         string $search = '',
         bool $paginate = true,
-        int $perPage = 10
+        ?int $perPage = 10
     );
 
     public function update(
