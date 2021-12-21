@@ -7,11 +7,8 @@ use App\Models\Company;
 use App\Models\Product;
 use App\Models\Profile;
 use App\Models\Supplier;
-
+use App\Models\SupplierProduct;
 use App\Models\User;
-use App\Services\RoleService;
-use App\Services\UserService;
-use Illuminate\Container\Container;
 use Illuminate\Database\Seeder;
 
 class SupplierTableSeeder extends Seeder
@@ -44,9 +41,21 @@ class SupplierTableSeeder extends Seeder
 
                 $some_prods = $products->shuffle()
                                 ->take((new RandomGenerator())
-                                            ->generateNumber(1, $products->count() > 10 ? 10 : $products->count() - 1));
+                                            ->generateNumber(1, $products->count() > 6 ? 6 : $products->count() - 1));
 
-                $supplier->products()->attach($some_prods);
+                $suppProd = [];
+
+                foreach($some_prods as $p) {
+                    $sp = new SupplierProduct();
+                    $sp->company_id = $c;
+                    $sp->supplier_id = $supplier->id;
+                    $sp->product_id = $p;
+                    $sp->main_product = (new RandomGenerator())->randomTrueOrFalse();
+                
+                    array_push($suppProd, $sp);
+                } 
+
+                $supplier->supplierProducts()->saveMany($suppProd);
             }
         }
     }

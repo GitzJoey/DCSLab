@@ -106,11 +106,13 @@ class AppHelper extends Command
 
     private function dataSeeding()
     {
-        $user = $this->confirm('Do you want to seed users?', true);
-        $roles = $this->confirm('Do you want to seed roles?', true);
-        $companies = $this->confirm('Do you want to seed companies for each users?', true);
-        $supplier = $this->confirm('Do you want to seed dummy suppliers for each companies?', true);
-        $product = $this->confirm('Do you want to seed dummy products for each companies?', true);
+        $unattended_mode = $this->confirm('Unattended Mode?', true);
+
+        $user = $unattended_mode ? true : $this->confirm('Do you want to seed users?', true);
+        $roles = $unattended_mode ? true : $this->confirm('Do you want to seed roles?', true);
+        $companies = $unattended_mode ? true : $this->confirm('Do you want to seed companies for each users?', true);
+        $supplier = $unattended_mode ? true : $this->confirm('Do you want to seed dummy suppliers for each companies?', true);
+        $product = $unattended_mode ? true : $this->confirm('Do you want to seed dummy products for each companies?', true);
 
         if (Permission::count() == 0) {
             $this->info('Roles and Permissions table is empty. seeding...');
@@ -120,8 +122,8 @@ class AppHelper extends Command
         if ($user)
         {
             $this->info('Starting UserSeeder');
-            $truncate = $this->confirm('Do you want to truncate the users table first?', false);
-            $count = $this->ask('How many data:', 5);
+            $truncate = $unattended_mode ? false : $this->confirm('Do you want to truncate the users table first?', false);
+            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
 
             $this->info('Seeding...');
 
@@ -136,7 +138,7 @@ class AppHelper extends Command
         if ($roles)
         {
             $this->info('Starting RoleSeeder');
-            $count = $this->ask('How many data:', 5);
+            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
 
             $this->info('Seeding...');
 
@@ -151,7 +153,7 @@ class AppHelper extends Command
         if ($companies)
         {
             $this->info('Starting CompanyTableSeeder');
-            $count = $this->ask('How many companies for each users:', 3);
+            $count = $unattended_mode ? 3 : $this->ask('How many companies for each users:', 3);
 
             $seeder = new CompanyTableSeeder();
             $seeder->callWith(CompanyTableSeeder::class, [$count]);
@@ -169,7 +171,7 @@ class AppHelper extends Command
             $this->info('UnitTableSeeder Finish.');
 
             $this->info('Starting ProductGroupTableSeeder');
-            $count_pg = $this->ask('How many product groups (0 to skip):', 3);
+            $count_pg = $unattended_mode ? 3 : $this->ask('How many product groups (0 to skip):', 3);
 
             if ($count_pg != 0) {
                 $seeder_pg = new ProductGroupTableSeeder();
@@ -179,7 +181,7 @@ class AppHelper extends Command
             }
 
             $this->info('Starting BrandTableSeeder');
-            $count_pb = $this->ask('How many brands (0 to skip):', 5);
+            $count_pb = $unattended_mode ? 5 : $this->ask('How many brands (0 to skip):', 5);
 
             if ($count_pb != 0) {
 
@@ -190,7 +192,7 @@ class AppHelper extends Command
             }
 
             $this->info('Starting ProductTableSeeder');
-            $count = $this->ask('How many products for each companies:', 5);
+            $count = $unattended_mode ? 5 : $this->ask('How many products for each companies:', 5);
 
             $seeder = new ProductTableSeeder();
             $seeder->callWith(ProductTableSeeder::class, [$count]);
@@ -203,7 +205,7 @@ class AppHelper extends Command
         if ($supplier)
         {
             $this->info('Starting SupplierTableSeeder');
-            $count = $this->ask('How many supplier for each companies:', 5);
+            $count = $unattended_mode ? 5 : $this->ask('How many supplier for each companies:', 5);
 
             $seeder = new SupplierTableSeeder();
             $seeder->callWith(SupplierTableSeeder::class, [$count]);

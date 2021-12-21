@@ -6,7 +6,7 @@ use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
-use App\Models\Product;
+use App\Models\SupplierProduct;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -66,9 +66,9 @@ class Supplier extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function products()
+    public function supplierProducts()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(SupplierProduct::class);
     }
 
     public function getActivitylogOptions(): LogOptions
