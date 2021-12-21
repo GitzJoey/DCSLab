@@ -36,8 +36,6 @@ class ProductRequest extends FormRequest
             'product_units_code.*' => 'nullable',
             'is_base.*' => 'nullable',
             'is_primary_unit.*' => 'nullable',
-            'conv_value.*' => 'nullable',
-            'supplier_id' => 'nullable',
             'use_serial_number' => 'nullable',
             'taxable_supplies' => 'nullable',
             'rate_supplies' => 'nullable',
@@ -56,7 +54,8 @@ class ProductRequest extends FormRequest
                     'brand_id' => 'required',
                     'point' => 'required|numeric',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
-                    'product_type' => [new validDropDownValue('PRODUCT_TYPE')]
+                    'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
+                    'conv_value.*' => 'numeric'
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -68,7 +67,8 @@ class ProductRequest extends FormRequest
                     'brand_id' => 'required',
                     'point' => 'required|numeric',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
-                    'product_type' => [new validDropDownValue('PRODUCT_TYPE')]
+                    'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
+                    'conv_value.*' => 'numeric'
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

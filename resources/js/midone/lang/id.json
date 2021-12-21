@@ -202,8 +202,8 @@
                 "title": "Daftar Produk",
                 "cols": {
                     "code": "Kode",
-                    "name": "Nama",    
-                    "supplier": "Supplier Utama",
+                    "name": "Nama",
+                    "brand": "Merk",
                     "status": "Status"
                 }
             },
@@ -218,7 +218,6 @@
                 "product_group_id": "Nama Group",
                 "brand_id": "Nama Merk",
                 "name": "Nama",
-                "supplier_id": "Pemasok",
                 "taxable_supplies": "Produk Kena Pajak",
                 "rate_supplies": "PPN",
                 "price_include_vat": "Harga Termasuk Pajak",

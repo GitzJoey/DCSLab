@@ -28,7 +28,6 @@ class Product extends Model
     protected $fillable = [
         'product group_id',
         'brand_id',
-        'supplier_id',
         'code',
         'name',
         'product_type',
@@ -45,7 +44,6 @@ class Product extends Model
     protected static $logAttributes = [
         'product group_id',
         'brand_id',
-        'supplier_id',
         'code',
         'name',
         'product_type',
@@ -65,7 +63,6 @@ class Product extends Model
         'id',
         'product_group_id',
         'brand_id',
-        'supplier_id',
         'unit_id',
         'created_by',
         'updated_by',
@@ -101,11 +98,6 @@ class Product extends Model
     public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
-    }
-
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
     }
 
     public function getActivitylogOptions(): LogOptions

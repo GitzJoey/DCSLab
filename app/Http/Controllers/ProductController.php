@@ -66,10 +66,6 @@ class ProductController extends BaseController
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
 
-        if (array_key_exists('supplier_id', $request) && $request['supplier_id'] != '') {
-            $supplier_id =  Hashids::decode($request['supplier_id'])[0];
-        }
-
         $remarks = $request['remarks'];
         $point = $request['point'];
 
@@ -110,7 +106,6 @@ class ProductController extends BaseController
             $taxable_supplies,
             $rate_supplies,
             $price_include_vat,
-            $supplier_id,
             $remarks,
             $point,
             $use_serial_number,
@@ -135,7 +130,6 @@ class ProductController extends BaseController
         $taxable_supplies = $request['taxable_supplies'];
         $rate_supplies = $request['rate_supplies'];
         $price_include_vat = $request['price_include_vat'];
-        $supplier_id = array_key_exists('supplier_id', $request) != null ? Hashids::decode($request['supplier_id'])[0]:null;
         $remarks = $request['remarks'];
         $point = $request['point'];
         $use_serial_number = $request['use_serial_number'];
@@ -187,7 +181,6 @@ class ProductController extends BaseController
             $taxable_supplies,
             $rate_supplies,
             $price_include_vat,    
-            $supplier_id,
             $remarks,
             $point,
             $use_serial_number,

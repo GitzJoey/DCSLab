@@ -8,7 +8,7 @@
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.product.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.product.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.product.table.cols.supplier') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.product.table.cols.brand') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.product.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
@@ -18,7 +18,7 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
-                                <td>{{ item.supplier !== null ? item.supplier.name : '' }}</td>
+                                <td>{{ item.brand !== null ? item.brand.name : '' }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 1" />
                                     <XIcon v-if="item.status === 0" />
@@ -97,13 +97,6 @@
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="supplier_id">{{ t('views.product.fields.supplier_id') }}</label>
-                        <select class="form-control" id="supplier_id" name="supplier_id" v-model="product.supplier.hId" v-show="mode === 'create' || mode === 'edit'">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="s.hId" v-for="s in supplierDDL" v-bind:key="s.hId">{{ s.code }} - {{ s.name }}</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
                         <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
                         <select id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-theme-21': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
@@ -113,61 +106,44 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputUnit" class="form-label">{{ t('views.product.fields.units.title') }}</label>
-                        <table class="table table-report">
-                            <thead>
-                                <tr class="bg-gray-700 dark:bg-dark-1 text-white">
-                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.code') }}</th>
-                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.unit') }}</th>
-                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.conversion_value') }}</th>
-                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.is_base') }}</th>
-                                    <th class="whitespace-nowrap">{{ t('views.product.fields.units.table.cols.is_primary') }}</th>
-                                    <th class="whitespace-nowrap"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(pu, puIdx) in product.product_units">
-                                    <td class="whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <input type="text" class="form-control" v-model="pu.code" id="product_units_code" name="product_units_code[]" :readonly="pu.code == '[AUTO]'"/>
-                                            <button type="button" class="btn btn-secondary mx-1" @click="generateCodeUnit(puIdx)" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                        <select class="form-control form-select" id="unit_id" name="unit_id[]" v-model="pu.unit.hId">
-                                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                            <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
-                                        </select>
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                       <input type="text" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" name="conv_value[]" :readonly="pu.is_base"/>
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                        <div class="flex justify-center">
-                                            <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" true-value="1" false-value="0" @click="changeIsBase(puIdx)"> 
-                                            <input type="hidden" v-model="pu.is_base" name="is_base[]"/>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                        <div class="flex justify-center">
-                                            <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary_unit" true-value="1" false-value="0" @click="changeIsPrimary(puIdx)">
-                                            <input type="hidden" v-model="pu.is_primary_unit" name="is_primary_unit[]"/>
-                                        </div>
-                                    </td>
-                                    <td class="whitespace-nowrap">
-                                        <div class="flex justify-center">
-                                            <button class="btn btn-sm btn-secondary" @click.prevent="deleteUnitSelected(puIdx)"><TrashIcon class="w-3 h-4"/></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th class="whitespace-nowrap" colspan="6">
-                                        <button class="btn btn-sm btn-secondary w-24" @click.prevent="createNewUnit"><PlusIcon class="w-3 h-4" /></button>
-                                    </th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <div class="grid grid-cols-9 mb-3 bg-gray-700 dark:bg-dark-1 gap-2">
+                            <div class="text-white p-3 font-bold col-span-2">{{ t('views.product.fields.units.table.cols.code') }}</div>
+                            <div class="text-white p-3 font-bold col-span-2">{{ t('views.product.fields.units.table.cols.unit') }}</div>
+                            <div class="text-white p-3 font-bold col-span-2">{{ t('views.product.fields.units.table.cols.conversion_value') }}</div>
+                            <div class="text-white p-3 font-bold">{{ t('views.product.fields.units.table.cols.is_base') }}</div>
+                            <div class="text-white p-3 font-bold">{{ t('views.product.fields.units.table.cols.is_primary') }}</div>
+                            <div class="text-white p-3 font-bold"></div>
+                        </div>
+                        <div class="grid grid-cols-9 gap-2 mb-2" v-for="(pu, puIdx) in product.product_units">
+                            <div class="col-span-2">
+                                <div class="flex items-center">
+                                    <input type="text" class="form-control" v-model="pu.code" id="product_units_code" name="product_units_code[]" :readonly="mode === 'create' && pu.code === '[AUTO]'"/>
+                                    <button type="button" class="btn btn-secondary mx-1" @click="generateCodeUnit(puIdx)" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                                </div>
+                            </div>
+                            <div class="col-span-2">
+                                <select class="form-control form-select" id="unit_id" name="unit_id[]" v-model="pu.unit.hId">
+                                    <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                    <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2">
+                                <input type="text" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" name="conv_value[]" :readonly="pu.is_base"/>
+                                <ErrorMessage :name="'conv_value.' + puIdx" class="text-theme-21"/>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" true-value="1" false-value="0" @click="changeIsBase(puIdx)"> 
+                                <input type="hidden" v-model="pu.is_base" name="is_base[]"/>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary_unit" true-value="1" false-value="0" @click="changeIsPrimary(puIdx)">
+                                <input type="hidden" v-model="pu.is_primary_unit" name="is_primary_unit[]"/>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <button class="btn btn-sm btn-secondary" @click.prevent="deleteUnitSelected(puIdx)"><TrashIcon class="w-3 h-4"/></button>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-secondary w-24" @click.prevent="createNewUnit"><PlusIcon class="w-3 h-4" /></button>
                     </div>
                     <div class="mb-3">
                         <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
@@ -257,7 +233,10 @@ const productList = ref([]);
 const product = ref({
     code: '',
     product_group: { hId: '' },
-    brand: { hId: '' },
+    brand: { 
+        hId: '',
+        name: '' 
+    },
     name: '',
     product_units: [
         {
@@ -269,7 +248,6 @@ const product = ref({
     taxable_supplies: '',
     rate_supplies: '',
     price_include_vat: '',
-    supplier: { hId: '' },
     remarks: '',
     point: '',
     is_use_serial: '',
@@ -399,7 +377,10 @@ function emptyProduct() {
     return {
         code: '[AUTO]',
         product_group: { hId: '' },
-        brand: { hId: '' },
+        brand: { 
+            hId: '',
+            name: '' 
+        },
         name: '',
         product_units: [
             {
@@ -414,7 +395,6 @@ function emptyProduct() {
         taxable_supplies: '',
         rate_supplies: '',
         price_include_vat: '',
-        supplier: { hId: '' },
         remarks: '',
         point: '',
         use_serial_number: '',

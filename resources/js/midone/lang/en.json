@@ -203,7 +203,7 @@
                 "cols": {
                     "code": "Code",
                     "name": "Name",    
-                    "supplier": "Main Supplier",
+                    "brand": "Brand",
                     "status": "Status"
                 }
             },
@@ -218,7 +218,6 @@
                 "product_group_id": "Group Name",
                 "brand_id": "Brand Name",
                 "name": "Name",
-                "supplier_id": "Supplier",
                 "taxable_supplies": "Taxable Supplies",
                 "rate_supplies": "Rate Supplies",
                 "price_include_vat": "Price Include VAT",

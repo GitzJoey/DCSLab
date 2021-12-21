@@ -24,7 +24,6 @@ class ProductServiceImpl implements ProductService
         bool $taxable_supplies,
         int $rate_supplies,
         bool $price_include_vat,
-        ?int $supplier_id = null,
         string $remarks,
         int $point,
         bool $use_serial_number,
@@ -50,7 +49,6 @@ class ProductServiceImpl implements ProductService
             $product->taxable_supplies = $taxable_supplies;
             $product->rate_supplies = $rate_supplies;
             $product->price_include_vat = $price_include_vat;
-            $product->supplier_id = $supplier_id;
             $product->remarks = $remarks;
             $product->point = $point;
             $product->use_serial_number = $use_serial_number;
@@ -97,7 +95,7 @@ class ProductServiceImpl implements ProductService
     {
         if (!$companyId) return null;
 
-        $product = Product::with('productGroup', 'brand', 'supplier', 'productUnits.unit')
+        $product = Product::with('productGroup', 'brand', 'productUnits.unit')
                     ->whereCompanyId($companyId);
 
         if (!$isProduct && $isService) {
@@ -132,7 +130,6 @@ class ProductServiceImpl implements ProductService
         bool $taxable_supplies,
         int $rate_supplies,
         bool $price_include_vat,
-        ?int $supplier_id = null,
         string $remarks,
         int $point,
         bool $use_serial_number,
@@ -160,7 +157,6 @@ class ProductServiceImpl implements ProductService
                 'taxable_supplies' => $taxable_supplies,
                 'rate_supplies' => $rate_supplies,
                 'price_include_vat' => $price_include_vat,
-                'supplier_id' => $supplier_id,
                 'remarks' => $remarks,
                 'point' => $point,
                 'use_serial_number' => $use_serial_number,
