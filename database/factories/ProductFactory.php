@@ -32,7 +32,9 @@ class ProductFactory extends Factory
         return [
             'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-            'tax_status' => $faker->numberBetween(1, 3),
+            'taxable_supplies' => $faker->numberBetween(0, 1),
+            'rate_supplies' => $faker->numberBetween(1, 10),
+            'price_include_vat' => $faker->numberBetween(0, 1),
             'remarks' => $faker->word(),
             'point' => 0,
             'use_serial_number' => $faker->numberBetween(0, 1),

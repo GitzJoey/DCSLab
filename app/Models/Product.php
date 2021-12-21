@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\ProductGroup;
 use App\Models\Brand;
-use App\Models\Unit;
 use App\Models\ProductUnit;
 use App\Models\Supplier;
 
@@ -98,6 +97,11 @@ class Product extends Model
     public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     public function getActivitylogOptions(): LogOptions

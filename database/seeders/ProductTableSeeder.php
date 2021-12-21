@@ -29,13 +29,11 @@ class ProductTableSeeder extends Seeder
             for ($i = 0; $i < $productPerCompany; $i++) {
                 $pbId = Brand::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
                 $gId = ProductGroup::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
-                $sId = Supplier::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
 
                 $prod = Product::factory()->make([
                     'company_id' => $c,
                     'product_group_id' => (new RandomGenerator())->randomTrueOrFalse() ? null : $gId,
                     'brand_id' => $pbId,
-                    'supplier_id' => (new RandomGenerator())->randomTrueOrFalse() ? null : $sId,
                 ]);
 
                 $prod->save();
