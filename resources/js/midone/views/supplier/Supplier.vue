@@ -226,12 +226,12 @@
                             <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>                            
                             <table class="table table--sm">
                                 <tbody>
-                                    <tr v-for="(p, pIdx) in supplier.supplier_products">
+                                    <tr v-for="(p, pIdx) in productLists">
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputProduct_' + p.product.hId" type="checkbox" class="form-check-switch" name="productIds">
+                                            <input :id="'inputProduct_' + p.hId" type="checkbox" class="form-check-switch" name="productIds" :checked="inSupplierProducts(p.hId)">
                                         </td>
                                         <td>
-                                            {{ p.product.name }}
+                                            {{ p.name }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -485,6 +485,15 @@ function toggleDetail(idx) {
 function generateCode() {
     if (supplier.value.code === '[AUTO]') supplier.value.code = '';
     else  supplier.value.code = '[AUTO]'
+}
+
+function inSupplierProducts(p_hId) {
+    _.forEach(supplier.value, function(v, k) {
+        console.log(v.supplier_products);
+        //if (sp.product.hId === p_hId) return true;
+    });
+    
+    //return false;
 }
 
 // Computed
