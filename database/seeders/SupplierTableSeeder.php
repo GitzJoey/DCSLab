@@ -22,10 +22,10 @@ class SupplierTableSeeder extends Seeder
     {
         $companies = Company::get()->pluck('id');
 
-        $products = Product::get()->pluck('id');
-
         foreach($companies as $c)
         {
+            $products = Product::whereCompanyId($c)->get()->pluck('id');
+
             for ($i = 0; $i < $supplierPerCompany; $i++) {
                 $usr = User::factory()->count(1)->create()[0];
 

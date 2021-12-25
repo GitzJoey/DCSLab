@@ -228,7 +228,10 @@
                                 <tbody>
                                     <tr v-for="(p, pIdx) in productLists">
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputProduct_' + p.hId" type="checkbox" class="form-check-switch" name="productIds" :checked="inSupplierProducts(p.hId)">
+                                            <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" :value="p.hId" class="form-check-switch" :checked="inSupplierProducts(p.hId)">
+                                        </td>
+                                        <td class="border-b dark:border-dark-5">
+                                            <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" :value="p.hId" class="form-check-switch" :checked="isMainProduct(p.hId)">
                                         </td>
                                         <td>
                                             {{ p.name }}
@@ -488,12 +491,18 @@ function generateCode() {
 }
 
 function inSupplierProducts(p_hId) {
-    _.forEach(supplier.value, function(v, k) {
-        console.log(v.supplier_products);
-        //if (sp.product.hId === p_hId) return true;
-    });
-    
-    //return false;
+    if (_.findIndex(supplier.value.supplier_products, { product: { hId: p_hId } }) > 0) return true;
+    else return false;
+}
+
+function isMainProduct(p_hId) {
+    let index = _.findIndex(supplier.value.supplier_products, { product: { hId: p_hId } });
+    if (index !== -1) {
+        if (supplier.value.supplier_products[index].main_product === 1) return true;
+        else return false;
+    } else {
+        return false;
+    }
 }
 
 // Computed

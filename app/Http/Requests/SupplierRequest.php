@@ -6,6 +6,7 @@ use App\Rules\uniqueCode;
 use App\Rules\validDropDownValue;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierRequest extends FormRequest
 {
@@ -26,7 +27,7 @@ class SupplierRequest extends FormRequest
      */
     public function rules()
     {
-        $companyId = $this['company_id'];
+        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
 
         $nullableArr = [
             'address' => 'nullable',

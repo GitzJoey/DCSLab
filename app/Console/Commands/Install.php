@@ -6,12 +6,14 @@ use App\Services\UserService;
 use App\Services\RoleService;
 use App\Services\SystemService;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class Install extends Command
@@ -64,6 +66,12 @@ class Install extends Command
             return false;
         }
 
+        if (!$this->checkRedisConnection()) {
+            $this->error('Redis not configured properly');
+            $this->error('Aborted');
+            return false;
+        }
+
         $container = Container::getInstance();
 
         $systemService = $container->make(SystemService::class);
@@ -79,9 +87,11 @@ class Install extends Command
             $this->error('Aborted');
             return false;
         }
-
+        
         $this->info('Generating App Key...');
         Artisan::call('key:generate');
+
+        $this->info(Artisan::output());
 
         if (App::environment('prod', 'production')) {
             $this->info('[PROD] Database Migrating...');
@@ -91,13 +101,17 @@ class Install extends Command
             Artisan::call('migrate');
         }
 
+        $this->info(Artisan::output());
+
         if (App::environment('prod', 'production')) {
             $this->info('[PROD] Seeding ...');
-            exec('php artisan db:seed --force=true');
+            Artisan::call('db:seed');
         } else {
             $this->info('Seeding ...');
-            exec('php artisan db:seed');
+            Artisan::call('db:seed');
         }
+
+        $this->info(Artisan::output());
 
         $this->info('Storage Linking ...');
         if (is_link(public_path().'/storage')) {
@@ -106,6 +120,8 @@ class Install extends Command
             Artisan::call('storage:link');
         }
 
+        $this->info(Artisan::output());
+        
         $this->info('Starting NPM Install');
         exec('npm install');
 
@@ -186,5 +202,16 @@ class Install extends Command
         sleep(3);
 
         $this->info('Done!');
+    }
+
+    private function checkRedisConnection()
+    {
+        $redis = Redis::connection();
+        try {
+            $redis->ping();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
