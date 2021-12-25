@@ -18,7 +18,7 @@ class CreateSuppliersTable extends Migration
             $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
             $table->string('code');
             $table->string('name')->nullable();
-            $table->string('payment_term_type');
+            $table->integer('payment_term_type');
             $table->string('contact')->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();

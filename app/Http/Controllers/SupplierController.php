@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\uniqueCode;
-use App\Services\ActivityLogService;
-use App\Services\SupplierService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Config;
-use App\Actions\RandomGenerator;
 use App\Models\Supplier;
+use App\Rules\uniqueCode;
+use Illuminate\Http\Request;
+use App\Actions\RandomGenerator;
+use App\Services\SupplierService;
+use Vinkla\Hashids\Facades\Hashids;
+use App\Services\ActivityLogService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class SupplierController extends BaseController
 {
     private $SupplierService;
     private $activityLogService;
 
-    public function __construct(SupplierService $SupplierService, ActivityLogService $activityLogService)
+    public function __construct(SupplierService $SupplierService,, ActivityLogService $activityLogService)
     {
         parent::__construct();
 
@@ -72,6 +72,20 @@ class SupplierController extends BaseController
         $taxable_enterprise = $request['taxable_enterprise'];
         $taxable_enterprise == 'on' ? $taxable_enterprise = 1 : $taxable_enterprise = 0;
 
+        $supplier_products = [];
+        if (empty($request['product_hId']) === false) {
+            $product_hIds = explode(',', $request['product_hId']);
+            $count_product = count($product_hIds);
+            for ($i = 0; $i < $count_product; $i++) {
+                array_push($supplier_products, array (
+                    'company_id' => $company_id,
+                    'supplier_id' => null,
+                    'product_id' => Hashids::decode($product_hIds[$i])[0]
+                ));
+            }
+        }
+
+
         $result = $this->SupplierService->create(
             $company_id,
             $code,
@@ -83,8 +97,9 @@ class SupplierController extends BaseController
             $taxable_enterprise,
             $request['tax_id'],
             $request['remarks'],
-            $request['status']
-            );
+            $request['status'],
+            $supplier_products
+        );
         return $result == 0 ? response()->error():response()->success();
     }
 
@@ -102,6 +117,22 @@ class SupplierController extends BaseController
         $taxable_enterprise = $request['taxable_enterprise'];
         $taxable_enterprise == 'on' ? $taxable_enterprise = 1 : $taxable_enterprise = 0;
 
+        $supplier_products = [];
+        if (empty($request['product_hId']) === false) {
+            $product_hIds = explode(',', $request['product_hId']);
+            $count_product = count($product_hIds);
+            for ($i = 0; $i < $count_product; $i++) {
+                $supplier_product_id = $request['supplier_product_hId'][$i] != null ? Hashids::decode($request['supplier_product_hId'][$i])[0] : null;
+                
+                array_push($supplier_products, array (
+                    'id' => $supplier_product_id,
+                    'company_id' => $company_id,
+                    'supplier_id' => null,
+                    'product_id' => Hashids::decode($product_hIds[$i])[0]
+                ));
+            }
+        }
+
         $result = $this->SupplierService->update(
             $id,
             $company_id,
@@ -115,6 +146,7 @@ class SupplierController extends BaseController
             $request['tax_id'],
             $request['remarks'],
             $request['status'],
+            $supplier_products
         );
         return $result == 0 ? response()->error():response()->success();
     }

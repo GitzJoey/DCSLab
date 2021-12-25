@@ -148,6 +148,11 @@ class Company extends Model
         return $this->hasMany(Supplier::class);
     }
 
+    public function suppliers_product()
+    {
+        return $this->hasMany(SupplierProduct::class);
+    }
+
     public static function boot()
     {
         parent::boot();

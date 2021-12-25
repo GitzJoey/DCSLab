@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
-
-use App\Models\Company;
-use App\Models\ProductGroup;
 use App\Models\Brand;
-use App\Models\ProductUnit;
+use App\Models\Company;
 use App\Models\Supplier;
 
-use Spatie\Activitylog\Traits\LogsActivity;
+use App\Models\ProductUnit;
+use App\Models\ProductGroup;
+use App\Models\SupplierProduct;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Config;
+
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -102,9 +104,24 @@ class Product extends Model
         return $this->belongsTo(Supplier::class);
     }
 
+    public function supplier_product()
+    {
+        return $this->belongsTo(SupplierProduct::class);
+    }
+
     public function getDefaultSupplierAttribute()
     {
         if ($this->supplier) return $this->supplier->hId;
         else return '';
+    }
+
+    public function scopeBySelectedCompany($query, $overrideCompanyId = '')
+    {
+        return $query->where('company_id', '=', empty($overrideCompanyId) ? Hashids::decode(session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY')))[0]:$overrideCompanyId);
+    }
+
+    public function scopeStatusActive($query, $overrideStatus = '')
+    {
+        return $query->where('status', '=', empty($overrideStatus) ? 1:$overrideStatus);
     }
 }
