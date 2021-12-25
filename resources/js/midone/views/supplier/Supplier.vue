@@ -225,6 +225,13 @@
                         <div class="mb-3">
                             <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>                            
                             <table class="table table--sm">
+                                <thead>
+                                    <tr>
+                                        <th>{{ t('views.supplier.fields.products.table.cols.selected') }}</th>
+                                        <th>{{ t('views.supplier.fields.products.table.cols.main_product') }}</th>
+                                        <th>{{ t('views.supplier.fields.products.table.cols.product_name') }}</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <tr v-for="(p, pIdx) in productLists">
                                         <td class="border-b dark:border-dark-5">

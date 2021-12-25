@@ -16,7 +16,6 @@ class CreateSuppliersTable extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->references('id')->on('companies');
-            $table->foreignId('user_id')->references('id')->on('users');
             $table->string('code');
             $table->string('name')->nullable();
             $table->string('address')->nullable();

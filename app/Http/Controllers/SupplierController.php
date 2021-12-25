@@ -38,7 +38,8 @@ class SupplierController extends BaseController
         $request = $supplierRequest->validated();
         
         $userId = Auth::id();
-        
+        $company_id = Hashids::decode($request['company_id'])[0];
+
         $code = $request['code'];
 
         $is_tax = array_key_exists('taxable_enterprise', $request);
@@ -73,6 +74,8 @@ class SupplierController extends BaseController
     public function update($id, SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
+        $company_id = Hashids::decode($request['company_id'])[0];
+
 
         $is_tax = array_key_exists('taxable_enterprise', $request);
 

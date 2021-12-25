@@ -31,6 +31,10 @@ class SupplierRequest extends FormRequest
 
         $nullableArr = [
             'address' => 'nullable',
+            'contact' => 'nullable',
+            'city' => 'nullable',
+            'tax_id' => 'nullable',
+            'remarks' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -40,7 +44,9 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'suppliers', companyId: $companyId)],
                     'name' => 'required|max:255',
-                    'status' => 'required'
+                    'status' => 'required',
+                    'payment_term_type' => 'required',
+                    'taxable_enterprise' => 'required',
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -48,7 +54,9 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => new uniqueCode(table: 'suppliers', companyId: $companyId, exceptId: $this->route('id')),
                     'name' => 'required|max:255',
-                    'status' => 'required'
+                    'status' => 'required',
+                    'payment_term_type' => 'required',
+                    'taxable_enterprise' => 'required',
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

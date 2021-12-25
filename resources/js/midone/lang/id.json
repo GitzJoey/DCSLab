@@ -281,7 +281,14 @@
                     "tax_id": "NPWP"
                 },
                 "products": {
-                    "product_lists": "Daftar Produk"
+                    "product_lists": "Daftar Produk",
+                    "table": {
+                        "cols": {
+                            "selected": "",
+                            "main_product": "Produk Utama",
+                            "product_name": "Nama Produk"
+                        }
+                    }
                 }
             }
         },

@@ -281,7 +281,14 @@
                     "tax_id": "Tax ID"
                 },
                 "products": {
-                    "product_lists": "Product Lists"
+                    "product_lists": "Product Lists",
+                    "table": {
+                        "cols": {
+                            "selected": "Selected",
+                            "main_product": "Main Product",
+                            "product_name": "Product Name"
+                        }
+                    }
                 }
             }
         },
