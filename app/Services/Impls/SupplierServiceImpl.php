@@ -136,7 +136,7 @@ class SupplierServiceImpl implements SupplierService
             $productIdsOld = $supplier->supplier_product()->pluck('id')->ToArray();
 
             $deletedSupplierProductIds = [];
-            $deletedSupplierProductIds = array_diff($productIdsOld, $productIds);            
+            $deletedSupplierProductIds = array_diff($productIdsOld, $productIds);
 
             foreach ($deletedSupplierProductIds as $deletedSupplierProductId) {
                 $supplierProduct = SupplierProduct::find($deletedSupplierProductId);

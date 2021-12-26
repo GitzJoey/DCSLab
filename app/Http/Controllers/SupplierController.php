@@ -17,7 +17,7 @@ class SupplierController extends BaseController
     private $SupplierService;
     private $activityLogService;
 
-    public function __construct(SupplierService $SupplierService,, ActivityLogService $activityLogService)
+    public function __construct(SupplierService $SupplierService, ActivityLogService $activityLogService)
     {
         parent::__construct();
 
@@ -119,16 +119,29 @@ class SupplierController extends BaseController
 
         $supplier_products = [];
         if (empty($request['product_hId']) === false) {
-            $product_hIds = explode(',', $request['product_hId']);
-            $count_product = count($product_hIds);
-            for ($i = 0; $i < $count_product; $i++) {
-                $supplier_product_id = $request['supplier_product_hId'][$i] != null ? Hashids::decode($request['supplier_product_hId'][$i])[0] : null;
-                
+            $supplier_product_hIds = $request['supplier_product_hId'];
+            $supplier_product_count = count($supplier_product_hIds);
+
+            $product_checked_hIds = explode(',', $request['product_hId']);
+            $product_checked_count = count($product_checked_hIds);
+            
+            for ($i = 0; $i < $product_checked_count; $i++) {
+
+                $supplier_product_id = null;
+                for ($x = 0; $x < $supplier_product_count; $x++) {
+                    $supplier_product_hId = $supplier_product_hIds[$x] != null ? explode(',', $supplier_product_hIds[$x])[0] : null;;
+                    $product_hId = $supplier_product_hIds[$x] != null ? explode(',', $supplier_product_hIds[$x])[1] : null;;
+
+                    if ($product_checked_hIds[$i] === $product_hId) {
+                        $supplier_product_id = Hashids::decode($supplier_product_hId)[0];
+                    }
+                }
+
                 array_push($supplier_products, array (
                     'id' => $supplier_product_id,
                     'company_id' => $company_id,
                     'supplier_id' => null,
-                    'product_id' => Hashids::decode($product_hIds[$i])[0]
+                    'product_id' => Hashids::decode($product_checked_hIds[$i])[0]
                 ));
             }
         }

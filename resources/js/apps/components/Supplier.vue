@@ -518,7 +518,7 @@ export default {
                 function(element) {
                     if (hId === element.product.hId) {
                         nCount = nCount + 1;
-                        supplier_product_hId = element.hId;
+                        supplier_product_hId = [element.hId, element.product.hId];
                     }
                 }
             );
