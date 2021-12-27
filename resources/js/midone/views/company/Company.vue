@@ -106,19 +106,19 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.company.actions.edit') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="companyForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors, validate }">
+            <VeeForm id="companyForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
                         <div class="flex item-centers">
-                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'create' && company.code === '[AUTO]'"/>
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'create' && company.code === '[AUTO]'"/>
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -133,10 +133,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
-                        <select class="form-control form-select" id="inputStatus" name="status" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                 </div>
@@ -158,9 +158,7 @@
 // Vue Import
 import { inject, onMounted, ref, computed } from 'vue'
 // Helper Import
-import { getLang } from '../../lang';
 import mainMixins from '../../mixins';
-import { helper } from '../../utils/helper';
 // Core Components Import
 import { useStore } from '../../store/index';
 // Components Import
@@ -272,6 +270,10 @@ function handleError(e, actions) {
 
 function invalidSubmit(e) {
     alertErrors.value = e.errors;
+}
+
+function reValidate(errors) {
+    alertErrors.value = errors;
 }
 
 function emptyCompany() {

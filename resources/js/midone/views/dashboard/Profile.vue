@@ -44,11 +44,11 @@
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
                         <div class="loader-container">
-                            <VeeForm id="profileForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                            <VeeForm id="profileForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                                 <div class="p-5">
                                     <div class="mb-3">
                                         <label class="form-label" for="name">{{ t('views.profile.fields.name') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" v-model="userContext.name"/>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" rules="required" v-model="userContext.name"/>
                                         <ErrorMessage name="name" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
@@ -96,12 +96,12 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" v-model="userContext.profile.tax_id"/>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" rules="required" v-model="userContext.profile.tax_id"/>
                                         <ErrorMessage name="tax_id" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" v-model="userContext.profile.ic_num"/>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" rules="required" v-model="userContext.profile.ic_num"/>
                                         <ErrorMessage name="ic_num" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
@@ -129,7 +129,7 @@
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
                         <div class="loader-container">
-                            <VeeForm id="profileSettingsForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_Settings" v-slot="{ handleReset, errors }">
+                            <VeeForm id="profileSettingsForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                                 <div class="p-5">
                                     <div class="mb-3">
                                         <label class="form-label" for="inputTheme">{{ t('views.profile.fields.settings.theme') }}</label>
@@ -205,21 +205,21 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <VeeForm id="changePasswordForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema_changePassword" v-slot="{ handleReset, errors }">
+                        <VeeForm id="changePasswordForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                             <div class="p-5">
                                 <div class="mb-3">
                                     <label class="form-label" for="current_pwd">{{ t('views.profile.fields.change_password.current_password') }}</label>
-                                    <VeeField id="current_pwd" v-bind="field" name="current_password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.current_password')"/>
+                                    <VeeField id="current_pwd" v-bind="field" name="current_password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.current_password')" rules="required"/>
                                     <ErrorMessage name="current_password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="new_pwd">{{ t('views.profile.fields.change_password.new_password') }}</label>
-                                    <VeeField id="new_pwd" name="password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.new_password')" />
+                                    <VeeField id="new_pwd" name="password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.new_password')" rules="required"/>
                                     <ErrorMessage name="password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="confirm_pwd">{{ t('views.profile.fields.change_password.confirm_password') }}</label>
-                                    <VeeField id="confirm_pwd" name="password_confirmation" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.confirm_password')" />
+                                    <VeeField id="confirm_pwd" name="password_confirmation" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.confirm_password')" rules="required"/>
                                     <ErrorMessage name="password_confirmation" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                             </div>
@@ -249,21 +249,6 @@ import { useStore } from "../../store";
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
 // Vee-Validate Schema
-const schema = {
-    name: 'required',
-    tax_id: 'required',
-    ic_num: 'required',
-};
-
-const schema_Settings = {
-
-};
-
-const schema_changePassword = {
-    current_password: 'required',
-    password: 'required',
-    password_confirmation: 'required',
-};
 
 // Declarations
 const store = useStore();

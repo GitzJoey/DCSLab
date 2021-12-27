@@ -10,6 +10,10 @@ use App\Models\Supplier;
 use App\Models\SupplierProduct;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Config;
+use App\Services\UserService;
+use App\Services\RoleService;
 
 class SupplierTableSeeder extends Seeder
 {
@@ -21,6 +25,10 @@ class SupplierTableSeeder extends Seeder
     public function run($supplierPerCompany = 10)
     {
         $companies = Company::get()->pluck('id');
+
+        $instances = Container::getInstance();
+        $setting = $instances->make(UserService::class)->createDefaultSetting();
+        $roles = $instances->make(RoleService::class)->readBy('NAME', Config::get('const.DEFAULT.ROLE.USER'));
 
         foreach($companies as $c)
         {
@@ -34,6 +42,9 @@ class SupplierTableSeeder extends Seeder
     
                 $usr->companies()->attach($c);
     
+                $usr->attachRoles([$roles->id]);
+                $usr->settings()->saveMany($setting);
+
                 $supplier = Supplier::factory()->create([
                     'company_id' => $c,
                     'user_id' => $usr->id

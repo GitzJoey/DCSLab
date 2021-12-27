@@ -81,16 +81,16 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.users.actions.show') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="userForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+            <VeeForm id="userForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.users.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" rules="required" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" @blur="reValidate(errors)" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">{{ t('views.users.fields.email') }}</label>
-                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" @blur="reValidate(errors)" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
                         <ErrorMessage name="email" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -126,38 +126,35 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputCountry" class="form-label">{{ t('views.users.fields.country') }}</label>
-                        <select id="inputCountry" name="country" class="form-control form-select" v-model="user.profile.country" :placeholder="t('views.users.fields.country')" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="user.profile.country" rules="required" :placeholder="t('views.users.fields.country')" :label="t('views.users.fields.country')" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="country" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputTaxId" class="form-label">{{ t('views.users.fields.tax_id') }}</label>
-                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" rules="required" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" @blur="reValidate(errors)" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
                         <ErrorMessage name="tax_id" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputICNum" class="form-label">{{ t('views.users.fields.ic_num') }}</label>
-                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" rules="required" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" @blur="reValidate(errors)" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
                         <ErrorMessage name="ic_num" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputRoles" class="form-label">{{ t('views.users.fields.roles') }}</label>
-                        <select multiple :class="{'form-control':true, 'border-theme-21':errors['roles']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" multiple :class="{'form-control':true, 'border-theme-21':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" rules="required" :label="t('views.users.fields.roles')" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
                             <option v-for="(value, name) in rolesDDL" :value="name">{{ value }}</option>
-                        </select>
-                        <div class="" v-if="mode === 'show'">
-                            <span v-for="r in user.roles">{{ r.display_name }}&nbsp;</span>
-                        </div>
-                        <ErrorMessage name="roles" class="text-theme-21" />
+                        </VeeField>
+                        <ErrorMessage name="roles[]" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.users.fields.status') }}</label>
-                        <select class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" rules="required" :label="t('views.users.fields.status')" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -260,12 +257,6 @@ import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
 // Vee-Validate Schema
-const schema = {
-    name: 'required',
-    email: 'required|email',
-    tax_id: 'required',
-    ic_num: 'required',
-};
 
 // Mixins
 const { t, route } = mainMixins();
@@ -385,6 +376,10 @@ function handleError(e, actions) {
 
 function invalidSubmit(e) {
     alertErrors.value = e.errors;
+}
+
+function reValidate(errors) {
+    alertErrors.value = errors;
 }
 
 function emptyUser() {
