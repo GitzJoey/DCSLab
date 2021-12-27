@@ -65,43 +65,43 @@
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.product.actions.show') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="productForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+            <VeeForm id="productForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.product.fields.code')" :label="t('views.product.fields.code')" v-model="product.code" v-show="mode === 'create' || mode === 'edit'" :readonly="product.code === '[AUTO]'"/>
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.product.fields.code')" :label="t('views.product.fields.code')" rules="required" @blur="reValidate(errors)" v-model="product.code" v-show="mode === 'create' || mode === 'edit'" :readonly="product.code === '[AUTO]'"/>
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
-                        <select id="product_group_id" name="product_group_id" :class="{'form-control form-select':true, 'border-theme-21': errors['product_group_id']}" :label="t('views.product.fields.product_group_id')" v-model="product.product_group.hId" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" id="product_group_id" name="product_group_id" :class="{'form-control form-select':true, 'border-theme-21': errors['product_group_id']}" :label="t('views.product.fields.product_group_id')" rules="required" @blur="reValidate(errors)" v-model="product.product_group.hId" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="g.hId" v-for="g in productGroupDDL" v-bind:key="g.hId">{{ g.code }} - {{ g.name }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="product_group_id" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="brand_id">{{ t('views.product.fields.brand_id') }}</label>
-                        <select id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-theme-21': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-theme-21': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" rules="required" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="b.hId" v-for="b in brandDDL" v-bind:key="b.hId">{{ b.code }} - {{ b.name }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="brand_id" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.product.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" v-model="product.name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product.name" v-show="mode === 'create' || mode === 'edit'"/>
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
-                        <select id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-theme-21': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-theme-21': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" rules="required" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ t(pt.name) }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="product_type" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -117,19 +117,21 @@
                         <div class="grid grid-cols-9 gap-2 mb-2" v-for="(pu, puIdx) in product.product_units">
                             <div class="col-span-2">
                                 <div class="flex items-center">
-                                    <input type="text" class="form-control" v-model="pu.code" id="product_units_code" name="product_units_code[]" :readonly="mode === 'create' && pu.code === '[AUTO]'"/>
+                                    <VeeField as="input" class="form-control" v-model="pu.code" id="product_units_code" :name="'product_units_code[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.code') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" :readonly="mode === 'create' && pu.code === '[AUTO]'"/>
                                     <button type="button" class="btn btn-secondary mx-1" @click="generateCodeUnit(puIdx)" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                                 </div>
+                                <ErrorMessage :name="'product_units_code[' + puIdx + ']'" class="text-theme-21" />
                             </div>
                             <div class="col-span-2">
-                                <select class="form-control form-select" id="unit_id" name="unit_id[]" v-model="pu.unit.hId">
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['unit_id[' + puIdx + ']']}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
-                                </select>
+                                </VeeField>
+                                <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-theme-21" />
                             </div>
                             <div class="col-span-2">
-                                <input type="text" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" name="conv_value[]" :readonly="pu.is_base"/>
-                                <ErrorMessage :name="'conv_value.' + puIdx" class="text-theme-21"/>
+                                <VeeField as="input" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required|numeric" :readonly="pu.is_base"/>
+                                <ErrorMessage :name="'conv_value[' + puIdx + ']'" class="text-theme-21"/>
                             </div>
                             <div class="flex items-center justify-center">
                                 <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" true-value="1" false-value="0" @click="changeIsBase(puIdx)"> 
@@ -147,7 +149,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
-                        <VeeField id="inputPoint" name="point" as="input" :class="{'form-control':true, 'border-theme-21': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" v-model="product.point" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputPoint" name="point" as="input" :class="{'form-control':true, 'border-theme-21': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric" v-model="product.point" v-show="mode === 'create' || mode === 'edit'"/>
                         <ErrorMessage name="point" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -170,10 +172,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.product.fields.status') }}</label>
-                        <select id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="product.status" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="input" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="product.status" rules="required" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
                             <option value='1'>{{ t('components.dropdown.values.statusDDL.active') }}</option>
                             <option value='0'>{{ t('components.dropdown.values.statusDDL.inactive') }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -207,11 +209,6 @@ import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
 // Vee-Validate Schema
-const schema = {
-    code: 'required',
-    name: 'required',
-    point: 'required'
-};
 
 // Declarations
 const store = useStore();

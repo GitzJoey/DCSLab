@@ -14,6 +14,7 @@ import {
     max_value as maxVal,
     not_one_of as excluded,
     confirmed,
+    numeric,
 } from "@vee-validate/rules";
 
 import { localize, setLocale } from '@vee-validate/i18n';
@@ -45,5 +46,6 @@ export default {
         defineRule("excluded", excluded);
         defineRule("country_excluded", excluded);
         defineRule("password_mismatch", confirmed);
+        defineRule("numeric", numeric);
     },
 };
