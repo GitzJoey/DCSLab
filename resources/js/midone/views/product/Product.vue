@@ -62,7 +62,6 @@
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.product.actions.create') }}</h2>
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.product.actions.edit') }}</h2>
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'show'">{{ t('views.product.actions.show') }}</h2>
         </div>
         <div class="loader-container">
             <VeeForm id="productForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
@@ -172,7 +171,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.product.fields.status') }}</label>
-                        <VeeField as="input" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="product.status" rules="required" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="product.status" rules="required" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
                             <option value='1'>{{ t('components.dropdown.values.statusDDL.active') }}</option>
                             <option value='0'>{{ t('components.dropdown.values.statusDDL.inactive') }}</option>
                         </VeeField>
@@ -370,6 +369,10 @@ function invalidSubmit(e) {
     alertErrors.value = e.errors;
 }
 
+function reValidate(errors) {
+    alertErrors.value = errors;
+}
+
 function emptyProduct() {
     return {
         code: '[AUTO]',
@@ -457,7 +460,6 @@ function confirmDelete() {
 }
 
 function showSelected(index) {
-    mode.value = 'show';
     product.value = productList.value.data[index];
 }
 

@@ -125,14 +125,14 @@
                     <br/>
                     <br/>
                 </template>
-                <back-to-top :visible="!dashboardLayout"/>
+                <back-to-top :visible="!dashboardLayout && showBackToTop"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { computed, provide, onMounted, ref, watch } from 'vue';
+import { computed, provide, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '../../store/index';
 import { switchLang, getLang } from '../../lang';
@@ -161,6 +161,7 @@ export default {
         const store = useStore();
 
         const dashboardLayout = ref(true);
+        const showBackToTop = ref(false);
         const formattedMenu = ref([]);
 
         const menuContext = computed(() => store.state.sideMenu.menu );
@@ -172,6 +173,8 @@ export default {
         provide('setDashboardLayout', newVal => {
             dashboardLayout.value = newVal
         });
+
+        window.addEventListener('scroll', handleScroll);
 
         onMounted(() => {
             cash('body')
@@ -185,6 +188,10 @@ export default {
 
             localeSetup();
             goToLastRoute();
+        });
+
+        onUnmounted(() => {
+            window.removeEventListener('scroll', handleScroll);
         });
 
         function localeSetup() {
@@ -211,6 +218,14 @@ export default {
             }
         }
 
+        function handleScroll() {
+            if (window.scrollY > 100) {
+                showBackToTop.value = true;
+            } else {
+                showBackToTop.value = false;
+            }
+        }
+
         watch(
             computed(() => route.path),() => {
                 formattedMenu.value = nestedMenu($h.toRaw(menuContext.value), route);
@@ -232,6 +247,7 @@ export default {
             leave,
             menuMode,
             switchMenu,
+            showBackToTop,
         }
     }
 }

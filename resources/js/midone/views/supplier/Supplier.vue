@@ -168,7 +168,6 @@
                         <div class="mb-3">
                             <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
                             <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" v-show="mode === 'create' || mode === 'edit'"/>
-                            <div class="" v-if="mode === 'show'">{{ supplier.city }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
