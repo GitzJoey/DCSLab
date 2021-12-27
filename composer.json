@@ -41,7 +41,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Tests\\Feature\\Service\\": "tests/Feature/Service/",
+            "Tests\\Feature\\API\\": "tests/Feature/API/"
         }
     },
     "scripts": {
