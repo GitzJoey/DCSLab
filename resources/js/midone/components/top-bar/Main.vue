@@ -91,7 +91,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <a data-dismiss="modal" href="javascript:;">
-                    <XIcon class="w-8 h-8 text-white"/>
+                    <XIcon class="w-8 h-8 text-white" />
                 </a>
 
                 <div class="modal-header">

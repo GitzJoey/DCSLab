@@ -111,29 +111,29 @@
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
                         <div class="flex item-centers">
-                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'create' && company.code === '[AUTO]'"/>
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" :readonly="mode === 'create' && company.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
                         <div class="mt-2">
-                            <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default" v-show="mode === 'create' || mode === 'edit'" true-value="1" false-value="0">
+                            <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default" true-value="1" false-value="0">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
-                        <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>

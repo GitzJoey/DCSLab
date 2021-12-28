@@ -8,7 +8,7 @@
         <div class="container">
             <div class="flex flex-col md:grid grid-cols-9 mx-auto p-2 text-blue-50">
                 <template v-if="isEmptyObject(activity)">
-                    <LoadingIcon icon="puff" class="w-5 h-5"/>
+                    <LoadingIcon icon="puff" class="w-5 h-5" />
                 </template>
                 <template v-for="(a, aIdx) in activity" v-if="!isEmptyObject(activity)">
                     <template v-if="a.pos === 'left'">
@@ -28,8 +28,8 @@
                                 </div>
                                 <div class="bg-white w-10 h-10 absolute top-1/2 -mt-3 rounded-full shadow"></div>
                                 <div class="w-10 h-10 absolute top-1/2 -mt-3 text-center">
-                                    <RefreshCwIcon class="m-2" v-if="a.log_name === 'RoutingActivity'"/>
-                                    <KeyIcon class="m-2" v-if="a.log_name === 'AuthActivity'"/>
+                                    <RefreshCwIcon class="m-2" v-if="a.log_name === 'RoutingActivity'" />
+                                    <KeyIcon class="m-2" v-if="a.log_name === 'AuthActivity'" />
                                 </div>
                             </div>
                         </div>
@@ -42,8 +42,8 @@
                                 </div>
                                 <div class="bg-white w-10 h-10 absolute top-1/2 -mt-3 rounded-full shadow"></div>
                                 <div class="w-10 h-10 absolute top-1/2 -mt-3 text-center">
-                                    <RefreshCwIcon class="m-2" v-if="a.log_name === 'RoutingActivity'"/>
-                                    <KeyIcon class="m-2" v-if="a.log_name === 'AuthActivity'"/>
+                                    <RefreshCwIcon class="m-2" v-if="a.log_name === 'RoutingActivity'" />
+                                    <KeyIcon class="m-2" v-if="a.log_name === 'AuthActivity'" />
                                 </div>
                             </div>
                             <div class="box col-start-6 col-end-10 p-4 rounded-xl my-4 mr-auto shadow-md">

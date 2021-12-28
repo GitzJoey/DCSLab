@@ -125,7 +125,7 @@
                     <br/>
                     <br/>
                 </template>
-                <back-to-top :visible="!dashboardLayout && showBackToTop"/>
+                <back-to-top :visible="!dashboardLayout && showBackToTop" />
             </div>
         </div>
     </div>

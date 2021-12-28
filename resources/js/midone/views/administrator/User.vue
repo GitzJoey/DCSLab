@@ -84,12 +84,12 @@
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.users.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" rules="required" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" @blur="reValidate(errors)" v-model="user.name" v-show="mode === 'create' || mode === 'edit'" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" rules="required|alpha_spaces" :placeholder="t('views.users.fields.name')" :label="t('views.users.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">{{ t('views.users.fields.email') }}</label>
-                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" @blur="reValidate(errors)" v-model="user.email" v-show="mode === 'create' || mode === 'edit'" :readonly="mode === 'edit'"/>
+                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.users.fields.email')" :label="t('views.users.fields.email')" @blur="reValidate(errors)" v-model="user.email" :readonly="mode === 'edit'" />
                         <ErrorMessage name="email" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -99,33 +99,33 @@
                                 <img id="inputImg" alt="" class="" :src="retrieveImage">
                             </div>
                             <div class="">
-                                <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload"/>
+                                <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload" />
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="inputFirstName" class="form-label">{{ t('views.users.fields.first_name') }}</label>
-                        <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.users.fields.first_name')" v-model="user.profile.first_name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputFirstName" name="first_name" type="text" class="form-control" :placeholder="t('views.users.fields.first_name')" v-model="user.profile.first_name" />
                     </div>
                     <div class="mb-3">
                         <label for="inputLastName" class="form-label">{{ t('views.users.fields.last_name') }}</label>
-                        <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.users.fields.last_name')" v-model="user.profile.last_name" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputLastName" name="last_name" type="text" class="form-control" :placeholder="t('views.users.fields.last_name')" v-model="user.profile.last_name" />
                     </div>
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.users.fields.address') }}</label>
-                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.users.fields.address')" v-model="user.profile.address" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.users.fields.address')" v-model="user.profile.address" />
                     </div>
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.users.fields.city') }}</label>
-                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.users.fields.city')" v-model="user.profile.city" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.users.fields.city')" v-model="user.profile.city" />
                     </div>
                     <div class="mb-3">
                         <label for="inputPostalCode" class="form-label">{{ t('views.users.fields.postal_code') }}</label>
-                        <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.users.fields.postal_code')" v-model="user.profile.postal_code" v-show="mode === 'create' || mode === 'edit'"/>
+                        <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.users.fields.postal_code')" v-model="user.profile.postal_code" />
                     </div>
                     <div class="mb-3">
                         <label for="inputCountry" class="form-label">{{ t('views.users.fields.country') }}</label>
-                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="user.profile.country" rules="required" :placeholder="t('views.users.fields.country')" :label="t('views.users.fields.country')" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="user.profile.country" rules="required" :placeholder="t('views.users.fields.country')" :label="t('views.users.fields.country')" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
                         </VeeField>
@@ -133,24 +133,24 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputTaxId" class="form-label">{{ t('views.users.fields.tax_id') }}</label>
-                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" rules="required" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" @blur="reValidate(errors)" v-model="user.profile.tax_id" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" rules="required" :placeholder="t('views.users.fields.tax_id')" :label="t('views.users.fields.tax_id')" @blur="reValidate(errors)" v-model="user.profile.tax_id" />
                         <ErrorMessage name="tax_id" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputICNum" class="form-label">{{ t('views.users.fields.ic_num') }}</label>
-                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" rules="required" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" @blur="reValidate(errors)" v-model="user.profile.ic_num" v-show="mode === 'create' || mode === 'edit'"/>
+                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" rules="required" :placeholder="t('views.users.fields.ic_num')" :label="t('views.users.fields.ic_num')" @blur="reValidate(errors)" v-model="user.profile.ic_num" />
                         <ErrorMessage name="ic_num" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputRoles" class="form-label">{{ t('views.users.fields.roles') }}</label>
-                        <VeeField as="select" multiple :class="{'form-control':true, 'border-theme-21':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" rules="required" :label="t('views.users.fields.roles')" @blur="reValidate(errors)" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" multiple :class="{'form-control':true, 'border-theme-21':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" rules="required" :label="t('views.users.fields.roles')" @blur="reValidate(errors)">
                             <option v-for="(value, name) in rolesDDL" :value="name">{{ value }}</option>
                         </VeeField>
                         <ErrorMessage name="roles[]" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.users.fields.status') }}</label>
-                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" rules="required" :label="t('views.users.fields.status')" v-show="mode === 'create' || mode === 'edit'">
+                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="user.profile.status" rules="required" :label="t('views.users.fields.status')">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
@@ -158,9 +158,9 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.users.fields.remarks') }}</label>
-                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.users.fields.remarks')" v-model="user.profile.remarks" v-show="mode === 'create' || mode === 'edit'" rows="3"></textarea>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.users.fields.remarks')" v-model="user.profile.remarks" rows="3"></textarea>
                     </div>
-                    <hr class="mb-3"/>
+                    <hr class="mb-3" />
                     <div class="mb-3">
                         <label for="inputSettings" class="form-label">{{ t('views.users.fields.settings.settings') }}</label>
                         <div class="mb-3">

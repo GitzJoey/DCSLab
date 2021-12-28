@@ -4,7 +4,7 @@
             {{ t('views.profile.title') }}
         </h2>
     </div>
-    <AlertPlaceholder :messages="alertErrors" :alertType="alertType" :title="alertTitle"/>
+    <AlertPlaceholder :messages="alertErrors" :alertType="alertType" :title="alertTitle" />
     <div class="grid grid-cols-12 gap-6 mt-5">
         <div class="col-span-12 lg:col-span-3 2xl:col-span-3 flex lg:block flex-col-reverse">
             <div class="intro-y box mt-5 lg:mt-0">
@@ -48,7 +48,7 @@
                                 <div class="p-5">
                                     <div class="mb-3">
                                         <label class="form-label" for="name">{{ t('views.profile.fields.name') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" rules="required" v-model="userContext.name"/>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" rules="required" v-model="userContext.name" />
                                         <ErrorMessage name="name" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
@@ -66,47 +66,47 @@
                                         <div class="form-inline">                                            
                                             <div class="flex-1">
                                                 <img alt="" class="my-1" :src="retrieveImage">
-                                                <input type="file" class="h-full w-full" id="inputImg" name="img_path" data-toggle="custom-file-input" v-on:change="handleUpload"/>
+                                                <input type="file" class="h-full w-full" id="inputImg" name="img_path" data-toggle="custom-file-input" v-on:change="handleUpload" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="firstName">{{ t('views.profile.fields.first_name') }}</label>
-                                        <input type="text" class="form-control" id="firstName" name="first_name" v-model="userContext.profile.first_name"/>
+                                        <input type="text" class="form-control" id="firstName" name="first_name" v-model="userContext.profile.first_name" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="lastName">{{ t('views.profile.fields.last_name') }}</label>
-                                        <input type="text" class="form-control" id="lastName" name="last_name" v-model="userContext.profile.last_name"/>
+                                        <input type="text" class="form-control" id="lastName" name="last_name" v-model="userContext.profile.last_name" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="address">{{ t('views.profile.fields.address') }}</label>
-                                        <input type="text" class="form-control" id="address" name="address" v-model="userContext.profile.address"/>
+                                        <input type="text" class="form-control" id="address" name="address" v-model="userContext.profile.address" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="city">{{ t('views.profile.fields.city') }}</label>
-                                        <input type="text" class="form-control" id="city" name="city" v-model="userContext.profile.city"/>
+                                        <input type="text" class="form-control" id="city" name="city" v-model="userContext.profile.city" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="postal_code">{{ t('views.profile.fields.postal_code') }}</label>
-                                        <input type="text" class="form-control" id="postal_code" name="postal_code" v-model="userContext.profile.postal_code"/>
+                                        <input type="text" class="form-control" id="postal_code" name="postal_code" v-model="userContext.profile.postal_code" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="country">{{ t('views.profile.fields.country') }}</label>
-                                        <input type="text" class="form-control" id="country" name="country" readonly v-model="userContext.profile.country"/>
+                                        <input type="text" class="form-control" id="country" name="country" readonly v-model="userContext.profile.country" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" rules="required" v-model="userContext.profile.tax_id"/>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" rules="required" v-model="userContext.profile.tax_id" />
                                         <ErrorMessage name="tax_id" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
-                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" rules="required" v-model="userContext.profile.ic_num"/>
+                                        <VeeField as="input" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" rules="required" v-model="userContext.profile.ic_num" />
                                         <ErrorMessage name="ic_num" class="text-theme-21" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="remarks">{{ t('views.profile.fields.remarks') }}</label>
-                                        <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks"/>
+                                        <textarea type="text" rows="3" class="form-control" id="remarks" name="remarks" v-model="userContext.profile.remarks" />
                                     </div>
                                 </div>
                                 <div class="pl-5">
@@ -209,17 +209,17 @@
                             <div class="p-5">
                                 <div class="mb-3">
                                     <label class="form-label" for="current_pwd">{{ t('views.profile.fields.change_password.current_password') }}</label>
-                                    <VeeField id="current_pwd" v-bind="field" name="current_password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.current_password')" rules="required"/>
+                                    <VeeField id="current_pwd" v-bind="field" name="current_password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.current_password')" rules="required" />
                                     <ErrorMessage name="current_password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="new_pwd">{{ t('views.profile.fields.change_password.new_password') }}</label>
-                                    <VeeField id="new_pwd" name="password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.new_password')" rules="required"/>
+                                    <VeeField id="new_pwd" name="password" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.new_password')" rules="required" />
                                     <ErrorMessage name="password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="confirm_pwd">{{ t('views.profile.fields.change_password.confirm_password') }}</label>
-                                    <VeeField id="confirm_pwd" name="password_confirmation" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.confirm_password')" rules="required"/>
+                                    <VeeField id="confirm_pwd" name="password_confirmation" as="input" type="password" class="form-control" :label="t('views.profile.fields.change_password.confirm_password')" rules="required" />
                                     <ErrorMessage name="password_confirmation" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                             </div>
