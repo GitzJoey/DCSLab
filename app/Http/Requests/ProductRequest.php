@@ -31,7 +31,6 @@ class ProductRequest extends FormRequest
         $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
 
         $nullableArr = [
-            '' => 'nullable',
             'remarks' => 'nullable',
             'unit_id.*' => 'nullable',
             'is_base.*' => 'nullable',
@@ -56,7 +55,7 @@ class ProductRequest extends FormRequest
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
                     'conv_value.*' => 'numeric',
-                    'product_units_code.*' => [],
+                    'product_units_code.*' => '',
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -70,7 +69,7 @@ class ProductRequest extends FormRequest
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
                     'conv_value.*' => 'numeric',
-                    'product_units_code.*' => [],
+                    'product_units_code.*' => 'distinct',
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
