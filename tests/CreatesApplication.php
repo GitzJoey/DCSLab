@@ -26,7 +26,10 @@ trait CreatesApplication
                 '--env' => 'testing',
                 '--path' => 'database/migrations/testdb',
                 '--seed' => true
-            ]);    
+            ]);
+
+            Artisan::call('db:seed', ['--class' => 'UserTableSeeder']);
+            Artisan::call('db:seed', ['--class' => 'CompanyTableSeeder']);
         }
 
         return $app;

@@ -59,7 +59,9 @@ class uniqueCode implements Rule
                 $is_duplicate = $this->supplierService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;
             case 'products':
-                $is_duplicate = $this->productService->isUniqueCode($value, $this->companyId, $this->exceptId);
+                $is_duplicate = $this->productService->isUniqueCodeForProduct($value, $this->companyId, $this->exceptId);
+            case 'product_units':
+                $is_duplicate = $this->productService->isUniqueCodeForProductUnits($value, $this->companyId, $this->exceptId);
             default:
                 break;
         }

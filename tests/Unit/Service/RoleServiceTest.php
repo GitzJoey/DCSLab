@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Service;
+namespace Tests\Unit\Service;
 
 use App\Services\RoleService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,11 +18,6 @@ class RoleServiceTest extends TestCase
         $this->service = app(RoleService::class);
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_call_read_with_empty_array_param()
     {
         $response = $this->service->read([]);

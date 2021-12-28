@@ -23,7 +23,7 @@ class UserTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($truncate = false, $count = 19)
+    public function run($truncate = false, $count = 4)
     {
         if ($truncate) $this->truncateUsersTables();
 

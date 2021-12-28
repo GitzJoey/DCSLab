@@ -24,20 +24,20 @@ class ProductServiceImpl implements ProductService
         bool $taxable_supplies,
         int $rate_supplies,
         bool $price_include_vat,
-        string $remarks,
+        ?string $remarks = null,
         int $point,
         bool $use_serial_number,
         bool $has_expiry_date,
         string $product_type,
         string $status,
         array $product_units
-    ): Product
+    ): ?Product
     {
         DB::beginTransaction();
 
         try {
             if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
+                $code = $this->generateUniqueCodeForProduct($company_id);
             }
 
             $product = new Product();
@@ -60,10 +60,15 @@ class ProductServiceImpl implements ProductService
 
             $pu = [];
             foreach ($product_units as $product_unit) {
+                $code = $product_unit['code'];
+                if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
+                    $code = $this->generateUniqueCodeForProductUnits($company_id);
+                }
+    
                 array_push($pu, new ProductUnit(array (
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $product['id'],
-                    'code' => $product_unit['code'],
+                    'code' => $code,
                     'unit_id' => $product_unit['unit_id'],
                     'conversion_value' => $product_unit['conv_value'],
                     'is_base' => $product_unit['is_base'],
@@ -72,7 +77,8 @@ class ProductServiceImpl implements ProductService
                 )));
             }
 
-            $product->productUnit()->saveMany($pu);
+            if (!empty($pu))
+                $product->productUnits()->saveMany($pu);
 
             DB::commit();
 
@@ -130,7 +136,7 @@ class ProductServiceImpl implements ProductService
         bool $taxable_supplies,
         int $rate_supplies,
         bool $price_include_vat,
-        string $remarks,
+        ?string $remarks = null,
         int $point,
         bool $use_serial_number,
         bool $has_expiry_date,
@@ -145,7 +151,7 @@ class ProductServiceImpl implements ProductService
             $product = Product::find($id);
 
             if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
+                $code = $this->generateUniqueCodeForProduct($company_id);
             }
 
             $product->update([
@@ -167,11 +173,16 @@ class ProductServiceImpl implements ProductService
 
             $pu = [];
             foreach ($product_units as $product_unit) {
+                $code = $product_unit['code'];
+                if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
+                    $code = $this->generateUniqueCodeForProductUnits($company_id);
+                }
+
                 array_push($pu, array(
                     'id' => $product_unit['id'],
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $id,
-                    'code' => $product_unit['code'],
+                    'code' => $code,
                     'unit_id' => $product_unit['unit_id'],
                     'conversion_value' => $product_unit['conv_value'],
                     'is_base' => $product_unit['is_base'],
@@ -223,20 +234,41 @@ class ProductServiceImpl implements ProductService
         return $product->delete();
     }
 
-    public function generateUniqueCode(int $companyId): string
+    public function generateUniqueCodeForProduct(int $companyId): string
     {
         $rand = new RandomGenerator();
         
         do {
             $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCode($code, $companyId));
+        } while (!$this->isUniqueCodeForProduct($code, $companyId));
 
         return $code;
     }
 
-    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
+    public function generateUniqueCodeForProductUnits(int $companyId): string
+    {
+        $rand = new RandomGenerator();
+        
+        do {
+            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        } while (!$this->isUniqueCodeForProductUnits($code, $companyId));
+
+        return $code;
+    }
+
+    public function isUniqueCodeForProduct(string $code, int $companyId, ?int $exceptId = null): bool
     {
         $result = Product::whereCompanyId($companyId)->where('code', '=' , $code);
+
+        if($exceptId)
+            $result = $result->where('id', '<>', $exceptId);
+
+        return $result->count() == 0 ? true:false;
+    }
+
+    public function isUniqueCodeForProductUnits(string $code, int $companyId, ?int $exceptId = null): bool
+    {
+        $result = ProductUnit::whereCompanyId($companyId)->where('code', '=' , $code);
 
         if($exceptId)
             $result = $result->where('id', '<>', $exceptId);

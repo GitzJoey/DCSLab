@@ -11,8 +11,8 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
-        <testsuite name="Feature - Service Layer">
-            <directory suffix="ServiceTest.php">./tests/Feature/Service</directory>
+        <testsuite name="Unit - Service Layer">
+            <directory suffix="ServiceTest.php">./tests/Unit/Service</directory>
         </testsuite>
         <testsuite name="Feature - APIs">
             <directory suffix="APITest.php">./tests/Feature/API</directory>

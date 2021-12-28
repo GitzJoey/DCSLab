@@ -21,7 +21,7 @@ class RoleFactory extends Factory
      */
     public function definition()
     {
-        $text = str_replace(' ', '_', $this->faker->jobTitle());
+        $text = str_replace(' ', '-', $this->faker->jobTitle());
         return [
             'name' => strtolower($text),
             'display_name' => $text,

@@ -124,7 +124,7 @@
                             <div class="col-span-2">
                                 <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['unit_id[' + puIdx + ']']}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                    <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
+                                    <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.description }}</option>
                                 </VeeField>
                                 <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-theme-21" />
                             </div>
@@ -148,7 +148,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
-                        <VeeField id="inputPoint" name="point" as="input" :class="{'form-control':true, 'border-theme-21': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric" v-model="product.point" />
+                        <VeeField id="inputPoint" name="point" as="input" :class="{'form-control':true, 'border-theme-21': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric|max_value:1000" v-model="product.point" />
                         <ErrorMessage name="point" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -460,7 +460,7 @@ function confirmDelete() {
 }
 
 function showSelected(index) {
-    product.value = productList.value.data[index];
+    toggleDetail(index);
 }
 
 function backToList() {

@@ -15,7 +15,7 @@ interface ProductService
         bool $taxable_supplies,
         int $rate_supplies,
         bool $price_include_vat,
-        string $remarks,
+        ?string $remarks = null,
         int $point,
         bool $use_serial_number,
         bool $has_expiry_date,
@@ -43,7 +43,7 @@ interface ProductService
         bool $taxable_supplies,
         int $rate_supplies,
         bool $price_include_vat,
-        string $remarks,
+        ?string $remarks = null,
         int $point,
         bool $use_serial_number,
         bool $has_expiry_date,
@@ -54,7 +54,11 @@ interface ProductService
 
     public function delete(int $id): bool;
 
-    public function generateUniqueCode(int $companyId): string;
+    public function generateUniqueCodeForProduct(int $companyId): string;
 
-    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;
+    public function generateUniqueCodeForProductUnits(int $companyId): string;
+
+    public function isUniqueCodeForProduct(string $code, int $companyId, ?int $exceptId = null): bool;
+
+    public function isUniqueCodeForProductUnits(string $code, int $companyId, ?int $exceptId = null): bool;
 }

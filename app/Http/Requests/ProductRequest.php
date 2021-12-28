@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\uniqueCode;
+use App\Rules\uniqueProductUnitCode;
 use App\Rules\validDropDownValue;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,6 @@ class ProductRequest extends FormRequest
             '' => 'nullable',
             'remarks' => 'nullable',
             'unit_id.*' => 'nullable',
-            'product_units_code.*' => 'nullable',
             'is_base.*' => 'nullable',
             'is_primary_unit.*' => 'nullable',
             'use_serial_number' => 'nullable',
@@ -55,7 +55,8 @@ class ProductRequest extends FormRequest
                     'point' => 'required|numeric',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
-                    'conv_value.*' => 'numeric'
+                    'conv_value.*' => 'numeric',
+                    'product_units_code.*' => [],
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -68,7 +69,8 @@ class ProductRequest extends FormRequest
                     'point' => 'required|numeric',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
-                    'conv_value.*' => 'numeric'
+                    'conv_value.*' => 'numeric',
+                    'product_units_code.*' => [],
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
