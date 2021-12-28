@@ -19,7 +19,7 @@ class SupplierTableSeeder extends Seeder
         $companies = Company::get()->pluck('id');
 
         foreach($companies as $company) {
-            for($i = 0; $i < 10000; $i++)
+            for($i = 0; $i < 5; $i++)
             {
                 $supplier = Supplier::factory()->make([
                     'company_id' => $company,

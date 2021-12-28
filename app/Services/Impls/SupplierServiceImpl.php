@@ -3,12 +3,14 @@
 namespace App\Services\Impls;
 
 use Exception;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\SupplierProduct;
 
 use App\Services\SupplierService;
-use App\Models\Supplier;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -23,7 +25,8 @@ class SupplierServiceImpl implements SupplierService
         $taxable_enterprise,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $supplier_products
     )
     {
         DB::beginTransaction();
@@ -41,8 +44,19 @@ class SupplierServiceImpl implements SupplierService
             $supplier->tax_id = $tax_id;
             $supplier->remarks = $remarks;
             $supplier->status = $status;
-
             $supplier->save();
+
+            if (empty($supplier_products) === false) {
+                $products = [];
+                foreach ($supplier_products as $supplier_product) {
+                    array_push($products, new SupplierProduct(array (
+                        'company_id' => $company_id,
+                        'supplier_id' => $supplier->id,
+                        'product_id' => $supplier_product['product_id']
+                    )));
+                }
+                $supplier->supplier_product()->saveMany($products);
+            }
 
             DB::commit();
 
@@ -55,14 +69,16 @@ class SupplierServiceImpl implements SupplierService
 
     }
 
-    public function read($userId)
+    public function read()
     {
-        return Supplier::with('company')->bySelectedCompany()->paginate();
+        return Supplier::with('company', 'supplier_product.product.productGroup', 'supplier_product.product.brand')
+            ->bySelectedCompany()
+            ->paginate();
     }
 
     public function getAllSupplier()
     {
-        return Supplier::get();
+        return Supplier::bySelectedCompany()->get();
     }
 
     public function update(
@@ -77,7 +93,8 @@ class SupplierServiceImpl implements SupplierService
         $taxable_enterprise,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $supplier_products
     )
     {
         DB::beginTransaction();
@@ -98,6 +115,45 @@ class SupplierServiceImpl implements SupplierService
                 'remarks' => $remarks,
                 'status' => $status
             ]);
+
+            $products = [];
+            foreach ($supplier_products as $supplier_product) {
+                array_push($products, array(
+                    'id' => $supplier_product['id'],
+                    'company_id' => $company_id,
+                    'supplier_id' => $id,
+                    'product_id' => $supplier_product['product_id']
+                ));
+            }
+
+            $productIds = [];
+            foreach ($products as $product)
+            {
+                array_push($productIds, $product['id']);
+            }
+
+            $supplier = Supplier::find($id);
+            $productIdsOld = $supplier->supplier_product()->pluck('id')->ToArray();
+
+            $deletedSupplierProductIds = [];
+            $deletedSupplierProductIds = array_diff($productIdsOld, $productIds);
+
+            foreach ($deletedSupplierProductIds as $deletedSupplierProductId) {
+                $supplierProduct = SupplierProduct::find($deletedSupplierProductId);
+                $retval = $supplierProduct->delete();
+            }
+
+            if (empty($products) === false) {
+                $retval = SupplierProduct::upsert(
+                    $products, 
+                    [
+                        'id'
+                    ], 
+                    [
+                        'product_id'
+                    ]
+                );
+            }
 
             DB::commit();
 

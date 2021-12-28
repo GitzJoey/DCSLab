@@ -15,10 +15,11 @@ interface SupplierService
         $taxable_enterprise,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $supplier_products
     );
 
-    public function read($userId);
+    public function read();
 
     public function getAllSupplier();
 
@@ -34,7 +35,8 @@ interface SupplierService
         $taxable_enterprise,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $supplier_products
     );
 
     public function delete($id);

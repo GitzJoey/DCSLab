@@ -2,10 +2,18 @@
     <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
         <div class="block-header bg-gray-dark">
             <h3 class="block-title" v-if="this.mode === 'list'"><strong>{{ $t('table.title') }}</strong></h3>
-            <h3 class="block-title" v-if="this.mode === 'create'"><strong>{{ $t('actions.create') }}</strong></h3>
-            <h3 class="block-title" v-if="this.mode === 'edit'"><strong>{{ $t('actions.edit') }}</strong></h3>
-            <h3 class="block-title" v-if="this.mode === 'show'"><strong>{{ $t('actions.show') }}</strong></h3>
+
+            <h3 class="block-title" v-if="this.mode === 'create_input'"><strong>{{ $t('actions.create') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'create_products'"><strong>{{ $t('actions.create') }}</strong></h3>
+
+            <h3 class="block-title" v-if="this.mode === 'edit_input'"><strong>{{ $t('actions.edit') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'edit_products'"><strong>{{ $t('actions.edit') }}</strong></h3>
+            
+            <h3 class="block-title" v-if="this.mode === 'show_input'"><strong>{{ $t('actions.show') }}</strong></h3>
+            <h3 class="block-title" v-if="this.mode === 'show_products'"><strong>{{ $t('actions.show') }}</strong></h3>
+
             <h3 class="block-title" v-if="this.mode === 'error'"><strong>&nbsp;</strong></h3>
+
             <div class="block-options">
                 <button type="button" class="btn-block-option" v-on:click="toggleFullScreen">
                     <i class="icon icon-size-actual" v-if="this.fullscreen === true"></i>
@@ -20,6 +28,7 @@
                 </button>
             </div>
         </div>
+
         <div class="block-content">
             <transition name="fade">
                 <div id="error" v-if="this.mode === 'error'">
@@ -34,6 +43,7 @@
                     </div>
                 </div>
             </transition>
+
             <transition name="fade">
                 <div id="list" v-if="this.mode === 'list'">
                     <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
@@ -45,6 +55,7 @@
                             <li v-for="e in this.tableListErrors">{{ e }}</li>
                         </ul>
                     </div>
+
                     <div class="alert alert-warning alert-dismissable" role="alert" v-if="this.tableListErrors.length !== 0">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="resetTableListErrors">
                             <span aria-hidden="true">&times;</span>
@@ -54,6 +65,7 @@
                             <li v-for="e in this.tableListErrors">{{ e }}</li>
                         </ul>
                     </div>
+
                     <table class="table table-vcenter">
                         <thead class="thead-light">
                             <tr>
@@ -118,118 +130,198 @@
                     </nav>
                 </div>
             </transition>
+
             <transition name="fade">
                 <div id="crud" v-if="this.mode !== 'list' && this.mode !== 'error'">
-                    <Form id="supplierForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
-                        <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
-                            <ul>
-                                <li v-for="e in errors">{{ e }}</li>
-                            </ul>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="supplier.code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="code" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.code }}</div>
+                    <div class="form-group row">
+                        <div class="col-lg-3">
+                            <div class="list-group push">
+                                <a :class="{'list-group-item list-group-item-action d-flex justify-content-between align-items-center':true, 'active':this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'}" @click="toggleTabs">
+                                    Supplier
+                                </a>
+                                <a :class="{'list-group-item list-group-item-action d-flex justify-content-between align-items-center':true, 'active':this.mode === 'create_products' || this.mode === 'edit_products' || this.mode === 'show_products'}" @click="toggleTabs">
+                                    Products
+                                </a>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="supplier.name" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <ErrorMessage name="name" class="invalid-feedback" />
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.name }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputPaymentTermType" class="col-2 col-form-label">{{ $t('fields.payment_term_type') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputPaymentTermType" name="payment_term_type" as="input" :class="{'form-control':true, 'is-invalid': errors['payment_term_type']}" :placeholder="$t('fields.payment_term_type')" :label="$t('fields.payment_term_type')" v-model="supplier.payment_term_type" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.code }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputContact" name="contact" as="input" :class="{'form-control':true, 'is-invalid': errors['contact']}" :placeholder="$t('fields.contact')" :label="$t('fields.contact')" v-model="supplier.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.contact }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputAddress" name="address" as="input" :class="{'form-control':true, 'is-invalid': errors['address']}" :placeholder="$t('fields.address')" :label="$t('fields.address')" v-model="supplier.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.address }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputCity" name="city" as="input" :class="{'form-control':true, 'is-invalid': errors['city']}" :placeholder="$t('fields.city')" :label="$t('fields.city')" v-model="supplier.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.city }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputTaxable_Enterprise" class="col-2 col-form-label">{{ $t('fields.taxable_enterprise') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">                              
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="taxable_enterprise" name="taxable_enterprise" v-model="supplier.taxable_enterprise" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="supplier.taxable_enterprise === 1">{{ $t('taxable_enterprise.active') }}</span>
-                                        <span v-if="supplier.taxable_enterprise === 0">{{ $t('taxable_enterprise.inactive') }}</span>
+
+                        <div class="col-lg-9">
+                            <transition name="fade">
+                                <Form id="supplierForm" @submit="onSubmit" :validation-schema="schema" v-slot="{ handleReset, errors }">
+                                    <div class="alert alert-warning alert-dismissable" role="alert" v-if="Object.keys(errors).length !== 0">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click="handleReset">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h3 class="alert-heading font-size-h5 font-w700 mb-5"><i class="fa fa-warning"></i>&nbsp;{{ $t('errors.warning') }}</h3>
+                                        <ul>
+                                            <li v-for="e in errors">{{ e }}</li>
+                                        </ul>
                                     </div>
-                                </label>
-                            </div>
-                        </div> 
-                        <div class="form-group row">
-                            <label for="inputTax_Id" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputTax_Id" name="tax_id" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_id']}" :placeholder="$t('fields.tax_id')" :label="$t('fields.tax_id')" v-model="supplier.tax_id" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ supplier.tax_id }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
-                            <div class="col-md-10">
-                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="supplier.remarks" v-if="this.mode === 'create' || this.mode === 'edit'" rows="3"></textarea>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ supplier.remarks }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
-                                <div>
-                                    <select class="form-control" id="inputStatus" name="status" v-model="supplier.status" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <option value="1">{{ $t('statusDDL.active') }}</option>
-                                        <option value="0">{{ $t('statusDDL.inactive') }}</option>
-                                    </select>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="supplier.status === 1">{{ $t('statusDDL.active') }}</span>
-                                        <span v-if="supplier.status === 0">{{ $t('statusDDL.inactive') }}</span>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputCode" class="col-2 col-form-label">{{ $t('fields.code') }}</label>
+                                        <div class="col-md-10">
+                                            <Field id="inputCode" name="code" as="input" :class="{'form-control':true, 'is-invalid': errors['code']}" :placeholder="$t('fields.code')" :label="$t('fields.code')" v-model="supplier.code" v-show="this.mode === 'create_input' || this.mode === 'edit_input'"/>
+                                            <ErrorMessage name="code" class="invalid-feedback" />
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show_input'">{{ supplier.code }}</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputName" class="col-2 col-form-label">{{ $t('fields.name') }}</label>
+                                        <div class="col-md-10">
+                                            <Field id="inputName" name="name" as="input" :class="{'form-control':true, 'is-invalid': errors['name']}" :placeholder="$t('fields.name')" :label="$t('fields.name')" v-model="supplier.name" v-show="this.mode === 'create_input' || this.mode === 'edit_input'"/>
+                                            <ErrorMessage name="name" class="invalid-feedback" />
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show_input'">{{ supplier.name }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputPaymentTermType" class="col-2 col-form-label">{{ $t('fields.payment_term_type') }}</label>
+                                        <div class="col-md-10">
+                                            <Field id="inputPaymentTermType" name="payment_term_type" as="input" :class="{'form-control':true, 'is-invalid': errors['payment_term_type']}" :placeholder="$t('fields.payment_term_type')" :label="$t('fields.payment_term_type')" v-model="supplier.payment_term_type" v-show="this.mode === 'create_input' || this.mode === 'edit_input'"/>
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show_input'">{{ supplier.code }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
+                                        <div class="col-md-10">
+                                            <Field id="inputContact" name="contact" as="input" :class="{'form-control':true, 'is-invalid': errors['contact']}" :placeholder="$t('fields.contact')" :label="$t('fields.contact')" v-model="supplier.contact" v-show="this.mode === 'create_input' || this.mode === 'edit_input'"/>
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show_input'">{{ supplier.contact }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
+                                        <div class="col-md-10">
+                                            <Field id="inputAddress" name="address" as="input" :class="{'form-control':true, 'is-invalid': errors['address']}" :placeholder="$t('fields.address')" :label="$t('fields.address')" v-model="supplier.address" v-show="this.mode === 'create_input' || this.mode === 'edit_input'"/>
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show_input'">{{ supplier.address }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
+                                        <div class="col-md-10">
+                                            <Field id="inputCity" name="city" as="input" :class="{'form-control':true, 'is-invalid': errors['city']}" :placeholder="$t('fields.city')" :label="$t('fields.city')" v-model="supplier.city" v-show="this.mode === 'create_input' || this.mode === 'edit_input'"/>
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show_input'">{{ supplier.city }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputTaxable_Enterprise" class="col-2 col-form-label">{{ $t('fields.taxable_enterprise') }}</label>
+                                        <div class="col-md-10 d-flex align-items-center">
+                                            <label class="css-control css-control-primary css-checkbox">                              
+                                                <span v-show="this.mode === 'create_input' || this.mode === 'edit_input'">
+                                                    <input type="checkbox" class="css-control-input" id="taxable_enterprise" name="taxable_enterprise" v-model="supplier.taxable_enterprise" true-value="1" false-value="0">
+                                                    <span class="css-control-indicator"></span>
+                                                </span>
+                                                <div class="form-control-plaintext" v-show="this.mode === 'show_input'">
+                                                    <span v-if="supplier.taxable_enterprise === 1">{{ $t('taxable_enterprise.active') }}</span>
+                                                    <span v-if="supplier.taxable_enterprise === 0">{{ $t('taxable_enterprise.inactive') }}</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div> 
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputTax_Id" class="col-2 col-form-label">{{ $t('fields.tax_id') }}</label>
+                                        <div class="col-md-10">
+                                            <Field id="inputTax_Id" name="tax_id" as="input" :class="{'form-control':true, 'is-invalid': errors['tax_id']}" :placeholder="$t('fields.tax_id')" :label="$t('fields.tax_id')" v-model="supplier.tax_id" v-show="this.mode === 'create_input' || this.mode === 'edit_input'"/>
+                                            <div class="form-control-plaintext" v-show="this.mode === 'show_input'">{{ supplier.tax_id }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
+                                        <div class="col-md-10">
+                                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="$t('fields.remarks')" v-model="supplier.remarks" v-if="this.mode === 'create_input' || this.mode === 'edit_input'" rows="3"></textarea>
+                                            <div class="form-control-plaintext" v-if="this.mode === 'show_input'">{{ supplier.remarks }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_input' || this.mode === 'edit_input' || this.mode === 'show_input'">
+                                        <label for="inputStatus" class="col-2 col-form-label">{{ $t('fields.status') }}</label>
+                                        <div class="col-md-10 d-flex align-items-center">
+                                            <div>
+                                                <select class="form-control" id="inputStatus" name="status" v-model="supplier.status" v-show="this.mode === 'create_input' || this.mode === 'edit_input'">
+                                                    <option value="1">{{ $t('statusDDL.active') }}</option>
+                                                    <option value="0">{{ $t('statusDDL.inactive') }}</option>
+                                                </select>
+                                                <div class="form-control-plaintext" v-show="this.mode === 'show_input'">
+                                                    <span v-if="supplier.status === 1">{{ $t('statusDDL.active') }}</span>
+                                                    <span v-if="supplier.status === 0">{{ $t('statusDDL.inactive') }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" v-show="this.mode === 'create_products' || this.mode === 'edit_products' || this.mode === 'show_products'">
+                                        <div class="col">
+                                            <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
+                                                <div class="block-content">
+                                                    <table class="table table-vcenter">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>Group</th>
+                                                                <th>Brand</th>
+                                                                <th>Name</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr v-for="(c, cIdx) in productList">
+                                                                <input type="hidden" :value="supplier_product_hId(c.hId)" name="supplier_product_hId[]"/>
+
+                                                                <td>
+                                                                    <label class="css-control css-control-primary css-checkbox">
+                                                                        <input type="checkbox" class="css-control-input" id="product_hId" :checked="checked(c.hId)" @change="getChecked(c.hId)" :disabled="this.disableObject"/>
+                                                                        <span class="css-control-indicator"></span>
+                                                                    </label>
+
+                                                                    <input type="hidden" name="product_hId" v-model="productChecked"/>
+                                                                </td>
+
+                                                                <td>
+                                                                    <div class="form-control-plaintext">
+                                                                        {{ c.product_group.name }}
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-control-plaintext">
+                                                                        {{ c.brand.name }}
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-control-plaintext">
+                                                                        {{ c.name }}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="form-group row">    
+                                        <div class="col">
+                                            <div v-if="this.mode === 'create_input' || this.mode === 'create_products' || this.mode === 'edit_input' || this.mode === 'edit_products'">
+                                                <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
+                                                <button type="submit" class="btn btn-primary min-width-125 float-right ml-2" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Form>
+                            </transition>
                         </div>
-                        <div class="form-group row">    
-                            <div class="col">
-                                <div v-if="this.mode === 'create' || this.mode === 'edit'">
-                                    <button type="button" class="btn btn-secondary min-width-125 float-right ml-2" data-toggle="click-ripple" v-on:click="handleReset">{{ $t("buttons.reset") }}</button>
-                                    <button type="submit" class="btn btn-primary min-width-125 float-right ml-2" data-toggle="click-ripple">{{ $t("buttons.submit") }}</button>&nbsp;&nbsp;&nbsp;
-                                </div>
-                            </div>
-                        </div>
-                    </Form>
+                    </div>
                 </div>
             </transition>
         </div>
+
         <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm">
             <div v-if="this.mode === 'list'">
                 <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNew"><i class="fa fa-plus-square"></i></button>
@@ -278,6 +370,7 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
+            disableObject: false,
             supplierList: [],
             supplier: {
                 code: 'AUTO',
@@ -290,7 +383,15 @@ export default {
                 tax_id: '',
                 remarks: '',
                 status: '1',
+                supplier_product: [
+                    {
+                        hId: '',
+                        product: {hId: ''}
+                    }
+                ]
             },
+            productList: [],
+            productChecked: [],
             listErrors: [],
             tableListErrors: [],
         }
@@ -301,6 +402,7 @@ export default {
     mounted() {
         this.mode = 'list';
         this.getAllSupplier(1);
+        this.getAllProduct();
     },
     methods: {
         getAllSupplier(page) {
@@ -326,7 +428,7 @@ export default {
             return {
                 code: 'AUTO',
                 name: '',
-                payment_term_type: '',
+                payment_term_type: '0',
                 contact: '',
                 address: '',
                 city: '',
@@ -334,19 +436,50 @@ export default {
                 tax_id: '',
                 remarks: '',
                 status: '1',
+                supplier_product: [
+                    {
+                        hId: '',
+                        product: {hId: ''}
+                    }
+                ],
             }
         },
+        getAllProduct() {
+            this.loading = true;
+            axios.get(route('api.get.dashboard.product.read.product.all')).then(response => {
+                this.productList = response.data;
+                this.loading = false;
+            }).catch(e => {
+                this.handleListError(e);
+                this.loading = false;
+            });
+        },
         createNew() {
-            this.mode = 'create';
+            this.mode = 'create_input';
             this.supplier = this.emptySupplier();
+
+            this.productChecked = [];
+            this.disableObject = false;
         },
         editSelected(idx) {
-            this.mode = 'edit';
+            this.mode = 'edit_input';
             this.supplier = this.supplierList.data[idx];
+
+            this.productChecked = [];
+
+            var data = this.supplier.supplier_product;
+            var length = data.length;
+            for (var i = 0; i < length; i++) {
+                this.productChecked.push(data[i].product.hId);
+            }
+            
+            this.disableObject = false;
         },
         showSelected(idx) {
-            this.mode = 'show';
+            this.mode = 'show_input';
             this.supplier = this.supplierList.data[idx];
+
+            this.disableObject = true;
         },
         deleteSelected(idx) {
             this.mode = 'delete';
@@ -362,14 +495,14 @@ export default {
         },
         onSubmit(values, actions) {
             this.loading = true;
-            if (this.mode === 'create') {
+            if (this.mode === 'create_input' || this.mode === 'create_products') {
                 axios.post(route('api.post.dashboard.supplier.save'), new FormData($('#supplierForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
                     this.handleError(e, actions);
                     this.loading = false;
                 });
-            } else if (this.mode === 'edit') {
+            } else if (this.mode === 'edit_input' || this.mode === 'edit_products') {
                 axios.post(route('api.post.dashboard.supplier.edit', this.supplier.hId), new FormData($('#supplierForm')[0])).then(response => {
                     this.backToList();
                 }).catch(e => {
@@ -377,6 +510,48 @@ export default {
                     this.loading = false;
                 });
             } else { }
+        },
+        supplier_product_hId(hId) {
+            var nCount = 0;
+            var supplier_product_hId = "";
+            this.supplier.supplier_product.filter(
+                function(element) {
+                    if (hId === element.product.hId) {
+                        nCount = nCount + 1;
+                        supplier_product_hId = [element.hId, element.product.hId];
+                    }
+                }
+            );
+
+            if (nCount > 0) {
+                return supplier_product_hId;
+            } else {
+                return '';
+            }
+        },
+        checked(hId) {
+            var nCount = 0;
+            this.supplier.supplier_product.filter(
+                function(element) {
+                    if (hId === element.product.hId) {
+                        nCount = nCount + 1;
+                    }
+                }
+            );
+
+            if (nCount > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        getChecked(hId) {
+            var index = this.productChecked.indexOf(hId);
+            if (index !== -1) {
+                this.productChecked.splice(index, 1);
+            } else {
+                this.productChecked.push(hId);
+            }
         },
         handleError(e, actions) {
             //Laravel Validations
@@ -418,6 +593,29 @@ export default {
                 this.supplier.profile.img_path = fileReader.result
             })
             fileReader.readAsDataURL(files[0])
+        },
+        toggleTabs() {
+            if (this.mode === '') {
+                this.mode = 'list';
+            }
+
+            if (this.mode === 'create_input') {
+                this.mode = 'create_products';
+            } else if (this.mode === 'create_products') {
+                this.mode = 'create_input';
+            }
+
+            if (this.mode === 'edit_input') {
+                this.mode = 'edit_products';
+            } else if (this.mode === 'edit_products') {
+                this.mode = 'edit_input';
+            }
+
+            if (this.mode === 'show_input') {
+                this.mode = 'show_products';
+            } else if (this.mode === 'show_products') {
+                this.mode = 'show_input';
+            }
         },
         backToList() {
             this.mode = 'list';
