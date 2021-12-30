@@ -56,6 +56,7 @@
         "vue-i18n": "^9.1.5",
         "vue-loader": "^16.2.0",
         "vue-router": "^4.0.6",
+        "vue3-datepicker": "^0.3.1",
         "vuex": "^4.0.0",
         "zoom-vanilla.js": "^2.0.6"
     }

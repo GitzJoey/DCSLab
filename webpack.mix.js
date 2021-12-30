@@ -1,6 +1,6 @@
 const mix = require('laravel-mix');
 const webpack = require('webpack')
-const tailwindcss = require("tailwindcss");
+//const tailwindcss = require("tailwindcss");
 const path = require('path');
 
 mix.disableNotifications();
@@ -23,7 +23,7 @@ mix
     .copy('node_modules/simplebar/dist/simplebar.esm.js.map', 'public/js/codebase')
     .version()
 ;
-
+/*
 mix
     .copy('resources/css/midone/', 'public/css/midone/')
     .webpackConfig({
@@ -41,7 +41,7 @@ mix
     .js('resources/js/midone/app.js','public/js/midone/main.js')
     .version()
 ;
-
+*/
 mix
     .webpackConfig({
         plugins: [

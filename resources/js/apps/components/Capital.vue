@@ -128,6 +128,12 @@
                             </ul>
                         </div>
                         <div class="form-group row">
+                            <label for="inputDate" class="col-2 col-form-label"></label>
+                            <div class="col-md-10">
+                                <DatePicker v-model="dt" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="inputRefNumber" class="col-2 col-form-label">{{ $t('fields.ref_number') }}</label>
                             <div class="col-md-10">
                                 <Field id="inputRefNumber" name="ref_number" as="input" :class="{'form-control':true, 'is-invalid': errors['ref_number']}" :placeholder="$t('fields.ref_number')" :label="$t('fields.ref_number')" v-model="capital.ref_number" v-show="this.mode === 'create' || this.mode === 'edit'"/>
@@ -232,6 +238,8 @@ import en from '@vee-validate/i18n/dist/locale/en.json';
 import id from '@vee-validate/i18n/dist/locale/id.json';
 import { find } from 'lodash';
 
+import DatePicker from 'vue3-datepicker';
+
 configure({
     validateOnInput: true,
     generateMessage: localize({ en, id }),
@@ -243,7 +251,7 @@ defineRule('required', required);
 
 export default {
     components: {
-        Form, Field, ErrorMessage
+        Form, Field, ErrorMessage, DatePicker
     },
     setup() {
         const schema = {
@@ -280,6 +288,7 @@ export default {
             capital_statusDDL: [],
             listErrors: [],
             tableListErrors: [],
+            dt: new Date(),
         }
     },
     created() {
