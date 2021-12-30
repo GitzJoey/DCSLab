@@ -152,7 +152,7 @@
                 "email_verified": "Email Verified"
             }
         },
-        "users": {
+        "user": {
             "page_title": "Users",
             "table": {
                 "title": "User Lists",

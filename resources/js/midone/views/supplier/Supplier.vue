@@ -172,7 +172,7 @@
                         <div class="mb-3">
                             <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
                             <div class="mt-2">
-                                <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch" name="taxable_enterprise" v-model="supplier.taxable_enterprise" true-value="1" false-value="0">
+                                <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch" name="taxable_enterprise" v-model="supplier.taxable_enterprise" :true-value="1" :false-value="0">
                             </div>
                         </div>
                         <div class="mb-3">

@@ -39,7 +39,9 @@ class ProductRequest extends FormRequest
             'taxable_supplies' => 'nullable',
             'rate_supplies' => 'nullable',
             'price_include_vat' => 'nullable',
-            'has_expiry_date' => 'nullable'
+            'has_expiry_date' => 'nullable',
+            'product_group_id' => 'nullable',
+            'product_unit_hId' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -49,13 +51,12 @@ class ProductRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'products', companyId: $companyId)],
                     'name' => 'required|min:3|max:255',
-                    'product_group_id' => 'required',
                     'brand_id' => 'required',
-                    'point' => 'required|numeric',
+                    'point' => 'required|numeric|min:0',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
-                    'conv_value.*' => 'numeric',
-                    'product_units_code.*' => '',
+                    'conv_value.*' => 'numeric|min:1',
+                    'product_units_code.*' => 'array',
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -63,13 +64,12 @@ class ProductRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'products', companyId: $companyId, exceptId: $this->route('id'))],
                     'name' => 'required|min:3|max:255',
-                    'product_group_id' => 'required',
                     'brand_id' => 'required',
-                    'point' => 'required|numeric',
+                    'point' => 'required|numeric|min:0',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
-                    'conv_value.*' => 'numeric',
-                    'product_units_code.*' => 'distinct',
+                    'conv_value.*' => 'numeric|min:1',
+                    'product_units_code.*' => 'array',
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

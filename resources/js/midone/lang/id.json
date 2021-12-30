@@ -152,7 +152,7 @@
                 "email_verified": "Email terverifikasi"
             }
         },
-        "users": {
+        "user": {
             "page_title": "Pengguna",
             "table": {
                 "title": "Daftar Pengguna",

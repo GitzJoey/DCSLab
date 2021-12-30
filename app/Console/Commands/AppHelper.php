@@ -121,7 +121,7 @@ class AppHelper extends Command
 
         if ($user)
         {
-            $this->info('Starting UserSeeder');
+            $this->info('Starting UserTableSeeder');
             $truncate = $unattended_mode ? false : $this->confirm('Do you want to truncate the users table first?', false);
             $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
 
@@ -130,14 +130,14 @@ class AppHelper extends Command
             $seeder = new UserTableSeeder();
             $seeder->callWith(UserTableSeeder::class, [$truncate, $count]);
 
-            $this->info('UserSeeder Finish.');
+            $this->info('UserTableSeeder Finish.');
         }
 
         sleep(3);
 
         if ($roles)
         {
-            $this->info('Starting RoleSeeder');
+            $this->info('Starting RoleTableSeeder');
             $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
 
             $this->info('Seeding...');
@@ -145,7 +145,7 @@ class AppHelper extends Command
             $seeder = new RoleTableSeeder();
             $seeder->callWith(RoleTableSeeder::class, [true, $count]);
 
-            $this->info('RoleSeeder Finish.');
+            $this->info('RoleTableSeeder Finish.');
         }
 
         sleep(3);

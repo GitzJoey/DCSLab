@@ -39,6 +39,7 @@ class ProductTableSeeder extends Seeder
                 $prod->save();
 
                 $units = Unit::whereCompanyId($c)->get();
+                $shuffled_units = $units->shuffle();
 
                 $howmanyUnitsPerProduct = (new RandomGenerator())->generateNumber(1, $units->count());
 
@@ -46,11 +47,12 @@ class ProductTableSeeder extends Seeder
                 $isPrimaryUnitIndex = (new RandomGenerator())->generateNumber(0, $howmanyUnitsPerProduct - 1);
 
                 for($j = 0; $j < $howmanyUnitsPerProduct; $j++) {
-                    $rUnitId = Unit::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
+                    $rUnitId = $shuffled_units[$j]->id;
 
                     $pu = new ProductUnit();
 
                     $pu->company_id = $c;
+                    $pu->code = (new RandomGenerator())->generateFixedLengthNumber(5);
                     $pu->product_id = $prod->id;
                     $pu->unit_id = $rUnitId;
                     $pu->is_base = $j == $isbaseIndex ? 1:0;
