@@ -7,5 +7,7 @@ return [
     'tax_id' => 'No NPWP',
     'ic_num' => 'KTP',
     'status' => 'Status',
-    'country' => 'Negara'
+    'country' => 'Negara',
+    'company' => 'Perusahaan',
+    'conv_value' => 'Nilai Tukar',
 ];

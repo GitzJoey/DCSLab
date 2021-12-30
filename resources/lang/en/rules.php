@@ -2,7 +2,8 @@
 
 return [
     'unique_code' => 'The Code has already been taken',
-    'valid_dropdown' => 'Invalid Value',
+    'valid_dropdown' => 'Invalid value',
+    'valid_company' => 'Invalid company value',
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
     'company' => [

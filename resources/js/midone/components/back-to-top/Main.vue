@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { provide, toRef } from "vue";
+import { toRef } from "vue";
 
 const props = defineProps({
     visible: {type: Boolean, default: false},
@@ -18,8 +18,4 @@ const visible = toRef(props, 'visible');
 function goTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-provide('triggerBackToTop', () => {
-    goTop();
-});
 </script>

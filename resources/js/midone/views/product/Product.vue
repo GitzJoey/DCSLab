@@ -201,21 +201,24 @@
                             <div class="col-span-2">
                                 <input type="hidden" :name="'product_units_hId[' + puIdx + ']'" v-model="pu.hId" />
                                 <div class="flex items-center">
-                                    <VeeField as="input" class="form-control" v-model="pu.code" id="product_units_code" :name="'product_units_code[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.code') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" :readonly="mode === 'create' && pu.code === '[AUTO]'" />
+                                    <VeeField as="input" :class="{'form-control': true, 'border-theme-21':errors['product_units_code[' + puIdx + ']']|errors['product_units_code.' + puIdx]}" v-model="pu.code" id="product_units_code" :name="'product_units_code[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.code') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" :readonly="mode === 'create' && pu.code === '[AUTO]'" />
                                     <button type="button" class="btn btn-secondary mx-1" @click="generateCodeUnit(puIdx)" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                                 </div>
                                 <ErrorMessage :name="'product_units_code[' + puIdx + ']'" class="text-theme-21" />
+                                <ErrorMessage :name="'product_units_code.' + puIdx" class="text-theme-21" />
                             </div>
                             <div class="col-span-2">
-                                <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['unit_id[' + puIdx + ']']}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['unit_id[' + puIdx + ']']|errors['unit_id.' + puIdx]}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.description }}</option>
                                 </VeeField>
                                 <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-theme-21" />
+                                <ErrorMessage :name="'unit_id.' + puIdx" class="text-theme-21" />
                             </div>
                             <div class="col-span-2">
-                                <VeeField as="input" class="form-control text-right" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
-                                <ErrorMessage :name="'conv_value[' + puIdx + ']'" class="text-theme-21" />
+                                <VeeField as="input" :class="{'form-control text-right':true, 'border-theme-21':errors['conv_value[' + puIdx +']']|errors['conv_value.' + puIdx]}" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
+                                <ErrorMessage :name="'conv_value[' + puIdx +']'" class="text-theme-21" />
+                                <ErrorMessage :name="'conv_value.' + puIdx" class="text-theme-21" />
                             </div>
                             <div class="flex items-center justify-center">
                                 <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" :true-value="1" :false-value="0" @click="changeIsBase(puIdx)"> 
@@ -341,11 +344,12 @@ const brandDDL = ref([]);
 const unitDDL = ref([]);
 const productTypeDDL = ref([]);
 
+
 // onMounted
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
     setDashboardLayout(false);
-
+  
     if (selectedUserCompany.value !== '') {
         getAllProducts({ page: 1 });
         getDDLSync();
@@ -418,6 +422,7 @@ function onSubmit(values, actions) {
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
+            triggerBackToTop();
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
@@ -427,6 +432,7 @@ function onSubmit(values, actions) {
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
+            triggerBackToTop();
             loading.value = false;
         });
     } else { }
@@ -579,14 +585,23 @@ function changeIsBase(idx) {
             if (i === idx) {
                 product.value.product_units[i].conversion_value = 1;
             }
+            product.value.product_units[i].is_base = 0;
         }
+    } else {
+
     }
 }
 
 function changeIsPrimary(idx) {
-    for (let i = 0; i < product.value.product_units.length; i++) {
-        if (i === idx) continue;
-        product.value.product_units[i].is_primary_unit = 0;
+    let checked_state = product.value.product_units[idx].is_primary_unit === 1 ? true:false;
+
+    if (!checked_state) {
+        for (let i = 0; i < product.value.product_units.length; i++) {
+            if (i === idx) continue;
+            product.value.product_units[i].is_primary_unit = 0;
+        }
+    } else {
+        
     }
 }
 

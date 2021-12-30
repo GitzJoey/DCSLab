@@ -9,4 +9,5 @@ return [
     'status' => 'Status',
     'country' => 'Country',
     'company' => 'Company',
+    'conv_value' => 'Conversion Value',
 ];

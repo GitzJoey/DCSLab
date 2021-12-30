@@ -42,6 +42,7 @@ class ProductRequest extends FormRequest
             'has_expiry_date' => 'nullable',
             'product_group_id' => 'nullable',
             'product_unit_hId' => 'nullable',
+            'product_units_code.*' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -56,7 +57,6 @@ class ProductRequest extends FormRequest
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
                     'conv_value.*' => 'numeric|min:1',
-                    'product_units_code.*' => 'array',
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -69,7 +69,6 @@ class ProductRequest extends FormRequest
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'product_type' => [new validDropDownValue('PRODUCT_TYPE')],
                     'conv_value.*' => 'numeric|min:1',
-                    'product_units_code.*' => 'array',
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -83,6 +82,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.company'),
+            'conv_value.*' => trans('validation_attributes.conv_value'),
         ];
     }
 }
