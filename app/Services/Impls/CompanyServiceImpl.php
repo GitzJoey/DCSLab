@@ -2,13 +2,14 @@
 
 namespace App\Services\Impls;
 
-use App\Actions\RandomGenerator;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+use App\Actions\RandomGenerator;
 use App\Services\CompanyService;
+
 use App\Models\User;
 use App\Models\Company;
 

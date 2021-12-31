@@ -262,7 +262,6 @@ import { useStore } from '../../store/index';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
-import axios from 'axios';
 
 // Vee-Validate Schema
 

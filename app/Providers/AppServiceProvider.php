@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use App\Services\DashboardService;
 use App\Services\UserService;
 use App\Services\RoleService;
 use App\Services\InboxService;
@@ -18,6 +19,7 @@ use App\Services\ProductGroupService;
 use App\Services\UnitService;
 /* Ext */
 
+use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
 use App\Services\Impls\InboxServiceImpl;
@@ -43,6 +45,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(SystemService::class, function (){
             return new SystemServiceImpl();
+        });
+
+        $this->app->singleton(DashboardService::class, function (){
+            return new DashboardServiceImpl();
         });
 
         $this->app->singleton(RoleService::class, function (){

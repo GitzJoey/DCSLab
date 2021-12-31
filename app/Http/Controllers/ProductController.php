@@ -7,7 +7,6 @@ use App\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
-use Illuminate\Support\Facades\Config;
 
 class ProductController extends BaseController
 {
@@ -62,7 +61,7 @@ class ProductController extends BaseController
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
-        $product_group_id = Hashids::decode($request['product_group_id'])[0];
+        $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
 
@@ -124,7 +123,7 @@ class ProductController extends BaseController
 
         $code = $request['code'];
         $company_id = Hashids::decode($request['$company_id'])[0];
-        $product_group_id = Hashids::decode($request['product_group_id'])[0];
+        $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
         $taxable_supplies = $request['taxable_supplies'];

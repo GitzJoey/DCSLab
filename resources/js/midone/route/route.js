@@ -12,6 +12,7 @@ import Company from '../views/company/Company.vue';
 import Supplier from '../views/supplier/Supplier.vue';
 import Product from '../views/product/Product.vue';
 import Service from '../views/product/Service.vue';
+import PurchaseOrder from '../views/purchase_order/PurchaseOrder.vue';
 /* Ext */
 
 import AdminUser from "../views/administrator/User";
@@ -91,6 +92,18 @@ const routes = [
                 path: root + '/product' + '/service',
                 name: 'side-menu-product-service',
                 component: Service,
+                meta: { remember: true }
+            }
+        ],
+    },
+    {
+        path: root + '/po',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/po' + '/po',
+                name: 'side-menu-purchase_order-purchaseorder',
+                component: PurchaseOrder,
                 meta: { remember: true }
             }
         ],

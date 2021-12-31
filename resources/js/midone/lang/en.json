@@ -12,6 +12,8 @@
             "product-service": "Service",
             "administrator": "Administrator",
             "administrator-user": "User",
+            "purchase_order": "Purchase Order",
+            "purchase_order-purchaseorder": "Purchase Order",
             "devtool": "Dev Tool",
             "devtool-dbbackup": "DB Backup",
             "devtool-playground": "Playground",

@@ -2,13 +2,14 @@
 
 namespace App\Services\Impls;
 
-use App\Actions\RandomGenerator;
-use Exception;
 use App\Models\Product;
 use App\Models\ProductUnit;
 
+use App\Actions\RandomGenerator;
 use App\Services\ProductService;
 
+use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -77,8 +78,10 @@ class ProductServiceImpl implements ProductService
                 )));
             }
 
-            if (!empty($pu))
-                $product->productUnits()->saveMany($pu);
+            if (!empty($pu)) {
+                $pu_clean = $this->checkUniqueCodeInArray($pu);
+                $product->productUnits()->saveMany($pu_clean);
+            }
 
             DB::commit();
 
@@ -274,5 +277,18 @@ class ProductServiceImpl implements ProductService
             $result = $result->where('id', '<>', $exceptId);
 
         return $result->count() == 0 ? true:false;
+    }
+
+    private function checkUniqueCodeInArray(array $productUnits): array
+    {
+        $result = [];
+
+        $allCodes = Arr::pluck($productUnits, 'code');
+
+        if (count($allCodes) == count(array_unique($allCodes))) {
+            return $productUnits;
+        }
+
+        return $result;
     }
 }
