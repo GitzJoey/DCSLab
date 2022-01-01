@@ -318,5 +318,44 @@
                 "status": "Status"
             }
         }
+        ,
+        "purchase_order": {
+            "table": {
+                "list_table": {
+                    "cols": {
+                        "code": "Code",
+                        "po_date": "Date",
+                        "supplier": "Supplier",
+                        "shipping_date": "Shipping Date",
+                        "status": "Status"
+                    }
+                },
+                "item_table": {
+                    "cols": {
+                        "product_name": "Product Name",
+                        "quantity": "Quantity",
+                        "unit": "Unit",
+                        "price_unit": "Price",
+                        "total_price": "Total Price",
+                        "discount": "Discount"
+                    }
+                }
+            },
+            "actions": {
+                "create": "Create Purchase Order",
+                "edit": "Edit Purchase Order",
+                "show": "Show Purchase Order",
+                "delete": "Delete Purchase Order"
+            },
+            "fields": {
+                "supplier": "Supplier",
+                "po_code": "PO Code",
+                "po_type": "Type",
+                "po_created": "Date",
+                "shipping_date": "Shipping Date",
+                "warehouse": "Warehouse",
+                "po_status": "Status"
+            }
+        }
     }
 }

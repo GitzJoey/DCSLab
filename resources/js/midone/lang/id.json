@@ -317,6 +317,44 @@
                 "default": "Default",
                 "status": "Status"
             }
+        },
+        "purchase_order": {
+            "table": {
+                "list_table": {
+                    "cols": {
+                        "code": "Kode",
+                        "po_date": "Tanggal",
+                        "supplier": "Supplier",
+                        "shipping_date": "Tanggal Kirim",
+                        "status": "Status"
+                    }
+                },
+                "item_table": {
+                    "cols": {
+                        "product_name": "Produk",
+                        "quantity": "Quantity",
+                        "unit": "Satuan",
+                        "price_unit": "Harga",
+                        "total_price": "Total Harga",
+                        "discount": "Diskon"
+                    }
+                }
+            },
+            "actions": {
+                "create": "Tambah Pembelian",
+                "edit": "Ubah Pembelian",
+                "show": "Tampilkan Pembelian",
+                "delete": "Hapus Pembelian"
+            },
+            "fields": {
+                "supplier": "Supplier",
+                "po_code": "Kode",
+                "po_type": "Tipe",
+                "po_created": "Tanggal PO",
+                "shipping_date": "Tgl Pengiriman",
+                "warehouse": "Gudang",
+                "po_status": "Status"
+            }
         }
     }
 }
