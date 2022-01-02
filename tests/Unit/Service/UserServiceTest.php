@@ -9,6 +9,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 use TypeError;
 
@@ -21,13 +22,22 @@ class UserServiceTest extends TestCase
         parent::setUp();
 
         $this->service = app(UserService::class);
+
+        if (!file_exists(database_path('database.sqlite'))) {
+            File::put(database_path('database.sqlite'), null);
+
+            $this->artisan('migrate', [
+                '--env' => 'testing',
+                '--path' => 'database/migrations/testdb',
+                '--seed' => true
+            ]);    
+        }
+    
+        $this->artisan('db:seed', [
+            '--class' => 'UserTableSeeder'
+        ]);
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_call_read_with_empty_search()
     {
         $response = $this->service->read('', true, 10);
@@ -91,7 +101,8 @@ class UserServiceTest extends TestCase
 
     public function test_call_register_with_existing_email()
     {
-        $usr = User::inRandomOrder()->first();
+        $email = $this->faker->email;
+        $usr = $this->service->register('normaluser', $email, 'password', 'on');
 
         $usr = $this->service->register('normaluser', $usr->email, 'password', 'on');
 
@@ -101,7 +112,7 @@ class UserServiceTest extends TestCase
     public function test_call_create()
     {
         $email = $this->faker->email;
-        $roles = Role::get()->pluck('id');
+        $roles = Role::get()->pluck('id')->toArray();
         $profile = [ 
             'first_name' => 'first_name',
             'status' => 1 

@@ -16,7 +16,6 @@ use Tests\TestCase;
 class SupplierServiceTest extends TestCase
 {
     use WithFaker;
-    use RefreshDatabase;
     
     protected function setUp(): void
     {
