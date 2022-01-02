@@ -4,17 +4,17 @@ namespace Database\Seeders;
 
 use App\Services\RoleService;
 use App\Services\UserService;
+
 use Exception;
 use Carbon\Carbon;
-use Database\Factories\UserFactory;
 use Illuminate\Container\Container;
 use Illuminate\Database\Seeder;
-
-use App\Models\User;
-use App\Models\Profile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+
+use App\Models\User;
+use App\Models\Profile;
 
 class UserTableSeeder extends Seeder
 {
@@ -29,16 +29,22 @@ class UserTableSeeder extends Seeder
 
         $instances = Container::getInstance();
 
+        $faker = \Faker\Factory::create('id_ID');
+
         for ($i = 0; $i < $count; $i++) {
             try {
-                $usr = User::factory()->make();
+                $name = $faker->name;
+
+                $usr = User::factory()->make([
+                    'name' => str_replace(' ', '', $name)
+                ]);
 
                 $usr->created_at = Carbon::now();
                 $usr->updated_at = Carbon::now();
 
                 $usr->save();
 
-                $profile = Profile::factory()->setFirstName($usr->name);
+                $profile = Profile::factory()->setFirstName($name);
 
                 $profile->created_at = Carbon::now();
                 $profile->updated_at = Carbon::now();

@@ -107,6 +107,7 @@ class AppHelper extends Command
                     break;
                 case 'X':
                     $loop = false;
+                    break;
                 default:
                     $this->info('Invalid Options.');
                     $loop = false;
@@ -121,7 +122,7 @@ class AppHelper extends Command
 
     private function createAdminDevUser()
     {
-        if (!is_null($this->argument('args'))) {
+        if (!is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
             $userName = $args[0];

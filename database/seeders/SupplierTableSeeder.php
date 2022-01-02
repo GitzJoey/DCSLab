@@ -3,15 +3,19 @@
 namespace Database\Seeders;
 
 use App\Actions\RandomGenerator;
+
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Profile;
 use App\Models\Supplier;
 use App\Models\SupplierProduct;
 use App\Models\User;
+
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Config;
+
 use App\Services\UserService;
 use App\Services\RoleService;
 
@@ -30,14 +34,24 @@ class SupplierTableSeeder extends Seeder
         $setting = $instances->make(UserService::class)->createDefaultSetting();
         $roles = $instances->make(RoleService::class)->readBy('NAME', Config::get('const.DEFAULT.ROLE.USER'));
 
+        $faker = \Faker\Factory::create('id_ID');
+
         foreach($companies as $c)
         {
             $products = Product::whereCompanyId($c)->get()->pluck('id');
 
             for ($i = 0; $i < $supplierPerCompany; $i++) {
-                $usr = User::factory()->count(1)->create()[0];
+                $name = $faker->name;
+                $usr = User::factory()->make([
+                    'name' => str_replace(' ', '', $name)
+                ]);
 
-                $profile = Profile::factory()->setFirstName($usr->name);
+                $usr->created_at = Carbon::now();
+                $usr->updated_at = Carbon::now();
+
+                $usr->save();
+
+                $profile = Profile::factory()->setFirstName($name);
                 $usr->profile()->save($profile);
     
                 $usr->companies()->attach($c);

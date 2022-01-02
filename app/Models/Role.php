@@ -17,6 +17,7 @@ class Role extends LaratrustRole
         'description',
         'created_at',
         'updated_at',
+        'pivot',
     ];
 
     protected $appends = ['hId'];
