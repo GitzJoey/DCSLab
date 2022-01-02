@@ -38,8 +38,7 @@ class CustomerController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
             return response()->error(trans('error_messages.unable_to_find_selected_company'));
             
-        $userId = Auth::user()->id;
-        return $this->CustomerService->read($userId);
+        return $this->CustomerService->read();
     }
 
     public function store(Request $request)

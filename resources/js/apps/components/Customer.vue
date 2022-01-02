@@ -158,7 +158,7 @@
                         </div>
                         <div class="form-group row">
                             <label for="inputUse_limit_outstanding_notes" class="col-2 col-form-label">{{ $t('fields.use_limit_outstanding_notes') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
+                            <div class="col-md-3 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
                                         <input type="checkbox" class="css-control-input" id="use_limit_outstanding_notes" name="use_limit_outstanding_notes" v-model="customer.use_limit_outstanding_notes" true-value="1" false-value="0">
@@ -170,17 +170,15 @@
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="inputLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.limit_outstanding_notes') }}</label>
-                            <div class="col-md-10">
+                            <div class="col-md-5">
                                 <Field id="inputLimitOutstandingNotes" name="limit_outstanding_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_outstanding_notes']}" :placeholder="$t('fields.limit_outstanding_notes')" :label="$t('fields.limit_outstanding_notes')" v-model="customer.limit_outstanding_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputUse_Limit_Outstanding_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_payable_nominal') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
+                            <div class="col-md-3 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
                                         <input type="checkbox" class="css-control-input" id="use_limit_payable_nominal" name="use_limit_payable_nominal" v-model="customer.use_limit_payable_nominal" true-value="1" false-value="0">
@@ -192,17 +190,15 @@
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
-                            <div class="col-md-10">
+                            <div class="col-md-5">
                                 <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customer.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.limit_payable_nominal }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputUse_Limit_Age_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_age_notes') }}</label>
-                            <div class="col-md-10 d-flex align-items-center">
+                            <div class="col-md-3 d-flex align-items-center">
                                 <label class="css-control css-control-primary css-checkbox">                              
                                     <span v-show="this.mode === 'create' || this.mode === 'edit'">
                                         <input type="checkbox" class="css-control-input" id="use_limit_age_notes" name="use_limit_age_notes" v-model="customer.use_limit_age_notes" true-value="1" false-value="0">
@@ -214,10 +210,8 @@
                                     </div>
                                 </label>
                             </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="inputLimitAgeNotes" class="col-2 col-form-label">{{ $t('fields.limit_age_notes') }}</label>
-                            <div class="col-md-10">
+                            <div class="col-md-5">
                                 <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customer.limit_age_notes" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.name }}</div>
                             </div>
