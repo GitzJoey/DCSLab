@@ -30,6 +30,8 @@ class UserServiceImpl implements UserService
             $pieces = explode(" ", $name);
             $first_name = $pieces[0];
             $last_name = $pieces[1];
+
+            $name = str_replace(' ', '', $name);
         } else {
             $first_name = $name;
             $last_name = '';
@@ -77,15 +79,15 @@ class UserServiceImpl implements UserService
 
             $pa = new Profile();
 
-            $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:null;
-            $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:null;
+            $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:'';
+            $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:'';
             $pa->address = array_key_exists('address', $profile) ? $profile['address']:null;
             $pa->city = array_key_exists('city', $profile) ? $profile['city']:null;
             $pa->postal_code = array_key_exists('postal_code', $profile) ? $profile['postal_code']:null;
             $pa->country = array_key_exists('country', $profile) ? $profile['country']:null;
-            $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:null;
-            $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:null;
-            $pa->status = array_key_exists('status', $profile) ? $profile['status']:null;
+            $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:'';
+            $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:'';
+            $pa->status = array_key_exists('status', $profile) ? $profile['status']:1;
             $pa->img_path = array_key_exists('img_path', $profile) ? $profile['img_path']:null;
             $pa->remarks = array_key_exists('remarks', $profile) ? $profile['remarks']:null;
 
@@ -153,17 +155,24 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function update(int $id, string $name, array $rolesId, array $profile, array $settings): User
+    public function update(int $id, ?string $name = null, ?array $rolesId = null, ?array $profile = null, ?array $settings = null): ?User
     {
         DB::beginTransaction();
 
         try {
             $usr = User::find($id);
 
-            $this->updateUser($usr, $name, false);
-            $this->updateProfile($usr, $profile, false);
-            $this->updateRoles($usr, $rolesId, false);
-            $this->updateSettings($usr, $settings, false);
+            if (!is_null($name))
+                $this->updateUser($usr, $name, false);
+
+            if (!is_null($profile))
+                $this->updateProfile($usr, $profile, false);
+            
+            if (!is_null($rolesId))
+                $this->updateRoles($usr, $rolesId, false);
+            
+            if (!is_null($settings))
+                $this->updateSettings($usr, $settings, false);
 
             DB::commit();
 
@@ -175,7 +184,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateUser(User $user, string $name, bool $useTransactions = true)
+    public function updateUser(User $user, string $name, bool $useTransactions = true): ?bool
     {
         !$useTransactions ? : DB::beginTransaction();
 
@@ -198,7 +207,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateProfile(User $user, array $profile, bool $useTransactions = true)
+    public function updateProfile(User $user, array $profile, bool $useTransactions = true): ?bool
     {
         !$useTransactions ? : DB::beginTransaction();
 
@@ -231,7 +240,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true)
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?bool
     {
         !$useTransactions ? : DB::beginTransaction();
 
@@ -248,7 +257,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateSettings(User $user, array $settings, bool $useTransactions = true)
+    public function updateSettings(User $user, array $settings, bool $useTransactions = true): ?bool
     {
         !$useTransactions ? : DB::beginTransaction();
 

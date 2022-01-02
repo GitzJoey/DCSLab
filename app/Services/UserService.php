@@ -27,19 +27,19 @@ interface UserService
 
     public function update(
         int $id,
-        string $name,
-        array $rolesId,
-        array $profile,
-        array $settings
-    ): User;
+        ?string $name = null,
+        ?array $rolesId = null,
+        ?array $profile = null,
+        ?array $settings = null
+    ): ?User;
 
-    public function updateUser(User $user, string $name, bool $useTransactions = true);
+    public function updateUser(User $user, string $name, bool $useTransactions = true): ?bool;
 
-    public function updateProfile(User $user, array $profile, bool $useTransactions = true);
+    public function updateProfile(User $user, array $profile, bool $useTransactions = true): ?bool;
 
-    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true);
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?bool;
 
-    public function updateSettings(User $user, array $settings, bool $useTransactions = true);
+    public function updateSettings(User $user, array $settings, bool $useTransactions = true): ?bool;
 
     public function resetPassword(string $email): void;
 

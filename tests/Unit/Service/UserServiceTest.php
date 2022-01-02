@@ -32,10 +32,9 @@ class UserServiceTest extends TestCase
                 '--seed' => true
             ]);    
         }
-    
-        $this->artisan('db:seed', [
-            '--class' => 'UserTableSeeder'
-        ]);
+
+        if (User::count() < 2)
+            $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
     }
 
     public function test_call_read_with_empty_search()
@@ -146,8 +145,93 @@ class UserServiceTest extends TestCase
         ]);
     }
 
-    public function test_call_update()
+    public function test_call_create_with_empty_profile_array()
     {
-        $this->assertTrue(true);
+        $email = $this->faker->email;
+        $roles = Role::get()->pluck('id')->toArray();
+        $profile = [];
+
+        $response = $this->service->create('testname', $email, 'password', $roles, $profile);
+
+        $this->assertTrue(!is_null($response));
+        $this->assertDatabaseHas('users', [
+            'name' => 'testname',
+            'email' => $email
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'testname',
+            'email' => $email
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'first_name' => '',
+            'status' => 1
+        ]);
+
+        $this->assertDatabaseHas('settings', [
+            'user_id' => $response->id,
+        ]);
+
+        $this->assertDatabaseHas('role_user', [
+            'user_id' => $response->id,
+            'role_id' => $roles[0]
+        ]);
+    }
+
+    public function test_call_create_with_empty_roles_array()
+    {
+        $email = $this->faker->email;
+        $roles = [];
+        $profile = [];
+
+        $response = $this->service->create('testname', $email, 'password', $roles, $profile);
+
+        $this->assertNotNull($response);
+        $this->assertDatabaseMissing('role_user', [
+            'user_id' => $response->id
+        ]);
+    }
+
+    public function test_call_update_users_table()
+    {
+        $email = $this->faker->email;
+        $roles = Role::get()->pluck('id')->toArray();;
+        $profile = [];
+
+        $response = $this->service->create('testname', $email, 'password', $roles, $profile);
+
+        $this->assertNotNull($response);
+
+        $response_edit = $this->service->update(id: $response->id, name: 'editedname');
+
+        $this->assertNotNull($response_edit);
+        $this->assertDatabaseHas('users', [
+            'id' => $response_edit->id,
+            'name' => 'editedname'
+        ]);
+    }
+
+    public function test_call_update_profile_table()
+    {
+        $email = $this->faker->email;
+        $roles = Role::get()->pluck('id')->toArray();;
+        $profile = [];
+
+        $response = $this->service->create('testname', $email, 'password', $roles, $profile);
+
+        $this->assertNotNull($response);
+
+        $profile_new = [
+            'first_name' => 'edited first name'
+        ];
+
+        $response_edit = $this->service->update(id: $response->id, name: 'edited again name', profile: $profile_new);
+
+        $this->assertNotNull($response_edit);
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $response_edit->id,
+            'first_name' => 'edited first name'
+        ]);
     }
 }

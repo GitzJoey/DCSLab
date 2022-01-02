@@ -14,12 +14,16 @@ use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\ProductTableSeeder;
 use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
+use Database\Seeders\BranchTableSeeder;
+use Database\Seeders\WarehouseTableSeeder;
 
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class AppHelper extends Command
 {
@@ -28,7 +32,7 @@ class AppHelper extends Command
      *
      * @var string
      */
-    protected $signature = 'app:helper';
+    protected $signature = 'app:helper {option? : Select the available options} {args?* : Optional arguments}';
 
     /**
      * The console command description.
@@ -60,19 +64,23 @@ class AppHelper extends Command
             return false;
         }
 
+        $option = $this->argument('option');
         $loop = true;
 
         while($loop)
         {
-            $this->info('Available Helper:');
-            $this->info('[1] Update Composer And NPM');
-            $this->info('[2] Clear All Cache');
-            $this->info('[3] Change User Roles');
-            $this->info('[4] Data Seeding');
-            $this->info('[5] Refresh Database');
-            $this->info('[X] Exit');
+            if (is_null($option)) {
+                $this->info('Available Helper:');
+                $this->info('[1] Update Composer And NPM');
+                $this->info('[2] Clear All Cache');
+                $this->info('[3] Change User Roles');
+                $this->info('[4] Data Seeding');
+                $this->info('[5] Refresh Database');
+                $this->info('[6] Create Acministrator/Dev User');
+                $this->info('[X] Exit');
+            }
 
-            $choose = $this->ask('Choose Helper','X');
+            $choose = is_null($option) ? $this->ask('Choose Helper','X') : $option;
 
             switch (strtoupper($choose)) {
                 case 1:
@@ -94,18 +102,124 @@ class AppHelper extends Command
                 case 5:
                     $this->refreshDatabase();
                     break;
+                case 6:
+                    $this->createAdminDevUser();
+                    break;
                 case 'X':
+                    $loop = false;
                 default:
+                    $this->info('Invalid Options.');
                     $loop = false;
                     break;
             }
             sleep(3);
+            
+            if (!is_null($option)) $loop = false;
         }
         $this->info('Bye!');
     }
 
+    private function createAdminDevUser()
+    {
+        if (!is_null($this->argument('args'))) {
+            $args = $this->argument('args');
+
+            $userName = $args[0];
+            $userEmail = $args[1];
+            $userPassword = $args[2];
+            $is_dev = boolval($args[3]);
+
+            $this->info('Creating Account...');
+            $this->info('Name: '.$userName);
+            $this->info('Email: '.$userEmail);
+            $this->info('Password: '.'***********');
+            $this->info('Account Type: '. ($is_dev ? 'Developers':'Administrator'));
+        } else {
+            $this->info('Creating Admin/Dev Account ...');
+            $is_dev = $this->confirm("Are you a developer?", false);
+    
+            if(!$is_dev)
+                $this->info('Setting you account as administrator since you\'re not dev...');
+    
+            $userName = 'GitzJoey';
+            $userEmail = 'gitzjoey@yahoo.com';
+            $userPassword = 'thepassword';
+    
+            $valid = false;
+    
+            while (!$valid) {
+                $userName = $this->ask('Name:', $userName);
+                $userEmail = $this->ask('Email:', $userEmail);
+                $userPassword = $this->secret('Password:', $userPassword);
+    
+                $validator = Validator::make([
+                    'name' => $userName,
+                    'email' => $userEmail,
+                    'password' => $userPassword
+                ], [
+                    'name' => 'required|min:3|max:50',
+                    'email' => 'required|max:255|email|unique:users,email',
+                    'password' => 'required|min:7'
+                ]);
+    
+                if (!$validator->fails()) {
+                    $valid = true;
+                } else {
+                    foreach ($validator->errors()->all() as $errorMessage) {
+                        $this->error($errorMessage);
+                    }
+                }
+            }
+    
+            $confirmed = $this->confirm("Everything's OK? Do you wish to continue?");
+    
+            if (!$confirmed) {
+                $this->error('Aborted');
+                return false;
+            }    
+        }
+
+        $container = Container::getInstance();
+        $userService = $container->make(UserService::class);
+        $roleService = $container->make(RoleService::class);
+
+        $rolesId = [];
+        if ($is_dev) {
+            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.DEV'))->id);
+        } else {
+            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.ADMIN'))->id);
+        }
+
+        $profile = [
+            'first_name' => $userName,
+            'status' => 1
+        ];
+
+        $userService->create(
+            $userName,
+            $userEmail,
+            $userPassword,
+            $rolesId,
+            $profile
+        );
+
+        $this->info('User Creation Success.');
+    }
+
     private function dataSeeding()
     {
+        if (App::environment('prod', 'production')) {
+            $this->info('**************************************');
+            $this->info('*     Application In Production!     *');
+            $this->info('**************************************');
+        
+            $runInProd = $this->confirm('Do you really wish to run this command?', false);
+
+            if (!$runInProd) {
+                return;
+            }
+        }
+
         $unattended_mode = $this->confirm('Unattended Mode?', true);
 
         $user = $unattended_mode ? true : $this->confirm('Do you want to seed users?', true);
@@ -113,6 +227,7 @@ class AppHelper extends Command
         $companies = $unattended_mode ? true : $this->confirm('Do you want to seed companies for each users?', true);
         $supplier = $unattended_mode ? true : $this->confirm('Do you want to seed dummy suppliers for each companies?', true);
         $product = $unattended_mode ? true : $this->confirm('Do you want to seed dummy products for each companies?', true);
+        $customer = $unattended_mode ? true : $this->confirm('Do you want to seed dummy customers for each companies?', true);
 
         if (Permission::count() == 0) {
             $this->info('Roles and Permissions table is empty. seeding...');
@@ -159,6 +274,26 @@ class AppHelper extends Command
             $seeder->callWith(CompanyTableSeeder::class, [$count]);
 
             $this->info('CompanyTableSeeder Finish.');
+
+            $this->info('Starting BranchTableSeeder');
+            $count_br = $unattended_mode ? 3 : $this->ask('How many branches per company (0 to skip) :', 3);
+
+            if ($count_br != 0) {
+                $seeder_br = new BranchTableSeeder();
+                $seeder_br->callWith(BranchTableSeeder::class, [$count_br]);
+    
+                $this->info('BranchTableSeeder Finish.');    
+            }
+
+            $this->info('Starting WarehouseTableSeeder');
+            $count_wh = $unattended_mode ? 3 : $this->ask('How many warehouses per company (0 to skip) :', 3);
+
+            if ($count_wh != 0) {
+                $seeder_wh = new WarehouseTableSeeder();
+                $seeder_wh->callWith(WarehouseTableSeeder::class, [$count_wh]);
+    
+                $this->info('WarehouseTableSeeder Finish.');
+            }
         }
 
         sleep(3);
@@ -211,6 +346,19 @@ class AppHelper extends Command
             $seeder->callWith(SupplierTableSeeder::class, [$count]);
 
             $this->info('SupplierTableSeeder Finish.');
+        }
+
+        sleep(3);
+
+        if ($customer)
+        {
+            $this->info('Starting CustomerTableSeeder');
+            $count = $unattended_mode ? 5 : $this->ask('How many customer for each companies:', 5);
+
+            //$seeder = new CustomerTableSeeder();
+            //$seeder->callWith(CustomerTableSeeder::class, [$count]);
+
+            $this->info('CustomerTableSeeder Finish.');
         }
     }
 

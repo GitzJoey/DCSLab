@@ -2,15 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Services\UserService;
-use App\Services\RoleService;
 use App\Services\SystemService;
 
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Redis;
@@ -87,7 +84,7 @@ class Install extends Command
             $this->error('Aborted');
             return false;
         }
-        
+
         $this->info('Generating App Key...');
         Artisan::call('key:generate');
 
@@ -176,30 +173,12 @@ class Install extends Command
             return false;
         }
 
-        $userService = $container->make(UserService::class);
-        $roleService = $container->make(RoleService::class);
+        $this->call('app:helper', [
+            'option' => '6',
+            'args' => [$userName, $userEmail, $userPassword, $is_dev ? '1':'0']
+        ]);
 
-        $rolesId = [];
-        if ($is_dev) {
-            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.DEV'))->id);
-        } else {
-            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.ADMIN'))->id);
-        }
-
-        $profile = [
-            'first_name' => $userName,
-            'status' => 1
-        ];
-
-        $userService->create(
-            $userName,
-            $userEmail,
-            $userPassword,
-            $rolesId,
-            $profile,
-        );
-
-        sleep(3);
+        $this->info(Artisan::output());
 
         $this->info('Done!');
     }

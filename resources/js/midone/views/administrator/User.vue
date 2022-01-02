@@ -102,7 +102,7 @@
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.user.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" rules="required|alpha_spaces" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" rules="required|alpha" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
