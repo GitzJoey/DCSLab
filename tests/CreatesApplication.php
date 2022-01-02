@@ -19,18 +19,9 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
-        if (!file_exists(database_path('database.sqlite'))) {
-            File::put(database_path('database.sqlite'), null);   
-
-            Artisan::call('migrate', [
-                '--env' => 'testing',
-                '--path' => 'database/migrations/testdb',
-                '--seed' => true
-            ]);
-
-            Artisan::call('db:seed', ['--class' => 'UserTableSeeder']);
-            Artisan::call('db:seed', ['--class' => 'CompanyTableSeeder']);
-        }
+        if (file_exists(database_path('database.sqlite'))) File::delete(database_path('database.sqllite'));
+        
+        File::put(database_path('database.sqlite'), null);
 
         return $app;
     }

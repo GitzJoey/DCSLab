@@ -2,41 +2,46 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class Company extends Model
+class Branch extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
 
     protected $fillable = [
+        'company_id',
         'code',
         'name',
-        'default',
+        'address',
+        'city',
+        'contact',
+        'remarks',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'default', 'status'];
+    protected static $logAttributes = ['company_id', 'code', 'name', 'address', 'city', 'contact', 'remarks', 'status'];
 
     protected static $logOnlyDirty = true;
 
+
     protected $hidden = [
         'id',
+        'company_id',
         'created_by',
         'updated_by',
         'deleted_by',
         'created_at',
         'updated_at',
-        'deleted_at',
-        'pivot',
+        'deleted_at'
     ];
 
     protected $appends = ['hId'];
@@ -46,9 +51,9 @@ class Company extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function users()
+    public function company()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function getActivitylogOptions(): LogOptions

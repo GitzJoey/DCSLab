@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Service;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -99,15 +100,42 @@ class UserServiceTest extends TestCase
 
     public function test_call_create()
     {
-        $this->assertTrue(true);
+        $email = $this->faker->email;
+        $roles = Role::get()->pluck('id');
+        $profile = [ 
+            'first_name' => 'first_name',
+            'status' => 1 
+        ];
+
+        $response = $this->service->create('testname', $email, 'password', $roles, $profile);
+
+        $this->assertTrue(!is_null($response));
+        $this->assertDatabaseHas('users', [
+            'name' => 'testname',
+            'email' => $email
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'testname',
+            'email' => $email
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'first_name' => 'first_name',
+            'status' => 1
+        ]);
+
+        $this->assertDatabaseHas('settings', [
+            'user_id' => $response->id,
+        ]);
+
+        $this->assertDatabaseHas('role_user', [
+            'user_id' => $response->id,
+            'role_id' => $roles[0]
+        ]);
     }
 
     public function test_call_update()
-    {
-        $this->assertTrue(true);
-    }
-
-    public function test_call_delete()
     {
         $this->assertTrue(true);
     }
