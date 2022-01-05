@@ -102,7 +102,9 @@ class Install extends Command
 
         if (App::environment('prod', 'production')) {
             $this->info('[PROD] Seeding ...');
-            Artisan::call('db:seed');
+            Artisan::call('db:seed', [
+                '--force' => true
+            ]);
         } else {
             $this->info('Seeding ...');
             Artisan::call('db:seed');

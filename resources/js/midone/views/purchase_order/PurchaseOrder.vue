@@ -1,12 +1,32 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.po.table.title')" :data="poList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+        <DataList :title="t('views.purchase_order.table.list_table.title')" :data="poList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
         </DataList>
     </div>
     <div v-if="mode !== 'list'">
         <h2 class="intro-y text-lg font-bold mt-5" v-if="mode === 'create'">{{ t('views.purchase_order.actions.create') }}</h2>
         <h2 class="intro-y text-lg font-bold mt-5" v-if="mode === 'edit'">{{ t('views.purchase_order.actions.edit') }}</h2>
+    
+        <div class="grid grid-cols-5 gap-4">
+            <div class="col-span-3">
+                <div class="box p-5">
+                    <div class="p-5">
+                        <div class="mb-3">
+                            <Litepicker v-model="po.po_created" :options="{ autoApply: true, showWeekNumbers: false, dropdowns: { minYear: 2021, maxYear: 2022, months: true, years: true } }" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-2">
+                <div class="box p-5">
+                    <div class="flex flex-row">
+                        <div class="">aaaa</div>
+                        <div class="flex-1 text-right">aaaa</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <hr/>
     <div>

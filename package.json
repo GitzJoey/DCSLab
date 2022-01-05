@@ -31,6 +31,7 @@
         "@zhuowenli/vue-feather-icons": "^5.0.2",
         "autoprefixer": "^10.3.7",
         "dayjs": "^1.10.7",
+        "litepicker": "^2.0.12",
         "tailwindcss": "^2.2.19",
         "tippy.js": "^6.3.2",
         "toastify-js": "^1.11.2",

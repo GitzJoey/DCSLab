@@ -322,6 +322,7 @@
         "purchase_order": {
             "table": {
                 "list_table": {
+                    "title": "Purchase Order Lists",
                     "cols": {
                         "code": "Code",
                         "po_date": "Date",

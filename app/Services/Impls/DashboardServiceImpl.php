@@ -22,6 +22,7 @@ class DashboardServiceImpl implements DashboardService
         array_push($menu, $this->createMenu_Product());
         array_push($menu, $this->createMenu_Supplier());
         array_push($menu, $this->createMenu_PurchaseOrder());
+        array_push($menu, $this->createMenu_SalesOrder());
 
         if ($usrRoles->where('name', Config::get('const.DEFAULT.ROLE.ADMIN'))->isNotEmpty() || $openAllMenu)
             array_push($menu, $this->createMenu_Administrator());
@@ -170,6 +171,13 @@ class DashboardServiceImpl implements DashboardService
                     'title' => 'components.menu.purchase_order-purchaseorder'
                 )
             ]
+
+        );
+    }
+
+    private function createMenu_SalesOrder(): array
+    {
+        return array(
 
         );
     }

@@ -2,7 +2,7 @@
     <input v-picker="{ props, emit }" type="text" :value="modelValue" />
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue'
 import { setValue, init, reInit } from './index'
 
