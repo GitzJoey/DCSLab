@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="visible">
         <h2 class="intro-y text-lg font-bold mt-5">{{ title }}</h2>
         <div class="grid grid-cols-12 gap-6 mt-5" v-if="loading">
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
@@ -90,10 +90,11 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref, toRef } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
+    visible: { type: Boolean, default: true },
     title: { type: String },
     canPrint: { type: Boolean, default: false },
     canExport: { type: Boolean, default: false },
@@ -108,6 +109,7 @@ const props = defineProps({
 
 const emit = defineEmits(['createNew', 'dataListChange', 'print', 'export']);
 
+const visible = toRef(props, 'visible');
 const title = toRef(props, 'title');
 const canPrint = toRef(props, 'canPrint');
 const canExport = toRef(props, 'canExport');

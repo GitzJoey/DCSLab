@@ -1,7 +1,7 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.supplier.table.title')" :data="supplierList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+        <DataList :title="t('views.supplier.table.title')" :data="supplierList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true" :visible="showGrid">
             <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
@@ -280,7 +280,7 @@ const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
-
+const showGrid = ref(false);
 // Data - Views
 const supplierList = ref([]);
 const supplier = ref({
@@ -315,6 +315,8 @@ onMounted(() => {
     if (selectedUserCompany.value !== '') {
         getAllSupplier({ page: 1});
         getDDLSync();
+    } else  {
+        
     }
 
     getDDL();
@@ -332,6 +334,7 @@ function getAllSupplier(args) {
 
     axios.get(route('api.get.db.supplier.supplier.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         supplierList.value = response.data;
+        showGrid.value = true;
         loading.value = false;
     });
 }
