@@ -86,7 +86,13 @@ class Install extends Command
         }
 
         $this->info('Generating App Key...');
-        Artisan::call('key:generate');
+        if (App::environment('prod', 'production')) {
+            Artisan::call('key:generate', [
+                '--force' => true
+            ]);
+        } else {
+            Artisan::call('key:generate');
+        }
 
         $this->info(Artisan::output());
 
