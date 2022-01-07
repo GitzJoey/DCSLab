@@ -9,7 +9,6 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 use TypeError;
 
@@ -22,16 +21,6 @@ class UserServiceTest extends TestCase
         parent::setUp();
 
         $this->service = app(UserService::class);
-
-        if (!file_exists(database_path('database.sqlite'))) {
-            File::put(database_path('database.sqlite'), null);
-
-            $this->artisan('migrate', [
-                '--env' => 'testing',
-                '--path' => 'database/migrations/testdb',
-                '--seed' => true
-            ]);    
-        }
 
         if (User::count() < 2)
             $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
