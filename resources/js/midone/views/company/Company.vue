@@ -140,7 +140,7 @@
                         <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                 </div>
-                <div class="pl-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
@@ -164,12 +164,6 @@ import { useStore } from '../../store/index';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
-
-// Vee-Validate Schema
-const schema = {
-    code: 'required',
-    name: 'required',
-};
 
 // Declarations
 const store = useStore();

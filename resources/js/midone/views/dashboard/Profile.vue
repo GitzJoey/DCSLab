@@ -248,8 +248,6 @@ import { useStore } from "../../store";
 // Components Import
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
-// Vee-Validate Schema
-
 // Declarations
 const store = useStore();
 

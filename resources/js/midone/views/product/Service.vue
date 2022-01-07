@@ -13,7 +13,6 @@ import { useStore } from '../../store/index';
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
 
-// Vee-Validate Schema
 // Declarations
 const store = useStore();
 

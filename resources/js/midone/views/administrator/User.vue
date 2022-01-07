@@ -183,7 +183,7 @@
                         <label for="inputSettings" class="form-label">{{ t('views.user.fields.settings.settings') }}</label>
                         <div class="mb-3">
                             <label for="selectTheme" class="form-label">{{ t('views.user.fields.settings.theme') }}</label>
-                            <select class="form-control form-select" id="selectTheme" name="theme" v-model="user.selectedSettings.theme" v-show="this.mode === 'create' || this.mode === 'edit'">
+                            <select class="form-control form-select" id="selectTheme" name="theme" v-model="user.selectedSettings.theme" v-show="mode === 'create' || mode === 'edit'">
                                 <option value="side-menu-light-full">Menu Light</option>
                                 <option value="side-menu-light-mini">Mini Menu Light</option>
                                 <option value="side-menu-dark-full">Menu Dark</option>
@@ -194,14 +194,14 @@
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label for="selectDate">{{ t('views.user.fields.settings.dateFormat') }}</label>
-                                    <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-show="mode === 'create' || mode === 'edit'">
                                         <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
                                         <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="selectTime">{{ t('views.user.fields.settings.timeFormat') }}</label>
-                                    <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="this.mode === 'create' || this.mode === 'edit'">
+                                    <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="mode === 'create' || mode === 'edit'">
                                         <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
                                         <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
                                     </select>
@@ -210,14 +210,14 @@
                         </div>
                         <div class="mb-3">
                             <label for="apiToken">{{ t('views.user.fields.settings.apiToken') }}</label>
-                            <div class="form-check" v-show="this.mode === 'edit'">
+                            <div class="form-check" v-show="mode === 'edit'">
                                 <input id="apiToken" class="form-check-input" type="checkbox" name="apiToken">
                                 <label class="form-check-label" for="apiToken">{{ t('components.buttons.revoke') }}</label>
                             </div>
-                            <div v-if="this.mode === 'create'">*************************</div>
+                            <div v-if="mode === 'create'">*************************</div>
                         </div>
                     </div>
-                    <div class="mb-3" v-if="this.mode === 'edit'">
+                    <div class="mb-3" v-if="mode === 'edit'">
                         <label for="resetPassword" class="form-label">{{ t('views.user.fields.reset_password') }}</label>
                         <div class="form-check pr-5">
                             <input id="resetPassword" name="resetPassword" class="form-check-input" type="checkbox" value="" />
@@ -229,7 +229,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pl-5" v-if="this.mode === 'create' || this.mode === 'edit'">
+                <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
@@ -250,7 +250,6 @@
 // Core Components Import
 // Components Import
 
-// Vee-Validate Schema
 // Declarations
 // Mixins
 // Data - VueX
@@ -272,8 +271,6 @@ import { helper } from '../../utils/helper';
 // Components Import
 import DataList from '../../global-components/data-list/Main'
 import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
-
-// Vee-Validate Schema
 
 // Mixins
 const { t, route } = mainMixins();
