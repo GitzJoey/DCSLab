@@ -63,17 +63,18 @@ class CustomerController extends BaseController
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
-        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
-
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
-        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
-
-        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
-        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
-        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
+        $customer_addresses = [];
+        $count_address = count($request['address']);
+        for ($i = 0; $i < $count_address; $i++) {
+            array_push($customer_addresses, array (
+                'company_id' => $company_id,
+                'customer_id' => null,
+                'address' => $request['address'][$i],
+                'city' => $request['city'][$i],
+                'contact' => $request['contact'][$i],
+                'address_remarks' => $request['address_remarks'][$i]
+            ));
+        }
 
         $result = $this->CustomerService->create(
             $company_id,
@@ -81,16 +82,11 @@ class CustomerController extends BaseController
             $request['name'],
             Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],
-            $use_limit_outstanding_notes,
-            $request['limit_outstanding_notes'],
-            $use_limit_payable_nominal,
-            $request['limit_payable_nominal'],
-            $use_limit_age_notes,
-            $request['limit_age_notes'],
-            $request['term'],
-            $request['address'],
-            $request['city'],
-            $request['contact'],
+            $request['max_open_invoice'],
+            $request['max_outstanding_invoice'],
+            $request['max_invoice_age'],
+            $request['payment_term'],
+            $customer_addresses,
             $request['tax_id'],
             $request['remarks'],
             $request['status'],
@@ -102,42 +98,54 @@ class CustomerController extends BaseController
     {
         $request->validate([
             'code' =>  new uniqueCode('update', $id, 'customers'),
-            'name' => 'required|min:3|max:255|alpha',
+            'name' => 'required|min:3|max:255',
             'status' => 'required',
         ]);
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
 
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
-        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
+        $customer_addresses = [];
+        array_push($customer_addresses, array (
+            'company_id' => $company_id,
+            'customer_id' => null,
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'contact' => $request['contact'],
+            'remarks' => ''
+        ));
+        
+        $customer_addresses = [];
+        if (empty($request['customer_address_hId']) === false) {
+            $count_address = count($request['address']);
 
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
-        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
-
-        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
-        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
-        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
+            for ($i = 0; $i < $count_address; $i++) {
+                $customer_address_id = $request['customer_address_hId'][$i] != null ? Hashids::decode($request['customer_address_hId'][$i])[0] : null;
+                
+                array_push($customer_addresses, array (
+                    'id' => $customer_address_id,
+                    'company_id' => $company_id,
+                    'customer_id' => null,
+                    'address' => $request['address'][$i],
+                    'city' => $request['city'][$i],
+                    'contact' => $request['contact'][$i],
+                    'address_remarks' => $request['address_remarks'][$i]
+                ));
+            }
+        }
 
         $result = $this->CustomerService->update(
             $id,
             $company_id,
             $request['code'],
             $request['name'],
-            Hashids::decode($request['customer_group_id'])[0],
+            Hashids::decode($request['customer_group_id'])[0], 
             $request['sales_territory'],
-            $use_limit_outstanding_notes,
-            $request['limit_outstanding_notes'],
-            $use_limit_payable_nominal,
-            $request['limit_payable_nominal'],
-            $use_limit_age_notes,
-            $request['limit_age_notes'],
-            $request['term'],
-            $request['address'],
-            $request['city'],
-            $request['contact'],
+            $request['max_open_invoice'],
+            $request['max_outstanding_invoice'],
+            $request['max_invoice_age'],
+            $request['payment_term'],
+            $customer_addresses,
             $request['tax_id'],
             $request['remarks'],
             $request['status'],

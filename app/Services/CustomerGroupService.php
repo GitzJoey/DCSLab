@@ -9,16 +9,13 @@ interface CustomerGroupService
         $code,
         $name,
         $is_member_card,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $selling_point,
         $selling_point_multiple,
-        $sell_at_capital_price,
+        $sell_at_cost,
         $global_markup_percent,
         $global_markup_nominal,
         $global_discount_percent,
@@ -30,7 +27,7 @@ interface CustomerGroupService
         $cash_id
     );
 
-    public function read($userId);
+    public function read();
 
     public function getAllCustomerGroup();
 
@@ -40,16 +37,13 @@ interface CustomerGroupService
         $code,
         $name,
         $is_member_card,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $selling_point,
         $selling_point_multiple,
-        $sell_at_capital_price,
+        $sell_at_cost,
         $global_markup_percent,
         $global_markup_nominal,
         $global_discount_percent,

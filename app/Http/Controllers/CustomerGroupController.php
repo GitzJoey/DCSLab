@@ -38,8 +38,7 @@ class CustomerGroupController extends BaseController
         if (!parent::hasSelectedCompanyOrCompany())
             return response()->error(trans('error_messages.unable_to_find_selected_company'));
             
-        $userId = Auth::user()->id;
-        return $this->CustomerGroupService->read($userId);
+        return $this->CustomerGroupService->read();
     }
 
     public function getAllCustomerGroup()
@@ -51,7 +50,7 @@ class CustomerGroupController extends BaseController
     {
         $request->validate([
             'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'customergroups')],
-            'name' => 'required|min:3|max:255|alpha',
+            'name' => 'required|min:3|max:255',
         ]);
 
         $randomGenerator = new randomGenerator();
@@ -71,51 +70,40 @@ class CustomerGroupController extends BaseController
         $is_member_card = $request['is_member_card'] == 'on' ? 1 : $request['is_member_card'];
         $is_member_card = is_null($is_member_card) ? 0 : $is_member_card;
         $is_member_card = is_numeric($is_member_card) ? $is_member_card : 0;
-        
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
-        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
 
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
-        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
-
-        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
-        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
-        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
-
-        $sell_at_capital_price = $request['sell_at_capital_price'] == 'on' ? 1 : $request['sell_at_capital_price'];
-        $sell_at_capital_price = is_null($sell_at_capital_price) ? 0 : $sell_at_capital_price;
-        $sell_at_capital_price = is_numeric($sell_at_capital_price) ? $sell_at_capital_price : 0;
+        $sell_at_cost = $request['sell_at_cost'] == 'on' ? 1 : $request['sell_at_cost'];
+        $sell_at_cost = is_null($sell_at_cost) ? 0 : $sell_at_cost;
+        $sell_at_cost = is_numeric($sell_at_cost) ? $sell_at_cost : 0;
 
         $is_rounding = $request['is_rounding'] == 'on' ? 1 : $request['is_rounding'];
         $is_rounding = is_null($is_rounding) ? 0 : $is_rounding;
         $is_rounding = is_numeric($is_rounding) ? $is_rounding : 0;
+
+        $round_on = is_null($request['round_on']) ? 1 :  $request['round_on'];
+
+        $cash_id = $request['cash_id'] == '0' ? null : Hashids::decode($request['cash_id'])[0];
 
         $result = $this->CustomerGroupService->create(
             $company_id,
             $code,
             $request['name'],
             $is_member_card,
-            $use_limit_outstanding_notes,
-            $request['limit_outstanding_notes'],
-            $use_limit_payable_nominal,
-            $request['limit_payable_nominal'],
-            $use_limit_age_notes,
-            $request['limit_age_notes'],
-            $request['term'],
+            $request['max_open_invoice'],
+            $request['max_outstanding_invoice'],
+            $request['max_invoice_age'],
+            $request['payment_term'],
             $request['selling_point'],
             $request['selling_point_multiple'],
-            $sell_at_capital_price,
+            $sell_at_cost,
             $request['global_markup_percent'],
             $request['global_markup_nominal'],
             $request['global_discount_percent'],
             $request['global_discount_nominal'],
             $is_rounding,
-            $request['round_on'],
+            $round_on,
             $request['round_digit'],
             $request['remarks'],
-            Hashids::decode($request['cash_id'])[0],
+            $cash_id,
         );
         return $result == 0 ? response()->error():response()->success();
     }
@@ -124,7 +112,7 @@ class CustomerGroupController extends BaseController
     {
         $request->validate([
             'code' =>  new uniqueCode('update', $id, 'customergroups'),
-            'name' => 'required|min:3|max:255|alpha',
+            'name' => 'required|min:3|max:255',
         ]);
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
@@ -133,22 +121,10 @@ class CustomerGroupController extends BaseController
         $is_member_card = $request['is_member_card'] == 'on' ? 1 : $request['is_member_card'];
         $is_member_card = is_null($is_member_card) ? 0 : $is_member_card;
         $is_member_card = is_numeric($is_member_card) ? $is_member_card : 0;
-        
-        $use_limit_outstanding_notes = $request['use_limit_outstanding_notes'] == 'on' ? 1 : $request['use_limit_outstanding_notes'];
-        $use_limit_outstanding_notes = is_null($use_limit_outstanding_notes) ? 0 : $use_limit_outstanding_notes;
-        $use_limit_outstanding_notes = is_numeric($use_limit_outstanding_notes) ? $use_limit_outstanding_notes : 0;
 
-        $use_limit_payable_nominal = $request['use_limit_payable_nominal'] == 'on' ? 1 : $request['use_limit_payable_nominal'];
-        $use_limit_payable_nominal = is_null($use_limit_payable_nominal) ? 0 : $use_limit_payable_nominal;
-        $use_limit_payable_nominal = is_numeric($use_limit_payable_nominal) ? $use_limit_payable_nominal : 0;
-
-        $use_limit_age_notes = $request['use_limit_age_notes'] == 'on' ? 1 : $request['use_limit_age_notes'];
-        $use_limit_age_notes = is_null($use_limit_age_notes) ? 0 : $use_limit_age_notes;
-        $use_limit_age_notes = is_numeric($use_limit_age_notes) ? $use_limit_age_notes : 0;
-
-        $sell_at_capital_price = $request['sell_at_capital_price'] == 'on' ? 1 : $request['sell_at_capital_price'];
-        $sell_at_capital_price = is_null($sell_at_capital_price) ? 0 : $sell_at_capital_price;
-        $sell_at_capital_price = is_numeric($sell_at_capital_price) ? $sell_at_capital_price : 0;
+        $sell_at_cost = $request['sell_at_cost'] == 'on' ? 1 : $request['sell_at_cost'];
+        $sell_at_cost = is_null($sell_at_cost) ? 0 : $sell_at_cost;
+        $sell_at_cost = is_numeric($sell_at_cost) ? $sell_at_cost : 0;
 
         $is_rounding = $request['is_rounding'] == 'on' ? 1 : $request['is_rounding'];
         $is_rounding = is_null($is_rounding) ? 0 : $is_rounding;
@@ -160,16 +136,13 @@ class CustomerGroupController extends BaseController
             $request['code'],
             $request['name'],
             $is_member_card,
-            $use_limit_outstanding_notes,
-            $request['limit_outstanding_notes'],
-            $use_limit_payable_nominal,
-            $request['limit_payable_nominal'],
-            $use_limit_age_notes,
-            $request['limit_age_notes'],
-            $request['term'],
+            $request['max_open_invoice'],
+            $request['max_outstanding_invoice'],
+            $request['max_invoice_age'],
+            $request['payment_term'],
             $request['selling_point'],
             $request['selling_point_multiple'],
-            $sell_at_capital_price,
+            $sell_at_cost,
             $request['global_markup_percent'],
             $request['global_markup_nominal'],
             $request['global_discount_percent'],

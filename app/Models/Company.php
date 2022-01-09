@@ -2,28 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Branch;
-use App\Models\Warehouse;
 use App\Models\Cash;
-use App\Models\Product;
-use App\Models\Brand;
-use App\Models\ProductGroup;
-use App\Models\ProductUnit;
 use App\Models\Unit;
-use App\Models\Customer;
-use App\Models\CustomerGroup;
-use App\Models\Investor;
+use App\Models\Brand;
+use App\Models\Branch;
 use App\Models\Capital;
+use App\Models\Expense;
+use App\Models\Product;
+use App\Models\Customer;
+use App\Models\Investor;
+use App\Models\Supplier;
+use App\Models\Warehouse;
+use App\Models\IncomeGroup;
+use App\Models\ProductUnit;
 use App\Models\CapitalGroup;
 use App\Models\ExpenseGroup;
-use App\Models\IncomeGroup;
-use App\Models\Supplier;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Traits\LogsActivity;
+use App\Models\ProductGroup;
+use App\Models\CustomerGroup;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Company extends Model
 {
@@ -73,39 +74,19 @@ class Company extends Model
         return $this->hasMany(Cash::class);
     }
 
-    public function products()
+    public function investors()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Investor::class);
     }
 
-    public function brands()
+    public function capital_groups()
     {
-        return $this->hasMany(Brand::class);
+        return $this->hasMany(CapitalGroup::class);
     }
-
-    public function productgroups()
+    
+    public function capitals()
     {
-        return $this->hasMany(ProductGroup::class);
-    }
-
-    public function productunits()
-    {
-        return $this->hasMany(ProductUnit::class);
-    }
-
-    public function units()
-    {
-        return $this->hasMany(Unit::class);
-    }
-
-    public function customers()
-    {
-        return $this->hasMany(Customer::class);
-    }
-
-    public function customergroups()
-    {
-        return $this->hasMany(CustomerGroup::class);
+        return $this->hasMany(Capital::class);
     }
 
     public function expensegroups()
@@ -113,24 +94,69 @@ class Company extends Model
         return $this->hasMany(ExpenseGroup::class);
     }
 
+    public function expense()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
     public function incomegroups()
     {
         return $this->hasMany(IncomeGroup::class);
     }
 
-    public function investors()
+    public function income()
     {
-        return $this->hasMany(Investor::class);
+        return $this->hasMany(Income::class);
     }
 
-    public function capitals()
+    public function productgroups()
     {
-        return $this->hasMany(Capital::class);
+        return $this->hasMany(ProductGroup::class);
+    }
+    
+    public function brands()
+    {
+        return $this->hasMany(Brand::class);
     }
 
-    public function capital_groups()
+    public function units()
     {
-        return $this->hasMany(CapitalGroup::class);
+        return $this->hasMany(Unit::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function productunits()
+    {
+        return $this->hasMany(ProductUnit::class);
+    }
+    
+    public function suppliers()
+    {
+        return $this->hasMany(Supplier::class);
+    }
+    
+    public function suppliers_product()
+    {
+        return $this->hasMany(SupplierProduct::class);
+    }
+
+    public function customergroups()
+    {
+        return $this->hasMany(CustomerGroup::class);
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    public function customerAddresses()
+    {
+        return $this->hasMany(CustomerAddress::class);
     }
 
     public function users()
@@ -141,16 +167,6 @@ class Company extends Model
     public function employees()
     {
         return $this->hasMany(Employee::class);
-    }
-
-    public function suppliers()
-    {
-        return $this->hasMany(Supplier::class);
-    }
-
-    public function suppliers_product()
-    {
-        return $this->hasMany(SupplierProduct::class);
     }
 
     public static function boot()

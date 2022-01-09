@@ -20,16 +20,13 @@ class CreateCustomerGroupsTable extends Migration
             $table->string('code');
             $table->string('name')->nullable();
             $table->integer('is_member_card');
-            $table->integer('use_limit_outstanding_notes')->nullable();
-            $table->integer('limit_outstanding_notes')->default(0);
-            $table->integer('use_limit_payable_nominal')->nullable();
-            $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8)->default(0);
-            $table->integer('use_limit_age_notes')->nullable();
-            $table->integer('limit_age_notes')->default(0);
-            $table->integer('term')->default(0);
+            $table->integer('max_open_invoice')->default(0);                                      // yg lama limit_outstanding_notes
+            $table->decimal('max_outstanding_invoice', $precision = 16, $scale = 8)->default(0);  // yg lama limit_payable_nominal
+            $table->integer('max_invoice_age')->default(0);                                       // yg lama limit_age_notes
+            $table->integer('payment_term')->default(0);                                          // yg lama term
             $table->decimal('selling_point', $precision = 8, $scale = 2)->default(0);
             $table->decimal('selling_point_multiple', $precision = 16, $scale = 8)->default(0);
-            $table->integer('sell_at_capital_price')->nullable();
+            $table->integer('sell_at_cost')->nullable(); // sell_at_capital_price
             $table->decimal('global_markup_percent', $precision = 16, $scale = 8)->default(0);
             $table->decimal('global_markup_nominal', $precision = 16, $scale = 8)->default(0);
             $table->decimal('global_discount_percent', $precision = 16, $scale = 8)->default(0);

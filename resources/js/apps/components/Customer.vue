@@ -157,91 +157,97 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUse_limit_outstanding_notes" class="col-2 col-form-label">{{ $t('fields.use_limit_outstanding_notes') }}</label>
-                            <div class="col-md-3 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">                              
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="use_limit_outstanding_notes" name="use_limit_outstanding_notes" v-model="customer.use_limit_outstanding_notes" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="customer.use_limit_outstanding_notes === 1">{{ $t('use_limit_outstanding_notes.active') }}</span>
-                                        <span v-if="customer.use_limit_outstanding_notes === 0">{{ $t('use_limit_outstanding_notes.inactive') }}</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <label for="inputLimitOutstandingNotes" class="col-2 col-form-label">{{ $t('fields.limit_outstanding_notes') }}</label>
+                            <label for="inputMaxOpenInvoice" class="col-2 col-form-label">{{ $t('fields.max_open_invoice') }}</label>
                             <div class="col-md-5">
-                                <Field id="inputLimitOutstandingNotes" name="limit_outstanding_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_outstanding_notes']}" :placeholder="$t('fields.limit_outstanding_notes')" :label="$t('fields.limit_outstanding_notes')" v-model="customer.limit_outstanding_notes" v-if="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.name }}</div>
+                                <Field id="inputMaxOpenInvoice" name="max_open_invoice" as="input" :class="{'form-control':true, 'is-invalid': errors['max_open_invoice']}" :placeholder="$t('fields.max_open_invoice')" :label="$t('fields.max_open_invoice')" v-model="customer.max_open_invoice" v-if="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.max_open_invoice }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUse_Limit_Outstanding_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_payable_nominal') }}</label>
-                            <div class="col-md-3 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">                              
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="use_limit_payable_nominal" name="use_limit_payable_nominal" v-model="customer.use_limit_payable_nominal" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="customer.use_limit_payable_nominal === 1">{{ $t('use_limit_payable_nominal.active') }}</span>
-                                        <span v-if="customer.use_limit_payable_nominal === 0">{{ $t('use_limit_payable_nominal.inactive') }}</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <label for="inputLimitPayableNominal" class="col-2 col-form-label">{{ $t('fields.limit_payable_nominal') }}</label>
+                            <label for="inputMaxOustandingInvoice" class="col-2 col-form-label">{{ $t('fields.max_outstanding_invoice') }}</label>
                             <div class="col-md-5">
-                                <Field id="inputLimitPayableNominal" name="limit_payable_nominal" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_payable_nominal']}" :placeholder="$t('fields.limit_payable_nominal')" :label="$t('fields.name')" v-model="customer.limit_payable_nominal" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.limit_payable_nominal }}</div>
+                                <Field id="inputMaxOustandingInvoice" name="max_outstanding_invoice" as="input" :class="{'form-control':true, 'is-invalid': errors['max_outstanding_invoice']}" :placeholder="$t('fields.max_outstanding_invoice')" :label="$t('fields.name')" v-model="customer.max_outstanding_invoice" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.max_outstanding_invoice }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputUse_Limit_Age_Notes" class="col-2 col-form-label">{{ $t('fields.use_limit_age_notes') }}</label>
-                            <div class="col-md-3 d-flex align-items-center">
-                                <label class="css-control css-control-primary css-checkbox">                              
-                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
-                                        <input type="checkbox" class="css-control-input" id="use_limit_age_notes" name="use_limit_age_notes" v-model="customer.use_limit_age_notes" true-value="1" false-value="0">
-                                        <span class="css-control-indicator"></span>
-                                    </span>
-                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
-                                        <span v-if="customer.use_limit_age_notes === 1">{{ $t('use_limit_age_notes.active') }}</span>
-                                        <span v-if="customer.use_limit_age_notes === 0">{{ $t('use_limit_age_notes.inactive') }}</span>
-                                    </div>
-                                </label>
-                            </div>
-                            <label for="inputLimitAgeNotes" class="col-2 col-form-label">{{ $t('fields.limit_age_notes') }}</label>
+                            <label for="inputMaxInvoiceAge" class="col-2 col-form-label">{{ $t('fields.max_invoice_age') }}</label>
                             <div class="col-md-5">
-                                <Field id="inputLimitAgeNotes" name="limit_age_notes" as="input" :class="{'form-control':true, 'is-invalid': errors['limit_age_notes']}" :placeholder="$t('fields.limit_age_notes')" :label="$t('fields.limit_age_notes')" v-model="customer.limit_age_notes" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.name }}</div>
+                                <Field id="inputMaxInvoiceAge" name="max_invoice_age" as="input" :class="{'form-control':true, 'is-invalid': errors['max_invoice_age']}" :placeholder="$t('fields.max_invoice_age')" :label="$t('fields.max_invoice_age')" v-model="customer.max_invoice_age" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.max_invoice_age }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputTerm" class="col-2 col-form-label">{{ $t('fields.term') }}</label>
+                            <label for="inputPaymentTerm" class="col-2 col-form-label">{{ $t('fields.payment_term') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputTerm" name="term" as="input" :class="{'form-control':true, 'is-invalid': errors['term']}" :placeholder="$t('fields.term')" :label="$t('fields.term')" v-model="customer.term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.term }}</div>
+                                <Field id="inputPaymentTerm" name="payment_term" as="input" :class="{'form-control':true, 'is-invalid': errors['payment_term']}" :placeholder="$t('fields.payment_term')" :label="$t('fields.payment_term')" v-model="customer.payment_term" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.payment_term }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
+                            <label for="inputAddress" class="col-2 col-form-label">Address</label>
                             <div class="col-md-10">
-                                <Field id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="customer.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.address }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="customer.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.city }}</div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputContact" class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
-                            <div class="col-md-10">
-                                <Field id="inputContact" name="contact" type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="customer.contact" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.contact }}</div>
+                                <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
+                                    <div class="block-content">
+                                        <table class="table table-vcenter">
+                                            <!-- <thead class="thead-light">
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead> -->
+                                            <tbody>
+                                                <input type="hidden" v-model="customer.customer_address">
+                                                <tr v-for="(c, cIdx) in customer.customer_address">
+                                                    <input type="hidden" v-model="c.hId" name="customer_address_hId[]"/>
+                                                    <td>
+                                                        <div class="form-group row">
+                                                            <label class="col-2 col-form-label">{{ $t('fields.address') }}</label>
+                                                            <div class="col-md-10">
+                                                                <input type="text" class="form-control" v-model="c.address" id="inputAddress" name="address[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ c.address }}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label class="col-2 col-form-label">{{ $t('fields.city') }}</label>
+                                                            <div class="col-md-4">
+                                                                <input type="text" class="form-control" v-model="c.city" id="inputCity" name="city[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ c.city }}</div>
+                                                            </div>
+
+                                                            <label class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
+                                                            <div class="col-md-4">
+                                                                <input type="text" class="form-control" v-model="c.contact" id="inputContact" name="contact[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ c.contact }}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row">
+                                                            <label for="inputAddressRemarks" class="col-2 col-form-label">{{ $t('fields.remarks') }}</label>
+                                                            <div class="col-md-10">
+                                                                <textarea id="inputAddressRemarks" name="address_remarks[]" type="text" class="form-control" :placeholder="$t('fields.remarks')" rows="3" v-model="c.remarks" v-show="this.mode === 'create' || this.mode === 'edit'"></textarea>
+                                                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ c.remarks }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                    <!-- Delete Button -->
+                                                    <td class="text-center">
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedCustomerAddress(cIdx)">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="block-content block-content-full block-content-sm bg-body-light font-size-sm" v-if="this.mode === 'create' || this.mode === 'edit'">
+                                        <button type="button" class="btn btn-primary min-width-125" data-toggle="click-ripple" v-on:click="createNewCustomerAddress"><i class="fa fa-plus-square"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -338,15 +344,19 @@ export default {
                 name: '',
                 customer_group: { hId: '' },
                 sales_territory: '',
-                use_limit_outstanding_notes: '0',
-                limit_outstanding_notes: '0',
-                use_limit_payable_nominal: '0',
-                limit_payable_nominal: '0',
-                use_limit_age_notes: '0',
-                term: '0',
-                address: '',
-                city: '',
-                contact: '',
+                max_open_invoice: '0',
+                max_outstanding_invoice: '0',
+                max_invoice_age: '0',
+                payment_term: '0',
+                customer_address: [
+                    {
+                        hId: '',
+                        address: '',
+                        city: '',
+                        contact: '',
+                        remarks: ''
+                    }
+                ],
                 tax_id: '',
                 remarks: '',
                 status: '1',
@@ -395,15 +405,19 @@ export default {
                 name: '',
                 customer_group: { hId: '' },
                 sales_territory: '',
-                use_limit_outstanding_notes: '0',
-                limit_outstanding_notes: '0',
-                use_limit_payable_nominal: '0',
-                limit_payable_nominal: '',
-                use_limit_age_notes: '0',
-                term: '',
-                address: '',
-                city: '',
-                contact: '',
+                max_open_invoice: '0',
+                max_outstanding_invoice: '0',
+                max_invoice_age: '0',
+                payment_term: '0',
+                customer_address: [
+                    {
+                        hId: '',
+                        address: '',
+                        city: '',
+                        contact: '',
+                        remarks: ''
+                    }
+                ],
                 tax_id: '',
                 remarks: '',
                 status: '1',
@@ -432,6 +446,31 @@ export default {
                 this.handleError(e, actions);
                 this.loading = false;
             });
+        },
+        createNewCustomerAddress() {
+            var customer_address = {
+                hId: '',
+                address: '',
+                city: '',
+                contact: '',
+                remarks: ''
+            };
+            this.customer.customer_address.push(customer_address);
+        },
+        deleteSelectedCustomerAddress(idx) {
+            this.loading = true;
+            if (this.mode === 'create') {
+                this.customer.customer_address.splice(idx, 1);
+                this.loading = false;
+            } else if (this.mode === 'edit') {
+                if (this.customer.customer_address[idx].hId !== '') {
+                    this.customer.customer_address.splice(idx, 1);
+                    this.loading = false;
+                } else { 
+                    this.customer.customer_address.splice(idx, 1);
+                    this.loading = false;
+                }
+            } else { }
         },
         onSubmit(values, actions) {
             this.loading = true;

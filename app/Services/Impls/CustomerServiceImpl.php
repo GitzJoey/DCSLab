@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 
-use App\Services\CustomerService;
 use App\Models\Customer;
+use App\Models\CustomerAddress;
+use App\Services\CustomerService;
 
 class CustomerServiceImpl implements CustomerService
 {
@@ -18,19 +19,14 @@ class CustomerServiceImpl implements CustomerService
         $name,
         $customer_group_id,
         $sales_territory,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
-        $address,
-        $city,
-        $contact,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $customer_addresses
     )
     {
         DB::beginTransaction();
@@ -42,20 +38,30 @@ class CustomerServiceImpl implements CustomerService
             $customer->name = $name;
             $customer->customer_group_id = $customer_group_id;
             $customer->sales_territory = $sales_territory;
-            $customer->use_limit_outstanding_notes = $use_limit_outstanding_notes;
-            $customer->limit_outstanding_notes = $limit_outstanding_notes;
-            $customer->use_limit_payable_nominal = $use_limit_payable_nominal;
-            $customer->use_limit_age_notes = $use_limit_age_notes;
-            $customer->limit_age_notes = $limit_age_notes;
-            $customer->term = $term;
-            $customer->address = $address;
-            $customer->city = $city;
-            $customer->contact = $contact;
+            $customer->max_open_invoice = $max_open_invoice;
+            $customer->max_outstanding_invoice = $max_outstanding_invoice;
+            $customer->max_invoice_age = $max_invoice_age;
+            $customer->payment_term = $payment_term;
             $customer->tax_id = $tax_id;
             $customer->remarks = $remarks;
             $customer->status = $status;
 
             $customer->save();
+
+            if (empty($customer_addresses) === false) {
+                $ca = [];
+                foreach ($customer_addresses as $customer_address) {
+                    array_push($ca, new CustomerAddress(array(
+                        'company_id' => $company_id,
+                        'customer_id' => $customer['id'],
+                        'address' => $customer_address['address'],
+                        'city' => $customer_address['city'],
+                        'contact' => $customer_address['contact'],
+                        'remarks' => $customer_address['address_remarks'],
+                    )));
+                }
+                $customer->customerAddress()->saveMany($ca);
+            }
 
             DB::commit();
 
@@ -69,7 +75,7 @@ class CustomerServiceImpl implements CustomerService
 
     public function read()
     {
-        return Customer::with('customerGroup', 'company')->bySelectedCompany()->paginate();
+        return Customer::with('customerGroup', 'customerAddress', 'company')->bySelectedCompany()->paginate();
     }
 
     public function update(
@@ -79,19 +85,14 @@ class CustomerServiceImpl implements CustomerService
         $name,
         $customer_group_id,
         $sales_territory,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
-        $address,
-        $city,
-        $contact,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $customer_addresses
     )
     {
         DB::beginTransaction();
@@ -105,20 +106,60 @@ class CustomerServiceImpl implements CustomerService
                 'name' => $name,
                 'customer_group_id' => $customer_group_id,
                 'sales_territory' => $sales_territory,
-                'use_limit_outstanding_notes' => $use_limit_outstanding_notes,
-                'limit_outstanding_notes' => $limit_outstanding_notes,
-                'use_limit_payable_nominal' => $use_limit_payable_nominal,
-                'limit_payable_nominal' => $limit_payable_nominal,
-                'use_limit_age_notes' =>  $use_limit_age_notes,
-                'limit_age_notes' => $limit_age_notes,
-                'term' => $term,
-                'address' => $address,
-                'city' => $city,
-                'contact' => $contact,
+                'max_open_invoice' => $max_open_invoice,
+                'max_outstanding_invoice' => $max_outstanding_invoice,
+                'max_invoice_age' => $max_invoice_age,
+                'payment_term' => $payment_term,
                 'tax_id' => $tax_id,
                 'remarks' => $remarks,
                 'status' => $status
             ]);
+
+            
+            $ca = [];
+            foreach ($customer_addresses as $customer_address) {
+                array_push($ca, array(
+                    'id' => $customer_address['id'],
+                    'company_id' => $company_id,
+                    'customer_id' => $id,
+                    'address' => $customer_address['address'],
+                    'city' => $customer_address['city'],
+                    'contact' => $customer_address['contact'],
+                    'remarks' => $customer_address['address_remarks'],
+                ));
+            }
+
+            $caIds = [];
+            foreach ($ca as $caId)
+            {
+                array_push($caIds, $caId['id']);
+            }
+
+            $caOld = Customer::find($id);
+            $caIdsOld = $caOld->customerAddress()->pluck('id')->ToArray();
+
+            $deletedCustomerAddressIds = [];
+            $deletedCustomerAddressIds = array_diff($caIdsOld, $caIds);
+
+            foreach ($deletedCustomerAddressIds as $deletedCustomerAddressId) {
+                $customerAddress = CustomerAddress::find($deletedCustomerAddressId);
+                $retval = $customerAddress->delete();
+            }
+
+            if (empty($ca) === false) {
+                CustomerAddress::upsert(
+                    $ca,
+                    [
+                        'id'
+                    ], 
+                    [
+                        'address',
+                        'city',
+                        'contact',
+                        'remarks'
+                    ]
+                );
+            }  
 
             DB::commit();
 
