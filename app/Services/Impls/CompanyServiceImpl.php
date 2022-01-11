@@ -66,8 +66,7 @@ class CompanyServiceImpl implements CompanyService
         if (!$usr) return null;
 
         $compIds = $usr->companies()->pluck('company_id');
-        if ($compIds->count() == 0) return null;
-
+        
         if (empty($search)) {
             $companies = Company::whereIn('id', $compIds)->latest();
         } else {
@@ -86,7 +85,7 @@ class CompanyServiceImpl implements CompanyService
     {
         $usr = User::find($userId);
         if (!$usr) return null;
-        
+
         $compIds = $usr->companies()->pluck('company_id');
         return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();
     }
