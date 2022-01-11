@@ -27,7 +27,8 @@ class CompanyServiceImpl implements CompanyService
         DB::beginTransaction();
 
         try {
-            $usr = User::find($userId)->first();
+            $usr = User::find($userId);
+            if (!$usr) return null;
 
             if ($usr->companies()->count() == 0) {
                 $default = 1;
@@ -61,7 +62,7 @@ class CompanyServiceImpl implements CompanyService
 
     public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10)
     {
-        $usr = User::find($userId)->first();
+        $usr = User::find($userId);
         if (!$usr) return null;
 
         $compIds = $usr->companies()->pluck('company_id');
@@ -83,7 +84,9 @@ class CompanyServiceImpl implements CompanyService
 
     public function getAllActiveCompany(int $userId)
     {
-        $usr = User::find($userId)->first();
+        $usr = User::find($userId);
+        if (!$usr) return null;
+        
         $compIds = $usr->companies()->pluck('company_id');
         return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();
     }
