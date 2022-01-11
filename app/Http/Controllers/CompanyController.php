@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\RandomGenerator;
 use App\Http\Requests\CompanyRequest;
 use App\Services\CompanyService;
 
 use Illuminate\Http\Request;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class CompanyController extends BaseController
 {
