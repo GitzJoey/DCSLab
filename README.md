@@ -65,3 +65,9 @@ Recompile
 ## Change Logs
 
 Full change logs can be found [here](CHANGES.md)
+
+## Treat us coffee
+
+If you think this open source project usefull
+
+[![Buy Me a Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-blue.png)](https://www.buymeacoffee.com/gitzjoey)
