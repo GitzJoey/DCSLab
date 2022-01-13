@@ -66,7 +66,7 @@ Recompile
 
 Full change logs can be found [here](CHANGES.md)
 
-## Treat us coffee
+## Treat Us Coffee
 
 If you think this open source project usefull
 
