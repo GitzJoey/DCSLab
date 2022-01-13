@@ -6,7 +6,7 @@ use App\Actions\RandomGenerator;
 
 use App\Models\User;
 use App\Models\Company;
-
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class CompanyTableSeeder extends Seeder
@@ -16,10 +16,20 @@ class CompanyTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($companiesPerUsers = 3)
+    public function run($companiesPerUsers = 3, $userId = 0)
     {
-        $users = User::all();
+        if ($userId != 0) {
+            $usr = User::find($userId);
 
+            if ($usr) {
+                $users = (new Collection())->push($usr);
+            } else {
+                $users = User::all();
+            }
+        } else {
+            $users = User::all();
+        }
+            
         $randomGenerator = new randomGenerator();
 
         if ($companiesPerUsers <= 0) $companiesPerUsers = 3;

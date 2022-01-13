@@ -9,8 +9,9 @@ use App\Models\Product;
 use App\Models\Brand;
 use App\Models\ProductGroup;
 use App\Models\ProductUnit;
-use App\Models\Supplier;
 use App\Models\Unit;
+
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class ProductTableSeeder extends Seeder
@@ -20,10 +21,20 @@ class ProductTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($productPerCompany = 5)
+    public function run($productPerCompany = 5, $onlyThisCompanyId = 0)
     {
-        $companies = Company::get()->pluck('id');
+        if ($onlyThisCompanyId != 0) {
+            $c = Company::find($onlyThisCompanyId);
 
+            if ($c) {
+                $companies = (new Collection())->push($c->id);
+            } else {
+                $companies = Company::get()->pluck('id');
+            }
+        } else {
+            $companies = Company::get()->pluck('id');
+        }
+        
         foreach($companies as $c)
         {
             for ($i = 0; $i < $productPerCompany; $i++) {

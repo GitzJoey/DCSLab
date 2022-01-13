@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Branch;
 use App\Models\Company;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class BranchTableSeeder extends Seeder
@@ -13,14 +14,24 @@ class BranchTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($branchPerCompanies = 3)
+    public function run($branchPerCompanies = 3, $onlyThisCompanyId = 0)
     {
-        $companies = Company::get()->pluck('id');
+        if ($onlyThisCompanyId != 0) {
+            $c = Company::find($onlyThisCompanyId);
+
+            if ($c) {
+                $companies = (new Collection())->push($c->id);
+            } else {
+                $companies = Company::get()->pluck('id');
+            }
+        } else {
+            $companies = Company::get()->pluck('id');
+        }
 
         foreach($companies as $c) {
             for($i = 0; $i < $branchPerCompanies; $i++)
             {
-                $branch = Branch::factory()->create([
+                Branch::factory()->create([
                     'company_id' => $c
                 ]);
             }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use App\Models\Brand;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class BrandTableSeeder extends Seeder
@@ -13,9 +14,19 @@ class BrandTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($brandPerCompany = 15)
+    public function run($brandPerCompany = 15, $onlyThisCompanyId = 0)
     {
-        $companies = Company::get()->pluck('id');
+        if ($onlyThisCompanyId != 0) {
+            $c = Company::find($onlyThisCompanyId);
+
+            if ($c) {
+                $companies = (new Collection())->push($c->id);
+            } else {
+                $companies = Company::get()->pluck('id');
+            }
+        } else {
+            $companies = Company::get()->pluck('id');
+        }
 
         foreach($companies as $c)
         {

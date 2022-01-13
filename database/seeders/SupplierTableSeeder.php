@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Config;
 
 use App\Services\UserService;
 use App\Services\RoleService;
+use Illuminate\Database\Eloquent\Collection;
 
 class SupplierTableSeeder extends Seeder
 {
@@ -26,9 +27,19 @@ class SupplierTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($supplierPerCompany = 10)
+    public function run($supplierPerCompany = 10, $onlyThisCompanyId = 0)
     {
-        $companies = Company::get()->pluck('id');
+        if ($onlyThisCompanyId != 0) {
+            $c = Company::find($onlyThisCompanyId);
+
+            if ($c) {
+                $companies = (new Collection())->push($c->id);
+            } else {
+                $companies = Company::get()->pluck('id');
+            }
+        } else {
+            $companies = Company::get()->pluck('id');
+        }
 
         $instances = Container::getInstance();
         $setting = $instances->make(UserService::class)->createDefaultSetting();

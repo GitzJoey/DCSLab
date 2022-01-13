@@ -14,7 +14,7 @@
                     <div class="intro-y flex items-center h-10">
                     </div>
                     <div class="mt-5">
-                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        <br v-for="n in 1000" />
                     </div>
                 </div>
                 <div class="col-span-12 mt-6">
