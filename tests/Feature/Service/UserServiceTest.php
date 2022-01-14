@@ -205,7 +205,7 @@ class UserServiceTest extends ServiceTestCase
     public function test_call_update_profile_table()
     {
         $email = $this->faker->email;
-        $roles = Role::get()->pluck('id')->toArray();;
+        $roles = Role::get()->pluck('id')->toArray();
         $profile = [];
 
         $response = $this->service->create('testname', $email, 'password', $roles, $profile);
@@ -222,6 +222,51 @@ class UserServiceTest extends ServiceTestCase
         $this->assertDatabaseHas('profiles', [
             'user_id' => $response_edit->id,
             'first_name' => 'edited first name'
-        ]);
+        ]);        
+    }
+
+    public function test_call_update_profile_table_update_one_field_others_must_remain()
+    {
+        $email = $this->faker->email;
+        $roles = Role::get()->pluck('id')->toArray();
+        $profile = [
+            'first_name' => 'first_name',
+            'last_name' => 'last_name',
+            'address' => 'address',
+            'city' => 'city',
+            'postal_code' => 'postal_code',
+            'country' => 'country',
+            'status' => 'status',
+            'tax_id' => 'tax_id',
+            'ic_num' => 'ic_num',
+            'img_path' => 'img_path',
+            'remarks' => 'remarks'
+        ];
+
+        $response = $this->service->create('testname', $email, 'password', $roles, $profile);
+
+        $this->assertNotNull($response);
+
+        $profile_new = [
+            'first_name' => 'edited first name'
+        ];
+
+        $response_edit = $this->service->update(id: $response->id, name: $response->name, profile: $profile_new);
+
+        $this->assertNotNull($response_edit);
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $response_edit->id,
+            'first_name' => 'edited first name',
+            'last_name' => 'last_name',
+            'address' => 'address',
+            'city' => 'city',
+            'postal_code' => 'postal_code',
+            'country' => 'country',
+            'status' => 'status',
+            'tax_id' => 'tax_id',
+            'ic_num' => 'ic_num',
+            'img_path' => 'img_path',
+            'remarks' => 'remarks'
+        ]);        
     }
 }

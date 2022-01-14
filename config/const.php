@@ -28,11 +28,6 @@ return [
 
         'ERROR_RETURN_VALUE' => null,
 
-        'RANDOMSTRINGRANGE' => [
-            'ALPHABET' => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-            'NUMERIC' => [3,4,7,9],
-        ],
-
         'KEYWORDS' => [
             'AUTO' => '[AUTO]',
         ]

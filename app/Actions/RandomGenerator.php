@@ -45,7 +45,9 @@ class RandomGenerator
     public function generateAlphaNumeric(int $length): string
     {
         $generatedString = '';
-        $characters = array_merge(Config::get('const.DEFAULT.RANDOMSTRINGRANGE.ALPHABET'), Config::get('const.DEFAULT.RANDOMSTRINGRANGE.NUMERIC'));
+        $characters = array_merge(
+            ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+            [3, 4, 7, 9]);
         $max = sizeof($characters) - 1;
 
         for ($i = 0; $i < $length; $i++) {
@@ -55,7 +57,7 @@ class RandomGenerator
         return strtoupper($generatedString);
     }
 
-    public function randomTrueOrFalse(int $howManyTimes = 1): bool
+    public function randomTrueOrFalse(int $howManyTimes = 1): bool | array
     {
         if ($howManyTimes <= 1) return (bool)rand(0,1);
 

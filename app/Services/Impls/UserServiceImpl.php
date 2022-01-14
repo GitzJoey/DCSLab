@@ -216,17 +216,17 @@ class UserServiceImpl implements UserService
                 $pa = $user->profile()->first();
 
                 $retval = $pa->update([
-                    'first_name' => $profile['first_name'],
-                    'last_name' => $profile['last_name'],
-                    'address' => $profile['address'],
-                    'city' => $profile['city'],
-                    'postal_code' => $profile['postal_code'],
-                    'country' => empty($profile['country']) ? $pa->country:$profile['country'],
+                    'first_name' => array_key_exists('first_name', $profile) ? $profile['first_name']:$pa->first_name,
+                    'last_name' => array_key_exists('last_name', $profile) ? $profile['last_name']:$pa->last_name,
+                    'address' => array_key_exists('address', $profile) ? $profile['address']:$pa->address,
+                    'city' => array_key_exists('city', $profile) ? $profile['city']:$pa->city,
+                    'postal_code' => array_key_exists('postal_code', $profile) ? $profile['postal_code']:$pa->postal_code,
+                    'country' => array_key_exists('country', $profile) ? $profile['country']:$pa->country,
                     'status' => array_key_exists('status', $profile ) ? $profile['status']:$pa->status,
-                    'tax_id' => $profile['tax_id'],
-                    'ic_num' => $profile['ic_num'],
+                    'tax_id' => array_key_exists('tax_id', $profile) ? $profile['tax_id']:$pa->tax_id,
+                    'ic_num' => array_key_exists('ic_num', $profile) ? $profile['ic_num']:$pa->ic_num,
                     'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$pa->img_path,
-                    'remarks' => $profile['remarks']
+                    'remarks' => array_key_exists('remarks', $profile) ? $profile['remarks']:$pa->remarks
                 ]);
             }
 
