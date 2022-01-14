@@ -60,7 +60,7 @@ Upon available updates, pull the project to the latest
 Recompile
 
 >`$ php artisan app:helper`  
->`<choose option 3>`
+>`<choose option 1>`
 
 ## Change Logs
 
