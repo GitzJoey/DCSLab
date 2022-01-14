@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace Tests\Feature\Service;
 
 use App\Services\RoleService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
+use Tests\ServiceTestCase;
 use TypeError;
 
-class RoleServiceTest extends TestCase
+class RoleServiceTest extends ServiceTestCase
 {
     protected function setUp(): void
     {

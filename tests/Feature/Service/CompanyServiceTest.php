@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace Tests\Feature\Service;
 
 use App\Models\User;
 use App\Services\CompanyService;
@@ -10,10 +10,10 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
+use Tests\ServiceTestCase;
 use TypeError;
 
-class CompanyServiceTest extends TestCase
+class CompanyServiceTest extends ServiceTestCase
 {
     use WithFaker;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace Tests\Feature\Service;
 
 use App\Services\SupplierService;
 use App\Models\Company;
@@ -11,9 +11,9 @@ use App\Actions\RandomGenerator;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ServiceTestCase;
 
-class SupplierServiceTest extends TestCase
+class SupplierServiceTest extends ServiceTestCase
 {
     use WithFaker;
     

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace Tests\Feature\Service;
 
 use App\Models\Role;
 use App\Models\User;
@@ -9,10 +9,11 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
+use Illuminate\Support\Facades\File;
+use Tests\ServiceTestCase;
 use TypeError;
 
-class UserServiceTest extends TestCase
+class UserServiceTest extends ServiceTestCase
 {
     use WithFaker;
 
@@ -215,7 +216,7 @@ class UserServiceTest extends TestCase
             'first_name' => 'edited first name'
         ];
 
-        $response_edit = $this->service->update(id: $response->id, name: 'edited again name', profile: $profile_new);
+        $response_edit = $this->service->update(id: $response->id, name: $response->name, profile: $profile_new);
 
         $this->assertNotNull($response_edit);
         $this->assertDatabaseHas('profiles', [
