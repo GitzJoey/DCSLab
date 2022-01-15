@@ -267,6 +267,50 @@ class UserServiceTest extends ServiceTestCase
             'ic_num' => 'ic_num',
             'img_path' => 'img_path',
             'remarks' => 'remarks'
-        ]);        
+        ]);
+
+        $profile_new = [
+            'last_name' => 'edited last name'
+        ];
+
+        $response_edit = $this->service->update(id: $response->id, name: $response->name, profile: $profile_new);
+
+        $this->assertNotNull($response_edit);
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $response_edit->id,
+            'first_name' => 'edited first name',
+            'last_name' => 'edited last name',
+            'address' => 'address',
+            'city' => 'city',
+            'postal_code' => 'postal_code',
+            'country' => 'country',
+            'status' => 'status',
+            'tax_id' => 'tax_id',
+            'ic_num' => 'ic_num',
+            'img_path' => 'img_path',
+            'remarks' => 'remarks'
+        ]);
+
+        $profile_new = [
+            'address' => 'edited address'
+        ];
+
+        $response_edit = $this->service->update(id: $response->id, name: $response->name, profile: $profile_new);
+
+        $this->assertNotNull($response_edit);
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $response_edit->id,
+            'first_name' => 'edited first name',
+            'last_name' => 'edited last name',
+            'address' => 'edited address',
+            'city' => 'city',
+            'postal_code' => 'postal_code',
+            'country' => 'country',
+            'status' => 'status',
+            'tax_id' => 'tax_id',
+            'ic_num' => 'ic_num',
+            'img_path' => 'img_path',
+            'remarks' => 'remarks'
+        ]);
     }
 }

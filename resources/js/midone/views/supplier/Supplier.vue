@@ -68,12 +68,16 @@
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.payment_term_type') }}</div>
                                         <div class="flex-1">
                                             <span v-if="item.payment_term_type === 'PIA'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
-                                            <span v-if="item.payment_term_type === 'NET30'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
+                                            <span v-if="item.payment_term_type === 'NET'">{{ t('components.dropdown.values.paymentTermTypeDDL.net') }}</span>
                                             <span v-if="item.payment_term_type === 'EOM'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
                                             <span v-if="item.payment_term_type === 'COD'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
                                             <span v-if="item.payment_term_type === 'CND'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
                                             <span v-if="item.payment_term_type === 'CBS'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
                                         </div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.payment_term') }}</div>
+                                        <div class="flex-1">{{ item.payment_term }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.tax_id') }}</div>
@@ -182,6 +186,13 @@
                                 <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                             </VeeField>
                             <ErrorMessage name="payment_term_type" class="text-theme-21" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
+                            <div class="mt-2">
+                                <VeeField id="inputPaymentTerm" as="input" rules="required|numeric|max:365" class="form-control" name="payment_term" v-model="supplier.payment_term" />
+                                <ErrorMessage name="payment_term_type" class="text-theme-21" />
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
@@ -299,6 +310,7 @@ const supplier = ref({
     remarks: '',
     supplier_products: [],
     payment_term_type: '',
+    payment_term: 0,
     status: 1,
 });
 const statusDDL = ref([]);
@@ -423,6 +435,7 @@ function emptySupplier() {
         tax_id: '',
         remarks: '',
         payment_term_type: '',
+        payment_term: 0,
         status: 1,
     }
 }

@@ -46,6 +46,7 @@ class SupplierRequest extends FormRequest
                     'name' => 'required|max:255',
                     'status' => 'required',
                     'payment_term_type' => 'required',
+                    'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required',
                 ];
                 return array_merge($rules_store, $nullableArr);
@@ -56,6 +57,7 @@ class SupplierRequest extends FormRequest
                     'name' => 'required|max:255',
                     'status' => 'required',
                     'payment_term_type' => 'required',
+                    'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required',
                 ];
                 return array_merge($rules_update, $nullableArr);

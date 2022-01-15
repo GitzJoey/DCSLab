@@ -23,17 +23,18 @@ class SupplierServiceImpl implements SupplierService
         int $company_id,
         string $code,
         string $name,
-        string $term,
-        string $contact,
-        string $address,
-        string $city,
+        string $payment_term_type,
+        ?int $payment_term = 0,
+        ?string $contact = null,
+        ?string $address = null,
+        ?string $city = null,
         bool $is_tax,
         string $tax_id,
-        string $remarks,
+        ?string $remarks = null,
         int $status,
         array $poc,
         array $products
-    ): Supplier
+    ): ?Supplier
     {
         DB::beginTransaction();
 
@@ -43,7 +44,8 @@ class SupplierServiceImpl implements SupplierService
             $supplier = new Supplier();
             $supplier->code = $code;
             $supplier->name = $name;
-            $supplier->payment_term_type = $term;
+            $supplier->payment_term_type = $payment_term_type;
+            $supplier->payment_term = $payment_term;
             $supplier->contact = $contact;
             $supplier->address = $address;
             $supplier->city = $city;
@@ -108,17 +110,18 @@ class SupplierServiceImpl implements SupplierService
         int $id,
         string $code,
         string $name,
-        string $term,
-        string $contact,
-        string $address,
-        string $city,
+        string $payment_term_type,
+        ?int $payment_term = 0,
+        ?string $contact = null,
+        ?string $address = null,
+        ?string $city = null,
         bool $is_tax,
         string $tax_id,
-        string $remarks,
+        ?string $remarks = null,
         int $status,
         array $poc,
         array $products
-    ): Supplier
+    ): ?Supplier
     {
         DB::beginTransaction();
 
@@ -128,7 +131,8 @@ class SupplierServiceImpl implements SupplierService
             $supplier->update([
                 'code' => $code,
                 'name' => $name,
-                'term' => $term,
+                'payment_term_type' => $payment_term_type,
+                'payment_term' => $payment_term,
                 'contact' => $contact,
                 'address' => $address,
                 'city' => $city,
@@ -140,7 +144,7 @@ class SupplierServiceImpl implements SupplierService
 
             DB::commit();
 
-            return $supplier;
+            return $supplier->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);

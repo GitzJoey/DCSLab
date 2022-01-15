@@ -55,7 +55,7 @@
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Payment In Advance",
-                    "net30": "Payment 30 Days After Invoice Date",
+                    "net": "Payment In X Days After Invoice Date",
                     "eom": "End Of Month",
                     "cod": "Cash On Delivery",
                     "cnd": "Cash Next Delivery",
@@ -272,6 +272,7 @@
                 "city": "City",
                 "taxable_enterprise": "Taxable Enterprise",
                 "payment_term_type": "Term of Payment",
+                "payment_term": "Payment Term",
                 "tax_id": "Tax ID",
                 "remarks": "Remarks",
                 "status": "Status",

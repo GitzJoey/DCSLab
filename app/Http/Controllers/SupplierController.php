@@ -57,6 +57,7 @@ class SupplierController extends BaseController
             $code,
             $request['name'],
             $request['payment_term_type'],
+            $request['payment_term'],
             $request['contact'],
             $request['address'],
             $request['city'],
@@ -92,6 +93,7 @@ class SupplierController extends BaseController
             $request['code'],
             $request['name'],
             $request['payment_term_type'],
+            $request['payment_term'],
             $request['contact'],
             $request['address'],
             $request['city'],
@@ -117,7 +119,7 @@ class SupplierController extends BaseController
     {
         return [
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => 'PIA'],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net30', 'code' => 'NET30'],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => 'NET'],
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => 'EOM'],
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => 'COD'],
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => 'CND']            

@@ -55,7 +55,7 @@
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Pembayaran Dimuka",
-                    "net30": "Pembayaran 30 Hari Setelah Tgl Invoice",
+                    "net": "Pembayaran Beberapa Hari Setelah Tgl Invoice",
                     "eom": "Akhir Bulan",
                     "cod": "Cash On Delivery",
                     "cnd": "Cash Di Pengiriman Selanjutnya",
@@ -272,6 +272,7 @@
                 "city": "Kota",
                 "taxable_enterprise": "Pengusaha Kena Pajak",
                 "payment_term_type": "Ketentuan Pembayaran",
+                "payment_term": "Tempo",
                 "tax_id": "NPWP",
                 "remarks": "Remarks",
                 "status": "Status",

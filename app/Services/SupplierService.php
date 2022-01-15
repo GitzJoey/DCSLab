@@ -11,16 +11,17 @@ interface SupplierService
         string $code,
         string $name,
         string $payment_term_type,
-        string $contact,
-        string $address,
-        string $city,
+        ?int $payment_term = 0,
+        ?string $contact = null,
+        ?string $address = null,
+        ?string $city = null,
         bool $is_tax,
         string $tax_id,
-        string $remarks,
+        ?string $remarks = null,
         int $status,
         array $poc,
         array $products
-    ): Supplier;
+    ): ?Supplier;
 
     public function read(int $companyId, string $search = '', bool $paginate = true, int $perPage = 10);
 
@@ -28,17 +29,18 @@ interface SupplierService
         int $id,
         string $code,
         string $name,
-        string $term,
-        string $contact,
-        string $address,
-        string $city,
+        string $payment_term_type,
+        ?int $payment_term = 0,
+        ?string $contact = null,
+        ?string $address = null,
+        ?string $city = null,
         bool $is_tax,
         string $tax_id,
-        string $remarks,
+        ?string $remarks = null,
         int $status,
         array $poc,
         array $products
-    ): Supplier;
+    ): ?Supplier;
 
     public function delete(int $id): bool;
 

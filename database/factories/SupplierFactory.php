@@ -28,7 +28,7 @@ class SupplierFactory extends Factory
 
         $array_term = [
             'PIA',
-            'NET30',
+            'NET',
             'EOM',
             'COD',
             'CND'
@@ -40,6 +40,7 @@ class SupplierFactory extends Factory
             'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->company(),
             'payment_term_type' => $array_term[0],
+            'payment_term' => $array_term[0] == 'NET' ? (new RandomGenerator())->generateNumber(1, 30) : 0,
             'contact' => $faker->e164PhoneNumber(),
             'address' => $faker->address(),
             'city' => $faker->city(),
