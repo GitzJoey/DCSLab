@@ -109,7 +109,7 @@ class ProductServiceTest extends TestCase
         $brand_id = Brand::inRandomOrder()->get()[0]->id;
         $name = $this->faker->name;
         $tax_status = (new RandomGenerator())->generateNumber(1,9999);
-        $supplier_id = Supplier::inRandomOrder()->get()[0]->id; 
+        $supplier_id = Supplier::inRandomOrder()->get()[0]->id;
         $remarks = null;
         $point = (new RandomGenerator())->generateNumber(1,9999);
         $use_serial_number = (new RandomGenerator())->generateNumber(0, 1);
@@ -131,7 +131,7 @@ class ProductServiceTest extends TestCase
                 'product_id' => null,
                 'code' => $faker->unique()->numberBetween(001, 99999),
                 'unit_id' => $units[$i]->id,
-                'conv_value' => $conv_value,
+                'conversion_value' => $conv_value,
                 'is_base' => $conv_value === 1 ? 1 : 0,
                 'is_primary_unit' => $is_primary_unit === $i ? 1 : 0,
                 'remarks' => ''
@@ -175,14 +175,14 @@ class ProductServiceTest extends TestCase
             $this->assertDatabaseHas('product_units', [
                 'company_id' => $product_unit['company_id'],
                 'product_id' => Hashids::decode($product)[0],
-                'code' => $product_unit['code'],
                 'unit_id' => $product_unit['unit_id'],
-                'conversion_value' => $product_unit['conv_value'],
+                'code' => $product_unit['code'],
                 'is_base' => $product_unit['is_base'],
+                'conversion_value' => $product_unit['conversion_value'],
                 'is_primary_unit' => $product_unit['is_primary_unit'],
                 'remarks' => $product_unit['remarks']
             ]);
-          }
+        }
     }
 
     public function test_update()
@@ -246,14 +246,14 @@ class ProductServiceTest extends TestCase
                 'product_id' => null,
                 'code' => $faker->unique()->numberBetween(001, 99999),
                 'unit_id' => $units[$i]->id,
-                'conv_value' => $conv_value,
+                'conversion_value' => $conv_value,
                 'is_base' => $conv_value === 1 ? 1 : 0,
                 'is_primary_unit' => $is_primary_unit === $i ? 1 : 0,
                 'remarks' => $faker->word()
             ));
         }
 
-        $product = $this->service->create(
+        $response = $this->service->create(
             $company_id,
             $code,
             $product_group_id,
@@ -270,8 +270,7 @@ class ProductServiceTest extends TestCase
             $product_units
         );
 
-        $product_id = Hashids::decode($product)[0];
-        $company_id_new = Company::inRandomOrder()->get()[0]->id;
+        $id = Hashids::decode($response)[0];
         $code_new = (new RandomGenerator())->generateNumber(1,9999);
         $product_group_id_new = ProductGroup::inRandomOrder()->get()[0]->id;
         $brand_id_new = Brand::inRandomOrder()->get()[0]->id;
@@ -285,7 +284,7 @@ class ProductServiceTest extends TestCase
         $product_type_new = (new RandomGenerator())->generateNumber(1, 4);
         $status_new = (new RandomGenerator())->generateNumber(0, 1);
 
-        $product_units_new = ProductUnit::where('product_id', '=', $product_id)->get();
+        $product_units_new = ProductUnit::where('product_id', '=', $id)->get();
         $nCount = count($product_units_new);
         $units = Unit::all()->random($nCount);
         
@@ -294,19 +293,19 @@ class ProductServiceTest extends TestCase
         for ($i = 0; $i < $nCount; $i++) {
             $conv_value = $i === 0 ? $conv_value : $conv_value * $faker->numberBetween(2, 5);
 
-            $product_units_new[$i]->company_id = $company_id_new;
-            $product_units_new[$i]->product_id = $product_id;
+            $product_units_new[$i]->company_id = $company_id;
+            $product_units_new[$i]->product_id = $id;
             $product_units_new[$i]->code = $faker->unique()->numberBetween(001, 99999);
             $product_units_new[$i]->unit_id = $units[$i]->id;
-            $product_units_new[$i]->conv_value = $conv_value;
+            $product_units_new[$i]->conversion_value = $conv_value;
             $product_units_new[$i]->is_base = $conv_value === 1 ? 1 : 0;
             $product_units_new[$i]->is_primary_unit = $is_primary_unit === $i ? 1 : 0;
             $product_units_new[$i]->remarks = $faker->word();
         }
 
         $response = $this->service->update(
-            $product_id,
-            $company_id_new,
+            $id,
+            $company_id,
             $code_new,
             $product_group_id_new,
             $brand_id_new,
@@ -323,8 +322,8 @@ class ProductServiceTest extends TestCase
         );
 
         $this->assertDatabaseHas('products', [
-            'id' => $product_id,
-            'company_id' => $company_id_new,
+            'id' => $id,
+            'company_id' => $company_id,
             'code' => $code_new,
             'product_group_id' => $product_group_id_new,
             'brand_id' => $brand_id_new,
@@ -344,10 +343,10 @@ class ProductServiceTest extends TestCase
                 'id' => $product_units_new[$i]->id,
                 'company_id' => $product_units_new[$i]->company_id,
                 'product_id' => $product_units_new[$i]->product_id,
-                'code' => $product_units_new[$i]->code,
                 'unit_id' => $product_units_new[$i]->unit_id,
-                'conversion_value' => $product_units_new[$i]->conv_value,
+                'code' => $product_units_new[$i]->code,
                 'is_base' => $product_units_new[$i]->is_base,
+                'conversion_value' => $product_units_new[$i]->conversion_value,
                 'is_primary_unit' => $product_units_new[$i]->is_primary_unit,
                 'remarks' => $product_units_new[$i]->remarks
             ]);
