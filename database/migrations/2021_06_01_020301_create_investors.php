@@ -15,7 +15,7 @@ class CreateInvestors extends Migration
     {
         Schema::create('investors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('company_id')->references('id')->on('companies');
             $table->string('code');
             $table->string('name')->nullable();
             $table->string('contact')->nullable();
