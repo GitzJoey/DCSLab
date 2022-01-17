@@ -19,6 +19,7 @@ use App\Models\CapitalGroup;
 use App\Models\ExpenseGroup;
 use App\Models\ProductGroup;
 use App\Models\CustomerGroup;
+use App\Models\CustomerAddress;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -129,7 +130,7 @@ class Company extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function productunits()
+    public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
     }

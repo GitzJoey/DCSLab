@@ -15,22 +15,21 @@ class CreateCustomerGroupsTable extends Migration
     {
         Schema::create('customer_groups', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('cash_id')->nullable()->references('id')->on('cashes')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('company_id')->references('id')->on('companies');
+            $table->foreignId('cash_id')->nullable()->references('id')->on('cashes');
             $table->string('code');
             $table->string('name')->nullable();
-            $table->integer('is_member_card');
-            $table->integer('max_open_invoice')->default(0);                                      // yg lama limit_outstanding_notes
-            $table->decimal('max_outstanding_invoice', $precision = 16, $scale = 8)->default(0);  // yg lama limit_payable_nominal
-            $table->integer('max_invoice_age')->default(0);                                       // yg lama limit_age_notes
-            $table->integer('payment_term')->default(0);                                          // yg lama term
+            $table->integer('max_open_invoice')->default(0);
+            $table->decimal('max_outstanding_invoice', $precision = 16, $scale = 8)->default(0);
+            $table->integer('max_invoice_age')->default(0);
+            $table->integer('payment_term')->default(0);
             $table->decimal('selling_point', $precision = 8, $scale = 2)->default(0);
             $table->decimal('selling_point_multiple', $precision = 16, $scale = 8)->default(0);
-            $table->integer('sell_at_cost')->nullable(); // sell_at_capital_price
-            $table->decimal('global_markup_percent', $precision = 16, $scale = 8)->default(0);
-            $table->decimal('global_markup_nominal', $precision = 16, $scale = 8)->default(0);
-            $table->decimal('global_discount_percent', $precision = 16, $scale = 8)->default(0);
-            $table->decimal('global_discount_nominal', $precision = 16, $scale = 8)->default(0);
+            $table->integer('sell_at_cost')->nullable();
+            $table->decimal('price_markup_percent', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('price_markup_nominal', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('price_markdown_percent', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('price_markdown_nominal', $precision = 16, $scale = 8)->default(0);
             $table->integer('is_rounding')->nullable();
             $table->integer('round_on')->default(0);
             $table->integer('round_digit')->nullable();
