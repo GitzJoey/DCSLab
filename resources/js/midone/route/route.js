@@ -165,7 +165,7 @@ router.afterEach((to, from) => {
     }).catch(e => { });
 
     if (to.matched.some(r => r.meta.remember))
-        localStorage.setItem('DCSLAB_LAST_ROUTE', to.name);
+        sessionStorage.setItem('DCSLAB_LAST_ROUTE', to.name);
 });
 
 export default router;

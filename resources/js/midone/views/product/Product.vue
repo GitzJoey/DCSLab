@@ -1,7 +1,7 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.product.table.title')" :data="productList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true" :visible="showGrid">
+        <DataList :title="t('views.product.table.title')" :data="productList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
            <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
@@ -310,9 +310,9 @@ const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
-const showGrid = ref(false);
+
 // Data - Views
-const productList = ref([]);
+const productList = ref({});
 const product = ref({
     code: '',
     product_group: { hId: '' },
@@ -371,7 +371,6 @@ function getAllProducts(args) {
 
     axios.get(route('api.get.db.product.product.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         productList.value = response.data;
-        showGrid.value = true;
         loading.value = false;
     });
 }

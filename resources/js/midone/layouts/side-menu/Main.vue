@@ -205,8 +205,8 @@ export default {
         }
 
         function goToLastRoute() {
-            if (localStorage.getItem('DCSLAB_LAST_ROUTE') !== null) {
-                router.push({ name: localStorage.getItem('DCSLAB_LAST_ROUTE') });
+            if (sessionStorage.getItem('DCSLAB_LAST_ROUTE') !== null) {
+                router.push({ name: sessionStorage.getItem('DCSLAB_LAST_ROUTE') });
             }
         }
 

@@ -180,7 +180,7 @@ const deleteId = ref('');
 const expandDetail = ref(null);
 
 // Data - Views
-const companyList = ref([]);
+const companyList = ref({});
 const company = ref({
     code: '',
     name: '',
@@ -319,6 +319,11 @@ function showSelected(index) {
 function backToList() {
     resetAlertErrors();
     mode.value = 'list';
+
+    if (companyList.value.data.length == 0) {
+        store.dispatch('sideMenu/fetchMenuContext');
+    }
+
     getAllCompany({ page: companyList.value.current_page, pageSize: companyList.value.per_page });
 }
 
