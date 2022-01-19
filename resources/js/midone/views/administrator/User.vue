@@ -265,6 +265,7 @@
 // Vue Import
 import { inject, onMounted, ref, computed } from 'vue'
 // Helper Import
+import axios from '../../axios';
 import { getLang } from '../../lang';
 import mainMixins from '../../mixins';
 import { helper } from '../../utils/helper';

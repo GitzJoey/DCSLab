@@ -65,6 +65,7 @@
 
 <script setup>
 import { inject, onMounted, ref } from "vue";
+import axios from '../../axios';
 import mainMixins from '../../mixins';
 
 const { t, route, isEmptyObject } = mainMixins();

@@ -1,4 +1,5 @@
 import { SET_DARK_MODE, USERCONTEXT, SELECTEDUSERCOMPANY } from './mutation-types';
+import axios from '../axios';
 
 const state = () => {
     return {

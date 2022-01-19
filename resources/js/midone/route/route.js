@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import axios from '../axios';
+
 import SideMenu from '../layouts/side-menu/Main.vue';
 
 import MainDashboard from '../views/dashboard/MainDashboard.vue';

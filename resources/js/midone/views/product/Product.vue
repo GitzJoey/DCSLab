@@ -288,6 +288,7 @@
 // Vue Import
 import { inject, onMounted, ref, computed, watch } from 'vue'
 // Helper Import
+import axios from '../../axios';
 import mainMixins from '../../mixins';
 // Core Components Import
 import { useStore } from '../../store/index';
