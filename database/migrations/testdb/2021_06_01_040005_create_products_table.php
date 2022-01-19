@@ -21,8 +21,8 @@ class CreateProductsTable extends Migration
             $table->string('code')->nullable();
             $table->string('name')->nullable();
             $table->integer('product_type')->nullable(); 
-            $table->boolean('taxable_supplies')->default(false);
-            $table->integer('rate_supplies')->default(0);
+            $table->boolean('taxable_supply')->default(false);
+            $table->integer('standard_rate_supply')->default(0);
             $table->boolean('price_include_vat')->default(false);
             $table->integer('point')->nullable();
             $table->integer('use_serial_number')->nullable();

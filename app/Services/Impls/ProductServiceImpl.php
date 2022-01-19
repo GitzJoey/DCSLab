@@ -22,8 +22,8 @@ class ProductServiceImpl implements ProductService
         int $product_group_id,
         int $brand_id,
         string $name,
-        bool $taxable_supplies,
-        int $rate_supplies,
+        bool $taxable_supply,
+        int $standard_rate_supply,
         bool $price_include_vat,
         ?string $remarks = null,
         int $point,
@@ -47,8 +47,8 @@ class ProductServiceImpl implements ProductService
             $product->product_group_id = $product_group_id;
             $product->brand_id = $brand_id;
             $product->name = $name;
-            $product->taxable_supplies = $taxable_supplies;
-            $product->rate_supplies = $rate_supplies;
+            $product->taxable_supply = $taxable_supply;
+            $product->standard_rate_supply = $standard_rate_supply;
             $product->price_include_vat = $price_include_vat;
             $product->remarks = $remarks;
             $product->point = $point;
@@ -78,9 +78,8 @@ class ProductServiceImpl implements ProductService
                 )));
             }
 
-            if (!empty($pu)) {
-                $pu_clean = $this->checkUniqueCodeInArray($pu);
-                $product->productUnits()->saveMany($pu_clean);
+            if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
+                $product->productUnits()->saveMany($pu);
             }
 
             DB::commit();
@@ -136,8 +135,8 @@ class ProductServiceImpl implements ProductService
         int $product_group_id,
         int $brand_id,
         string $name,
-        bool $taxable_supplies,
-        int $rate_supplies,
+        bool $taxable_supply,
+        int $standard_rate_supply,
         bool $price_include_vat,
         ?string $remarks = null,
         int $point,
@@ -163,8 +162,8 @@ class ProductServiceImpl implements ProductService
                 'product_group_id' => $product_group_id,
                 'brand_id' => $brand_id,
                 'name' => $name,
-                'taxable_supplies' => $taxable_supplies,
-                'rate_supplies' => $rate_supplies,
+                'taxable_supply' => $taxable_supply,
+                'standard_rate_supply' => $standard_rate_supply,
                 'price_include_vat' => $price_include_vat,
                 'remarks' => $remarks,
                 'point' => $point,
@@ -200,25 +199,26 @@ class ProductServiceImpl implements ProductService
                 array_push($puIds, $puId['id']);
             }
 
-            $puIdsOld = $product->productUnit()->pluck('id')->ToArray();
+            $puIdsOld = $product->productUnits()->pluck('id')->ToArray();
 
             $deletedProductUnitIds = [];
             $deletedProductUnitIds = array_diff($puIdsOld, $puIds);            
 
             foreach ($deletedProductUnitIds as $deletedProductUnitId) {
-                $productUnit = $product->productUnit()->whereIn('id', $deletedProductUnitId);
+                $productUnit = $product->productUnits()->whereIn('id', $deletedProductUnitId);
                 $productUnit->delete();
             }
 
-            $product->productUnits()->upsert($pu, ['id'], [
+            if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
+                $product->productUnits()->upsert($pu, ['id'], [
                     'code',
                     'unit_id',
                     'is_base',
                     'conversion_value',
                     'is_primary_unit',
                     'remarks'
-                ]
-            );
+                ]);
+            }
 
             DB::commit();
 
@@ -279,16 +279,10 @@ class ProductServiceImpl implements ProductService
         return $result->count() == 0 ? true:false;
     }
 
-    private function checkUniqueCodeInArray(array $productUnits): array
+    private function checkUniqueCodeInArray(array $productUnits): bool
     {
-        $result = [];
-
         $allCodes = Arr::pluck($productUnits, 'code');
 
-        if (count($allCodes) == count(array_unique($allCodes))) {
-            return $productUnits;
-        }
-
-        return $result;
+        return (count($allCodes) == count(array_unique($allCodes)));
     }
 }

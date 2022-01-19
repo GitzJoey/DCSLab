@@ -74,8 +74,8 @@ class ProductController extends BaseController
         $product_type = $request['product_type'];
         $status = $request['status'];
 
-        $taxable_supplies = array_key_exists('taxable_supplies', $request) ? boolVal($request['taxable_supplies']) : false;
-        $rate_supplies = array_key_exists('rate_supplies', $request) ? intVal($request['rate_supplies']) : 0;
+        $taxable_supply = array_key_exists('taxable_supply', $request) ? boolVal($request['taxable_supply']) : false;
+        $standard_rate_supply = array_key_exists('standard_rate_supply', $request) ? intVal($request['standard_rate_supply']) : 0;
         $price_include_vat = array_key_exists('price_include_vat', $request) ? boolVal($request['price_include_vat']) : false;
 
         $product_units = [];
@@ -102,8 +102,8 @@ class ProductController extends BaseController
             $product_group_id,
             $brand_id,
             $name,
-            $taxable_supplies,
-            $rate_supplies,
+            $taxable_supply,
+            $standard_rate_supply,
             $price_include_vat,
             $remarks,
             $point,
@@ -122,16 +122,16 @@ class ProductController extends BaseController
         $request = $productRequest->validated();
 
         $code = $request['code'];
-        $company_id = Hashids::decode($request['$company_id'])[0];
+        $company_id = Hashids::decode($request['company_id'])[0];
         $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
-        $taxable_supplies = $request['taxable_supplies'];
-        $rate_supplies = $request['rate_supplies'];
-        $price_include_vat = $request['price_include_vat'];
+        $taxable_supply = array_key_exists('taxable_supply', $request) ? $request['taxable_supply']:0;
+        $standard_rate_supply = array_key_exists('standard_rate_supply', $request) ? $request['standard_rate_supply']:0;
+        $price_include_vat = array_key_exists('price_include_vat', $request) ? $request['price_include_vat']:0;
         $remarks = $request['remarks'];
         $point = $request['point'];
-        $use_serial_number = $request['use_serial_number'];
+        $use_serial_number = array_key_exists('use_serial_number', $request) ? $request['use_serial_number']:0;
         $has_expiry_date = $request['has_expiry_date'];
         $product_type = $request['product_type'];
         $status = $request['status'];
@@ -139,9 +139,8 @@ class ProductController extends BaseController
         $product_units = [];
         $count_unit = count($request['unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $product_unit_id = $request['product_unit_hId'][$i] != null ? Hashids::decode($request['product_unit_hId'][$i])[0] : null;
-
-            $code = '';
+            $product_unit_id = $request['product_units_hId'][$i] == 0 ? 0 : Hashids::decode($request['product_units_hId'][$i])[0];
+            $code = $request['product_units_code'][$i];
 
             $is_base = is_null($request['is_base'][$i]) ? 0 : $request['is_base'][$i];
             $is_base = is_numeric($is_base) ? $is_base : 0;
@@ -149,11 +148,9 @@ class ProductController extends BaseController
             $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : $request['is_primary_unit'][$i];
             $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
 
-            $use_serial_number = $use_serial_number == 'on' ? 1 : $use_serial_number;
             $use_serial_number = is_null($use_serial_number) ? 0 : $use_serial_number;
             $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
             
-            $has_expiry_date = $has_expiry_date == 'on' ? 1 : $has_expiry_date;
             $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
             $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
 
@@ -177,8 +174,8 @@ class ProductController extends BaseController
             $product_group_id,
             $brand_id,
             $name,
-            $taxable_supplies,
-            $rate_supplies,
+            $taxable_supply,
+            $standard_rate_supply,
             $price_include_vat,    
             $remarks,
             $point,

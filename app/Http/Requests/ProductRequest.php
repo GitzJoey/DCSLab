@@ -36,12 +36,12 @@ class ProductRequest extends FormRequest
             'is_base.*' => 'nullable',
             'is_primary_unit.*' => 'nullable',
             'use_serial_number' => 'nullable',
-            'taxable_supplies' => 'nullable',
-            'rate_supplies' => 'nullable',
+            'taxable_supply' => 'nullable',
+            'standard_rate_supply' => 'nullable',
             'price_include_vat' => 'nullable',
             'has_expiry_date' => 'nullable',
             'product_group_id' => 'nullable',
-            'product_unit_hId' => 'nullable',
+            'product_units_hId.*' => 'nullable',
             'product_units_code.*' => 'nullable',
         ];
 

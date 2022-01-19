@@ -87,15 +87,15 @@
                                         </table>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.taxable_supplies') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.taxable_supply') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.taxable_supplies === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.taxable_supplies === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.taxable_supply === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-if="item.taxable_supply === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.rate_supplies') }}</div>
-                                        <div class="flex-1">{{ item.rate_supplies }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.standard_rate_supply') }}</div>
+                                        <div class="flex-1">{{ item.standard_rate_supply }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.price_include_vat') }}</div>
@@ -186,6 +186,17 @@
                             <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ t(pt.name) }}</option>
                         </VeeField>
                         <ErrorMessage name="product_type" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputTaxableSupply" class="form-label">{{ t('views.product.fields.taxable_supply') }}</label>
+                        <div class="mt-2">
+                            <input id="inputTaxableSupply" type="checkbox" class="form-check-switch" name="taxable_supply" v-model="product.taxable_supply" :true-value="1" :false-value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputStandardRatedSupply" class="form-label">{{ t('views.product.fields.standard_rated_supply') }}</label>
+                        <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" as="input" :class="{'form-control':true, 'border-theme-21': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
+                        <ErrorMessage name="standard_rated_supply" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
                         <label for="inputUnit" class="form-label">{{ t('views.product.fields.units.title') }}</label>
@@ -329,14 +340,14 @@ const product = ref({
             unit: { hId: '' }
         }
     ],
-    taxable_supplies: '',
-    rate_supplies: '',
-    price_include_vat: '',
+    taxable_supply: '',
+    standard_rate_supply: '',
+    price_include_vat: 0,
     remarks: '',
-    point: '',
-    is_use_serial: '',
+    point: 0,
+    is_use_serial: 0,
     product_type: '',
-    status: '',
+    status: 1,
 });
 const statusDDL = ref([]);
 const productGroupDDL = ref([]);
@@ -424,7 +435,6 @@ function onSubmit(values, actions) {
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
-            triggerBackToTop();
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
@@ -434,7 +444,6 @@ function onSubmit(values, actions) {
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
-            triggerBackToTop();
             loading.value = false;
         });
     } else { }
@@ -484,11 +493,11 @@ function emptyProduct() {
                 unit: { hId: '' }
             }
         ],
-        taxable_supplies: '',
-        rate_supplies: '',
+        taxable_supply: '',
+        standard_rate_supply: '',
         price_include_vat: '',
         remarks: '',
-        point: '',
+        point: 0,
         use_serial_number: '',
         has_expiry_date: '',
         product_type: '',
