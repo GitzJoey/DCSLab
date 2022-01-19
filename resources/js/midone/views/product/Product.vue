@@ -340,8 +340,8 @@ const product = ref({
             unit: { hId: '' }
         }
     ],
-    taxable_supply: '',
-    standard_rated_supply: '',
+    taxable_supply: 0,
+    standard_rated_supply: 0,
     price_include_vat: 0,
     remarks: '',
     point: 0,
@@ -493,13 +493,13 @@ function emptyProduct() {
                 unit: { hId: '' }
             }
         ],
-        taxable_supply: '',
-        standard_rated_supply: '',
-        price_include_vat: '',
+        taxable_supply: 0,
+        standard_rated_supply: 0,
+        price_include_vat: 0,
         remarks: '',
         point: 0,
-        use_serial_number: '',
-        has_expiry_date: '',
+        use_serial_number: 0,
+        has_expiry_date: 0,
         product_type: '',
         status: 1,
     }
