@@ -67,6 +67,17 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.taxable_supply') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.taxable_supply === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-if="item.taxable_supply === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.standard_rated_supply') }}</div>
+                                        <div class="flex-1">{{ item.standard_rated_supply }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.units.title') }}</div>
                                         <table>
                                             <tbody>
@@ -85,17 +96,6 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.taxable_supply') }}</div>
-                                        <div class="flex-1">
-                                            <span v-if="item.taxable_supply === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.taxable_supply === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.standard_rate_supply') }}</div>
-                                        <div class="flex-1">{{ item.standard_rate_supply }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.price_include_vat') }}</div>
@@ -341,7 +341,7 @@ const product = ref({
         }
     ],
     taxable_supply: '',
-    standard_rate_supply: '',
+    standard_rated_supply: '',
     price_include_vat: 0,
     remarks: '',
     point: 0,
@@ -494,7 +494,7 @@ function emptyProduct() {
             }
         ],
         taxable_supply: '',
-        standard_rate_supply: '',
+        standard_rated_supply: '',
         price_include_vat: '',
         remarks: '',
         point: 0,

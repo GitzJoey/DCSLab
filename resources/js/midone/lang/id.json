@@ -221,7 +221,7 @@
                 "brand_id": "Nama Merk",
                 "name": "Nama",
                 "taxable_supply": "Produk Kena Pajak",
-                "standard_rate_supply": "PPN",
+                "standard_rated_supply": "PPN",
                 "price_include_vat": "Harga Termasuk Pajak",
                 "remarks": "Remarks",
                 "point": "Poin",

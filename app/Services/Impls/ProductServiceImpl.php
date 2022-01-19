@@ -23,7 +23,7 @@ class ProductServiceImpl implements ProductService
         int $brand_id,
         string $name,
         bool $taxable_supply,
-        int $standard_rate_supply,
+        int $standard_rated_supply,
         bool $price_include_vat,
         ?string $remarks = null,
         int $point,
@@ -48,7 +48,7 @@ class ProductServiceImpl implements ProductService
             $product->brand_id = $brand_id;
             $product->name = $name;
             $product->taxable_supply = $taxable_supply;
-            $product->standard_rate_supply = $standard_rate_supply;
+            $product->standard_rated_supply = $standard_rated_supply;
             $product->price_include_vat = $price_include_vat;
             $product->remarks = $remarks;
             $product->point = $point;
@@ -136,7 +136,7 @@ class ProductServiceImpl implements ProductService
         int $brand_id,
         string $name,
         bool $taxable_supply,
-        int $standard_rate_supply,
+        int $standard_rated_supply,
         bool $price_include_vat,
         ?string $remarks = null,
         int $point,
@@ -163,7 +163,7 @@ class ProductServiceImpl implements ProductService
                 'brand_id' => $brand_id,
                 'name' => $name,
                 'taxable_supply' => $taxable_supply,
-                'standard_rate_supply' => $standard_rate_supply,
+                'standard_rated_supply' => $standard_rated_supply,
                 'price_include_vat' => $price_include_vat,
                 'remarks' => $remarks,
                 'point' => $point,

@@ -75,7 +75,7 @@ class ProductController extends BaseController
         $status = $request['status'];
 
         $taxable_supply = array_key_exists('taxable_supply', $request) ? boolVal($request['taxable_supply']) : false;
-        $standard_rate_supply = array_key_exists('standard_rate_supply', $request) ? intVal($request['standard_rate_supply']) : 0;
+        $standard_rated_supply = array_key_exists('standard_rated_supply', $request) ? intVal($request['standard_rated_supply']) : 0;
         $price_include_vat = array_key_exists('price_include_vat', $request) ? boolVal($request['price_include_vat']) : false;
 
         $product_units = [];
@@ -103,7 +103,7 @@ class ProductController extends BaseController
             $brand_id,
             $name,
             $taxable_supply,
-            $standard_rate_supply,
+            $standard_rated_supply,
             $price_include_vat,
             $remarks,
             $point,
@@ -127,7 +127,7 @@ class ProductController extends BaseController
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
         $taxable_supply = array_key_exists('taxable_supply', $request) ? $request['taxable_supply']:0;
-        $standard_rate_supply = array_key_exists('standard_rate_supply', $request) ? $request['standard_rate_supply']:0;
+        $standard_rated_supply = array_key_exists('standard_rated_supply', $request) ? $request['standard_rated_supply']:0;
         $price_include_vat = array_key_exists('price_include_vat', $request) ? $request['price_include_vat']:0;
         $remarks = $request['remarks'];
         $point = $request['point'];
@@ -175,7 +175,7 @@ class ProductController extends BaseController
             $brand_id,
             $name,
             $taxable_supply,
-            $standard_rate_supply,
+            $standard_rated_supply,
             $price_include_vat,    
             $remarks,
             $point,
