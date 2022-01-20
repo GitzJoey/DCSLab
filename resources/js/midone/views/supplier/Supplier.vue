@@ -233,10 +233,10 @@
                                 <tbody>
                                     <tr v-for="(p, pIdx) in productLists">
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" :value="p.hId" class="form-check-switch" :checked="inSupplierProducts(p.hId)">
+                                            <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selectedProducts" :value="p.hId" class="form-check-switch">
                                         </td>
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" :value="p.hId" class="form-check-switch" :checked="isMainProduct(p.hId)">
+                                            <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.mainProducts" :value="p.hId" class="form-check-switch">
                                         </td>
                                         <td>
                                             {{ p.name }}
@@ -312,6 +312,8 @@ const supplier = ref({
     supplier_products: [],
     payment_term_type: '',
     payment_term: 0,
+    selectedProducts: [],
+    mainProducts: [],
     status: 1,
 });
 const statusDDL = ref([]);
@@ -436,6 +438,8 @@ function emptySupplier() {
         remarks: '',
         payment_term_type: '',
         payment_term: 0,
+        selectedProducts: [],
+        mainProducts: [],
         status: 1,
     }
 }
@@ -495,27 +499,32 @@ function generateCode() {
     else  supplier.value.code = '[AUTO]'
 }
 
-function inSupplierProducts(p_hId) {
-    if (_.findIndex(supplier.value.supplier_products, { product: { hId: p_hId } }) > 0) return true;
-    else return false;
-}
-
-function isMainProduct(p_hId) {
-    let index = _.findIndex(supplier.value.supplier_products, { product: { hId: p_hId } });
-    if (index !== -1) {
-        if (supplier.value.supplier_products[index].main_product === 1) return true;
-        else return false;
-    } else {
-        return false;
-    }
-}
-
 // Computed
 // Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
         getAllSupplier({ page: 1 });
         getDDLSync();
+    }
+});
+
+watch(computed(() => supplier.value.mainProducts), () => {
+    if (supplier.value.mainProducts.length != 0) {
+        _.forEach(supplier.value.mainProducts, function(val) {
+            if (_.findIndex(supplier.value.selectedProducts, val) === -1) {
+                supplier.value.selectedProducts.push(val);
+            }
+        });
+    }
+});
+
+watch(computed(() => supplier.value.selectedProducts), () => {
+    if (supplier.value.mainProducts.length != 0) {
+        _.forEach(supplier.value.mainProducts, function(val) {
+            if (_.findIndex(supplier.value.selectedProducts, val) === -1) {
+                supplier.value.mainProducts.splice(_.findIndex(supplier.value.mainProducts, val), 1);
+            }
+        });
     }
 });
 </script>
