@@ -37,23 +37,32 @@ class SupplierController extends BaseController
     {
         $request = $supplierRequest->validated();
         
-        $userId = Auth::id();
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
 
-        $is_tax = array_key_exists('taxable_enterprise', $request);
+        $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
 
         $poc = [
-
+            'name' => $request['poc_name'],
+            'email' => $request['email'], 
         ];
 
-        $products = [
+        $supplier_products = [];
+        if (!empty($request['productIds'])) {
+            for ($i = 0; $i < count($request['productIds']); $i++) {
+                array_push($supplier_products, array (
+                    'company_id' => $company_id,
+                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
+                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0
+                ));
+            }
+        }
 
-        ];
+        $contact = array_key_exists('contact', $request) ? $request['contact'] : '';
 
         $result = $this->supplierService->create(
-            Hashids::decode($request['company_id'])[0],
+            $company_id,
             $code,
             $request['name'],
             $request['payment_term_type'],
@@ -61,12 +70,12 @@ class SupplierController extends BaseController
             $request['contact'],
             $request['address'],
             $request['city'],
-            $is_tax,
+            $taxable_enterprise,
             $request['tax_id'],
             $request['remarks'],
             $request['status'],
             $poc,
-            $products
+            $supplier_products
         );
 
         return is_null($result) ? response()->error():response()->success();
@@ -78,7 +87,7 @@ class SupplierController extends BaseController
         $company_id = Hashids::decode($request['company_id'])[0];
 
 
-        $is_tax = array_key_exists('taxable_enterprise', $request);
+        $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
 
         $poc = [
 
@@ -97,7 +106,7 @@ class SupplierController extends BaseController
             $request['contact'],
             $request['address'],
             $request['city'],
-            $is_tax,
+            $taxable_enterprise,
             $request['tax_id'],
             $request['remarks'],
             $request['status'],

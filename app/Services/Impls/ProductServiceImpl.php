@@ -232,9 +232,17 @@ class ProductServiceImpl implements ProductService
 
     public function delete(int $id): bool
     {
-        $product = Product::find($id);
+        try {
+            $product = Product::find($id);
 
-        return $product->delete();
+            $product->productUnits()->delete();
+
+            $product->delete();    
+
+            return true; 
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function generateUniqueCodeForProduct(int $companyId): string

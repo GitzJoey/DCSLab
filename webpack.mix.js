@@ -13,6 +13,11 @@ if (mix.inProduction()) {
 
     mix
         .webpackConfig({
+            resolve: {
+                alias: {
+                    "@": path.resolve(__dirname, "resources/js/midone")
+                }
+            },
             plugins: [
                 new webpack.DefinePlugin({
                     __VUE_OPTIONS_API__: true,
@@ -48,6 +53,11 @@ if (mix.inProduction()) {
     mix
         .webpackConfig({
             devtool: 'source-map',
+            resolve: {
+                alias: {
+                    "@": path.resolve(__dirname, "resources/js/midone/")
+                }
+            },
             plugins: [
                 new webpack.DefinePlugin({
                     __VUE_OPTIONS_API__: true,

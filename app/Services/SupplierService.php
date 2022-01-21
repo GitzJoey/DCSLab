@@ -15,7 +15,7 @@ interface SupplierService
         ?string $contact = null,
         ?string $address = null,
         ?string $city = null,
-        bool $is_tax,
+        bool $taxable_enterprise,
         string $tax_id,
         ?string $remarks = null,
         int $status,
@@ -27,6 +27,7 @@ interface SupplierService
 
     public function update(
         int $id,
+        int $company_id,
         string $code,
         string $name,
         string $payment_term_type,
@@ -34,7 +35,7 @@ interface SupplierService
         ?string $contact = null,
         ?string $address = null,
         ?string $city = null,
-        bool $is_tax,
+        bool $taxable_enterprise,
         string $tax_id,
         ?string $remarks = null,
         int $status,

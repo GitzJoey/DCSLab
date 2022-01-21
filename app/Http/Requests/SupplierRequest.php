@@ -35,6 +35,9 @@ class SupplierRequest extends FormRequest
             'city' => 'nullable',
             'tax_id' => 'nullable',
             'remarks' => 'nullable',
+            'productIds.*' => 'nullable',
+            'mainProducts.*' => 'nullable',
+            'poc_name' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -44,10 +47,11 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'suppliers', companyId: $companyId)],
                     'name' => 'required|max:255',
-                    'status' => 'required',
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'payment_term_type' => 'required',
                     'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required',
+                    'email' => ['required', 'email']
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -55,10 +59,11 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => new uniqueCode(table: 'suppliers', companyId: $companyId, exceptId: $this->route('id')),
                     'name' => 'required|max:255',
-                    'status' => 'required',
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
                     'payment_term_type' => 'required',
                     'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required',
+                    'email' => ['required', 'email']
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -73,5 +78,12 @@ class SupplierRequest extends FormRequest
         return [
             'company_id' => trans('validation_attributes.company'),
         ];
+    }
+
+    public function validationData()
+    {
+        $additionalArray = [];
+
+        return array_merge($this->all(), $additionalArray);
     }
 }

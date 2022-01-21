@@ -4,10 +4,10 @@ Doctor Computer SG Lab
 
 This project is inspired by the desire to create an up to date web app boilerplate and keep evolving.
 
-A web application focusing on the usage of the most popular framework, handpicked with consideration. To meet the everyday programming/coding obstacle and giving the best solution that we can find. Sometimes google/stackoverflow searching is enough to satisfied our curiosity 
-but complex issue such as inter-related components, multi vendors applications problems, hardware
-software compatibility, bad/slow performances of projects, is something that you can only face it if you do a real projects.
+A web application focusing on the usage of the most popular framework, handpicked with consideration. To meet the everyday programming/coding obstacle and giving the best solution that we can find.  
+Sometimes google/stackoverflow searching is enough to satisfied our curiosity, but complex issue such as inter-related components, multi vendors applications problems, hardware software compatibility, bad/slow performances of projects, is something that you can only face it if you do a real projects.  
 
+This project is to 'simulate' the everyday production worthy of obstacles.
 Interested? let discuss it together [here](https://github.com/GitzJoey/DCSLab/discussions)
 
 ## Features

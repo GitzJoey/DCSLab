@@ -167,7 +167,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
-                            <input id="inputContact" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.city" />
+                            <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.contact" />
                         </div>
                         <div class="mb-3">
                             <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
@@ -179,6 +179,11 @@
                                 <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch" name="taxable_enterprise" v-model="supplier.taxable_enterprise" :true-value="1" :false-value="0">
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="inputTaxId" class="form-label">{{ t('views.supplier.fields.tax_id') }}</label>
+                            <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" rules="required" :placeholder="t('views.supplier.fields.tax_id')" :label="t('views.supplier.fields.tax_id')" @blur="reValidate(errors)" v-model="supplier.tax_id" />
+                            <ErrorMessage name="tax_id" class="text-theme-21" />
+                        </div>                        
                         <div class="mb-3">
                             <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
                             <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
@@ -511,18 +516,20 @@ watch(selectedUserCompany, () => {
 watch(computed(() => supplier.value.mainProducts), () => {
     if (supplier.value.mainProducts.length != 0) {
         _.forEach(supplier.value.mainProducts, function(val) {
-            if (_.findIndex(supplier.value.selectedProducts, val) === -1) {
+            if (_.findIndex(supplier.value.selectedProducts, (item) => { return item === val }) === -1) {
                 supplier.value.selectedProducts.push(val);
             }
         });
     }
 });
 
-watch(computed(() => supplier.value.selectedProducts), () => {
+watch(computed(() => supplier.value.selectedProducts), (n, o) => {
     if (supplier.value.mainProducts.length != 0) {
         _.forEach(supplier.value.mainProducts, function(val) {
-            if (_.findIndex(supplier.value.selectedProducts, val) === -1) {
-                supplier.value.mainProducts.splice(_.findIndex(supplier.value.mainProducts, val), 1);
+            if (_.findIndex(supplier.value.selectedProducts, (item) => { return item === val }) === -1) {
+                if (_.findIndex(supplier.value.mainProducts, (item) => { return item === val }) > -1) {
+                    supplier.value.mainProducts.splice(_.findIndex(supplier.value.mainProducts, (item) => { return item === val }), 1);
+                }
             }
         });
     }
