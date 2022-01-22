@@ -162,29 +162,20 @@ class SupplierServiceImpl implements SupplierService
                 'status' => $status
             ]);
 
-            $productIds = [];
-            foreach ($products as $product)
-            {
-                array_push($productIds, $product['id']);
+            $supplier->supplierProducts()->delete();
+
+            $newSP = [];
+            if (!empty($products)) {
+                $newSPE = new SupplierProduct();
+                $newSPE->company_id = $company_id;
+                $newSPE->supplier_id =$supplier->id;
+                $newSPE->product_id = $products['product_id'];
+                $newSPE->product_id = $products['main_product'];
+            
+                array_push($newSP, $newSPE); 
             }
 
-            $productIdsOld = $supplier->supplierProducts()->get()->pluck('id')->toArray();
-
-            $deletedSupplierProductIds = [];
-            $deletedSupplierProductIds = array_diff($productIdsOld, $productIds);
-
-            foreach ($deletedSupplierProductIds as $deletedSupplierProductId) {
-                $supplier->supplierProducts()->where('id', '=', $deletedSupplierProductId)->delete();
-            }
-
-            if (empty($products) === false) {
-                $supplier->supplierProducts()->upsert(
-                    $products, ['id'], [
-                        'product_id',
-                        'main_product'
-                    ]
-                );
-            }
+            $supplier->supplierProducts()->saveMany($newSP);
 
             DB::commit();
 
