@@ -514,6 +514,7 @@ watch(selectedUserCompany, () => {
 });
 
 watch(computed(() => supplier.value.mainProducts), () => {
+    /*
     if (supplier.value.mainProducts.length != 0) {
         _.forEach(supplier.value.mainProducts, function(val) {
             if (_.findIndex(supplier.value.selectedProducts, (item) => { return item === val }) === -1) {
@@ -521,9 +522,11 @@ watch(computed(() => supplier.value.mainProducts), () => {
             }
         });
     }
+    */
 });
 
 watch(computed(() => supplier.value.selectedProducts), (n, o) => {
+    /*
     if (supplier.value.mainProducts.length != 0) {
         _.forEach(supplier.value.mainProducts, function(val) {
             if (_.findIndex(supplier.value.selectedProducts, (item) => { return item === val }) === -1) {
@@ -533,5 +536,6 @@ watch(computed(() => supplier.value.selectedProducts), (n, o) => {
             }
         });
     }
+    */
 });
 </script>

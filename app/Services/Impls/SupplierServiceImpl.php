@@ -195,6 +195,11 @@ class SupplierServiceImpl implements SupplierService
             $supplier->supplierProducts()->delete();
             $supplier->delete();
 
+
+            $supplier->user()->with('profile')->first()->profile()->update([
+                'status' => 0
+            ]);
+
             return true;
         } catch (Exception $e) {
             return false;

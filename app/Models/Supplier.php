@@ -59,12 +59,12 @@ class Supplier extends Model
 
     public function getSelectedProductsAttribute() : string
     {
-        return $this->supplierProducts()->get()->pluck('hId');
+        return $this->supplierProducts()->with('product')->get()->pluck('product.hId');
     }
 
     public function getMainProductsAttribute() : string
     {
-        return $this->supplierProducts()->where('main_product', '=', 1)->get()->pluck('hId');
+        return $this->supplierProducts()->with('product')->where('main_product', '=', 1)->get()->pluck('product.hId');
     }
 
     public function user()
