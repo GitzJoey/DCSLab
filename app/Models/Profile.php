@@ -17,7 +17,6 @@ class Profile extends Model
     protected $fillable = [
         'first_name',
         'last_name',
-        'company_name',
         'address',
         'city',
         'postal_code',
@@ -32,7 +31,6 @@ class Profile extends Model
     protected static $logAttributes = [
         'first_name',
         'last_name',
-        'company_name',
         'address',
         'city',
         'postal_code',

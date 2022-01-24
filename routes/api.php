@@ -10,6 +10,7 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\DevController;
 /* Ext */
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SupplierController;
@@ -84,6 +85,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
                 Route::get('roles/read', [UserController::class, 'getAllRoles'])->name('.roles.read');
             });
+        });
+
+        Route::group(['prefix' => 'devtool', 'as' => '.devtool'], function() {
+            Route::get('test', [DevController::class, 'test'])->name('.test');
         });
 
         Route::group(['prefix' => 'core', 'as' => '.core'], function() {

@@ -20,11 +20,12 @@ class Company extends Model
     protected $fillable = [
         'code',
         'name',
+        'address',
         'default',
         'status'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'default', 'status'];
+    protected static $logAttributes = ['code', 'name', 'address', 'default', 'status'];
 
     protected static $logOnlyDirty = true;
 
