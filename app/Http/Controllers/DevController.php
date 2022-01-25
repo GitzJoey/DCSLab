@@ -28,7 +28,9 @@ class DevController extends BaseController
     {
         $u = $this->userService->readBy('ID', 1);
 
-        $resource = new UserResource($u);
-        return $resource;
+        $resource = UserResource::make($u);
+        $test = $resource->toArray($request);
+
+        return $test;
     }
 }
