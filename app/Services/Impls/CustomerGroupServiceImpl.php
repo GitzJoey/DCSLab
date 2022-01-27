@@ -16,22 +16,17 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         $company_id,
         $code,
         $name,
-        $is_member_card,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $selling_point,
         $selling_point_multiple,
-        $sell_at_capital_price,
-        $global_markup_percent,
-        $global_markup_nominal,
-        $global_discount_percent,
-        $global_discount_nominal,
-        $is_rounding,
+        $sell_at_cost,
+        $price_markup_percent,
+        $price_markup_nominal,
+        $price_markdown_percent,
+        $price_markdown_nominal,
         $round_on,
         $round_digit,
         $remarks,
@@ -45,21 +40,17 @@ class CustomerGroupServiceImpl implements CustomerGroupService
             $customergroup->company_id = $company_id;
             $customergroup->code = $code;
             $customergroup->name = $name;
-            $customergroup->is_member_card = $is_member_card;
-            $customergroup->use_limit_outstanding_notes = $use_limit_outstanding_notes;
-            $customergroup->limit_outstanding_notes = $limit_outstanding_notes;
-            $customergroup->use_limit_payable_nominal = $use_limit_payable_nominal;
-            $customergroup->use_limit_age_notes = $use_limit_age_notes;
-            $customergroup->limit_age_notes = $limit_age_notes;
-            $customergroup->term = $term;
+            $customergroup->max_open_invoice = $max_open_invoice;
+            $customergroup->max_outstanding_invoice = $max_outstanding_invoice;
+            $customergroup->max_invoice_age = $max_invoice_age;
+            $customergroup->payment_term = $payment_term;
             $customergroup->selling_point = $selling_point;
             $customergroup->selling_point_multiple = $selling_point_multiple;
-            $customergroup->sell_at_capital_price = $sell_at_capital_price;
-            $customergroup->global_markup_percent = $global_markup_percent;
-            $customergroup->global_markup_nominal = $global_markup_nominal;
-            $customergroup->global_discount_percent = $global_discount_percent;
-            $customergroup->global_discount_nominal = $global_discount_nominal;
-            $customergroup->is_rounding = $is_rounding;
+            $customergroup->sell_at_cost = $sell_at_cost;
+            $customergroup->price_markup_percent = $price_markup_percent;
+            $customergroup->price_markup_nominal = $price_markup_nominal;
+            $customergroup->price_markdown_percent = $price_markdown_percent;
+            $customergroup->price_markdown_nominal = $price_markdown_nominal;
             $customergroup->round_on = $round_on;
             $customergroup->round_digit = $round_digit;
             $customergroup->remarks = $remarks;
@@ -77,14 +68,14 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         }
     }
 
-    public function read($userId)
+    public function read()
     {
-        return CustomerGroup::with('cash', 'company')->bySelectedCompany()->paginate();
+        return CustomerGroup::with('cash')->bySelectedCompany()->paginate();
     }
 
     public function getAllCustomerGroup()
     {
-        return CustomerGroup::all();
+        return CustomerGroup::bySelectedCompany()->get();
     }
 
     public function update(
@@ -92,22 +83,17 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         $company_id,
         $code,
         $name,
-        $is_member_card,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $selling_point,
         $selling_point_multiple,
-        $sell_at_capital_price,
-        $global_markup_percent,
-        $global_markup_nominal,
-        $global_discount_percent,
-        $global_discount_nominal,
-        $is_rounding,
+        $sell_at_cost,
+        $price_markup_percent,
+        $price_markup_nominal,
+        $price_markdown_percent,
+        $price_markdown_nominal,
         $round_on,
         $round_digit,
         $remarks,
@@ -124,22 +110,17 @@ class CustomerGroupServiceImpl implements CustomerGroupService
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
-                'is_member_card' => $is_member_card,
-                'use_limit_outstanding_notes' => $use_limit_outstanding_notes,
-                'limit_outstanding_notes' => $limit_outstanding_notes,
-                'use_limit_payable_nominal' => $use_limit_payable_nominal,
-                'limit_payable_nominal' => $limit_payable_nominal,
-                'use_limit_age_notes' =>  $use_limit_age_notes,
-                'limit_age_notes' => $limit_age_notes,
-                'term' => $term,
+                'max_open_invoice' => $max_open_invoice,
+                'max_outstanding_invoice' => $max_outstanding_invoice,
+                'max_invoice_age' => $max_invoice_age,
+                'payment_term' => $payment_term,
                 'selling_point' => $selling_point,
                 'selling_point_multiple' => $selling_point_multiple,
-                'sell_at_capital_price' => $sell_at_capital_price,
-                'global_markup_percent' => $global_markup_percent,
-                'global_markup_nominal' => $global_markup_nominal,
-                'global_discount_percent' => $global_discount_percent,
-                'global_discount_nominal' => $global_discount_nominal,
-                'is_rounding' => $is_rounding,
+                'sell_at_cost' => $sell_at_cost,
+                'price_markup_percent' => $price_markup_percent,
+                'price_markup_nominal' => $price_markup_nominal,
+                'price_markdown_percent' => $price_markdown_percent,
+                'price_markdown_nominal' => $price_markdown_nominal,
                 'round_on' => $round_on,
                 'round_digit' => $round_digit,
                 'remarks' => $remarks,

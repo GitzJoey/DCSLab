@@ -15,28 +15,17 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->bigIncrements('id');
-
-            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
-            
-            $table->foreignId('customer_group_id')->references('id')->on('customer_groups')->onUpdate('cascade')->onDelete('restrict');;
+            $table->foreignId('company_id')->references('id')->on('companies');
+            $table->foreignId('customer_group_id')->references('id')->on('customer_groups');
             $table->string('code');
+            $table->integer('is_member');
             $table->string('name')->nullable();
-
-            $table->string('sales_territory')->nullable();
-
-            $table->integer('use_limit_outstanding_notes')->nullable();
-            $table->integer('limit_outstanding_notes')->default(0);
-            $table->integer('use_limit_payable_nominal')->nullable();
-            $table->decimal('limit_payable_nominal', $precision = 16, $scale = 8)->default(0);
-            $table->integer('use_limit_age_notes')->nullable();
-            $table->integer('limit_age_notes')->default(0);
-            $table->integer('term');
-            
-            $table->string('address')->nullable();
-            $table->string('city')->nullable();
-            $table->string('contact')->nullable();
+            $table->string('zone')->nullable();
+            $table->integer('max_open_invoice')->default(0);
+            $table->decimal('max_outstanding_invoice', $precision = 16, $scale = 8)->default(0);
+            $table->integer('max_invoice_age')->default(0);
+            $table->integer('payment_term')->default(0);
             $table->string('tax_id')->nullable();
-
             $table->string('remarks')->nullable();
 			$table->integer('status')->default(0);
             $table->unsignedBigInteger('created_by')->default(0);

@@ -15,10 +15,10 @@ class CreateCapitals extends Migration
     {
         Schema::create('capitals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('investor_id')->references('id')->on('investors')->onUpdate('cascade')->onDelete('restrict');;
-            $table->foreignId('group_id')->references('id')->on('capital_groups')->onUpdate('cascade')->onDelete('restrict');;
-            $table->foreignId('cash_id')->references('id')->on('cashes')->onUpdate('cascade')->onDelete('restrict')->nullable();
+            $table->foreignId('company_id')->references('id')->on('companies');
+            $table->foreignId('investor_id')->references('id')->on('investors');
+            $table->foreignId('group_id')->references('id')->on('capital_groups');
+            $table->foreignId('cash_id')->references('id')->on('cashes')->nullable();
             $table->string('ref_number')->nullable();
             $table->dateTime('date', $precision = 0);
             $table->integer('capital_status')->default(1);

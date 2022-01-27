@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUnitsTable extends Migration
+class CreateCustomerAddressesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateUnitsTable extends Migration
      */
     public function up()
     {
-        Schema::create('units', function (Blueprint $table) {
-            $table->id();
+        Schema::create('customer_addresses', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->foreignId('company_id')->references('id')->on('companies');
-            $table->string('code');
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->integer('category')->default(3); // [1 : Product, 2 : Service, 3 : Product & Service]
+            $table->foreignId('customer_id')->references('id')->on('customers');
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('contact')->nullable();
+            $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
@@ -35,6 +36,6 @@ class CreateUnitsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('units');
+        Schema::dropIfExists('customer_addresses');
     }
 }

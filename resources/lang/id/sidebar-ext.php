@@ -8,7 +8,7 @@ return [
     'db.company.warehouses' => 'Gudang',
     'db.finance' => 'Keuangan',
     'db.finance.chart_of_accounts' => 'Chart Of Accounts',
-    'db.finance.cashes' => 'Kas',
+    'db.finance.cashes' => 'Kas & Bank',
     'db.finance.capital' => 'Modal',
     'db.finance.capital.investors' => 'Investor',
     'db.finance.capital.capitals' => 'Modal',

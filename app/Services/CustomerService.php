@@ -8,45 +8,37 @@ interface CustomerService
         $company_id,
         $code,
         $name,
+        $is_member,
         $customer_group_id,
-        $sales_territory,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
-        $address,
-        $city,
-        $contact,
+        $zone,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $customer_addresses,
     );
 
-    public function read($userId);
+    public function read();
 
     public function update(
         $id,
         $company_id,
         $code,
         $name,
+        $is_member,
         $customer_group_id,
-        $sales_territory,
-        $use_limit_outstanding_notes,
-        $limit_outstanding_notes,
-        $use_limit_payable_nominal,
-        $limit_payable_nominal,
-        $use_limit_age_notes,
-        $limit_age_notes,
-        $term,
-        $address,
-        $city,
-        $contact,
+        $zone,
+        $max_open_invoice,
+        $max_outstanding_invoice,
+        $max_invoice_age,
+        $payment_term,
         $tax_id,
         $remarks,
-        $status
+        $status,
+        $customer_addresses
     );
 
     public function delete($id);

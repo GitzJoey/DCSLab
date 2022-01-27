@@ -15,9 +15,9 @@ class CreateProductUnitsTable extends Migration
     {
         Schema::create('product_units', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('restrict');
-            $table->foreignId('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('company_id')->references('id')->on('companies');
+            $table->foreignId('product_id')->references('id')->on('products');
+            $table->foreignId('unit_id')->references('id')->on('units');
             $table->string('code')->nullable();
             $table->boolean('is_base')->default(0);
             $table->decimal('conversion_value', 19, 2)->nullable();

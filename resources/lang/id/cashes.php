@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'title' => 'Kas'
+    'title' => 'Kas & Bank'
 ];

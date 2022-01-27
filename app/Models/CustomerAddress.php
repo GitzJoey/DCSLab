@@ -4,56 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\CustomerGroup;
-use App\Models\Company;
-use App\Models\CustomerAddress;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Models\Company;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Config;
 
-class Customer extends Model
+class CustomerAddress extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
     
     protected $fillable = [
-        'code',
-        'name',
-        'is_member',
-        'customer_group_id',
-        'zone',
-        'max_open_invoice',
-        'max_outstanding_invoice',
-        'max_invoice_age',
-        'payment_term',
+        'company_id',
+        'customer_id',
         'address',
-        'tax_id',
-        'remarks',
-        'status',
+        'city',
+        'contact',
+        'remarks'
     ];
 
     protected static $logAttributes = [
-        'code',
-        'name',
-        'is_member',
-        'customer_group_id',
-        'zone',
-        'max_open_invoice',
-        'max_outstanding_invoice',
-        'max_invoice_age',
-        'payment_term',
+        'company_id',
+        'customer_id',
         'address',
-        'tax_id',
-        'remarks',
-        'status',
+        'city',
+        'contact',
+        'remarks'
     ];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [
         'id',
-        'customer_group_id',
+        'customer_id',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -74,14 +59,9 @@ class Customer extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function customerGroup()
+    public function customers()
     {
-        return $this->belongsTo(CustomerGroup::class);
-    }
-
-    public function customerAddress()
-    {
-        return $this->hasMany(CustomerAddress::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function scopeBySelectedCompany($query, $overrideCompanyId = '')
