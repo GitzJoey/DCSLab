@@ -59,6 +59,7 @@
                             <tr>
                                 <th>{{ $t("table.cols.code") }}</th>
                                 <th>{{ $t("table.cols.name") }}</th>
+                                <th>{{ $t("table.cols.is_member") }}</th>
                                 <th>{{ $t("table.cols.customer_group_id") }}</th>
                                 <th>{{ $t("table.cols.remarks") }}</th>
                                 <th>{{ $t("table.cols.status") }}</th>
@@ -66,9 +67,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr v-if="this.customerList.data.length === 0">
+                                <td class="text-center" colspan="5">{{ $t('placeholder.data_not_found') }}</td>
+                            </tr>
                             <tr v-for="(c, cIdx) in customerList.data">
                                 <td>{{ c.code }}</td>
                                 <td>{{ c.name }}</td>
+                                <td>
+                                    <span v-if="c.is_member === 1">{{ $t('is_member.active') }}</span>
+                                    <span v-if="c.is_member === 0">{{ $t('is_member.inactive') }}</span>
+                                </td>
                                 <td>{{ c.customer_group.name }}</td>
                                 <td>{{ c.remarks }}</td>
                                 <td>
@@ -98,6 +106,9 @@
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Previous</span>
                                 </a>
+                            </li>
+                            <li :class="{'page-item': true, 'active': n === this.customerList.current_page}" v-for="n in getPages">
+                                <a class="page-link" href="#" v-on:click="onPaginationChangePage(n)">{{ n }}</a>
                             </li>
                             <li :class="{'page-item':true, 'disabled': this.customerList.next_page_url == null}">
                                 <a class="page-link" href="#" aria-label="Next" v-on:click="onPaginationChangePage('next')">
@@ -138,6 +149,21 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label for="inputis_member" class="col-2 col-form-label">{{ $t('fields.is_member') }}</label>
+                            <div class="col-md-10 d-flex align-items-center">
+                                <label class="css-control css-control-primary css-checkbox">                              
+                                    <span v-show="this.mode === 'create' || this.mode === 'edit'">
+                                        <input type="checkbox" class="css-control-input" id="is_member" name="is_member" v-model="customer.is_member" true-value="1" false-value="0">
+                                        <span class="css-control-indicator"></span>
+                                    </span>
+                                    <div class="form-control-plaintext" v-show="this.mode === 'show'">
+                                        <span v-if="customer.is_member === 1">{{ $t('is_member.active') }}</span>
+                                        <span v-if="customer.is_member === 0">{{ $t('is_member.inactive') }}</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-2 col-form-label" for="customer_group_id">{{ $t('fields.customer_group_id') }}</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="customer_group_id" name="customer_group_id" v-model="customer.customer_group.hId" v-show="this.mode === 'create' || this.mode === 'edit'">
@@ -150,29 +176,29 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputSalesTerritory" class="col-2 col-form-label">{{ $t('fields.sales_territory') }}</label>
+                            <label for="inputSalesTerritory" class="col-2 col-form-label">{{ $t('fields.zone') }}</label>
                             <div class="col-md-10">
-                                <Field id="inputSalesTerritory" name="sales_territory" as="input" :class="{'form-control':true, 'is-invalid': errors['sales_territory']}" :placeholder="$t('fields.sales_territory')" :label="$t('fields.sales_territory')" v-model="customer.sales_territory" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.sales_territory }}</div>
+                                <Field id="inputSalesTerritory" name="zone" as="input" :class="{'form-control':true, 'is-invalid': errors['zone']}" :placeholder="$t('fields.zone')" :label="$t('fields.zone')" v-model="customer.zone" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.zone }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputMaxOpenInvoice" class="col-2 col-form-label">{{ $t('fields.max_open_invoice') }}</label>
-                            <div class="col-md-5">
+                            <div class="col-md-10">
                                 <Field id="inputMaxOpenInvoice" name="max_open_invoice" as="input" :class="{'form-control':true, 'is-invalid': errors['max_open_invoice']}" :placeholder="$t('fields.max_open_invoice')" :label="$t('fields.max_open_invoice')" v-model="customer.max_open_invoice" v-if="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ customer.max_open_invoice }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputMaxOustandingInvoice" class="col-2 col-form-label">{{ $t('fields.max_outstanding_invoice') }}</label>
-                            <div class="col-md-5">
+                            <div class="col-md-10">
                                 <Field id="inputMaxOustandingInvoice" name="max_outstanding_invoice" as="input" :class="{'form-control':true, 'is-invalid': errors['max_outstanding_invoice']}" :placeholder="$t('fields.max_outstanding_invoice')" :label="$t('fields.name')" v-model="customer.max_outstanding_invoice" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.max_outstanding_invoice }}</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="inputMaxInvoiceAge" class="col-2 col-form-label">{{ $t('fields.max_invoice_age') }}</label>
-                            <div class="col-md-5">
+                            <div class="col-md-10">
                                 <Field id="inputMaxInvoiceAge" name="max_invoice_age" as="input" :class="{'form-control':true, 'is-invalid': errors['max_invoice_age']}" :placeholder="$t('fields.max_invoice_age')" :label="$t('fields.max_invoice_age')" v-model="customer.max_invoice_age" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ customer.max_invoice_age }}</div>
                             </div>
@@ -190,12 +216,6 @@
                                 <div :class="{'block block-bordered block-themed block-mode-loading-refresh':true, 'block-mode-loading':this.loading, 'block-mode-fullscreen':this.fullscreen, 'block-mode-hidden':this.contentHidden}">
                                     <div class="block-content">
                                         <table class="table table-vcenter">
-                                            <!-- <thead class="thead-light">
-                                                <tr>
-                                                    <th></th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead> -->
                                             <tbody>
                                                 <input type="hidden" v-model="customer.customer_address">
                                                 <tr v-for="(c, cIdx) in customer.customer_address">
@@ -204,21 +224,20 @@
                                                         <div class="form-group row">
                                                             <label class="col-2 col-form-label">{{ $t('fields.address') }}</label>
                                                             <div class="col-md-10">
-                                                                <input type="text" class="form-control" v-model="c.address" id="inputAddress" name="address[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                                                <input type="text" class="form-control" :placeholder="$t('fields.address')" v-model="c.address" id="inputAddress" name="address[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ c.address }}</div>
                                                             </div>
                                                         </div>
-
                                                         <div class="form-group row">
                                                             <label class="col-2 col-form-label">{{ $t('fields.city') }}</label>
                                                             <div class="col-md-4">
-                                                                <input type="text" class="form-control" v-model="c.city" id="inputCity" name="city[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                                                <input type="text" class="form-control" :placeholder="$t('fields.city')" v-model="c.city" id="inputCity" name="city[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ c.city }}</div>
                                                             </div>
 
                                                             <label class="col-2 col-form-label">{{ $t('fields.contact') }}</label>
                                                             <div class="col-md-4">
-                                                                <input type="text" class="form-control" v-model="c.contact" id="inputContact" name="contact[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
+                                                                <input type="text" class="form-control" :placeholder="$t('fields.contact')" v-model="c.contact" id="inputContact" name="contact[]" v-show="this.mode === 'create' || this.mode === 'edit'"/>
                                                                 <div class="form-control-plaintext" v-show="this.mode === 'show'">{{ c.contact }}</div>
                                                             </div>
                                                         </div>
@@ -234,7 +253,7 @@
                                                     
                                                     <!-- Delete Button -->
                                                     <td class="text-center">
-                                                        <div class="btn-group">
+                                                        <div class="btn-group" v-if="this.mode === 'create' || this.mode === 'edit'">
                                                             <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" :title="$t('actions.delete')" v-on:click="deleteSelectedCustomerAddress(cIdx)">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
@@ -338,12 +357,15 @@ export default {
             loading: false,
             fullscreen: false,
             contentHidden: false,
-            customerList: [],
+            customerList: {
+                data: []
+            },
             customer: {
                 code: 'AUTO',
                 name: '',
+                is_member: '',
                 customer_group: { hId: '' },
-                sales_territory: '',
+                zone: '',
                 max_open_invoice: '0',
                 max_outstanding_invoice: '0',
                 max_invoice_age: '0',
@@ -403,8 +425,9 @@ export default {
             return {
                 code: 'AUTO',
                 name: '',
+                is_member: '',
                 customer_group: { hId: '' },
-                sales_territory: '',
+                zone: '',
                 max_open_invoice: '0',
                 max_outstanding_invoice: '0',
                 max_invoice_age: '0',

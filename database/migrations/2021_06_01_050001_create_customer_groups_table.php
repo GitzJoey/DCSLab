@@ -30,7 +30,6 @@ class CreateCustomerGroupsTable extends Migration
             $table->decimal('price_markup_nominal', $precision = 16, $scale = 8)->default(0);
             $table->decimal('price_markdown_percent', $precision = 16, $scale = 8)->default(0);
             $table->decimal('price_markdown_nominal', $precision = 16, $scale = 8)->default(0);
-            $table->integer('is_rounding')->nullable();
             $table->integer('round_on')->default(0);
             $table->integer('round_digit')->nullable();
             $table->string('remarks')->nullable();

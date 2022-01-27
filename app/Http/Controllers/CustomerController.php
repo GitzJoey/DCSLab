@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Rules\uniqueCode;
 use Illuminate\Http\Request;
 use App\Services\CustomerService;
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Services\ActivityLogService;
 use Illuminate\Support\Facades\Config;
@@ -46,6 +45,10 @@ class CustomerController extends BaseController
         $request->validate([
             'code' => ['required', 'min:1', 'max:255', new uniqueCode('create', '', 'customers')],
             'name' => 'required|min:3|max:255',
+            'max_open_invoice' => 'required|integer|digits_between:1,11',
+            'max_outstanding_invoice' => 'required|integer|digits_between:1,16',
+            'max_invoice_age' => 'required|integer|digits_between:1,11',
+            'payment_term' => 'required|integer|digits_between:1,11',
             'status' => 'required',
         ]);
 
@@ -62,6 +65,10 @@ class CustomerController extends BaseController
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
+        
+        $is_member = $request['is_member'] == 'on' ? 1 : $request['is_member'];
+        $is_member = is_null($is_member) ? 0 : $is_member;
+        $is_member = is_numeric($is_member) ? $is_member : 0;
 
         $customer_addresses = [];
         $count_address = count($request['address']);
@@ -80,16 +87,17 @@ class CustomerController extends BaseController
             $company_id,
             $code,
             $request['name'],
+            $is_member,
             Hashids::decode($request['customer_group_id'])[0], 
-            $request['sales_territory'],
+            $request['zone'],
             $request['max_open_invoice'],
             $request['max_outstanding_invoice'],
             $request['max_invoice_age'],
             $request['payment_term'],
-            $customer_addresses,
             $request['tax_id'],
             $request['remarks'],
             $request['status'],
+            $customer_addresses
         );
         return $result == 0 ? response()->error():response()->success();
     }
@@ -99,11 +107,19 @@ class CustomerController extends BaseController
         $request->validate([
             'code' =>  new uniqueCode('update', $id, 'customers'),
             'name' => 'required|min:3|max:255',
+            'max_open_invoice' => 'required|integer|digits_between:1,11',
+            'max_outstanding_invoice' => 'required|numeric|min:0|max:999999999999999',
+            'max_invoice_age' => 'required|integer|digits_between:1,11',
+            'payment_term' => 'required|integer|digits_between:1,11',
             'status' => 'required',
         ]);
 
         $company_id = session(Config::get('const.DEFAULT.SESSIONS.SELECTED_COMPANY'));
         $company_id = Hashids::decode($company_id)[0];
+        
+        $is_member = $request['is_member'] == 'on' ? 1 : $request['is_member'];
+        $is_member = is_null($is_member) ? 0 : $is_member;
+        $is_member = is_numeric($is_member) ? $is_member : 0;
 
         $customer_addresses = [];
         array_push($customer_addresses, array (
@@ -139,16 +155,17 @@ class CustomerController extends BaseController
             $company_id,
             $request['code'],
             $request['name'],
+            $is_member,
             Hashids::decode($request['customer_group_id'])[0], 
-            $request['sales_territory'],
+            $request['zone'],
             $request['max_open_invoice'],
             $request['max_outstanding_invoice'],
             $request['max_invoice_age'],
             $request['payment_term'],
-            $customer_addresses,
             $request['tax_id'],
             $request['remarks'],
             $request['status'],
+            $customer_addresses
         );
         return $result == 0 ? response()->error():response()->success();
     }

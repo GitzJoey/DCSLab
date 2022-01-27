@@ -72,6 +72,7 @@ const messages = {
             warning: 'Warning',
         },
         placeholder: {
+            data_not_found: 'Data Not Found',
             please_select: 'Please Select',
         },
         is_member: {
@@ -142,6 +143,7 @@ const messages = {
             warning: 'Peringatan',
         },
         placeholder: {
+            data_not_found: 'Data Tidak Ditemukan',
             please_select: 'Silahkan Pilih',
         },
         is_member: {

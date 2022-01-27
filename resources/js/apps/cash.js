@@ -15,7 +15,7 @@ window.axios.defaults.headers.common['X-localization'] = language;
 const messages = {
     en: {
         table: {
-            title: 'Cash Lists',
+            title: 'Cash & Bank Lists',
             cols: {
                 code: 'Code',
                 name: 'Name',
@@ -50,6 +50,7 @@ const messages = {
             warning: 'Warning',
         },
         placeholder: {
+            data_not_found: 'Data Not Found',
             please_select: 'Please Select',
         },
         is_bank: {
@@ -63,7 +64,7 @@ const messages = {
     },
     id: {
         table: {
-            title: 'Daftar Kas',
+            title: 'Daftar Kas & Bank',
             cols: {
                 code: 'Kode',
                 name: 'Nama',
@@ -98,6 +99,7 @@ const messages = {
             warning: 'Peringatan',
         },
         placeholder: {
+            data_not_found: 'Data Tidak Ditemukan',
             please_select: 'Silahkan Pilih',
         },
         is_bank: {

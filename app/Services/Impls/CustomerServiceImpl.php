@@ -17,8 +17,9 @@ class CustomerServiceImpl implements CustomerService
         $company_id,
         $code,
         $name,
+        $is_member,
         $customer_group_id,
-        $sales_territory,
+        $zone,
         $max_open_invoice,
         $max_outstanding_invoice,
         $max_invoice_age,
@@ -36,8 +37,9 @@ class CustomerServiceImpl implements CustomerService
             $customer->company_id = $company_id;
             $customer->code = $code;
             $customer->name = $name;
+            $customer->is_member = $is_member;
             $customer->customer_group_id = $customer_group_id;
-            $customer->sales_territory = $sales_territory;
+            $customer->zone = $zone;
             $customer->max_open_invoice = $max_open_invoice;
             $customer->max_outstanding_invoice = $max_outstanding_invoice;
             $customer->max_invoice_age = $max_invoice_age;
@@ -75,7 +77,7 @@ class CustomerServiceImpl implements CustomerService
 
     public function read()
     {
-        return Customer::with('customerGroup', 'customerAddress', 'company')->bySelectedCompany()->paginate();
+        return Customer::with('customerGroup', 'customerAddress')->bySelectedCompany()->paginate();
     }
 
     public function update(
@@ -83,8 +85,9 @@ class CustomerServiceImpl implements CustomerService
         $company_id,
         $code,
         $name,
+        $is_member,
         $customer_group_id,
-        $sales_territory,
+        $zone,
         $max_open_invoice,
         $max_outstanding_invoice,
         $max_invoice_age,
@@ -104,8 +107,9 @@ class CustomerServiceImpl implements CustomerService
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
+                'is_member' => $is_member,
                 'customer_group_id' => $customer_group_id,
-                'sales_territory' => $sales_territory,
+                'zone' => $zone,
                 'max_open_invoice' => $max_open_invoice,
                 'max_outstanding_invoice' => $max_outstanding_invoice,
                 'max_invoice_age' => $max_invoice_age,
