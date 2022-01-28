@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SupplierRequest;
-use App\Actions\RandomGenerator;
+use App\Http\Resources\SupplierResource;
 use App\Services\SupplierService;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierController extends BaseController
@@ -30,7 +29,15 @@ class SupplierController extends BaseController
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
-        return $this->supplierService->read($companyId, $search, $paginate, $perPage);
+        $result = $this->supplierService->read($companyId, $search, $paginate, $perPage);
+
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = SupplierResource::collection($result);
+
+            return $response;
+        }
     }
 
     public function store(SupplierRequest $supplierRequest)
@@ -99,6 +106,7 @@ class SupplierController extends BaseController
 
         $result = $this->supplierService->update(
             $id,
+            $company_id,
             $request['code'],
             $request['name'],
             $request['payment_term_type'],

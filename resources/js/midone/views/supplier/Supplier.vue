@@ -60,8 +60,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.taxable_enterprise') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.taxable_enterprise === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.taxable_enterprise === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.taxable_enterprise">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
