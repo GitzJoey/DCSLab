@@ -21,14 +21,22 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'email_verified' => !is_null($this->email_verified_at),
-            'profile' => new ProfileResource($this->profile),
-            'selected_roles' => $this->relationLoaded('roles') ? $this->selectedRolesInArray($this->roles):'',
-            'selected_settings' => $this->relationLoaded('settings') ? $this->selectedSettingsInArray($this->settings):'',
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
-            'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'roles_description' => $this->relationLoaded('roles') ? $this->flattenRoles($this->roles):'',
-            'companies' => CompanyResource::collection($this->whenLoaded('companies')),
-            'settings' => SettingResource::collection($this->whenLoaded('settings'))
+            $this->mergeWhen($this->whenLoaded('profile'), [
+                'profile' => new ProfileResource($this->profile)
+            ]),
+            $this->mergeWhen($this->whenLoaded('roles'), [
+                'roles' => RoleResource::collection($this->roles),
+                'roles_description' => $this->flattenRoles($this->roles),
+                'selected_roles' => $this->selectedRolesInArray($this->roles)
+            ]),
+            $this->mergeWhen($this->whenLoaded('companies'), [
+                'companies' => CompanyResource::collection($this->companies)
+            ]),
+            $this->mergeWhen($this->whenLoaded('settings'), [
+                'settings' => SettingResource::collection($this->settings),
+                'selected_settings' => $this->selectedSettingsInArray($this->settings)
+            ])
         ];
     }
 
@@ -52,8 +60,8 @@ class UserResource extends JsonResource
 
     private function selectedSettingsInArray($settings)
     {
-        $settings = array();
-        foreach ($this->settings as $s) {
+        $result = array();
+        foreach ($settings as $s) {
             $skey = '';
             switch ($s->key) {
                 case 'PREFS.THEME':
@@ -68,8 +76,8 @@ class UserResource extends JsonResource
                 default:
                     break;
             }
-            $settings[$skey] = $s->value;
+            $result[$skey] = $s->value;
         }
-        return $settings;
+        return $result;
     }
 }

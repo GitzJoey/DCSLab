@@ -15,8 +15,7 @@ class SupplierProductResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'product' => '',
-            'product_id' => $this->product_id,
+            'product' => new ProductResource($this->product),
             'main_product' => $this->main_product == 1 ? true : false,
         ];
     }

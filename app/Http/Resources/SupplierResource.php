@@ -25,23 +25,26 @@ class SupplierResource extends JsonResource
             'taxable_enterprise' => $this->taxable_enterprise == 1 ? true : false,
             'tax_id' => $this->tax_id,
             'remarks' => $this->remarks,
-            'status' => $this->status,
-            'selected_products' => '',
-            'main_products' => '',
-            'supplier_poc' => '',
-            'supplier_products' => '',
-            'user' => new UserResource($this->whenLoaded('user'))
+            'status' => $this->status == 1 ? true : false,
+            $this->mergeWhen($this->whenLoaded('supplier_products'), [
+                'supplier_products' => SupplierProductResource::collection($this->supplierProducts),
+                'selected_products' => $this->getSelectedProducts($this->supplierProducts),
+                'main_products' => $this->getMainProducts($this->supplierProducts)
+            ]),
+            $this->mergeWhen($this->whenLoaded('user'), [
+                'supplier_poc' => new UserResource($this->user)
+            ])
         ];
     }
 
-    private function getSelectedProducts()
+    private function getSelectedProducts($supplierProducts)
     {
-
+        return $supplierProducts->pluck('product.hId');
     }
 
-    private function getMainProducts()
+    private function getMainProducts($supplierProducts)
     {
-
+        return $supplierProducts->where('main_product', '=', 1)->pluck('product.hId');
     }
 
     

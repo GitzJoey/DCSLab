@@ -69,52 +69,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['hId', 'emailVerified', 'selectedRoles', 'selectedSettings', 'passwordExpiryDay'];
+    protected $appends = ['hId'];
 
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
-    }
-
-    public function getEmailVerifiedAttribute()
-    {
-        return !is_null($this->email_verified_at);
-    }
-
-    public function getSelectedRolesAttribute()
-    {
-        return $this->roles()->get()->pluck('hId');
-    }
-
-    public function getSelectedSettingsAttribute()
-    {
-        $settings = array();
-        foreach ($this->settings as $s) {
-            $skey = '';
-            switch ($s->key) {
-                case 'PREFS.THEME':
-                    $skey = 'theme';
-                    break;
-                case 'PREFS.DATE_FORMAT':
-                    $skey = 'dateFormat';
-                    break;
-                case 'PREFS.TIME_FORMAT':
-                    $skey = 'timeFormat';
-                    break;
-                default:
-                    break;
-            }
-            $settings[$skey] = $s->value;
-        }
-        return $settings;
-    }
-
-    public function getPasswordExpiryDayAttribute()
-    {
-        if (is_null($this->password_changed_at))
-            return 0;
-
-        return Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(Config::get('const.DEFAULT.PASSWORD_EXPIRY_DAYS')));
     }
 
     public function profile()
@@ -135,11 +94,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function supplier()
     {
         return $this->hasMany(Supplier::class);
-    }
-
-    public function getSetting($key)
-    {
-        return $this->settings()->where('key', $key)->pluck('value')->first();
     }
 
     public function getActivitylogOptions(): LogOptions

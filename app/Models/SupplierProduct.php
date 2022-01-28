@@ -19,9 +19,6 @@ class SupplierProduct extends Model
     protected $table = 'supplier_products';
 
     protected $fillable = [
-        'company_id',
-        'supplier_id',
-        'product_id',
         'main_product',
     ];
 
@@ -42,11 +39,21 @@ class SupplierProduct extends Model
         'deleted_at'
     ];
 
-    protected $appends = ['hId'];
+    protected $appends = ['hId', 'supplier_hId', 'product_hId'];
 
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
+    }
+
+    public function getSupplier_hIdAttribute() : string
+    {
+        return HashIds::encode($this->attributes['supplier_id']);
+    }
+
+    public function getProduct_hIdAttribute() : string
+    {
+        return HashIds::encode($this->attributes['product_id']);
     }
 
     public function company()
