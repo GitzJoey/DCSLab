@@ -118,10 +118,12 @@ class UserServiceImpl implements UserService
 
     public function read(string $search = '', bool $paginate = true, int $perPage = 10)
     {
+        $relationship = ['roles', 'profile', 'settings'];
+
         if (empty($search)) {
-            $usr = User::with('roles', 'profile', 'settings')->latest();
+            $usr = User::with($relationship)->latest();
         } else {
-            $usr = User::with('profile')
+            $usr = User::with($relationship)
                     ->where('email', 'like', '%'.$search.'%')
                     ->orWhere('name', 'like', '%'.$search.'%')
                     ->orWhereHas('profile', function ($query) use($search) {

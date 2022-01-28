@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CompanyRequest;
+use App\Http\Resources\CompanyResource;
 use App\Services\CompanyService;
 
 use Illuminate\Http\Request;
@@ -27,13 +28,29 @@ class CompanyController extends BaseController
         $paginate = true;
         $perPage = $request->has('perPage') ? $request['perPage']:null;
 
-        return $this->companyService->read($userId, $search, $paginate, $perPage);
+        $result = $this->companyService->read($userId, $search, $paginate, $perPage);
+        
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = CompanyResource::collection($result);
+
+            return $response;
+        }
     }
 
     public function getAllActiveCompany()
     {
         $userId = Auth::id();
-        return $this->companyService->getAllActiveCompany($userId);
+        $result = $this->companyService->getAllActiveCompany($userId);
+    
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = CompanyResource::collection($result);
+
+            return $response;
+        }
     }
 
     public function getDefaultCompany()

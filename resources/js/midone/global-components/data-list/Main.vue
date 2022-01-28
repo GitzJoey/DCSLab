@@ -134,8 +134,8 @@ const dataNotFound = computed(() => {
 });
 
 const pages = computed(() => {
-    if (data.value.current_page !== undefined && data.value.last_page !== undefined) {
-         return paginate(data.value.total, data.value.current_page, data.value.per_page, 5);
+    if (data.value.meta.current_page !== undefined && data.value.meta.last_page !== undefined) {
+         return paginate(data.value.meta.total, data.value.meta.current_page, data.value.meta.per_page, 5);
     } else {
         return [];
     }
@@ -144,18 +144,18 @@ const pages = computed(() => {
 const first = computed(()=> { return 1; });
 
 let previous = computed(()=> {
-    if (data.value.current_page === undefined) return 1;
-    if (data.value.current_page === 1) return 1;
-    return data.value.current_page - 1;
+    if (data.value.meta.current_page === undefined) return 1;
+    if (data.value.meta.current_page === 1) return 1;
+    return data.value.meta.current_page - 1;
 });
 
 const next = computed(()=> {
-    if (data.value.current_page === undefined) return 1;
-    if (data.value.current_page === data.value.last_page) return data.value.last_page;
-    return data.value.current_page + 1;
+    if (data.value.meta.current_page === undefined) return 1;
+    if (data.value.meta.current_page === data.value.meta.last_page) return data.value.meta.last_page;
+    return data.value.meta.current_page + 1;
 });
 
-const last = computed(()=> { return data.value.last_page; });
+const last = computed(()=> { return data.value.meta.last_page; });
 
 const { t } = useI18n();
 

@@ -25,7 +25,7 @@ class UserResource extends JsonResource
             'selected_roles' => $this->relationLoaded('roles') ? $this->selectedRolesInArray($this->roles):'',
             'selected_settings' => $this->relationLoaded('settings') ? $this->selectedSettingsInArray($this->settings):'',
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
-            'roles' => RoleResource::collection($this->whenLoaded('permissions')),
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'roles_description' => $this->relationLoaded('roles') ? $this->flattenRoles($this->roles):'',
             'companies' => CompanyResource::collection($this->whenLoaded('companies')),
             'settings' => SettingResource::collection($this->whenLoaded('settings'))

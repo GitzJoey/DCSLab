@@ -22,8 +22,8 @@
                                     <span v-for="(r, rIdx) in item.roles">{{ r.display_name }}</span>
                                 </td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.profile.status === 1" />
-                                    <XIcon v-if="item.profile.status === 0" />
+                                    <CheckCircleIcon v-if="item.profile.status" />
+                                    <XIcon v-else />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -53,13 +53,13 @@
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}</div>
-                                        <div class="flex-1">{{ multipleRolesDisplay }}</div>
+                                        <div class="flex-1">{{ item.roles_description }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.profile.status">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -162,7 +162,7 @@
                     <div class="mb-3">
                         <label for="inputRoles" class="form-label">{{ t('views.user.fields.roles') }}</label>
                         <VeeField as="select" multiple :class="{'form-control':true, 'border-theme-21':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" rules="required" :label="t('views.user.fields.roles')" @blur="reValidate(errors)">
-                            <option v-for="(value, name) in rolesDDL" :value="name">{{ value }}</option>
+                            <option v-for="r in rolesDDL" :value="r.hId">{{ r.display_name }}</option>
                         </VeeField>
                         <ErrorMessage name="roles[]" class="text-theme-21" />
                     </div>
@@ -481,12 +481,6 @@ const retrieveImage = computed(() => {
     } else {
         return '/images/def-user.png';
     }
-});
-
-const multipleRolesDisplay = computed(() => {
-    if (user.value.roles === null) return '';
-
-    return _.map(user.value.roles, 'description') .join(", ");
 });
 
 // Watcher

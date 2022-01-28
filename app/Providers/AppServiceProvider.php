@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 use App\Services\DashboardService;
 use App\Services\UserService;
@@ -32,6 +33,7 @@ use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
+
 /* Ext */
 
 class AppServiceProvider extends ServiceProvider
@@ -102,6 +104,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        JsonResource::withoutWrapping();
     }
 }
