@@ -22,20 +22,27 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'email_verified' => !is_null($this->email_verified_at),
             'profile' => new ProfileResource($this->profile),
-            'selected_roles' => $this->selectedRolesInArray($this->roles),
-            'selected_settings' => $this->selectedSettingsInArray($this->settings),
+            'selected_roles' => $this->relationLoaded('roles') ? $this->selectedRolesInArray($this->roles):'',
+            'selected_settings' => $this->relationLoaded('settings') ? $this->selectedSettingsInArray($this->settings):'',
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
-            'roles' => new RoleCollection($this->roles),
-            'companies' => new CompanyCollection($this->companies),
-            'settings' => new SettingCollection($this->settings)
+            'roles' => RoleResource::collection($this->whenLoaded('permissions')),
+            'roles_description' => $this->relationLoaded('roles') ? $this->flattenRoles($this->roles):'',
+            'companies' => CompanyResource::collection($this->whenLoaded('companies')),
+            'settings' => SettingResource::collection($this->whenLoaded('settings'))
         ];
     }
 
-    private function selectedRolesInArray($roles) {
+    private function flattenRoles($roles)
+    {
+        return $roles->pluck('display_name')->implode(',');
+    }
+
+    private function selectedRolesInArray($roles)
+    {
         return $roles->pluck('hId');
     }
 
-    public function getPasswordExpiryDay($password_changed_at)
+    private function getPasswordExpiryDay($password_changed_at)
     {
         if (is_null($password_changed_at))
             return 0;
@@ -43,7 +50,8 @@ class UserResource extends JsonResource
         return Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(Config::get('const.DEFAULT.PASSWORD_EXPIRY_DAYS')));
     }
 
-    private function selectedSettingsInArray($settings) {
+    private function selectedSettingsInArray($settings)
+    {
         $settings = array();
         foreach ($this->settings as $s) {
             $skey = '';

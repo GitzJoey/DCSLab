@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Actions\RandomGenerator;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use App\Services\RoleService;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Session;
 
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -35,20 +34,31 @@ class UserController extends BaseController
         $paginate = true;
         $perPage = $request->has('perPage') ? $request['perPage']:null;
 
-        return $this->userService->read($search, $paginate, $perPage);
+        $result = $this->userService->read($search, $paginate, $perPage);
+        
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = UserResource::collection($result);
+            return $response;    
+        }
     }
 
     public function getAllRoles()
     {
-        $withDefaultRole = Auth::user()->hasRole([
+        $excludeRole = [
             Config::get('const.DEFAULT.ROLE.ADMIN'),
             Config::get('const.DEFAULT.ROLE.DEV')
-        ]);
+        ];
 
-        $parameters['withDefaultRole'] = $withDefaultRole;
-
-        $roles = $this->roleService->read($parameters);
-        return $roles;
+        $roles = $this->roleService->read(exclude: $excludeRole);
+        
+        if (is_null($roles)) {
+            return response()->error();
+        } else {
+            $response = RoleResource::collection($roles);
+            return $response;    
+        }
     }
 
     public function store(UserRequest $userRequest)

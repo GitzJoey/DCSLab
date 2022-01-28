@@ -13,7 +13,7 @@ interface RoleService
         array $permissions
     ): Role;
 
-    public function read(array $parameters = []);
+    public function read(array $relationship = [], array $exclude = []);
 
     public function readBy(string $key, string $value);
 

@@ -45,20 +45,15 @@ class RoleServiceImpl implements RoleService
         }
     }
 
-    public function read(array $parameters = [])
+    public function read(array $relationship = [], array $exclude = [])
     {
-        if ($parameters == []) {
-            return Role::with('permissions')->latest()->get();
-        }
+        $role = Role::with($relationship)->latest();
 
-        if (array_key_exists('withDefaultRole', $parameters)) {
-            if (!$parameters['withDefaultRole'])
-                return Role::whereNotIn('name', ['dev','administrator'])->get()->pluck('display_name', 'hId');
-            else
-                return Role::get()->pluck('display_name', 'hId');
+        if (empty($exclude)) {
+            return $role->get();
+        } else {
+            return $role->whereNotIn('name', ['dev','administrator'])->get();
         }
-
-        return null;
     }
 
     public function readBy(string $key, string $value)

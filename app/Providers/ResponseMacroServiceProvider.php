@@ -10,8 +10,8 @@ class ResponseMacroServiceProvider extends ServiceProvider
     public function boot()
     {
         Response::macro('success', function ($data = null) {
-            return Response::json([
-                'data' => $data == null ? '':$data,
+            return Response::json($data == null ? null : [
+                'data' => $data
             ]);
         });
 
