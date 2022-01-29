@@ -7,6 +7,7 @@ use App\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends BaseController
 {
@@ -28,13 +29,21 @@ class ProductController extends BaseController
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
-        return $this->productService->read(
+        $result = $this->productService->read(
                     companyId: $companyId, 
                     isProduct: true, 
                     isService: false, 
                     search: $search, 
                     paginate: $paginate, 
                     perPage: $perPage);
+
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = ProductResource::collection($result);
+
+            return $response;
+        }            
     }
 
     public function readServices(Request $request)
@@ -45,13 +54,21 @@ class ProductController extends BaseController
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
-        return $this->productService->read(
+        $result = $this->productService->read(
                     companyId: $companyId, 
                     isProduct: false, 
                     isService: true, 
                     search: $search, 
                     paginate: $paginate, 
                     perPage: $perPage);
+        
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = ProductResource::collection($result);
+
+            return $response;
+        }
     }
 
     public function store(ProductRequest $productRequest)

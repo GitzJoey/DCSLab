@@ -50,21 +50,11 @@ class Supplier extends Model
         'pivot'
     ];
 
-    protected $appends = ['hId', 'selectedProducts', 'mainProducts'];
+    protected $appends = ['hId'];
 
     public function getHIdAttribute() : string
     {
         return HashIds::encode($this->attributes['id']);
-    }
-
-    public function getSelectedProductsAttribute() : string
-    {
-        return $this->supplierProducts()->with('product')->get()->pluck('product.hId');
-    }
-
-    public function getMainProductsAttribute() : string
-    {
-        return $this->supplierProducts()->with('product')->where('main_product', '=', 1)->get()->pluck('product.hId');
     }
 
     public function user()

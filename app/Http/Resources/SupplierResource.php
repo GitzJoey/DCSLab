@@ -46,7 +46,4 @@ class SupplierResource extends JsonResource
     {
         return $supplierProducts->where('main_product', '=', 1)->pluck('product.hId');
     }
-
-    
-    
 }

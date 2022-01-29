@@ -18,10 +18,10 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
-                                <td>{{ item.user.name }}</td>
+                                <td>{{ item.supplier_poc.name }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status === 1" />
-                                    <XIcon v-if="item.status === 0" />
+                                    <CheckCircleIcon v-if="item.status" />
+                                    <XIcon v-else />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -90,13 +90,13 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.poc.label') }}</div>
-                                        <div class="flex-1">{{ item.user.name }} - {{ item.user.email }}</div>
+                                        <div class="flex-1">{{ item.supplier_poc.name }} - {{ item.supplier_poc.email }}</div>
                                     </div>                                    
                                 </td>
                             </tr>
@@ -215,12 +215,12 @@
                     <div id="poc" class="tab-pane p-5" role="tabpanel" aria-labelledby="poc-tab">
                         <div class="mb-3">
                             <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
-                            <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.user.name" />
+                            <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
                             <ErrorMessage name="poc_name" class="text-theme-21" />
                         </div>
                         <div class="mb-3">
                             <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
-                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.user.email" :readonly="mode === 'edit'" />
+                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
                             <ErrorMessage name="email" class="text-theme-21" />
                         </div>
                     </div>
@@ -238,10 +238,10 @@
                                 <tbody>
                                     <tr v-for="(p, pIdx) in productLists">
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selectedProducts" :value="p.hId" class="form-check-switch">
+                                            <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selected_products" :value="p.hId" class="form-check-switch">
                                         </td>
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.mainProducts" :value="p.hId" class="form-check-switch">
+                                            <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.main_products" :value="p.hId" class="form-check-switch">
                                         </td>
                                         <td>
                                             {{ p.name }}
@@ -304,7 +304,7 @@ const supplier = ref({
     term: '',
     contact: '',
     address: '',
-    user: {
+    supplier_poc: {
         hId: '',
         profile: {
             first_name: ''
@@ -317,8 +317,8 @@ const supplier = ref({
     supplier_products: [],
     payment_term_type: '',
     payment_term: 0,
-    selectedProducts: [],
-    mainProducts: [],
+    selected_products: [],
+    main_products: [],
     status: 1,
 });
 const statusDDL = ref([]);
@@ -431,7 +431,7 @@ function emptySupplier() {
         contact: '',
         address: '',
         city: '',
-        user: {
+        supplier_poc: {
             hId: '',
             profile: {
                 first_name: ''
@@ -443,8 +443,8 @@ function emptySupplier() {
         remarks: '',
         payment_term_type: '',
         payment_term: 0,
-        selectedProducts: [],
-        mainProducts: [],
+        selected_products: [],
+        main_products: [],
         status: 1,
     }
 }
@@ -513,29 +513,25 @@ watch(selectedUserCompany, () => {
     }
 });
 
-watch(computed(() => supplier.value.mainProducts), () => {
-    /*
-    if (supplier.value.mainProducts.length != 0) {
-        _.forEach(supplier.value.mainProducts, function(val) {
-            if (_.findIndex(supplier.value.selectedProducts, (item) => { return item === val }) === -1) {
-                supplier.value.selectedProducts.push(val);
+watch(computed(() => supplier.value.main_products), () => {
+    if (supplier.value.main_products.length != 0) {
+        _.forEach(supplier.value.main_products, function(val) {
+            if (_.findIndex(supplier.value.selected_products, (item) => { return item === val }) === -1) {
+                supplier.value.selected_products.push(val);
             }
         });
     }
-    */
 });
 
-watch(computed(() => supplier.value.selectedProducts), (n, o) => {
-    /*
-    if (supplier.value.mainProducts.length != 0) {
-        _.forEach(supplier.value.mainProducts, function(val) {
-            if (_.findIndex(supplier.value.selectedProducts, (item) => { return item === val }) === -1) {
-                if (_.findIndex(supplier.value.mainProducts, (item) => { return item === val }) > -1) {
-                    supplier.value.mainProducts.splice(_.findIndex(supplier.value.mainProducts, (item) => { return item === val }), 1);
+watch(computed(() => supplier.value.selected_products), (n, o) => {
+    if (supplier.value.main_products.length != 0) {
+        _.forEach(supplier.value.main_products, function(val) {
+            if (_.findIndex(supplier.value.selected_products, (item) => { return item === val }) === -1) {
+                if (_.findIndex(supplier.value.main_products, (item) => { return item === val }) > -1) {
+                    supplier.value.main_products.splice(_.findIndex(supplier.value.main_products, (item) => { return item === val }), 1);
                 }
             }
         });
     }
-    */
 });
 </script>
