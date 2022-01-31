@@ -41,7 +41,7 @@ class CompanyServiceTest extends ServiceTestCase
         $response = $this->service->read($usr->id, '', true, 10);
 
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertTrue(!is_null($response));
+        $this->assertNotNull($response);
     }
 
     public function test_call_read_when_user_doesnt_have_companies()
@@ -58,6 +58,6 @@ class CompanyServiceTest extends ServiceTestCase
         $response = $this->service->read($selectedUsr->id, '', true, 10);
 
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertTrue(!is_null($response));
+        $this->assertNotNull($response);
     }
 }

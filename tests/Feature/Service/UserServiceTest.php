@@ -31,15 +31,15 @@ class UserServiceTest extends ServiceTestCase
         $response = $this->service->read('', true, 10);
 
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertTrue(!is_null($response));
+        $this->assertNotNull($response);
     }
 
     public function test_call_read_with_special_char_in_search()
     {
-        $response = $this->service->read('', true, 10);
+        $response = $this->service->read('&', true, 10);
 
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertTrue(!is_null($response));
+        $this->assertNull($response);
     }
 
     public function test_call_read_with_negative_value_in_perpage_param()
@@ -47,7 +47,7 @@ class UserServiceTest extends ServiceTestCase
         $response = $this->service->read('', true, -10);
 
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertTrue(!is_null($response));
+        $this->assertNotNull($response);
     }
 
     public function test_call_read_without_pagination()
@@ -94,7 +94,7 @@ class UserServiceTest extends ServiceTestCase
 
         $usr = $this->service->register('normaluser', $usr->email, 'password', 'on');
 
-        $this->assertTrue(is_null($usr));
+        $this->assertNull($usr);
     }
 
     public function test_call_create()
@@ -108,7 +108,8 @@ class UserServiceTest extends ServiceTestCase
 
         $response = $this->service->create('testname', $email, 'password', $roles, $profile);
 
-        $this->assertTrue(!is_null($response));
+        $this->assertNull($response);
+
         $this->assertDatabaseHas('users', [
             'name' => 'testname',
             'email' => $email
@@ -142,7 +143,8 @@ class UserServiceTest extends ServiceTestCase
 
         $response = $this->service->create('testname', $email, 'password', $roles, $profile);
 
-        $this->assertTrue(!is_null($response));
+        $this->assertNull($response);
+
         $this->assertDatabaseHas('users', [
             'name' => 'testname',
             'email' => $email
@@ -177,6 +179,7 @@ class UserServiceTest extends ServiceTestCase
         $response = $this->service->create('testname', $email, 'password', $roles, $profile);
 
         $this->assertNotNull($response);
+        
         $this->assertDatabaseMissing('role_user', [
             'user_id' => $response->id
         ]);
@@ -195,6 +198,7 @@ class UserServiceTest extends ServiceTestCase
         $response_edit = $this->service->update(id: $response->id, name: 'editedname');
 
         $this->assertNotNull($response_edit);
+        
         $this->assertDatabaseHas('users', [
             'id' => $response_edit->id,
             'name' => 'editedname'
@@ -218,6 +222,7 @@ class UserServiceTest extends ServiceTestCase
         $response_edit = $this->service->update(id: $response->id, name: $response->name, profile: $profile_new);
 
         $this->assertNotNull($response_edit);
+        
         $this->assertDatabaseHas('profiles', [
             'user_id' => $response_edit->id,
             'first_name' => 'edited first name'
@@ -253,6 +258,7 @@ class UserServiceTest extends ServiceTestCase
         $response_edit = $this->service->update(id: $response->id, name: $response->name, profile: $profile_new);
 
         $this->assertNotNull($response_edit);
+        
         $this->assertDatabaseHas('profiles', [
             'user_id' => $response_edit->id,
             'first_name' => 'edited first name',
@@ -297,6 +303,7 @@ class UserServiceTest extends ServiceTestCase
         $response_edit = $this->service->update(id: $response->id, name: $response->name, profile: $profile_new);
 
         $this->assertNotNull($response_edit);
+        
         $this->assertDatabaseHas('profiles', [
             'user_id' => $response_edit->id,
             'first_name' => 'edited first name',
