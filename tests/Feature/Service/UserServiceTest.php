@@ -38,8 +38,8 @@ class UserServiceTest extends ServiceTestCase
     {
         $response = $this->service->read('&', true, 10);
 
+        $this->assertNotNull($response);
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertNull($response);
     }
 
     public function test_call_read_with_negative_value_in_perpage_param()
@@ -108,7 +108,7 @@ class UserServiceTest extends ServiceTestCase
 
         $response = $this->service->create('testname', $email, 'password', $roles, $profile);
 
-        $this->assertNull($response);
+        $this->assertNotNull($response);
 
         $this->assertDatabaseHas('users', [
             'name' => 'testname',
@@ -143,7 +143,7 @@ class UserServiceTest extends ServiceTestCase
 
         $response = $this->service->create('testname', $email, 'password', $roles, $profile);
 
-        $this->assertNull($response);
+        $this->assertNotNull($response);
 
         $this->assertDatabaseHas('users', [
             'name' => 'testname',
