@@ -16,6 +16,7 @@ class ProductResource extends JsonResource
     {
         return [
             'hId' => $this->hId,
+            'code' => $this->code,
             'name' => $this->name,
             'product_type' => $this->product_type,
             'taxable_supply' => $this->taxable_supply == 1 ? true : false,

@@ -289,7 +289,7 @@ const user = ref({
     selectedRoles: [],
     profile: {
         country: '',
-        status: 1,
+        status: true,
         img_path: ''
     },
     selectedSettings: {
@@ -404,7 +404,7 @@ function emptyUser() {
         profile: {
             img_path: '',
             country: '',
-            status: 1,
+            status: true,
         },
         selectedSettings: {
             theme: 'side-menu-light-full',

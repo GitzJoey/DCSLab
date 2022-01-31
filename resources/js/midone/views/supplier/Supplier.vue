@@ -319,7 +319,7 @@ const supplier = ref({
     payment_term: 0,
     selected_products: [],
     main_products: [],
-    status: 1,
+    status: true,
 });
 const statusDDL = ref([]);
 const paymentTermDDL = ref([]);
@@ -445,7 +445,7 @@ function emptySupplier() {
         payment_term: 0,
         selected_products: [],
         main_products: [],
-        status: 1,
+        status: true,
     }
 }
 

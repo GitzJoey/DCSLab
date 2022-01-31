@@ -20,8 +20,8 @@
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>{{ item.brand !== null ? item.brand.name : '' }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status === 1" />
-                                    <XIcon v-if="item.status === 0" />
+                                    <CheckCircleIcon v-if="item.status" />
+                                    <XIcon v-else />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -69,8 +69,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.taxable_supply') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.taxable_supply === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.taxable_supply === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.taxable_supply">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -100,8 +100,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.price_include_vat') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.price_include_vat === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.price_include_vat === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.price_include_vat">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -111,22 +111,22 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.use_serial_number') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.use_serial_number === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.use_serial_number === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.use_serial_number">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.has_expiry_date') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.has_expiry_date === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.has_expiry_date === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.has_expiry_date">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -340,14 +340,15 @@ const product = ref({
             unit: { hId: '' }
         }
     ],
-    taxable_supply: 0,
+    taxable_supply: false,
     standard_rated_supply: 0,
-    price_include_vat: 0,
+    price_include_vat: false,
     remarks: '',
     point: 0,
-    is_use_serial: 0,
+    is_use_serial: false,
+    has_expiry_date: false,
     product_type: '',
-    status: 1,
+    status: true,
 });
 const statusDDL = ref([]);
 const productGroupDDL = ref([]);
@@ -493,15 +494,15 @@ function emptyProduct() {
                 unit: { hId: '' }
             }
         ],
-        taxable_supply: 0,
+        taxable_supply: false,
         standard_rated_supply: 0,
-        price_include_vat: 0,
+        price_include_vat: false,
         remarks: '',
         point: 0,
-        use_serial_number: 0,
-        has_expiry_date: 0,
+        use_serial_number: false,
+        has_expiry_date: false,
         product_type: '',
-        status: 1,
+        status: true,
     }
 }
 
