@@ -25,7 +25,7 @@ class SupplierResource extends JsonResource
             'taxable_enterprise' => $this->taxable_enterprise == 1 ? true : false,
             'tax_id' => $this->tax_id,
             'remarks' => $this->remarks,
-            'status' => $this->status == 1 ? true : false,
+            'status' => $this->status,
             $this->mergeWhen($this->whenLoaded('supplier_products'), [
                 'supplier_products' => SupplierProductResource::collection($this->supplierProducts),
                 'selected_products' => $this->getSelectedProducts($this->supplierProducts),

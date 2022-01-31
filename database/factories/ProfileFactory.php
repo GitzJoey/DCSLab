@@ -21,13 +21,16 @@ class ProfileFactory extends Factory
      */
     public function definition()
     {
+        $country = ['Singapore', 'Indonesia'];
+        shuffle($country);
+
         return [
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'address' => $this->faker->address(),
             'city' => $this->faker->city(),
             'postal_code' => $this->faker->postcode(),
-            'country' => $this->faker->country(),
+            'country' => $country[0],
             'tax_id' => $this->faker->randomDigit(),
             'ic_num' => $this->faker->randomDigit(),
             'img_path' => '',
@@ -38,6 +41,9 @@ class ProfileFactory extends Factory
 
     public function setFirstName($first_name)
     {
+        $country = ['Singapore', 'Indonesia'];
+        shuffle($country);
+
         $profile = new Profile();
 
         $profile->first_name = $first_name;
@@ -45,7 +51,7 @@ class ProfileFactory extends Factory
         $profile->address = $this->faker->address();
         $profile->city = $this->faker->city();
         $profile->postal_code = $this->faker->postcode();
-        $profile->country = $this->faker->country();
+        $profile->country = $country[0];
         $profile->tax_id = $this->faker->randomDigit();
         $profile->ic_num = $this->faker->randomDigit();
         $profile->img_path = '';

@@ -23,8 +23,8 @@
                                     <XIcon v-else />
                                 </td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status" />
-                                    <XIcon v-else />
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -66,8 +66,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.status">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -128,7 +128,7 @@
                     <div class="mb-3">
                         <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
                         <div class="mt-2">
-                            <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default" :true-value="1" :false-value="0">
+                            <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -186,8 +186,8 @@ const company = ref({
     code: '',
     name: '',
     address: '',
-    default: '',
-    status: ''
+    default: false,
+    status: 1
 });
 const statusDDL = ref([]);
 
@@ -276,8 +276,8 @@ function emptyCompany() {
         code: '[AUTO]',
         name: '',
         address: '',
-        default: 0,
-        status: true,
+        default: false,
+        status: 1,
     }
 }
 

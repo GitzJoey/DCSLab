@@ -20,8 +20,8 @@
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>{{ item.supplier_poc.name }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status" />
-                                    <XIcon v-else />
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -90,8 +90,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.status">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -319,7 +319,7 @@ const supplier = ref({
     payment_term: 0,
     selected_products: [],
     main_products: [],
-    status: true,
+    status: 1,
 });
 const statusDDL = ref([]);
 const paymentTermDDL = ref([]);
@@ -445,7 +445,7 @@ function emptySupplier() {
         payment_term: 0,
         selected_products: [],
         main_products: [],
-        status: true,
+        status: 1,
     }
 }
 

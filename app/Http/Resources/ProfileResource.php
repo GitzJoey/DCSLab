@@ -21,7 +21,7 @@ class ProfileResource extends JsonResource
             'city' => $this->city,
             'postal_code' => $this->postal_code,
             'country' => $this->country,
-            'status' => $this->status == 1 ? true:false,
+            'status' => $this->status,
             'tax_id' => $this->tax_id,
             'ic_num' => $this->ic_num,
             'img_path' => $this->img_path,

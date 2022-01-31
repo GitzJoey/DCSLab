@@ -22,8 +22,8 @@
                                     <span v-for="(r, rIdx) in item.roles">{{ r.display_name }}</span>
                                 </td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.profile.status" />
-                                    <XIcon v-else />
+                                    <CheckCircleIcon v-if="item.profile.status === 1" />
+                                    <XIcon v-if="item.profile.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -58,8 +58,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.profile.status">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -183,7 +183,7 @@
                         <label for="inputSettings" class="form-label">{{ t('views.user.fields.settings.settings') }}</label>
                         <div class="mb-3">
                             <label for="selectTheme" class="form-label">{{ t('views.user.fields.settings.theme') }}</label>
-                            <select class="form-control form-select" id="selectTheme" name="theme" v-model="user.selectedSettings.theme" v-show="mode === 'create' || mode === 'edit'">
+                            <select class="form-control form-select" id="selectTheme" name="theme" v-model="user.selected_settings.theme" v-show="mode === 'create' || mode === 'edit'">
                                 <option value="side-menu-light-full">Menu Light</option>
                                 <option value="side-menu-light-mini">Mini Menu Light</option>
                                 <option value="side-menu-dark-full">Menu Dark</option>
@@ -194,14 +194,14 @@
                             <div class="grid grid-cols-2 gap-2">
                                 <div>
                                     <label for="selectDate">{{ t('views.user.fields.settings.dateFormat') }}</label>
-                                    <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="user.selectedSettings.dateFormat" v-show="mode === 'create' || mode === 'edit'">
+                                    <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="user.selected_settings.dateFormat" v-show="mode === 'create' || mode === 'edit'">
                                         <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
                                         <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="selectTime">{{ t('views.user.fields.settings.timeFormat') }}</label>
-                                    <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="user.selectedSettings.timeFormat" v-show="mode === 'create' || mode === 'edit'">
+                                    <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="user.selected_settings.timeFormat" v-show="mode === 'create' || mode === 'edit'">
                                         <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
                                         <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
                                     </select>
@@ -289,10 +289,10 @@ const user = ref({
     selectedRoles: [],
     profile: {
         country: '',
-        status: true,
+        status: 1,
         img_path: ''
     },
-    selectedSettings: {
+    selected_settings: {
         theme: 'side-menu-light-full',
         dateFormat: '',
         timeFormat: '',
@@ -404,9 +404,9 @@ function emptyUser() {
         profile: {
             img_path: '',
             country: '',
-            status: true,
+            status: 1,
         },
-        selectedSettings: {
+        selected_settings: {
             theme: 'side-menu-light-full',
             dateFormat: 'yyyy_MM_dd',
             timeFormat: 'hh_mm_ss',

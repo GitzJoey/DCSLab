@@ -20,8 +20,8 @@
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>{{ item.brand !== null ? item.brand.name : '' }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status" />
-                                    <XIcon v-else />
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -125,8 +125,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.status">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -348,7 +348,7 @@ const product = ref({
     is_use_serial: false,
     has_expiry_date: false,
     product_type: '',
-    status: true,
+    status: 1,
 });
 const statusDDL = ref([]);
 const productGroupDDL = ref([]);
@@ -502,7 +502,7 @@ function emptyProduct() {
         use_serial_number: false,
         has_expiry_date: false,
         product_type: '',
-        status: true,
+        status: 1,
     }
 }
 

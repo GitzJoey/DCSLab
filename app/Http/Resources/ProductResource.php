@@ -25,10 +25,11 @@ class ProductResource extends JsonResource
             'point' => $this->point,
             'use_serial_number' => $this->use_serial_number == 1 ? true : false,
             'has_expiry_date' => $this->has_expiry_date == 1 ? true : false,
-            'status' => $this->status == 1 ? true : false,
+            'status' => $this->status,
             'remarks' => $this->remarks,
             'brand' => '',
-            'product_group' => ''
+            'product_group' => '',
+            'product_units' => ProductUnitResource::collection($this->productUnits)
         ];
     }
 }
