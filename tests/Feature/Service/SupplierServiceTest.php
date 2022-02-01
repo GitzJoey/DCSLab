@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Service;
 
+use App\Actions\RandomGenerator;
 use App\Services\SupplierService;
 use App\Models\Company;
 use App\Models\Supplier;
@@ -66,7 +67,7 @@ class SupplierServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Collection::class, $response);
     }
-    /*
+
     public function test_create()
     {
         $paymentTermType = ['PIA','NET30','EOM','COD','CND'];
@@ -77,12 +78,13 @@ class SupplierServiceTest extends ServiceTestCase
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $payment_term_type = $paymentTermType[0];
+        $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
         $taxable_enterprise = (new RandomGenerator())->generateNumber(0, 1);
-        $tax_id = $this->faker->name;
-        $remarks = $this->faker->words;
+        $tax_id = (new RandomGenerator())->generateNumber(0, 1999);
+        $remarks = $this->faker->word;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $poc = [
@@ -97,6 +99,7 @@ class SupplierServiceTest extends ServiceTestCase
             $code,
             $name,
             $payment_term_type,
+            $payment_term,
             $contact,
             $address,
             $city,
@@ -122,7 +125,7 @@ class SupplierServiceTest extends ServiceTestCase
             'status' => $status
         ]);
     }
-
+    /*
     public function test_update()
     {
         $paymentTermType = ['PIA','NET30','EOM','COD','CND'];
