@@ -24,7 +24,7 @@ class SupplierServiceImpl implements SupplierService
         string $code,
         string $name,
         string $payment_term_type,
-        ?int $payment_term = 0,
+        ?int $payment_term = null,
         ?string $contact = null,
         ?string $address = null,
         ?string $city = null,
@@ -115,7 +115,7 @@ class SupplierServiceImpl implements SupplierService
 
         if ($paginate) {
             $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-            return $suppliers->paginate($perPage);
+            return $suppliers->paginate(abs($perPage));
         } else {
             return $suppliers->get();
         }
@@ -127,7 +127,7 @@ class SupplierServiceImpl implements SupplierService
         string $code,
         string $name,
         string $payment_term_type,
-        ?int $payment_term = 0,
+        ?int $payment_term = null,
         ?string $contact = null,
         ?string $address = null,
         ?string $city = null,

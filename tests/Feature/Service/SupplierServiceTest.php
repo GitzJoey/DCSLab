@@ -5,12 +5,13 @@ namespace Tests\Feature\Service;
 use App\Services\SupplierService;
 use App\Models\Company;
 use App\Models\Supplier;
-use Illuminate\Support\Facades\Config;
-use Vinkla\Hashids\Facades\Hashids;
-use App\Actions\RandomGenerator;
+use App\Models\User;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\SupplierTableSeeder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Collection;
 use Tests\ServiceTestCase;
 
 class SupplierServiceTest extends ServiceTestCase
@@ -22,23 +23,50 @@ class SupplierServiceTest extends ServiceTestCase
         parent::setUp();
 
         $this->service = app(SupplierService::class);
+
+        if (User::count() == 0)
+            $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
+
+        if (User::has('companies')->count() == 0) {
+            $companyPerUser = 3;
+            $companySeeder = new CompanyTableSeeder();
+            $companySeeder->callWith(CompanyTableSeeder::class, [$companyPerUser]);    
+        }
+
+        if (Supplier::count() == 0) {
+            $supplierPerCompany = 3;
+
+            $supplierSeeder = new SupplierTableSeeder();
+            $supplierSeeder->callWith(SupplierTableSeeder::class, [$supplierPerCompany]);
+        }
+        
+        $this->selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
     }
 
-    public function test_example()
+    public function test_call_read()
     {
-        $this->assertTrue(true);
-    }
-    /*
-    public function test_read()
-    {
-        $selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
-
-        $response = $this->service->read($selectedCompanyId, '', true, 10);
+        $response = $this->service->read($this->selectedCompanyId, '', true, 10);
 
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertTrue(!is_null($response));
+        $this->assertNotNull($response);
     }
 
+
+    public function test_call_read_with_negative_value_in_perpage_param()
+    {
+        $response = $this->service->read($this->selectedCompanyId, '', true, -10);
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
+    }
+
+    public function test_call_read_without_pagination()
+    {
+        $response = $this->service->read($this->selectedCompanyId, '', false, 10);
+
+        $this->assertInstanceOf(Collection::class, $response);
+    }
+    /*
     public function test_create()
     {
         $paymentTermType = ['PIA','NET30','EOM','COD','CND'];
