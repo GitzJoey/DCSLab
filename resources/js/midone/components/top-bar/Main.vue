@@ -114,6 +114,7 @@ import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { switchLang, getLang } from '../../lang/index';
 import { useStore } from '../../store';
 import mainMixins from '../../mixins/index';
+import axios from '../../axios';
 import { useRouter } from "vue-router";
 
 export default defineComponent({
