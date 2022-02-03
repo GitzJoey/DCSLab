@@ -178,7 +178,7 @@ export default defineComponent({
             if (companyLists.length === 0) return;
 
             if (selected === '') {
-                let defaultCompany = _.find(companyLists, { default: 1 });
+                let defaultCompany = _.find(companyLists, { default: true });
                 selectedCompany.value = defaultCompany.name;
                 store.dispatch('main/setSelectedCompany', defaultCompany.hId);
             } else {
