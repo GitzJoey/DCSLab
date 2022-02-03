@@ -43,7 +43,7 @@ class ProductController extends BaseController
             $response = ProductResource::collection($result);
 
             return $response;
-        }            
+        }
     }
 
     public function readServices(Request $request)
