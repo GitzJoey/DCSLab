@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Service;
 
+use App\Actions\RandomGenerator;
 use App\Services\SupplierService;
 use App\Models\Company;
 use App\Models\Supplier;
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use Tests\ServiceTestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierServiceTest extends ServiceTestCase
 {
@@ -66,7 +68,7 @@ class SupplierServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Collection::class, $response);
     }
-    /*
+
     public function test_create()
     {
         $paymentTermType = ['PIA','NET30','EOM','COD','CND'];
@@ -77,12 +79,13 @@ class SupplierServiceTest extends ServiceTestCase
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $payment_term_type = $paymentTermType[0];
+        $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
         $taxable_enterprise = (new RandomGenerator())->generateNumber(0, 1);
-        $tax_id = $this->faker->name;
-        $remarks = $this->faker->words;
+        $tax_id = (new RandomGenerator())->generateNumber(0, 1999);
+        $remarks = $this->faker->word;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $poc = [
@@ -97,6 +100,7 @@ class SupplierServiceTest extends ServiceTestCase
             $code,
             $name,
             $payment_term_type,
+            $payment_term,
             $contact,
             $address,
             $city,
@@ -133,6 +137,7 @@ class SupplierServiceTest extends ServiceTestCase
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $payment_term_type = $paymentTermType[0];
+        $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
@@ -153,6 +158,7 @@ class SupplierServiceTest extends ServiceTestCase
             $code,
             $name,
             $payment_term_type,
+            $payment_term,
             $contact,
             $address,
             $city,
@@ -171,6 +177,7 @@ class SupplierServiceTest extends ServiceTestCase
         $code_new = (new RandomGenerator())->generateNumber(1, 9999);
         $name_new = $this->faker->name;
         $payment_term_type_new = $paymentTermType[0];
+        $payment_term_new = 30;
         $contact_new = $this->faker->e164PhoneNumber;
         $address_new = $this->faker->address;
         $city_new = $this->faker->city;
@@ -178,20 +185,26 @@ class SupplierServiceTest extends ServiceTestCase
         $tax_id_new = $this->faker->name;
         $remarks_new = '';
         $status_new = (new RandomGenerator())->generateNumber(0, 1);
-        
+
+        $poc_new = [];
+        $products_new = [];
+
         $response = $this->service->update(
             $rId, 
             $company_id,
             $code_new,
             $name_new,
             $payment_term_type_new,
+            $payment_term_new,
             $contact_new,
             $address_new,
             $city_new,
             $taxable_enterprise_new,
             $tax_id_new,
             $remarks_new,
-            $status_new
+            $status_new,
+            $poc_new,
+            $products_new
         );
 
         $this->assertDatabaseHas('suppliers', [
@@ -220,6 +233,7 @@ class SupplierServiceTest extends ServiceTestCase
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $payment_term_type = $paymentTermType[0];
+        $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
@@ -240,6 +254,7 @@ class SupplierServiceTest extends ServiceTestCase
             $code,
             $name,
             $payment_term_type,
+            $payment_term,
             $contact,
             $address,
             $city,
@@ -256,10 +271,6 @@ class SupplierServiceTest extends ServiceTestCase
         $response = $this->service->delete($rId);
         $deleted_at = Supplier::withTrashed()->find($rId)->deleted_at->format('Y-m-d H:i:s');
         
-        $this->assertDatabaseHas('suppliers', [
-            'id' => $rId,
-            'deleted_at' => $deleted_at
-        ]);
+        $this->assertSoftDeleted('suppliers');
     }
-    */
 }
