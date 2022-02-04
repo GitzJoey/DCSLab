@@ -71,12 +71,12 @@ class AppHelper extends Command
         {
             if (is_null($option)) {
                 $this->info('Available Helper:');
-                $this->info('[1] Update Composer And NPM');
-                $this->info('[2] Clear All Cache');
-                $this->info('[3] Change User Roles');
-                $this->info('[4] Data Seeding');
-                $this->info('[5] Refresh Database');
-                $this->info('[6] Create Acministrator/Dev User');
+                $this->info('[1] Update Composer And NPM           [7]');
+                $this->info('[2] Clear All Cache                   [8]');
+                $this->info('[3] Change User Roles                 [9]');
+                $this->info('[4] Data Seeding                      [10]');
+                $this->info('[5] Refresh Database                  [11]');
+                $this->info('[6] Create Acministrator/Dev User     [12]');
                 $this->info('[X] Exit');
             }
 
