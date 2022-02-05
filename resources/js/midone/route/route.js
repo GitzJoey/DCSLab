@@ -65,6 +65,12 @@ const routes = [
                 name: 'side-menu-company-company',
                 component: Company,
                 meta: { remember: true }
+            },
+            {
+                path: root + '/company' + '/branch',
+                name: 'side-menu-company-branch',
+                component: Company,
+                meta: { remember: true }
             }
         ],
     },

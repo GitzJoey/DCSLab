@@ -10,6 +10,7 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\DevController;
 /* Ext */
 use App\Http\Controllers\CompanyController;
@@ -41,7 +42,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('default', [CompanyController::class, 'getDefaultCompany'])->name('.default');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
-
+                Route::get('read', [BranchController::class, 'read'])->name('.read');
             });
         });
 

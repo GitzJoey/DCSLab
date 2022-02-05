@@ -5,6 +5,8 @@
             "main-dashboard": "Dashboard Utama",
             "company": "Perusahaan",
             "company-company": "Perusahaan",
+            "branch": "Cabang",
+            "company-branch": "Cabang",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -319,6 +321,38 @@
                 "status": "Status"
             }
         },
+        "branch": {
+            "table": {
+                "title": "Cabang Lists",
+                "cols": {
+                    "company": "Perusahaan",
+                    "code": "Kode",
+                    "name": "Nama",
+                    "address": "Alamat",
+                    "city": "Kota",
+                    "contact": "Kontak",
+                    "remarks": "Catatan",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Cabang",
+                "edit": "Edit Cabang",
+                "show": "Show Cabang",
+                "delete": "Delete Cabang"
+            },
+            "fields": {
+                "company_id": "Perusahaan",
+                "code": "Kode",
+                "name": "Nama",
+                "address": "Alamat",
+                "city": "Kota",
+                "contact": "Contact",
+                "remarks": "Catatan",
+                "status": "Status"
+            }
+        }
+        ,
         "purchase_order": {
             "table": {
                 "list_table": {

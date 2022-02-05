@@ -28,7 +28,16 @@ class Branch extends Model
         'status'
     ];
 
-    protected static $logAttributes = ['company_id', 'code', 'name', 'address', 'city', 'contact', 'remarks', 'status'];
+    protected static $logAttributes = [
+        'company_id',
+        'code',
+        'name',
+        'address',
+        'city',
+        'contact',
+        'remarks',
+        'status'
+    ];
 
     protected static $logOnlyDirty = true;
 

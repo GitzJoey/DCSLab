@@ -88,7 +88,7 @@ class DashboardServiceImpl implements DashboardService
             ]
         );
 
-        array_push($root_array['subMenu'], $company);
+        array_push($root_array['subMenu'], $company, $branches);
 
         return $root_array;
     }
