@@ -39,7 +39,8 @@
             "activate": "Activate",
             "submit": "Submit",
             "send_verification_email": "Send Verification Email",
-            "auto": "Auto"
+            "auto": "Auto",
+            "new_order": "New Order"
         },
         "dropdown": {
             "placeholder": "Please Select",
@@ -321,6 +322,11 @@
         }
         ,
         "purchase_order": {
+            "tabs": {
+                "purchase_order": "Purchase Order",
+                "supplier": "Supplier",
+                "warehouse": "Warehouse"
+            },
             "table": {
                 "list_table": {
                     "title": "Purchase Order Lists",

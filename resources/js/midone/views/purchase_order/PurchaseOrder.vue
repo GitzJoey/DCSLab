@@ -13,9 +13,9 @@
             <VeeForm id="poForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="intro-y grid grid-cols-2 mb-5">
                     <div class="">
-                        <button class="btn btn-primary shadow-md mr-2">Purchase Order</button>
-                        <button class="btn btn-primary shadow-md mr-2">Supplier</button>
-                        <button class="btn btn-primary shadow-md">Warehouse</button>
+                        <button class="btn btn-primary shadow-md mr-2" @click.prevent="gotoTabs('po')">{{ t('views.purchase_order.tabs.purchase_order') }}</button>
+                        <button class="btn btn-primary shadow-md mr-2" @click.prevent="gotoTabs('supplier')">{{ t('views.purchase_order.tabs.supplier') }}</button>
+                        <button class="btn btn-primary shadow-md" @click.prevent="gotoTabs('warehouse')">{{ t('views.purchase_order.tabs.warehouse') }}</button>
                     </div>
                     <div class="flex flex-row-reverse">
                         <div class="pos-dropdown dropdown ml-auto sm:ml-0">
@@ -30,7 +30,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary shadow-md mr-2">New Order</button>
+                        <button class="btn btn-primary shadow-md mr-2">{{ t('components.buttons.new_order') }}</button>
                     </div>
                 </div>
                 <div class="grid grid-cols-12 gap-5 ">
@@ -315,6 +315,7 @@ const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
+const tabs = ref('');
 // Data - Views
 const poList = ref([]);
 const po = ref({
@@ -356,6 +357,10 @@ function backToList() {
     resetAlertErrors();
     mode.value = 'list';
     getAllPO({ page: poList.value.current_page, pageSize: poList.value.per_page });
+}
+
+function gotoTabs(tab) {
+    tabs.value = tab;
 }
 // Computed
 // Watcher
