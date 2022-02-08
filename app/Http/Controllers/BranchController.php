@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\BranchService;
+
+use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\BranchRequest;
 use App\Http\Resources\BranchResource;
 
-class BranchController extends Controller
+class BranchController extends BaseController
 {
     private $branchService;
     
@@ -28,7 +29,12 @@ class BranchController extends Controller
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
-        $result = $this->branchService->read($companyId, $search, $paginate, $perPage);
+        $result = $this->branchService->read(
+            companyId: $companyId,
+            search: $search,
+            paginate: $paginate,
+            perPage: $perPage
+        );
 
         if (is_null($result)) {
             return response()->error();

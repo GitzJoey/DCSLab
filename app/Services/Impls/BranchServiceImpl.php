@@ -2,14 +2,14 @@
 
 namespace App\Services\Impls;
 
-use App\Actions\RandomGenerator;
-use Exception;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
 use App\Services\BranchService;
 use App\Models\Branch;
+
+use Exception;
+use App\Actions\RandomGenerator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 class BranchServiceImpl implements BranchService
 {
@@ -21,12 +21,16 @@ class BranchServiceImpl implements BranchService
         ?string $city = null,
         ?string $contact = null,
         ?string $remarks = null,
-        ?string $status = null,
+        int $status,
     ): ?Branch
     {
         DB::beginTransaction();
 
         try {
+            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
+                $code = $this->generateUniqueCode($company_id);
+            }
+
             $branch = new Branch();
             $branch->company_id = $company_id;
             $branch->code = $code;
@@ -49,19 +53,15 @@ class BranchServiceImpl implements BranchService
         }
     }
 
-    public function readBy(string $key, string $value)
+    public function read(
+        int $companyId,
+        string $search = '',
+        bool $paginate = true,
+        ?int $perPage = 10
+    )
     {
-        switch (strtoupper($key)) {
-            case 'ID':
-                return Branch::find($value);
-            default:
-                return null;
-                break;
-        }
-    }
+        if (!$companyId) return null;
 
-    public function read(int $companyId, string $search = '', bool $paginate = true, ?int $perPage = 10)
-    {
         $branch = Branch::with('company')
                     ->whereCompanyId($companyId);
 
@@ -88,13 +88,17 @@ class BranchServiceImpl implements BranchService
         ?string $city = null,
         ?string $contact = null,
         ?string $remarks = null,
-        ?string $status = null,
+        int $status,
     ): ?Branch
     {
         DB::beginTransaction();
 
         try {
             $branch = Branch::find($id);
+
+            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
+                $code = $this->generateUniqueCode($company_id);
+            }
     
             $branch->update([
                 'company_id' => $company_id,
@@ -119,9 +123,15 @@ class BranchServiceImpl implements BranchService
 
     public function delete(int $id): bool
     {
-        $branch = Branch::find($id);
+        try {
+            $branch = Branch::find($id);
 
-        return $branch->delete();
+            $branch->delete();    
+
+            return true; 
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function generateUniqueCode(int $companyId): string

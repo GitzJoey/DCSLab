@@ -5,6 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 
 use Illuminate\Container\Container;
+use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\SupplierService;
 use Illuminate\Support\Facades\Config;
@@ -15,6 +16,7 @@ class uniqueCode implements Rule
     private ?int $exceptId;
     private string $table;
 
+    private BranchService $branchService;
     private SupplierService $supplierService;
     private ProductService $productService;
 
@@ -30,6 +32,9 @@ class uniqueCode implements Rule
         $this->exceptId = $exceptId ? $exceptId : null;
 
         switch($this->table) {
+            case 'branches':
+                $this->branchService = Container::getInstance()->make(BranchService::class);
+                break;
             case 'suppliers':
                 $this->supplierService = Container::getInstance()->make(SupplierService::class);
                 break;
@@ -55,6 +60,9 @@ class uniqueCode implements Rule
         $is_duplicate = false;
 
         switch($this->table) {
+            case 'branches':
+                $is_duplicate = $this->branchService->isUniqueCode($value, $this->companyId, $this->exceptId);
+                break;
             case 'suppliers':
                 $is_duplicate = $this->supplierService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;

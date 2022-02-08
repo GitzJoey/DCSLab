@@ -22,7 +22,6 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
-                                <td>{{ item.brand !== null ? item.brand.name : '' }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 1" />
                                     <XIcon v-if="item.status === 0" />
@@ -101,7 +100,7 @@
                         <label class="form-label" for="company_id">{{ t('views.branch.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="b.hId" v-for="b in companyDDL" v-bind:key="b.hId">{{ b.code }} - {{ b.name }}</option>
+                            <option :value="c.hId" v-for="c in companyDDL" v-bind:key="c.hId">{{ c.code }} - {{ c.name }}</option>
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-theme-21" />
                     </div>
@@ -232,7 +231,7 @@ function getAllBranches(args) {
 
     let companyId = selectedUserCompany.value;
 
-    axios.get(route('api.get.db.branch.branch.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.company.branch.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         branchList.value = response.data;
         loading.value = false;
     });
@@ -242,27 +241,14 @@ function getDDL() {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
-
-    axios.get(route('api.get.db.branch.common.list.branch_type', {
-            type: 'branches'
-        })).then(response => {
-            branchTypeDDL.value = response.data;
-    });
 }
 
 function getDDLSync() {
-    axios.get(route('api.get.db.branch.brand.read', {
+    axios.get(route('api.get.db.company.company.read', {
             companyId: selectedUserCompany.value,
             paginate: false
         })).then(response => {
-            brandDDL.value = response.data;
-    });
-
-    axios.get(route('api.get.db.branch.branch_group.read', {
-            companyId: selectedUserCompany.value,
-            paginate: false
-        })).then(response => {
-            branchGroupDDL.value = response.data;
+            companyDDL.value = response.data;
     });
 }
 
@@ -273,7 +259,7 @@ function onSubmit(values, actions) {
     formData.append('company_id', selectedUserCompany.value);
     
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.branch.branch.save'), formData).then(response => {
+        axios.post(route('api.post.db.company.branch.save'), formData).then(response => {
             backToList();
         }).catch(e => {
             handleError(e, actions);
@@ -281,7 +267,7 @@ function onSubmit(values, actions) {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.branch.branch.edit', branch.value.hId), formData).then(response => {
+        axios.post(route('api.post.db.company.branch.edit', branch.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -349,12 +335,6 @@ function onDataListChange({page, pageSize, search}) {
 function editSelected(index) {
     mode.value = 'edit';
     branch.value = branchList.value.data[index];
-
-    if (branch.value.branch_group === null) {
-        branch.value.branch_group = {
-            hId: ''
-        };
-    }
 }
 
 function deleteSelected(index) {
@@ -362,7 +342,7 @@ function deleteSelected(index) {
 }
 
 function confirmDelete() {
-    axios.post(route('api.post.db.branch.branch.delete', deleteId.value)).then(response => {
+    axios.post(route('api.post.db.company.branch.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
         alertErrors.value = e.response.data;

@@ -29,12 +29,14 @@ class BranchRequest extends FormRequest
             'address' => 'nullable',
             'city' => 'nullable',
             'contact' => 'nullable',
+            'remarks' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
+                    'company_id' => 'required',
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
@@ -42,6 +44,7 @@ class BranchRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
+                    'company_id' => 'required',
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]

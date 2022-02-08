@@ -14,7 +14,7 @@ interface BranchService
         ?string $city = null,
         ?string $contact = null,
         ?string $remarks = null,
-        ?string $status = null,
+        int $status,
     ): ?Branch;
 
     public function read(
@@ -23,8 +23,6 @@ interface BranchService
         bool $paginate = true,
         ?int $perPage = 10
     );
-
-    public function readBy(string $key, string $value);
 
     public function update(
         int $id,
@@ -35,7 +33,7 @@ interface BranchService
         ?string $city = null,
         ?string $contact = null,
         ?string $remarks = null,
-        ?string $status = null,
+        int $status,
     ): ?Branch;
 
     public function delete(int $id): bool;

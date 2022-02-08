@@ -5,7 +5,6 @@
             "main-dashboard": "Main Dashboard",
             "company": "Company",
             "company-company": "Company",
-            "branch": "Branch",
             "company-branch": "Branch",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
@@ -320,8 +319,7 @@
                 "default": "Default",
                 "status": "Status"
             }
-        }
-        ,
+        },
         "branch": {
             "table": {
                 "title": "Branch Lists",
@@ -352,8 +350,7 @@
                 "remarks": "Remarks",
                 "status": "Status"
             }
-        }
-        ,
+        },
         "purchase_order": {
             "table": {
                 "list_table": {
