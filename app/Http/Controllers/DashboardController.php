@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\DashboardService;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends BaseController
 {
@@ -31,5 +32,13 @@ class DashboardController extends BaseController
         $menu = $this->dashboardService->createMenu();
 
         return $menu;
+    }
+
+    public function canUserAccess()
+    {
+        $user = Auth::user();
+
+        return true;
+
     }
 }
