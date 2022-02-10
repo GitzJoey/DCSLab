@@ -9,9 +9,9 @@
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.company') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.address') }}</th>
+                            <!-- <th class="whitespace-nowrap">{{ t('views.branch.table.cols.address') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.city') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.contact') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.contact') }}</th> -->
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.remarks') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
@@ -56,7 +56,7 @@
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
-                                    <div class="flex flex-row">
+                                    <!-- <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.address') }}</div>
                                         <div class="flex-1">{{ item.address }}</div>
                                     </div>
@@ -67,7 +67,7 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.contact') }}</div>
                                         <div class="flex-1">{{ item.contact }}</div>
-                                    </div>
+                                    </div> -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.remarks') }}</div>
                                         <div class="flex-1">{{ item.remarks }}</div>
@@ -97,10 +97,10 @@
             <VeeForm id="branchForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
                     <div class="mb-3">
-                        <label class="form-label" for="company_id">{{ t('views.branch.fields.company_id') }}</label>
+                        <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="c.hId" v-for="c in companyDDL" v-bind:key="c.hId">{{ c.code }} - {{ c.name }}</option>
+                            <option :value="c.hId" v-for="c in companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-theme-21" />
                     </div>
@@ -118,18 +118,18 @@
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.branch.fields.address') }}</label>
-                        <VeeField id="inputName" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
+                        <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
+                        <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
                         <ErrorMessage name="address" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <VeeField id="inputName" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
+                        <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
+                        <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
                         <ErrorMessage name="city" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <VeeField id="inputName" name="contact" as="input" :class="{'form-control':true, 'border-theme-21': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
+                        <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
+                        <VeeField id="inputContact" name="contact" as="input" :class="{'form-control':true, 'border-theme-21': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
                         <ErrorMessage name="contact" class="text-theme-21" />
                     </div>
                     <div class="mb-3">
@@ -203,7 +203,7 @@ const branch = ref({
     status: 1,
 });
 const statusDDL = ref([]);
-const company = ref([]);
+const companyDDL = ref([]);
 
 
 // onMounted
@@ -241,10 +241,13 @@ function getDDL() {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
+    // axios.get(route('api.get.db.company.company.read.all_active')).then(response => {
+    //     companyDDL.value = response.data;
+    // });
 }
 
 function getDDLSync() {
-    axios.get(route('api.get.db.company.company.read', {
+    axios.get(route('api.get.db.company.company.read.all_active', {
             companyId: selectedUserCompany.value,
             paginate: false
         })).then(response => {
@@ -306,7 +309,6 @@ function reValidate(errors) {
 function emptyBranch() {
     return {
         company: { 
-            hId: '',
             name: ''
         },
         code: '[AUTO]',

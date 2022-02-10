@@ -327,9 +327,6 @@
                     "company": "Company",
                     "code": "Code",
                     "name": "Name",
-                    "address": "Address",
-                    "city": "City",
-                    "contact": "Contact",
                     "remarks": "Remarks",
                     "status": "Status"
                 }

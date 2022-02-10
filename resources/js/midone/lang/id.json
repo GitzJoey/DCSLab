@@ -327,9 +327,6 @@
                     "company": "Perusahaan",
                     "code": "Kode",
                     "name": "Nama",
-                    "address": "Alamat",
-                    "city": "Kota",
-                    "contact": "Kontak",
                     "remarks": "Catatan",
                     "status": "Status"
                 }
