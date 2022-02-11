@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\validDropDownValue;
+use Illuminate\Support\Facades\Auth;
 use App\Rules\deactivateDefaultCompany;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -15,7 +16,7 @@ class BranchRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::check();
     }
 
     /**

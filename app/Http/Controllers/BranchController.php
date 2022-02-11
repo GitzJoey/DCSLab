@@ -58,7 +58,6 @@ class BranchController extends BaseController
         $remarks = $request['remarks'];
         $status = $request['status'];
 
-
         $result = $this->branchService->create(
             $company_id,
             $code, 
@@ -105,6 +104,6 @@ class BranchController extends BaseController
     {
         $result = $this->branchService->delete($id);
 
-        return $result ? response()->error():response()->success();
+        return is_null($result) ? response()->error():response()->success();
     }
 }

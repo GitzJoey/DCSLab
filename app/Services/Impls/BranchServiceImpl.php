@@ -45,7 +45,7 @@ class BranchServiceImpl implements BranchService
 
             DB::commit();
 
-            return $branch->hId;
+            return $branch;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);

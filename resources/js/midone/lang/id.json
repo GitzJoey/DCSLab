@@ -322,20 +322,20 @@
         },
         "branch": {
             "table": {
-                "title": "Cabang Lists",
+                "title": " Daftar Cabang",
                 "cols": {
                     "company": "Perusahaan",
                     "code": "Kode",
                     "name": "Nama",
-                    "remarks": "Catatan",
+                    "remarks": "Keterangan",
                     "status": "Status"
                 }
             },
             "actions": {
-                "create": "Create Cabang",
-                "edit": "Edit Cabang",
-                "show": "Show Cabang",
-                "delete": "Delete Cabang"
+                "create": "Tambah Cabang",
+                "edit": "Ubah Cabang",
+                "show": "Tampilkan Cabang",
+                "delete": "Hapus Cabang"
             },
             "fields": {
                 "company_id": "Perusahaan",
@@ -343,8 +343,8 @@
                 "name": "Nama",
                 "address": "Alamat",
                 "city": "Kota",
-                "contact": "Contact",
-                "remarks": "Catatan",
+                "contact": "Kontak",
+                "remarks": "Keterangan",
                 "status": "Status"
             }
         }

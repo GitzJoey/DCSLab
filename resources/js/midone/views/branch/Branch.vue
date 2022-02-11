@@ -9,9 +9,6 @@
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.company') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.name') }}</th>
-                            <!-- <th class="whitespace-nowrap">{{ t('views.branch.table.cols.address') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.city') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.contact') }}</th> -->
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.remarks') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
@@ -20,8 +17,10 @@
                     <tbody>
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
+                                <td>{{ item.company.name }}</td>
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
+                                <td>{{ item.remarks }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 1" />
                                     <XIcon v-if="item.status === 0" />
@@ -43,7 +42,7 @@
                                 </td>
                             </tr>
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
-                                <td colspan="5">
+                                <td colspan="6">
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.company_id') }}</div>
                                         <div class="flex-1">{{ item.company.name }}</div>
@@ -56,18 +55,6 @@
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
-                                    <!-- <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.address') }}</div>
-                                        <div class="flex-1">{{ item.address }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.city') }}</div>
-                                        <div class="flex-1">{{ item.city }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.contact') }}</div>
-                                        <div class="flex-1">{{ item.contact }}</div>
-                                    </div> -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.remarks') }}</div>
                                         <div class="flex-1">{{ item.remarks }}</div>
@@ -84,6 +71,27 @@
                         </template>
                     </tbody>
                 </table>
+                <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body p-0">
+                                <div class="p-5 text-center">
+                                    <XCircleIcon class="w-16 h-16 text-theme-21 mx-auto mt-3" />
+                                    <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
+                                    <div class="text-gray-600 mt-2">
+                                        {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
+                                    </div>
+                                </div>
+                                <div class="px-5 pb-8 text-center">
+                                    <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
+                                        {{ t('components.buttons.cancel') }}
+                                    </button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </template>
         </DataList>
     </div>
@@ -100,7 +108,7 @@
                         <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="c.hId" v-for="c in companyDDL" v-bind:key="c.hId">{{ c.name }}</option>
+                            <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-theme-21" />
                     </div>
@@ -241,9 +249,6 @@ function getDDL() {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
-    // axios.get(route('api.get.db.company.company.read.all_active')).then(response => {
-    //     companyDDL.value = response.data;
-    // });
 }
 
 function getDDLSync() {
@@ -308,7 +313,8 @@ function reValidate(errors) {
 
 function emptyBranch() {
     return {
-        company: { 
+        company: {
+            hId: '',
             name: ''
         },
         code: '[AUTO]',

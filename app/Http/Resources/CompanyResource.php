@@ -15,6 +15,7 @@ class CompanyResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'hId' => $this->hId,
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,
