@@ -10,6 +10,7 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\DevController;
 /* Ext */
 use App\Http\Controllers\CompanyController;
@@ -37,11 +38,11 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         Route::group(['prefix' => 'company', 'as' => '.company'], function() {
             Route::group(['prefix' => 'company', 'as' => '.company'], function() {
                 Route::get('read', [CompanyController::class, 'read'])->name('.read');
-
                 Route::get('default', [CompanyController::class, 'getDefaultCompany'])->name('.default');
+                Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('.read.all_active');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
-
+                Route::get('read', [BranchController::class, 'read'])->name('.read');
             });
         });
 
@@ -133,7 +134,9 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
                 Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
-
+                Route::post('save', [BranchController::class, 'store'])->name('.save');
+                Route::post('edit/{id}', [BranchController::class, 'update'])->name('.edit');
+                Route::post('delete/{id}', [BranchController::class, 'delete'])->name('.delete');
             });
         });
 

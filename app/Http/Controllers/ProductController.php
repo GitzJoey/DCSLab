@@ -30,11 +30,11 @@ class ProductController extends BaseController
         $companyId = Hashids::decode($request['companyId'])[0];
 
         $result = $this->productService->read(
-                    companyId: $companyId, 
-                    isProduct: true, 
-                    isService: false, 
-                    search: $search, 
-                    paginate: $paginate, 
+                    companyId: $companyId,
+                    isProduct: true,
+                    isService: false,
+                    search: $search,
+                    paginate: $paginate,
                     perPage: $perPage);
 
         if (is_null($result)) {

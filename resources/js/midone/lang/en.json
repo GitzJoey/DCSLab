@@ -5,6 +5,7 @@
             "main-dashboard": "Main Dashboard",
             "company": "Company",
             "company-company": "Company",
+            "company-branch": "Branch",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -318,8 +319,35 @@
                 "default": "Default",
                 "status": "Status"
             }
-        }
-        ,
+        },
+        "branch": {
+            "table": {
+                "title": "Branch Lists",
+                "cols": {
+                    "company": "Company",
+                    "code": "Code",
+                    "name": "Name",
+                    "remarks": "Remarks",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Branch",
+                "edit": "Edit Branch",
+                "show": "Show Branch",
+                "delete": "Delete Branch"
+            },
+            "fields": {
+                "company_id": "Company",
+                "code": "Code",
+                "name": "Name",
+                "address": "Address",
+                "city": "City",
+                "contact": "Contact",
+                "remarks": "Remarks",
+                "status": "Status"
+            }
+        },
         "purchase_order": {
             "table": {
                 "list_table": {
