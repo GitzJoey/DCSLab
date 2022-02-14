@@ -2,40 +2,39 @@
 
 namespace App\Providers;
 
-use App\Services\RoleService;
-use App\Services\UnitService;
-
-use App\Services\UserService;
-use App\Services\BrandService;
-use App\Services\InboxService;
-use App\Services\BranchService;
-use App\Services\SystemService;
-use App\Services\CompanyService;
-use App\Services\ProductService;
-/* Ext */
-use App\Services\SupplierService;
-use App\Services\DashboardService;
-use App\Services\ActivityLogService;
-use App\Services\ProductGroupService;
-use App\Services\Impls\RoleServiceImpl;
-use App\Services\Impls\UnitServiceImpl;
-/* Ext */
-
-use App\Services\Impls\UserServiceImpl;
 use Illuminate\Support\ServiceProvider;
-use App\Services\Impls\BrandServiceImpl;
-use App\Services\Impls\InboxServiceImpl;
-use App\Services\Impls\BranchServiceImpl;
-use App\Services\Impls\SystemServiceImpl;
-/* Ext */
-use App\Services\Impls\CompanyServiceImpl;
-use App\Services\Impls\ProductServiceImpl;
-use App\Services\Impls\SupplierServiceImpl;
-use App\Services\Impls\DashboardServiceImpl;
-use App\Services\Impls\ActivityLogServiceImpl;
-use App\Services\Impls\ProductGroupServiceImpl;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Services\DashboardService;
+use App\Services\UserService;
+use App\Services\RoleService;
+use App\Services\InboxService;
+use App\Services\SystemService;
+use App\Services\ActivityLogService;
+/* Ext */
+use App\Services\CompanyService;
+use App\Services\BrandService;
+use App\Services\SupplierService;
+use App\Services\ProductService;
+use App\Services\ProductGroupService;
+use App\Services\UnitService;
+use App\Services\BranchService;
+/* Ext */
+
+use App\Services\Impls\DashboardServiceImpl;
+use App\Services\Impls\UserServiceImpl;
+use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\InboxServiceImpl;
+use App\Services\Impls\SystemServiceImpl;
+use App\Services\Impls\ActivityLogServiceImpl;
+/* Ext */
+use App\Services\Impls\CompanyServiceImpl;
+use App\Services\Impls\BrandServiceImpl;
+use App\Services\Impls\SupplierServiceImpl;
+use App\Services\Impls\ProductServiceImpl;
+use App\Services\Impls\ProductGroupServiceImpl;
+use App\Services\Impls\UnitServiceImpl;
+use App\Services\Impls\BranchServiceImpl;
 /* Ext */
 
 class AppServiceProvider extends ServiceProvider
@@ -72,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         /* Ext */
+        
         $this->app->singleton(CompanyService::class, function (){
             return new CompanyServiceImpl();
         });
