@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Rules\validDropDownValue;
 use Illuminate\Support\Facades\Auth;
-use App\Rules\deactivateDefaultCompany;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BranchRequest extends FormRequest
@@ -40,7 +39,7 @@ class BranchRequest extends FormRequest
                     'company_id' => 'required',
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -48,7 +47,7 @@ class BranchRequest extends FormRequest
                     'company_id' => 'required',
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
