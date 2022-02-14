@@ -269,8 +269,9 @@ class SupplierServiceTest extends ServiceTestCase
         $rId = Hashids::decode($response->hId)[0];
 
         $response = $this->service->delete($rId);
-        $deleted_at = Supplier::withTrashed()->find($rId)->deleted_at->format('Y-m-d H:i:s');
         
-        $this->assertSoftDeleted('suppliers');
+        $this->assertSoftDeleted('suppliers', [
+            'id' => $rId
+        ]);
     }
 }
