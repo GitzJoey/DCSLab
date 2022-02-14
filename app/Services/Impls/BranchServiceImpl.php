@@ -123,14 +123,20 @@ class BranchServiceImpl implements BranchService
 
     public function delete(int $id): bool
     {
+        DB::beginTransaction();
+
         try {
             $branch = Branch::find($id);
 
-            $branch->delete();    
+            $retval = $branch->delete();
 
-            return true; 
+            DB::commit();
+
+            return $retval;
         } catch (Exception $e) {
-            return false;
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
 
