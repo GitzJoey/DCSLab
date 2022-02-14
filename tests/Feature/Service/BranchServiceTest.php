@@ -2,16 +2,17 @@
 
 namespace Tests\Feature\Service;
 
-use App\Actions\RandomGenerator;
+use TypeError;
 use App\Models\Branch;
 use App\Models\Company;
+use Tests\ServiceTestCase;
 use App\Services\BranchService;
+use App\Actions\RandomGenerator;
+use Illuminate\Support\Collection;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
-use Tests\ServiceTestCase;
-use TypeError;
 
 class BranchServiceTest extends ServiceTestCase
 {
@@ -173,14 +174,13 @@ class BranchServiceTest extends ServiceTestCase
             $remarks,
             $status
         );
+        $id = $response->id;
 
-        $this->assertNotNull($response);
-
-        $response = $this->service->delete($response);
-        $deleted_at = Branch::withTrashed()->find($response)->deleted_at->format('Y-m-d H:i:s');
+        $this->service->delete($id);
+        $deleted_at = Branch::withTrashed()->find($id)->deleted_at->format('Y-m-d H:i:s');
         
         $this->assertSoftDeleted('branches', [
-            'id' => $response->id,
+            'id' => $id,
             'deleted_at' => $deleted_at
         ]);
     }
