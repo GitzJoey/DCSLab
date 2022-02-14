@@ -174,14 +174,13 @@ class BranchServiceTest extends ServiceTestCase
             $remarks,
             $status
         );
+
         $id = $response->id;
 
         $this->service->delete($id);
-        $deleted_at = Branch::withTrashed()->find($id)->deleted_at->format('Y-m-d H:i:s');
         
         $this->assertSoftDeleted('branches', [
-            'id' => $id,
-            'deleted_at' => $deleted_at
+            'id' => $id
         ]);
     }
 }
