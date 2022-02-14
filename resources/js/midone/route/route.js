@@ -14,6 +14,7 @@ import Error403 from '../views/error/403.vue';
 
 /* Ext */
 import Company from '../views/company/Company.vue';
+import Branch from '../views/branch/Branch.vue';
 import Supplier from '../views/supplier/Supplier.vue';
 import Product from '../views/product/Product.vue';
 import Service from '../views/product/Service.vue';
@@ -70,6 +71,12 @@ const routes = [
                 path: root + '/company' + '/company',
                 name: 'side-menu-company-company',
                 component: Company,
+                meta: { remember: true }
+            },
+            {
+                path: root + '/company' + '/branch',
+                name: 'side-menu-company-branch',
+                component: Branch,
                 meta: { remember: true }
             }
         ],

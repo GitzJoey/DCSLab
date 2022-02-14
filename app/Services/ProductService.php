@@ -20,7 +20,7 @@ interface ProductService
         bool $use_serial_number,
         bool $has_expiry_date,
         string $product_type,
-        string $status,
+        int $status,
         array $product_units
     ): ?Product;
 
@@ -48,7 +48,7 @@ interface ProductService
         bool $use_serial_number,
         bool $has_expiry_date,
         string $product_type,
-        string $status,
+        int $status,
         array $product_units
     ): ?Product;
 

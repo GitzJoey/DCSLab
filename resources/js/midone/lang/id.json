@@ -5,6 +5,7 @@
             "main-dashboard": "Dashboard Utama",
             "company": "Perusahaan",
             "company-company": "Perusahaan",
+            "company-branch": "Cabang",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -320,6 +321,35 @@
                 "status": "Status"
             }
         },
+        "branch": {
+            "table": {
+                "title": " Daftar Cabang",
+                "cols": {
+                    "company": "Perusahaan",
+                    "code": "Kode",
+                    "name": "Nama",
+                    "remarks": "Keterangan",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Cabang",
+                "edit": "Ubah Cabang",
+                "show": "Tampilkan Cabang",
+                "delete": "Hapus Cabang"
+            },
+            "fields": {
+                "company_id": "Perusahaan",
+                "code": "Kode",
+                "name": "Nama",
+                "address": "Alamat",
+                "city": "Kota",
+                "contact": "Kontak",
+                "remarks": "Keterangan",
+                "status": "Status"
+            }
+        }
+        ,
         "purchase_order": {
             "tabs": {
                 "purchase_order": "Pembelian",

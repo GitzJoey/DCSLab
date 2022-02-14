@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Models\Branch;
+use App\Models\User;
+
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -50,6 +53,11 @@ class Company extends Model
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function branch()
+    {
+        return $this->hasMany(Branch::class);
     }
 
     public function getActivitylogOptions(): LogOptions
