@@ -102,7 +102,7 @@ class BranchServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_update_branches_table()
+    public function test_call_update()
     {
         $company_id = Company::inRandomOrder()->get()[0]->id;
         $code = (new RandomGenerator())->generateNumber(1, 9999);
@@ -126,30 +126,38 @@ class BranchServiceTest extends ServiceTestCase
 
         $this->assertNotNull($response);
 
+        $code_new = (new RandomGenerator())->generateNumber(1, 9999);
+        $name_new = $this->faker->name;
+        $address_new = $this->faker->address;
+        $city_new = $this->faker->city;
+        $contact_new = $this->faker->e164PhoneNumber;
+        $remarks_new = null;
+        $status_new = (new RandomGenerator())->generateNumber(0, 1);
+
         $response_edit = $this->service->update(
             id: $response->id,
-            company_id: '1',
-            code: 'newCode',
-            name: 'newName',
-            address: 'newAddress',
-            city: 'newCity',
-            contact: 'newContact',
-            remarks: 'newRemarks',
-            status: '0'
+            company_id: $company_id,
+            code: $code_new,
+            name: $name_new,
+            address: $address_new,
+            city: $city_new,
+            contact: $contact_new,
+            remarks: $remarks_new,
+            status: $status_new
         );
 
         $this->assertNotNull($response_edit);
         
         $this->assertDatabaseHas('branches', [
             'id' => $response_edit->id,
-            'company_id' => '1',
-            'code' => 'newCode',
-            'name' => 'newName',
-            'address' => 'newAddress',
-            'city' => 'newCity',
-            'contact' => 'newContact',
-            'remarks' => 'newRemarks',
-            'status' => 0,
+            'company_id' => $company_id,
+            'code' => $code_new,
+            'name' => $name_new,
+            'address' => $address_new,
+            'city' => $city_new,
+            'contact' => $contact_new,
+            'remarks' => $remarks_new,
+            'status' => $status_new
         ]);
     }
 
