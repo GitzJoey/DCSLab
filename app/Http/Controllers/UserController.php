@@ -32,7 +32,7 @@ class UserController extends BaseController
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $paginate = true;
-        $perPage = $request->has('perPage') ? $request['perPage']:null;
+        $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $result = $this->userService->read($search, $paginate, $perPage);
         

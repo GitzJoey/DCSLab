@@ -13,9 +13,9 @@
             <VeeForm id="poForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="intro-y grid grid-cols-2 mb-5">
                     <div class="">
-                        <button class="btn btn-primary shadow-md mr-2" @click.prevent="gotoTabs('po')">{{ t('views.purchase_order.tabs.purchase_order') }}</button>
-                        <button class="btn btn-primary shadow-md mr-2" @click.prevent="gotoTabs('supplier')">{{ t('views.purchase_order.tabs.supplier') }}</button>
-                        <button class="btn btn-primary shadow-md" @click.prevent="gotoTabs('warehouse')">{{ t('views.purchase_order.tabs.warehouse') }}</button>
+                        <button type="button" class="btn btn-primary shadow-md mr-2" @click="gotoTabs('po')">{{ t('views.purchase_order.tabs.purchase_order') }}</button>
+                        <button type="button" class="btn btn-primary shadow-md mr-2" @click="gotoTabs('supplier')">{{ t('views.purchase_order.tabs.supplier') }}</button>
+                        <button type="button" class="btn btn-primary shadow-md" @click="gotoTabs('warehouse')">{{ t('views.purchase_order.tabs.warehouse') }}</button>
                     </div>
                     <div class="flex flex-row-reverse">
                         <div class="pos-dropdown dropdown ml-auto sm:ml-0">
@@ -30,23 +30,26 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary shadow-md mr-2">{{ t('components.buttons.new_order') }}</button>
+                        <button type="button" class="btn btn-primary shadow-md mr-2" @click="gotoTabs('a')">{{ t('components.buttons.new_order') }}</button>
                     </div>
                 </div>
-                <div class="grid grid-cols-12 gap-5 ">
-                    <div class="intro-y col-span-12 lg:col-span-8">
-                        <div class="lg:flex intro-y">
-                            <div class="relative text-gray-700 dark:text-gray-300">
-                                <input type="text" class="form-control py-3 px-4 w-full lg:w-64 box pr-10 placeholder-theme-13" placeholder="Search item...">
-                                <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-feather="search"></i> 
+                <div class="grid grid-cols-12 gap-5">
+                    <div class="intro-y col-span-12 lg:col-span-8" v-if="tabs === '' || tabs === 'supplier'">
+                        <div class="">
+
+                        </div>
+                    </div>
+                    <div class="intro-y col-span-12 lg:col-span-8" v-if="tabs === '' || tabs === 'warehouse'">
+                        <div class="">
+                            
+                        </div>
+                    </div>
+                    <div class="intro-y col-span-12 lg:col-span-8" v-if="tabs === '' || tabs === 'po'">
+                        <div class="intro-y">
+                            <div class="text-gray-700 dark:text-gray-300">
+                                <input type="text" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item...">
+                                <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
                             </div>
-                            <select class="form-select py-3 px-4 box w-full lg:w-auto mt-3 lg:mt-0 ml-auto">
-                                <option>Sort By</option>
-                                <option>A to Z</option>
-                                <option>Z to A</option>
-                                <option>Lowest Price</option>
-                                <option>Highest Price</option>
-                            </select>
                         </div>
                         <div class="grid grid-cols-12 gap-5 mt-5">
                             <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
@@ -293,6 +296,7 @@
 // Vue Import
 import { inject, onMounted, ref, computed, watch } from 'vue'
 // Helper Import
+import axios from '../../axios';
 import mainMixins from '../../mixins';
 // Core Components Import
 import { useStore } from '../../store/index';
@@ -321,6 +325,8 @@ const poList = ref([]);
 const po = ref({
     
 });
+const supplierDDL = ref([]);
+const statusDDL = ref([]);
 
 // onMounted
 onMounted(() => {
@@ -328,6 +334,8 @@ onMounted(() => {
     setDashboardLayout(false);
 
     if (selectedUserCompany.value !== '') {
+        getDDL();
+        getDDLSync();
     }
 
     mode.value = "create";
@@ -359,9 +367,30 @@ function backToList() {
     getAllPO({ page: poList.value.current_page, pageSize: poList.value.per_page });
 }
 
-function gotoTabs(tab) {
-    tabs.value = tab;
+function getDDL() {
+    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+        statusDDL.value = response.data;
+    });
 }
+
+function getDDLSync() {
+    axios.get(route('api.get.db.supplier.supplier.read', {
+            companyId: selectedUserCompany.value,
+            paginate: false
+        })).then(response => {
+            supplierDDL.value = response.data;
+    });
+}
+
+function gotoTabs(selectedTab) {
+    tabs.value = selectedTab;
+}
+
 // Computed
 // Watcher
+watch(selectedUserCompany, () => {
+    if (selectedUserCompany.value !== '') {
+        getDDLSync();
+    }
+});
 </script>

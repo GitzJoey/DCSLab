@@ -25,7 +25,7 @@ class ProductController extends BaseController
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $paginate = $request->has('paginate') ? boolVal($request['paginate']):true;
-        $perPage = $request->has('perPage') ? $request['perPage']:null;
+        $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
@@ -50,7 +50,7 @@ class ProductController extends BaseController
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $paginate = true;
-        $perPage = $request->has('perPage') ? $request['perPage']:null;
+        $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
