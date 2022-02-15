@@ -108,7 +108,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
 
             Route::get('user/menu', [DashboardController::class, 'userMenu'])->name('.user_menu');
-            Route::get('user/access', [DashboardController::class, 'canUserAccess'])->name('.user_access');
         });
 
         Route::group(['prefix' => 'common', 'as' => '.common'], function() {
@@ -186,6 +185,8 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
             Route::group(['prefix' => 'activity', 'as' => '.activity'], function() {
                 Route::post('log/route', [ActivityLogController::class, 'logRouteActivity'])->name('.log_route');
             });
+
+            Route::post('user/access', [DashboardController::class, 'canUserAccess'])->name('.user_access');
         });
     });
 });
