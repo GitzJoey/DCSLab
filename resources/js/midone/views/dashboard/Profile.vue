@@ -133,7 +133,7 @@
                                 <div class="p-5">
                                     <div class="mb-3">
                                         <label class="form-label" for="inputTheme">{{ t('views.profile.fields.settings.theme') }}</label>
-                                        <select class="form-control form-select" id="inputTheme" name="theme" v-model="userContext.selectedSettings.theme">
+                                        <select class="form-control form-select" id="inputTheme" name="theme" v-model="userContext.selected_settings.theme">
                                             <option value="side-menu-light-full">Menu Light</option>
                                             <option value="side-menu-light-mini">Mini Menu Light</option>
                                             <option value="side-menu-dark-full">Menu Dark</option>
@@ -142,14 +142,14 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="selectDate">{{ t('views.profile.fields.settings.dateFormat') }}</label>
-                                        <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="userContext.selectedSettings.dateFormat">
+                                        <select id="selectDate" class="form-control form-select" name="dateFormat" v-model="userContext.selected_settings.dateFormat">
                                             <option value="yyyy_MM_dd">{{ helper.formatDate(new Date(), 'YYYY-MM-DD') }}</option>
                                             <option value="dd_MMM_yyyy">{{ helper.formatDate(new Date(), 'DD-MMM-YYYY') }}</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="selectTime">{{ t('views.profile.fields.settings.timeFormat') }}</label>
-                                        <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="userContext.selectedSettings.timeFormat">
+                                        <select id="selectTime" class="form-control form-select" name="timeFormat" v-model="userContext.selected_settings.timeFormat">
                                             <option value="hh_mm_ss">{{ helper.formatDate(new Date(), 'HH:mm:ss') }}</option>
                                             <option value="h_m_A">{{ helper.formatDate(new Date(), 'H:m A') }}</option>
                                         </select>
@@ -186,11 +186,11 @@
                                 <div class="grid grid-cols-2 gap-2 place-items-center">
                                     <div class="text-center">
                                         <img alt="" :src="assetPath('pos_system.png')" width="100" height="100" />
-                                        <button class="btn btn-sm btn-secondary hover:btn-primary">{{ t('components.buttons.activate') }}</button>
+                                        <button class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('pos')">{{ t('components.buttons.activate') }}</button>
                                     </div>
                                     <div class="text-center">
                                         <img alt="" :src="assetPath('warehouse_system.png')" width="100" height="100" />
-                                        <button class="btn btn-sm btn-secondary hover:btn-primary">{{ t('components.buttons.activate') }}</button>
+                                        <button class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
                                     </div>
                                 </div>
                             </div>

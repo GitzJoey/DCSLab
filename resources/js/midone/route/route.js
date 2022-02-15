@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import axios from '../axios';
+import { canUserAccess } from './guards';
 
 import SideMenu from '../layouts/side-menu/Main.vue';
 
@@ -8,6 +9,8 @@ import MainDashboard from '../views/dashboard/MainDashboard.vue';
 import Profile from '../views/dashboard/Profile.vue';
 import Inbox from '../views/dashboard/Inbox.vue';
 import Activity from '../views/dashboard/Activity.vue';
+
+import Error403 from '../views/error/403.vue';
 
 /* Ext */
 import Company from '../views/company/Company.vue';
@@ -35,7 +38,10 @@ const routes = [
                 path: root,
                 name: 'side-menu-dashboard-maindashboard',
                 component: MainDashboard,
-                meta: { remember: false }
+                meta: {
+                    middleware: ['canUserAccess'], 
+                    remember: false 
+                }
             },
             {
                 path: root + '/profile',
@@ -160,11 +166,33 @@ const routes = [
             }
         ]
     },
+    {
+        path: root + '/error',
+        name: 'side-menu-error',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/error' + '/403',
+                name: 'side-menu-error-403',
+                component: Error403,
+                meta: { remember: false }
+            }
+        ]
+    }
 ];
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes,
+});
+
+router.beforeEach(async (to, from) => {
+    if (to.matched.some(r => r.meta.middleware)) {
+        if (to.meta.middleware.includes('canUserAccess')) {
+            const canAccess = await canUserAccess(to);
+            if (!canAccess) return '/error/403';
+        }
+    }
 });
 
 router.afterEach((to, from) => {

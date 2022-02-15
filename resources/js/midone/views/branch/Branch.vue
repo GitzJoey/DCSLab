@@ -148,7 +148,7 @@
                         <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in statusDDL" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
                         <ErrorMessage name="status" class="text-theme-21" />
                     </div>
@@ -212,7 +212,6 @@ const branch = ref({
 });
 const statusDDL = ref([]);
 const companyDDL = ref([]);
-
 
 // onMounted
 onMounted(() => {
@@ -334,6 +333,8 @@ function resetAlertErrors() {
 function createNew() {
     mode.value = 'create';
     branch.value = emptyBranch();
+
+    branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
 function onDataListChange({page, pageSize, search}) {

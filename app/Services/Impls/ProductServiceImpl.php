@@ -248,7 +248,8 @@ class ProductServiceImpl implements ProductService
     public function generateUniqueCodeForProduct(int $companyId): string
     {
         $rand = new RandomGenerator();
-        
+        $code = '';
+
         do {
             $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         } while (!$this->isUniqueCodeForProduct($code, $companyId));
@@ -259,6 +260,7 @@ class ProductServiceImpl implements ProductService
     public function generateUniqueCodeForProductUnits(int $companyId): string
     {
         $rand = new RandomGenerator();
+        $code = '';
         
         do {
             $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);

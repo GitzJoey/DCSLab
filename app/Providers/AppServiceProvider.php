@@ -19,6 +19,8 @@ use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 use App\Services\Impls\RoleServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
+use App\Services\UnitService;
+use App\Services\BranchService;
 /* Ext */
 
 use App\Services\Impls\UserServiceImpl;
@@ -36,6 +38,8 @@ use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Services\Impls\UnitServiceImpl;
+use App\Services\Impls\BranchServiceImpl;
 /* Ext */
 
 class AppServiceProvider extends ServiceProvider
@@ -72,6 +76,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         /* Ext */
+        
         $this->app->singleton(CompanyService::class, function (){
             return new CompanyServiceImpl();
         });

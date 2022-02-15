@@ -13,9 +13,9 @@
             <VeeForm id="poForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="intro-y grid grid-cols-2 mb-5">
                     <div class="">
-                        <button class="btn btn-primary shadow-md mr-2">Purchase Order</button>
-                        <button class="btn btn-primary shadow-md mr-2">Supplier</button>
-                        <button class="btn btn-primary shadow-md">Warehouse</button>
+                        <button type="button" class="btn btn-primary shadow-md mr-2" @click="gotoTabs('po')">{{ t('views.purchase_order.tabs.purchase_order') }}</button>
+                        <button type="button" class="btn btn-primary shadow-md mr-2" @click="gotoTabs('supplier')">{{ t('views.purchase_order.tabs.supplier') }}</button>
+                        <button type="button" class="btn btn-primary shadow-md" @click="gotoTabs('warehouse')">{{ t('views.purchase_order.tabs.warehouse') }}</button>
                     </div>
                     <div class="flex flex-row-reverse">
                         <div class="pos-dropdown dropdown ml-auto sm:ml-0">
@@ -30,23 +30,31 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary shadow-md mr-2">New Order</button>
+                        <button type="button" class="btn btn-primary shadow-md mr-2" @click="gotoTabs('a')">{{ t('components.buttons.new_order') }}</button>
                     </div>
                 </div>
-                <div class="grid grid-cols-12 gap-5 ">
+                <div class="grid grid-cols-12 gap-5">
                     <div class="intro-y col-span-12 lg:col-span-8">
-                        <div class="lg:flex intro-y">
-                            <div class="relative text-gray-700 dark:text-gray-300">
-                                <input type="text" class="form-control py-3 px-4 w-full lg:w-64 box pr-10 placeholder-theme-13" placeholder="Search item...">
-                                <i class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" data-feather="search"></i> 
+                        <div class="intro-y py-3" v-if="tabs === '' || tabs === 'supplier'">
+                            <div class="box p-5">
+                                <label for="selectSupplier" class="form-label">{{ t('views.purchase_order.fields.supplier') }}</label>
+                                <VeeField as="select" id="selectSupplier" name="supplier" :class="{'form-control form-select':true, 'border-theme-21': errors['supplier']}" v-model="po.supplier" rules="required" @blur="reValidate(errors)">
+                                    <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                    <option v-for="s in supplierDDL" :value="s.hId">{{ s.code }} - {{ s.name }}</option>
+                                </VeeField>
+                                <ErrorMessage name="supplier" class="text-theme-21" />
                             </div>
-                            <select class="form-select py-3 px-4 box w-full lg:w-auto mt-3 lg:mt-0 ml-auto">
-                                <option>Sort By</option>
-                                <option>A to Z</option>
-                                <option>Z to A</option>
-                                <option>Lowest Price</option>
-                                <option>Highest Price</option>
-                            </select>
+                        </div>
+                        <div class="intro-y py-3" v-if="tabs === '' || tabs === 'warehouse'">
+                            <div class="">
+                                
+                            </div>
+                        </div>
+                        <div class="intro-y" v-if="tabs === '' || tabs === 'po'">
+                            <div class="text-gray-700 dark:text-gray-300">
+                                <input type="text" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item...">
+                                <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
+                            </div>
                         </div>
                         <div class="grid grid-cols-12 gap-5 mt-5">
                             <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
@@ -293,6 +301,7 @@
 // Vue Import
 import { inject, onMounted, ref, computed, watch } from 'vue'
 // Helper Import
+import axios from '../../axios';
 import mainMixins from '../../mixins';
 // Core Components Import
 import { useStore } from '../../store/index';
@@ -315,11 +324,16 @@ const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
+const tabs = ref('');
 // Data - Views
 const poList = ref([]);
 const po = ref({
     
 });
+const supplierDDL = ref([]);
+const statusDDL = ref([]);
+const warehouseDDL = ref([]);
+const productDDL = ref([]);
 
 // onMounted
 onMounted(() => {
@@ -327,6 +341,8 @@ onMounted(() => {
     setDashboardLayout(false);
 
     if (selectedUserCompany.value !== '') {
+        getDDL();
+        getDDLSync();
     }
 
     mode.value = "create";
@@ -357,6 +373,35 @@ function backToList() {
     mode.value = 'list';
     getAllPO({ page: poList.value.current_page, pageSize: poList.value.per_page });
 }
+
+function getDDL() {
+    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+        statusDDL.value = response.data;
+    });
+}
+
+function getDDLSync() {
+    axios.get(route('api.get.db.supplier.supplier.read', {
+            companyId: selectedUserCompany.value,
+            paginate: false
+        })).then(response => {
+            supplierDDL.value = response.data;
+    });
+}
+
+function gotoTabs(selectedTab) {
+    tabs.value = selectedTab;
+}
+
+function reValidate(errors) {
+    alertErrors.value = errors;
+}
+
 // Computed
 // Watcher
+watch(selectedUserCompany, () => {
+    if (selectedUserCompany.value !== '') {
+        getDDLSync();
+    }
+});
 </script>

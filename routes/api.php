@@ -185,6 +185,8 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
             Route::group(['prefix' => 'activity', 'as' => '.activity'], function() {
                 Route::post('log/route', [ActivityLogController::class, 'logRouteActivity'])->name('.log_route');
             });
+
+            Route::post('user/access', [DashboardController::class, 'canUserAccess'])->name('.user_access');
         });
     });
 });

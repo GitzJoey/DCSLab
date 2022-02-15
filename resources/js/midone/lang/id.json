@@ -40,7 +40,8 @@
             "activate": "Aktifkan",
             "submit": "Kirim",
             "send_verification_email": "Kirim Email Verifikasi",
-            "auto": "Auto"
+            "auto": "Auto",
+            "new_order": "Order Baru"
         },
         "dropdown": {
             "placeholder": "Silahkan Pilih",
@@ -350,6 +351,11 @@
         }
         ,
         "purchase_order": {
+            "tabs": {
+                "purchase_order": "Pembelian",
+                "supplier": "Pemasok",
+                "warehouse": "Gudang"
+            },
             "table": {
                 "list_table": {
                     "title": "Daftar Pembelian",
