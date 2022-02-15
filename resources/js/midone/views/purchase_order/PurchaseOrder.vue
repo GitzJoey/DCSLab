@@ -332,6 +332,8 @@ const po = ref({
 });
 const supplierDDL = ref([]);
 const statusDDL = ref([]);
+const warehouseDDL = ref([]);
+const productDDL = ref([]);
 
 // onMounted
 onMounted(() => {
