@@ -34,18 +34,23 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-12 gap-5">
-                    <div class="intro-y col-span-12 lg:col-span-8" v-if="tabs === '' || tabs === 'supplier'">
-                        <div class="">
-
+                    <div class="intro-y col-span-12 lg:col-span-8">
+                        <div class="intro-y py-3" v-if="tabs === '' || tabs === 'supplier'">
+                            <div class="box p-5">
+                                <label for="selectSupplier" class="form-label">{{ t('views.purchase_order.fields.supplier') }}</label>
+                                <VeeField as="select" id="selectSupplier" name="supplier" :class="{'form-control form-select':true, 'border-theme-21': errors['supplier']}" v-model="po.supplier" rules="required" @blur="reValidate(errors)">
+                                    <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                    <option v-for="s in supplierDDL" :value="s.hId">{{ s.code }} - {{ s.name }}</option>
+                                </VeeField>
+                                <ErrorMessage name="supplier" class="text-theme-21" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="intro-y col-span-12 lg:col-span-8" v-if="tabs === '' || tabs === 'warehouse'">
-                        <div class="">
-                            
+                        <div class="intro-y py-3" v-if="tabs === '' || tabs === 'warehouse'">
+                            <div class="">
+                                
+                            </div>
                         </div>
-                    </div>
-                    <div class="intro-y col-span-12 lg:col-span-8" v-if="tabs === '' || tabs === 'po'">
-                        <div class="intro-y">
+                        <div class="intro-y" v-if="tabs === '' || tabs === 'po'">
                             <div class="text-gray-700 dark:text-gray-300">
                                 <input type="text" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item...">
                                 <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
@@ -384,6 +389,10 @@ function getDDLSync() {
 
 function gotoTabs(selectedTab) {
     tabs.value = selectedTab;
+}
+
+function reValidate(errors) {
+    alertErrors.value = errors;
 }
 
 // Computed
