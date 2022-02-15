@@ -101,6 +101,7 @@ class BrandServiceImpl implements BrandService
     public function generateUniqueCode(int $companyId): string
     {
         $rand = new RandomGenerator();
+        $code = '';
         
         do {
             $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);

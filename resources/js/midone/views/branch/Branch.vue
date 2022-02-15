@@ -213,7 +213,6 @@ const branch = ref({
 const statusDDL = ref([]);
 const companyDDL = ref([]);
 
-
 // onMounted
 onMounted(() => {
     const setDashboardLayout = inject('setDashboardLayout');
@@ -334,6 +333,8 @@ function resetAlertErrors() {
 function createNew() {
     mode.value = 'create';
     branch.value = emptyBranch();
+
+    branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
 function onDataListChange({page, pageSize, search}) {
