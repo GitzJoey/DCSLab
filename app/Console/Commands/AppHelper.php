@@ -16,7 +16,7 @@ use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
-
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Vinkla\Hashids\Facades\Hashids;
 
 class AppHelper extends Command
 {
@@ -71,7 +72,7 @@ class AppHelper extends Command
         {
             if (is_null($option)) {
                 $this->info('Available Helper:');
-                $this->info('[1] Update Composer And NPM           [7]');
+                $this->info('[1] Update Composer And NPM           [7] Convert hId to Id');
                 $this->info('[2] Clear All Cache                   [8]');
                 $this->info('[3] Change User Roles                 [9]');
                 $this->info('[4] Data Seeding                      [10]');
@@ -105,6 +106,9 @@ class AppHelper extends Command
                 case 6:
                     $this->createAdminDevUser();
                     break;
+                case 7:
+                    $this->convertHashIdToId();
+                    break;
                 case 'X':
                     $loop = false;
                     break;
@@ -118,6 +122,23 @@ class AppHelper extends Command
             if (!is_null($option)) $loop = false;
         }
         $this->info('Bye!');
+    }
+
+    private function convertHashIdToId()
+    {
+        if (!is_null($this->argument('option'))) {
+            $args = $this->argument('args');
+
+            $hId = $args[0];
+        } else {
+            $hId = $this->ask('Enter hId:', '');
+        }
+
+        try {
+            $this->info('Id: ' . Hashids::decode($hId)[0]);
+        } catch(Exception $e) {
+            $this->info('Id: '.'Invalid');
+        }
     }
 
     private function createAdminDevUser()
