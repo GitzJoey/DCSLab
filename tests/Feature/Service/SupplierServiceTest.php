@@ -2,16 +2,19 @@
 
 namespace Tests\Feature\Service;
 
+use App\Actions\RandomGenerator;
 use App\Services\SupplierService;
 use App\Models\Company;
 use App\Models\Supplier;
-use Illuminate\Support\Facades\Config;
-use Vinkla\Hashids\Facades\Hashids;
-use App\Actions\RandomGenerator;
+use App\Models\User;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\SupplierTableSeeder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Collection;
 use Tests\ServiceTestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierServiceTest extends ServiceTestCase
 {
@@ -22,21 +25,48 @@ class SupplierServiceTest extends ServiceTestCase
         parent::setUp();
 
         $this->service = app(SupplierService::class);
+
+        if (User::count() == 0)
+            $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
+
+        if (User::has('companies')->count() == 0) {
+            $companyPerUser = 3;
+            $companySeeder = new CompanyTableSeeder();
+            $companySeeder->callWith(CompanyTableSeeder::class, [$companyPerUser]);    
+        }
+
+        if (Supplier::count() == 0) {
+            $supplierPerCompany = 3;
+
+            $supplierSeeder = new SupplierTableSeeder();
+            $supplierSeeder->callWith(SupplierTableSeeder::class, [$supplierPerCompany]);
+        }
+        
+        $this->selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
     }
 
-    public function test_example()
+    public function test_call_read()
     {
-        $this->assertTrue(true);
-    }
-    /*
-    public function test_read()
-    {
-        $selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
-
-        $response = $this->service->read($selectedCompanyId, '', true, 10);
+        $response = $this->service->read($this->selectedCompanyId, '', true, 10);
 
         $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertTrue(!is_null($response));
+        $this->assertNotNull($response);
+    }
+
+
+    public function test_call_read_with_negative_value_in_perpage_param()
+    {
+        $response = $this->service->read($this->selectedCompanyId, '', true, -10);
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
+    }
+
+    public function test_call_read_without_pagination()
+    {
+        $response = $this->service->read($this->selectedCompanyId, '', false, 10);
+
+        $this->assertInstanceOf(Collection::class, $response);
     }
 
     public function test_create()
@@ -49,12 +79,13 @@ class SupplierServiceTest extends ServiceTestCase
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $payment_term_type = $paymentTermType[0];
+        $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
         $taxable_enterprise = (new RandomGenerator())->generateNumber(0, 1);
-        $tax_id = $this->faker->name;
-        $remarks = $this->faker->words;
+        $tax_id = (new RandomGenerator())->generateNumber(0, 1999);
+        $remarks = $this->faker->word;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $poc = [
@@ -69,6 +100,7 @@ class SupplierServiceTest extends ServiceTestCase
             $code,
             $name,
             $payment_term_type,
+            $payment_term,
             $contact,
             $address,
             $city,
@@ -105,6 +137,7 @@ class SupplierServiceTest extends ServiceTestCase
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $payment_term_type = $paymentTermType[0];
+        $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
@@ -125,6 +158,7 @@ class SupplierServiceTest extends ServiceTestCase
             $code,
             $name,
             $payment_term_type,
+            $payment_term,
             $contact,
             $address,
             $city,
@@ -143,6 +177,7 @@ class SupplierServiceTest extends ServiceTestCase
         $code_new = (new RandomGenerator())->generateNumber(1, 9999);
         $name_new = $this->faker->name;
         $payment_term_type_new = $paymentTermType[0];
+        $payment_term_new = 30;
         $contact_new = $this->faker->e164PhoneNumber;
         $address_new = $this->faker->address;
         $city_new = $this->faker->city;
@@ -150,20 +185,26 @@ class SupplierServiceTest extends ServiceTestCase
         $tax_id_new = $this->faker->name;
         $remarks_new = '';
         $status_new = (new RandomGenerator())->generateNumber(0, 1);
-        
+
+        $poc_new = [];
+        $products_new = [];
+
         $response = $this->service->update(
             $rId, 
             $company_id,
             $code_new,
             $name_new,
             $payment_term_type_new,
+            $payment_term_new,
             $contact_new,
             $address_new,
             $city_new,
             $taxable_enterprise_new,
             $tax_id_new,
             $remarks_new,
-            $status_new
+            $status_new,
+            $poc_new,
+            $products_new
         );
 
         $this->assertDatabaseHas('suppliers', [
@@ -192,6 +233,7 @@ class SupplierServiceTest extends ServiceTestCase
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $payment_term_type = $paymentTermType[0];
+        $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
@@ -212,6 +254,7 @@ class SupplierServiceTest extends ServiceTestCase
             $code,
             $name,
             $payment_term_type,
+            $payment_term,
             $contact,
             $address,
             $city,
@@ -226,12 +269,9 @@ class SupplierServiceTest extends ServiceTestCase
         $rId = Hashids::decode($response->hId)[0];
 
         $response = $this->service->delete($rId);
-        $deleted_at = Supplier::withTrashed()->find($rId)->deleted_at->format('Y-m-d H:i:s');
         
-        $this->assertDatabaseHas('suppliers', [
-            'id' => $rId,
-            'deleted_at' => $deleted_at
+        $this->assertSoftDeleted('suppliers', [
+            'id' => $rId
         ]);
     }
-    */
 }

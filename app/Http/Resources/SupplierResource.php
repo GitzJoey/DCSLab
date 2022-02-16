@@ -15,6 +15,7 @@ class SupplierResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'hId' => $this->hId,
             'code' => $this->code,
             'name' => $this->name,
             'contact' => $this->contact,

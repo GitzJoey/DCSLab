@@ -31,8 +31,8 @@ class UserController extends BaseController
     public function read(Request $request)
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        $paginate = true;
-        $perPage = $request->has('perPage') ? $request['perPage']:null;
+        $paginate = $request->has('paginate') ? $request['paginate']:true;
+        $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $result = $this->userService->read($search, $paginate, $perPage);
         

@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Http\Requests\ProfileRequest;
+use App\Http\Resources\UserResource;
 use App\Services\UserService;
-use App\Services\RoleService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
 
 class ProfileController extends BaseController
 {
@@ -24,7 +22,15 @@ class ProfileController extends BaseController
 
     public function readProfile()
     {
-        return $this->userService->readBy('ID', Auth::id());
+        $result = $this->userService->readBy('ID', Auth::id());
+        
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = new UserResource($result);
+
+            return $response;
+        }
     }
 
     public function updateProfile(ProfileRequest $profileRequest)
