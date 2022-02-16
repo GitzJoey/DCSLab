@@ -6,6 +6,7 @@
             "company": "Company",
             "company-company": "Company",
             "company-branch": "Branch",
+            "company-warehouse": "Warehouse",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -337,6 +338,34 @@
                 "edit": "Edit Branch",
                 "show": "Show Branch",
                 "delete": "Delete Branch"
+            },
+            "fields": {
+                "company_id": "Company",
+                "code": "Code",
+                "name": "Name",
+                "address": "Address",
+                "city": "City",
+                "contact": "Contact",
+                "remarks": "Remarks",
+                "status": "Status"
+            }
+        },
+        "warehouse": {
+            "table": {
+                "title": "Warehouse Lists",
+                "cols": {
+                    "company": "Company",
+                    "code": "Code",
+                    "name": "Name",
+                    "remarks": "Remarks",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Warehouse",
+                "edit": "Edit Warehouse",
+                "show": "Show Warehouse",
+                "delete": "Delete Warehouse"
             },
             "fields": {
                 "company_id": "Company",
