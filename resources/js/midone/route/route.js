@@ -12,6 +12,7 @@ import Activity from '../views/dashboard/Activity.vue';
 /* Ext */
 import Company from '../views/company/Company.vue';
 import Branch from '../views/branch/Branch.vue';
+import Warehouse from '../views/warehouse/Warehouse.vue';
 import Supplier from '../views/supplier/Supplier.vue';
 import Product from '../views/product/Product.vue';
 import Service from '../views/product/Service.vue';
@@ -71,6 +72,12 @@ const routes = [
                 path: root + '/company' + '/branch',
                 name: 'side-menu-company-branch',
                 component: Branch,
+                meta: { remember: true }
+            },
+            {
+                path: root + '/company' + '/warehouse',
+                name: 'side-menu-company-warehouse',
+                component: Warehouse,
                 meta: { remember: true }
             }
         ],

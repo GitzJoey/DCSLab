@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Company;
+
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -28,7 +30,16 @@ class Warehouse extends Model
         'status'
     ];
 
-    protected static $logAttributes = ['company_id', 'code', 'name', 'address', 'city','contact','remarks','status'];
+    protected static $logAttributes = [
+        'company_id',
+        'code',
+        'name',
+        'address',
+        'city',
+        'contact',
+        'remarks',
+        'status'
+    ];
 
     protected static $logOnlyDirty = true;
 

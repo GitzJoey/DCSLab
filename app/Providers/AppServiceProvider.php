@@ -3,14 +3,15 @@
 namespace App\Providers;
 
 use App\Services\RoleService;
-use App\Services\UnitService;
-
 use App\Services\UserService;
-use App\Services\BrandService;
 use App\Services\InboxService;
-use App\Services\BranchService;
 use App\Services\SystemService;
+
 use App\Services\CompanyService;
+use App\Services\BranchService;
+use App\Services\WarehouseService;
+use App\Services\BrandService;
+use App\Services\UnitService;
 use App\Services\ProductService;
 /* Ext */
 use App\Services\SupplierService;
@@ -34,6 +35,7 @@ use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
+use App\Services\Impls\WarehouseServiceImpl;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /* Ext */
@@ -78,6 +80,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(BranchService::class, function (){
             return new BranchServiceImpl();
+        });
+
+        $this->app->singleton(WarehouseService::class, function (){
+            return new WarehouseServiceImpl();
         });
 
         $this->app->singleton(BrandService::class, function (){
