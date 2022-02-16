@@ -183,7 +183,7 @@ class SupplierServiceTest extends ServiceTestCase
         $city_new = $this->faker->city;
         $taxable_enterprise_new = (new RandomGenerator())->generateNumber(0, 1);
         $tax_id_new = $this->faker->name;
-        $remarks_new = '';
+        $remarks_new = $this->faker->word;
         $status_new = (new RandomGenerator())->generateNumber(0, 1);
 
         $poc_new = [];
@@ -239,7 +239,7 @@ class SupplierServiceTest extends ServiceTestCase
         $city = $this->faker->city;
         $taxable_enterprise = (new RandomGenerator())->generateNumber(0, 1);
         $tax_id = $this->faker->name;
-        $remarks = null;
+        $remarks = $this->faker->word;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $poc = [
@@ -273,5 +273,14 @@ class SupplierServiceTest extends ServiceTestCase
         $this->assertSoftDeleted('suppliers', [
             'id' => $rId
         ]);
+    }
+
+    public function test_call_delete_with_nonexistence_id()
+    {
+        $max_int = (2147483647);
+        
+        $response = $this->service->delete($max_int);
+
+        $this->assertFalse($response);
     }
 }
