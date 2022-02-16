@@ -189,20 +189,29 @@ class SupplierServiceImpl implements SupplierService
 
     public function delete(int $id): bool
     {
+        DB::beginTransaction();
+
+        $retval = false;
         try {
             $supplier = Supplier::find($id);
 
-            $supplier->supplierProducts()->delete();
-            $supplier->delete();
+            if ($supplier) {
+                $supplier->supplierProducts()->delete();
+                $supplier->delete();
+    
+                $supplier->user()->with('profile')->first()->profile()->update([
+                    'status' => 0
+                ]);
 
+                DB::commit();
+                $retval = true;
+            }
 
-            $supplier->user()->with('profile')->first()->profile()->update([
-                'status' => 0
-            ]);
-
-            return true;
+            return $retval;
         } catch (Exception $e) {
-            return false;
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
 
