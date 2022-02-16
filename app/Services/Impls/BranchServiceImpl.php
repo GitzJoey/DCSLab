@@ -125,10 +125,13 @@ class BranchServiceImpl implements BranchService
     {
         DB::beginTransaction();
 
+        $retval = false;
         try {
             $branch = Branch::find($id);
 
-            $retval = $branch->delete();
+            if ($branch) {
+                $retval = $branch->delete();
+            }
 
             DB::commit();
 

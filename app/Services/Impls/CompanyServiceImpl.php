@@ -130,13 +130,16 @@ class CompanyServiceImpl implements CompanyService
     {
         DB::beginTransaction();
 
+        $retval = false;
         try {
             $company = Company::find($id);
 
-            $usr = User::find($userId);
-            $usr->companies()->detach([$company->id]);
-
-            $retval = $company->delete();
+            if ($company) {
+                $usr = User::find($userId);
+                $usr->companies()->detach([$company->id]);
+    
+                $retval = $company->delete();    
+            }
 
             DB::commit();
 

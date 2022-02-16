@@ -131,7 +131,7 @@ class BranchServiceTest extends ServiceTestCase
         $address_new = $this->faker->address;
         $city_new = $this->faker->city;
         $contact_new = $this->faker->e164PhoneNumber;
-        $remarks_new = null;
+        $remarks_new = $this->faker->word;
         $status_new = (new RandomGenerator())->generateNumber(0, 1);
 
         $response_edit = $this->service->update(
@@ -190,5 +190,14 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertSoftDeleted('branches', [
             'id' => $id
         ]);
+    }
+
+    public function test_call_delete_with_nonexistence_id()
+    {
+        $max_int = 2147483647;
+        
+        $response = $this->service->delete($max_int);
+
+        $this->assertFalse($response);
     }
 }

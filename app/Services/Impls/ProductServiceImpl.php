@@ -232,16 +232,24 @@ class ProductServiceImpl implements ProductService
 
     public function delete(int $id): bool
     {
+        DB::beginTransaction();
+
+        $retval = false;
         try {
             $product = Product::find($id);
 
-            $product->productUnits()->delete();
+            if ($product) {
+                $product->productUnits()->delete();
 
-            $product->delete();    
+                $retval = $product->delete();
+                DB::commit();
+            }
 
-            return true; 
+            return $retval; 
         } catch (Exception $e) {
-            return false;
+            DB::rollBack();
+            Log::debug($e);
+            return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
 
