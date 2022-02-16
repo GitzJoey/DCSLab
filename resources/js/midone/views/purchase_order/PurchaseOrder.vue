@@ -35,22 +35,39 @@
                 </div>
                 <div class="grid grid-cols-12 gap-5">
                     <div class="intro-y col-span-12 lg:col-span-8">
-                        <div class="intro-y py-3" v-if="tabs === '' || tabs === 'supplier'">
+                        <div class="intro-y py-3" v-if="tabs.includes('supplier')">
+                            <div class="box p-5">
+                                <div class="mb-3">
+                                    <label for="selectInvoiceNo" class="form-label">{{ t('views.purchase_order.fields.invoice_no') }}</label>
+
+                                </div>
+                                <div class="mb-3">
+                                    <label for="selectInvoiceDate" class="form-label">{{ t('views.purchase_order.fields.invoice_date') }}</label>
+                                    <Litepicker v-model="po.invoice_date" class="form-control" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, }" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="intro-y py-3" v-if="tabs.includes('supplier')">
                             <div class="box p-5">
                                 <label for="selectSupplier" class="form-label">{{ t('views.purchase_order.fields.supplier') }}</label>
-                                <VeeField as="select" id="selectSupplier" name="supplier" :class="{'form-control form-select':true, 'border-theme-21': errors['supplier']}" v-model="po.supplier" rules="required" @blur="reValidate(errors)">
+                                <VeeField as="select" id="selectSupplier" name="supplier" :class="{'form-control form-select':true, 'border-theme-21': errors['supplier']}" v-model="po.supplier.hId" rules="required" @blur="reValidate(errors)">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option v-for="s in supplierDDL" :value="s.hId">{{ s.code }} - {{ s.name }}</option>
                                 </VeeField>
                                 <ErrorMessage name="supplier" class="text-theme-21" />
                             </div>
                         </div>
-                        <div class="intro-y py-3" v-if="tabs === '' || tabs === 'warehouse'">
-                            <div class="">
-                                
+                        <div class="intro-y py-3" v-if="tabs.includes('warehouse')">
+                            <div class="box p-5">
+                                <label for="selectWarehouse" class="form-label">{{ t('views.purchase_order.fields.warehouse') }}</label>
+                                <VeeField as="select" id="selectWarehouse" name="warehouse" :class="{'form-control form-select':true, 'border-theme-21': errors['warehouse']}" v-model="po.warehouse.hId" rules="required" @blur="reValidate(errors)">
+                                    <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                    <option v-for="w in warehouseDDL" :value="w.hId">{{ s.code }} - {{ s.name }}</option>
+                                </VeeField>
+                                <ErrorMessage name="warehouse" class="text-theme-21" />
                             </div>
                         </div>
-                        <div class="intro-y" v-if="tabs === '' || tabs === 'po'">
+                        <div class="intro-y" v-if="tabs.includes('products')">
                             <div class="text-gray-700 dark:text-gray-300">
                                 <input type="text" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item...">
                                 <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
@@ -324,11 +341,29 @@ const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
-const tabs = ref('');
+const tabs = ref(['po', 'supplier', 'warehouse', 'products']);
 // Data - Views
 const poList = ref([]);
 const po = ref({
-    
+    invoice_no: '',
+    invoice_date: '',
+    supplier: {
+        hId: '',
+        name: ''
+    },
+    warehouse: {
+        hId: '',
+        name: ''
+    },
+    shipping_date: '',
+    items:[],
+    expenses: [],
+    subtotal: 0,
+    discount_pct: 0,
+    discount_val: 0,
+    downpayment: 0,
+    grandtotal: 0,
+    remarks: ''
 });
 const supplierDDL = ref([]);
 const statusDDL = ref([]);
@@ -387,10 +422,21 @@ function getDDLSync() {
         })).then(response => {
             supplierDDL.value = response.data;
     });
+
+    axios.get(route('api.get.db.product.product.read', {
+            companyId: selectedUserCompany.value,
+            paginate: false
+        })).then(response => {
+            productDDL.value = response.data;
+    });
 }
 
 function gotoTabs(selectedTab) {
-    tabs.value = selectedTab;
+    if (tabs.value.includes(selectedTab)) {
+        tabs.value.splice(tabs.value.indexOf(selectedTab),1);
+    } else {
+        tabs.value.push(selectedTab);
+    }
 }
 
 function reValidate(errors) {

@@ -63,10 +63,12 @@ class Install extends Command
             return false;
         }
 
-        if (!$this->checkRedisConnection()) {
-            $this->error('Redis not configured properly');
-            $this->error('Aborted');
-            return false;
+        if(env('DCSLAB_DATACACHE', true)) {
+            if (!$this->checkRedisConnection()) {
+                $this->error('Data cache is enabled but Redis not configured properly');
+                $this->error('Aborted');
+                return false;
+            }
         }
 
         $container = Container::getInstance();

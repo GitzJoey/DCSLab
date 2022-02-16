@@ -384,11 +384,11 @@
                 "show": "Tampilkan Pembelian",
                 "delete": "Hapus Pembelian"
             },
-            "fields": {
+            "fields": {                
                 "supplier": "Supplier",
-                "po_code": "Kode",
+                "invoice_no": "Nomor Faktur",
                 "po_type": "Tipe",
-                "po_created": "Tanggal PO",
+                "invoice_date": "Tanggal Faktur",
                 "shipping_date": "Tgl Pengiriman",
                 "warehouse": "Gudang",
                 "po_status": "Status"

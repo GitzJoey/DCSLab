@@ -385,9 +385,9 @@
             },
             "fields": {
                 "supplier": "Supplier",
-                "po_code": "PO Code",
+                "invoice_no": "Invoice No",
                 "po_type": "Type",
-                "po_created": "Date",
+                "invoice_date": "Invoice Date",
                 "shipping_date": "Shipping Date",
                 "warehouse": "Warehouse",
                 "po_status": "Status"
