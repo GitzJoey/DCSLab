@@ -23,12 +23,12 @@ class CompanyAPITest extends APITestCase
         $this->assertTrue(true);
     }
 
-    public function test_api_call_store()
+    public function test_api_call_save()
     {
         $this->assertTrue(true);
     }
 
-    public function test_api_call_update()
+    public function test_api_call_edit()
     {
         $this->assertTrue(true);
     }
