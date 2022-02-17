@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Vinkla\Hashids\Facades\Hashids;
 
-class WarehouseRequest extends FormRequest
+class EmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,33 +27,20 @@ class WarehouseRequest extends FormRequest
      */
     public function rules()
     {
-        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
-
-        $nullableArr = [
-            'address' => 'nullable',
-            'city' => 'nullable',
-            'contact' => 'nullable',
-            'remarks' => 'nullable',
-        ];
-
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', 'bail'],
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'warehouses', companyId: $companyId)],
-                    'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
+                    'user_id' => ['required', 'bail'],
                 ];
-                return array_merge($rules_store, $nullableArr);
+                return array_merge($rules_store);
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
-                    'code' => new uniqueCode(table: 'warehouses', companyId: $companyId, exceptId: $this->route('id')),
-                    'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
+                    'user_id' => ['required', 'bail'],
                 ];
-                return array_merge($rules_update, $nullableArr);
+                return array_merge($rules_update);
             default:
                 return [
                     '' => 'required'
