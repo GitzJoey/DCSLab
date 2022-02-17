@@ -2,50 +2,36 @@
 
 namespace App\Services\Impls;
 
-use App\Services\WarehouseService;
-use App\Models\Warehouse;
-
 use Exception;
+use App\Models\User;
+
+use App\Models\Employee;
 use App\Actions\RandomGenerator;
+use App\Services\EmployeeService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 
-class WarehouseServiceImpl implements WarehouseService
+class EmployeeServiceImpl implements EmployeeService
 {
     public function create(
         int $company_id,
-        string $code,
-        string $name,
-        ?string $address = null,
-        ?string $city = null,
-        ?string $contact = null,
-        ?string $remarks = null,
-        int $status,
-    ): ?Warehouse
+        int $userId,
+    ): ?Employee
     {
         DB::beginTransaction();
 
         try {
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
 
-            $warehouse = new Warehouse();
-            $warehouse->company_id = $company_id;
-            $warehouse->code = $code;
-            $warehouse->name = $name;
-            $warehouse->address = $address;
-            $warehouse->city = $city;
-            $warehouse->contact = $contact;
-            $warehouse->remarks = $remarks;
-            $warehouse->status = $status;
+            $employee = new Employee();
+            $employee->company_id = $company_id;
+            $employee->user_id = $userId;
 
-            $warehouse->save();
+            $employee->save();
 
             DB::commit();
 
-            return $warehouse;
+            return $employee;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -55,65 +41,53 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function read(
         int $companyId,
+        int $userId,
         string $search = '',
         bool $paginate = true,
         int $perPage = 10
     )
     {
+        $usr = User::find($userId);
+        if (!$usr) return null;
+        
         if (!$companyId) return null;
 
-        $warehouse = Warehouse::with('company')
+        $employee = Employee::with('company')
                     ->whereCompanyId($companyId);
 
         if (empty($search)) {
-            $warehouse = $warehouse->latest();
+            $employee = $employee->latest();
         } else {
-            $warehouse = $warehouse->where('name', 'like', '%'.$search.'%')->latest();
+            $employee = $employee->where('name', 'like', '%'.$search.'%')->latest();
         }
 
         if ($paginate) {
             $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-            return $warehouse->paginate($perPage);
+            return $employee->paginate($perPage);
         } else {
-            return $warehouse->get();
+            return $employee->get();
         }
     }
 
     public function update(
         int $id,
         int $company_id,
-        string $code,
-        string $name,
-        ?string $address = null,
-        ?string $city = null,
-        ?string $contact = null,
-        ?string $remarks = null,
-        int $status,
-    ): ?Warehouse
+        int $userId,
+    ): ?Employee
     {
         DB::beginTransaction();
 
         try {
-            $warehouse = Warehouse::find($id);
-
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
+            $employee = Employee::find($id);
     
-            $warehouse->update([
+            $employee->update([
                 'company_id' => $company_id,
-                'code' => $code,
-                'name' => $name,
-                'address' => $address,
-                'city' => $city,
-                'contact' => $contact,
-                'remarks' => $remarks,
-                'status' => $status,
+                'code' => $userId,
             ]);
 
             DB::commit();
 
-            return $warehouse->refresh();
+            return $employee->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -127,10 +101,10 @@ class WarehouseServiceImpl implements WarehouseService
 
         $retval = false;
         try {
-            $warehouse = Warehouse::find($id);
+            $employee = Employee::find($id);
 
-            if ($warehouse) {
-                $retval = $warehouse->delete();
+            if ($employee) {
+                $retval = $employee->delete();
             }
 
             DB::commit();
@@ -157,7 +131,7 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $result = Warehouse::whereCompanyId($companyId)->where('code', '=' , $code);
+        $result = Employee::whereCompanyId($companyId)->where('code', '=' , $code);
 
         if($exceptId)
             $result = $result->where('id', '<>', $exceptId);
