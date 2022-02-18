@@ -31,7 +31,6 @@ use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\SystemServiceImpl;
 use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
-use App\Services\Impls\EmployeeServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
@@ -86,10 +85,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(WarehouseService::class, function (){
             return new WarehouseServiceImpl();
-        });
-
-        $this->app->singleton(EmployeeService::class, function (){
-            return new EmployeeServiceImpl();
         });
 
         $this->app->singleton(BrandService::class, function (){

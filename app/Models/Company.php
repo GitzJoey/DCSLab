@@ -66,11 +66,6 @@ class Company extends Model
         return $this->hasMany(Warehouse::class);
     }
 
-    public function employee()
-    {
-        return $this->hasMany(Employee::class);
-    }
-
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
