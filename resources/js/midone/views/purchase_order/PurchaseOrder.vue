@@ -43,7 +43,10 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="selectInvoiceDate" class="form-label">{{ t('views.purchase_order.fields.invoice_date') }}</label>
-                                    <Litepicker v-model="po.invoice_date" class="form-control" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, }" />
+                                    <VeeField name="invoice_date" v-slot="{ field }" rules="required" :label="t('views.purchase_order.fields.invoice_date')">
+                                        <Litepicker v-model="po.invoice_date" class="form-control" v-bind="field" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, }" />
+                                    </VeeField>
+                                    <ErrorMessage name="invoice_date" class="text-theme-21" />
                                 </div>
                             </div>
                         </div>
@@ -69,7 +72,7 @@
                         </div>
                         <div class="intro-y" v-if="tabs.includes('products')">
                             <div class="text-gray-700 dark:text-gray-300">
-                                <input type="text" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item...">
+                                <input type="text" v-model="productSearch" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item..." @change="filterProducts">
                                 <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
                             </div>
                         </div>
@@ -369,6 +372,7 @@ const supplierDDL = ref([]);
 const statusDDL = ref([]);
 const warehouseDDL = ref([]);
 const productDDL = ref([]);
+const productSearch = ref('');
 
 // onMounted
 onMounted(() => {
@@ -441,6 +445,10 @@ function gotoTabs(selectedTab) {
 
 function reValidate(errors) {
     alertErrors.value = errors;
+}
+
+function filterProducts() {
+
 }
 
 // Computed
