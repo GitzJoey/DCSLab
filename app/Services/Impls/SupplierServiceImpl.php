@@ -203,9 +203,9 @@ class SupplierServiceImpl implements SupplierService
                     'status' => 0
                 ]);
 
-                DB::commit();
                 $retval = true;
             }
+            DB::commit();
 
             return $retval;
         } catch (Exception $e) {

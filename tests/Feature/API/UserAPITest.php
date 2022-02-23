@@ -4,26 +4,49 @@ namespace Tests\Feature\API;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class UserAPITest extends TestCase
+class UserAPITest extends APITestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_api_call_require_authentication()
     {
         $api = $this->getJson('/api/get/dashboard/admin/users/read');
-        $api->assertStatus(401);
+        $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/get/dashboard/common/ddl/list/statuses');
-        $api->assertStatus(401);
+        $api = $this->getJson('/api/get/dashboard/admin/users/roles/read');
+        $this->assertContains($api->getStatusCode(), array(401, 405));
 
+        $api = $this->getJson('/api/post/dashboard/admin/users/save');
+        $this->assertContains($api->getStatusCode(), array(401, 405));
+
+        $api = $this->getJson('/api/post/dashboard/admin/users/edit/1');
+        $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_authenticated_read_user()
+    public function test_api_call_read()
+    {
+        $this->actingAs($this->user);
+
+        $api = $this->getJson('/api/get/dashboard/admin/users/read');
+        $api->assertStatus(200);
+    }
+
+    public function test_api_call_getAllRoles()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function test_api_call_store()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function test_api_call_update()
+    {
+        $this->assertTrue(true);
+    }
+
+    public function test_api_call_resetPassword()
     {
         $this->assertTrue(true);
     }

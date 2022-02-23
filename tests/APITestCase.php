@@ -2,13 +2,15 @@
 
 namespace Tests;
 
+use App\Models\User;
+
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\UserTableSeeder;
 
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
-class ServiceTestCase extends TestCase
+class APITestCase extends TestCase
 {
     protected function setUp(): void
     {
@@ -28,6 +30,8 @@ class ServiceTestCase extends TestCase
 
             $seed_company = new CompanyTableSeeder();
             $seed_company->callWith(CompanyTableSeeder::class, [2]);
-        }        
+        }
+
+        $this->user = User::inRandomOrder()->first();
     }
 } 
