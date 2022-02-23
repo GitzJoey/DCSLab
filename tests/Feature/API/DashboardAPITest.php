@@ -4,15 +4,10 @@ namespace Tests\Feature\API;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class DashboardAPITest extends TestCase
+class DashboardAPITest extends APITestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_example()
     {
         $response = $this->get('/');

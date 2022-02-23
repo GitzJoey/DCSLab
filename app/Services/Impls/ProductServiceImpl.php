@@ -242,8 +242,9 @@ class ProductServiceImpl implements ProductService
                 $product->productUnits()->delete();
 
                 $retval = $product->delete();
-                DB::commit();
             }
+
+            DB::commit();
 
             return $retval; 
         } catch (Exception $e) {
