@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Models\Branch;
 use App\Models\User;
+use App\Models\Warehouse;
 
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -58,6 +59,11 @@ class Company extends Model
     public function branch()
     {
         return $this->hasMany(Branch::class);
+    }
+
+    public function warehouse()
+    {
+        return $this->hasMany(Warehouse::class);
     }
 
     public function getActivitylogOptions(): LogOptions

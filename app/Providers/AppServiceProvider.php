@@ -19,8 +19,8 @@ use App\Services\ProductService;
 use App\Services\ProductGroupService;
 use App\Services\UnitService;
 use App\Services\BranchService;
+use App\Services\WarehouseService;
 /* Ext */
-
 use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
@@ -35,6 +35,7 @@ use App\Services\Impls\ProductServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
+use App\Services\Impls\WarehouseServiceImpl;
 /* Ext */
 
 class AppServiceProvider extends ServiceProvider
@@ -71,13 +72,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         /* Ext */
-        
+
         $this->app->singleton(CompanyService::class, function (){
             return new CompanyServiceImpl();
-        });
-
-        $this->app->singleton(BranchService::class, function (){
-            return new BranchServiceImpl();
         });
 
         $this->app->singleton(BrandService::class, function (){
@@ -100,6 +97,14 @@ class AppServiceProvider extends ServiceProvider
             return new UnitServiceImpl();
         });
 
+        $this->app->singleton(BranchService::class, function (){
+            return new BranchServiceImpl();
+        });
+
+        $this->app->singleton(WarehouseService::class, function (){
+            return new WarehouseServiceImpl();
+        });
+        
         /* Ext */
     }
 

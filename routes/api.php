@@ -19,6 +19,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\WarehouseController;
+
 /* Ext */
 
 Route::bind('id', function ($id) {
@@ -43,6 +45,9 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
                 Route::get('read', [BranchController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
+                Route::get('read', [WarehouseController::class, 'read'])->name('.read');
             });
         });
 
@@ -137,6 +142,11 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
                 Route::post('save', [BranchController::class, 'store'])->name('.save');
                 Route::post('edit/{id}', [BranchController::class, 'update'])->name('.edit');
                 Route::post('delete/{id}', [BranchController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
+                Route::post('save', [WarehouseController::class, 'store'])->name('.save');
+                Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('.edit');
+                Route::post('delete/{id}', [WarehouseController::class, 'delete'])->name('.delete');
             });
         });
 

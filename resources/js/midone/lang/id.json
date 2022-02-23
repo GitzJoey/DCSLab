@@ -6,6 +6,7 @@
             "company": "Perusahaan",
             "company-company": "Perusahaan",
             "company-branch": "Cabang",
+            "company-warehouse": "Gudang",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -337,6 +338,35 @@
                 "edit": "Ubah Cabang",
                 "show": "Tampilkan Cabang",
                 "delete": "Hapus Cabang"
+            },
+            "fields": {
+                "company_id": "Perusahaan",
+                "code": "Kode",
+                "name": "Nama",
+                "address": "Alamat",
+                "city": "Kota",
+                "contact": "Kontak",
+                "remarks": "Keterangan",
+                "status": "Status"
+            }
+        }
+        ,
+        "warehouse": {
+            "table": {
+                "title": " Daftar Gudang",
+                "cols": {
+                    "company": "Perusahaan",
+                    "code": "Kode",
+                    "name": "Nama",
+                    "remarks": "Keterangan",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Gudang",
+                "edit": "Ubah Gudang",
+                "show": "Tampilkan Gudang",
+                "delete": "Hapus Gudang"
             },
             "fields": {
                 "company_id": "Perusahaan",

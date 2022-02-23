@@ -76,8 +76,8 @@ class DashboardServiceImpl implements DashboardService
 
         $warehouses = array(
             'icon' => '',
-            'pageName' => 'side-menu-company-branch',
-            'title' => 'components.menu.company-branch'
+            'pageName' => 'side-menu-company-warehouse',
+            'title' => 'components.menu.company-warehouse'
         );
 
         $root_array = array(
@@ -88,7 +88,7 @@ class DashboardServiceImpl implements DashboardService
             ]
         );
 
-        array_push($root_array['subMenu'], $company, $branches);
+        array_push($root_array['subMenu'], $company, $branches, $warehouses);
 
         return $root_array;
     }
