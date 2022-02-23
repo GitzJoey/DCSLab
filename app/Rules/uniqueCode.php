@@ -42,7 +42,7 @@ class uniqueCode implements Rule
                 $this->warehouseService = Container::getInstance()->make(WarehouseService::class);
                 break;
             case 'suppliers':
-            $this->supplierService = Container::getInstance()->make(SupplierService::class);
+                $this->supplierService = Container::getInstance()->make(SupplierService::class);
                 break;
             case 'products':
                 $this->productService = Container::getInstance()->make(ProductService::class);
