@@ -27,14 +27,14 @@ class DashboardServiceImpl implements DashboardService
             array_push($menu, $this->createMenu_Supplier());
             //array_push($menu, $this->createMenu_Customer());
             array_push($menu, $this->createMenu_PurchaseOrder());
-            //array_push($menu, $this->createMenu_SalesOrder());
-    
-            if ($usrRoles->where('name', Config::get('const.DEFAULT.ROLE.ADMIN'))->isNotEmpty() || $openAllMenu)
-                array_push($menu, $this->createMenu_Administrator());
-            
-            if ($usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() || $openAllMenu)
-                array_push($menu, $this->createMenu_DevTool());    
+            //array_push($menu, $this->createMenu_SalesOrder());    
         }
+
+        if ($usrRoles->where('name', Config::get('const.DEFAULT.ROLE.ADMIN'))->isNotEmpty() || $openAllMenu)
+            array_push($menu, $this->createMenu_Administrator());
+    
+        if ($usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() || $openAllMenu)
+            array_push($menu, $this->createMenu_DevTool());    
 
         return $menu;
     }

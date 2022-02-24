@@ -37,7 +37,7 @@ interface UserService
 
     public function updateProfile(User $user, array $profile, bool $useTransactions = true): ?bool;
 
-    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?bool;
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?User;
 
     public function updateSettings(User $user, array $settings, bool $useTransactions = true): ?bool;
 
