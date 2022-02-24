@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\API;
 
 use App\Actions\RandomGenerator;
 use App\Models\Branch;
