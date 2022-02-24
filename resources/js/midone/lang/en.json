@@ -7,6 +7,7 @@
             "company-company": "Company",
             "company-branch": "Branch",
             "company-warehouse": "Warehouse",
+            "company-employee": "Employee",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -376,6 +377,35 @@
                 "contact": "Contact",
                 "remarks": "Remarks",
                 "status": "Status"
+            }
+        },
+        "employee": {
+            "table": {
+                "title": "Employee Lists",
+                "cols": {
+                    "company": "Company",
+                    "name": "Name",
+                    "remarks": "Remarks"
+                }
+            },
+            "actions": {
+                "create": "Create Employee",
+                "edit": "Edit Employee",
+                "show": "Show Employee",
+                "delete": "Delete Employee"
+            },
+            "fields": {
+                "company_id": "Company Name",
+                "name": "Nama",
+                "email": "Email",
+                "address": "Address",
+                "city": "City",
+                "postal_code": "Postal Code",
+                "country": "Country",
+                "tax_id": "Tax ID",
+                "ic_num": "Ic Num",
+                "status": "Status",
+                "remarks": "Remarks"
             }
         },
         "purchase_order": {
