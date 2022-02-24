@@ -161,8 +161,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputRoles" class="form-label">{{ t('views.user.fields.roles') }}</label>
-                        <VeeField as="select" multiple :class="{'form-control':true, 'border-theme-21':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selectedRoles" rules="required" :label="t('views.user.fields.roles')" @blur="reValidate(errors)">
-                            <option v-for="r in rolesDDL" :value="r.hId">{{ r.display_name }}</option>
+                        <VeeField as="select" multiple v-slot="{ value }" :class="{'form-control':true, 'border-theme-21':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selected_roles" rules="required" :label="t('views.user.fields.roles')" @blur="reValidate(errors)">
+                            <option v-for="r in rolesDDL" :key="r.hId" :value="r.hId" :selected="r.hId == value">{{ r.display_name }}</option>
                         </VeeField>
                         <ErrorMessage name="roles[]" class="text-theme-21" />
                     </div>
@@ -286,7 +286,7 @@ const expandDetail = ref(null);
 // Data - Views
 const user = ref({
     roles: [],
-    selectedRoles: [],
+    selected_roles: [],
     profile: {
         country: '',
         status: 1,
@@ -400,7 +400,7 @@ function reValidate(errors) {
 function emptyUser() {
     return {
         roles: [],
-        selectedRoles: [],
+        selected_roles: [],
         profile: {
             img_path: '',
             country: '',
