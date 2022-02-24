@@ -242,16 +242,16 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?bool
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?User
     {
         !$useTransactions ? : DB::beginTransaction();
 
         try {
             !$useTransactions ? : DB::commit();
 
-            $retval = $user->syncRoles($rolesId);
+            $updated_usr = $user->syncRoles($rolesId);
 
-            return $retval;
+            return $updated_usr;
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug($e);
