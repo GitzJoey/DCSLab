@@ -31,7 +31,7 @@ class ApiAuthController extends Controller
             ], 401);
         }
 
-        $user = $this->userService->readBy('EMAL', $request['email']);
+        $user = $this->userService->readBy('EMAIL', $request['email']);
 
         $token = $user->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'))->plainTextToken;
 
