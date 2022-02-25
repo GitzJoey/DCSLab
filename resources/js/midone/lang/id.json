@@ -7,6 +7,7 @@
             "company-company": "Perusahaan",
             "company-branch": "Cabang",
             "company-warehouse": "Gudang",
+            "company-employee": "Karyawan",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -377,6 +378,36 @@
                 "contact": "Kontak",
                 "remarks": "Keterangan",
                 "status": "Status"
+            }
+        }
+        ,
+        "karyawan": {
+            "table": {
+                "title": "Daftar Karyawan",
+                "cols": {
+                    "company": "Perusahaan",
+                    "name": "Nama",
+                    "remarks": "Keterangan"
+                }
+            },
+            "actions": {
+                "create": "Tambah Karyawan",
+                "edit": "Ubah Karyawan",
+                "show": "Tampilkan Karyawan",
+                "delete": "Hapus Karyawan"
+            },
+            "fields": {
+                "company_id": "Perusahaan",
+                "name": "Nama",
+                "email": "Email",
+                "address": "Alamat",
+                "city": "Kota",
+                "postal_code": "Kode Pos",
+                "country": "CounNegaratry",
+                "tax_id": "Nomor Pajak",
+                "ic_num": "Nomor Kependudukan",
+                "status": "Status",
+                "remarks": "Keterangan"
             }
         }
         ,

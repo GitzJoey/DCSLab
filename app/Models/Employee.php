@@ -2,46 +2,44 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
-use App\Models\Branch;
-use App\Models\User;
-use App\Models\Warehouse;
+use App\Models\Company;
 
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 use Vinkla\Hashids\Facades\Hashids;
 
-class Company extends Model
+class Employee extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
 
     protected $fillable = [
-        'code',
-        'name',
-        'address',
-        'default',
-        'status'
+        'company_id',
     ];
 
-    protected static $logAttributes = ['code', 'name', 'address', 'default', 'status'];
+    protected static $logAttributes = [
+        'company_id',
+    ];
 
     protected static $logOnlyDirty = true;
 
+
     protected $hidden = [
         'id',
+        'user_id',
+        'company_id',
         'created_by',
         'updated_by',
         'deleted_by',
         'created_at',
         'updated_at',
-        'deleted_at',
-        'pivot',
+        'deleted_at'
     ];
 
     protected $appends = ['hId'];
@@ -51,24 +49,14 @@ class Company extends Model
         return HashIds::encode($this->attributes['id']);
     }
 
-    public function users()
+    public function company()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(Company::class);
     }
 
-    public function branch()
+    public function user()
     {
-        return $this->hasMany(Branch::class);
-    }
-
-    public function warehouse()
-    {
-        return $this->hasMany(Warehouse::class);
-    }
-
-    public function employee()
-    {
-        return $this->hasMany(Employee::class);
+        return $this->belongsTo(User::class);
     }
 
     public function getActivitylogOptions(): LogOptions
