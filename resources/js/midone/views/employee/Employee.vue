@@ -6,18 +6,21 @@
                 <table class="table table-report -mt-2">
                     <thead>
                         <tr>
-                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.company') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.name') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.remarks') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.user.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
-                                <td>{{ item.company.name }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>{{ item.remarks }}</td>
+                                <td>
+                                    <CheckCircleIcon v-if="item.profile.status === 1" />
+                                    <XIcon v-if="item.profile.status === 0" />
+                                </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
                                         <a class="flex items-center mr-3" href="" @click.prevent="showSelected(itemIdx)">
@@ -47,6 +50,13 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.remarks') }}</div>
                                         <div class="flex-1">{{ item.remarks }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -87,69 +97,49 @@
             <VeeForm id="employeeForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
                     <div class="mb-3">
-                        <label class="form-label" for="inputCompany_id">{{ t('views.employee.fields.company_id') }}</label>
-                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="employee.company.hId" :label="t('views.employee.fields.company_id')" rules="required" @blur="reValidate(errors)">
+                        <label for="inputAddress" class="form-label">{{ t('views.employee.fields.address') }}</label>
+                        <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.employee.fields.address')" :label="t('views.employee.fields.address')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.address" />
+                        <ErrorMessage name="address" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputCity" class="form-label">{{ t('views.employee.fields.city') }}</label>
+                        <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.employee.fields.city')" :label="t('views.employee.fields.city')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.city" />
+                        <ErrorMessage name="city" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPostalCode" class="form-label">{{ t('views.employee.fields.postal_code') }}</label>
+                        <VeeField id="inputPostalCode" name="postal_code" as="input" :class="{'form-control':true, 'border-theme-21': errors['postal_code']}" :placeholder="t('views.employee.fields.postal_code')" :label="t('views.employee.fields.postal_code')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.postal_code" />
+                        <ErrorMessage name="postal_code" class="text-theme-21" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputCountry" class="form-label">{{ t('views.user.fields.country') }}</label>
+                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="employee.user.profile.country" rules="required" :placeholder="t('views.user.fields.country')" :label="t('views.user.fields.country')" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
+                            <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
                         </VeeField>
-                        <ErrorMessage name="company_id" class="text-theme-21" />
+                        <ErrorMessage name="country" class="text-theme-21" />
                     </div>
-                    <div class="form-group row">
-                        <label for="inputAddress" class="col-2 col-form-label">{{ $t('fields.address') }}</label>
-                        <div class="col-md-10">
-                            <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="$t('fields.address')" v-model="employee.user.profile.address" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                            <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ employee.user.profile.address }}</div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="inputTaxId" class="form-label">{{ t('views.employee.fields.tax_id') }}</label>
+                        <VeeField id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.employee.fields.tax_id')" :label="t('views.employee.fields.tax_id')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.tax_id" />
+                        <ErrorMessage name="tax_id" class="text-theme-21" />
                     </div>
-                    <div class="form-group row">
-                        <label for="inputCity" class="col-2 col-form-label">{{ $t('fields.city') }}</label>
-                        <div class="col-md-10">
-                            <input id="inputCity" name="city" type="text" class="form-control" :placeholder="$t('fields.city')" v-model="employee.user.profile.city" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                            <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ employee.user.profile.city }}</div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="inputIcNum" class="form-label">{{ t('views.employee.fields.ic_num') }}</label>
+                        <VeeField id="inputIcNum" name="ic_num" as="input" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.employee.fields.ic_num')" :label="t('views.employee.fields.ic_num')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.ic_num" />
+                        <ErrorMessage name="ic_num" class="text-theme-21" />
                     </div>
-                    <div class="form-group row">
-                        <label for="inputPostalCode" class="col-2 col-form-label">{{ $t('fields.postal_code') }}</label>
-                        <div class="col-md-10">
-                            <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="$t('fields.postal_code')" v-model="employee.user.profile.postal_code" v-show="this.mode === 'create' || this.mode === 'edit'"/>
-                            <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ employee.user.profile.postal_code }}</div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="employee.user.profile.remarks" rows="3"></textarea>
                     </div>
-                    <div class="form-group row">
-                        <label for="inputCountry" class="col-2 col-form-label">{{ $t('fields.country') }}</label>
-                        <div class="col-md-10">
-                            <select id="inputCountry" name="country" class="form-control" v-model="employee.user.profile.country" :placeholder="$t('fields.country')" v-show="this.mode === 'create' || this.mode === 'edit'">
-                                <option value="">{{ $t('placeholder.please_select') }}</option>
-                                <option v-for="c in countriesDDL" :key="c.name">{{ c.name }}</option>
-                            </select>
-                            <div class="form-control-plaintext" v-if="this.mode === 'show'">{{ employee.user.profile.country }}</div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <label for="country">{{ $t('fields.country') }}</label>
-                            <input type="text" class="form-control form-control-lg" id="country" name="country" readonly v-model="employee.user.profile.country"/>
-                        </div>
-                    </div>
-                    <!-- <div class="form-group row">
-                        <div class="col-12">
-                            <label for="tax_id">{{ $t('fields.tax_id') }}</label>
-                            <Field as="input" :class="{'form-control form-control-lg':true, 'is-invalid':errors['tax_id']}" :label="$t('fields.tax_id')" id="tax_id" name="tax_id" v-model="employee.user.profile.tax_id"/>
-                            <ErrorMessage name="tax_id" class="invalid-feedback" />
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <label for="ic_num">{{ $t('fields.ic_num') }}</label>
-                            <Field as="input" :class="{'form-control form-control-lg':true, 'is-invalid':errors['ic_num']}" :label="$t('fields.ic_num')" id="ic_num" name="ic_num" v-model="employee.user.profile.ic_num"/>
-                            <ErrorMessage name="ic_num" class="invalid-feedback" />
-                        </div>
-                    </div> -->
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <label for="remarks">{{ $t('fields.remarks') }}</label>
-                            <textarea type="text" rows="3" class="form-control form-control-lg" id="remarks" name="remarks" v-model="employee.user.profile.remarks"/>
-                        </div>
+                    <div class="mb-3">
+                        <label for="inputStatus" class="form-label">{{ t('views.user.fields.status') }}</label>
+                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.user.profile.status" rules="required" :label="t('views.user.fields.status')">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </VeeField>
+                        <ErrorMessage name="status" class="text-theme-21" />
                     </div>
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
@@ -197,10 +187,6 @@ const expandDetail = ref(null);
 // Data - Views
 const employeeList = ref({});
 const employee = ref({
-    company: { 
-        hId: '',
-        name: '' 
-    },
     user: {
         hId: '',
         name: '',
@@ -218,7 +204,8 @@ const employee = ref({
         },
     },
 });
-const companyDDL = ref([]);
+const statusDDL = ref([]);
+const countriesDDL = ref([]);
 
 // onMounted
 onMounted(() => {
@@ -227,7 +214,6 @@ onMounted(() => {
   
     if (selectedUserCompany.value !== '') {
         getAllEmployees({ page: 1 });
-        getDDLSync();
     } else  {
         
     }
@@ -249,12 +235,13 @@ function getAllEmployees(args) {
     });
 }
 
-function getDDLSync() {
-    axios.get(route('api.get.db.company.company.read.all_active', {
-            companyId: selectedUserCompany.value,
-            paginate: false
-        })).then(response => {
-            companyDDL.value = response.data;
+function getDDL() {
+    axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
+        countriesDDL.value = response.data;
+    });
+
+    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+        statusDDL.value = response.data;
     });
 }
 
@@ -396,7 +383,6 @@ function generateCode() {
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
         getAllEmployees({ page: 1 });
-        getDDLSync();
     }
 });
 </script>
