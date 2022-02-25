@@ -52,6 +52,10 @@
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
                 },
+                "countriesDDL": {
+                    "SG": "Singapura",
+                    "ID": "Indonesia"
+                },
                 "productOrServiceCategoryDDL": {
                     "product": "Produk",
                     "service": "Jasa",
