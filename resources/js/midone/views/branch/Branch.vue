@@ -104,6 +104,7 @@
         <div class="loader-container">
             <VeeForm id="branchForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
+                    <!-- company -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
@@ -112,6 +113,7 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-theme-21" />
                     </div>
+                    <!-- code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
                         <div class="flex items-center">
@@ -120,30 +122,36 @@
                         </div>
                         <ErrorMessage name="code" class="text-theme-21" />
                     </div>
+                    <!-- name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
                         <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
+                    <!-- address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
                         <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
                         <ErrorMessage name="address" class="text-theme-21" />
                     </div>
+                    <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
                         <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
                         <ErrorMessage name="city" class="text-theme-21" />
                     </div>
+                    <!-- contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
                         <VeeField id="inputContact" name="contact" as="input" :class="{'form-control':true, 'border-theme-21': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
                         <ErrorMessage name="contact" class="text-theme-21" />
                     </div>
+                    <!-- remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
                     </div>
+                    <!-- status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
@@ -245,7 +253,7 @@ function getAllBranches(args) {
 }
 
 function getDDL() {
-    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }

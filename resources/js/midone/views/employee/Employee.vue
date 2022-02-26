@@ -96,43 +96,75 @@
         <div class="loader-container">
             <VeeForm id="employeeForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
+                    <!-- name -->
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">{{ t('views.employee.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.employee.fields.name')" :label="t('views.employee.fields.name')" rules="required" @blur="reValidate(errors)" v-model="employee.name" />
+                        <ErrorMessage name="name" class="text-theme-21" />
+                    </div>
+                    <!-- email -->
+                    <div class="mb-3">
+                        <label for="inputEmail" class="form-label">{{ t('views.employee.fields.email') }}</label>
+                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.employee.fields.email')" :label="t('views.employee.fields.email')" @blur="reValidate(errors)" v-model="employee.email" :readonly="mode === 'edit'" />
+                        <ErrorMessage name="email" class="text-theme-21" />
+                    </div>
+                    <!-- input img -->
+                    <div class="mb-3">
+                        <label for="inputImg" class="form-label">{{ t('views.employee.fields.picture') }}</label>
+                        <div class="">
+                            <div class="my-1">
+                                <img id="inputImg" alt="" class="" :src="retrieveImage">
+                            </div>
+                            <div class="">
+                                <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.employee.fields.address') }}</label>
                         <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.employee.fields.address')" :label="t('views.employee.fields.address')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.address" />
                         <ErrorMessage name="address" class="text-theme-21" />
                     </div>
+                    <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.employee.fields.city') }}</label>
                         <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.employee.fields.city')" :label="t('views.employee.fields.city')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.city" />
                         <ErrorMessage name="city" class="text-theme-21" />
                     </div>
+                    <!-- postal code -->
                     <div class="mb-3">
                         <label for="inputPostalCode" class="form-label">{{ t('views.employee.fields.postal_code') }}</label>
                         <VeeField id="inputPostalCode" name="postal_code" as="input" :class="{'form-control':true, 'border-theme-21': errors['postal_code']}" :placeholder="t('views.employee.fields.postal_code')" :label="t('views.employee.fields.postal_code')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.postal_code" />
                         <ErrorMessage name="postal_code" class="text-theme-21" />
                     </div>
+                    <!-- country -->
                     <div class="mb-3">
                         <label for="inputCountry" class="form-label">{{ t('views.user.fields.country') }}</label>
                         <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="employee.user.profile.country" rules="required" :placeholder="t('views.user.fields.country')" :label="t('views.user.fields.country')" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
+                            <option v-for="c in countriesDDL" :key="c.name" :value="c.code">{{ c.name }}</option>
                         </VeeField>
                         <ErrorMessage name="country" class="text-theme-21" />
                     </div>
+                    <!-- tax id -->
                     <div class="mb-3">
                         <label for="inputTaxId" class="form-label">{{ t('views.employee.fields.tax_id') }}</label>
                         <VeeField id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.employee.fields.tax_id')" :label="t('views.employee.fields.tax_id')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.tax_id" />
                         <ErrorMessage name="tax_id" class="text-theme-21" />
                     </div>
+                    <!-- ic num -->
                     <div class="mb-3">
                         <label for="inputIcNum" class="form-label">{{ t('views.employee.fields.ic_num') }}</label>
                         <VeeField id="inputIcNum" name="ic_num" as="input" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.employee.fields.ic_num')" :label="t('views.employee.fields.ic_num')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.ic_num" />
                         <ErrorMessage name="ic_num" class="text-theme-21" />
                     </div>
+                    <!-- remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="employee.user.profile.remarks" rows="3"></textarea>
                     </div>
+                    <!-- status -->
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.user.fields.status') }}</label>
                         <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.user.profile.status" rules="required" :label="t('views.user.fields.status')">
@@ -217,6 +249,8 @@ onMounted(() => {
     } else  {
         
     }
+
+    getDDL();
 
     loading.value = false;
 });

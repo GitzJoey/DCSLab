@@ -402,6 +402,7 @@
                 "company_id": "Company Name",
                 "name": "Nama",
                 "email": "Email",
+                "picture" : "Picture",
                 "address": "Address",
                 "city": "City",
                 "postal_code": "Postal Code",

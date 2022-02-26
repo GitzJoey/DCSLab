@@ -32,9 +32,9 @@ Route::bind('id', function ($id) {
     }
 });
 
-Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
+Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,10'])->name('api.auth');
 
-Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
+Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,10'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
 
         /* Ext */
@@ -132,7 +132,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
     });
 });
 
-Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1'], 'as' => 'api.post'], function () {
+Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,10'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
 
         /* Ext */
