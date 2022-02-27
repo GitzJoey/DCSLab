@@ -1,6 +1,7 @@
 # Change Logs
-  * v1.0  
-    To be released.
+  * **v0.2 (2022-02-27)**
+    * Changing branch and versioning into SemVer (Semantic Versioning)
+    * Officially using [Midone Template](https://themeforest.net/item/midone-vuejs-admin-dashboard-template/28123408)
 
 # History
   * **2021-12-07**
