@@ -68,10 +68,9 @@
 @import "./components/_pos-dropdown.css";
 @import "./components/_post.css";
 @import "./components/_litepicker.css";
-@import "./components/_tiny-slider.css";
 @import "./components/_tippy.css";
 @import "./components/_tom-select.css";
 @import "./components/_dark-mode-switcher.css";
 @import "./components/_pristine.css";
 
-/*@import 'customs/loading-overlay.css';*/
+@import 'customs/loading-overlay.css';
