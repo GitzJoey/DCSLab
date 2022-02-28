@@ -26,21 +26,19 @@ if (mix.inProduction()) {
             ]
         })
         .copy('resources/css/midone/fonts/*.ttf', 'public/fonts')
-        .sass('resources/css/midone/app.css', 'public/css/midone/app.css')
-        .options({
-            postCss: [
-                require('postcss-import'),
-                require('postcss-advanced-variables'),
-                require('tailwindcss/nesting'),
-                require('tailwindcss')('./tailwind.config.js'),
-                require('autoprefixer'),
-                require('postcss-path-replace')({
-                    publicPath: process.env.APP_URL,
-                    matched: "[APP_URL]",
-                    mode: "replace"
-                })
-            ]
-        })
+        .postCss('resources/css/midone/app.css', 'public/css/midone', [
+            require('postcss-import'),
+            require('postcss-advanced-variables'),
+            require('tailwindcss/nesting'),
+            require('tailwindcss')('./tailwind.config.js'),
+            require('autoprefixer'),
+            require('postcss-path-replace')({
+                publicPath: process.env.APP_URL,
+                matched: "[APP_URL]",
+                mode: "replace"
+            }),
+            require('cssnano')
+        ])
         //.js('resources/js/midone/app.js','public/js/midone/main.js')
         //.vue()
         //.version()
