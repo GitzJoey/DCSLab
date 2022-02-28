@@ -25,7 +25,7 @@ if (mix.inProduction()) {
                 })
             ]
         })
-        .sass('resources/sass/midone/app.scss', 'public/css/midone/app.css')
+        .sass('resources/css/midone/app.css', 'public/css/midone/app.css')
         .options({
             postCss: [
                 require("postcss-import"),
@@ -65,7 +65,7 @@ if (mix.inProduction()) {
                 })
             ]
         })
-        .postCss('resources/sass/midone/app.css', 'public/css/midone', [
+        .postCss('resources/css/midone/app.css', 'public/css/midone', [
             require("postcss-import"),
             require("postcss-advanced-variables"),
             require("tailwindcss/nesting"),
