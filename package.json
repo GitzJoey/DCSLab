@@ -35,6 +35,7 @@
         "simple-line-icons": "^2.5.5",
         "tailwindcss": "^3.0.23",
         "tippy.js": "^6.3.7",
+        "toastify-js": "^1.11.2",
         "tom-select": "^1.7.5",
         "vue": "^3.2.31",
         "vue-router": "^4.0.12"

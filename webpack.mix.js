@@ -49,7 +49,7 @@ if (mix.inProduction()) {
         .js('resources/js/start/main.js', 'public/js/start/main.js')
         .sourceMaps()
     ;
-/*
+
     mix
         .webpackConfig({
             devtool: 'source-map',
@@ -65,20 +65,16 @@ if (mix.inProduction()) {
                 })
             ]
         })
-        .sass('resources/sass/midone/app.scss', 'public/css/midone/app.css')
-        .options({
-            postCss: [
-                require("postcss-import"),
-                require("postcss-advanced-variables"),
-                require("tailwindcss/nesting"),
-                require("tailwindcss")("./tailwind.config.js"),
-                require("autoprefixer"),
-            ]
-        })
+        .postCss('resources/sass/midone/app.css', 'public/css/midone', [
+            require("postcss-import"),
+            require("postcss-advanced-variables"),
+            require("tailwindcss/nesting"),
+            require("tailwindcss")("./tailwind.config.js"),
+            require("autoprefixer")
+        ])
         //.js('resources/js/midone/app.js','public/js/midone/main.js')
         //.sourceMaps()
         //.vue()
     ;
-*/
 }
 
