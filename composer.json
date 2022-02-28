@@ -1,15 +1,26 @@
 {
-    "name": "laravel/laravel",
+    "name": "gitzjoey/dcslab",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "DCSLab - Laravel Always Updated ERP System",
+    "keywords": ["ERP", "framework", "laravel", "gitzjoey"],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "cmgmyr/messenger": "^2.27",
+        "doctrine/dbal": "^3.3",
+        "fico7489/laravel-pivot": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
+        "intervention/image": "^2.7",
         "laravel/framework": "^9.2",
         "laravel/sanctum": "^2.14.1",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "mews/captcha": "^3.2",
+        "predis/predis": "^1.1",
+        "rap2hpoutre/laravel-log-viewer": "^2.1",
+        "santigarcor/laratrust": "^7.0",
+        "spatie/laravel-activitylog": "^4.4",
+        "tightenco/ziggy": "^1.4",
+        "vinkla/hashids": "^10.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -28,7 +39,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Tests\\Unit\\Service\\": "tests/Unit/Service/",
+            "Tests\\Feature\\API\\": "tests/Feature/API/"
         }
     },
     "scripts": {
@@ -44,7 +57,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "artisan_xdebug": "@php -dxdebug.start_with_request=yes -dxdebug.mode=debug -dxdebug.client_port=9003 -dxdebug.client_host=127.0.0.1 artisan"
     },
     "extra": {
         "laravel": {
