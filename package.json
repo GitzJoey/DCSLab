@@ -13,7 +13,10 @@
         "axios": "^0.25",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "postcss": "^8.1.14",
+        "resolve-url-loader": "^5.0.0",
+        "sass": "^1.49.9",
+        "sass-loader": "^12.1.0"
     },
     "dependencies": {
         "@left4code/tw-starter": "^3.1.25",
