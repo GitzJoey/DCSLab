@@ -72,9 +72,6 @@ if (mix.inProduction()) {
             require("tailwindcss")("./tailwind.config.js"),
             require("autoprefixer")
         ])
-        .options({
-            processCssUrls: false
-        })
         //.js('resources/js/midone/app.js','public/js/midone/main.js')
         //.sourceMaps()
         //.vue()
