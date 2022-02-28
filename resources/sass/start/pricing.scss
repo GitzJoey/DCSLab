@@ -1,0 +1,197 @@
+.pricing-area {
+    padding-top: 120px;
+    padding-bottom: 120px;
+    background-color: #f4f6f7;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .pricing-area {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+}
+
+@media (max-width: 767px) {
+    .pricing-area {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+}
+
+.single-pricing {
+    -webkit-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    -moz-box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    padding: 24px 20px 50px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.single-pricing .pricing-header .sub-title {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 25px;
+    color: #121212;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.single-pricing .pricing-header .sub-title::before {
+    position: absolute;
+    content: '';
+    width: 72px;
+    height: 4px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #2bdbdc;
+    margin: 0 auto;
+}
+
+.single-pricing .pricing-header .price {
+    display: block;
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 80px;
+    margin-top: 32px;
+    color: #121212;
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+    .single-pricing .pricing-header .price {
+        font-size: 50px;
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .single-pricing .pricing-header .price {
+        font-size: 50px;
+        margin-top: 16px;
+    }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .single-pricing .pricing-header .price {
+        font-size: 64px;
+        margin-top: 32px;
+    }
+}
+
+.single-pricing .pricing-header .year {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 25px;
+    color: #6c6c6c;
+    margin-top: 3px;
+}
+
+.single-pricing .pricing-list {
+    margin-top: 40px;
+}
+
+.single-pricing .pricing-list ul li {
+    font-size: 16px;
+    line-height: 24px;
+    color: #121212;
+    margin-top: 16px;
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+    .single-pricing .pricing-list ul li {
+        font-size: 14px;
+        margin-top: 12px;
+    }
+}
+
+@media (max-width: 767px) {
+    .single-pricing .pricing-list ul li {
+        font-size: 14px;
+        margin-top: 12px;
+    }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .single-pricing .pricing-list ul li {
+        font-size: 16px;
+        margin-top: 16px;
+    }
+}
+
+.single-pricing .pricing-list ul li i {
+    color: #0067f4;
+    margin-right: 8px;
+}
+
+.single-pricing .pricing-btn {
+    margin-top: 42px;
+}
+
+.single-pricing .pricing-btn .main-btn {
+    background-color: #0067f4;
+    border-radius: 50px;
+    color: #fff;
+    border-color: #0067f4;
+}
+
+.single-pricing .pricing-btn .main-btn:hover {
+    background-color: #005ad5;
+    border-color: #005ad5;
+}
+
+.single-pricing .buttom-shape {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 101%;
+}
+
+.single-pricing.pro .pricing-header .sub-title::before {
+    right: auto;
+    left: 0;
+    background-color: #0067f4;
+}
+
+.single-pricing.pro .pricing-baloon {
+    position: absolute;
+    top: 0;
+    right: -78px;
+    width: 156px;
+}
+
+.single-pricing.enterprise .pricing-header .sub-title::before {
+    right: 0;
+    left: auto;
+    background-color: #0067f4;
+}
+
+.single-pricing.enterprise .pricing-flower {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 144px;
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+    .single-pricing.enterprise .pricing-flower {
+        width: 110px;
+    }
+}
+
+@media (max-width: 767px) {
+    .single-pricing.enterprise .pricing-flower {
+        width: 110px;
+    }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .single-pricing.enterprise .pricing-flower {
+        width: 144px;
+    }
+}
+
+.single-pricing.enterprise .pricing-flower img {
+    width: 100%;
+}

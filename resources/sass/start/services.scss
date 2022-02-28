@@ -1,0 +1,119 @@
+.services-area {
+    padding-top: 120px;
+    padding-bottom: 120px;
+    position: relative;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .services-area {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-area {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+}
+
+.services-content .services-icon i {
+    font-size: 64px;
+    color: #0067f4;
+}
+
+.services-content .services-content {
+    padding-left: 15px;
+}
+
+@media (max-width: 767px) {
+    .services-content .services-content {
+        padding-left: 0;
+        padding-top: 15px;
+    }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .services-content .services-content {
+        padding-left: 15px;
+        padding-top: 0;
+    }
+}
+
+.services-content .services-content .services-title {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 30px;
+    color: #121212;
+}
+
+.services-content .services-content .text {
+    font-size: 14px;
+    line-height: 20px;
+    color: #121212;
+    margin-top: 8px;
+}
+
+.services-image {
+    position: absolute;
+    width: 40%;
+    height: 100%;
+    top: 0;
+    right: 0;
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+    .services-image {
+        width: 34%;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .services-image {
+        position: relative;
+        width: 720px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-image {
+        position: relative;
+        width: 100%;
+        padding-left: 15px;
+        padding-right: 16px;
+        margin: 0 auto;
+    }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+    .services-image {
+        position: relative;
+        width: 540px;
+        margin: 0 auto;
+    }
+}
+
+.services-image .image {
+    max-width: 580px;
+    width: 100%;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .services-image .image {
+        margin: 0 auto;
+        padding-top: 50px;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-image .image {
+        margin: 0 auto;
+        padding-top: 50px;
+    }
+}
+
+.services-image .image img {
+    width: 100%;
+}

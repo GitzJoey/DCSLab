@@ -2,17 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\FrontController;
+use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return view('welcome');
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
+Route::get('/', [FrontController::class, 'index'])->name('front');
+
+Route::get('/home', function() {
+    return redirect()->route('db');
+})->name('home');
+
+Route::group(['prefix' => 'dashboard'], function () {
+    Route::get('', [DashboardController::class, 'index'])->name('db');
+    Route::any('/{all}', function($page) { return redirect()->route('db'); })->where(['all' => '.*']);
 });
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
