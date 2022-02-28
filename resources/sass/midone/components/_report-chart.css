@@ -1,0 +1,5 @@
+.report-chart {
+    @apply relative;
+    @apply before:block before:absolute before:w-16 before:h-[85%] before:sm:h-[93%] before:left-0 before:top-0 before:ml-10 before:bg-gradient-to-r before:from-white before:via-white/80 before:to-transparent before:dark:from-darkmode-600;
+    @apply after:block after:absolute after:w-16 after:h-[85%] after:sm:h-[93%] after:right-0 after:top-0 after:bg-gradient-to-l after:from-white after:via-white/80 after:to-transparent after:dark:from-darkmode-600;
+}
