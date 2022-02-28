@@ -404,6 +404,7 @@
                 "company_id": "Perusahaan",
                 "name": "Nama",
                 "email": "Email",
+                "picture" : "Gambar",
                 "address": "Alamat",
                 "city": "Kota",
                 "postal_code": "Kode Pos",
