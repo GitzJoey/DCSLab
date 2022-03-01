@@ -3,10 +3,14 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+
+use App\Services\UserService;
+use App\Services\Impls\UserServiceImpl;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -30,12 +34,19 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'terms' => 'required',
+            'captcha' => 'required|captcha',
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-        ]);
+        $instances = Container::getInstance();
+
+        $usr = $instances->make(UserService::class)->register(
+            $input['name'],
+            $input['email'],
+            $input['password'],
+            $input['terms'],
+        );
+
+        return $usr;
     }
 }
