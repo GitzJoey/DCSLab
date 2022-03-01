@@ -153,15 +153,37 @@ function setSelectedCompany(companyLists, selected) {
   if (selected === '') {
     let defaultCompany = _.find(companyLists, { default: true });
     selectedCompany.value = defaultCompany.name;
-    userContextStore.setSelectedCompany(defaultCompany.hId);
+    userContextStore.setSelectedUserCompany(defaultCompany.hId);
   } else {
     _.forEach(companyLists, function(item) {
       if (selected === item.hId) {
         selectedCompany.value = item.name;
-        userContextStore.setSelectedCompany(item.hId);
+        userContextStore.setSelectedUserCompany(item.hId);
       }
     });
   }
+}
+
+function goTo(page) {
+  switch(page) {
+    case 'profile':
+      router.push({ name: 'side-menu-dashboard-profile' });
+      break;
+    case 'inbox':
+      router.push({ name: 'side-menu-dashboard-inbox' });
+      break;
+    case 'activity':
+      router.push({ name: 'side-menu-dashboard-activity' });
+      break;
+    }
+}
+
+function logout() {
+  axios.post('/logout').then(response => {
+    window.location.href = '/';
+  }).catch(e => {
+
+  });
 }
 
 watch(userContext, () => {
