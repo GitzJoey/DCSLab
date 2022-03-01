@@ -168,7 +168,7 @@ import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 // Declarations
 const { t } = useI18n();
 
-// Data - VueX
+// Data - Pinia
 // Data - UI
 const mode = ref('list');
 const loading = ref(false);

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import axios from "@/axios";
 
 import SideMenu from "../layouts/side-menu/Main.vue";
 
@@ -10,13 +11,13 @@ import Activity from "@/views/dashboard/Activity.vue";
 import Error403 from "@/views/error/403.vue";
 
 /* Ext */
-//import Company from "@/views/company/Company.vue";
+import Company from "@/views/company/Company.vue";
 import Branch from "@/views/branch/Branch.vue";
-//import Warehouse from "@/views/warehouse/Warehouse.vue";
-//import Supplier from "@/views/supplier/Supplier.vue";
-//import Product from "@/views/product/Product.vue";
-//import Service from "@/views/product/Service.vue";
-//import PurchaseOrder from "@/views/purchase_order/PurchaseOrder.vue";
+import Warehouse from "@/views/warehouse/Warehouse.vue";
+import Supplier from "@/views/supplier/Supplier.vue";
+import Product from "@/views/product/Product.vue";
+import Service from "@/views/product/Service.vue";
+import PurchaseOrder from "@/views/purchase_order/PurchaseOrder.vue";
 /* Ext */
 
 import AdminUser from "../views/administrator/User";

@@ -252,7 +252,7 @@
 
 // Declarations
 // Mixins
-// Data - VueX
+// Data - Pinia
 // Data - UI
 // Data - Views
 

@@ -183,7 +183,7 @@ import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 // Declarations
 const { t } = useI18n();
 
-// Data - VueX
+// Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 
