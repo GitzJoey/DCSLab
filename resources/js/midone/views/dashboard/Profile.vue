@@ -282,9 +282,6 @@ const retrieveImage = computed(() => {
 
 // onMounted
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-
     getRoles();
 });
 
@@ -366,6 +363,10 @@ function resetAlertErrors() {
     alertErrors.value = [];
     alertType.value = '';
     alertTitle.value = '';
+}
+
+function isEmptyObject(obj) {
+    return _.isEmpty(obj);
 }
 
 function createSuccessAlert(type) {

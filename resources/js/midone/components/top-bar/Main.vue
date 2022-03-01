@@ -1,7 +1,7 @@
 <template>
   <div class="top-bar">
     <nav class="-intro-x mr-auto hidden sm:flex">
-        <div id="company-dropdown" class="intro-x dropdown mr-auto sm:mr-6" data-placement="bottom-start">
+        <div id="company-dropdown" class="intro-x dropdown mr-auto sm:mr-6" data-tw-placement="bottom-start">
             <div class="dropdown-toggle notification cursor-pointer" role="button" aria-expanded="false" data-tw-toggle="dropdown">
                 <div class="flex flex-row">
                     <UmbrellaIcon class="notification__icon dark:text-gray-300 mr-2" />
@@ -137,6 +137,7 @@ const userCompanyLists = computed(() => {
 
 const switchLanguage = (lang) => {
   switchLang(lang);
+  tailwind.Dropdown.getOrCreateInstance(document.querySelector("#language-dropdown")).hide();
 }
 
 const currentLanguage = computed(() => {
@@ -145,6 +146,7 @@ const currentLanguage = computed(() => {
 
 function switchCompany(hId) {
   setSelectedCompany(userCompanyLists.value, hId);
+  tailwind.Dropdown.getOrCreateInstance(document.querySelector("#company-dropdown")).hide();
 }
 
 function setSelectedCompany(companyLists, selected) {
@@ -176,6 +178,7 @@ function goTo(page) {
       router.push({ name: 'side-menu-dashboard-activity' });
       break;
     }
+    tailwind.Dropdown.getOrCreateInstance(document.querySelector("#main-dropdown")).hide();
 }
 
 function logout() {

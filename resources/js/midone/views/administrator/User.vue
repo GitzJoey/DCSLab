@@ -263,18 +263,19 @@
 */
 
 // Vue Import
-import { inject, onMounted, ref, computed } from 'vue'
+import { inject, onMounted, ref, computed } from "vue";
 // Helper Import
-import axios from '../../axios';
-import { getLang } from '../../lang';
-import mainMixins from '../../mixins';
-import { helper } from '../../utils/helper';
+import axios from "@/axios";
+import { getLang } from "@/lang";
+import { assetPath } from "@/mixins";
+import { helper } from "@/utils/helper";
+import { useI18n } from "vue-i18n";
 // Components Import
-import DataList from '../../global-components/data-list/Main'
-import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+import DataList from "../../global-components/data-list/Main"
+import AlertPlaceholder from "../../global-components/alert-placeholder/Main"
 
 // Mixins
-const { t, route } = mainMixins();
+const { t } = useI18n();
 
 // Data - UI
 const mode = ref('list');
@@ -305,9 +306,6 @@ const countriesDDL = ref([]);
 
 // onMounted
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-
     getUser({ page: 1 });
     getDDL();
 

@@ -3,9 +3,29 @@ import { createRouter, createWebHistory } from "vue-router";
 import SideMenu from "../layouts/side-menu/Main.vue";
 
 import MainDashboard from "@/views/dashboard/MainDashboard.vue";
-import Profile from '@/views/dashboard/Profile.vue';
-import Inbox from '@/views/dashboard/Inbox.vue';
-import Activity from '@/views/dashboard/Activity.vue';
+import Profile from "@/views/dashboard/Profile.vue";
+import Inbox from "@/views/dashboard/Inbox.vue";
+import Activity from "@/views/dashboard/Activity.vue";
+
+import Error403 from "@/views/error/403.vue";
+
+/* Ext */
+/*
+import Company from "@/views/company/Company.vue";
+import Branch from "@/views/branch/Branch.vue";
+import Warehouse from "@/views/warehouse/Warehouse.vue";
+import Supplier from "@/views/supplier/Supplier.vue";
+import Product from "@/views/product/Product.vue";
+import Service from "@/views/product/Service.vue";
+import PurchaseOrder from "@/views/purchase_order/PurchaseOrder.vue";
+*/
+/* Ext */
+
+import AdminUser from "../views/administrator/User";
+
+import DBBackup from "../views/dev/DBBackup";
+import Ex1 from "../views/dev/Ex1";
+import Ex2 from "../views/dev/Ex2";
 
 const root = '/dashboard';
 
@@ -43,6 +63,62 @@ const routes = [
             },
         ]
     },
+    {
+        path: root + '/admin',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/admin' + '/user',
+                name: 'side-menu-administrator-user',
+                component: AdminUser,
+                meta: { remember: true }
+            }
+        ],
+    },
+    {
+        path: root + '/dev',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/dev' + '/tools/db_backup',
+                name: 'side-menu-devtool-backup',
+                component: DBBackup,
+                meta: { remember: true }
+            }
+        ],
+    },
+    {
+        path: root + '/dev' + '/example',
+        name: 'side-menu-devtool-example',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/dev' + '/example' + '/ex1',
+                name: 'side-menu-devtool-example-ex1',
+                component: Ex1,
+                meta: { remember: true }
+            },
+            {
+                path: root + '/dev' + '/example' + '/ex2',
+                name: 'side-menu-devtool-example-ex2',
+                component: Ex2,
+                meta: { remember: true }
+            }
+        ]
+    },
+    {
+        path: root + '/error',
+        name: 'side-menu-error',
+        component: SideMenu,
+        children: [
+            {
+                path: root + '/error' + '/403',
+                name: 'side-menu-error-403',
+                component: Error403,
+                meta: { remember: false }
+            }
+        ]
+    }
 ];
 
 const router = createRouter({
@@ -65,7 +141,6 @@ router.beforeEach(async (to, from) => {
 });
 
 router.afterEach((to, from) => {
-  /*
   axios.post('/api/post/dashboard/core/activity/log/route', {
       to: to.name,
       params: to.params
@@ -73,7 +148,6 @@ router.afterEach((to, from) => {
 
   if (to.matched.some(r => r.meta.remember))
       sessionStorage.setItem('DCSLAB_LAST_ROUTE', to.name);
-  */
 });
 
 export default router;
