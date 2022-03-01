@@ -39,9 +39,9 @@ if (mix.inProduction()) {
             }),
             require('cssnano')
         ])
-        //.js('resources/js/midone/app.js','public/js/midone/main.js')
-        //.vue()
-        //.version()
+        .js('resources/js/midone/main.js','public/js/midone/main.js')
+        .vue()
+        .version()
     ;
 
 } else {
@@ -82,9 +82,9 @@ if (mix.inProduction()) {
                 mode: "replace"
             })
         ])
-        //.js('resources/js/midone/app.js','public/js/midone/main.js')
-        //.sourceMaps()
-        //.vue()
+        .js('resources/js/midone/main.js','public/js/midone/main.js')
+        .sourceMaps()
+        .vue()
     ;
 }
 
