@@ -268,26 +268,23 @@
 
 <script setup>
 // Vue Import
-import { inject, onMounted, ref, computed, watch } from 'vue'
+import { inject, onMounted, ref, computed, watch } from "vue";
 // Helper Import
-import axios from '../../axios';
-import { getLang } from '../../lang';
-import mainMixins from '../../mixins';
-import { helper } from '../../utils/helper';
+import axios from "@/axios";
+import { useI18n } from "vue-i18n";
+import { route } from "@/ziggy";
 // Core Components Import
-import { useStore } from '../../store/index';
+import { useUserContextStore } from "@/stores/user-context";
 // Components Import
-import DataList from '../../global-components/data-list/Main'
-import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+import DataList from "@/global-components/data-list/Main";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 
 // Declarations
 const store = useStore();
 
-// Mixins
-const { t, route } = mainMixins();
-
 // Data - VueX
-const selectedUserCompany = computed(() => store.state.main.selectedUserCompany );
+const userContextStore = useUserContextStore();
+const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 
 // Data - UI
 const mode = ref('list');
@@ -327,9 +324,6 @@ const productLists = ref([]);
 
 // onMounted
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-
     if (selectedUserCompany.value !== '') {
         getAllSupplier({ page: 1});
         getDDLSync();

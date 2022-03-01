@@ -156,21 +156,17 @@
 
 <script setup>
 // Vue Import
-import { inject, onMounted, ref, computed } from 'vue'
+import { inject, onMounted, ref, computed } from "vue";
 // Helper Import
-import axios from '../../axios';
-import mainMixins from '../../mixins';
-// Core Components Import
-import { useStore } from '../../store/index';
+import axios from "@/axios";
+import { useI18n } from "vue-i18n";
+import { route } from "@/ziggy";
 // Components Import
-import DataList from '../../global-components/data-list/Main'
-import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+import DataList from "@/global-components/data-list/Main";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 
 // Declarations
-const store = useStore();
-
-// Mixins
-const { t, route } = mainMixins();
+const { t } = useI18n();
 
 // Data - VueX
 // Data - UI
@@ -193,9 +189,6 @@ const statusDDL = ref([]);
 
 // onMounted
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-
     getAllCompany({ page: 1 });
     getDDL();
 

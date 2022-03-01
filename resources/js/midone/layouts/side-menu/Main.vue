@@ -131,6 +131,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { helper as $h } from "@/utils/helper";
+import { getLang, switchLang } from "@/lang";
 import { useI18n } from "vue-i18n";
 import { assetPath } from "@/mixins";
 import { useSideMenuStore } from "@/stores/side-menu";
@@ -150,7 +151,8 @@ const router = useRouter();
 const formattedMenu = ref([]);
 
 const sideMenuStore = useSideMenuStore();
-const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
+//const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
+const sideMenu = computed(() => sideMenuStore.menu);
 
 const userContextStore = useUserContextStore();
 const userContext = computed(() => userContextStore.userContext);
@@ -165,7 +167,7 @@ onMounted(() => {
   userContextStore.fetchUserContext();
   sideMenuStore.fetchMenu();
   
-  formattedMenu.value = $h.toRaw(sideMenu.value);
+  localeSetup();
 });
 
 onUnmounted(() => {
@@ -179,7 +181,7 @@ function handleScroll() {
     //showBackToTop.value = false;
   }
 }
-/*
+
 function localeSetup() {
   if (localStorage.getItem('DCSLAB_LANG') === null) {
     localStorage.setItem('DCSLAB_LANG', getLang());
@@ -189,6 +191,8 @@ function localeSetup() {
     switchLang(localStorage.getItem('DCSLAB_LANG'));
   }
 }
+
+/*
 
 function goToLastRoute() {
   if (sessionStorage.getItem('DCSLAB_LAST_ROUTE') !== null) {
@@ -208,12 +212,12 @@ function switchMenu() {
 
 watch(
   computed(() => route.path),
-  () => {
-    formattedMenu.value = $h.toRaw(sideMenu.value);
+  () => {    
+    formattedMenu.value = nestedMenu($h.toRaw(sideMenu.value), route);
   }
 );
 watch(
   sideMenu, () => {
-    formattedMenu.value = nestedMenu(sideMenu.value, route);
+    formattedMenu.value = nestedMenu($h.toRaw(sideMenu.value), route);
 });
 </script>

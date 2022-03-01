@@ -266,8 +266,6 @@
 import { inject, onMounted, ref, computed } from "vue";
 // Helper Import
 import axios from "@/axios";
-import { getLang } from "@/lang";
-import { assetPath } from "@/mixins";
 import { helper } from "@/utils/helper";
 import { useI18n } from "vue-i18n";
 // Components Import

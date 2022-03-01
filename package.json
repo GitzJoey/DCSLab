@@ -45,6 +45,7 @@
         "vee-validate": "^4.5.9",
         "vue": "^3.2.31",
         "vue-i18n": "^9.1.9",
-        "vue-router": "^4.0.12"
+        "vue-router": "^4.0.12",
+        "ziggy-js": "^1.4.3"
     }
 }

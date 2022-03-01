@@ -319,24 +319,22 @@
 
 <script setup>
 // Vue Import
-import { inject, onMounted, ref, computed, watch } from 'vue'
+import { inject, onMounted, ref, computed, watch } from "vue";
 // Helper Import
-import axios from '../../axios';
-import mainMixins from '../../mixins';
+import axios from "@/axios";
+import { useI18n } from "vue-i18n";
 // Core Components Import
-import { useStore } from '../../store/index';
+import { useUserContextStore } from "@/stores/user-context";
 // Components Import
-import DataList from '../../global-components/data-list/Main'
-import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+import DataList from "@/global-components/data-list/Main";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 
 // Declarations
-const store = useStore();
-
-// Mixins
-const { t, route } = mainMixins();
+const { t } = useI18n();
 
 // Data - VueX
-const selectedUserCompany = computed(() => store.state.main.selectedUserCompany );
+const userContextStore = useUserContextStore();
+const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 
 // Data - UI
 const mode = ref('list');
@@ -376,9 +374,6 @@ const productSearch = ref('');
 
 // onMounted
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-
     if (selectedUserCompany.value !== '') {
         getDDL();
         getDDLSync();
