@@ -1,20 +1,15 @@
 import { defineStore } from "pinia";
+import axios from "@/axios";
 
 export const useSideMenuStore = defineStore("sideMenu", {
   state: () => ({
-    menu: [
-      {
-        icon: "HomeIcon",
-        pageName: "side-menu-dashboard",
-        title: "Dashboard",
-        subMenu: [
-          {
-            icon: "",
-            pageName: "side-menu-dashboard-maindashboard",
-            title: "Main Dashboard",
-          }
-        ],
-      },
-    ],
+    menu: [],
   }),
+  actions: {
+    fetchMenu() {
+      axios.get('/api/get/dashboard/core/user/menu').then(response => {
+        this.menu = response.data;
+      });
+    }
+  }
 });
