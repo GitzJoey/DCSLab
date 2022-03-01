@@ -3,7 +3,7 @@
 
 <script setup>
 import { inject, onMounted, ref } from "vue";
-import axios from '../../axios';
+import axios from "@/axios";
 
 onMounted(() => {
     axios.get('/api/get/dashboard/devtool/test').then(response => {

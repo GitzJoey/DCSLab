@@ -11,8 +11,8 @@ import { useI18n } from "vue-i18n";
 // Core Components Import
 import { useUserContextStore } from "@/stores/user-context";
 // Components Import
-import DataList from '../../global-components/data-list/Main'
-import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+import DataList from "@/global-components/data-list/Main";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 
 // Declarations
 const { t } = useI18n();

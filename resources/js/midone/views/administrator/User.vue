@@ -268,9 +268,10 @@ import { inject, onMounted, ref, computed } from "vue";
 import axios from "@/axios";
 import { helper } from "@/utils/helper";
 import { useI18n } from "vue-i18n";
+import { route } from "@/ziggy";
 // Components Import
-import DataList from "../../global-components/data-list/Main"
-import AlertPlaceholder from "../../global-components/alert-placeholder/Main"
+import DataList from "@/global-components/data-list/Main"
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main"
 
 // Mixins
 const { t } = useI18n();
