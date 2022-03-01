@@ -5,7 +5,7 @@
     <MobileMenu />
     <div class="flex overflow-hidden">
       <nav class="side-nav">
-        <router-link :to="{ name: 'side-menu-dashboard-overview-1' }" tag="a" class="intro-x flex items-center pl-5 pt-4 mt-3">
+        <router-link :to="{ name: 'side-menu-dashboard-maindashboard' }" tag="a" class="intro-x flex items-center pl-5 pt-4 mt-3">
           <img alt="Tinker Tailwind HTML Admin Template" class="w-6" src="" />
           <span class="hidden xl:block text-white text-lg ml-3"> Tinker </span>
         </router-link>
