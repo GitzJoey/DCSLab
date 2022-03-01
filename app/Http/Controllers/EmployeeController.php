@@ -8,12 +8,16 @@ use App\Services\RoleService;
 use App\Services\UserService;
 use App\Services\EmployeeService;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Resources\RoleResource;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 
 class EmployeeController extends BaseController
 {
     private $employeeService;
+    private $userService;
+    private $roleService;
     
     public function __construct(EmployeeService $employeeService, RoleService $roleService, UserService $userService,)
     {
@@ -21,8 +25,8 @@ class EmployeeController extends BaseController
 
         $this->middleware('auth');
         $this->employeeService = $employeeService;
-        $this->roleService = $roleService;
         $this->userService = $userService;
+        $this->roleService = $roleService;
     }
 
     public function read(Request $request)
@@ -32,7 +36,7 @@ class EmployeeController extends BaseController
         $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $companyId = Hashids::decode($request['companyId'])[0];
-        // $userId = Hashids::decode($request['userId'])[0];
+        // $userId = Hashids::decode($request['companyId'])[0];
 
         $result = $this->employeeService->read(
             companyId: $companyId,
@@ -51,13 +55,30 @@ class EmployeeController extends BaseController
         }
     }
 
+    public function getAllRoles()
+    {
+        $excludeRole = [
+            //Config::get('const.DEFAULT.ROLE.ADMIN'),
+            //Config::get('const.DEFAULT.ROLE.DEV')
+        ];
+
+        $roles = $this->roleService->read(exclude: $excludeRole);
+        
+        if (is_null($roles)) {
+            return response()->error();
+        } else {
+            $response = RoleResource::collection($roles);
+            return $response;    
+        }
+    }
+
     public function store(EmployeeRequest $employeeRequest)
     {   
         $request = $employeeRequest->validated();
-        
-        $rolesId = [];
-        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
 
+        $rolesId = [];
+        array_push($rolesId, $this->roleService->readBy('NAME', 'user')->id);
+        
         $first_name = '';
         $last_name = '';
         if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
@@ -77,9 +98,17 @@ class EmployeeController extends BaseController
             'country' => $request['country'],
             'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
-            'status' => $request['status'],
             'remarks' => $request['remarks'],
+            'status' => $request['status'],
         );
+
+        if (array_key_exists('img_path', $request)) {
+            $image = $request['img_path'];
+            $filename = time().".".$image->getClientOriginalExtension();
+            
+            $file = $image->storePubliclyAs('usr', $filename, 'public');
+            $profile['img_path'] = $file;
+        }
 
         $user = $this->userService->create(
             $request['name'],
@@ -88,13 +117,13 @@ class EmployeeController extends BaseController
             $rolesId,
             $profile
         );
-        $user_id = Hashids::decode($user)[0];
+        $user_id = $user->id;
 
         $result = $this->employeeService->create(
             Hashids::decode($request['company_id'])[0],
             $user_id
         );
-        return $result == 0 ? response()->error():response()->success();
+        return is_null($result) ? response()->error():response()->success();
     }
 
     public function update($id, EmployeeRequest $employeeRequest)
@@ -103,23 +132,10 @@ class EmployeeController extends BaseController
 
         $userId = Employee::find($id);
         $userId = $userId['user_id'];
-
-        $rolesId = [];
-        array_push($rolesId, $this->roleService->getRoleByName('user')->id);
-
-        $first_name = '';
-        $last_name = '';
-        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
-            $pieces = explode(" ", $request['name']);
-            $first_name = $pieces[0];
-            $last_name = $pieces[1];
-        } else {
-            $first_name = $request['name'];
-        }
-
-        $profile = array(
-            'first_name' => $first_name,
-            'last_name' => $last_name,
+        
+        $profile = array (
+            'first_name' => $request['first_name'],
+            'last_name' => $request['last_name'],
             'address' => $request['address'],
             'city' => $request['city'],
             'postal_code' => $request['postal_code'],
@@ -129,12 +145,25 @@ class EmployeeController extends BaseController
             'status' => $request['status'],
             'remarks' => $request['remarks'],
         );
+        
+        $rolesId = [];
+        foreach ($request['roles'] as $r) {
+            array_push($rolesId, Hashids::decode($r)[0]);
+        }
 
         $settings = [
             'THEME.CODEBASE' => $request['theme'],
             'PREFS.DATE_FORMAT' => $request['dateFormat'],
             'PREFS.TIME_FORMAT' => $request['timeFormat'],
         ];
+        
+        if (array_key_exists('img_path', $request)) {
+            $image = $request['img_path'];
+            $filename = time().".".$image->getClientOriginalExtension();
+
+            $file = $image->storePubliclyAs('usr', $filename, 'public');
+            $profile['img_path'] = $file;
+        }
         
         $user = $this->userService->update(
             $userId,
@@ -155,7 +184,9 @@ class EmployeeController extends BaseController
 
     public function delete($id)
     {
-        $result = $this->employeeService->delete($id);
+        $userId = Auth::id();
+        
+        $result = $this->employeeService->delete($userId, $id);
 
         return is_null($result) ? response()->error():response()->success();
     }

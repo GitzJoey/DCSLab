@@ -385,13 +385,14 @@
             }
         }
         ,
-        "karyawan": {
+        "employee": {
             "table": {
                 "title": "Daftar Karyawan",
                 "cols": {
                     "company": "Perusahaan",
                     "name": "Nama",
-                    "remarks": "Keterangan"
+                    "remarks": "Keterangan",
+                    "status": "Status"
                 }
             },
             "actions": {

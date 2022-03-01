@@ -389,7 +389,8 @@
                 "cols": {
                     "company": "Company",
                     "name": "Name",
-                    "remarks": "Remarks"
+                    "remarks": "Remarks",
+                    "status": "Status"
                 }
             },
             "actions": {

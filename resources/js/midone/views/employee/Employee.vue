@@ -8,7 +8,7 @@
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.name') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.remarks') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.user.table.cols.status') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
                     </thead>
@@ -18,8 +18,8 @@
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>{{ item.remarks }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.profile.status === 1" />
-                                    <XIcon v-if="item.profile.status === 0" />
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -38,24 +38,21 @@
                                 </td>
                             </tr>
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
+                                {{item}}
                                 <td colspan="6">
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.company_id') }}</div>
-                                        <div class="flex-1">{{ item.company.name }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.name') }}</div>
-                                        <div class="flex-1">{{ item.name }}</div>
+                                        <div class="flex-1">{{ item.user.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.remarks') }}</div>
                                         <div class="flex-1">{{ item.remarks }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -140,8 +137,8 @@
                     </div>
                     <!-- country -->
                     <div class="mb-3">
-                        <label for="inputCountry" class="form-label">{{ t('views.user.fields.country') }}</label>
-                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="employee.user.profile.country" rules="required" :placeholder="t('views.user.fields.country')" :label="t('views.user.fields.country')" @blur="reValidate(errors)">
+                        <label for="inputCountry" class="form-label">{{ t('views.employee.fields.country') }}</label>
+                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="employee.user.profile.country" rules="required" :placeholder="t('views.employee.fields.country')" :label="t('views.employee.fields.country')" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in countriesDDL" :key="c.name" :value="c.code">{{ c.name }}</option>
                         </VeeField>
@@ -166,8 +163,8 @@
                     </div>
                     <!-- status -->
                     <div class="mb-3">
-                        <label for="inputStatus" class="form-label">{{ t('views.user.fields.status') }}</label>
-                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.user.profile.status" rules="required" :label="t('views.user.fields.status')">
+                        <label for="inputStatus" class="form-label">{{ t('views.employee.fields.status') }}</label>
+                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.user.profile.status" rules="required" :label="t('views.employee.fields.status')">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
@@ -220,11 +217,16 @@ const expandDetail = ref(null);
 const employeeList = ref({});
 const employee = ref({
     user: {
+        company: { 
+            hId: '',
+            name: '' 
+        },
         hId: '',
         name: '',
         email: '',
         profile: {
             hId: '',
+            img_path: '',
             address: '',
             city: '',
             postal_code: '',
@@ -333,15 +335,16 @@ function reValidate(errors) {
 function emptyEmployee() {
     return {
         company: { 
-        hId: '',
-        name: '' 
-    },
+            hId: '',
+            name: '' 
+        },
         user: {
             hId: '',
             name: '',
             email: '',
             profile: {
                 hId: '',
+                img_path: '',
                 address: '',
                 city: '',
                 postal_code: '',
@@ -361,7 +364,7 @@ function resetAlertErrors() {
 
 function createNew() {
     mode.value = 'create';
-    // employee.value = emptyEmployee();
+    employee.value = emptyEmployee();
 
     // employee.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
@@ -407,12 +410,31 @@ function toggleDetail(idx) {
     }
 }
 
-function generateCode() {
-    if (employee.value.code === '[AUTO]') employee.value.code = '';
-    else  employee.value.code = '[AUTO]'
+function handleUpload(e) {
+    const files = e.target.files;
+
+    let filename = files[0].name;
+
+    const fileReader = new FileReader()
+    fileReader.addEventListener('load', () => {
+        employee.value.user.profile.img_path = fileReader.result
+    })
+    fileReader.readAsDataURL(files[0])
 }
 
 // Computed
+const retrieveImage = computed(() => {
+    if (employee.value.user.profile.img_path && employee.value.user.profile.img_path !== '') {
+        if (employee.value.user.profile.img_path.includes('data:image')) {
+            return employee.value.user.profile.img_path;
+        } else {
+            return '/storage/' + employee.value.user.profile.img_path;
+        }
+    } else {
+        return '/images/def-user.png';
+    }
+});
+
 // Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
