@@ -3,6 +3,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import SideMenu from "../layouts/side-menu/Main.vue";
 
 import MainDashboard from "@/views/dashboard/MainDashboard.vue";
+import Profile from '@/views/dashboard/Profile.vue';
+import Inbox from '@/views/dashboard/Inbox.vue';
+import Activity from '@/views/dashboard/Activity.vue';
 
 const root = '/dashboard';
 

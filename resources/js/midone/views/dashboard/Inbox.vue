@@ -111,11 +111,12 @@
 // Vue Import
 import { inject, onMounted, ref } from "vue";
 // Helper Import
-import axios from '../../axios';
-import mainMixins from '../../mixins';
+import axios from "@/axios";
+import { useI18n } from "vue-i18n";
+import { assetPath } from "@/mixins";
 
 // Mixins
-const { t, route, assetPath } = mainMixins();
+const { t } = useI18n();
 
 // Data - UI
 const mode = ref('list');
@@ -131,9 +132,6 @@ const message = ref({
 
 // onMounted
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-
     getMessages('inbox');
 });
 

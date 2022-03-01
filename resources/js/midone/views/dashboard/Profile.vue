@@ -241,22 +241,21 @@
 // Vue Import
 import { computed, inject, onMounted, ref } from "vue";
 // Helper Import
-import axios from '../../axios';
-import mainMixins from '../../mixins';
-import { helper } from '../../utils/helper';
+import axios from "@/axios";
+import { useI18n } from "vue-i18n";
+import { assetPath } from "@/mixins";
+import { helper } from "@/utils/helper";
 // Core Components Import
-import { useStore } from "../../store";
+import { useUserContextStore } from "@/stores/user-context";
 // Components Import
-import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+import AlertPlaceholder from '@/global-components/alert-placeholder/Main'
 
-// Declarations
-const store = useStore();
-
-// Mixins
-const { t, assetPath, isEmptyObject, route } = mainMixins();
+//Declarations
+const { t } = useI18n();
 
 // Data - VueX
-const userContext = computed(() => store.state.main.userContext );
+const userContextStore = useUserContextStore();
+const userContext = computed(() => userContextStore.userContext );
 
 // Data - UI
 const alertErrors = ref({});

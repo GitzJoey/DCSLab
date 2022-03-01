@@ -29,8 +29,7 @@
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, toRef, ref, watch } from 'vue'
-import mainMixins from '../../mixins';
+import { toRef } from "vue";
 
 const props = defineProps({
     alertType: { type: String, default: 'danger' },
@@ -38,7 +37,9 @@ const props = defineProps({
     title: { type: String }
 });
 
-const { isEmptyObject } = mainMixins();
+function isEmptyObject(obj) {
+    return _.isEmpty(obj);
+}
 
 const messages = toRef(props, 'messages');
 

@@ -1,4 +1,4 @@
-import { createI18n } from "vue-i18n"
+import { createI18n, useI18n } from "vue-i18n"
 import * as en from "./en.json"
 import * as id from "./id.json"
 

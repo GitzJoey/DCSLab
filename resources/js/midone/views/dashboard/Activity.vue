@@ -65,17 +65,15 @@
 
 <script setup>
 import { inject, onMounted, ref } from "vue";
-import axios from '../../axios';
-import mainMixins from '../../mixins';
+import axios from "@/axios";
+import { useI18n } from "vue-i18n";
+import { assetPath } from "@/mixins";
 
-const { t, route, isEmptyObject } = mainMixins();
+const { t } = useI18n();
 
 const activity = ref({});
 
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-
     getActivity();
 });
 
