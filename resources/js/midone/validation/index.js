@@ -6,9 +6,9 @@ import {
 } from "vee-validate";
 import allRules from "@vee-validate/rules";
 
-import { localize, setLocale } from '@vee-validate/i18n';
-import en from '@vee-validate/i18n/dist/locale/en.json';
-import id from '@vee-validate/i18n/dist/locale/id.json';
+import { localize, setLocale } from "@vee-validate/i18n";
+import en from "@vee-validate/i18n/dist/locale/en.json";
+import id from "@vee-validate/i18n/dist/locale/id.json";
 
 import { getLang } from '../lang';
 

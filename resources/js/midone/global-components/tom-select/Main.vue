@@ -1,8 +1,5 @@
 <template>
-  <select
-    v-select-directive="{ props, emit, computedOptions }"
-    class="tom-select"
-  >
+  <select v-select-directive="{ props, emit, computedOptions }" class="tom-select">
     <slot></slot>
   </select>
 </template>
