@@ -22,13 +22,31 @@ const routes = [
                     middleware: ['canUserAccess'], 
                     remember: false 
                 }
-            }
+            },
+            {
+                path: root + '/profile',
+                name: 'side-menu-dashboard-profile',
+                component: Profile,
+                meta: { remember: true }
+            },
+            {
+                path: root + '/inbox',
+                name: 'side-menu-dashboard-inbox',
+                component: Inbox,
+                meta: { remember: true }
+            },
+            {
+                path: root + '/activity',
+                name: 'side-menu-dashboard-activity',
+                component: Activity,
+                meta: { remember: true }
+            },
         ]
     },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     return savedPosition || { left: 0, top: 0 };
