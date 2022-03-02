@@ -54,26 +54,26 @@
             </div>
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" v-if="!dataNotFound">
                 <ul class="pagination">
-                    <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: first, pageSize: pageSize, search: search })">
+                    <li class="page-item">
+                        <a class="page-link" href="" @click.prevent="$emit('dataListChange', { page: first, pageSize: pageSize, search: search })">
                             <ChevronsLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
-                    <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: previous, pageSize: pageSize, search: search })">
+                    <li class="page-item">
+                        <a class="page-link" href="" @click.prevent="$emit('dataListChange', { page: previous, pageSize: pageSize, search: search })">
                             <ChevronLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
-                    <li v-for="(n, nIdx) in pages">
-                        <a :class="{'pagination__link':true, 'pagination__link--active': data.current_page === n}" href="" @click.prevent="$emit('dataListChange', { page: n, pageSize: pageSize, search: search })">{{ n }}</a>
+                    <li v-for="(n, nIdx) in pages" class="page-item">
+                        <a :class="{'page-link':true, 'active': data.current_page === n}" href="" @click.prevent="$emit('dataListChange', { page: n, pageSize: pageSize, search: search })">{{ n }}</a>
                     </li>
-                    <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: next, pageSize: pageSize, search: search })">
+                    <li class="page-item">
+                        <a class="page-link" href="" @click.prevent="$emit('dataListChange', { page: next, pageSize: pageSize, search: search })">
                             <ChevronRightIcon class="w-4 h-4" />
                         </a>
                     </li>
-                    <li>
-                        <a class="pagination__link" href="" @click.prevent="$emit('dataListChange', { page: last, pageSize: pageSize, search: search })">
+                    <li class="page-item">
+                        <a class="page-link" href="" @click.prevent="$emit('dataListChange', { page: last, pageSize: pageSize, search: search })">
                             <ChevronsRightIcon class="w-4 h-4" />
                         </a>
                     </li>
