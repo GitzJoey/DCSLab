@@ -140,12 +140,13 @@ class EmployeeServiceImpl implements EmployeeService
         try {
             $employee = Employee::find($id);
 
-            if ($employee) {
-                $usr = User::find($userId);
-                $usr->employees()->detach([$employee->id]);
+            $retval = $employee->delete();
+            // if ($employee) {
+            //     $usr = User::find($userId);
+            //     $usr->employees()->detach([$employee->id]);
 
-                $retval = $employee->delete();
-            }
+            //     $retval = $employee->delete();
+            // }
 
             DB::commit();
 

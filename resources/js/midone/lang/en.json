@@ -389,7 +389,7 @@
                 "cols": {
                     "company": "Company",
                     "name": "Name",
-                    "remarks": "Remarks",
+                    "email": "Email",
                     "status": "Status"
                 }
             },

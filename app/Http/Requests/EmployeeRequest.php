@@ -41,7 +41,7 @@ class EmployeeRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', 'bail'],
                     'name' => 'required',
-                    'email' => 'required|email|max:255|unique:users',
+                    'email' => 'required|email|max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required',
@@ -52,7 +52,7 @@ class EmployeeRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
                     'name' => 'required',
-                    'email' => 'required|email|max:255|unique:users',
+                    'email' => 'required|email|max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required',

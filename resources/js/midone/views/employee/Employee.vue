@@ -7,7 +7,7 @@
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.remarks') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.email') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
@@ -15,11 +15,11 @@
                     <tbody>
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
-                                <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
-                                <td>{{ item.remarks }}</td>
+                                <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.user.name }}</a></td>
+                                <td>{{ item.user.email }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status === 1" />
-                                    <XIcon v-if="item.status === 0" />
+                                    <CheckCircleIcon v-if="item.user.profile.status === 1" />
+                                    <XIcon v-if="item.user.profile.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -46,13 +46,13 @@
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.remarks') }}</div>
-                                        <div class="flex-1">{{ item.remarks }}</div>
+                                        <div class="flex-1">{{ item.user.email }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.user.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.user.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -96,13 +96,13 @@
                     <!-- name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.employee.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.employee.fields.name')" :label="t('views.employee.fields.name')" rules="required" @blur="reValidate(errors)" v-model="employee.name" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.employee.fields.name')" :label="t('views.employee.fields.name')" rules="required" @blur="reValidate(errors)" v-model="employee.user.name" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
                     <!-- email -->
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">{{ t('views.employee.fields.email') }}</label>
-                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.employee.fields.email')" :label="t('views.employee.fields.email')" @blur="reValidate(errors)" v-model="employee.email" :readonly="mode === 'edit'" />
+                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.employee.fields.email')" :label="t('views.employee.fields.email')" @blur="reValidate(errors)" v-model="employee.user.email" :readonly="mode === 'edit'" />
                         <ErrorMessage name="email" class="text-theme-21" />
                     </div>
                     <!-- input img -->
@@ -247,7 +247,7 @@ onMounted(() => {
     setDashboardLayout(false);
   
     if (selectedUserCompany.value !== '') {
-        getAllEmployees({ page: 1 });
+        getAllEmployee({ page: 1 });
     } else  {
         
     }
@@ -258,7 +258,7 @@ onMounted(() => {
 });
 
 // Methods
-function getAllEmployees(args) {
+function getAllEmployee(args) {
     employeeList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -370,7 +370,7 @@ function createNew() {
 }
 
 function onDataListChange({page, pageSize, search}) {
-    getAllEmployees({page, pageSize, search});
+    getAllEmployee({page, pageSize, search});
 }
 
 function editSelected(index) {
@@ -399,7 +399,7 @@ function showSelected(index) {
 function backToList() {
     resetAlertErrors();
     mode.value = 'list';
-    getAllEmployees({ page: employeeList.value.current_page, pageSize: employeeList.value.per_page });
+    getAllEmployee({ page: employeeList.value.current_page, pageSize: employeeList.value.per_page });
 }
 
 function toggleDetail(idx) {
@@ -438,7 +438,7 @@ const retrieveImage = computed(() => {
 // Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
-        getAllEmployees({ page: 1 });
+        getAllEmployee({ page: 1 });
     }
 });
 </script>

@@ -391,7 +391,7 @@
                 "cols": {
                     "company": "Perusahaan",
                     "name": "Nama",
-                    "remarks": "Keterangan",
+                    "email": "Email",
                     "status": "Status"
                 }
             },
