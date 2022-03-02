@@ -48,8 +48,8 @@
                                 <div class="p-5">
                                     <div class="mb-3">
                                         <label class="form-label" for="name">{{ t('views.profile.fields.name') }}</label>
-                                        <VeeField as="text" :class="{'form-control':true, 'border-theme-21':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" rules="required" v-model="userContext.name" />
-                                        <ErrorMessage name="name" class="text-theme-21" />
+                                        <VeeField as="text" :class="{'form-control':true, 'border-danger':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" rules="required" v-model="userContext.name" />
+                                        <ErrorMessage name="name" class="text-danger" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="email">{{ t('views.profile.fields.email') }}</label>
@@ -96,13 +96,13 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
-                                        <VeeField as="text" :class="{'form-control':true, 'border-theme-21':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" rules="required" v-model="userContext.profile.tax_id" />
-                                        <ErrorMessage name="tax_id" class="text-theme-21" />
+                                        <VeeField as="text" :class="{'form-control':true, 'border-danger':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" rules="required" v-model="userContext.profile.tax_id" />
+                                        <ErrorMessage name="tax_id" class="text-danger" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
-                                        <VeeField as="text" :class="{'form-control':true, 'border-theme-21':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" rules="required" v-model="userContext.profile.ic_num" />
-                                        <ErrorMessage name="ic_num" class="text-theme-21" />
+                                        <VeeField as="text" :class="{'form-control':true, 'border-danger':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" rules="required" v-model="userContext.profile.ic_num" />
+                                        <ErrorMessage name="ic_num" class="text-danger" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="remarks">{{ t('views.profile.fields.remarks') }}</label>
@@ -210,17 +210,17 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="current_pwd">{{ t('views.profile.fields.change_password.current_password') }}</label>
                                     <VeeField id="current_pwd" v-bind="field" name="current_password" as="text" type="password" class="form-control" :label="t('views.profile.fields.change_password.current_password')" rules="required" />
-                                    <ErrorMessage name="current_password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                    <ErrorMessage name="current_password" class="text-danger sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="new_pwd">{{ t('views.profile.fields.change_password.new_password') }}</label>
                                     <VeeField id="new_pwd" name="password" as="text" type="password" class="form-control" :label="t('views.profile.fields.change_password.new_password')" rules="required" />
-                                    <ErrorMessage name="password" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                    <ErrorMessage name="password" class="text-danger sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" for="confirm_pwd">{{ t('views.profile.fields.change_password.confirm_password') }}</label>
                                     <VeeField id="confirm_pwd" name="password_confirmation" as="text" type="password" class="form-control" :label="t('views.profile.fields.change_password.confirm_password')" rules="required" />
-                                    <ErrorMessage name="password_confirmation" class="text-theme-21 sm:ml-40 sm:pl-5 mt-2" />
+                                    <ErrorMessage name="password_confirmation" class="text-danger sm:ml-40 sm:pl-5 mt-2" />
                                 </div>
                             </div>
                             <div class="pl-5">

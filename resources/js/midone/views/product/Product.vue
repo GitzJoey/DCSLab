@@ -33,7 +33,7 @@
                                             <CheckSquareIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.edit') }}
                                         </a>
-                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                        <a class="flex items-center text-danger" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
                                             <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                         </a>
                                     </div>
@@ -153,10 +153,10 @@
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.product.fields.code')" :label="t('views.product.fields.code')" rules="required" @blur="reValidate(errors)" v-model="product.code" :readonly="product.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.product.fields.code')" :label="t('views.product.fields.code')" rules="required" @blur="reValidate(errors)" v-model="product.code" :readonly="product.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
-                        <ErrorMessage name="code" class="text-theme-21" />
+                        <ErrorMessage name="code" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
@@ -164,28 +164,28 @@
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="g.hId" v-for="g in productGroupDDL" v-bind:key="g.hId">{{ g.code }} - {{ g.name }}</option>
                         </select>
-                        <ErrorMessage name="product_group_id" class="text-theme-21" />
+                        <ErrorMessage name="product_group_id" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="brand_id">{{ t('views.product.fields.brand_id') }}</label>
-                        <VeeField as="select" id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-theme-21': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" rules="required" @blur="reValidate(errors)">
+                        <VeeField as="select" id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-danger': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="b.hId" v-for="b in brandDDL" v-bind:key="b.hId">{{ b.code }} - {{ b.name }}</option>
                         </VeeField>
-                        <ErrorMessage name="brand_id" class="text-theme-21" />
+                        <ErrorMessage name="brand_id" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.product.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product.name" />
-                        <ErrorMessage name="name" class="text-theme-21" />
+                        <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product.name" />
+                        <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
-                        <VeeField as="select" id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-theme-21': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" rules="required" @blur="reValidate(errors)">
+                        <VeeField as="select" id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-danger': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ t(pt.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="product_type" class="text-theme-21" />
+                        <ErrorMessage name="product_type" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputTaxableSupply" class="form-label">{{ t('views.product.fields.taxable_supply') }}</label>
@@ -195,8 +195,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputStandardRatedSupply" class="form-label">{{ t('views.product.fields.standard_rated_supply') }}</label>
-                        <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" as="text" :class="{'form-control':true, 'border-theme-21': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
-                        <ErrorMessage name="standard_rated_supply" class="text-theme-21" />
+                        <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" as="text" :class="{'form-control':true, 'border-danger': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
+                        <ErrorMessage name="standard_rated_supply" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputUnit" class="form-label">{{ t('views.product.fields.units.title') }}</label>
@@ -212,24 +212,24 @@
                             <div class="col-span-2">
                                 <input type="hidden" :name="'product_units_hId[' + puIdx + ']'" v-model="pu.hId" />
                                 <div class="flex items-center">
-                                    <VeeField as="text" :class="{'form-control': true, 'border-theme-21':errors['product_units_code[' + puIdx + ']']|errors['product_units_code.' + puIdx]}" v-model="pu.code" id="product_units_code" :name="'product_units_code[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.code') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" :readonly="mode === 'create' && pu.code === '[AUTO]'" />
+                                    <VeeField as="text" :class="{'form-control': true, 'border-danger':errors['product_units_code[' + puIdx + ']']|errors['product_units_code.' + puIdx]}" v-model="pu.code" id="product_units_code" :name="'product_units_code[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.code') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" :readonly="mode === 'create' && pu.code === '[AUTO]'" />
                                     <button type="button" class="btn btn-secondary mx-1" @click="generateCodeUnit(puIdx)" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                                 </div>
-                                <ErrorMessage :name="'product_units_code[' + puIdx + ']'" class="text-theme-21" />
-                                <ErrorMessage :name="'product_units_code.' + puIdx" class="text-theme-21" />
+                                <ErrorMessage :name="'product_units_code[' + puIdx + ']'" class="text-danger" />
+                                <ErrorMessage :name="'product_units_code.' + puIdx" class="text-danger" />
                             </div>
                             <div class="col-span-2">
-                                <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['unit_id[' + puIdx + ']']|errors['unit_id.' + puIdx]}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['unit_id[' + puIdx + ']']|errors['unit_id.' + puIdx]}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.description }}</option>
                                 </VeeField>
-                                <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-theme-21" />
-                                <ErrorMessage :name="'unit_id.' + puIdx" class="text-theme-21" />
+                                <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-danger" />
+                                <ErrorMessage :name="'unit_id.' + puIdx" class="text-danger" />
                             </div>
                             <div class="col-span-2">
-                                <VeeField as="text" :class="{'form-control text-right':true, 'border-theme-21':errors['conv_value[' + puIdx +']']|errors['conv_value.' + puIdx]}" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
-                                <ErrorMessage :name="'conv_value[' + puIdx +']'" class="text-theme-21" />
-                                <ErrorMessage :name="'conv_value.' + puIdx" class="text-theme-21" />
+                                <VeeField as="text" :class="{'form-control text-right':true, 'border-danger':errors['conv_value[' + puIdx +']']|errors['conv_value.' + puIdx]}" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
+                                <ErrorMessage :name="'conv_value[' + puIdx +']'" class="text-danger" />
+                                <ErrorMessage :name="'conv_value.' + puIdx" class="text-danger" />
                             </div>
                             <div class="flex items-center justify-center">
                                 <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" :true-value="1" :false-value="0" @click="changeIsBase(puIdx)"> 
@@ -247,8 +247,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
-                        <VeeField id="inputPoint" name="point" as="text" :class="{'form-control':true, 'border-theme-21': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric|max_value:1000" v-model="product.point" />
-                        <ErrorMessage name="point" class="text-theme-21" />
+                        <VeeField id="inputPoint" name="point" as="text" :class="{'form-control':true, 'border-danger': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric|max_value:1000" v-model="product.point" />
+                        <ErrorMessage name="point" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputUseSerialNumber" class="form-label">{{ t('views.product.fields.use_serial_number') }}</label>
@@ -270,11 +270,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.product.fields.status') }}</label>
-                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="product.status" rules="required" @blur="reValidate(errors)">
+                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="product.status" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="status" class="text-theme-21" />
+                        <ErrorMessage name="status" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.product.fields.remarks') }}</label>

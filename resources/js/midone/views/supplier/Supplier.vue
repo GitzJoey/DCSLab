@@ -33,7 +33,7 @@
                                             <CheckSquareIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.edit') }}
                                         </a>
-                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                        <a class="flex items-center text-danger" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
                                             <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                         </a>
                                     </div>
@@ -108,7 +108,7 @@
                         <div class="modal-content">
                             <div class="modal-body p-0">
                                 <div class="p-5 text-center">
-                                    <XCircleIcon class="w-16 h-16 text-theme-21 mx-auto mt-3" />
+                                    <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
                                     <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
                                     <div class="text-gray-600 mt-2">
                                         {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
@@ -137,10 +137,10 @@
             <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="nav nav-tabs flex-col sm:flex-row bg-gray-300 dark:bg-dark-2 text-gray-600" role="tablist">
                     <Tippy id="supplier-tab" tag="a" :content="t('views.supplier.tabs.supplier')" data-toggle="tab" data-target="#supplier" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center active" role="tab" aria-controls="supplier" aria-selected="true">
-                        <span :class="{'text-theme-21':errors['code']||errors['name']|errors['payment_term_type']|errors['status']}">{{ t('views.supplier.tabs.supplier') }}</span>
+                        <span :class="{'text-danger':errors['code']||errors['name']|errors['payment_term_type']|errors['status']}">{{ t('views.supplier.tabs.supplier') }}</span>
                     </Tippy>
                     <Tippy id="poc-tab" tag="a" :content="t('views.supplier.tabs.poc')" data-toggle="tab" data-target="#poc" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="poc" aria-selected="false">
-                        <span :class="{'text-theme-21':errors['poc_name']||errors['email']}">{{ t('views.supplier.tabs.poc') }}</span>
+                        <span :class="{'text-danger':errors['poc_name']||errors['email']}">{{ t('views.supplier.tabs.poc') }}</span>
                     </Tippy>
                     <Tippy id="products-tab" tag="a" :content="t('views.supplier.tabs.products')" data-toggle="tab" data-target="#products" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="products" aria-selected="false">
                         {{ t('views.supplier.tabs.products') }}
@@ -151,15 +151,15 @@
                         <div class="mb-3">
                             <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
                             <div class="flex items-center">
-                                <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
+                                <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
                                 <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                             </div>
-                            <ErrorMessage name="code" class="text-theme-21" />
+                            <ErrorMessage name="code" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
-                            <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.name" />
-                            <ErrorMessage name="name" class="text-theme-21" />
+                            <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.name" />
+                            <ErrorMessage name="name" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
@@ -181,31 +181,31 @@
                         </div>
                         <div class="mb-3">
                             <label for="inputTaxId" class="form-label">{{ t('views.supplier.fields.tax_id') }}</label>
-                            <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" rules="required" :placeholder="t('views.supplier.fields.tax_id')" :label="t('views.supplier.fields.tax_id')" @blur="reValidate(errors)" v-model="supplier.tax_id" />
-                            <ErrorMessage name="tax_id" class="text-theme-21" />
+                            <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.supplier.fields.tax_id')" :label="t('views.supplier.fields.tax_id')" @blur="reValidate(errors)" v-model="supplier.tax_id" />
+                            <ErrorMessage name="tax_id" class="text-danger" />
                         </div>                        
                         <div class="mb-3">
                             <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
-                            <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
+                            <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
                                 <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                 <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                             </VeeField>
-                            <ErrorMessage name="payment_term_type" class="text-theme-21" />
+                            <ErrorMessage name="payment_term_type" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
                             <div class="mt-2">
                                 <VeeField id="inputPaymentTerm" as="text" rules="required|numeric|max:365" class="form-control" name="payment_term" v-model="supplier.payment_term" />
-                                <ErrorMessage name="payment_term_type" class="text-theme-21" />
+                                <ErrorMessage name="payment_term_type" class="text-danger" />
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
-                            <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['status']}" id="inputStatus" name="status" :label="t('views.supplier.fields.status')" rules="required" @blur="reValidate(errors)" v-model="supplier.status">
+                            <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['status']}" id="inputStatus" name="status" :label="t('views.supplier.fields.status')" rules="required" @blur="reValidate(errors)" v-model="supplier.status">
                                 <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                 <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                             </VeeField>
-                            <ErrorMessage name="status" class="text-theme-21" />
+                            <ErrorMessage name="status" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
@@ -215,13 +215,13 @@
                     <div id="poc" class="tab-pane p-5" role="tabpanel" aria-labelledby="poc-tab">
                         <div class="mb-3">
                             <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
-                            <VeeField id="inputPOCName" name="poc_name" as="text" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
-                            <ErrorMessage name="poc_name" class="text-theme-21" />
+                            <VeeField id="inputPOCName" name="poc_name" as="text" :class="{'form-control':true, 'border-danger': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
+                            <ErrorMessage name="poc_name" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
-                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
-                            <ErrorMessage name="email" class="text-theme-21" />
+                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
+                            <ErrorMessage name="email" class="text-danger" />
                         </div>
                     </div>
                     <div id="products" class="tab-pane p-5" role="tabpanel" aria-labelledby="products-tab">

@@ -35,7 +35,7 @@
                                             <CheckSquareIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.edit') }}
                                         </a>
-                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                        <a class="flex items-center text-danger" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
                                             <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                         </a>
                                     </div>
@@ -72,7 +72,7 @@
                         <div class="modal-content">
                             <div class="modal-body p-0">
                                 <div class="p-5 text-center">
-                                    <XCircleIcon class="w-16 h-16 text-theme-21 mx-auto mt-3" />
+                                    <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
                                     <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
                                     <div class="text-gray-600 mt-2">
                                         {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
@@ -102,13 +102,13 @@
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.user.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" rules="required|alpha" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
-                        <ErrorMessage name="name" class="text-theme-21" />
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" rules="required|alpha" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
+                        <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">{{ t('views.user.fields.email') }}</label>
-                        <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.user.fields.email')" :label="t('views.user.fields.email')" @blur="reValidate(errors)" v-model="user.email" :readonly="mode === 'edit'" />
-                        <ErrorMessage name="email" class="text-theme-21" />
+                        <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" rules="required|email" :placeholder="t('views.user.fields.email')" :label="t('views.user.fields.email')" @blur="reValidate(errors)" v-model="user.email" :readonly="mode === 'edit'" />
+                        <ErrorMessage name="email" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputImg" class="form-label">{{ t('views.user.fields.picture') }}</label>
@@ -143,28 +143,28 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputCountry" class="form-label">{{ t('views.user.fields.country') }}</label>
-                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="user.profile.country" rules="required" :placeholder="t('views.user.fields.country')" :label="t('views.user.fields.country')" @blur="reValidate(errors)">
+                        <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-danger': errors['country']}" v-model="user.profile.country" rules="required" :placeholder="t('views.user.fields.country')" :label="t('views.user.fields.country')" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
                         </VeeField>
-                        <ErrorMessage name="country" class="text-theme-21" />
+                        <ErrorMessage name="country" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputTaxId" class="form-label">{{ t('views.user.fields.tax_id') }}</label>
-                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" rules="required" :placeholder="t('views.user.fields.tax_id')" :label="t('views.user.fields.tax_id')" @blur="reValidate(errors)" v-model="user.profile.tax_id" />
-                        <ErrorMessage name="tax_id" class="text-theme-21" />
+                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.user.fields.tax_id')" :label="t('views.user.fields.tax_id')" @blur="reValidate(errors)" v-model="user.profile.tax_id" />
+                        <ErrorMessage name="tax_id" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputICNum" class="form-label">{{ t('views.user.fields.ic_num') }}</label>
-                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" rules="required" :placeholder="t('views.user.fields.ic_num')" :label="t('views.user.fields.ic_num')" @blur="reValidate(errors)" v-model="user.profile.ic_num" />
-                        <ErrorMessage name="ic_num" class="text-theme-21" />
+                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-danger': errors['ic_num']}" rules="required" :placeholder="t('views.user.fields.ic_num')" :label="t('views.user.fields.ic_num')" @blur="reValidate(errors)" v-model="user.profile.ic_num" />
+                        <ErrorMessage name="ic_num" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputRoles" class="form-label">{{ t('views.user.fields.roles') }}</label>
-                        <VeeField as="select" multiple v-slot="{ value }" :class="{'form-control':true, 'border-theme-21':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selected_roles" rules="required" :label="t('views.user.fields.roles')" @blur="reValidate(errors)">
+                        <VeeField as="select" multiple v-slot="{ value }" :class="{'form-control':true, 'border-danger':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selected_roles" rules="required" :label="t('views.user.fields.roles')" @blur="reValidate(errors)">
                             <option v-for="r in rolesDDL" :key="r.hId" :value="r.hId" :selected="r.hId == value">{{ r.display_name }}</option>
                         </VeeField>
-                        <ErrorMessage name="roles[]" class="text-theme-21" />
+                        <ErrorMessage name="roles[]" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.user.fields.status') }}</label>
@@ -172,7 +172,7 @@
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="status" class="text-theme-21" />
+                        <ErrorMessage name="status" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.user.fields.remarks') }}</label>

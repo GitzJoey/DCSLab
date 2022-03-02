@@ -46,28 +46,28 @@
                                     <VeeField name="invoice_date" v-slot="{ field }" rules="required" :label="t('views.purchase_order.fields.invoice_date')">
                                         <Litepicker v-model="po.invoice_date" class="form-control" v-bind="field" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, }" />
                                     </VeeField>
-                                    <ErrorMessage name="invoice_date" class="text-theme-21" />
+                                    <ErrorMessage name="invoice_date" class="text-danger" />
                                 </div>
                             </div>
                         </div>
                         <div class="intro-y py-3" v-if="tabs.includes('supplier')">
                             <div class="box p-5">
                                 <label for="selectSupplier" class="form-label">{{ t('views.purchase_order.fields.supplier') }}</label>
-                                <VeeField as="select" id="selectSupplier" name="supplier" :class="{'form-control form-select':true, 'border-theme-21': errors['supplier']}" v-model="po.supplier.hId" rules="required" @blur="reValidate(errors)">
+                                <VeeField as="select" id="selectSupplier" name="supplier" :class="{'form-control form-select':true, 'border-danger': errors['supplier']}" v-model="po.supplier.hId" rules="required" @blur="reValidate(errors)">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option v-for="s in supplierDDL" :value="s.hId">{{ s.code }} - {{ s.name }}</option>
                                 </VeeField>
-                                <ErrorMessage name="supplier" class="text-theme-21" />
+                                <ErrorMessage name="supplier" class="text-danger" />
                             </div>
                         </div>
                         <div class="intro-y py-3" v-if="tabs.includes('warehouse')">
                             <div class="box p-5">
                                 <label for="selectWarehouse" class="form-label">{{ t('views.purchase_order.fields.warehouse') }}</label>
-                                <VeeField as="select" id="selectWarehouse" name="warehouse" :class="{'form-control form-select':true, 'border-theme-21': errors['warehouse']}" v-model="po.warehouse.hId" rules="required" @blur="reValidate(errors)">
+                                <VeeField as="select" id="selectWarehouse" name="warehouse" :class="{'form-control form-select':true, 'border-danger': errors['warehouse']}" v-model="po.warehouse.hId" rules="required" @blur="reValidate(errors)">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option v-for="w in warehouseDDL" :value="w.hId">{{ s.code }} - {{ s.name }}</option>
                                 </VeeField>
-                                <ErrorMessage name="warehouse" class="text-theme-21" />
+                                <ErrorMessage name="warehouse" class="text-danger" />
                             </div>
                         </div>
                         <div class="intro-y" v-if="tabs.includes('products')">
@@ -245,7 +245,7 @@
                                     </div>
                                     <div class="flex mt-4">
                                         <div class="mr-auto">Discount</div>
-                                        <div class="font-medium text-theme-21">-$20</div>
+                                        <div class="font-medium text-danger">-$20</div>
                                     </div>
                                     <div class="flex mt-4">
                                         <div class="mr-auto">Tax</div>

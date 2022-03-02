@@ -36,7 +36,7 @@
                                             <CheckSquareIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.edit') }}
                                         </a>
-                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                        <a class="flex items-center text-danger" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
                                             <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                         </a>
                                     </div>
@@ -80,7 +80,7 @@
                         <div class="modal-content">
                             <div class="modal-body p-0">
                                 <div class="p-5 text-center">
-                                    <XCircleIcon class="w-16 h-16 text-theme-21 mx-auto mt-3" />
+                                    <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
                                     <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
                                     <div class="text-gray-600 mt-2">
                                         {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
@@ -111,15 +111,15 @@
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
                         <div class="flex item-centers">
-                            <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" :readonly="mode === 'create' && company.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" :readonly="mode === 'create' && company.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
-                        <ErrorMessage name="code" class="text-theme-21" />
+                        <ErrorMessage name="code" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" />
-                        <ErrorMessage name="name" class="text-theme-21" />
+                        <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" />
+                        <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
@@ -133,11 +133,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
-                        <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status">
+                        <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="status" class="text-theme-21" />
+                        <ErrorMessage name="status" class="text-danger" />
                     </div>
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
