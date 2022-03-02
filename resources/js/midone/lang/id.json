@@ -354,8 +354,7 @@
                 "remarks": "Keterangan",
                 "status": "Status"
             }
-        }
-        ,
+        },
         "warehouse": {
             "table": {
                 "title": " Daftar Gudang",
@@ -383,8 +382,7 @@
                 "remarks": "Keterangan",
                 "status": "Status"
             }
-        }
-        ,
+        },
         "employee": {
             "table": {
                 "title": "Daftar Karyawan",

@@ -253,7 +253,7 @@ function getAllBranches(args) {
 }
 
 function getDDL() {
-axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
