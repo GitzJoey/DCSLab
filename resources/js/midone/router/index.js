@@ -20,11 +20,11 @@ import Service from "@/views/product/Service.vue";
 import PurchaseOrder from "@/views/purchase_order/PurchaseOrder.vue";
 /* Ext */
 
-import AdminUser from "../views/administrator/User";
+import AdminUser from "@/views/administrator/User";
 
-import DBBackup from "../views/dev/DBBackup";
-import Ex1 from "../views/dev/Ex1";
-import Ex2 from "../views/dev/Ex2";
+import DBBackup from "@/views/dev/DBBackup";
+import Ex1 from "@/views/dev/Ex1";
+import Ex2 from "@/views/dev/Ex2";
 
 const root = '/dashboard';
 

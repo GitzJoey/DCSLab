@@ -168,6 +168,7 @@ onMounted(() => {
   sideMenuStore.fetchMenu();
   
   localeSetup();
+  goToLastRoute();
 });
 
 onUnmounted(() => {
@@ -192,15 +193,11 @@ function localeSetup() {
   }
 }
 
-/*
-
 function goToLastRoute() {
   if (sessionStorage.getItem('DCSLAB_LAST_ROUTE') !== null) {
     router.push({ name: sessionStorage.getItem('DCSLAB_LAST_ROUTE') });
   }
 }
-
-*/
 
 function switchMenu() {
   if (menuMode.value === 'simple') {
