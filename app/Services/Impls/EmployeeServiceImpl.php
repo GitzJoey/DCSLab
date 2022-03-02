@@ -15,13 +15,12 @@ class EmployeeServiceImpl implements EmployeeService
 {
     public function create(
         int $company_id,
-        int $user_id,
+        $user_id
     ): ?Employee
     {
         DB::beginTransaction();
 
         try {
-
             $employee = new Employee();
             $employee->company_id = $company_id;
             $employee->user_id = $user_id;
@@ -49,10 +48,10 @@ class EmployeeServiceImpl implements EmployeeService
         // $usr = User::find($userId);
         // if (!$usr) return null;
         
-        if (!$companyId) return null;
+        // $compIds = $usr->companies()->pluck('company_id');
 
-        $employee = Employee::with('company')
-                    ->whereCompanyId($companyId);
+        // $employee = Employee::with('company')->whereCompanyId($companyId);
+        $employee = Employee::with('company', 'user.profile')->whereCompanyId($companyId);
 
         if (empty($search)) {
             $employee = $employee->latest();
@@ -133,7 +132,7 @@ class EmployeeServiceImpl implements EmployeeService
         }
     }
 
-    public function delete(int $id): bool
+    public function delete(int $userId, int $id): bool
     {
         DB::beginTransaction();
 
@@ -141,9 +140,13 @@ class EmployeeServiceImpl implements EmployeeService
         try {
             $employee = Employee::find($id);
 
-            if ($employee) {
-                $retval = $employee->delete();
-            }
+            $retval = $employee->delete();
+            // if ($employee) {
+            //     $usr = User::find($userId);
+            //     $usr->employees()->detach([$employee->id]);
+
+            //     $retval = $employee->delete();
+            // }
 
             DB::commit();
 
