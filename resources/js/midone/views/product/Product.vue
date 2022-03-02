@@ -189,8 +189,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputTaxableSupply" class="form-label">{{ t('views.product.fields.taxable_supply') }}</label>
-                        <div class="mt-2">
-                            <input id="inputTaxableSupply" type="checkbox" class="form-check-switch" name="taxable_supply" v-model="product.taxable_supply" :true-value="1" :false-value="0">
+                        <div class="form-switch mt-2">
+                            <input id="inputTaxableSupply" type="checkbox" class="form-check-input" name="taxable_supply" v-model="product.taxable_supply" :true-value="1" :false-value="0">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -252,20 +252,20 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputUseSerialNumber" class="form-label">{{ t('views.product.fields.use_serial_number') }}</label>
-                        <div class="mt-2">
-                            <input id="inputUseSerialNumber" type="checkbox" class="form-check-switch" name="use_serial_number" v-model="product.use_serial_number" :true-value="1" :false-value="0">
+                        <div class="form-switch mt-2">
+                            <input id="inputUseSerialNumber" type="checkbox" class="form-check-input" name="use_serial_number" v-model="product.use_serial_number" :true-value="1" :false-value="0">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="inputHasExpiryDate" class="form-label">{{ t('views.product.fields.has_expiry_date') }}</label>
-                        <div class="mt-2">
-                            <input id="inputHasExpiryDate" type="checkbox" class="form-check-switch" name="has_expiry_date" v-model="product.has_expiry_date" :true-value="1" :false-value="0">
+                        <div class="form-switch mt-2">
+                            <input id="inputHasExpiryDate" type="checkbox" class="form-check-input" name="has_expiry_date" v-model="product.has_expiry_date" :true-value="1" :false-value="0">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="inputPriceIncludeVAT" class="form-label">{{ t('views.product.fields.price_include_vat') }}</label>
-                        <div class="mt-2">
-                            <input id="inputPriceIncludeVAT" type="checkbox" class="form-check-switch" name="price_include_vat" v-model="product.price_include_vat" :true-value="1" :false-value="0">
+                        <div class="form-switch mt-2">
+                            <input id="inputPriceIncludeVAT" type="checkbox" class="form-check-input" name="price_include_vat" v-model="product.price_include_vat" :true-value="1" :false-value="0">
                         </div>
                     </div>
                     <div class="mb-3">

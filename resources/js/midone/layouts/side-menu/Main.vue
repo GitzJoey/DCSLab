@@ -210,11 +210,11 @@ function switchMenu() {
 watch(
   computed(() => route.path),
   () => {    
-    formattedMenu.value = nestedMenu($h.toRaw(sideMenu.value), route);
+    formattedMenu.value = $h.toRaw(nestedMenu(sideMenu.value, route));
   }
 );
 watch(
   sideMenu, () => {
-    formattedMenu.value = nestedMenu($h.toRaw(sideMenu.value), route);
+    formattedMenu.value = $h.toRaw(nestedMenu(sideMenu.value, route));
 });
 </script>

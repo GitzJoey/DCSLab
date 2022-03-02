@@ -16,7 +16,7 @@
                 <component :is="menu.icon" />
               </div>
               <div class="menu__title">
-                {{ menu.title }}
+                {{ t(menu.title) }}
                 <div v-if="menu.subMenu" class="menu__sub-icon" :class="{ 'transform rotate-180': menu.activeDropdown }">
                   <ChevronDownIcon />
                 </div>
@@ -30,7 +30,7 @@
                       <ChevronRightIcon />
                     </div>
                     <div class="menu__title">
-                      {{ subMenu.title }}
+                      {{ t(subMenu.title) }}
                       <div v-if="subMenu.subMenu" class="menu__sub-icon" :class="{ 'transform rotate-180': subMenu.activeDropdown, }">
                         <ChevronDownIcon />
                       </div>
@@ -44,7 +44,7 @@
                             <ChevronsRightIcon />
                           </div>
                           <div class="menu__title">
-                            {{ lastSubMenu.title }}
+                            {{ t(lastSubMenu.title) }}
                           </div>
                         </a>
                       </li>
@@ -62,6 +62,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { helper as $h } from "@/utils/helper";
 import { useSideMenuStore } from "@/stores/side-menu";
@@ -74,20 +75,27 @@ import {
 } from "./index";
 import { nestedMenu } from "@/layouts/side-menu";
 
+const { t } = useI18n();
+
 const route = useRoute();
 const router = useRouter();
 const formattedMenu = ref([]);
 const sideMenuStore = useSideMenuStore();
-const mobileMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
+const mobileMenu = computed(() => sideMenuStore.menu );
 
 watch(
   computed(() => route.path),
   () => {
-    formattedMenu.value = $h.toRaw(mobileMenu.value);
+    formattedMenu.value = $h.toRaw(nestedMenu(mobileMenu.value, route));
   }
 );
 
+watch(
+  mobileMenu, () => {
+    formattedMenu.value = $h.toRaw(nestedMenu(mobileMenu.value, route));
+});
+
 onMounted(() => {
-  formattedMenu.value = $h.toRaw(mobileMenu.value);
+
 });
 </script>

@@ -136,13 +136,13 @@
         <div class="loader-container">
             <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="nav nav-tabs flex-col sm:flex-row bg-gray-300 dark:bg-dark-2 text-gray-600" role="tablist">
-                    <Tippy id="supplier-tab" tag="a" :content="t('views.supplier.tabs.supplier')" data-toggle="tab" data-target="#supplier" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center active" role="tab" aria-controls="supplier" aria-selected="true">
+                    <Tippy id="supplier-tab" tag="a" :content="t('views.supplier.tabs.supplier')" data-tw-toggle="tab" data-tw-target="#supplier" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center active" role="tab" aria-controls="supplier" aria-selected="true">
                         <span :class="{'text-danger':errors['code']||errors['name']|errors['payment_term_type']|errors['status']}">{{ t('views.supplier.tabs.supplier') }}</span>
                     </Tippy>
-                    <Tippy id="poc-tab" tag="a" :content="t('views.supplier.tabs.poc')" data-toggle="tab" data-target="#poc" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="poc" aria-selected="false">
+                    <Tippy id="poc-tab" tag="a" :content="t('views.supplier.tabs.poc')" data-tw-toggle="tab" data-tw-target="#poc" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="poc" aria-selected="false">
                         <span :class="{'text-danger':errors['poc_name']||errors['email']}">{{ t('views.supplier.tabs.poc') }}</span>
                     </Tippy>
-                    <Tippy id="products-tab" tag="a" :content="t('views.supplier.tabs.products')" data-toggle="tab" data-target="#products" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="products" aria-selected="false">
+                    <Tippy id="products-tab" tag="a" :content="t('views.supplier.tabs.products')" data-tw-toggle="tab" data-tw-target="#products" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="products" aria-selected="false">
                         {{ t('views.supplier.tabs.products') }}
                     </Tippy>
                 </div>
@@ -175,8 +175,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
-                            <div class="mt-2">
-                                <input id="inputTaxableEnterprise" type="checkbox" class="form-check-switch" name="taxable_enterprise" v-model="supplier.taxable_enterprise" :true-value="1" :false-value="0">
+                            <div class="form-switch mt-2">
+                                <input id="inputTaxableEnterprise" type="checkbox" class="form-check-input" name="taxable_enterprise" v-model="supplier.taxable_enterprise" :true-value="1" :false-value="0">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -238,10 +238,14 @@
                                 <tbody>
                                     <tr v-for="(p, pIdx) in productLists">
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selected_products" :value="p.hId" class="form-check-switch">
+                                            <div class="form-switch">
+                                                <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selected_products" :value="p.hId" class="form-check-input">
+                                            </div>
                                         </td>
                                         <td class="border-b dark:border-dark-5">
-                                            <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.main_products" :value="p.hId" class="form-check-switch">
+                                            <div class="form-switch">
+                                                <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.main_products" :value="p.hId" class="form-check-input">
+                                            </div>
                                         </td>
                                         <td>
                                             {{ p.name }}
@@ -280,7 +284,7 @@ import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 
 // Declarations
-const store = useStore();
+const { t } = useI18n();
 
 // Data - Pinia
 const userContextStore = useUserContextStore();

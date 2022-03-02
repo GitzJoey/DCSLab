@@ -127,8 +127,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
-                        <div class="mt-2">
-                            <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default">
+                        <div class="form-switch mt-2">
+                            <input id="inputDefault" type="checkbox" class="form-check-input" name="default" v-model="company.default">
                         </div>
                     </div>
                     <div class="mb-3">
