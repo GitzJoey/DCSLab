@@ -31,7 +31,7 @@
                 </div>
                 <div class="hidden md:block mx-auto text-gray-600">
                     <template v-if="!dataNotFound">
-                        {{ t('components.data-list.showing') }} {{ data.from }} {{ t('components.data-list.to') }} {{ data.to }} {{ t('components.data-list.of') }} {{ data.total }} {{ t('components.data-list.entries') }}
+                        {{ t('components.data-list.showing') }} {{ data.meta.from }} {{ t('components.data-list.to') }} {{ data.meta.to }} {{ t('components.data-list.of') }} {{ data.meta.total }} {{ t('components.data-list.entries') }}
                     </template>
                 </div>
                 <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0 mr-3" v-if="enableSearch">
@@ -40,7 +40,7 @@
                         <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
                     </div>
                 </div>
-                <button class="btn btn-primary-soft shadow-md mr-2 w-20" @click="$emit('dataListChange', { page: data.current_page, pageSize: pageSize, search: search })"><RefreshCwIcon class="w-4 h-4" /></button>
+                <button class="btn btn-primary-soft shadow-md mr-2 w-20" @click="$emit('dataListChange', { page: data.meta.current_page, pageSize: pageSize, search: search })"><RefreshCwIcon class="w-4 h-4" /></button>
             </div>
             <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
                 <slot name="table" :dataList="data"></slot>
@@ -64,8 +64,8 @@
                             <ChevronLeftIcon class="w-4 h-4" />
                         </a>
                     </li>
-                    <li v-for="(n, nIdx) in pages" class="page-item">
-                        <a :class="{'page-link':true, 'active': data.current_page === n}" href="" @click.prevent="$emit('dataListChange', { page: n, pageSize: pageSize, search: search })">{{ n }}</a>
+                    <li v-for="(n, nIdx) in pages" :class="{'page-item': true, 'active': data.meta.current_page === n}">
+                        <a class="page-link" href="" @click.prevent="$emit('dataListChange', { page: n, pageSize: pageSize, search: search })">{{ n }}</a>
                     </li>
                     <li class="page-item">
                         <a class="page-link" href="" @click.prevent="$emit('dataListChange', { page: next, pageSize: pageSize, search: search })">
@@ -78,7 +78,7 @@
                         </a>
                     </li>
                 </ul>
-                <select class="w-20 form-select box mt-3 sm:mt-0" v-model="pageSize" v-on:change="$emit('dataListChange', { page: data.current_page, pageSize: pageSize, search: search })">
+                <select class="w-20 form-select box mt-3 sm:mt-0" v-model="pageSize" v-on:change="$emit('dataListChange', { page: data.meta.current_page, pageSize: pageSize, search: search })">
                     <option value="10">10</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
