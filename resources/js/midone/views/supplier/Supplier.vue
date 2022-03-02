@@ -151,14 +151,14 @@
                         <div class="mb-3">
                             <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
                             <div class="flex items-center">
-                                <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
+                                <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
                                 <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                             </div>
                             <ErrorMessage name="code" class="text-theme-21" />
                         </div>
                         <div class="mb-3">
                             <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
-                            <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.name" />
+                            <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.name" />
                             <ErrorMessage name="name" class="text-theme-21" />
                         </div>
                         <div class="mb-3">
@@ -195,7 +195,7 @@
                         <div class="mb-3">
                             <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
                             <div class="mt-2">
-                                <VeeField id="inputPaymentTerm" as="input" rules="required|numeric|max:365" class="form-control" name="payment_term" v-model="supplier.payment_term" />
+                                <VeeField id="inputPaymentTerm" as="text" rules="required|numeric|max:365" class="form-control" name="payment_term" v-model="supplier.payment_term" />
                                 <ErrorMessage name="payment_term_type" class="text-theme-21" />
                             </div>
                         </div>
@@ -215,7 +215,7 @@
                     <div id="poc" class="tab-pane p-5" role="tabpanel" aria-labelledby="poc-tab">
                         <div class="mb-3">
                             <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
-                            <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
+                            <VeeField id="inputPOCName" name="poc_name" as="text" :class="{'form-control':true, 'border-theme-21': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
                             <ErrorMessage name="poc_name" class="text-theme-21" />
                         </div>
                         <div class="mb-3">
