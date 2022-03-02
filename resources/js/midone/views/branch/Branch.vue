@@ -115,29 +115,29 @@
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
-                        <VeeField id="inputAddress" name="address" as="text" :class="{'form-control':true, 'border-danger': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
+                        <VeeField id="inputAddress" name="address" type="text" :class="{'form-control':true, 'border-danger': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
                         <ErrorMessage name="address" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <VeeField id="inputCity" name="city" as="text" :class="{'form-control':true, 'border-danger': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
+                        <VeeField id="inputCity" name="city" type="text" :class="{'form-control':true, 'border-danger': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
                         <ErrorMessage name="city" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <VeeField id="inputContact" name="contact" as="text" :class="{'form-control':true, 'border-danger': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
+                        <VeeField id="inputContact" name="contact" type="text" :class="{'form-control':true, 'border-danger': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
                         <ErrorMessage name="contact" class="text-danger" />
                     </div>
                     <div class="mb-3">

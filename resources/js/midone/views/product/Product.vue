@@ -153,7 +153,7 @@
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" as="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.product.fields.code')" :label="t('views.product.fields.code')" rules="required" @blur="reValidate(errors)" v-model="product.code" :readonly="product.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.product.fields.code')" :label="t('views.product.fields.code')" rules="required" @blur="reValidate(errors)" v-model="product.code" :readonly="product.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
@@ -176,7 +176,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.product.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product.name" />
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <div class="mb-3">
@@ -195,7 +195,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputStandardRatedSupply" class="form-label">{{ t('views.product.fields.standard_rated_supply') }}</label>
-                        <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" as="text" :class="{'form-control':true, 'border-danger': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
+                        <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" type="text" :class="{'form-control':true, 'border-danger': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
                         <ErrorMessage name="standard_rated_supply" class="text-danger" />
                     </div>
                     <div class="mb-3">
@@ -212,7 +212,7 @@
                             <div class="col-span-2">
                                 <input type="hidden" :name="'product_units_hId[' + puIdx + ']'" v-model="pu.hId" />
                                 <div class="flex items-center">
-                                    <VeeField as="text" :class="{'form-control': true, 'border-danger':errors['product_units_code[' + puIdx + ']']|errors['product_units_code.' + puIdx]}" v-model="pu.code" id="product_units_code" :name="'product_units_code[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.code') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" :readonly="mode === 'create' && pu.code === '[AUTO]'" />
+                                    <VeeField type="text" :class="{'form-control': true, 'border-danger':errors['product_units_code[' + puIdx + ']']|errors['product_units_code.' + puIdx]}" v-model="pu.code" id="product_units_code" :name="'product_units_code[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.code') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" :readonly="mode === 'create' && pu.code === '[AUTO]'" />
                                     <button type="button" class="btn btn-secondary mx-1" @click="generateCodeUnit(puIdx)" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                                 </div>
                                 <ErrorMessage :name="'product_units_code[' + puIdx + ']'" class="text-danger" />
@@ -227,7 +227,7 @@
                                 <ErrorMessage :name="'unit_id.' + puIdx" class="text-danger" />
                             </div>
                             <div class="col-span-2">
-                                <VeeField as="text" :class="{'form-control text-right':true, 'border-danger':errors['conv_value[' + puIdx +']']|errors['conv_value.' + puIdx]}" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
+                                <VeeField type="text" :class="{'form-control text-right':true, 'border-danger':errors['conv_value[' + puIdx +']']|errors['conv_value.' + puIdx]}" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
                                 <ErrorMessage :name="'conv_value[' + puIdx +']'" class="text-danger" />
                                 <ErrorMessage :name="'conv_value.' + puIdx" class="text-danger" />
                             </div>
@@ -247,7 +247,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
-                        <VeeField id="inputPoint" name="point" as="text" :class="{'form-control':true, 'border-danger': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric|max_value:1000" v-model="product.point" />
+                        <VeeField id="inputPoint" name="point" type="text" :class="{'form-control':true, 'border-danger': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric|max_value:1000" v-model="product.point" />
                         <ErrorMessage name="point" class="text-danger" />
                     </div>
                     <div class="mb-3">
