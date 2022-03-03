@@ -60,7 +60,7 @@ class ActivityLogServiceImpl implements ActivityLogService
             ->log(ucfirst($type));
     }
 
-    public function getAuthUserActivities(int $maxRecords = 25): Activity
+    public function getAuthUserActivities(int $maxRecords = 25)
     {
         $id = Auth::user();
 

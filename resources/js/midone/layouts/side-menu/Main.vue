@@ -1,7 +1,8 @@
 <template>
   <div class="py-5 md:py-0 -mx-3 px-3 sm:-mx-8 sm:px-8 bg-black/[0.15]">
-    <DarkModeSwitcher />
-    <MainColorSwitcher />
+    <DarkModeSwitcher :visible="showTheme" />
+    <MainColorSwitcher :visible="showTheme" />
+    <BackToTop :visible="showBackToTop" @easter-click="easterClick" />
     <MobileMenu />
     <div class="flex overflow-hidden">
       <nav class="side-nav side-nav--simple" v-if="menuMode === 'simple'">
@@ -141,6 +142,7 @@ import MobileMenu from "@/components/mobile-menu/Main.vue";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main.vue";
 import MainColorSwitcher from "@/components/main-color-switcher/Main.vue";
 import SideMenuTooltip from "@/components/side-menu-tooltip/Main.vue";
+import BackToTop from "@/components/back-to-top/Main.vue";
 import { linkTo, nestedMenu, enter, leave } from "./index";
 import dom from "@left4code/tw-starter/dist/js/dom";
 
@@ -151,13 +153,14 @@ const router = useRouter();
 const formattedMenu = ref([]);
 
 const sideMenuStore = useSideMenuStore();
-//const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 const sideMenu = computed(() => sideMenuStore.menu);
 
 const userContextStore = useUserContextStore();
 const userContext = computed(() => userContextStore.userContext);
 
 const menuMode = ref('side');
+const showBackToTop = ref(false);
+const showTheme = ref(false);
 
 window.addEventListener('scroll', handleScroll);
 
@@ -177,9 +180,9 @@ onUnmounted(() => {
 
 function handleScroll() {
   if (window.scrollY > 100) {
-    //showBackToTop.value = true;
+    showBackToTop.value = true;
   } else {
-    //showBackToTop.value = false;
+    showBackToTop.value = false;
   }
 }
 
@@ -207,6 +210,18 @@ function switchMenu() {
   }
 }
 
+function easterClick() {
+  showTheme.value = true;
+}
+
+function setDashboardLayout(settings) {
+  let theme = settings.theme;
+
+  if (theme.indexOf('-mini') > 0) {
+    menuMode.value = 'simple';
+  }
+}
+
 watch(
   computed(() => route.path),
   () => {    
@@ -216,5 +231,9 @@ watch(
 watch(
   sideMenu, () => {
     formattedMenu.value = $h.toRaw(nestedMenu(sideMenu.value, route));
+});
+watch(
+  userContext, () => {
+    setDashboardLayout(userContext.value.selected_settings);
 });
 </script>

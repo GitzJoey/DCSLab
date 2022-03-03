@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-md fixed bottom-0 right-0 box border rounded-full h-12 px-5 flex items-center justify-center z-50 mb-10 mr-52">
+  <div class="shadow-md fixed bottom-0 right-0 box border rounded-full h-12 px-5 flex items-center justify-center z-50 mb-10 mr-52" v-if="visible">
     <div class="mr-4 hidden sm:block text-slate-600 dark:text-slate-200">
       Color Scheme
     </div>
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { toRef, computed } from "vue";
 import { useDarkModeStore } from "@/stores/dark-mode";
 import { useColorSchemeStore } from "@/stores/color-scheme";
 import dom from "@left4code/tw-starter/dist/js/dom";
@@ -21,6 +21,12 @@ const darkModeStore = useDarkModeStore();
 const darkMode = computed(() => darkModeStore.darkMode);
 const colorSchemeStore = useColorSchemeStore();
 const colorScheme = computed(() => colorSchemeStore.colorScheme);
+
+const props = defineProps({
+    visible: {type: Boolean, default: false},
+});
+
+const visible = toRef(props, 'visible');
 
 const setColorSchemeClass = () => {
   dom("html")

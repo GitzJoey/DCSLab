@@ -66,8 +66,8 @@
 <script setup>
 import { inject, onMounted, ref } from "vue";
 import axios from "@/axios";
+import { route } from "@/ziggy";
 import { useI18n } from "vue-i18n";
-import { assetPath } from "@/mixins";
 
 const { t } = useI18n();
 
@@ -82,4 +82,9 @@ function getActivity() {
         activity.value = response.data;
     });
 }
+
+function isEmptyObject(obj) {
+    return _.isEmpty(obj);
+}
+
 </script>

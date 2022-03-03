@@ -114,6 +114,7 @@ import { inject, onMounted, ref } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { assetPath } from "@/mixins";
+import { route } from "@/ziggy";
 
 // Mixins
 const { t } = useI18n();

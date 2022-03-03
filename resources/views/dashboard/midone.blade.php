@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="{{ app()->getLocale() }}" class="theme-1">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -18,6 +18,6 @@
     </head>
     <body class="main">
         <div id="app"></div>
-        <script src="{{ mix('js/midone/main.js') }}"></script>
+        <script type="module" src="{{ mix('js/midone/main.js') }}"></script>
     </body>
 </html>
