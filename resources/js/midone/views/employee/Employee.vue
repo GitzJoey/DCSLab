@@ -38,7 +38,6 @@
                                 </td>
                             </tr>
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
-                                {{item}}
                                 <td colspan="6">
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.name') }}</div>
