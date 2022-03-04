@@ -3,38 +3,48 @@
 </template>
 
 <script setup>
-// Vue Import
+//#region Imports
 import { inject, onMounted, ref, computed, watch } from "vue";
-// Helper Import
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
-// Core Components Import
 import { useUserContextStore } from "@/stores/user-context";
-// Components Import
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+//#endregion
 
-// Declarations
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
-// Data - Pinia
+//#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
+//#endregion
 
-// Data - UI
+//#region Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
-// Data - Views
+//#endregion
 
-// onMounted
+//#region Data - Views
+//#endregion
+
+//#region onMounted
 onMounted(() => {
 
 });
-// Methods
-// Computed
-// Watcher
+//#endregion
+
+//#region Methods
+//#endregion
+
+//#region Computed
+//#endregion
+
+//#region Watcher
+//#endregion
 </script>

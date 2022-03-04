@@ -30,7 +30,7 @@ return [
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
         ],
-        /* Ext */
+        #region Extensions
         'POS-owner' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
@@ -44,7 +44,7 @@ return [
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
         ],
-        /* Ext */
+        #endregion
     ],
 
     'permissions_map' => [

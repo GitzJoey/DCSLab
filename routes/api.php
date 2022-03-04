@@ -12,7 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\DevController;
-/* Ext */
+#region Extensions
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
@@ -20,7 +20,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WarehouseController;
-/* Ext */
+#endregion
 
 Route::bind('id', function ($id) {
     if (!is_numeric($id)) {
@@ -35,7 +35,7 @@ Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
 
-        /* Ext */
+        #region Extensions
         Route::group(['prefix' => 'company', 'as' => '.company'], function() {
             Route::group(['prefix' => 'company', 'as' => '.company'], function() {
                 Route::get('read', [CompanyController::class, 'read'])->name('.read');
@@ -82,7 +82,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
         });
         
-        /* Ext */
+        #endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
             Route::group(['prefix' => 'users', 'as' => '.users'], function() {
@@ -130,7 +130,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
 
-        /* Ext */
+        #region Extensions
         Route::group(['prefix' => 'company', 'as' => '.company'], function() {
             Route::group(['prefix' => 'company', 'as' => '.company'], function() {
                 Route::post('save', [CompanyController::class, 'store'])->name('.save');
@@ -165,7 +165,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
             });
         });
 
-        /* Ext */
+        #endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
             Route::group(['prefix' => 'users', 'as' => '.users'], function() {

@@ -108,21 +108,23 @@
 </template>
 
 <script setup>
-// Vue Import
+//#region Imports
 import { inject, onMounted, ref } from "vue";
-// Helper Import
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { assetPath } from "@/mixins";
 import { route } from "@/ziggy";
+//#endregion
 
-// Mixins
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
-// Data - UI
+//#region Data - UI
 const mode = ref('list');
+//#endregion
 
-// Data - Views
+//#region Data - Views
 const messageFolder = ref('inbox');
 const messageList = ref([]);
 const message = ref({
@@ -130,13 +132,15 @@ const message = ref({
     subject: '',
     text: ''
 });
+//#endregion
 
-// onMounted
+//#region onMounted
 onMounted(() => {
     getMessages('inbox');
 });
+//#endregion
 
-// Methods
+//#region Methods
 function createNew() {
     mode.value = 'create';
     message.value = emptyMessage();
@@ -174,5 +178,5 @@ function checkAll() {
 function backToList() {
     mode.value = 'list';
 }
-
+//#endregion
 </script>

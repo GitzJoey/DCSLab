@@ -238,37 +238,39 @@
 </template>
 
 <script setup>
-// Vue Import
+//#region Imports
 import { computed, inject, onMounted, ref } from "vue";
-// Helper Import
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { assetPath } from "@/mixins";
 import { helper } from "@/utils/helper";
 import { route } from "@/ziggy";
-// Core Components Import
 import { useUserContextStore } from "@/stores/user-context";
-// Components Import
 import AlertPlaceholder from '@/global-components/alert-placeholder/Main'
+//#endregion
 
-//Declarations
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
-// Data - Pinia
+//#region Data - Pinia
 const userContextStore = useUserContextStore();
 const userContext = computed(() => userContextStore.userContext );
+//#endregion
 
-// Data - UI
+//#region Data - UI
 const alertErrors = ref({});
 const alertType = ref('');
 const alertTitle = ref('');
 const loading = ref(false);
 const mode = ref('personal_info')
+//#endregion
 
-// Data - Views
+//#region Data - Views
 const rolesList = ref([]);
+//#endregion
 
-// Computed
+//#region Computed
 const retrieveImage = computed(() => {
     if (userContext.value.profile.img_path && userContext.value.profile.img_path !== '') {
         if (userContext.value.profile.img_path.includes('data:image')) {
@@ -280,13 +282,15 @@ const retrieveImage = computed(() => {
         return '/images/def-user.png';
     }
 });
+//#endregion
 
-// onMounted
+//#region onMounted
 onMounted(() => {
     getRoles();
 });
+//#endregion
 
-// Methods
+//#region Methods
 function changeTab(name) {
     mode.value = name;
     resetAlertErrors();
@@ -392,5 +396,7 @@ function createSuccessAlert(type) {
     }
     alertType.value = 'success';
     alertTitle.value = 'Success';
+
 }
+//#endregion
 </script>

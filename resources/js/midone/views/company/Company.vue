@@ -155,28 +155,31 @@
 </template>
 
 <script setup>
-// Vue Import
+//#region Vue Import
 import { inject, onMounted, ref, computed } from "vue";
-// Helper Import
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
-// Components Import
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+//#endregion
 
-// Declarations
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
-// Data - Pinia
-// Data - UI
+//#region Data - Pinia
+//#endregion
+
+//#region Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
+//#endregion
 
-// Data - Views
+//#region Data - Views
 const companyList = ref({});
 const company = ref({
     code: '',
@@ -186,16 +189,18 @@ const company = ref({
     status: 1
 });
 const statusDDL = ref([]);
+//#endregion
 
-// onMounted
+//#region onMounted
 onMounted(() => {
     getAllCompany({ page: 1 });
     getDDL();
 
     loading.value = false;
 });
+//#endregion
 
-// Methods
+//#region Methods
 function getAllCompany(args) {
     companyList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -333,7 +338,11 @@ function generateCode() {
     if (company.value.code === '[AUTO]') company.value.code = '';
     else  company.value.code = '[AUTO]'
 }
+//#endregion
 
-// Computed
-// Watcher
+//#region Computed
+//#endregion
+
+//#region Watcher
+//#endregion
 </script>

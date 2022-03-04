@@ -271,33 +271,34 @@
 </template>
 
 <script setup>
-// Vue Import
+//#region Imports
 import { inject, onMounted, ref, computed, watch } from "vue";
-// Helper Import
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
-// Core Components Import
 import { useUserContextStore } from "@/stores/user-context";
-// Components Import
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+//#endregion
 
-// Declarations
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
-// Data - Pinia
+//#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
+//#endregion
 
-// Data - UI
+//#region Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
+//#endregion
 
-// Data - Views
+//#region Data - Views
 const supplierList = ref([]);
 const supplier = ref({
     code: '',
@@ -325,8 +326,9 @@ const supplier = ref({
 const statusDDL = ref([]);
 const paymentTermDDL = ref([]);
 const productLists = ref([]);
+//#endregion
 
-// onMounted
+//#region onMounted
 onMounted(() => {
     if (selectedUserCompany.value !== '') {
         getAllSupplier({ page: 1});
@@ -339,8 +341,9 @@ onMounted(() => {
 
     loading.value = false;
 });
+//#endregion
 
-// Methods
+//#region Methods
 function getAllSupplier(args) {
     supplierList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -501,9 +504,12 @@ function generateCode() {
     if (supplier.value.code === '[AUTO]') supplier.value.code = '';
     else  supplier.value.code = '[AUTO]'
 }
+//#endregion
 
-// Computed
-// Watcher
+//#region Computed
+//#endregion
+
+//#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
         getAllSupplier({ page: 1 });
@@ -532,4 +538,5 @@ watch(computed(() => supplier.value.selected_products), (n, o) => {
         });
     }
 });
+//#endregion
 </script>

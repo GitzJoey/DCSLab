@@ -244,46 +244,29 @@
 </template>
 
 <script setup>
-/* Stuctures
-// Vue Import
-// Helper Import
-// Core Components Import
-// Components Import
-
-// Declarations
-// Mixins
-// Data - Pinia
-// Data - UI
-// Data - Views
-
-// onMounted
-// Methods
-// Computed
-// Watcher
-*/
-
-// Vue Import
+//#region Imports
 import { inject, onMounted, ref, computed } from "vue";
-// Helper Import
 import axios from "@/axios";
 import { helper } from "@/utils/helper";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
-// Components Import
 import DataList from "@/global-components/data-list/Main"
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main"
+//#endregion
 
-// Mixins
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
-// Data - UI
+//#region  Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
+//#endregion
 
-// Data - Views
+//#region Data - Views
 const user = ref({
     roles: [],
     selected_roles: [],
@@ -302,16 +285,18 @@ const userList = ref({ });
 const rolesDDL = ref([]);
 const statusDDL = ref([]);
 const countriesDDL = ref([]);
+//#endregion
 
-// onMounted
+//#region onMounted
 onMounted(() => {
     getUser({ page: 1 });
     getDDL();
 
     loading.value = false;
 });
+//#endregion
 
-// Methods
+//#region Methods
 function getUser(args) {
     userList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -466,8 +451,9 @@ function handleUpload(e) {
     })
     fileReader.readAsDataURL(files[0])
 }
+//#endregion
 
-// Computed
+//#region Computed
 const retrieveImage = computed(() => {
     if (user.value.profile.img_path && user.value.profile.img_path !== '') {
         if (user.value.profile.img_path.includes('data:image')) {
@@ -479,6 +465,8 @@ const retrieveImage = computed(() => {
         return '/images/def-user.png';
     }
 });
+//#endregion
 
-// Watcher
+//#region Watcher
+//#endregion
 </script>

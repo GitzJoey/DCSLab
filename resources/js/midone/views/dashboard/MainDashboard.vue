@@ -35,6 +35,7 @@
 </template>
 
 <script setup>
+//#region Imports
 import { defineComponent, inject, onMounted } from "vue";
-
+//#endregion
 </script>

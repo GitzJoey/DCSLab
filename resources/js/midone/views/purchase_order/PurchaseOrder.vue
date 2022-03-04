@@ -318,33 +318,35 @@
 </template>
 
 <script setup>
-// Vue Import
+//#region Imports
 import { inject, onMounted, ref, computed, watch } from "vue";
-// Helper Import
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
-// Core Components Import
 import { useUserContextStore } from "@/stores/user-context";
-// Components Import
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+//#endregion
 
-// Declarations
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
-// Data - Pinia
+//#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
+//#endregion
 
-// Data - UI
+//#region Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
 const tabs = ref(['po', 'supplier', 'warehouse', 'products']);
-// Data - Views
+//#endregion
+
+//#region Data - Views
 const poList = ref([]);
 const po = ref({
     invoice_no: '',
@@ -372,8 +374,9 @@ const statusDDL = ref([]);
 const warehouseDDL = ref([]);
 const productDDL = ref([]);
 const productSearch = ref('');
+//#endregion
 
-// onMounted
+//#region onMounted
 onMounted(() => {
     if (selectedUserCompany.value !== '') {
         getDDL();
@@ -384,8 +387,9 @@ onMounted(() => {
 
     loading.value = false;
 });
+//#endregion
 
-// Methods
+//#region Methods
 function getAllPO(args) {
     poList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -446,12 +450,16 @@ function reValidate(errors) {
 function filterProducts() {
 
 }
+//#endregion
 
-// Computed
-// Watcher
+//#region Computed
+//#endregion
+
+//#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
         getDDLSync();
     }
 });
+//#endregion
 </script>

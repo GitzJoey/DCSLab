@@ -11,7 +11,7 @@ use App\Services\RoleService;
 use App\Services\InboxService;
 use App\Services\SystemService;
 use App\Services\ActivityLogService;
-/* Ext */
+#region Extensions 
 use App\Services\CompanyService;
 use App\Services\BrandService;
 use App\Services\SupplierService;
@@ -20,7 +20,7 @@ use App\Services\ProductGroupService;
 use App\Services\UnitService;
 use App\Services\BranchService;
 use App\Services\WarehouseService;
-/* Ext */
+#endregion
 
 use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\UserServiceImpl;
@@ -28,7 +28,7 @@ use App\Services\Impls\RoleServiceImpl;
 use App\Services\Impls\InboxServiceImpl;
 use App\Services\Impls\SystemServiceImpl;
 use App\Services\Impls\ActivityLogServiceImpl;
-/* Ext */
+#region Extensions
 use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\BrandServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
@@ -37,7 +37,7 @@ use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
-/* Ext */
+#endregion
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -72,7 +72,7 @@ class AppServiceProvider extends ServiceProvider
             return new InboxServiceImpl();
         });
 
-        /* Ext */
+        #region Extensions
         $this->app->singleton(CompanyService::class, function (){
             return new CompanyServiceImpl();
         });
@@ -104,7 +104,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(WarehouseService::class, function (){
             return new WarehouseServiceImpl();
         });
-        /* Ext */
+        
+        #endregion
     }
 
     /**

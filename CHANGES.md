@@ -3,6 +3,7 @@
     * Upgrade PHP to 8.1 (utilizing enums)
     * Upgrade Laravel to 9
     * Upgrade Midone template to use Tailwindcss 3
+    * Add #region folding for some clarity
 
   * **v0.2 (2022-02-27)**
     * Changing branch and versioning into SemVer (Semantic Versioning)

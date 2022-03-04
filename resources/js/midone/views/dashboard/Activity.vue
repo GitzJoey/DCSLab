@@ -64,19 +64,28 @@
 </template>
 
 <script setup>
+//#region Imports
 import { inject, onMounted, ref } from "vue";
 import axios from "@/axios";
 import { route } from "@/ziggy";
 import { useI18n } from "vue-i18n";
+//#endregion
 
+//#region Declarations
 const { t } = useI18n();
+//#endregion
 
+//#region Data - Views
 const activity = ref({});
+//#endregion
 
+//#region onMounted
 onMounted(() => {
     getActivity();
 });
+//#endregion
 
+//#region Methods
 function getActivity() {
     axios.get(route('api.get.db.core.activity.route.list')).then(response => {
         activity.value = response.data;
@@ -86,5 +95,5 @@ function getActivity() {
 function isEmptyObject(obj) {
     return _.isEmpty(obj);
 }
-
+//#endregion
 </script>
