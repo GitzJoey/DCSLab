@@ -36,11 +36,9 @@ class EmployeeController extends BaseController
         $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $companyId = Hashids::decode($request['companyId'])[0];
-        // $userId = Hashids::decode($request['companyId'])[0];
 
         $result = $this->employeeService->read(
             companyId: $companyId,
-            // userId: $userId,
             search: $search,
             paginate: $paginate,
             perPage: $perPage
@@ -75,9 +73,6 @@ class EmployeeController extends BaseController
     public function store(EmployeeRequest $employeeRequest)
     {   
         $request = $employeeRequest->validated();
-
-        $rolesId = [];
-        array_push($rolesId, $this->roleService->readBy('NAME', 'user')->id);
         
         $first_name = '';
         $last_name = '';
@@ -88,6 +83,9 @@ class EmployeeController extends BaseController
         } else {
             $first_name = $request['name'];
         }
+
+        $rolesId = [];
+        array_push($rolesId, $this->roleService->readBy('NAME', 'user')->id);
 
         $profile = array (
             'first_name' => $first_name,
@@ -109,19 +107,33 @@ class EmployeeController extends BaseController
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profile['img_path'] = $file;
         }
+        
+        $user = [];
+        array_push($user, array (
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => '',
+            'rolesId' => $rolesId,
+            'profile' => $profile
+        ));
 
-        $user = $this->userService->create(
-            $request['name'],
-            $request['email'],
-            '',
-            $rolesId,
-            $profile
-        );
-        $user_id = $user->id;
+        // $user = $this->userService->create(
+        //     $request['name'],
+        //     $request['email'],
+        //     '',
+        //     $rolesId,
+        //     $profile
+        // );
+        // $user_id = $user->id;
+
+        // $result = $this->employeeService->create(
+        //     Hashids::decode($request['company_id'])[0],
+        //     $user_id
+        // );
 
         $result = $this->employeeService->create(
             Hashids::decode($request['company_id'])[0],
-            $user_id
+            $user
         );
         return is_null($result) ? response()->error():response()->success();
     }
