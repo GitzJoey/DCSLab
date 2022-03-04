@@ -8,12 +8,11 @@ interface EmployeeService
 {
     public function create(
         int $company_id,
-        int $user_id,
+        array $user,
     ): ?Employee;
 
     public function read(
         int $companyId,
-        // int $userId,
         string $search = '',
         bool $paginate = true,
         int $perPage = 10

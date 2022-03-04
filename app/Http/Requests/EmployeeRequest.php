@@ -40,22 +40,22 @@ class EmployeeRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', 'bail'],
-                    'name' => 'required',
+                    'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
-                    'ic_num' => 'required',
+                    'ic_num' => 'required|min:12|max:255',
                     'status' => 'required',
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
-                    'name' => 'required',
+                    'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
-                    'ic_num' => 'required',
+                    'ic_num' => 'required|min:12|max:255',
                     'status' => 'required',
                 ];
                 return array_merge($rules_update, $nullableArr);

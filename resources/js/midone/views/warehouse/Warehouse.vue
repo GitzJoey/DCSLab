@@ -127,18 +127,17 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
-                        <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.warehouse.fields.address')" :label="t('views.warehouse.fields.address')" rules="required" @blur="reValidate(errors)" v-model="warehouse.address" />
-                        <ErrorMessage name="address" class="text-theme-21" />
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address" rows="3"></textarea>
                     </div>
+                    <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
-                        <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.warehouse.fields.city')" :label="t('views.warehouse.fields.city')" rules="required" @blur="reValidate(errors)" v-model="warehouse.city" />
-                        <ErrorMessage name="city" class="text-theme-21" />
+                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.address" rows="3"></textarea>
                     </div>
+                    <!-- contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
-                        <VeeField id="inputContact" name="contact" as="input" :class="{'form-control':true, 'border-theme-21': errors['contact']}" :placeholder="t('views.warehouse.fields.contact')" :label="t('views.warehouse.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="warehouse.contact" />
-                        <ErrorMessage name="contact" class="text-theme-21" />
+                        <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.address" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.warehouse.fields.remarks') }}</label>

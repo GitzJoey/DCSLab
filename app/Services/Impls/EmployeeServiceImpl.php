@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Employee;
 use App\Actions\RandomGenerator;
 use App\Services\EmployeeService;
+use App\Services\UserService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -15,12 +16,22 @@ class EmployeeServiceImpl implements EmployeeService
 {
     public function create(
         int $company_id,
-        $user_id
+        array $user
     ): ?Employee
     {
         DB::beginTransaction();
 
         try {
+            $userService = app(UserService::class);
+            $user_id = $userService->create(
+                $user[0]['name'],
+                $user[0]['email'],
+                $user[0]['password'],
+                $user[0]['rolesId'],
+                $user[0]['profile']
+            );
+            $user_id = $user_id->id;
+            
             $employee = new Employee();
             $employee->company_id = $company_id;
             $employee->user_id = $user_id;
@@ -39,18 +50,11 @@ class EmployeeServiceImpl implements EmployeeService
 
     public function read(
         int $companyId,
-        // int $userId,
         string $search = '',
         bool $paginate = true,
         int $perPage = 10
     )
     {
-        // $usr = User::find($userId);
-        // if (!$usr) return null;
-        
-        // $compIds = $usr->companies()->pluck('company_id');
-
-        // $employee = Employee::with('company')->whereCompanyId($companyId);
         $employee = Employee::with('company', 'user.profile')->whereCompanyId($companyId);
 
         if (empty($search)) {

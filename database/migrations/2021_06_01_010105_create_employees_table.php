@@ -17,6 +17,8 @@ class CreateEmployeesTable extends Migration
             $table->bigIncrements('id');
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('user_id')->references('id')->on('users');
+            $table->date('join_date');
+            $table->integer('status')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
