@@ -131,20 +131,17 @@
                     <!-- address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
-                        <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
-                        <ErrorMessage name="address" class="text-theme-21" />
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address" rows="3"></textarea>
                     </div>
                     <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
-                        <ErrorMessage name="city" class="text-theme-21" />
+                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.address" rows="3"></textarea>
                     </div>
                     <!-- contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <VeeField id="inputContact" name="contact" as="input" :class="{'form-control':true, 'border-theme-21': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
-                        <ErrorMessage name="contact" class="text-theme-21" />
+                        <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.address" rows="3"></textarea>
                     </div>
                     <!-- remarks -->
                     <div class="mb-3">
@@ -253,7 +250,7 @@ function getAllBranches(args) {
 }
 
 function getDDL() {
-axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }

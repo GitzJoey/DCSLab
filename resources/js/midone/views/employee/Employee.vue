@@ -18,8 +18,8 @@
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.user.name }}</a></td>
                                 <td>{{ item.user.email }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.user.profile.status === 1" />
-                                    <XIcon v-if="item.user.profile.status === 0" />
+                                    <CheckCircleIcon v-if="item.status === 1" />
+                                    <XIcon v-if="item.status === 0" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -51,8 +51,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.user.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.user.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -120,20 +120,17 @@
                     <!-- address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.employee.fields.address') }}</label>
-                        <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.employee.fields.address')" :label="t('views.employee.fields.address')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.address" />
-                        <ErrorMessage name="address" class="text-theme-21" />
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.employee.fields.address')" v-model="employee.user.profile.address" rows="3"></textarea>
                     </div>
                     <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.employee.fields.city') }}</label>
-                        <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.employee.fields.city')" :label="t('views.employee.fields.city')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.city" />
-                        <ErrorMessage name="city" class="text-theme-21" />
+                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.employee.fields.city')" v-model="employee.user.profile.address" rows="3"></textarea>
                     </div>
                     <!-- postal code -->
                     <div class="mb-3">
                         <label for="inputPostalCode" class="form-label">{{ t('views.employee.fields.postal_code') }}</label>
-                        <VeeField id="inputPostalCode" name="postal_code" as="input" :class="{'form-control':true, 'border-theme-21': errors['postal_code']}" :placeholder="t('views.employee.fields.postal_code')" :label="t('views.employee.fields.postal_code')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.postal_code" />
-                        <ErrorMessage name="postal_code" class="text-theme-21" />
+                        <textarea id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.employee.fields.postal_code')" v-model="employee.user.profile.address" rows="3"></textarea>
                     </div>
                     <!-- country -->
                     <div class="mb-3">
@@ -164,7 +161,7 @@
                     <!-- status -->
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.employee.fields.status') }}</label>
-                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.user.profile.status" rules="required" :label="t('views.employee.fields.status')">
+                        <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.status" rules="required" :label="t('views.employee.fields.status')">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
@@ -216,6 +213,7 @@ const expandDetail = ref(null);
 // Data - Views
 const employeeList = ref({});
 const employee = ref({
+    status: 1,
     user: {
         company: { 
             hId: '',
@@ -233,7 +231,6 @@ const employee = ref({
             country: '',
             tax_id: '',
             ic_num: '',
-            status: 1,
             remarks: '',
         },
     },
@@ -334,6 +331,7 @@ function reValidate(errors) {
 
 function emptyEmployee() {
     return {
+        status: 1,
         company: { 
             hId: '',
             name: '' 
@@ -351,7 +349,6 @@ function emptyEmployee() {
                 country: '',
                 tax_id: '',
                 ic_num: '',
-                status: 1,
                 remarks: '',
             },
         }
