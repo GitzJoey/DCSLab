@@ -245,6 +245,7 @@ import { useI18n } from "vue-i18n";
 import { assetPath } from "@/mixins";
 import { helper } from "@/utils/helper";
 import { route } from "@/ziggy";
+import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import AlertPlaceholder from '@/global-components/alert-placeholder/Main'
 //#endregion
@@ -304,7 +305,7 @@ function getRoles() {
 
 function onSubmit(values, actions) {
     if (mode.value === 'personal_info') {
-        axios.post(route('api.post.db.core.profile.update.profile'), new FormData(cash('#profileForm')[0])).then(response => {
+        axios.post(route('api.post.db.core.profile.update.profile'), new FormData(dom('#profileForm')[0])).then(response => {
             createSuccessAlert('changeProfile');
         }).catch(e => {
             handleError(e, actions);
@@ -312,7 +313,7 @@ function onSubmit(values, actions) {
 
         });
     } else if (mode.value === 'account_settings') {
-        axios.post(route('api.post.db.core.profile.update.settings'), new FormData(cash('#profileSettingsForm')[0])).then(response => {
+        axios.post(route('api.post.db.core.profile.update.settings'), new FormData(dom('#profileSettingsForm')[0])).then(response => {
             createSuccessAlert('changeSettings');
             store.dispatch('main/fetchUserContext');
         }).catch(e => {
@@ -323,7 +324,7 @@ function onSubmit(values, actions) {
     } else if (mode.value === 'roles') {
 
     } else {
-        axios.post(route('api.post.db.core.profile.change_password'), new FormData(cash('#changePasswordForm')[0])).then(response => {
+        axios.post(route('api.post.db.core.profile.change_password'), new FormData(dom('#changePasswordForm')[0])).then(response => {
             createSuccessAlert('changePassword');
         }).catch(e => {
             handleError(e, actions);

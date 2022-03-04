@@ -79,10 +79,10 @@
                                     </div>
                                 </div>
                                 <div class="px-5 pb-8 text-center">
-                                    <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
+                                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
                                         {{ t('components.buttons.cancel') }}
                                     </button>
-                                    <button type="button" data-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
+                                    <button type="button" data-tw-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -250,6 +250,7 @@ import axios from "@/axios";
 import { helper } from "@/utils/helper";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
+import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main"
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main"
 //#endregion
@@ -324,7 +325,7 @@ function getDDL() {
 function onSubmit(values, actions) {
     loading.value = true;
 
-    var formData = new FormData(cash('#userForm')[0]); 
+    var formData = new FormData(dom('#userForm')[0]); 
 
     if (mode.value === 'create') {
         axios.post(route('api.post.db.admin.users.save'), formData, {

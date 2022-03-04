@@ -301,6 +301,7 @@ import { inject, onMounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
+import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
@@ -425,7 +426,7 @@ function getDDLSync() {
 function onSubmit(values, actions) {
     loading.value = true;
 
-    var formData = new FormData(cash('#productForm')[0]); 
+    var formData = new FormData(dom('#productForm')[0]); 
     formData.append('company_id', selectedUserCompany.value);
     
     if (mode.value === 'create') {

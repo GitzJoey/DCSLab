@@ -83,10 +83,10 @@
                                     </div>
                                 </div>
                                 <div class="px-5 pb-8 text-center">
-                                    <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
+                                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
                                         {{ t('components.buttons.cancel') }}
                                     </button>
-                                    <button type="button" data-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
+                                    <button type="button" data-tw-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -173,6 +173,7 @@ import { inject, onMounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
+import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
@@ -261,7 +262,7 @@ function getDDLSync() {
 function onSubmit(values, actions) {
     loading.value = true;
 
-    var formData = new FormData(cash('#warehouseForm')[0]); 
+    var formData = new FormData(dom('#warehouseForm')[0]); 
     formData.append('company_id', selectedUserCompany.value);
     
     if (mode.value === 'create') {
