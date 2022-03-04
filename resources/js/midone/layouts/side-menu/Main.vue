@@ -211,7 +211,7 @@ function switchMenu() {
 }
 
 function easterClick() {
-  showTheme.value = true;
+  showTheme.value = !showTheme.value;
 }
 
 function setDashboardLayout(settings) {

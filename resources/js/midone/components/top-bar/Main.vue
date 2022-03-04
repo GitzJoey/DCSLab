@@ -182,6 +182,7 @@ function goTo(page) {
 }
 
 function logout() {
+  tailwind.Dropdown.getOrCreateInstance(document.querySelector("#main-dropdown")).hide();
   axios.post('/logout').then(response => {
     window.location.href = '/';
   }).catch(e => {
