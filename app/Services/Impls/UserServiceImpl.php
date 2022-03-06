@@ -24,6 +24,11 @@ use App\Services\UserService;
 
 class UserServiceImpl implements UserService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function register(string $name, string $email, string $password, string $terms): ?User
     {
         if ($name == trim($name) && strpos($name, ' ') !== false) {

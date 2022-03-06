@@ -13,6 +13,11 @@ use App\Models\ProductGroup;
 
 class ProductGroupServiceImpl implements ProductGroupService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function create(
         int $company_id,
         string $code,

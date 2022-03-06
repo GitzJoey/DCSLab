@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Config;
 use App\Services\BrandService;
 
 use App\Models\Brand;
-use App\Models\User;
 
 class BrandServiceImpl implements BrandService
 {
+    public function __construct()
+    {
+        
+    }
+
     public function create(int $company_id, string $code, string $name): Brand
     {
         DB::beginTransaction();

@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Schema;
 
 class SystemServiceImpl implements SystemService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function checkDBConnection(): bool
     {
         try {

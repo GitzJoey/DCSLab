@@ -14,6 +14,11 @@ use App\Services\RoleService;
 
 class RoleServiceImpl implements RoleService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function create(
         string $name,
         string $display_name,

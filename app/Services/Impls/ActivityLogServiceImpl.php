@@ -9,6 +9,10 @@ use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogServiceImpl implements ActivityLogService
 {
+    public function __construct()
+    {
+        
+    }
 
     public function RoutingActivity(string $routeName, array $routeParameters): void
     {

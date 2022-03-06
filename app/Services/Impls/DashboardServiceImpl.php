@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Config;
 
 class DashboardServiceImpl implements DashboardService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function createMenu(): array
     {
         $usr = Auth::user();

@@ -19,6 +19,11 @@ use App\Services\RoleService;
 
 class SupplierServiceImpl implements SupplierService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function create(
         int $company_id,
         string $code,

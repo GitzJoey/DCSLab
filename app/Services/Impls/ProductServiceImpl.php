@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Config;
 
 class ProductServiceImpl implements ProductService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function create(
         int $company_id,
         string $code,

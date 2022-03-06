@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Log;
 
 class InboxServiceImpl implements InboxService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function getThreads(int $userId)
     {
         $t = Thread::with('participants')

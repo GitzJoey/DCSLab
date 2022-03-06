@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Config;
 
 class WarehouseServiceImpl implements WarehouseService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function create(
         int $company_id,
         string $code,

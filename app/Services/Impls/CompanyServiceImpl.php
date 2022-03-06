@@ -15,6 +15,11 @@ use App\Models\Company;
 
 class CompanyServiceImpl implements CompanyService
 {
+    public function __construct()
+    {
+        
+    }
+    
     public function create(
         string $code, 
         string $name, 
