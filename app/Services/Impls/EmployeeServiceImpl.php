@@ -16,7 +16,8 @@ class EmployeeServiceImpl implements EmployeeService
 {
     public function create(
         int $company_id,
-        array $user
+        array $user,
+        int $status
     ): ?Employee
     {
         DB::beginTransaction();
@@ -35,6 +36,7 @@ class EmployeeServiceImpl implements EmployeeService
             $employee = new Employee();
             $employee->company_id = $company_id;
             $employee->user_id = $user_id;
+            $employee->status = $status;
 
             $employee->save();
 
@@ -75,6 +77,7 @@ class EmployeeServiceImpl implements EmployeeService
         int $id,
         int $company_id,
         int $user_id,
+        int $status
     ): ?Employee
     {
         DB::beginTransaction();
@@ -85,6 +88,7 @@ class EmployeeServiceImpl implements EmployeeService
             $employee->update([
                 'company_id' => $company_id,
                 'user_id' => $user_id,
+                'status' => $status,
             ]);
 
             $user_id = new User;
