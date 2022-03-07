@@ -104,7 +104,7 @@
         <div class="loader-container">
             <VeeForm id="branchForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <!-- company -->
+                    <!-- Company -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
@@ -113,7 +113,7 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-theme-21" />
                     </div>
-                    <!-- code -->
+                    <!-- Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
                         <div class="flex items-center">
@@ -122,38 +122,38 @@
                         </div>
                         <ErrorMessage name="code" class="text-theme-21" />
                     </div>
-                    <!-- name -->
+                    <!-- Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
                         <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
-                    <!-- address -->
+                    <!-- Addresss -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address" rows="3"></textarea>
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address"></textarea>
                     </div>
                     <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.address" rows="3"></textarea>
+                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city"></textarea>
                     </div>
                     <!-- contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.address" rows="3"></textarea>
+                        <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact"></textarea>
                     </div>
-                    <!-- remarks -->
+                    <!-- Remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
                     </div>
-                    <!-- status -->
+                    <!-- Status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
                         <ErrorMessage name="status" class="text-theme-21" />
                     </div>
@@ -224,7 +224,7 @@ onMounted(() => {
     setDashboardLayout(false);
   
     if (selectedUserCompany.value !== '') {
-        getAllBranches({ page: 1 });
+        getAllBranch({ page: 1 });
         getDDLSync();
     } else  {
         
@@ -236,7 +236,7 @@ onMounted(() => {
 });
 
 // Methods
-function getAllBranches(args) {
+function getAllBranch(args) {
     branchList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -315,7 +315,7 @@ function reValidate(errors) {
     alertErrors.value = errors;
 }
 
-function emptyBranch() {
+function emptybranch() {
     return {
         company: {
             hId: '',
@@ -337,13 +337,11 @@ function resetAlertErrors() {
 
 function createNew() {
     mode.value = 'create';
-    branch.value = emptyBranch();
-
-    branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+    branch.value = emptybranch();
 }
 
 function onDataListChange({page, pageSize, search}) {
-    getAllBranches({page, pageSize, search});
+    getAllBranch({page, pageSize, search});
 }
 
 function editSelected(index) {
@@ -372,7 +370,7 @@ function showSelected(index) {
 function backToList() {
     resetAlertErrors();
     mode.value = 'list';
-    getAllBranches({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
+    getAllBranch({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
 }
 
 function toggleDetail(idx) {
@@ -392,7 +390,7 @@ function generateCode() {
 // Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
-        getAllBranches({ page: 1 });
+        getAllBranch({ page: 1 });
         getDDLSync();
     }
 });

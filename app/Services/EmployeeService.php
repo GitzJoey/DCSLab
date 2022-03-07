@@ -9,6 +9,7 @@ interface EmployeeService
     public function create(
         int $company_id,
         array $user,
+        int $status
     ): ?Employee;
 
     public function read(
@@ -22,6 +23,7 @@ interface EmployeeService
         int $id,
         int $company_id,
         int $user_id,
+        int $status
     ): ?Employee;
 
     public function delete(int $userId, int $id): bool;

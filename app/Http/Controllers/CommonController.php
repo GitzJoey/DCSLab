@@ -18,7 +18,7 @@ class CommonController extends BaseController
     {
         return [
             ['name' => 'Indonesia', 'code' => 'ID'],
-            ['name' => 'Singapore', 'code' => 'SG']            
+            ['name' => 'Singapore', 'code' => 'SG'],
         ];
     }
 
