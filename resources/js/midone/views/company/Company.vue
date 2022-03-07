@@ -156,10 +156,11 @@
 
 <script setup>
 //#region Vue Import
-import { inject, onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
+import { useUserContextStore } from "@/stores/user-context";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
@@ -170,6 +171,8 @@ const { t } = useI18n();
 //#endregion
 
 //#region Data - Pinia
+const userContextStore = useUserContextStore();
+const userContext = computed(() => userContextStore.userContext);
 //#endregion
 
 //#region Data - UI
@@ -227,7 +230,7 @@ function onSubmit(values, actions) {
     if (mode.value === 'create') {
         axios.post(route('api.post.db.company.company.save'), formData).then(response => {
             backToList();
-            store.dispatch('main/fetchUserContext');
+            userContextStore.fetchUserContext();
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
@@ -321,7 +324,7 @@ function backToList() {
     mode.value = 'list';
 
     if (companyList.value.data.length == 0) {
-        store.dispatch('sideMenu/fetchMenuContext');
+        userContextStore.fetchUserContext();
     }
 
     getAllCompany({ page: companyList.value.current_page, pageSize: companyList.value.per_page });
