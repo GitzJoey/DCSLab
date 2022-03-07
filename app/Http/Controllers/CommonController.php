@@ -16,14 +16,6 @@ class CommonController extends BaseController
 
     public function getCountries()
     {
-        return [
-            ['name' => 'Indonesia', 'code' => 'ID'],
-            ['name' => 'Singapore', 'code' => 'SG']            
-        ];
-    }
-
-    public function getStatus()
-    {
         $country = [
             ['name' => 'Afghanistan', 'code' => 'AF'],
             ['name' => 'Albania', 'code' => 'AL'],
@@ -267,6 +259,14 @@ class CommonController extends BaseController
             ['name' => 'Zimbabwe', 'code' => 'ZW'],
         ];
 
+        return [
+            ['name' => 'Indonesia', 'code' => 'ID'],
+            ['name' => 'Singapore', 'code' => 'SG']            
+        ];
+    }
+
+    public function getStatus()
+    {
         return [
             ['name' => 'components.dropdown.values.statusDDL.active', 'code' => '1'],
             ['name' => 'components.dropdown.values.statusDDL.inactive', 'code' => '0'],
