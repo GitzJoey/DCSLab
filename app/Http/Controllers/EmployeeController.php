@@ -117,23 +117,11 @@ class EmployeeController extends BaseController
             'profile' => $profile
         ));
 
-        // $user = $this->userService->create(
-        //     $request['name'],
-        //     $request['email'],
-        //     '',
-        //     $rolesId,
-        //     $profile
-        // );
-        // $user_id = $user->id;
-
-        // $result = $this->employeeService->create(
-        //     Hashids::decode($request['company_id'])[0],
-        //     $user_id
-        // );
-
+        $status = $request['status'];
         $result = $this->employeeService->create(
             Hashids::decode($request['company_id'])[0],
-            $user
+            $user,
+            $status
         );
         return is_null($result) ? response()->error():response()->success();
     }
@@ -187,10 +175,13 @@ class EmployeeController extends BaseController
         );
         $user_id = $user->id;
 
+        $status = $request['status'];
+
         $result = $this->employeeService->update(
             $id,
             Hashids::decode($request['company_id'])[0],
-            $user_id
+            $user_id,
+            $status
         );
         return is_null($result) ? response()->error():response()->success();
     }
