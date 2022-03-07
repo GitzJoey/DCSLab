@@ -9,6 +9,7 @@ interface EmployeeService
     public function create(
         int $company_id,
         array $user,
+        string $join_date,
         int $status
     ): ?Employee;
 

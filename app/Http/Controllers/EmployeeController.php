@@ -121,6 +121,7 @@ class EmployeeController extends BaseController
         $result = $this->employeeService->create(
             Hashids::decode($request['company_id'])[0],
             $user,
+            $request['join_date'],
             $status
         );
         return is_null($result) ? response()->error():response()->success();

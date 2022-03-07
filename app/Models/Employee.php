@@ -21,11 +21,13 @@ class Employee extends Model
 
     protected $fillable = [
         'company_id',
+        'join_date',
         'status'
     ];
 
     protected static $logAttributes = [
         'company_id',
+        'join_date',
         'status'
     ];
 
