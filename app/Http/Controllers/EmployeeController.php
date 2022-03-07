@@ -117,20 +117,6 @@ class EmployeeController extends BaseController
             'profile' => $profile
         ));
 
-        // $user = $this->userService->create(
-        //     $request['name'],
-        //     $request['email'],
-        //     '',
-        //     $rolesId,
-        //     $profile
-        // );
-        // $user_id = $user->id;
-
-        // $result = $this->employeeService->create(
-        //     Hashids::decode($request['company_id'])[0],
-        //     $user_id
-        // );
-
         $result = $this->employeeService->create(
             Hashids::decode($request['company_id'])[0],
             $user
