@@ -17,7 +17,6 @@
         "laravel/tinker": "^2.7",
         "mews/captcha": "^3.2",
         "predis/predis": "^1.1",
-        "rap2hpoutre/laravel-log-viewer": "^2.1",
         "santigarcor/laratrust": "^7.0",
         "spatie/laravel-activitylog": "^4.4",
         "tightenco/ziggy": "^1.4",
