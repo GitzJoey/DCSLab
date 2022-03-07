@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 
 class UnitTableSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class UnitTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run($onlyThisCompanyId = 0)
     {
         $units = [
             ['name' => 'kg', 'description' => 'kilogram (kg)', 'category' => 1],
@@ -25,7 +26,17 @@ class UnitTableSeeder extends Seeder
             ['name' => 'dz', 'description' => 'Dozen (dz)', 'category' => 1]            
         ];
 
-        $companies = Company::get()->pluck('id');
+        if ($onlyThisCompanyId != 0) {
+            $c = Company::find($onlyThisCompanyId);
+
+            if ($c) {
+                $companies = (new Collection())->push($c->id);
+            } else {
+                $companies = Company::get()->pluck('id');
+            }
+        } else {
+            $companies = Company::get()->pluck('id');
+        }
 
         foreach($companies as $c) {
             foreach ($units as $u) {

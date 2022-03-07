@@ -76,7 +76,7 @@ class AppHelper extends Command
                 $this->info('[2] Clear All Cache                   [8]');
                 $this->info('[3] Change User Roles                 [9]');
                 $this->info('[4] Data Seeding                      [10]');
-                $this->info('[5] Refresh Database                  [11]');
+                $this->info('[5] Wipe Database                     [11]');
                 $this->info('[6] Create Acministrator/Dev User     [12]');
                 $this->info('[X] Exit');
             }
@@ -101,7 +101,7 @@ class AppHelper extends Command
                     $this->info('Done.');
                     break;
                 case 5:
-                    $this->refreshDatabase();
+                    $this->wipeDatabase();
                     break;
                 case 6:
                     $this->createAdminDevUser();
@@ -122,6 +122,286 @@ class AppHelper extends Command
             if (!is_null($option)) $loop = false;
         }
         $this->info('Bye!');
+    }
+
+    private function dataSeeding()
+    {
+        if (App::environment('prod', 'production')) {
+            $this->info('**************************************');
+            $this->info('*     Application In Production!     *');
+            $this->info('**************************************');
+        
+            $runInProd = $this->confirm('Do you really wish to run this command?', false);
+
+            if (!$runInProd) {
+                return;
+            }
+        }
+
+        $unattended_mode = $this->confirm('Unattended Mode?', true);
+
+        $seeders = [];
+        if ($unattended_mode) {
+            $seeders = [
+                'UserTableSeeder', 
+                'RoleTableSeeder',
+                'CompanyTableSeeder',
+                'BranchTableSeeder',
+                'WarehouseTableSeeder',
+                'UnitTableSeeder',
+                'ProductTableSeeder',
+                'ProductGroupTableSeeder',
+                'BrandTableSeeder',
+                'SupplierTableSeeder',
+                'CustomerTableSeeder',
+            ];
+        } else {
+            $seeders = $this->choice(
+                'Please select the seeders (comma separated for multiple choices):', [
+                    'UserTableSeeder', 
+                    'RoleTableSeeder',
+                    'CompanyTableSeeder',
+                    'BranchTableSeeder',
+                    'WarehouseTableSeeder',
+                    'UnitTableSeeder',
+                    'ProductTableSeeder',
+                    'ProductGroupTableSeeder',
+                    'BrandTableSeeder',
+                    'SupplierTableSeeder',
+                    'CustomerTableSeeder',
+                ],
+                null, 3, true
+            );
+        }
+
+    
+        if (in_array('UserTableSeeder', $seeders))
+        {
+            $this->info('Starting UserTableSeeder');
+            $truncate = $unattended_mode ? false : $this->confirm('Do you want to truncate the users table first?', false);
+            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
+
+            $this->callUserTableSeeder($truncate, $count);
+
+            $this->info('UserTableSeeder Finish.');
+        }
+
+        if (in_array('RoleTableSeeder', $seeders))
+        {
+            $this->info('Starting RoleTableSeeder');
+            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
+
+            $this->callRoleTableSeeder(true, $count);
+
+            $this->info('RoleTableSeeder Finish.');
+        }
+
+        if (in_array('CompanyTableSeeder', $seeders))
+        {
+            $this->info('Starting CompanyTableSeeder');
+            $count = $unattended_mode ? 3 : $this->ask('How many companies for each users:', 3);
+            $userId = $unattended_mode ? 3 : $this->ask('Only to this userId (0 to all):', 0);
+
+            $this->callCompanyTableSeeder($count, $userId);
+
+            $this->info('CompanyTableSeeder Finish.');
+        }
+
+        if (in_array('BranchTableSeeder', $seeders))
+        {
+            $this->info('Starting BranchTableSeeder');
+            $count_br = $unattended_mode ? 3 : $this->ask('How many branches per company (0 to skip) :', 3);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->callBranchTableSeeder($count_br, $onlyThisCompanyId);
+
+            $this->info('BranchTableSeeder Finish.');    
+        }
+
+        if (in_array('WarehouseTableSeeder', $seeders))
+        {
+            $this->info('Starting WarehouseTableSeeder');
+            $count_wh = $unattended_mode ? 3 : $this->ask('How many warehouses per company (0 to skip) :', 3);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->callWarehouseTableSeeder($count_wh, $onlyThisCompanyId);
+
+            $this->info('WarehouseTableSeeder Finish.');
+        }
+
+        if (in_array('UnitTableSeeder', $seeders))
+        {
+            $this->info('Starting UnitTableSeeder');
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->callUnitTableSeeder($onlyThisCompanyId);
+
+            $this->info('UnitTableSeeder Finish.');
+        }
+
+        if (in_array('ProductGroupTableSeeder', $seeders))
+        {
+            $this->info('Starting ProductGroupTableSeeder');
+            $count_pg = $unattended_mode ? 3 : $this->ask('How many product groups (0 to skip):', 3);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->callProductGroupTableSeeder($count_pg, $onlyThisCompanyId);
+
+            $this->info('ProductGroupTableSeeder Finish.');
+        }
+
+        if (in_array('BrandTableSeeder', $seeders))
+        {
+            $this->info('Starting BrandTableSeeder');
+            $count = $unattended_mode ? 5 : $this->ask('How many brands (0 to skip):', 5);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->callBrandTableSeeder($count, $onlyThisCompanyId);
+
+            $this->info('BrandTableSeeder Finish.');
+        }
+
+        if (in_array('ProductTableSeeder', $seeders))
+        {
+            $this->info('Starting ProductTableSeeder');
+            $count = $unattended_mode ? 5 : $this->ask('How many products for each companies:', 5);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->callProductTableSeeder($count, $onlyThisCompanyId);
+
+            $this->info('ProductTableSeeder Finish.');
+        }
+
+        if (in_array('SupplierTableSeeder', $seeders))
+        {
+            $this->info('Starting SupplierTableSeeder');
+            $count = $unattended_mode ? 5 : $this->ask('How many supplier for each companies:', 5);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->callSupplierTableSeeder($count, $onlyThisCompanyId);
+
+            $this->info('SupplierTableSeeder Finish.');
+        }
+
+        if (in_array('CustomerTableSeeder', $seeders))
+        {
+            $this->info('Starting CustomerTableSeeder');
+            $count = $unattended_mode ? 5 : $this->ask('How many customer for each companies:', 5);
+
+            //$seeder = new CustomerTableSeeder();
+            //$seeder->callWith(CustomerTableSeeder::class, [$count]);
+
+            $this->info('CustomerTableSeeder Finish.');
+        }
+    }
+
+    #region Seeders
+
+    private function callUserTableSeeder($truncate = false, $count = 4)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new UserTableSeeder();
+        $seeder->callWith(UserTableSeeder::class, [$truncate, $count]);
+    }
+
+    private function callRoleTableSeeder($randomPermission = true, $count = 10)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new RoleTableSeeder();
+        $seeder->callWith(RoleTableSeeder::class, [$randomPermission, $count]);
+    }
+
+    private function callCompanyTableSeeder($companiesPerUsers = 3, $userId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new CompanyTableSeeder();
+        $seeder->callWith(CompanyTableSeeder::class, [$companiesPerUsers, $userId]);
+    }
+
+    private function callBranchTableSeeder($branchPerCompanies = 3, $onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new BranchTableSeeder();
+        $seeder->callWith(BranchTableSeeder::class, [$branchPerCompanies, $onlyThisCompanyId]);
+    }
+
+    private function callWarehouseTableSeeder($warehousePerCompanies = 3, $onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new WarehouseTableSeeder();
+        $seeder->callWith(WarehouseTableSeeder::class, [$warehousePerCompanies, $onlyThisCompanyId]);
+    }
+
+    private function callUnitTableSeeder($onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new UnitTableSeeder();
+        $seeder->callWith(UnitTableSeeder::class);
+    }
+
+    private function callProductGroupTableSeeder($productGroupPerCompany = 5, $onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new ProductGroupTableSeeder();
+        $seeder->callWith(ProductGroupTableSeeder::class, [$productGroupPerCompany, $onlyThisCompanyId]);
+    }
+
+    private function callBrandTableSeeder($brandPerCompany = 15, $onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new BrandTableSeeder();
+        $seeder->callWith(BrandTableSeeder::class, [$brandPerCompany, $onlyThisCompanyId]);
+    }
+
+    private function callProductTableSeeder($productPerCompany = 5, $onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new ProductTableSeeder();
+        $seeder->callWith(ProductTableSeeder::class, [$productPerCompany, $onlyThisCompanyId]);
+    }
+
+    private function callSupplierTableSeeder($supplierPerCompany = 10, $onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+        $seeder = new SupplierTableSeeder();
+        $seeder->callWith(SupplierTableSeeder::class, [$supplierPerCompany, $onlyThisCompanyId]);
+    }
+
+    private function callCustomerTableSeeder($customerPerCompanies = 3, $onlyThisCompanyId = 0)
+    {
+        $this->info('Seeding...');
+
+
+    }
+
+    #endregion
+
+    private function wipeDatabase()
+    {
+        $this->info('THIS ACTIONS WILL WIPE CLEAN ALL TABLES. ALL DATA CANNOT BE RESTORED!');
+        $run = $this->confirm('CONFIRM TO WIPE DATABASE?', false);
+
+        if (App::environment('prod', 'production')) {
+            $this->error('This helper cannot run on production enviroment');
+            $run = false;
+        }
+
+        if ($run) {
+            Artisan::call('db:wipe');
+            $this->info(Artisan::output());
+            sleep(3);
+            $this->info('Done.');
+        }
     }
 
     private function convertHashIdToId()
@@ -226,174 +506,6 @@ class AppHelper extends Command
         );
 
         $this->info('User Creation Success.');
-    }
-
-    private function dataSeeding()
-    {
-        if (App::environment('prod', 'production')) {
-            $this->info('**************************************');
-            $this->info('*     Application In Production!     *');
-            $this->info('**************************************');
-        
-            $runInProd = $this->confirm('Do you really wish to run this command?', false);
-
-            if (!$runInProd) {
-                return;
-            }
-        }
-
-        $unattended_mode = $this->confirm('Unattended Mode?', true);
-
-        $user = $unattended_mode ? true : $this->confirm('Do you want to seed users?', true);
-        $roles = $unattended_mode ? true : $this->confirm('Do you want to seed roles?', true);
-        $companies = $unattended_mode ? true : $this->confirm('Do you want to seed companies for each users?', true);
-        $supplier = $unattended_mode ? true : $this->confirm('Do you want to seed dummy suppliers for each companies?', true);
-        $product = $unattended_mode ? true : $this->confirm('Do you want to seed dummy products for each companies?', true);
-        $customer = $unattended_mode ? true : $this->confirm('Do you want to seed dummy customers for each companies?', true);
-
-        if (Permission::count() == 0) {
-            $this->info('Roles and Permissions table is empty. seeding...');
-            Artisan::call('db:seed');
-        }
-
-        if ($user)
-        {
-            $this->info('Starting UserTableSeeder');
-            $truncate = $unattended_mode ? false : $this->confirm('Do you want to truncate the users table first?', false);
-            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
-
-            $this->info('Seeding...');
-
-            $seeder = new UserTableSeeder();
-            $seeder->callWith(UserTableSeeder::class, [$truncate, $count]);
-
-            $this->info('UserTableSeeder Finish.');
-        }
-
-        sleep(3);
-
-        if ($roles)
-        {
-            $this->info('Starting RoleTableSeeder');
-            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
-
-            $this->info('Seeding...');
-
-            $seeder = new RoleTableSeeder();
-            $seeder->callWith(RoleTableSeeder::class, [true, $count]);
-
-            $this->info('RoleTableSeeder Finish.');
-        }
-
-        sleep(3);
-
-        if ($companies)
-        {
-            $this->info('Starting CompanyTableSeeder');
-            $count = $unattended_mode ? 3 : $this->ask('How many companies for each users:', 3);
-
-            $seeder = new CompanyTableSeeder();
-            $seeder->callWith(CompanyTableSeeder::class, [$count]);
-
-            $this->info('CompanyTableSeeder Finish.');
-
-            $this->info('Starting BranchTableSeeder');
-            $count_br = $unattended_mode ? 3 : $this->ask('How many branches per company (0 to skip) :', 3);
-
-            if ($count_br != 0) {
-                $seeder_br = new BranchTableSeeder();
-                $seeder_br->callWith(BranchTableSeeder::class, [$count_br]);
-    
-                $this->info('BranchTableSeeder Finish.');    
-            }
-
-            $this->info('Starting WarehouseTableSeeder');
-            $count_wh = $unattended_mode ? 3 : $this->ask('How many warehouses per company (0 to skip) :', 3);
-
-            if ($count_wh != 0) {
-                $seeder_wh = new WarehouseTableSeeder();
-                $seeder_wh->callWith(WarehouseTableSeeder::class, [$count_wh]);
-    
-                $this->info('WarehouseTableSeeder Finish.');
-            }
-        }
-
-        sleep(3);
-
-        if ($product)
-        {
-            $this->info('Starting UnitTableSeeder');
-            $seeder_unit = new UnitTableSeeder();
-            $seeder_unit->callWith(UnitTableSeeder::class);
-            $this->info('UnitTableSeeder Finish.');
-
-            $this->info('Starting ProductGroupTableSeeder');
-            $count_pg = $unattended_mode ? 3 : $this->ask('How many product groups (0 to skip):', 3);
-
-            if ($count_pg != 0) {
-                $seeder_pg = new ProductGroupTableSeeder();
-                $seeder_pg->callWith(ProductGroupTableSeeder::class, [$count_pg]);
-
-                $this->info('ProductGroupTableSeeder Finish.');
-            }
-
-            $this->info('Starting BrandTableSeeder');
-            $count_pb = $unattended_mode ? 5 : $this->ask('How many brands (0 to skip):', 5);
-
-            if ($count_pb != 0) {
-
-                $seeder_pb = new BrandTableSeeder();
-                $seeder_pb->callWith(BrandTableSeeder::class, [$count_pb]);
-
-                $this->info('BrandTableSeeder Finish.');
-            }
-
-            $this->info('Starting ProductTableSeeder');
-            $count = $unattended_mode ? 5 : $this->ask('How many products for each companies:', 5);
-
-            $seeder = new ProductTableSeeder();
-            $seeder->callWith(ProductTableSeeder::class, [$count]);
-
-            $this->info('ProductTableSeeder Finish.');
-        }
-
-        sleep(3);
-
-        if ($supplier)
-        {
-            $this->info('Starting SupplierTableSeeder');
-            $count = $unattended_mode ? 5 : $this->ask('How many supplier for each companies:', 5);
-
-            $seeder = new SupplierTableSeeder();
-            $seeder->callWith(SupplierTableSeeder::class, [$count]);
-
-            $this->info('SupplierTableSeeder Finish.');
-        }
-
-        sleep(3);
-
-        if ($customer)
-        {
-            $this->info('Starting CustomerTableSeeder');
-            $count = $unattended_mode ? 5 : $this->ask('How many customer for each companies:', 5);
-
-            //$seeder = new CustomerTableSeeder();
-            //$seeder->callWith(CustomerTableSeeder::class, [$count]);
-
-            $this->info('CustomerTableSeeder Finish.');
-        }
-    }
-
-    private function refreshDatabase()
-    {
-        $this->info('THIS ACTIONS WILL REMOVE ALL DATA AND LEAVING ONLY DEFAULT DATA');
-        $run = $this->confirm('CONFIRM TO REFRESH DATABASE?', false);
-
-        Artisan::call('migrate:fresh');
-        Artisan::call('db:seed', ['--class' => 'DatabaseSeeder']);
-
-        $this->info('Done.');
-        sleep(3);
     }
 
     private function changeUserRoles()
