@@ -410,8 +410,9 @@
                 "country": "Country",
                 "tax_id": "Tax ID",
                 "ic_num": "Ic Num",
-                "status": "Status",
-                "remarks": "Remarks"
+                "join_date": "Join Date",
+                "remarks": "Remarks",
+                "status": "Status"
             }
         },
         "purchase_order": {

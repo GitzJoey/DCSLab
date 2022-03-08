@@ -17,6 +17,7 @@ class EmployeeServiceImpl implements EmployeeService
     public function create(
         int $company_id,
         array $user,
+        string $join_date,
         int $status
     ): ?Employee
     {
@@ -36,6 +37,7 @@ class EmployeeServiceImpl implements EmployeeService
             $employee = new Employee();
             $employee->company_id = $company_id;
             $employee->user_id = $user_id;
+            $employee->join_date = $join_date;
             $employee->status = $status;
 
             $employee->save();

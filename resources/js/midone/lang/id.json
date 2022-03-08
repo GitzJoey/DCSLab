@@ -410,8 +410,9 @@
                 "country": "CounNegaratry",
                 "tax_id": "Nomor Pajak",
                 "ic_num": "Nomor Kependudukan",
-                "status": "Status",
-                "remarks": "Keterangan"
+                "join_date": "Tanggal Bergabung",
+                "remarks": "Keterangan",
+                "status": "Status"
             }
         }
         ,

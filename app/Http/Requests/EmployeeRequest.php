@@ -45,6 +45,7 @@ class EmployeeRequest extends FormRequest
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
+                    'join_date' => 'required',
                     'status' => 'required',
                 ];
                 return array_merge($rules_store, $nullableArr);
@@ -56,6 +57,7 @@ class EmployeeRequest extends FormRequest
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
+                    'join_date' => 'required',
                     'status' => 'required',
                 ];
                 return array_merge($rules_update, $nullableArr);
