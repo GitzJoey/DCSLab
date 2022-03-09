@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\RandomGenerator;
 use App\Models\Permission;
 use App\Services\RoleService;
 use App\Services\UserService;
@@ -158,15 +159,18 @@ class AppHelper extends Command
                 ],
                 null, 3, true
             );
+        } else {
+            $unattended_count = $this->ask('Override the seed count?', 5);
         }
 
+        
         #region Seeders
 
         if (in_array('UserTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting UserTableSeeder');
             $truncate = $unattended_mode ? false : $this->confirm('Do you want to truncate the users table first?', false);
-            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
+            $count = $unattended_mode ? $unattended_count : $this->ask('How many data:', 5);
 
             $this->info('Seeding...');
 
@@ -180,7 +184,7 @@ class AppHelper extends Command
         {
             $this->info('Starting RoleTableSeeder');
             $randomPermission = true;
-            $count = $unattended_mode ? 5 : $this->ask('How many data:', 5);
+            $count = $unattended_mode ? $unattended_count : $this->ask('How many data:', 5);
 
             $this->info('Seeding...');
 
@@ -193,8 +197,8 @@ class AppHelper extends Command
         if (in_array('CompanyTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting CompanyTableSeeder');
-            $companiesPerUsers = $unattended_mode ? 3 : $this->ask('How many companies for each users:', 3);
-            $userId = $unattended_mode ? 3 : $this->ask('Only to this userId (0 to all):', 0);
+            $companiesPerUsers = $unattended_mode ? $unattended_count : $this->ask('How many companies for each users:', 3);
+            $userId = $unattended_mode ? 0 : $this->ask('Only to this userId (0 to all):', 0);
 
             $this->info('Seeding...');
 
@@ -207,7 +211,7 @@ class AppHelper extends Command
         if (in_array('BranchTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting BranchTableSeeder');
-            $branchPerCompanies = $unattended_mode ? 3 : $this->ask('How many branches per company (0 to skip) :', 3);
+            $branchPerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many branches per company (0 to skip) :', 3);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
             $this->info('Seeding...');
@@ -222,7 +226,7 @@ class AppHelper extends Command
         if (in_array('WarehouseTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting WarehouseTableSeeder');
-            $warehousePerCompanies = $unattended_mode ? 3 : $this->ask('How many warehouses per company (0 to skip) :', 3);
+            $warehousePerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many warehouses per company (0 to skip) :', 3);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
             $this->info('Seeding...');
@@ -249,7 +253,7 @@ class AppHelper extends Command
         if (in_array('ProductGroupTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting ProductGroupTableSeeder');
-            $productGroupPerCompany = $unattended_mode ? 3 : $this->ask('How many product groups (0 to skip):', 3);
+            $productGroupPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many product groups (0 to skip):', 3);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
             $this->info('Seeding...');
@@ -263,7 +267,7 @@ class AppHelper extends Command
         if (in_array('BrandTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting BrandTableSeeder');
-            $brandPerCompany = $unattended_mode ? 5 : $this->ask('How many brands (0 to skip):', 5);
+            $brandPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many brands (0 to skip):', 5);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
             $this->info('Seeding...');
@@ -277,7 +281,7 @@ class AppHelper extends Command
         if (in_array('ProductTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting ProductTableSeeder');
-            $productPerCompany = $unattended_mode ? 5 : $this->ask('How many products for each companies:', 5);
+            $productPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many products for each companies:', 5);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
             $this->info('Seeding...');
@@ -291,7 +295,7 @@ class AppHelper extends Command
         if (in_array('SupplierTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting SupplierTableSeeder');
-            $supplierPerCompany = $unattended_mode ? 5 : $this->ask('How many supplier for each companies:', 5);
+            $supplierPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many supplier for each companies:', 5);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
             $this->info('Seeding...');
@@ -305,7 +309,7 @@ class AppHelper extends Command
         if (in_array('CustomerTableSeeder', $seeders) || $unattended_mode)
         {
             $this->info('Starting CustomerTableSeeder');
-            $count = $unattended_mode ? 5 : $this->ask('How many customer for each companies:', 5);
+            $count = $unattended_mode ? $unattended_count : $this->ask('How many customer for each companies:', 5);
 
             //$seeder = new CustomerTableSeeder();
             //$seeder->callWith(CustomerTableSeeder::class, [$count]);
