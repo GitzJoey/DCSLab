@@ -79,6 +79,7 @@ class EmployeeServiceImpl implements EmployeeService
         int $id,
         int $company_id,
         int $user_id,
+        string $join_date,
         int $status
     ): ?Employee
     {
@@ -90,6 +91,7 @@ class EmployeeServiceImpl implements EmployeeService
             $employee->update([
                 'company_id' => $company_id,
                 'user_id' => $user_id,
+                'join_date' => $join_date,
                 'status' => $status,
             ]);
 
