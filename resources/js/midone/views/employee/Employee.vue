@@ -8,6 +8,7 @@
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.name') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.email') }}</th>
+                            <th class="whitespace-nowrap">Join Date</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
@@ -17,6 +18,7 @@
                             <tr class="intro-x">
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.user.name }}</a></td>
                                 <td>{{ item.user.email }}</td>
+                                <td>{{ item.join_date }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 1" />
                                     <XIcon v-if="item.status === 0" />
@@ -275,7 +277,7 @@ function getAllEmployee(args) {
         employeeList.value = response.data;
         loading.value = false;
 
-        console.log(employeeList.value);
+        console.log(response.data);
     });
 }
 
