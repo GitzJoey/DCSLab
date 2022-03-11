@@ -25,7 +25,6 @@ if (mix.inProduction()) {
                 })
             ]
         })
-        .copy('resources/css/midone/fonts/*.ttf', 'public/fonts')
         .postCss('resources/css/midone/app.css', 'public/css/midone', [
             require('postcss-import'),
             require('postcss-advanced-variables'),
@@ -65,7 +64,6 @@ if (mix.inProduction()) {
                 })
             ]
         })
-        .copy('resources/css/midone/fonts/*.ttf', 'public/fonts')
         .postCss('resources/css/midone/app.css', 'public/css/midone', [
             require('postcss-import'),
             require('postcss-advanced-variables'),
