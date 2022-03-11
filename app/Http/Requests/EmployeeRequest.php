@@ -42,10 +42,14 @@ class EmployeeRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
+                    'address' => 'max:255',
+                    'city' => 'max:255',
+                    'postal_code' => 'max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
+                    'remarks' => 'max:255',
                     'status' => 'required',
                 ];
                 return array_merge($rules_store, $nullableArr);
@@ -54,10 +58,14 @@ class EmployeeRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
+                    'address' => 'max:255',
+                    'city' => 'max:255',
+                    'postal_code' => 'max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
+                    'remarks' => 'max:255',
                     'status' => 'required',
                 ];
                 return array_merge($rules_update, $nullableArr);

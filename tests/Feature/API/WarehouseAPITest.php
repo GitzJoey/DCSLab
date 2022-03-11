@@ -52,7 +52,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;;
+        $companyId = Company::inRandomOrder()->get()[0]->id;
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $address = $this->faker->address;
