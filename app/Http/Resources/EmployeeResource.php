@@ -18,6 +18,7 @@ class EmployeeResource extends JsonResource
             'hId' => $this->hId,
             'company' => new CompanyResource($this->company),
             'user' => new UserResource($this->user),
+            'join_date' => $this->join_date,
             'status' => $this->status
         ];
     }
