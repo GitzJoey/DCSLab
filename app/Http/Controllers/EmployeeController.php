@@ -182,6 +182,7 @@ class EmployeeController extends BaseController
             $id,
             Hashids::decode($request['company_id'])[0],
             $user_id,
+            $request['join_date'],
             $status
         );
         return is_null($result) ? response()->error():response()->success();
