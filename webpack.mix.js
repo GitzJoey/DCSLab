@@ -32,11 +32,7 @@ if (mix.inProduction()) {
             require('tailwindcss/nesting'),
             require('tailwindcss')('./tailwind.config.js'),
             require('autoprefixer'),
-            require('postcss-path-replace')({
-                publicPath: process.env.APP_URL,
-                matched: "[APP_URL]",
-                mode: "replace"
-            }),
+            require('postcss-url'),
             require('cssnano')
         ])
         .js('resources/js/midone/main.js','public/js/midone/main.js')
@@ -76,11 +72,7 @@ if (mix.inProduction()) {
             require('tailwindcss/nesting'),
             require('tailwindcss')('./tailwind.config.js'),
             require('autoprefixer'),
-            require('postcss-path-replace')({
-                publicPath: process.env.APP_URL,
-                matched: "[APP_URL]",
-                mode: "replace"
-            })
+            require('postcss-url')
         ])
         .js('resources/js/midone/main.js','public/js/midone/main.js')
         .sourceMaps()
