@@ -188,7 +188,6 @@
                             <ErrorMessage name="status" class="text-theme-21" />
                         </div>
                     <!-- #endregion -->
-
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>

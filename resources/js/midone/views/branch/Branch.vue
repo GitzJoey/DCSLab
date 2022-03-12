@@ -131,22 +131,22 @@
                     <!-- Addresss -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address"></textarea>
+                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address"/>
                     </div>
                     <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city"></textarea>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city"/>
                     </div>
                     <!-- contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact"></textarea>
+                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact"/>
                     </div>
                     <!-- Remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
-                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
+                        <input id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
                     </div>
                     <!-- Status -->
                     <div class="mb-3">

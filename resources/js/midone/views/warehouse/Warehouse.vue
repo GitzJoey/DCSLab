@@ -127,17 +127,17 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address"></textarea>
+                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address"/>
                     </div>
                     <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
-                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city"></textarea>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city"/>
                     </div>
                     <!-- contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
-                        <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact"></textarea>
+                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact"/>
                     </div>
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.warehouse.fields.remarks') }}</label>
