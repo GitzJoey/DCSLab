@@ -107,43 +107,6 @@ class EmployeeServiceImpl implements EmployeeService
         }
     }
 
-    public function updateProfile($id, $profile)
-    {
-        DB::beginTransaction();
-
-        try {
-            $retval = 0;
-
-            $employee = Employee::find($id);
-
-            if ($profile != null) {
-                $profile = $employee->profile()->first();
-
-                $retval += $profile->update([
-                    'first_name' => $profile['first_name'],
-                    'last_name' => $profile['last_name'],
-                    'address' => $profile['address'],
-                    'city' => $profile['city'],
-                    'postal_code' => $profile['postal_code'],
-                    'country' => $profile['country'],
-                    'status' => $profile['status'],
-                    'tax_id' => $profile['tax_id'],
-                    'ic_num' => $profile['ic_num'],
-                    'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$profile->img_path,
-                    'remarks' => $profile['remarks']
-                ]);
-            }
-
-            DB::commit();
-
-            return $retval;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug($e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        }
-    }
-
     public function delete(int $userId, int $id): bool
     {
         DB::beginTransaction();
@@ -151,14 +114,7 @@ class EmployeeServiceImpl implements EmployeeService
         $retval = false;
         try {
             $employee = Employee::find($id);
-
             $retval = $employee->delete();
-            // if ($employee) {
-            //     $usr = User::find($userId);
-            //     $usr->employees()->detach([$employee->id]);
-
-            //     $retval = $employee->delete();
-            // }
 
             DB::commit();
 

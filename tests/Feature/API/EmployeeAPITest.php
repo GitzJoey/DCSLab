@@ -44,45 +44,8 @@ class EmployeeAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
-        $companyId = Hashids::encode($companyId);
-        
+        $companyId = Hashids::encode(Company::inRandomOrder()->get()[0]->id);
         $name = $this->faker->name;
-        $first_name = '';
-        $last_name = '';
-        if ($name == trim($name) && strpos($name, ' ') !== false) {
-            $pieces = explode(" ", $name);
-            $first_name = $pieces[0];
-            $last_name = $pieces[1];
-        } else {
-            $first_name = $name;
-        }
-
-        $rolesId = [];
-        $roleService = app(RoleService::class);
-        array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
-        $profile = array (
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'address' => $this->faker->address,
-            'city' => $this->faker->city,
-            'postal_code' => (new RandomGenerator())->generateNumber(10000, 99999),
-            'country' => $this->faker->country(),
-            'tax_id' => $this->faker->creditCardNumber,
-            'ic_num' => $this->faker->creditCardNumber,
-            'remarks' => $this->faker->sentence,
-            'status' => (new RandomGenerator())->generateNumber(0, 1)
-        );
-
-        $user = [];
-        array_push($user, array (
-            'name' => $this->faker->name,
-            'email' => $this->faker->email(),
-            'password' => '',
-            'rolesId' => $rolesId,
-            'profile' => $profile
-        ));
-
         $email = $this->faker->email();
         $address = $this->faker->address();
         $city = $this->faker->city();
