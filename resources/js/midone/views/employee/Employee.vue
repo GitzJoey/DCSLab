@@ -121,17 +121,17 @@
                     <!-- address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.employee.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.employee.fields.address')" v-model="employee.user.profile.address"></textarea>
+                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.employee.fields.address')" v-model="employee.user.profile.address"/>
                     </div>
                     <!-- city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.employee.fields.city') }}</label>
-                        <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.employee.fields.city')" v-model="employee.user.profile.city"></textarea>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.employee.fields.city')" v-model="employee.user.profile.city"/>
                     </div>
                     <!-- postal code -->
                     <div class="mb-3">
                         <label for="inputPostalCode" class="form-label">{{ t('views.employee.fields.postal_code') }}</label>
-                        <textarea id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.employee.fields.postal_code')" v-model="employee.user.profile.postal_code"></textarea>
+                        <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.employee.fields.postal_code')" v-model="employee.user.profile.postal_code"/>
                     </div>
                     <!-- country -->
                     <div class="mb-3">
