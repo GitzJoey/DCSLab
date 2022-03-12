@@ -53,23 +53,6 @@ class EmployeeController extends BaseController
         }
     }
 
-    public function getAllRoles()
-    {
-        $excludeRole = [
-            //Config::get('const.DEFAULT.ROLE.ADMIN'),
-            //Config::get('const.DEFAULT.ROLE.DEV')
-        ];
-
-        $roles = $this->roleService->read(exclude: $excludeRole);
-        
-        if (is_null($roles)) {
-            return response()->error();
-        } else {
-            $response = RoleResource::collection($roles);
-            return $response;    
-        }
-    }
-
     public function store(EmployeeRequest $employeeRequest)
     {   
         $request = $employeeRequest->validated();
