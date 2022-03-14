@@ -44,32 +44,19 @@ class EmployeeAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Hashids::encode(Company::inRandomOrder()->get()[0]->id);
-        $name = $this->faker->name;
-        $email = $this->faker->email();
-        $address = $this->faker->address();
-        $city = $this->faker->city();
-        $postal_code = (new RandomGenerator())->generateNumber(10000, 99999);
-        $country = $this->faker->country();
-        $tax_id = $this->faker->creditCardNumber;
-        $ic_num = (new RandomGenerator())->generateNumber(100000000000, 999999999999);
-        $join_date = date("Y-m-d", mt_rand(1609459201,1640995201)); 
-        $remarks = $this->faker->sentence;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
-
         $api = $this->json('POST', route('api.post.db.company.employee.save'), [
-            'company_id' => $companyId,
-            'name' => $name,
-            'email' => $email,
-            'address' => $address,
-            'city' => $city,
-            'postal_code' => $postal_code,
-            'country' => $country,
-            'tax_id' => $tax_id,
-            'ic_num' => $ic_num,
-            'join_date' => $join_date,
-            'remarks' => $remarks,
-            'status' => $status
+            'company_id' => Hashids::encode(Company::inRandomOrder()->get()[0]->id),
+            'name' => $this->faker->name,
+            'email' => $this->faker->email(),
+            'address' => $this->faker->address(),
+            'city' => $this->faker->city(),
+            'postal_code' => (new RandomGenerator())->generateNumber(10000, 99999),
+            'country' => $this->faker->country(),
+            'tax_id' => $this->faker->creditCardNumber,
+            'ic_num' => (new RandomGenerator())->generateNumber(100000000000, 999999999999),
+            'join_date' => date("Y-m-d", mt_rand(1609459201,1640995201)),
+            'remarks' => $this->faker->sentence,
+            'status' => (new RandomGenerator())->generateNumber(0, 1)
         ]);
 
         $api->assertSuccessful();
