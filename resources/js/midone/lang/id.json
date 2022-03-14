@@ -231,7 +231,7 @@
                 "taxable_supply": "Produk Kena Pajak",
                 "standard_rated_supply": "PPN",
                 "price_include_vat": "Harga Termasuk Pajak",
-                "remarks": "Remarks",
+                "remarks": "Keterangan",
                 "point": "Poin",
                 "use_serial_number": "Memakai Nomor Serial",
                 "has_expiry_date": "Tanggal Kadaluarsa",
@@ -282,7 +282,7 @@
                 "payment_term_type": "Ketentuan Pembayaran",
                 "payment_term": "Tempo",
                 "tax_id": "NPWP",
-                "remarks": "Remarks",
+                "remarks": "Keterangan",
                 "status": "Status",
                 "poc": {
                     "label": "Penanggung Jawab",
