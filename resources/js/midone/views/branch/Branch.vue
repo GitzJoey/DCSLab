@@ -158,7 +158,7 @@
                     <!-- #region remarks -->
                         <div class="mb-3">
                             <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
-                            <input id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
+                            <input id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"/>
                         </div>
                     <!-- #endregion -->
                     
