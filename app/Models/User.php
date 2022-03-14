@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 use Laratrust\Traits\LaratrustUserTrait;
 use Cmgmyr\Messenger\Traits\Messagable;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
-
 use Laravel\Sanctum\HasApiTokens;
 use Vinkla\Hashids\Facades\Hashids;
 use Spatie\Activitylog\ActivityLogger;
@@ -71,9 +69,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $appends = ['hId'];
 
-    public function getHIdAttribute() : string
+    public function hId() : Attribute
     {
-        return HashIds::encode($this->attributes['id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['id'])
+        );
     }
 
     public function profile()
