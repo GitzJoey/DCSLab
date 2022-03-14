@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import multiguard from "vue-router-multiguard";
+import * as guards from "@/router/guards";
 import axios from "@/axios";
 
 import SideMenu from "../layouts/side-menu/Main.vue";
@@ -38,7 +40,6 @@ const routes = [
                 name: 'side-menu-dashboard-maindashboard',
                 component: MainDashboard,
                 meta: {
-                    middleware: ['canUserAccess'], 
                     remember: false 
                 }
             },
@@ -195,14 +196,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-    /*
-    if (to.matched.some(r => r.meta.middleware)) {
-        if (to.meta.middleware.includes('canUserAccess')) {
-            const canAccess = await canUserAccess(to);
-            if (!canAccess) return '/error/403';
-        }
-    }
-    */
+    multiguard([guards.checkPasswordExpiry(), guards.checkUserStatus()]);
 });
 
 router.afterEach((to, from) => {

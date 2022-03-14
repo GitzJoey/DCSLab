@@ -1,4 +1,4 @@
-import axios from '@/axios';
+import axios from "@/axios";
 
 export async function canUserAccess(to) {
     try {
@@ -12,5 +12,11 @@ export async function canUserAccess(to) {
 }
 
 export function checkPasswordExpiry() {
-    
+
+    return true;
+}
+
+export function checkUserStatus() {
+
+    return true;
 }
