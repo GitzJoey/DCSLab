@@ -35,11 +35,11 @@
                 </div>
                 <div class="grid grid-cols-12 gap-5">
                     <div class="intro-y col-span-12 lg:col-span-8">
-                        <div class="intro-y py-3" v-if="tabs.includes('supplier')">
+                        <div class="intro-y py-3" v-if="tabs.includes('po')">
                             <div class="box p-5">
                                 <div class="mb-3">
-                                    <label for="selectInvoiceNo" class="form-label">{{ t('views.purchase_order.fields.invoice_no') }}</label>
-
+                                    <label for="inputInvoiceNo" class="form-label">{{ t('views.purchase_order.fields.invoice_no') }}</label>
+                                    <input id="inputInvoiceNo" name="invoice_no" type="text" class="form-control" :placeholder="t('views.purchase_order.fields.invoice_no')" v-model="po.invoice_no" />
                                 </div>
                                 <div class="mb-3">
                                     <label for="selectInvoiceDate" class="form-label">{{ t('views.purchase_order.fields.invoice_date') }}</label>
@@ -76,122 +76,10 @@
                                 <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
                             </div>
                         </div>
-                        <div class="grid grid-cols-12 gap-5 mt-5">
-                            <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
-                                <div class="font-medium text-base">Soup</div>
-                                <div class="text-gray-600">5 Items</div>
-                            </div>
-                            <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box bg-theme-25 dark:bg-theme-25 p-5 cursor-pointer zoom-in">
-                                <div class="font-medium text-base text-white">Pancake & Toast</div>
-                                <div class="text-theme-34 dark:text-gray-400">8 Items</div>
-                            </div>
-                            <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
-                                <div class="font-medium text-base">Pasta</div>
-                                <div class="text-gray-600">4 Items</div>
-                            </div>
-                            <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
-                                <div class="font-medium text-base">Waffle</div>
-                                <div class="text-gray-600">3 Items</div>
-                            </div>
-                            <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
-                                <div class="font-medium text-base">Snacks</div>
-                                <div class="text-gray-600">8 Items</div>
-                            </div>
-                            <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
-                                <div class="font-medium text-base">Deserts</div>
-                                <div class="text-gray-600">8 Items</div>
-                            </div>
-                            <div class="col-span-12 sm:col-span-4 2xl:col-span-3 box p-5 cursor-pointer zoom-in">
-                                <div class="font-medium text-base">Beverage</div>
-                                <div class="text-gray-600">9 Items</div>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-12 gap-5 mt-5 pt-5 border-t border-theme-31">
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-1.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">Vanilla Latte</div>
-                                </div>
-                            </a>
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-17.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">Fried Calamari</div>
-                                </div>
-                            </a>
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-4.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">Root Beer</div>
-                                </div>
-                            </a>
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-15.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">Fried/Grilled Banana</div>
-                                </div>
-                            </a>
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-18.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">Chicken Wings</div>
-                                </div>
-                            </a>
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-16.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">Crispy Mushroom</div>
-                                </div>
-                            </a>
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-18.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">Chicken Wings</div>
-                                </div>
-                            </a>
-                            <a href="javascript:;" data-toggle="modal" data-target="#add-item-modal" class="intro-y block col-span-12 sm:col-span-4 2xl:col-span-3">
-                                <div class="box rounded-md p-3 relative zoom-in">
-                                    <div class="flex-none pos-image relative block">
-                                        <div class="pos-image__preview image-fit">
-                                            <img alt="Tinker Tailwind HTML Admin Template" src="dist/images/food-beverage-12.jpg">
-                                        </div>
-                                    </div>
-                                    <div class="block font-medium text-center truncate mt-3">French Fries</div>
-                                </div>
-                            </a>
-                        </div>
                     </div>
                     <!-- END: Item List -->
                     <!-- BEGIN: Ticket -->
-                    <div class="col-span-12 lg:col-span-4">
+                    <div class="col-span-12 lg:col-span-4 py-3">
                         <div class="intro-y pr-1">
                             <div class="box p-2">
                                 <div class="pos__tabs nav nav-tabs justify-center" role="tablist"> <a id="ticket-tab" data-toggle="tab" data-target="#ticket" href="javascript:;" class="flex-1 py-2 rounded-md text-center active" role="tab" aria-controls="ticket" aria-selected="true">Ticket</a> <a id="details-tab" data-toggle="tab" data-target="#details" href="javascript:;" class="flex-1 py-2 rounded-md text-center" role="tab" aria-controls="details" aria-selected="false">Details</a> </div>
@@ -296,6 +184,15 @@
                         </div>
                     </div>
                 </div>
+
+
+
+
+
+
+
+
+                
 
 
 
