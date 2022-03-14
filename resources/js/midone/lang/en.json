@@ -52,10 +52,6 @@
                     "active": "Active",
                     "inactive": "Inactive"
                 },
-                "countriesDDL": {
-                    "SG": "Singapore",
-                    "ID": "Indonesia"
-                },
                 "productOrServiceCategoryDDL": {
                     "product": "Product",
                     "service": "Service",
