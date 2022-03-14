@@ -44,7 +44,7 @@
                                 <div class="mb-3">
                                     <label for="selectInvoiceDate" class="form-label">{{ t('views.purchase_order.fields.invoice_date') }}</label>
                                     <VeeField name="invoice_date" v-slot="{ field }" rules="required" :label="t('views.purchase_order.fields.invoice_date')">
-                                        <Litepicker v-model="po.invoice_date" class="form-control" v-bind="field" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, }" />
+                                        <Litepicker v-model="po.invoice_date" class="form-control" v-bind="field" :options="invoiceDatePOpt" />
                                     </VeeField>
                                     <ErrorMessage name="invoice_date" class="text-danger" />
                                 </div>
@@ -221,6 +221,7 @@ import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
 import { useUserContextStore } from "@/stores/user-context";
+import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 //#endregion
@@ -241,13 +242,17 @@ const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
 const tabs = ref(['po', 'supplier', 'warehouse', 'products']);
+const invoiceDatePOpt = ref({
+    autoApply: false, showWeekNumbers: false, 
+    dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, 
+});
 //#endregion
 
 //#region Data - Views
 const poList = ref([]);
 const po = ref({
     invoice_no: '',
-    invoice_date: '',
+    invoice_date: '20 Mar, 2022',
     supplier: {
         hId: '',
         name: ''
@@ -298,6 +303,16 @@ function getAllPO(args) {
         poList.value = response.data;
         loading.value = false;
     });
+}
+
+function onSubmit(values, actions) {
+    loading.value = true;
+
+    var formData = new FormData(dom('#poForm')[0]); 
+
+    if (mode.value === 'create') {
+    } else if (mode.value === 'edit') {
+    } else { }
 }
 
 function resetAlertErrors() {

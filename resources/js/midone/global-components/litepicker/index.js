@@ -20,6 +20,11 @@ const setValue = (props, emit) => {
             .format(format)
         : ''
     emit('update:modelValue', date)
+  } else {
+    if (dayjs(props.modelValue, format).isValid()) {
+      let date = dayjs(props.modelValue).format(format);
+      emit('update:modelValue', date);
+    }
   }
 }
 
@@ -39,7 +44,12 @@ const init = (el, props, emit) => {
         emit('update:modelValue', date)
       })
     }
-  })
+  });
+
+  if (dayjs(props.modelValue, format).isValid()) {
+    let date = dayjs(props.modelValue).format(format);
+    litePickerInstance.setDate(date);
+  }
 }
 
 const reInit = (el, props, emit) => {
