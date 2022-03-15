@@ -18,7 +18,7 @@ return [
     'throttle' => 'Terlalu banyak upaya masuk. Silahkan coba lagi dalam :seconds detik.',
 
     'register' => [
-        'title' => 'Dafter Baru',
+        'title' => 'Daftar Baru',
         'name' => 'Full name',
         'email' => 'Email',
         'password' => 'Password',
