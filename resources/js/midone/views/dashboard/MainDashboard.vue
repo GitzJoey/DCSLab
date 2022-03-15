@@ -128,7 +128,9 @@ onMounted(() => {
 
 //#region Methods
 function greetings() {
-    greet.value = 'Welcome, ' + userContext.value.name;
+    if (userContext.value.name) {
+        greet.value = 'Welcome, ' + userContext.value.name;
+    }
 }
 //#endregion
 

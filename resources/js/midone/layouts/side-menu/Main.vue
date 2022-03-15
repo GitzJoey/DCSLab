@@ -164,10 +164,10 @@ const showTheme = ref(false);
 
 window.addEventListener('scroll', handleScroll);
 
-onMounted(() => {
+onMounted(async () => {
   dom("body").removeClass("error-page").removeClass("login").addClass("main");
   
-  userContextStore.fetchUserContext();
+  await userContextStore.fetchUserContext();
   sideMenuStore.fetchMenu();
   
   localeSetup();

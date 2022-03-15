@@ -11,12 +11,17 @@ export async function canUserAccess(to) {
     }
 }
 
-export function checkPasswordExpiry() {
-
+export function checkPasswordExpiry(userContext) {
+    if (userContext.password_expiry_day <= 0) {
+        
+    }
     return true;
 }
 
-export function checkUserStatus() {
+export function checkUserStatus(userContext) {
+    if (userContext.profile !== undefined && userContext.profile.status === 0) {
+        
+    }
 
     return true;
 }

@@ -5,7 +5,7 @@
             <div class="dropdown-toggle notification cursor-pointer" role="button" aria-expanded="false" data-tw-toggle="dropdown">
                 <div class="flex flex-row">
                     <UmbrellaIcon class="notification__icon dark:text-gray-300 mr-2" />
-                    <div>{{ selectedCompany }}</div>
+                    <LoadingIcon icon="puff" v-if="selectedCompany === ''"/> <div v-else>{{ selectedCompany }}</div>
                 </div>
             </div>
             <div class="dropdown-menu w-56">
@@ -46,7 +46,9 @@
       </div>
     </div>
 
-    <div id="main-dropdown" class="intro-x dropdown w-8 h-8">
+    <LoadingIcon icon="puff" v-if="userContext.name === undefined"/>
+
+    <div id="main-dropdown" class="intro-x dropdown w-8 h-8" v-else>
       <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in" role="button" aria-expanded="false" data-tw-toggle="dropdown">
         <img alt="" :src="assetPath('gray200.jpg')"/>
       </div>

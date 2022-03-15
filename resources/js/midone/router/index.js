@@ -3,6 +3,8 @@ import multiguard from "vue-router-multiguard";
 import * as guards from "@/router/guards";
 import axios from "@/axios";
 
+import { useUserContextStore } from "@/stores/user-context";
+
 import SideMenu from "../layouts/side-menu/Main.vue";
 
 import MainDashboard from "@/views/dashboard/MainDashboard.vue";
@@ -196,7 +198,13 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-    multiguard([guards.checkPasswordExpiry(), guards.checkUserStatus()]);
+    const userContextStore = useUserContextStore();
+    if (userContextStore.userContext.name !== undefined) {
+        multiguard([
+            guards.checkPasswordExpiry(userContextStore.userContext), 
+            guards.checkUserStatus(userContextStore.userContext)
+        ]);
+    }
 });
 
 router.afterEach((to, from) => {
