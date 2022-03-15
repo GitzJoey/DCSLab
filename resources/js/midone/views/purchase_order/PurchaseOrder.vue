@@ -252,7 +252,7 @@ const invoiceDatePOpt = ref({
 const poList = ref([]);
 const po = ref({
     invoice_no: '',
-    invoice_date: '20 Mar, 2022',
+    invoice_date: '',
     supplier: {
         hId: '',
         name: ''
@@ -360,7 +360,7 @@ function reValidate(errors) {
 }
 
 function filterProducts() {
-
+    
 }
 //#endregion
 

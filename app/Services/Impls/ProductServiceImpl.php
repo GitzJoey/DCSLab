@@ -115,6 +115,8 @@ class ProductServiceImpl implements ProductService
             $product = $product->where('product_type', '=', Config::get('const.ENUMS.PRODUCT_TYPE.SVC'));
         } else if ($isProduct && !$isService) {
             $product = $product->where('product_type', '<>', Config::get('const.ENUMS.PRODUCT_TYPE.SVC'));
+        } else if ($isProduct && $isService) {
+            
         } else {
             return null;
         }
