@@ -4,6 +4,72 @@
             <div class="col-span-12 xl:col-span-9 2xl:col-span-9 z-10">
             </div>
             <div class="report-box-3 px-5 pt-8 pb-14 col-span-12 z-10">
+                <div class="col-span-12">
+                    <div class="intro-y flex items-center h-10">
+                        <h2 class="text-lg font-medium truncate mr-5">
+                            {{ greet }}
+                        </h2>
+                        <a href="" class="ml-auto flex items-center text-primary"> <RefreshCcwIcon class="w-4 h-4 mr-3" /></a>
+                    </div>
+                    <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                            <div class="report-box zoom-in">
+                                <div class="box p-5">
+                                    <div class="flex">
+                                        <PlusCircleIcon class="report-box__icon text-primary"/> 
+                                        <div class="ml-auto">
+                                            <div class="report-box__indicator bg-success tooltip cursor-pointer" title=""><ChevronUpIcon class="w-4 h-4 ml-0.5"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-3xl font-medium leading-8 mt-6"></div>
+                                    <div class="text-base text-slate-500 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                            <div class="report-box zoom-in">
+                                <div class="box p-5">
+                                    <div class="flex">
+                                        <PlusCircleIcon class="report-box__icon text-pending"/> 
+                                        <div class="ml-auto">
+                                            <div class="report-box__indicator bg-danger tooltip cursor-pointer" title=""> <ChevronDownIcon class="w-4 h-4 ml-0.5"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-3xl font-medium leading-8 mt-6"></div>
+                                    <div class="text-base text-slate-500 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                            <div class="report-box zoom-in">
+                                <div class="box p-5">
+                                    <div class="flex">
+                                        <PlusCircleIcon class="report-box__icon text-warning"/> 
+                                        <div class="ml-auto">
+                                            <div class="report-box__indicator bg-success tooltip cursor-pointer" title=""><ChevronUpIcon class="w-4 h-4 ml-0.5"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-3xl font-medium leading-8 mt-6"></div>
+                                    <div class="text-base text-slate-500 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                            <div class="report-box zoom-in">
+                                <div class="box p-5">
+                                    <div class="flex">
+                                        <PlusCircleIcon class="report-box__icon text-success"/> 
+                                        <div class="ml-auto">
+                                            <div class="report-box__indicator bg-success tooltip cursor-pointer" title=""><ChevronUpIcon class="w-4 h-4 ml-0.5"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-3xl font-medium leading-8 mt-6"></div>
+                                    <div class="text-base text-slate-500 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -36,6 +102,39 @@
 
 <script setup>
 //#region Imports
-import { defineComponent, inject, onMounted } from "vue";
+import { ref, defineComponent, watch, onMounted, computed } from "vue";
+import { useUserContextStore } from "@/stores/user-context";
+import { useI18n } from "vue-i18n";
+//#endregion
+
+//#region Declarations
+const { t } = useI18n();
+//#endregion
+
+//#region Data - Pinia
+const userContextStore = useUserContextStore();
+const userContext = computed(() => userContextStore.userContext);
+//#endregion
+
+//#region Data - UI
+const greet = ref('');
+//#endregion
+
+//#region onMounted
+onMounted(() => {
+    greetings();
+});
+//#endregion
+
+//#region Methods
+function greetings() {
+    greet.value = 'Welcome, ' + userContext.value.name;
+}
+//#endregion
+
+//#region Watcher
+watch(userContext, () => {
+    greetings();
+});
 //#endregion
 </script>
