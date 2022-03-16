@@ -2,6 +2,7 @@ import Litepicker from "./litepicker/Main.vue";
 import Tippy from "./tippy/Main.vue";
 import TippyContent from "./tippy-content/Main.vue";
 import TomSelect from "./tom-select/Main.vue";
+import TomSelectAjax from "./tom-select/AjaxMain.vue";
 import LoadingIcon from "./loading-icon/Main.vue";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "./modal";
 import {
@@ -29,6 +30,7 @@ export default (app) => {
   app.component("Tippy", Tippy);
   app.component("TippyContent", TippyContent);
   app.component("TomSelect", TomSelect);
+  app.component("TomSelectAjax", TomSelectAjax);
   app.component("LoadingIcon", LoadingIcon);
   app.component("Modal", Modal);
   app.component("ModalHeader", ModalHeader);
