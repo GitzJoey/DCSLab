@@ -28,7 +28,7 @@ interface EmployeeService
         int $status
     ): ?Employee;
 
-    public function delete(int $userId, int $id): bool;
+    public function delete(int $id): bool;
 
     public function generateUniqueCode(int $companyId): string;
 

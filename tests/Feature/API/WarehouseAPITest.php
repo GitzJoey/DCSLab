@@ -2,13 +2,14 @@
 
 namespace Tests\Feature\API;
 
-use App\Actions\RandomGenerator;
-use App\Models\Warehouse;
-use App\Models\Company;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Warehouse;
+use App\Actions\RandomGenerator;
+use App\Services\WarehouseService;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class WarehouseAPITest extends APITestCase
 {
@@ -48,56 +49,39 @@ class WarehouseAPITest extends APITestCase
         $api->assertSuccessful();
     }
 
-    public function test_api_call_save()
+    public function test_api_call_edit()
     {
         $this->actingAs($this->user);
-
         $companyId = Company::inRandomOrder()->get()[0]->id;
-        $code = (new RandomGenerator())->generateNumber(1, 9999);
+        $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
-        $remarks = '';
+        $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
+        $warehouseService = app(WarehouseService::class);
+        $warehouseId = $warehouseService->create(
+            $companyId,
+            $code,
+            $name,
+            $address,
+            $city,
+            $contact,
+            $remarks,
+            $status
+        );
+        $warehouseId = $warehouseId->id;
 
-        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
-            'company_id' => Hashids::encode($companyId),
-            'code' => $code, 
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status
-        ]);
-
-        $api->assertSuccessful();
-    }
-
-    public function test_api_call_edit()
-    {
-        $this->actingAs($this->user);
-
-        $warehouse = Warehouse::with('company')->inRandomOrder()->first();
-
-        $code_new = (new RandomGenerator())->generateNumber(1, 9999) . 'new';
-        $name_new = $this->faker->name;
-        $address_new = $this->faker->address;
-        $city_new = $this->faker->city;
-        $contact_new = $this->faker->e164PhoneNumber;
-        $remarks_new = '';
-        $status_new = (new RandomGenerator())->generateNumber(0, 1);
-
-        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => $warehouse->hId ]), [
-            'company_id' => $warehouse->company->hId,
-            'code' => $code_new, 
-            'name' => $name_new,
-            'address' => $address_new,
-            'city' => $city_new,
-            'contact' => $contact_new,
-            'remarks' => $remarks_new,
-            'status' => $status_new
+        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => $warehouseId ]), [
+            'company_id' => Hashids::encode(Company::inRandomOrder()->get()[0]->id),
+            'code' => (new RandomGenerator())->generateNumber(1, 9999) . 'new',
+            'name' => $this->faker->name,
+            'address' => $this->faker->address,
+            'city' => $this->faker->city,
+            'contact' => $this->faker->e164PhoneNumber,
+            'remarks' => $this->faker->sentence,
+            'status' => (new RandomGenerator())->generateNumber(0, 1),
         ]);
 
         $api_edit->assertSuccessful();
@@ -107,9 +91,29 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $warehouse = Warehouse::with('company')->inRandomOrder()->first();
+        $this->actingAs($this->user);
+        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $remarks = null;
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $warehouseService = app(WarehouseService::class);
+        $warehouseId = $warehouseService->create(
+            $companyId,
+            $code,
+            $name,
+            $address,
+            $city,
+            $contact,
+            $remarks,
+            $status
+        );
+        $warehouseId = $warehouseId->id;
 
-        $api = $this->json('POST', route('api.post.db.company.warehouse.delete', [ 'id' => $warehouse->hId ]));
+        $api = $this->json('POST', route('api.post.db.company.warehouse.delete', $warehouseId));
 
         $api->assertSuccessful();
     }

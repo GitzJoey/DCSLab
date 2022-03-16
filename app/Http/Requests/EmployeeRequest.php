@@ -28,11 +28,11 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'address' => 'nullable',
-            'city' => 'nullable',
+            'address' => 'nullable|max:255',
+            'city' => 'nullable|max:255',
             'postal_code' => 'nullable',
             'img_path' => 'nullable',
-            'remarks' => 'nullable',
+            'remarks' => 'nullable|max:255',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -42,30 +42,23 @@ class EmployeeRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
-                    'address' => 'max:255',
-                    'city' => 'max:255',
-                    'postal_code' => 'max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'remarks' => 'max:255',
                     'status' => 'required',
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
                     'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
-                    'address' => 'max:255',
-                    'city' => 'max:255',
-                    'postal_code' => 'max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'remarks' => 'max:255',
                     'status' => 'required',
                 ];
                 return array_merge($rules_update, $nullableArr);

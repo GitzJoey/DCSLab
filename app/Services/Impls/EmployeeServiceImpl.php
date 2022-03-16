@@ -108,7 +108,7 @@ class EmployeeServiceImpl implements EmployeeService
         }
     }
 
-    public function delete(int $userId, int $id): bool
+    public function delete(int $id): bool
     {
         DB::beginTransaction();
 
