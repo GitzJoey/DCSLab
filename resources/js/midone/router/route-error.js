@@ -13,7 +13,8 @@ export default {
             name: 'side-menu-error-403',
             component: Error403,
             meta: { 
-                remember: false 
+                remember: false,
+                log_route: false
             }
         }
     ]
