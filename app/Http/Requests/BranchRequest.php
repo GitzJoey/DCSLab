@@ -30,10 +30,10 @@ class BranchRequest extends FormRequest
         $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
 
         $nullableArr = [
-            'address' => 'nullable',
-            'city' => 'nullable',
-            'contact' => 'nullable',
-            'remarks' => 'nullable',
+            'address' => 'nullable|max:255',
+            'city' => 'nullable|max:255',
+            'contact' => 'nullable|max:255',
+            'remarks' => 'nullable|max:255',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
