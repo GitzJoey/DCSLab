@@ -24,11 +24,11 @@
                         <input class="form-check-input" type="checkbox" @click="checkAll">
                     </div>
                     <div class="flex items-center sm:ml-auto">
-                        <div class="dark:text-slate-300">1 - 50 of 5,238</div>
+                        <div class="dark:text-slate-300"></div>
                     </div>
                 </div>
                 <div class="overflow-x-auto sm:overflow-x-visible">
-                    <div class="intro-y">
+                    <div class="intro-y" v-for="m in messageList">
                         <div class="inbox__item inbox__item--active inline-block sm:block text-gray-700 dark:text-slate-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
                             <div class="flex px-5 py-3">
                                 <div class="w-50 flex-none flex items-center mr-5">
@@ -36,47 +36,17 @@
                                     <div class="w-6 h-6 flex-none image-fit relative ml-5">
                                         <img alt="" class="rounded-full" :src="assetPath('def-user.png')">
                                     </div>
-                                    <div class="inbox__item--sender truncate ml-3">Brad Pitt</div>
+                                    <div class="inbox__item--sender truncate ml-3">{{ m.from }}</div>
                                 </div>
-                                <div class="w-64 sm:w-auto truncate"> <span class="inbox__item--highlight">There are many variations of passages of Lorem Ips</span> There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomi </div>
-                                <div class="inbox__item--time whitespace-nowrap ml-auto pl-10">01:10 PM</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="intro-y">
-                        <div class="inbox__item inbox__item--active inline-block sm:block text-gray-700 dark:text-slate-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
-                            <div class="flex px-5 py-3">
-                                <div class="w-50 flex-none flex items-center mr-5">
-                                    <input class="form-check-input flex-none" type="checkbox" >
-                                    <div class="w-6 h-6 flex-none image-fit relative ml-5">
-                                        <img alt="" class="rounded-full" :src="assetPath('def-user.png')">
-                                    </div>
-                                    <div class="inbox__item--sender truncate ml-3">Russell Crowe</div>
-                                </div>
-                                <div class="w-64 sm:w-auto truncate"> <span class="inbox__item--highlight">Contrary to popular belief, Lo</span> Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 20 </div>
-                                <div class="inbox__item--time whitespace-nowrap ml-auto pl-10">01:10 PM</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="intro-y">
-                        <div class="inbox__item inline-block sm:block text-gray-700 dark:text-slate-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
-                            <div class="flex px-5 py-3">
-                                <div class="w-50 flex-none flex items-center mr-5">
-                                    <input class="form-check-input flex-none" type="checkbox" checked>
-                                    <div class="w-6 h-6 flex-none image-fit relative ml-5">
-                                        <img alt="" class="rounded-full" :src="assetPath('def-user.png')">
-                                    </div>
-                                    <div class="inbox__item--sender truncate ml-3">Morgan Freeman</div>
-                                </div>
-                                <div class="w-64 sm:w-auto truncate"> <span class="inbox__item--highlight">Contrary to popular belief, Lo</span> Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 20 </div>
-                                <div class="inbox__item--time whitespace-nowrap ml-auto pl-10">05:09 AM</div>
+                                <div class="w-64 sm:w-auto truncate"> <span class="inbox__item--highlight">{{ m.subject }}</span></div>
+                                <div class="inbox__item--time whitespace-nowrap ml-auto pl-10">{{ m.msg_datetime }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="p-5 flex flex-col sm:flex-row items-center text-center sm:text-left text-slate-600">
-                    <div class="dark:text-slate-300">4.41 GB (25%) of 17 GB used Manage</div>
-                    <div class="sm:ml-auto mt-2 sm:mt-0 dark:text-slate-300">Last account activity: 36 minutes ago</div>
+                    <div class="dark:text-slate-300"></div>
+                    <div class="sm:ml-auto mt-2 sm:mt-0 dark:text-slate-300"></div>
                 </div>
             </div>
             <div class="intro-y box mt-5" v-if="mode === 'create'">
@@ -130,7 +100,8 @@ const messageList = ref([]);
 const message = ref({
     to: [],
     subject: '',
-    text: ''
+    text: '',
+    msg_datetime: ''
 });
 //#endregion
 
