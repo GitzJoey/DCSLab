@@ -48,6 +48,12 @@ return [
     */
 
     'channels' => [
+        'perfs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/performances.log'),
+            'level' => 'info' 
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

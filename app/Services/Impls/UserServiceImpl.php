@@ -64,6 +64,7 @@ class UserServiceImpl implements UserService
     public function create(string $name, string $email, string $password, array $rolesId, array $profile): ?User
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             //throw New \Exception('Test Exception From Services');
@@ -113,6 +114,9 @@ class UserServiceImpl implements UserService
             DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -123,48 +127,66 @@ class UserServiceImpl implements UserService
 
     public function read(string $search = '', bool $paginate = true, int $perPage = 10)
     {
-        $relationship = ['roles', 'profile', 'settings'];
+        $timer_start = microtime(true);
+        try {
+            $relationship = ['roles', 'profile', 'settings'];
 
-        if (empty($search)) {
-            $usr = User::with($relationship)->latest();
-        } else {
-            $usr = User::with($relationship)
-                    ->where('email', 'like', '%'.$search.'%')
-                    ->orWhere('name', 'like', '%'.$search.'%')
-                    ->orWhereHas('profile', function ($query) use($search) {
-                        $query->where('first_name', 'like', '%'.$search.'%')
-                                ->orWhere('last_name', 'like', '%'.$search.'%');
-                    })->latest();
-        }
-
-        if ($paginate) {
-            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-            return $usr->paginate(abs($perPage));
-        } else {
-            return $usr->get();
+            if (empty($search)) {
+                $usr = User::with($relationship)->latest();
+            } else {
+                $usr = User::with($relationship)
+                        ->where('email', 'like', '%'.$search.'%')
+                        ->orWhere('name', 'like', '%'.$search.'%')
+                        ->orWhereHas('profile', function ($query) use($search) {
+                            $query->where('first_name', 'like', '%'.$search.'%')
+                                    ->orWhere('last_name', 'like', '%'.$search.'%');
+                        })->latest();
+            }
+    
+            if ($paginate) {
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                return $usr->paginate(abs($perPage));
+            } else {
+                return $usr->get();
+            }    
+        } catch (Exception $e) {
+            return null;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function readBy(string $key, string $value)
     {
-        switch(strtoupper($key)) {
-            case 'ID':
-                if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
-                    return User::with('roles.permissions', 'profile', 'companies')->find($value);
+        $timer_start = microtime(true);
 
-                return Cache::tags([$value])->remember('readByID'.$value, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($value) {
-                    return User::with('roles.permissions', 'profile', 'companies')->find($value);
-                });
-            case 'EMAIL':
-                return User::where('email', '=', $value)->first();
-            default:
-                return null;
+        try {
+            switch(strtoupper($key)) {
+                case 'ID':
+                    if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
+                        return User::with('roles.permissions', 'profile', 'companies')->find($value);
+    
+                    return Cache::tags([$value])->remember('readByID'.$value, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($value) {
+                        return User::with('roles.permissions', 'profile', 'companies')->find($value);
+                    });
+                case 'EMAIL':
+                    return User::where('email', '=', $value)->first();
+                default:
+                    return null;
+            }    
+        } catch (Exception $e) {
+            return null;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function update(int $id, ?string $name = null, ?array $rolesId = null, ?array $profile = null, ?array $settings = null): ?User
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $usr = User::find($id);
@@ -188,12 +210,16 @@ class UserServiceImpl implements UserService
             DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function updateUser(User $user, string $name, bool $useTransactions = true): ?bool
     {
         !$useTransactions ? : DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             //DB::enableQueryLog();
@@ -211,12 +237,16 @@ class UserServiceImpl implements UserService
             !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function updateProfile(User $user, array $profile, bool $useTransactions = true): ?bool
     {
         !$useTransactions ? : DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             if ($profile != null) {
@@ -244,12 +274,16 @@ class UserServiceImpl implements UserService
             !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?User
     {
         !$useTransactions ? : DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             !$useTransactions ? : DB::commit();
@@ -261,12 +295,16 @@ class UserServiceImpl implements UserService
             !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function updateSettings(User $user, array $settings, bool $useTransactions = true): ?bool
     {
         !$useTransactions ? : DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             !$useTransactions ? : DB::commit();
@@ -287,6 +325,9 @@ class UserServiceImpl implements UserService
             !$useTransactions ? : DB::rollBack();
             Log::debug($e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 

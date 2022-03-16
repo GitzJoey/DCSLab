@@ -12,6 +12,7 @@ use App\Services\CompanyService;
 
 use App\Models\User;
 use App\Models\Company;
+use finfo;
 
 class CompanyServiceImpl implements CompanyService
 {
@@ -30,6 +31,7 @@ class CompanyServiceImpl implements CompanyService
     ): Company
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $usr = User::find($userId);
@@ -62,37 +64,58 @@ class CompanyServiceImpl implements CompanyService
             DB::rollBack();
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10)
     {
-        $usr = User::find($userId);
-        if (!$usr) return null;
+        $timer_start = microtime(true);
 
-        $compIds = $usr->companies()->pluck('company_id');
-        
-        if (empty($search)) {
-            $companies = Company::whereIn('id', $compIds)->latest();
-        } else {
-            $companies = Company::whereIn('id', $compIds)->where('name', 'like', '%'.$search.'%')->latest();
-        }
-
-        if ($paginate) {
-            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-            return $companies->paginate($perPage);
-        } else {
-            return $companies->get();
+        try {
+            $usr = User::find($userId);
+            if (!$usr) return null;
+    
+            $compIds = $usr->companies()->pluck('company_id');
+            
+            if (empty($search)) {
+                $companies = Company::whereIn('id', $compIds)->latest();
+            } else {
+                $companies = Company::whereIn('id', $compIds)->where('name', 'like', '%'.$search.'%')->latest();
+            }
+    
+            if ($paginate) {
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                return $companies->paginate($perPage);
+            } else {
+                return $companies->get();
+            }
+        } catch (Exception $e) {
+            return null;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function getAllActiveCompany(int $userId)
     {
-        $usr = User::find($userId);
-        if (!$usr) return null;
+        $timer_start = microtime(true);
 
-        $compIds = $usr->companies()->pluck('company_id');
-        return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();
+        try {
+            $usr = User::find($userId);
+            if (!$usr) return null;
+    
+            $compIds = $usr->companies()->pluck('company_id');
+            return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();    
+        } catch (Exception $e) {
+            return null;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
     }
 
     public function update(
@@ -105,6 +128,7 @@ class CompanyServiceImpl implements CompanyService
     ): Company
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $company = Company::find($id);
@@ -128,12 +152,16 @@ class CompanyServiceImpl implements CompanyService
             DB::rollBack();
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function delete(int $userId, int $id): bool
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         $retval = false;
         try {
@@ -153,6 +181,9 @@ class CompanyServiceImpl implements CompanyService
             DB::rollBack();
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -181,6 +212,7 @@ class CompanyServiceImpl implements CompanyService
     public function resetDefaultCompany(int $userId): bool
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $usr = User::find($userId);
@@ -196,6 +228,9 @@ class CompanyServiceImpl implements CompanyService
             DB::rollBack();
             Log::debug($e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
