@@ -108,37 +108,47 @@
         <div class="loader-container">
             <VeeForm id="companyForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <div class="mb-3">
-                        <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
-                        <div class="flex item-centers">
-                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" :readonly="mode === 'create' && company.code === '[AUTO]'" />
-                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                    <!-- #region code -->
+                        <div class="mb-3">
+                            <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
+                            <div class="flex item-centers">
+                                <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" :readonly="mode === 'create' && company.code === '[AUTO]'" />
+                                <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                            </div>
+                            <ErrorMessage name="code" class="text-theme-21" />
                         </div>
-                        <ErrorMessage name="code" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" />
-                        <ErrorMessage name="name" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
-                        <div class="mt-2">
-                            <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default">
+                    <!-- #endregion -->                   
+                    <!-- #region name -->
+                        <div class="mb-3">
+                            <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
+                            <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" />
+                            <ErrorMessage name="name" class="text-theme-21" />
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
-                        <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </VeeField>
-                        <ErrorMessage name="status" class="text-theme-21" />
-                    </div>
+                    <!-- #endregion -->
+                    <!-- #region address -->
+                        <div class="mb-3">
+                            <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
+                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" rows="3"></textarea>
+                        </div>
+                    <!-- #endregion -->
+                    <!-- #region default -->
+                        <div class="mb-3">
+                            <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
+                            <div class="mt-2">
+                                <input id="inputDefault" type="checkbox" class="form-check-switch" name="default" v-model="company.default">
+                            </div>
+                        </div>
+                    <!-- #endregion -->
+                    <!-- #region status -->
+                        <div class="mb-3">
+                            <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
+                            <VeeField as="select" :class="{'form-control form-select':true, 'border-theme-21':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            </VeeField>
+                            <ErrorMessage name="status" class="text-theme-21" />
+                        </div>
+                    <!-- #endregion -->
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
