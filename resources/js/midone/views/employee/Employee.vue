@@ -127,7 +127,7 @@
                     <!-- #region address-->
                         <div class="mb-3">
                             <label for="inputAddress" class="form-label">{{ t('views.employee.fields.address') }}</label>
-                            <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.employee.fields.address')" v-model="employee.user.profile.address"/>
+                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.employee.fields.address')" v-model="employee.user.profile.address" rows="3"></textarea>
                         </div>
                     <!-- #endregion -->
                     
@@ -185,8 +185,8 @@
                     
                     <!-- #region remarks-->
                         <div class="mb-3">
-                            <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
-                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="employee.user.profile.remarks" rows="3"></textarea>
+                            <label for="inputRemarks" class="form-label">{{ t('views.employee.fields.remarks') }}</label>
+                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.employee.fields.remarks')" v-model="employee.user.profile.remarks" rows="3"></textarea>
                         </div>
                     <!-- #endregion -->
                     
@@ -399,8 +399,6 @@ function resetAlertErrors() {
 function createNew() {
     mode.value = 'create';
     employee.value = emptyEmployee();
-
-    // employee.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
 function onDataListChange({page, pageSize, search}) {

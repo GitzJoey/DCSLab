@@ -4,9 +4,10 @@ namespace App\Http\Requests;
 
 use App\Rules\uniqueCode;
 use App\Rules\validDropDownValue;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use App\Rules\deactivateDefaultCompany;
+use Illuminate\Foundation\Http\FormRequest;
 
 class EmployeeRequest extends FormRequest
 {
@@ -46,7 +47,7 @@ class EmployeeRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'status' => 'required',
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -59,7 +60,7 @@ class EmployeeRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'status' => 'required',
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
