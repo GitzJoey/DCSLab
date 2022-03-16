@@ -49,6 +49,33 @@ class WarehouseAPITest extends APITestCase
         $api->assertSuccessful();
     }
 
+    public function test_api_call_save()
+    {
+        $this->actingAs($this->user);
+
+        $companyId = Company::inRandomOrder()->get()[0]->id;;
+        $code = (new RandomGenerator())->generateNumber(1, 9999);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $remarks = '';
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+
+        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
+            'company_id' => Hashids::encode($companyId),
+            'code' => $code, 
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'remarks' => $remarks,
+            'status' => $status
+        ]);
+
+        $api->assertSuccessful();
+    }
+
     public function test_api_call_edit()
     {
         $this->actingAs($this->user);
