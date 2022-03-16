@@ -34,7 +34,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;;
+        $companyId = Company::inRandomOrder()->get()[0]->id;
         $page = 1;
         $pageSize = 10;
         $search = '';
