@@ -33,7 +33,7 @@
                                             <CheckSquareIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.edit') }}
                                         </a>
-                                        <a class="flex items-center text-danger" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                        <a class="flex items-center text-danger" href="javascript:;" @click="deleteSelected(itemIdx)">
                                             <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                         </a>
                                     </div>
@@ -103,27 +103,23 @@
                         </template>
                     </tbody>
                 </table>
-                <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-body p-0">
-                                <div class="p-5 text-center">
-                                    <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
-                                    <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
-                                    <div class="text-slate-600 mt-2">
-                                        {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
-                                    </div>
-                                </div>
-                                <div class="px-5 pb-8 text-center">
-                                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
-                                        {{ t('components.buttons.cancel') }}
-                                    </button>
-                                    <button type="button" data-tw-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
-                                </div>
+                <Modal :show="deleteModalShow" @hidden="deleteModalShow = false">
+                    <ModalBody class="p-0">
+                        <div class="p-5 text-center">
+                            <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
+                            <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
+                            <div class="text-slate-600 mt-2">
+                                {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <div class="px-5 pb-8 text-center">
+                            <button type="button" class="btn btn-outline-secondary w-24 mr-1" @click="deleteModalShow = false">
+                                {{ t('components.buttons.cancel') }}
+                            </button>
+                            <button type="button" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
+                        </div>
+                    </ModalBody>
+                </Modal>
             </template>
         </DataList>
     </div>
@@ -296,6 +292,7 @@ const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
+const deleteModalShow = ref(false);
 const expandDetail = ref(null);
 //#endregion
 
@@ -471,9 +468,11 @@ function editSelected(index) {
 
 function deleteSelected(index) {
     deleteId.value = supplierList.value.data[index].hId;
+    deleteModalShow.value = true;
 }
 
 function confirmDelete() {
+    deleteModalShow.value = false;
     axios.post(route('api.post.db.supplier.supplier.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
