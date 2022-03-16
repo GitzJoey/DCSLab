@@ -1,5 +1,11 @@
 .report-chart {
-    @apply relative;
-    @apply before:block before:absolute before:w-16 before:h-[85%] before:sm:h-[93%] before:left-0 before:top-0 before:ml-10 before:bg-gradient-to-r before:from-white before:via-white/80 before:to-transparent before:dark:from-darkmode-600;
-    @apply after:block after:absolute after:w-16 after:h-[85%] after:sm:h-[93%] after:right-0 after:top-0 after:bg-gradient-to-l after:from-white after:via-white/80 after:to-transparent after:dark:from-darkmode-600;
+  @apply relative;
+  &:before {
+    content: "";
+    @apply block absolute w-16 left-0 top-0 bottom-0 ml-10 mb-7 bg-gradient-to-r from-white via-white/80 to-transparent dark:from-darkmode-600;
+  }
+  &:after {
+    content: "";
+    @apply block absolute w-16 right-0 top-0 bottom-0 mb-7 bg-gradient-to-l from-white via-white/80 to-transparent dark:from-darkmode-600;
+  }
 }

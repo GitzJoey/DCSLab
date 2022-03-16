@@ -1,6 +1,6 @@
 <template>
   <div class="shadow-md fixed bottom-0 right-0 box border rounded-full h-12 px-5 flex items-center justify-center z-50 mb-10 mr-52" v-if="visible">
-    <div class="mr-4 hidden sm:block text-slate-600 dark:text-slate-200">
+    <div class="mr-4 hidden sm:block text-gray-600 dark:text-slate-200">
       Color Scheme
     </div>
     <a @click="switchColorScheme('default')" class="block w-8 h-8 cursor-pointer bg-emerald-900 rounded-full border-4 mr-1 hover:border-slate-200" :class="{ 'border-slate-300 dark:border-darkmode-800/80':colorScheme == 'default', 'border-white dark:border-darkmode-600': colorScheme != 'default', }"></a>

@@ -1,9 +1,16 @@
 import dom from "@left4code/tw-starter/dist/js/dom";
 
+// Setup side menu
 const findActiveMenu = (subMenu, route) => {
   let match = false;
   subMenu.forEach((item) => {
-    if (item.pageName === route.name && !item.ignore) {
+    if (
+      ((route.forceActiveMenu !== undefined &&
+        item.pageName === route.forceActiveMenu) ||
+        (route.forceActiveMenu === undefined &&
+          item.pageName === route.name)) &&
+      !item.ignore
+    ) {
       match = true;
     } else if (!match && item.subMenu) {
       match = findActiveMenu(item.subMenu, route);
@@ -17,7 +24,10 @@ const nestedMenu = (menu, route) => {
     if (typeof item !== "string") {
       let menuItem = menu[key];
       menuItem.active =
-        (item.pageName === route.name ||
+        ((route.forceActiveMenu !== undefined &&
+          item.pageName === route.forceActiveMenu) ||
+          (route.forceActiveMenu === undefined &&
+            item.pageName === route.name) ||
           (item.subMenu && findActiveMenu(item.subMenu, route))) &&
         !item.ignore;
 

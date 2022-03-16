@@ -14,7 +14,7 @@
                     </div>
                     <div class="ml-4 mr-auto">
                         <div class="font-medium text-base">{{ userContext.name }}</div>
-                        <div class="text-gray-600">{{ userContext.email }}</div>
+                        <div class="text-slate-600">{{ userContext.email }}</div>
                     </div>
                 </div>
                 <div class="p-5 border-t border-gray-200 dark:border-dark-5">

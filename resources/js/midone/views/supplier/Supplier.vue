@@ -110,7 +110,7 @@
                                 <div class="p-5 text-center">
                                     <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
                                     <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
-                                    <div class="text-gray-600 mt-2">
+                                    <div class="text-slate-600 mt-2">
                                         {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
                                     </div>
                                 </div>

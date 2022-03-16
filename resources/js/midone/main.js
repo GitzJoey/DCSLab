@@ -4,7 +4,6 @@ import App from "./App.vue";
 import router from "./router";
 import globalComponents from "./global-components";
 import utils from "./utils";
-import "./libs";
 import i18n from "./lang";
 import VeeValidate from "./validation";
 

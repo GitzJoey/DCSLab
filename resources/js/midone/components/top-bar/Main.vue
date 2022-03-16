@@ -1,37 +1,37 @@
 <template>
   <div class="top-bar">
     <nav class="-intro-x mr-auto hidden sm:flex">
-        <div id="company-dropdown" class="intro-x dropdown mr-auto sm:mr-6" data-tw-placement="bottom-start">
-            <div class="dropdown-toggle notification cursor-pointer" role="button" aria-expanded="false" data-tw-toggle="dropdown">
+        <Dropdown id="company-dropdown" class="intro-x mr-auto sm:mr-6" data-tw-placement="bottom-start">
+            <DropdownToggle tag="div" class="notification cursor-pointer" role="button">
                 <div class="flex flex-row">
-                    <UmbrellaIcon class="notification__icon dark:text-gray-300 mr-2" />
-                    <LoadingIcon icon="puff" v-if="selectedCompany === ''"/> <div v-else>{{ selectedCompany }}</div>
+                    <UmbrellaIcon class="notification__icon dark:text-slate-300 mr-2" />
+                    <LoadingIcon icon="puff" v-if="selectedCompany === ''"/> <div class="text-gray-700 dark:text-slate-300" v-else><strong>{{ selectedCompany }}</strong></div>
                 </div>
-            </div>
-            <div class="dropdown-menu w-56">
-                <div class="dropdown-menu__content box dark:bg-dark-6">
-                    <div class="p-2" v-for="(c, cIdx) in userCompanyLists">
-                        <a href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                            <span :class="{ 'underline': c.name === selectedCompany, 'font-medium':c.default === 1 }">{{ c.name }}</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>      
+            </DropdownToggle>
+            <DropdownMenu class="w-56">
+                <DropdownContent class="notification-content__box dark:bg-dark-6">
+                  <div class="p-2" v-for="(c, cIdx) in userCompanyLists">
+                    <a href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                      <span :class="{ 'underline': c.name === selectedCompany, 'font-medium': c.default === 1 }">{{ c.name }}</span>
+                    </a>
+                  </div>
+                </DropdownContent>
+            </DropdownMenu>            
+        </Dropdown>
     </nav>
 
     <div class="mr-auto sm:mr-6 hover:animate-pulse">
-      <a id="slide-over" href="javascript:;" data-tw-toggle="modal" data-tw-target="#slide-over-content" class="notification cursor-pointer">
-        <ArchiveIcon class="notification__icon dark:text-gray-300" />
+      <a href="" class="notification cursor-pointer" @click.prevent="slideOverShow = true">
+        <ArchiveIcon class="notification__icon dark:text-slate-300" />
       </a>
     </div>
 
-    <div id="language-dropdown" class="intro-x dropdown mr-auto sm:mr-6">
-      <div class="dropdown-toggle notification cursor-pointer" role="button" aria-expanded="false" data-tw-toggle="dropdown">
-        <GlobeIcon class="notification__icon dark:text-gray-300" />
-      </div>
-      <div class="dropdown-menu w-56">
-        <div class="dropdown-menu__content box dark:bg-dark-6">
+    <Dropdown id="language-dropdown" class="intro-x mr-auto sm:mr-6">
+      <DropdownToggle tag="div" role="button" class="notification cursor-pointer">
+        <GlobeIcon class="notification__icon dark:text-slate-300" />
+      </DropdownToggle>
+      <DropdownMenu class="w-56">
+        <DropdownContent tag="div" class="notification-content__box">
           <div class="p-2">
             <a href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
               <img alt="English" :src="assetPath('us.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'en' }">English</span>
@@ -42,72 +42,60 @@
               <img alt="Bahasa Indonesia" :src="assetPath('id.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'id' }">Bahasa Indonesia</span>
             </a>
           </div>
-        </div>
-      </div>
-    </div>
+        </DropdownContent>
+      </DropdownMenu>
+    </Dropdown>
 
     <LoadingIcon icon="puff" v-if="userContext.name === undefined"/>
 
-    <div id="main-dropdown" class="intro-x dropdown w-8 h-8" v-else>
-      <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in" role="button" aria-expanded="false" data-tw-toggle="dropdown">
+    <Dropdown id="main-dropdown" class="intro-x w-8 h-8" v-else>
+      <DropdownToggle tag="div" role="button" class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in">
         <img alt="" :src="assetPath('gray200.jpg')"/>
-      </div>
-      <div class="dropdown-menu w-56">
-        <ul class="dropdown-content bg-primary text-white">
-          <li class="p-2">
+      </DropdownToggle>
+      <DropdownMenu class="w-56">
+        <DropdownContent class="bg-primary text-white">
+          <DropdownHeader tag="div" class="!font-normal">
             <div class="font-medium">{{ userContext !== undefined ? userContext.name:'' }}</div>
             <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">{{ userContext.email }}</div>
-          </li>
-          <li><hr class="dropdown-divider border-white/[0.08]" /></li>
-          <li>
-            <a href="" @click.prevent="goTo('profile')" class="dropdown-item hover:bg-white/5">
-              <UserIcon class="w-4 h-4 mr-2" />
-              {{ t('components.top-bar.profile_ddl.profile') }}
-            </a>
-          </li>
-          <li>
-            <a href="" @click.prevent="goTo('inbox')" class="dropdown-item hover:bg-white/5">
-              <MailIcon class="w-4 h-4 mr-2" />
-              {{ t('components.top-bar.profile_ddl.inbox') }}
-            </a>
-          </li>
-          <li>
-            <a href="" @click.prevent="goTo('activity')" class="dropdown-item hover:bg-white/5">
-              <ActivityIcon class="w-4 h-4 mr-2" />
-              {{ t('components.top-bar.profile_ddl.activity') }}
-            </a>
-          </li>
-          <li><hr class="dropdown-divider border-white/[0.08]" /></li>
-          <li>
-            <a href="" @click.prevent="logout" class="dropdown-item hover:bg-white/5">
-              <ToggleRightIcon class="w-4 h-4 mr-2" />
-              {{ t('components.top-bar.profile_ddl.logout') }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
+          </DropdownHeader>
+          <DropdownDivider class="border-white/[0.08]" />
+          <DropdownItem class="dropdown-item hover:bg-white/5" @click="goTo('profile')">
+            <UserIcon class="w-4 h-4 mr-2" />
+            {{ t('components.top-bar.profile_ddl.profile') }}
+          </DropdownItem>
+          <DropdownItem class="dropdown-item hover:bg-white/5" @click.prevent="goTo('inbox')">
+            <MailIcon class="w-4 h-4 mr-2" />
+            {{ t('components.top-bar.profile_ddl.inbox') }}
+          </DropdownItem>
+          <DropdownItem class="dropdown-item hover:bg-white/5" @click.prevent="goTo('activity')">
+            <ActivityIcon class="w-4 h-4 mr-2" />
+            {{ t('components.top-bar.profile_ddl.activity') }}
+          </DropdownItem>
+          <DropdownDivider class="border-white/[0.08]" />
+          <DropdownItem class="dropdown-item hover:bg-white/5" @click.prevent="logout">
+            <ToggleRightIcon class="w-4 h-4 mr-2" />
+            {{ t('components.top-bar.profile_ddl.logout') }}
+          </DropdownItem>
+        </DropdownContent>
+      </DropdownMenu>
+    </Dropdown>
 
-    <div id="slide-over-content" class="modal modal-slide-over" data-tw-backdrop="static" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <a data-tw-dismiss="modal" href="javascript:;">
-            <XIcon class="w-8 h-8 text-white" />
-          </a>
+    <Modal backdrop="static" :slideOver="true" :show="slideOverShow" @hidden="slideOverShow = false">
+      <a @click.prevent="slideOverShow = false" class="absolute top-0 left-0 right-auto mt-4 -ml-12" href="">
+        <XIcon class="w-8 h-8 text-slate-400" />
+      </a>
+      <ModalHeader class="p-5">
+        <h2 class="font-medium text-base mr-auto"></h2>
+      </ModalHeader>
+      
+      <ModalBody>
+        <div></div>  
+      </ModalBody>
 
-          <div class="modal-header">
-            <h2 class="font-medium text-base mr-auto"></h2>
-          </div>
-
-          <div class="modal-body">
-          </div>
-
-          <div class="modal-footer text-right w-full absolute bottom-0">
-            <strong>Copyright &copy; {{ (new Date()).getFullYear() }} <a href="https://www.github.com/GitzJoey">GitzJoey</a>&nbsp;&amp;&nbsp;<a href="#">Contributors</a>.</strong> All rights reserved.<br/> Powered By Coffee &amp; Curiosity.
-          </div>
-        </div>
-      </div>
-    </div>
+      <ModalFooter class="w-full absolute bottom-0">
+        <strong>Copyright &copy; {{ (new Date()).getFullYear() }} <a href="https://www.github.com/GitzJoey">GitzJoey</a>&nbsp;&amp;&nbsp;<a href="https://github.com/GitzJoey/DCSLab/graphs/contributors">Contributors</a>.</strong> All rights reserved.<br/> Powered By Coffee &amp; Curiosity.
+      </ModalFooter>
+    </Modal>
   </div>
 </template>
 
@@ -126,6 +114,8 @@ const router = useRouter();
 const userContextStore = useUserContextStore();
 const userContext = computed(() => userContextStore.userContext);
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany);
+
+const slideOverShow = ref(false);
 
 const selectedCompany = ref('');
 

@@ -7,7 +7,7 @@
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12 lg:col-span-3 2xl:col-span-2">
             <div class="intro-y box bg-theme-1 p-5 mt-5">
-                <button type="button" class="btn text-gray-700 dark:text-gray-300 w-full bg-white dark:bg-theme-1 mt-1 btn-secondary" @click="createNew">
+                <button type="button" class="btn text-gray-700 dark:text-slate-300 w-full bg-white dark:bg-theme-1 mt-1 btn-secondary" @click="createNew">
                     <Edit3Icon class="w-4 h-4 mr-2" />
                     {{ t('components.buttons.compose')}}
                 </button>
@@ -19,17 +19,17 @@
         </div>
         <div class="col-span-12 lg:col-span-9 2xl:col-span-10">
             <div class="intro-y inbox box mt-5" v-if="mode === 'list'">
-                <div class="p-5 flex flex-col-reverse sm:flex-row text-gray-600 border-b border-gray-200 dark:border-dark-1">
+                <div class="p-5 flex flex-col-reverse sm:flex-row text-slate-600 border-b border-gray-200 dark:border-dark-1">
                     <div class="flex items-center mt-3 sm:mt-0 border-t sm:border-0 border-gray-200 pt-5 sm:pt-0 mt-5 sm:mt-0 -mx-5 sm:mx-0 px-5 sm:px-0">
                         <input class="form-check-input" type="checkbox" @click="checkAll">
                     </div>
                     <div class="flex items-center sm:ml-auto">
-                        <div class="dark:text-gray-300">1 - 50 of 5,238</div>
+                        <div class="dark:text-slate-300">1 - 50 of 5,238</div>
                     </div>
                 </div>
                 <div class="overflow-x-auto sm:overflow-x-visible">
                     <div class="intro-y">
-                        <div class="inbox__item inbox__item--active inline-block sm:block text-gray-700 dark:text-gray-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
+                        <div class="inbox__item inbox__item--active inline-block sm:block text-gray-700 dark:text-slate-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
                             <div class="flex px-5 py-3">
                                 <div class="w-50 flex-none flex items-center mr-5">
                                     <input class="form-check-input flex-none" type="checkbox" >
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="intro-y">
-                        <div class="inbox__item inbox__item--active inline-block sm:block text-gray-700 dark:text-gray-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
+                        <div class="inbox__item inbox__item--active inline-block sm:block text-gray-700 dark:text-slate-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
                             <div class="flex px-5 py-3">
                                 <div class="w-50 flex-none flex items-center mr-5">
                                     <input class="form-check-input flex-none" type="checkbox" >
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                     <div class="intro-y">
-                        <div class="inbox__item inline-block sm:block text-gray-700 dark:text-gray-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
+                        <div class="inbox__item inline-block sm:block text-gray-700 dark:text-slate-500 bg-gray-100 dark:bg-dark-1 border-b border-gray-200 dark:border-dark-1">
                             <div class="flex px-5 py-3">
                                 <div class="w-50 flex-none flex items-center mr-5">
                                     <input class="form-check-input flex-none" type="checkbox" checked>
@@ -74,9 +74,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-5 flex flex-col sm:flex-row items-center text-center sm:text-left text-gray-600">
-                    <div class="dark:text-gray-300">4.41 GB (25%) of 17 GB used Manage</div>
-                    <div class="sm:ml-auto mt-2 sm:mt-0 dark:text-gray-300">Last account activity: 36 minutes ago</div>
+                <div class="p-5 flex flex-col sm:flex-row items-center text-center sm:text-left text-slate-600">
+                    <div class="dark:text-slate-300">4.41 GB (25%) of 17 GB used Manage</div>
+                    <div class="sm:ml-auto mt-2 sm:mt-0 dark:text-slate-300">Last account activity: 36 minutes ago</div>
                 </div>
             </div>
             <div class="intro-y box mt-5" v-if="mode === 'create'">

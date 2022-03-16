@@ -7,18 +7,37 @@ const setValue = (el, props) => {
   }
 };
 
-const init = (el, emit, computedOptions) => {
-  el.TomSelect = new TomSelect(el, computedOptions);
-  el.TomSelect.on("change", function (selectedItems) {
+const init = (originalEl, clonedEl, props, emit, computedOptions) => {
+  // On option add
+  if (Array.isArray(props.modelValue)) {
+    computedOptions = {
+      onOptionAdd: function (value) {
+        // Add new option
+        const newOption = document.createElement("option");
+        newOption.value = value;
+        newOption.text = value;
+        originalEl.add(newOption);
+
+        // Emit option add
+        emit("optionAdd", value);
+      },
+      ...computedOptions,
+    };
+  }
+
+  clonedEl.TomSelect = new TomSelect(clonedEl, computedOptions);
+
+  // On change
+  clonedEl.TomSelect.on("change", function (selectedItems) {
     emit("update:modelValue", selectedItems);
   });
 };
 
-const reInit = (el, props, emit, computedOptions) => {
-  el.TomSelect.destroy();
-  dom(el).html(dom(el).prev().html());
-  setValue(el, props);
-  init(el, emit, computedOptions);
+const reInit = (originalEl, clonedEl, props, emit, computedOptions) => {
+  clonedEl.TomSelect.destroy();
+  dom(clonedEl).html(dom(clonedEl).prev().html());
+  setValue(clonedEl, props);
+  init(originalEl, clonedEl, props, emit, computedOptions);
 };
 
 export { setValue, init, reInit };
