@@ -8,7 +8,7 @@ import Ex2 from "@/views/dev/Ex2";
 
 const root = '/dashboard';
 
-function admin() {
+function Admin() {
     return {
         path: root + '/admin',
         component: SideMenu,
@@ -26,7 +26,7 @@ function admin() {
     };
 }
 
-function dev() {
+function DevTool() {
     return {
         path: root + '/dev',
         component: SideMenu,
@@ -43,7 +43,7 @@ function dev() {
     };
 }
 
-function example() {
+function Example() {
     return {
         path: root + '/dev' + '/example',
         name: 'side-menu-devtool-example',
@@ -69,4 +69,4 @@ function example() {
     };
 }
 
-export default { admin, dev, example }
+export default { Admin, DevTool, Example }

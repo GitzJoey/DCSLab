@@ -20,9 +20,9 @@ const routes = [
     RouteSupplier,
     RouteProduct,
     RoutePurchaseOrder,
-    RouteAdmin.admin,
-    RouteAdmin.dev,
-    RouteAdmin.example,
+    RouteAdmin.Admin(),
+    RouteAdmin.DevTool(),
+    RouteAdmin.Example(),
     RouteError
 ];
 
