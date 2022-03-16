@@ -62,7 +62,7 @@ class WarehouseAPITest extends APITestCase
         $remarks = '';
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
-        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => Hashids::encode($companyId),
             'code' => $code, 
             'name' => $name,
