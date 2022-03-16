@@ -59,20 +59,20 @@
             <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">{{ userContext.email }}</div>
           </DropdownHeader>
           <DropdownDivider class="border-white/[0.08]" />
-          <DropdownItem class="dropdown-item hover:bg-white/5" @click="goTo('profile')">
+          <DropdownItem @click="goTo('profile')">
             <UserIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.profile') }}
           </DropdownItem>
-          <DropdownItem class="dropdown-item hover:bg-white/5" @click.prevent="goTo('inbox')">
+          <DropdownItem @click.prevent="goTo('inbox')">
             <MailIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.inbox') }}
           </DropdownItem>
-          <DropdownItem class="dropdown-item hover:bg-white/5" @click.prevent="goTo('activity')">
+          <DropdownItem @click.prevent="goTo('activity')">
             <ActivityIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.activity') }}
           </DropdownItem>
           <DropdownDivider class="border-white/[0.08]" />
-          <DropdownItem class="dropdown-item hover:bg-white/5" @click.prevent="logout">
+          <DropdownItem @click.prevent="logout">
             <ToggleRightIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.logout') }}
           </DropdownItem>

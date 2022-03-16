@@ -9,26 +9,26 @@
         <div class="grid grid-cols-12 gap-6 mt-5" v-if="!loading">
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
                 <button class="btn btn-primary shadow-md mr-2 w-20" v-if="enableCreate" @click="$emit('createNew')"><PlusIcon class="w-4 h-4" /></button>
-                <div class="dropdown" data-placement="bottom-start" v-if="canPrint || canExport">
-                    <button class="dropdown-toggle btn px-2 box text-gray-700 dark:text-slate-300" aria-expanded="false">
+                <Dropdown v-if="canPrint || canExport">
+                    <DropdownToggle class=" btn px-2 box text-gray-700 dark:text-slate-300">
                     <span class="w-5 h-5 flex items-center justify-center">
                       <ColumnsIcon class="w-4 h-4" />
                     </span>
-                    </button>
-                    <div class="dropdown-menu w-40">
-                        <div class="dropdown-menu__content box dark:bg-dark-1 p-2">
-                            <a v-if="canPrint" href="" @click.prevent="$emit('print')" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
+                    </DropdownToggle>
+                    <DropdownMenu class="w-40">
+                        <DropdownContent class="box dark:bg-dark-1 p-2">
+                            <DropdownItem v-if="canPrint" @click.prevent="$emit('print')">
                                 <PrinterIcon class="w-4 h-4 mr-2" /> {{ t('components.data-list.print') }}
-                            </a>
-                            <a v-if="canExport" href="" @click.prevent="$emit('export', 'xls')" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
+                            </DropdownItem>
+                            <DropdownItem v-if="canExport" @click.prevent="$emit('export', 'xls')">
                                 <FileTextIcon class="w-4 h-4 mr-2" /> {{ t('components.data-list.exportToExcel') }}
-                            </a>
-                            <a v-if="canExport" href="" @click.prevent="$emit('export', 'pdf')" class="flex items-center block p-2 transition duration-300 ease-in-out bg-white dark:bg-dark-1 hover:bg-gray-200 dark:hover:bg-dark-2 rounded-md">
+                            </DropdownItem>
+                            <DropdownItem v-if="canExport" @click.prevent="$emit('export', 'pdf')">
                                 <FileTextIcon class="w-4 h-4 mr-2" /> {{ t('components.data-list.exportToPDF') }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                            </DropdownItem>
+                        </DropdownContent>
+                    </DropdownMenu>
+                </Dropdown>
                 <div class="hidden md:block mx-auto text-slate-600">
                     <template v-if="!dataNotFound">
                         {{ t('components.data-list.showing') }} {{ data.meta.from }} {{ t('components.data-list.to') }} {{ data.meta.to }} {{ t('components.data-list.of') }} {{ data.meta.total }} {{ t('components.data-list.entries') }}

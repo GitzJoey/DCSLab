@@ -131,127 +131,129 @@
         </div>
         <div class="loader-container">
             <VeeForm id="supplierForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
-                <div class="nav nav-tabs flex-col sm:flex-row bg-gray-300 dark:bg-dark-2 text-gray-600" role="tablist">
-                    <Tippy id="supplier-tab" tag="a" :content="t('views.supplier.tabs.supplier')" data-tw-toggle="tab" data-tw-target="#supplier" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center active" role="tab" aria-controls="supplier" aria-selected="true">
-                        <span :class="{'text-danger':errors['code']||errors['name']|errors['payment_term_type']|errors['status']}">{{ t('views.supplier.tabs.supplier') }}</span>
-                    </Tippy>
-                    <Tippy id="poc-tab" tag="a" :content="t('views.supplier.tabs.poc')" data-tw-toggle="tab" data-tw-target="#poc" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="poc" aria-selected="false">
-                        <span :class="{'text-danger':errors['poc_name']||errors['email']}">{{ t('views.supplier.tabs.poc') }}</span>
-                    </Tippy>
-                    <Tippy id="products-tab" tag="a" :content="t('views.supplier.tabs.products')" data-tw-toggle="tab" data-tw-target="#products" href="javascript:;" class="w-full sm:w-40 py-4 text-center flex justify-center items-center" role="tab" aria-controls="products" aria-selected="false">
-                        {{ t('views.supplier.tabs.products') }}
-                    </Tippy>
-                </div>
-                <div class="tab-content">
-                    <div id="supplier" class="tab-pane p-5 active" role="tabpanel" aria-labelledby="supplier-tab">
-                        <div class="mb-3">
-                            <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
-                            <div class="flex items-center">
-                                <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
-                                <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                <TabGroup>
+                    <TabList class="nav-tabs">
+                        <Tab class="w-full py-2">
+                            <span :class="{'text-danger':errors['code']||errors['name']|errors['payment_term_type']|errors['status']}">{{ t('views.supplier.tabs.supplier') }}</span>
+                        </Tab>
+                        <Tab class="w-full py-2">
+                            <span :class="{'text-danger':errors['poc_name']||errors['email']}">{{ t('views.supplier.tabs.poc') }}</span>
+                        </Tab>
+                        <Tab class="w-full py-2">
+                            {{ t('views.supplier.tabs.products') }}
+                        </Tab>
+                    </TabList>
+                    <TabPanels class="border-l border-r border-b">
+                        <TabPanel class="leading-relaxed p-5">
+                            <div class="mb-3">
+                                <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
+                                <div class="flex items-center">
+                                    <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
+                                    <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                                </div>
+                                <ErrorMessage name="code" class="text-danger" />
                             </div>
-                            <ErrorMessage name="code" class="text-danger" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
-                            <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.name" />
-                            <ErrorMessage name="name" class="text-danger" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
-                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
-                            <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.contact" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
-                            <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
-                            <div class="form-switch mt-2">
-                                <input id="inputTaxableEnterprise" type="checkbox" class="form-check-input" name="taxable_enterprise" v-model="supplier.taxable_enterprise" :true-value="1" :false-value="0">
+                            <div class="mb-3">
+                                <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
+                                <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.name" />
+                                <ErrorMessage name="name" class="text-danger" />
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputTaxId" class="form-label">{{ t('views.supplier.fields.tax_id') }}</label>
-                            <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.supplier.fields.tax_id')" :label="t('views.supplier.fields.tax_id')" @blur="reValidate(errors)" v-model="supplier.tax_id" />
-                            <ErrorMessage name="tax_id" class="text-danger" />
-                        </div>                        
-                        <div class="mb-3">
-                            <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
-                            <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                            </VeeField>
-                            <ErrorMessage name="payment_term_type" class="text-danger" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
-                            <div class="mt-2">
-                                <VeeField id="inputPaymentTerm" type="text" rules="required|numeric|max:365" class="form-control" name="payment_term" v-model="supplier.payment_term" />
+                            <div class="mb-3">
+                                <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
+                                <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
+                                <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.contact" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
+                                <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
+                                <div class="form-switch mt-2">
+                                    <input id="inputTaxableEnterprise" type="checkbox" class="form-check-input" name="taxable_enterprise" v-model="supplier.taxable_enterprise" :true-value="1" :false-value="0">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputTaxId" class="form-label">{{ t('views.supplier.fields.tax_id') }}</label>
+                                <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.supplier.fields.tax_id')" :label="t('views.supplier.fields.tax_id')" @blur="reValidate(errors)" v-model="supplier.tax_id" />
+                                <ErrorMessage name="tax_id" class="text-danger" />
+                            </div>                        
+                            <div class="mb-3">
+                                <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
+                                    <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                    <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                                </VeeField>
                                 <ErrorMessage name="payment_term_type" class="text-danger" />
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
-                            <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['status']}" id="inputStatus" name="status" :label="t('views.supplier.fields.status')" rules="required" @blur="reValidate(errors)" v-model="supplier.status">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                            </VeeField>
-                            <ErrorMessage name="status" class="text-danger" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
-                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" rows="3"></textarea>
-                        </div>
-                    </div>
-                    <div id="poc" class="tab-pane p-5" role="tabpanel" aria-labelledby="poc-tab">
-                        <div class="mb-3">
-                            <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
-                            <VeeField id="inputPOCName" name="poc_name" type="text" :class="{'form-control':true, 'border-danger': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
-                            <ErrorMessage name="poc_name" class="text-danger" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
-                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
-                            <ErrorMessage name="email" class="text-danger" />
-                        </div>
-                    </div>
-                    <div id="products" class="tab-pane p-5" role="tabpanel" aria-labelledby="products-tab">
-                        <div class="mb-3">
-                            <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>                            
-                            <table class="table table--sm">
-                                <thead>
-                                    <tr>
-                                        <th>{{ t('views.supplier.fields.products.table.cols.selected') }}</th>
-                                        <th>{{ t('views.supplier.fields.products.table.cols.main_product') }}</th>
-                                        <th>{{ t('views.supplier.fields.products.table.cols.product_name') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(p, pIdx) in productLists">
-                                        <td class="border-b dark:border-dark-5">
-                                            <div class="form-switch">
-                                                <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selected_products" :value="p.hId" class="form-check-input">
-                                            </div>
-                                        </td>
-                                        <td class="border-b dark:border-dark-5">
-                                            <div class="form-switch">
-                                                <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.main_products" :value="p.hId" class="form-check-input">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            {{ p.name }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                            <div class="mb-3">
+                                <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
+                                <div class="mt-2">
+                                    <VeeField id="inputPaymentTerm" type="text" rules="required|numeric|max:365" class="form-control" name="payment_term" v-model="supplier.payment_term" />
+                                    <ErrorMessage name="payment_term_type" class="text-danger" />
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['status']}" id="inputStatus" name="status" :label="t('views.supplier.fields.status')" rules="required" @blur="reValidate(errors)" v-model="supplier.status">
+                                    <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                    <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                                </VeeField>
+                                <ErrorMessage name="status" class="text-danger" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
+                                <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" rows="3"></textarea>
+                            </div>
+                        </TabPanel>
+                        <TabPanel class="leading-relaxed p-5">
+                            <div class="mb-3">
+                                <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
+                                <VeeField id="inputPOCName" name="poc_name" type="text" :class="{'form-control':true, 'border-danger': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
+                                <ErrorMessage name="poc_name" class="text-danger" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
+                                <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
+                                <ErrorMessage name="email" class="text-danger" />
+                            </div>
+                        </TabPanel>
+                        <TabPanel class="leading-relaxed p-5">
+                            <div class="mb-3">
+                                <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>                            
+                                <table class="table table--sm">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ t('views.supplier.fields.products.table.cols.selected') }}</th>
+                                            <th>{{ t('views.supplier.fields.products.table.cols.main_product') }}</th>
+                                            <th>{{ t('views.supplier.fields.products.table.cols.product_name') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(p, pIdx) in productLists">
+                                            <td class="border-b dark:border-dark-5">
+                                                <div class="form-switch">
+                                                    <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selected_products" :value="p.hId" class="form-check-input">
+                                                </div>
+                                            </td>
+                                            <td class="border-b dark:border-dark-5">
+                                                <div class="form-switch">
+                                                    <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.main_products" :value="p.hId" class="form-check-input">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ p.name }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </TabPanel>
+                    </TabPanels>
+                </TabGroup>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
