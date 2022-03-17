@@ -33,12 +33,21 @@ class EmployeeAPITest extends APITestCase
 
     public function test_api_call_read()
     {
-        $this->assertTrue(true);
-    }
+        $this->actingAs($this->user);
 
-    public function test_api_call_read_getPaymentTermType()
-    {
-        $this->assertTrue(true);
+        $companyId = Hashids::encode(Company::inRandomOrder()->get()[0]->id);
+        $search = '';
+        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $pageSize = 10;
+
+        $api = $this->getJson(route('api.get.db.company.employee.read', [
+            'companyId' => $companyId,
+            'search' => $search,
+            'paginate' => $paginate,
+            'perPage' => $pageSize
+        ]));
+
+        $api->assertSuccessful();
     }
 
     public function test_api_call_save()

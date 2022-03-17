@@ -34,7 +34,7 @@ class BranchAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;;
+        $companyId = Company::inRandomOrder()->get()[0]->id;
         $page = 1;
         $pageSize = 10;
         $search = '';
@@ -79,6 +79,7 @@ class BranchAPITest extends APITestCase
     public function test_api_call_edit()
     {
         $this->actingAs($this->user);
+
         $companyId = Company::inRandomOrder()->get()[0]->id;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
@@ -118,7 +119,6 @@ class BranchAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $this->actingAs($this->user);
         $companyId = Company::inRandomOrder()->get()[0]->id;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
