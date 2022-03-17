@@ -35,16 +35,16 @@ class EmployeeAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Hashids::encode(Company::inRandomOrder()->get()[0]->id);
-        $search = '';
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $page = 1;
         $pageSize = 10;
+        $search = '';
 
         $api = $this->getJson(route('api.get.db.company.employee.read', [
-            'companyId' => $companyId,
-            'search' => $search,
-            'paginate' => $paginate,
-            'perPage' => $pageSize
+            'companyId' => Hashids::encode($companyId),
+            'page' => $page,
+            'perPage' => $pageSize,
+            'search' => $search
         ]));
 
         $api->assertSuccessful();
