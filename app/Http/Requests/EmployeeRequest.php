@@ -47,7 +47,7 @@ class EmployeeRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -60,7 +60,7 @@ class EmployeeRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
