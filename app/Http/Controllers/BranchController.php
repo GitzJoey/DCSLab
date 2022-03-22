@@ -23,11 +23,10 @@ class BranchController extends BaseController
 
     public function read(Request $request)
     {
+        $companyId = Hashids::decode($request['companyId'])[0];
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $paginate = $request->has('paginate') ? $request['paginate']:true;
-        $perPage = $request->has('perPage') ? $request['perPage']:10;
-
-        $companyId = Hashids::decode($request['companyId'])[0];
+        $perPage = $request->has('perPage') ? $request['perPage']:10;      
 
         $result = $this->branchService->read(
             companyId: $companyId,

@@ -30,20 +30,58 @@ class BranchAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_read()
+    public function test_api_call_read_with_empty_search()
     {
         $this->actingAs($this->user);
 
         $companyId = Company::inRandomOrder()->get()[0]->id;
-        $page = 1;
-        $pageSize = 10;
         $search = '';
+        $paginate = 1;
+        $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.branch.read', [
             'companyId' => Hashids::encode($companyId),
-            'page' => $page,
-            'perPage' => $pageSize,
-            'search' => $search
+            'search' => $search,
+            'paginate' => $paginate,
+            'perPage' => $perPage
+        ]));
+
+        $api->assertSuccessful();
+    }
+
+    public function test_api_call_read_with_special_char_in_search()
+    {
+        $this->actingAs($this->user);
+
+        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
+        $paginate = 1;
+        $perPage = 10;
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'perPage' => $perPage
+        ]));
+
+        $api->assertSuccessful();
+    }
+
+    public function test_api_call_read_with_negative_value_in_perpage_param()
+    {
+        $this->actingAs($this->user);
+
+        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $search = "";
+        $paginate = 1;
+        $perPage = -10;
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'perPage' => $perPage
         ]));
 
         $api->assertSuccessful();

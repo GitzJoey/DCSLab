@@ -31,7 +31,7 @@ class EmployeeAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_read()
+    public function test_api_call_read_with_empty_search()
     {
         $this->actingAs($this->user);
 
