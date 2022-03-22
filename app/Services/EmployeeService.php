@@ -24,7 +24,6 @@ interface EmployeeService
         int $id,
         int $company_id,
         int $user_id,
-        string $join_date,
         int $status
     ): ?Employee;
 

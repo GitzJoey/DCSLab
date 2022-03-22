@@ -4,6 +4,7 @@ namespace Tests\Feature\API;
 
 use App\Models\User;
 use Tests\APITestCase;
+use App\Models\Company;
 use App\Actions\RandomGenerator;
 use App\Services\CompanyService;
 use Database\Seeders\CompanyTableSeeder;
@@ -148,23 +149,28 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $code = (new RandomGenerator())->generateNumber(1,9999);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 0;
-        $status = 1;
-        $userId = $this->user->id;
+        $isDefault = 0;
+        do {
+            $code = (new RandomGenerator())->generateNumber(1,9999);
+            $name = $this->faker->name;
+            $address = $this->faker->address;
+            $default = 0;
+            $status = 1;
+            $userId = $this->user->id;
+    
+            $companyService = app(CompanyService::class);
+            $response = $companyService->create(
+                $code,
+                $name,
+                $address,
+                $default,
+                $status,
+                $userId
+            );
+            $companyId = $response->id;
 
-        $companyService = app(CompanyService::class);
-        $response = $companyService->create(
-            $code,
-            $name,
-            $address,
-            $default,
-            $status,
-            $userId
-        );
-        $companyId = $response->id;
+            $isDefault = Company::where('id', $companyId)->first()->default;
+        } while ($isDefault == 1);
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', $companyId));
 

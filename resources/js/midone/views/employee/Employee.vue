@@ -173,10 +173,9 @@
                     <!-- #endregion -->
                     
                     <!-- #region join date-->
-                        <div class="mb-3">
+                        <div class="mb-3" v-if="mode === 'create'">
                             <label for="inputJoinDate" class="form-label">{{ t('views.employee.fields.join_date') }}</label>
                             <VeeField name="join_date" v-slot="{ field }" rules="required" :label="t('views.employee.fields.join_date')">
-                                <!-- <Litepicker v-model="employee.join_date" :class="{'form-control':true, 'border-theme-21': errors['join_date']}" v-bind="field" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, format: 'YYYY-MM-DD'}" /> -->
                                 <Litepicker v-model="employee.join_date" class="form-control" v-bind="field" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, format: 'YYYY-MM-DD'}" />
                             </VeeField>
                             <ErrorMessage name="join_date" class="text-theme-21" />
