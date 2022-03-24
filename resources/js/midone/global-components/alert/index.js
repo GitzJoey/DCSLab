@@ -59,7 +59,7 @@ const Alert = defineComponent({
           "div",
           {
             class: "alert",
-            rolse: "alert",
+            role: "alert",
             ref: alertRef,
           },
           slots.default({

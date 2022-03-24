@@ -4,6 +4,7 @@ import TippyContent from "./tippy-content/Main.vue";
 import TomSelect from "./tom-select/Main.vue";
 import TomSelectAjax from "./tom-select/AjaxMain.vue";
 import LoadingIcon from "./loading-icon/Main.vue";
+import Notification from "./notification/Main.vue";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "./modal";
 import {
   Dropdown,
@@ -32,6 +33,7 @@ export default (app) => {
   app.component("TomSelect", TomSelect);
   app.component("TomSelectAjax", TomSelectAjax);
   app.component("LoadingIcon", LoadingIcon);
+  app.component("Notification", Notification);
   app.component("Modal", Modal);
   app.component("ModalHeader", ModalHeader);
   app.component("ModalBody", ModalBody);

@@ -75,10 +75,25 @@
                                 <input type="text" v-model="productSearch" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item..." @change="filterProducts">
                                 <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
                             </div>
+                            <table class="table table-report -mt-2">
+                                <tbody>
+                                    <tr class="intro-x">
+                                        <td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                                    </tr>
+                                    <tr class="intro-x">
+                                        <td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                                    </tr>
+                                    <tr class="intro-x">
+                                        <td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                                    </tr>
+                                    <tr class="intro-x">
+                                        <td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <!-- END: Item List -->
-                    <!-- BEGIN: Ticket -->
+
                     <div class="col-span-12 lg:col-span-4 py-3">
                         <div class="intro-y pr-1">
                             <div class="box p-2">
