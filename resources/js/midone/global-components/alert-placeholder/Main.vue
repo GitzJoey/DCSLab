@@ -35,9 +35,7 @@ const props = defineProps({
     title: { type: String }
 });
 
-function isEmptyObject(obj) {
-    return _.isEmpty(obj);
-}
+const isEmptyObject = (obj) => _.isEmpty(obj);
 
 const messages = toRef(props, 'messages');
 

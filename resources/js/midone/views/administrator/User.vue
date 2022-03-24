@@ -295,7 +295,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function getUser(args) {
+const getUser = (args) => {
     userList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -305,7 +305,7 @@ function getUser(args) {
     });
 }
 
-function getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
         countriesDDL.value = response.data;
     });
@@ -319,7 +319,7 @@ function getDDL() {
     });
 }
 
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#userForm')[0]); 
@@ -352,7 +352,7 @@ function onSubmit(values, actions) {
     } else { }
 }
 
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -369,15 +369,15 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-function emptyUser() {
+const emptyUser = () => {
     return {
         roles: [],
         selected_roles: [],
@@ -394,45 +394,45 @@ function emptyUser() {
     }
 }
 
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
     user.value = emptyUser();
 }
 
-function onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getUser({page, pageSize, search});
 }
 
-function editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     user.value = userList.value.data[index];
 }
 
-function deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = userList.value.data[index].hId;
     deleteModalShow.value = true;
 }
 
-function confirmDelete() {
+const confirmDelete = () => {
     deleteModalShow.value = false;
     if (deleteId.value) console.log('Data ' + deleteId.value + ' deleted.');
 }
 
-function showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getUser({ page: userList.value.current_page, pageSize: userList.value.per_page });
 }
 
-function toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -440,7 +440,7 @@ function toggleDetail(idx) {
     }
 }
 
-function handleUpload(e) {
+const handleUpload = (e) => {
     const files = e.target.files;
 
     let filename = files[0].name;

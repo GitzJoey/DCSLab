@@ -141,25 +141,25 @@ const pages = computed(() => {
     }
 });
 
-const first = computed(()=> { return 1; });
+const first = computed(() => { return 1; });
 
-let previous = computed(()=> {
+let previous = computed(() => {
     if (data.value.meta.current_page === undefined) return 1;
     if (data.value.meta.current_page === 1) return 1;
     return data.value.meta.current_page - 1;
 });
 
-const next = computed(()=> {
+const next = computed(() => {
     if (data.value.meta.current_page === undefined) return 1;
     if (data.value.meta.current_page === data.value.meta.last_page) return data.value.meta.last_page;
     return data.value.meta.current_page + 1;
 });
 
-const last = computed(()=> { return data.value.meta.last_page; });
+const last = computed(() => { return data.value.meta.last_page; });
 
 const { t } = useI18n();
 
-function paginate(totalItems, currentPage, pageSize, maxPages) {
+const paginate = (totalItems, currentPage, pageSize, maxPages) => {
     let totalPages = Math.ceil(totalItems / pageSize);
 
     if (currentPage < 1) {
