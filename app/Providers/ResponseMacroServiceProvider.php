@@ -15,7 +15,7 @@ class ResponseMacroServiceProvider extends ServiceProvider
             ]);
         });
 
-        Response::macro('error', function ($message = '', $status = 400) {
+        Response::macro('error', function ($message = '', $status = 500) {
             if (is_array($message)) {
                 return Response::json($message, $status);
             } else {
