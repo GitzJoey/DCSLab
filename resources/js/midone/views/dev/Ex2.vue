@@ -4,7 +4,7 @@
 
 <script setup>
 //#region Imports
-import { inject, onMounted } from "vue";
+import { onMounted } from "vue";
 //#endregion
 
 //#region onMounted

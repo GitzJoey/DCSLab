@@ -270,7 +270,7 @@
 
 <script setup>
 //#region Imports
-import { inject, onMounted, ref, computed, watch } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";

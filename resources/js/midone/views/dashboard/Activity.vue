@@ -65,7 +65,7 @@
 
 <script setup>
 //#region Imports
-import { inject, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import axios from "@/axios";
 import { route } from "@/ziggy";
 import { useI18n } from "vue-i18n";

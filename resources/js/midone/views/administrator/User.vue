@@ -241,7 +241,7 @@
 
 <script setup>
 //#region Imports
-import { inject, onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed } from "vue";
 import axios from "@/axios";
 import { helper } from "@/utils/helper";
 import { useI18n } from "vue-i18n";
