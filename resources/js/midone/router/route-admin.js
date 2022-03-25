@@ -19,7 +19,8 @@ function Admin() {
                 component: AdminUser,
                 meta: { 
                     remember: true,
-                    log_route: true 
+                    log_route: true,
+                    acl: [ 'Administrator', 'Dev' ]
                 }
             }
         ]    

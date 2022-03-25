@@ -38,6 +38,7 @@ router.beforeEach(async (to, from) => {
     const userContextStore = useUserContextStore();
     if (userContextStore.userContext.name !== undefined) {
         multiguard([
+            guards.canUserAccess(to, userContextStore.userContext),
             guards.checkPasswordExpiry(userContextStore.userContext), 
             guards.checkUserStatus(userContextStore.userContext)
         ]);
