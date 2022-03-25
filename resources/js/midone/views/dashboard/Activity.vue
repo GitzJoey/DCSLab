@@ -6,7 +6,7 @@
     </div>
     <div class="intro-y mt-5">
         <div class="container">
-            <div class="flex flex-col md:grid grid-cols-9 mx-auto p-2 text-blue-50">
+            <div class="flex flex-col md:grid grid-cols-9 mx-auto p-2">
                 <template v-if="isEmptyObject(activity)">
                     <LoadingIcon icon="puff" class="w-5 h-5" />
                 </template>
@@ -86,13 +86,13 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function getActivity() {
+const getActivity = () => {
     axios.get(route('api.get.db.core.activity.route.list')).then(response => {
         activity.value = response.data;
     });
 }
 
-function isEmptyObject(obj) {
+const isEmptyObject = (obj) => {
     return _.isEmpty(obj);
 }
 //#endregion
