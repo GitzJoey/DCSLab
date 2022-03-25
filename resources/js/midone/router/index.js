@@ -34,15 +34,17 @@ const router = createRouter({
     },
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to, from, next) => {
+    if (to.matched.some(r => r.meta.skipBeforeEach) && to.meta.skipBeforeEach) next();
+
     const userContextStore = useUserContextStore();
-    if (userContextStore.userContext.name !== undefined) {
-        multiguard([
-            guards.canUserAccess(to, userContextStore.userContext),
-            guards.checkPasswordExpiry(userContextStore.userContext), 
-            guards.checkUserStatus(userContextStore.userContext)
-        ]);
-    }
+    if (userContextStore.userContext.name === undefined) next();
+
+    multiguard([
+        guards.canUserAccess(to, userContextStore.userContext, next),
+        guards.checkPasswordExpiry(userContextStore.userContext, next), 
+        guards.checkUserStatus(userContextStore.userContext, next)
+    ]);
 });
 
 router.afterEach((to, from) => {

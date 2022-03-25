@@ -1,6 +1,7 @@
 const mix = require('laravel-mix');
 const path = require('path');
 const webpack = require('webpack');
+const JavaScriptObfuscator = require('webpack-obfuscator');
 
 mix.disableNotifications();
 
@@ -22,7 +23,10 @@ if (mix.inProduction()) {
                 new webpack.DefinePlugin({
                     __VUE_OPTIONS_API__: true,
                     __VUE_PROD_DEVTOOLS__: false
-                })
+                }),
+                new JavaScriptObfuscator ({
+                    rotateUnicodeArray: true
+                }, [])
             ]
         })
         .postCss('resources/css/midone/app.css', 'public/css/midone', [
