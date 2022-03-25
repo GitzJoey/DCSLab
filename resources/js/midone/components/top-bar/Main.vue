@@ -50,7 +50,7 @@
 
     <Dropdown id="main-dropdown" class="intro-x w-8 h-8" v-else>
       <DropdownToggle tag="div" role="button" class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in">
-        <img alt="" :src="assetPath('gray200.jpg')"/>
+        <img alt="" :src="assetPath('profile.png')"/>
       </DropdownToggle>
       <DropdownMenu class="w-56">
         <DropdownContent class="bg-primary text-white">
