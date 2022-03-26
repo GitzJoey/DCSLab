@@ -202,7 +202,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-const getAllCompany(args) {
+const getAllCompany = (args) => {
     companyList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -213,13 +213,13 @@ const getAllCompany(args) {
     });
 }
 
-const getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-const onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#companyForm')[0]); 
@@ -245,7 +245,7 @@ const onSubmit(values, actions) {
     } else { }
 }
 
-const handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -262,15 +262,15 @@ const handleError(e, actions) {
     }
 }
 
-const invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-const reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptyCompany() {
+const emptyCompany = () => {
     return {
         code: '[AUTO]',
         name: '',
@@ -280,30 +280,30 @@ const emptyCompany() {
     }
 }
 
-const resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-const createNew() {
+const createNew = () => {
     mode.value = 'create';
     company.value = emptyCompany();
 }
 
-const onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllCompany({page, pageSize, search});
 }
 
-const editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     company.value = companyList.value.data[index];
 }
 
-const deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = companyList.value.data[index].hId;
     deleteModalShow.value = true;
 }
 
-const confirmDelete() {
+const confirmDelete = () => {
     deleteModalShow.value = false;
     axios.post(route('api.post.db.company.company.delete', deleteId.value)).then(response => {
         backToList();
@@ -314,11 +314,11 @@ const confirmDelete() {
     });
 }
 
-const showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-const backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
 
@@ -329,7 +329,7 @@ const backToList() {
     getAllCompany({ page: companyList.value.current_page, pageSize: companyList.value.per_page });
 }
 
-const toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -337,7 +337,7 @@ const toggleDetail(idx) {
     }
 }
 
-const generateCode() {
+const generateCode = () => {
     if (company.value.code === '[AUTO]') company.value.code = '';
     else  company.value.code = '[AUTO]'
 }

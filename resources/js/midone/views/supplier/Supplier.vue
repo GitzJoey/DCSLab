@@ -344,7 +344,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-const getAllSupplier(args) {
+const getAllSupplier = (args) => {
     supplierList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -357,7 +357,7 @@ const getAllSupplier(args) {
     });
 }
 
-const getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
@@ -367,13 +367,13 @@ const getDDL() {
     });
 }
 
-const getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.product.product.read', { "companyId": selectedUserCompany.value, "paginate": false })).then(response => {
         productLists.value = response.data;
     });
 }
 
-const onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#supplierForm')[0]); 
@@ -399,7 +399,7 @@ const onSubmit(values, actions) {
     } else { }
 }
 
-const handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -416,15 +416,15 @@ const handleError(e, actions) {
     }
 }
 
-const invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-const reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptySupplier() {
+const emptySupplier = () => {
     return {
         code: '[AUTO]',
         name: '',
@@ -450,30 +450,30 @@ const emptySupplier() {
     }
 }
 
-const resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-const createNew() {
+const createNew = () => {
     mode.value = 'create';
     supplier.value = emptySupplier();
 }
 
-const onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllSupplier({page, pageSize, search});
 }
 
-const editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     supplier.value = supplierList.value.data[index];
 }
 
-const deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = supplierList.value.data[index].hId;
     deleteModalShow.value = true;
 }
 
-const confirmDelete() {
+const confirmDelete = () => {
     deleteModalShow.value = false;
     axios.post(route('api.post.db.supplier.supplier.delete', deleteId.value)).then(response => {
         backToList();
@@ -484,17 +484,17 @@ const confirmDelete() {
     });
 }
 
-const showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-const backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllSupplier({ page: supplierList.value.current_page, pageSize: supplierList.value.per_page });
 }
 
-const toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -502,7 +502,7 @@ const toggleDetail(idx) {
     }
 }
 
-const generateCode() {
+const generateCode = () => {
     if (supplier.value.code === '[AUTO]') supplier.value.code = '';
     else  supplier.value.code = '[AUTO]'
 }
@@ -521,7 +521,7 @@ watch(selectedUserCompany, () => {
 
 watch(computed(() => supplier.value.main_products), () => {
     if (supplier.value.main_products.length != 0) {
-        _.forEach(supplier.value.main_products, const(val) {
+        _.forEach(supplier.value.main_products, const = (val) => {
             if (_.findIndex(supplier.value.selected_products, (item) => { return item === val }) === -1) {
                 supplier.value.selected_products.push(val);
             }
@@ -531,7 +531,7 @@ watch(computed(() => supplier.value.main_products), () => {
 
 watch(computed(() => supplier.value.selected_products), (n, o) => {
     if (supplier.value.main_products.length != 0) {
-        _.forEach(supplier.value.main_products, const(val) {
+        _.forEach(supplier.value.main_products, const = (val) => {
             if (_.findIndex(supplier.value.selected_products, (item) => { return item === val }) === -1) {
                 if (_.findIndex(supplier.value.main_products, (item) => { return item === val }) > -1) {
                     supplier.value.main_products.splice(_.findIndex(supplier.value.main_products, (item) => { return item === val }), 1);

@@ -231,7 +231,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-const getAllWarehouse(args) {
+const getAllWarehouse = (args) => {
     warehouseList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -244,13 +244,13 @@ const getAllWarehouse(args) {
     });
 }
 
-const getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-const getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.company.company.read.all_active', {
             companyId: selectedUserCompany.value,
             paginate: false
@@ -259,7 +259,7 @@ const getDDLSync() {
     });
 }
 
-const onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#warehouseForm')[0]); 
@@ -285,7 +285,7 @@ const onSubmit(values, actions) {
     } else { }
 }
 
-const handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -302,15 +302,15 @@ const handleError(e, actions) {
     }
 }
 
-const invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-const reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptywarehouse() {
+const emptywarehouse = () => {
     return {
         company: {
             hId: '',
@@ -326,29 +326,29 @@ const emptywarehouse() {
     }
 }
 
-const resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-const createNew() {
+const createNew = () => {
     mode.value = 'create';
     warehouse.value = emptywarehouse();
 }
 
-const onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllWarehouse({page, pageSize, search});
 }
 
-const editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     warehouse.value = warehouseList.value.data[index];
 }
 
-const deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = warehouseList.value.data[index].hId;
 }
 
-const confirmDelete() {
+const confirmDelete = () => {
     axios.post(route('api.post.db.company.warehouse.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
@@ -358,17 +358,17 @@ const confirmDelete() {
     });
 }
 
-const showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-const backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllWarehouse({ page: warehouseList.value.current_page, pageSize: warehouseList.value.per_page });
 }
 
-const toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -376,7 +376,7 @@ const toggleDetail(idx) {
     }
 }
 
-const generateCode() {
+const generateCode = () => {
     if (warehouse.value.code === '[AUTO]') warehouse.value.code = '';
     else  warehouse.value.code = '[AUTO]'
 }

@@ -231,7 +231,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-const getAllBranches(args) {
+const getAllBranches = (args) => {
     branchList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -244,13 +244,13 @@ const getAllBranches(args) {
     });
 }
 
-const getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-const getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.company.company.read.all_active', {
             companyId: selectedUserCompany.value,
             paginate: false
@@ -259,7 +259,7 @@ const getDDLSync() {
     });
 }
 
-const onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#branchForm')[0]); 
@@ -285,7 +285,7 @@ const onSubmit(values, actions) {
     } else { }
 }
 
-const handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -302,15 +302,15 @@ const handleError(e, actions) {
     }
 }
 
-const invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-const reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptyBranch() {
+const emptyBranch = () => {
     return {
         company: {
             hId: '',
@@ -326,31 +326,31 @@ const emptyBranch() {
     }
 }
 
-const resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-const createNew() {
+const createNew = () => {
     mode.value = 'create';
     branch.value = emptyBranch();
 
     branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
-const onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllBranches({page, pageSize, search});
 }
 
-const editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     branch.value = branchList.value.data[index];
 }
 
-const deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = branchList.value.data[index].hId;
 }
 
-const confirmDelete() {
+const confirmDelete = () => {
     axios.post(route('api.post.db.company.branch.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
@@ -360,17 +360,17 @@ const confirmDelete() {
     });
 }
 
-const showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-const backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllBranches({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
 }
 
-const toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -378,7 +378,7 @@ const toggleDetail(idx) {
     }
 }
 
-const generateCode() {
+const generateCode = () => {
     if (branch.value.code === '[AUTO]') branch.value.code = '';
     else  branch.value.code = '[AUTO]'
 }

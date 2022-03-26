@@ -392,7 +392,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-const getAllProducts(args) {
+const getAllProducts = (args) => {
     productList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -405,7 +405,7 @@ const getAllProducts(args) {
     });
 }
 
-const getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
@@ -417,7 +417,7 @@ const getDDL() {
     });
 }
 
-const getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.product.brand.read', {
             companyId: selectedUserCompany.value,
             paginate: false
@@ -441,7 +441,7 @@ const getDDLSync() {
     });
 }
 
-const onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#productForm')[0]); 
@@ -467,7 +467,7 @@ const onSubmit(values, actions) {
     } else { }
 }
 
-const handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -484,15 +484,15 @@ const handleError(e, actions) {
     }
 }
 
-const invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-const reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptyProduct() {
+const emptyProduct = () => {
     return {
         code: '[AUTO]',
         product_group: { hId: '' },
@@ -523,16 +523,16 @@ const emptyProduct() {
     }
 }
 
-const resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-const createNew() {
+const createNew = () => {
     mode.value = 'create';
     product.value = emptyProduct();
 }
 
-const createNewUnit() {
+const createNewUnit = () => {
     let product_unit = {
         hId: '',
         code: '[AUTO]',
@@ -545,11 +545,11 @@ const createNewUnit() {
     product.value.product_units.push(product_unit);
 }
 
-const onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllProducts({page, pageSize, search});
 }
 
-const editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     product.value = productList.value.data[index];
 
@@ -560,16 +560,16 @@ const editSelected(index) {
     }
 }
 
-const deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = productList.value.data[index].hId;
     deleteModalShow.value = true;
 }
 
-const deleteUnitSelected(index) {
+const deleteUnitSelected = (index) => {
     product.value.product_units.splice(index, 1);
 }
 
-const confirmDelete() {
+const confirmDelete = () => {
     deleteModalShow.value = false;
     axios.post(route('api.post.db.product.product.delete', deleteId.value)).then(response => {
         backToList();
@@ -580,17 +580,17 @@ const confirmDelete() {
     });
 }
 
-const showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-const backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllProducts({ page: productList.value.current_page, pageSize: productList.value.per_page });
 }
 
-const toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -598,17 +598,17 @@ const toggleDetail(idx) {
     }
 }
 
-const generateCode() {
+const generateCode = () => {
     if (product.value.code === '[AUTO]') product.value.code = '';
     else  product.value.code = '[AUTO]'
 }
 
-const generateCodeUnit(idx) {
+const generateCodeUnit = (idx) => {
     if (product.value.product_units[idx].code === '[AUTO]') product.value.product_units[idx].code = '';
     else  product.value.product_units[idx].code = '[AUTO]'
 }
 
-const changeIsBase(idx) {
+const changeIsBase = (idx) => {
     let checked_state = product.value.product_units[idx].is_base === 1 ? true:false;
     
     if (!checked_state) {
@@ -623,7 +623,7 @@ const changeIsBase(idx) {
     }
 }
 
-const changeIsPrimary(idx) {
+const changeIsPrimary = (idx) => {
     let checked_state = product.value.product_units[idx].is_primary_unit === 1 ? true:false;
 
     if (!checked_state) {
