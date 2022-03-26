@@ -4,7 +4,7 @@ import _ from "lodash";
 export async function canUserAccess(to, userContext, next) {
     try {
         if (to.matched.some(r => r.meta.acl)) {
-            //userRoles = userContext.roles_description.split(',');
+            let userRoles = userContext.roles_description.includes(',') ? userContext.roles_description.split(',') :  new Array(userContext.roles_description);
             _.forEach(to.meta.acl, (val) => {
                 
             });
