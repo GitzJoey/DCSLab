@@ -231,7 +231,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function getAllWarehouse(args) {
+const getAllWarehouse(args) {
     warehouseList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -244,13 +244,13 @@ function getAllWarehouse(args) {
     });
 }
 
-function getDDL() {
+const getDDL() {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-function getDDLSync() {
+const getDDLSync() {
     axios.get(route('api.get.db.company.company.read.all_active', {
             companyId: selectedUserCompany.value,
             paginate: false
@@ -259,7 +259,7 @@ function getDDLSync() {
     });
 }
 
-function onSubmit(values, actions) {
+const onSubmit(values, actions) {
     loading.value = true;
 
     var formData = new FormData(dom('#warehouseForm')[0]); 
@@ -285,7 +285,7 @@ function onSubmit(values, actions) {
     } else { }
 }
 
-function handleError(e, actions) {
+const handleError(e, actions) {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -302,15 +302,15 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit(e) {
+const invalidSubmit(e) {
     alertErrors.value = e.errors;
 }
 
-function reValidate(errors) {
+const reValidate(errors) {
     alertErrors.value = errors;
 }
 
-function emptywarehouse() {
+const emptywarehouse() {
     return {
         company: {
             hId: '',
@@ -326,29 +326,29 @@ function emptywarehouse() {
     }
 }
 
-function resetAlertErrors() {
+const resetAlertErrors() {
     alertErrors.value = [];
 }
 
-function createNew() {
+const createNew() {
     mode.value = 'create';
     warehouse.value = emptywarehouse();
 }
 
-function onDataListChange({page, pageSize, search}) {
+const onDataListChange({page, pageSize, search}) {
     getAllWarehouse({page, pageSize, search});
 }
 
-function editSelected(index) {
+const editSelected(index) {
     mode.value = 'edit';
     warehouse.value = warehouseList.value.data[index];
 }
 
-function deleteSelected(index) {
+const deleteSelected(index) {
     deleteId.value = warehouseList.value.data[index].hId;
 }
 
-function confirmDelete() {
+const confirmDelete() {
     axios.post(route('api.post.db.company.warehouse.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
@@ -358,17 +358,17 @@ function confirmDelete() {
     });
 }
 
-function showSelected(index) {
+const showSelected(index) {
     toggleDetail(index);
 }
 
-function backToList() {
+const backToList() {
     resetAlertErrors();
     mode.value = 'list';
     getAllWarehouse({ page: warehouseList.value.current_page, pageSize: warehouseList.value.per_page });
 }
 
-function toggleDetail(idx) {
+const toggleDetail(idx) {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -376,7 +376,7 @@ function toggleDetail(idx) {
     }
 }
 
-function generateCode() {
+const generateCode() {
     if (warehouse.value.code === '[AUTO]') warehouse.value.code = '';
     else  warehouse.value.code = '[AUTO]'
 }
