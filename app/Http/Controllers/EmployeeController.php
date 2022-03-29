@@ -31,11 +31,20 @@ class EmployeeController extends BaseController
 
     public function read(Request $request)
     {
-        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        $paginate = $request->has('paginate') ? $request['paginate']:true;
-        $perPage = $request->has('perPage') ? $request['perPage']:10;
+        $companyId = $request->has('companyId') ? Hashids::decode($request['companyId'])[0] : null;
 
-        $companyId = Hashids::decode($request['companyId'])[0];
+        $search = $request->has('search') ? $request['search'] : '';
+        $search = is_null($search) == false ? $search : '';
+
+        $paginate = $request->has('paginate') ? $request['paginate'] : true;
+        $paginate = is_null($paginate) == false ? $paginate : true;
+        $paginate = is_numeric($paginate) == true ? $paginate : true;
+        $paginate = $paginate == 0 && $paginate == 1 ? $paginate : true;
+
+        $perPage = $request->has('perPage') ? $request['perPage'] : 10;    
+        $perPage = is_null($perPage) == false ? $perPage : 10;
+        $perPage = is_numeric($perPage) == true ? $perPage : 10;  
+        $perPage = $perPage > 0 ? $perPage : 10;
 
         $result = $this->employeeService->read(
             companyId: $companyId,
