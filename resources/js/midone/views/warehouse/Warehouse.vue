@@ -144,14 +144,14 @@
                     <!-- #region city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
-                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city">
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city" />
                     </div>
                     <!-- #endregion -->
 
                     <!-- #region contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
-                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact">
+                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact" />
                     </div>
                     <!-- #endregion -->
 

@@ -144,14 +144,14 @@
                     <!-- #region city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city">
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city" />
                     </div>
                     <!--  #endregion -->
 
                     <!-- #region contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact">
+                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact" />
                     </div>
                     <!-- #endregion -->
 
