@@ -167,7 +167,6 @@
         <div class="loader-container">
             <VeeForm id="productForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    
                     <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product.fields.code') }}</label>

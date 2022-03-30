@@ -104,7 +104,6 @@
         <div class="loader-container">
             <VeeForm id="warehouseForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-
                     <!-- #region company -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.warehouse.fields.company_id') }}</label>

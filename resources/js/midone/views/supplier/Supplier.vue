@@ -145,7 +145,6 @@
                     </TabList>
                     <TabPanels class="border-l border-r border-b">
                         <TabPanel class="leading-relaxed p-5">
-
                             <!-- #region Code -->
                             <div class="mb-3">
                                 <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
@@ -260,7 +259,7 @@
                                 <ErrorMessage name="email" class="text-danger" />
                             </div>
                             <!-- #endregion -->
-                            
+
                         </TabPanel>
                         <TabPanel class="leading-relaxed p-5">
                             <div class="mb-3">
