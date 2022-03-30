@@ -323,16 +323,13 @@ import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 //#endregion
-
 //#region Declarations
 const { t } = useI18n();
 //#endregion
-
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 //#endregion
-
 //#region Data - UI
 const mode = ref('list');
 const loading = ref(false);
@@ -341,7 +338,6 @@ const deleteId = ref('');
 const deleteModalShow = ref(false);
 const expandDetail = ref(null);
 //#endregion
-
 //#region Data - Views
 const productList = ref({});
 const product = ref({
@@ -375,7 +371,6 @@ const brandDDL = ref([]);
 const unitDDL = ref([]);
 const productTypeDDL = ref([]);
 //#endregion
-
 //#region onMounted
 onMounted(() => {
     if (selectedUserCompany.value !== '') {
@@ -384,54 +379,44 @@ onMounted(() => {
     } else  {
         
     }
-
     getDDL();
-
     loading.value = false;
 });
 //#endregion
-
 //#region Methods
-function getAllProducts(args) {
+const getAllProducts = (args) => {
     productList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
-
     let companyId = selectedUserCompany.value;
-
     axios.get(route('api.get.db.product.product.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         productList.value = response.data;
         loading.value = false;
     });
 }
-
-function getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
-
     axios.get(route('api.get.db.product.common.list.product_type', {
             type: 'products'
         })).then(response => {
             productTypeDDL.value = response.data;
     });
 }
-
-function getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.product.brand.read', {
             companyId: selectedUserCompany.value,
             paginate: false
         })).then(response => {
             brandDDL.value = response.data;
     });
-
     axios.get(route('api.get.db.product.product_group.read', {
             companyId: selectedUserCompany.value,
             paginate: false
         })).then(response => {
             productGroupDDL.value = response.data;
     });
-
     axios.get(route('api.get.db.product.unit.read', {
             companyId: selectedUserCompany.value,
             category: 1,
@@ -440,10 +425,8 @@ function getDDLSync() {
             unitDDL.value = response.data;
     });
 }
-
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
-
     var formData = new FormData(dom('#productForm')[0]); 
     formData.append('company_id', selectedUserCompany.value);
     
@@ -466,8 +449,7 @@ function onSubmit(values, actions) {
         });
     } else { }
 }
-
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -483,16 +465,13 @@ function handleError(e, actions) {
         };
     }
 }
-
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
-
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
-
-function emptyProduct() {
+const emptyProduct = () => {
     return {
         code: '[AUTO]',
         product_group: { hId: '' },
@@ -522,17 +501,14 @@ function emptyProduct() {
         status: 1,
     }
 }
-
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
-
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
     product.value = emptyProduct();
 }
-
-function createNewUnit() {
+const createNewUnit = () => {
     let product_unit = {
         hId: '',
         code: '[AUTO]',
@@ -541,74 +517,60 @@ function createNewUnit() {
         is_primary_unit: 0,
         unit: { hId: '' }
     };
-
     product.value.product_units.push(product_unit);
 }
-
-function onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllProducts({page, pageSize, search});
 }
-
-function editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     product.value = productList.value.data[index];
-
     if (product.value.product_group === null) {
         product.value.product_group = {
             hId: ''
         };
     }
 }
-
-function deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = productList.value.data[index].hId;
     deleteModalShow.value = true;
 }
-
-function deleteUnitSelected(index) {
+const deleteUnitSelected = (index) => {
     product.value.product_units.splice(index, 1);
 }
-
-function confirmDelete() {
+const confirmDelete = () => {
     deleteModalShow.value = false;
     axios.post(route('api.post.db.product.product.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
         alertErrors.value = e.response.data;
     }).finally(() => {
-
     });
 }
-
-function showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
-
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllProducts({ page: productList.value.current_page, pageSize: productList.value.per_page });
 }
-
-function toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
         expandDetail.value = idx;
     }
 }
-
-function generateCode() {
+const generateCode = () => {
     if (product.value.code === '[AUTO]') product.value.code = '';
     else  product.value.code = '[AUTO]'
 }
-
-function generateCodeUnit(idx) {
+const generateCodeUnit = (idx) => {
     if (product.value.product_units[idx].code === '[AUTO]') product.value.product_units[idx].code = '';
     else  product.value.product_units[idx].code = '[AUTO]'
 }
-
-function changeIsBase(idx) {
+const changeIsBase = (idx) => {
     let checked_state = product.value.product_units[idx].is_base === 1 ? true:false;
     
     if (!checked_state) {
@@ -619,13 +581,10 @@ function changeIsBase(idx) {
             product.value.product_units[i].is_base = 0;
         }
     } else {
-
     }
 }
-
-function changeIsPrimary(idx) {
+const changeIsPrimary = (idx) => {
     let checked_state = product.value.product_units[idx].is_primary_unit === 1 ? true:false;
-
     if (!checked_state) {
         for (let i = 0; i < product.value.product_units.length; i++) {
             if (i === idx) continue;
@@ -636,10 +595,8 @@ function changeIsPrimary(idx) {
     }
 }
 //#endregion
-
 //#region Computed
 //#endregion
-
 //#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {

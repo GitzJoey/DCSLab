@@ -279,16 +279,13 @@ import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
 //#endregion
-
 //#region Declarations
 const { t } = useI18n();
 //#endregion
-
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 //#endregion
-
 //#region Data - UI
 const mode = ref('list');
 const loading = ref(false);
@@ -297,7 +294,6 @@ const deleteId = ref('');
 const deleteModalShow = ref(false);
 const expandDetail = ref(null);
 //#endregion
-
 //#region Data - Views
 const supplierList = ref([]);
 const supplier = ref({
@@ -327,7 +323,6 @@ const statusDDL = ref([]);
 const paymentTermDDL = ref([]);
 const productLists = ref([]);
 //#endregion
-
 //#region onMounted
 onMounted(() => {
     if (selectedUserCompany.value !== '') {
@@ -336,49 +331,38 @@ onMounted(() => {
     } else  {
         
     }
-
     getDDL();
-
     loading.value = false;
 });
 //#endregion
-
 //#region Methods
-function getAllSupplier(args) {
+const getAllSupplier = (args) => {
     supplierList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
-
     let companyId = selectedUserCompany.value;
-
     axios.get(route('api.get.db.supplier.supplier.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         supplierList.value = response.data;
         loading.value = false;
     });
 }
-
-function getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
-
     axios.get(route('api.get.db.supplier.common.list.payment_term')).then(response => {
         paymentTermDDL.value = response.data;
     });
 }
-
-function getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.product.product.read', { "companyId": selectedUserCompany.value, "paginate": false })).then(response => {
         productLists.value = response.data;
     });
 }
-
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
-
     var formData = new FormData(dom('#supplierForm')[0]); 
     formData.append('company_id', selectedUserCompany.value);
-
     if (mode.value === 'create') {
         axios.post(route('api.post.db.supplier.supplier.save'), formData).then(response => {
             backToList();
@@ -398,8 +382,7 @@ function onSubmit(values, actions) {
         });
     } else { }
 }
-
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -415,16 +398,13 @@ function handleError(e, actions) {
         };
     }
 }
-
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
-
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
-
-function emptySupplier() {
+const emptySupplier = () => {
     return {
         code: '[AUTO]',
         name: '',
@@ -449,68 +429,55 @@ function emptySupplier() {
         status: 1,
     }
 }
-
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
-
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
     supplier.value = emptySupplier();
 }
-
-function onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllSupplier({page, pageSize, search});
 }
-
-function editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     supplier.value = supplierList.value.data[index];
 }
-
-function deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = supplierList.value.data[index].hId;
     deleteModalShow.value = true;
 }
-
-function confirmDelete() {
+const confirmDelete = () => {
     deleteModalShow.value = false;
     axios.post(route('api.post.db.supplier.supplier.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
         alertErrors.value = e.response.data;
     }).finally(() => {
-
     });
 }
-
-function showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
-
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllSupplier({ page: supplierList.value.current_page, pageSize: supplierList.value.per_page });
 }
-
-function toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
         expandDetail.value = idx;
     }
 }
-
-function generateCode() {
+const generateCode = () => {
     if (supplier.value.code === '[AUTO]') supplier.value.code = '';
     else  supplier.value.code = '[AUTO]'
 }
 //#endregion
-
 //#region Computed
 //#endregion
-
 //#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
@@ -518,20 +485,18 @@ watch(selectedUserCompany, () => {
         getDDLSync();
     }
 });
-
 watch(computed(() => supplier.value.main_products), () => {
     if (supplier.value.main_products.length != 0) {
-        _.forEach(supplier.value.main_products, function(val) {
+        _.forEach(supplier.value.main_products, const = (val) => {
             if (_.findIndex(supplier.value.selected_products, (item) => { return item === val }) === -1) {
                 supplier.value.selected_products.push(val);
             }
         });
     }
 });
-
 watch(computed(() => supplier.value.selected_products), (n, o) => {
     if (supplier.value.main_products.length != 0) {
-        _.forEach(supplier.value.main_products, function(val) {
+        _.forEach(supplier.value.main_products, const = (val) => {
             if (_.findIndex(supplier.value.selected_products, (item) => { return item === val }) === -1) {
                 if (_.findIndex(supplier.value.main_products, (item) => { return item === val }) > -1) {
                     supplier.value.main_products.splice(_.findIndex(supplier.value.main_products, (item) => { return item === val }), 1);
