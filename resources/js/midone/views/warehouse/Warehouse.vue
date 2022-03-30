@@ -114,7 +114,7 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!-- #region Code -->
                     <div class="mb-3">
@@ -125,7 +125,7 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!-- #region Name -->
                     <div class="mb-3">
@@ -133,35 +133,35 @@
                         <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.warehouse.fields.name')" :label="t('views.warehouse.fields.name')" rules="required" @blur="reValidate(errors)" v-model="warehouse.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!-- #region Address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
                         <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
                         <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region Remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.warehouse.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.warehouse.fields.remarks')" v-model="warehouse.remarks" rows="3"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!-- #region Status -->
                     <div class="mb-3">
@@ -172,7 +172,7 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
                     
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">

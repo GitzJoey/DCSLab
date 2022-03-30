@@ -113,7 +113,7 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
                     
                     <!--#region Code -->
                     <div class="mb-3">
@@ -124,7 +124,7 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region Name -->
                     <div class="mb-3">
@@ -132,35 +132,35 @@
                         <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region Addresss -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
                         <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
                         <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region Remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                     <!--#region Status -->
                     <div class="mb-3">
@@ -171,7 +171,7 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
-                    <!-- endregion -->
+                    <!-- #endregion -->
 
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
