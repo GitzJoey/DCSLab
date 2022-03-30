@@ -95,7 +95,6 @@
             </template>
         </DataList>
     </div>
-
     <div class="intro-y box" v-if="mode !== 'list'">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
             <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.branch.actions.create') }}</h2>
@@ -104,7 +103,7 @@
         <div class="loader-container">
             <VeeForm id="branchForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <!--#region Company -->
+                    <!--#region Company_id -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
