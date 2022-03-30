@@ -114,6 +114,7 @@
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
                     <!-- endregion -->
+
                     <!-- #region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
@@ -121,12 +122,14 @@
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <!-- endregion -->
+
                     <!-- #region Address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" rows="3"></textarea>
                     </div>
                     <!-- endregion -->
+
                     <!-- #region Default -->
                     <div class="mb-3">
                         <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
@@ -135,6 +138,7 @@
                         </div>
                     </div>
                     <!-- endregion -->
+
                     <!-- #region Status -->
                     <div class="mb-3">
                         <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
@@ -145,6 +149,7 @@
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
                     <!-- endregion -->
+                    
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>

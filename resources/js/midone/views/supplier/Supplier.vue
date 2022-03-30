@@ -145,6 +145,7 @@
                     </TabList>
                     <TabPanels class="border-l border-r border-b">
                         <TabPanel class="leading-relaxed p-5">
+
                             <!-- #region Code -->
                             <div class="mb-3">
                                 <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
@@ -155,6 +156,7 @@
                                 <ErrorMessage name="code" class="text-danger" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Name -->
                             <div class="mb-3">
                                 <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
@@ -162,24 +164,28 @@
                                 <ErrorMessage name="name" class="text-danger" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Address -->
                             <div class="mb-3">
                                 <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
                                 <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" rows="3"></textarea>
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Contact -->
                             <div class="mb-3">
                                 <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
                                 <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.contact" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region City -->
                             <div class="mb-3">
                                 <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
                                 <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Taxable Enterprise -->
                             <div class="mb-3">
                                 <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
@@ -188,6 +194,7 @@
                                 </div>
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Tax Id -->
                             <div class="mb-3">
                                 <label for="inputTaxId" class="form-label">{{ t('views.supplier.fields.tax_id') }}</label>
@@ -195,6 +202,7 @@
                                 <ErrorMessage name="tax_id" class="text-danger" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Payment Term Type -->                
                             <div class="mb-3">
                                 <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
@@ -205,6 +213,7 @@
                                 <ErrorMessage name="payment_term_type" class="text-danger" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Payment Term -->
                             <div class="mb-3">
                                 <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
@@ -214,6 +223,7 @@
                                 </div>
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Status -->
                             <div class="mb-3">
                                 <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
@@ -224,14 +234,17 @@
                                 <ErrorMessage name="status" class="text-danger" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Remarks -->
                             <div class="mb-3">
                                 <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" rows="3"></textarea>
                             </div>
                             <!-- #endregion -->
+
                         </TabPanel>
                         <TabPanel class="leading-relaxed p-5">
+
                             <!-- #region POC Name -->
                             <div class="mb-3">
                                 <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
@@ -239,6 +252,7 @@
                                 <ErrorMessage name="poc_name" class="text-danger" />
                             </div>
                             <!-- #endregion -->
+
                             <!-- #region Email -->
                             <div class="mb-3">
                                 <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
@@ -246,6 +260,7 @@
                                 <ErrorMessage name="email" class="text-danger" />
                             </div>
                             <!-- #endregion -->
+                            
                         </TabPanel>
                         <TabPanel class="leading-relaxed p-5">
                             <div class="mb-3">
