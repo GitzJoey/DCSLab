@@ -104,6 +104,7 @@
         <div class="loader-container">
             <VeeForm id="warehouseForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
+                    <!-- #region company -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.warehouse.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="warehouse.company.hId" :label="t('views.warehouse.fields.company_id')" rules="required" @blur="reValidate(errors)">
@@ -112,6 +113,8 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-theme-21" />
                     </div>
+                    <!-- endregion -->
+                    <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.warehouse.fields.code') }}</label>
                         <div class="flex items-center">
@@ -120,30 +123,39 @@
                         </div>
                         <ErrorMessage name="code" class="text-theme-21" />
                     </div>
+                    <!-- endregion -->
+                    <!-- #region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.warehouse.fields.name') }}</label>
                         <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.warehouse.fields.name')" :label="t('views.warehouse.fields.name')" rules="required" @blur="reValidate(errors)" v-model="warehouse.name" />
                         <ErrorMessage name="name" class="text-theme-21" />
                     </div>
+                    <!-- endregion -->
+                    <!-- #region Address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address"></textarea>
                     </div>
-                    <!-- city -->
+                    <!-- endregion -->
+                    <!--#region city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
                         <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city"></textarea>
                     </div>
-                    <!-- contact -->
+                    <!-- endregion -->
+                    <!--#region contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
                         <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact"></textarea>
                     </div>
-                    <!-- Remarks -->
+                    <!-- endregion -->
+                    <!--#region Remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.warehouse.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.warehouse.fields.remarks')" v-model="warehouse.remarks" rows="3"></textarea>
                     </div>
+                    <!-- endregion -->
+                    <!-- #region Status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.warehouse.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="warehouse.status" rules="required" @blur="reValidate(errors)">
@@ -152,6 +164,7 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-theme-21" />
                     </div>
+                    <!-- endregion -->
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
