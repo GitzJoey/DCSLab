@@ -116,7 +116,7 @@ class EmployeeAPITest extends APITestCase
             'perPage' => null
         ]));
 
-        $this->assertTrue(true);
+        $api->assertStatus(500);
     }
 
     public function test_api_call_save_with_all_field_filled()
@@ -508,8 +508,10 @@ class EmployeeAPITest extends APITestCase
         );
         $employeeId = $employeeId->id;
 
-        $api = $this->json('POST', route('api.post.db.company.employee.delete', $employeeId));
-
-        $api->assertSuccessful();
+        $this->json('POST', route('api.post.db.company.employee.delete', $employeeId));
+ 
+        $this->assertSoftDeleted('employees', [
+            'id' => $employeeId
+        ]);
     }
 }

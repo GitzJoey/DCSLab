@@ -115,7 +115,7 @@ class BranchAPITest extends APITestCase
             'perPage' => null
         ]));
 
-        $this->assertTrue(true);
+        $api->assertStatus(500);
     }
 
     public function test_api_call_save_with_all_field_filled()
@@ -408,8 +408,10 @@ class BranchAPITest extends APITestCase
         );
         $branchId = $branchId->id;
 
-        $api = $this->json('POST', route('api.post.db.company.branch.delete', $branchId));
+        $this->json('POST', route('api.post.db.company.branch.delete', $branchId));
 
-        $api->assertSuccessful();
+        $this->assertSoftDeleted('branches', [
+            'id' => $branchId
+        ]);
     }
 }
