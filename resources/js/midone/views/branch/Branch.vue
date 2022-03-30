@@ -1,24 +1,26 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.employee.table.title')" :data="employeeList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+        <DataList :title="t('views.branch.table.title')" :data="branchList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
            <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2">
                     <thead>
                         <tr>
-                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.email') }}</th>
-                            <th class="whitespace-nowrap">Join Date</th>
-                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.status') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.company') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.code') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.name') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.remarks') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
-                                <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.user.name }}</a></td>
-                                <td>{{ item.user.email }}</td>
-                                <td>{{ item.join_date }}</td>
+                                <td>{{ item.company.name }}</td>
+                                <td>{{ item.code }}</td>
+                                <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
+                                <td>{{ item.remarks }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 1" />
                                     <XIcon v-if="item.status === 0" />
@@ -33,7 +35,7 @@
                                             <CheckSquareIcon class="w-4 h-4 mr-1" />
                                             {{ t('components.data-list.edit') }}
                                         </a>
-                                        <a class="flex items-center text-theme-21" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
+                                        <a class="flex items-center text-danger" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
                                             <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
                                         </a>
                                     </div>
@@ -42,15 +44,23 @@
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
                                 <td colspan="6">
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.name') }}</div>
-                                        <div class="flex-1">{{ item.user.name }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.company_id') }}</div>
+                                        <div class="flex-1">{{ item.company.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.remarks') }}</div>
-                                        <div class="flex-1">{{ item.user.email }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.code') }}</div>
+                                        <div class="flex-1">{{ item.code }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.employee.fields.status') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
+                                        <div class="flex-1">{{ item.name }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.remarks') }}</div>
+                                        <div class="flex-1">{{ item.remarks }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.status') }}</div>
                                         <div class="flex-1">
                                             <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
                                             <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
@@ -66,17 +76,17 @@
                         <div class="modal-content">
                             <div class="modal-body p-0">
                                 <div class="p-5 text-center">
-                                    <XCircleIcon class="w-16 h-16 text-theme-21 mx-auto mt-3" />
+                                    <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
                                     <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
-                                    <div class="text-gray-600 mt-2">
+                                    <div class="text-slate-600 mt-2">
                                         {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
                                     </div>
                                 </div>
                                 <div class="px-5 pb-8 text-center">
-                                    <button type="button" data-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
+                                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
                                         {{ t('components.buttons.cancel') }}
                                     </button>
-                                    <button type="button" data-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
+                                    <button type="button" data-tw-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -88,116 +98,79 @@
 
     <div class="intro-y box" v-if="mode !== 'list'">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.employee.actions.create') }}</h2>
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.employee.actions.edit') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.branch.actions.create') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.branch.actions.edit') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="employeeForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
+            <VeeForm id="branchForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <!-- #region name-->
+                    <!-- #region company -->
                         <div class="mb-3">
-                            <label for="inputName" class="form-label">{{ t('views.employee.fields.name') }}</label>
-                            <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.employee.fields.name')" :label="t('views.employee.fields.name')" rules="required" @blur="reValidate(errors)" v-model="employee.user.name" />
-                            <ErrorMessage name="name" class="text-theme-21" />
-                        </div>
-                    <!-- #endregion -->                  
-                    
-                    <!-- #region email-->
-                        <div class="mb-3">
-                            <label for="inputEmail" class="form-label">{{ t('views.employee.fields.email') }}</label>
-                            <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-theme-21': errors['email']}" rules="required|email" :placeholder="t('views.employee.fields.email')" :label="t('views.employee.fields.email')" @blur="reValidate(errors)" v-model="employee.user.email" :readonly="mode === 'edit'" />
-                            <ErrorMessage name="email" class="text-theme-21" />
-                        </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region input img-->
-                        <div class="mb-3">
-                            <label for="inputImg" class="form-label">{{ t('views.employee.fields.picture') }}</label>
-                            <div class="">
-                                <div class="my-1">
-                                    <img id="inputImg" alt="" class="" :src="retrieveImage">
-                                </div>
-                                <div class="">
-                                    <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload" />
-                                </div>
-                            </div>
-                        </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region address-->
-                        <div class="mb-3">
-                            <label for="inputAddress" class="form-label">{{ t('views.employee.fields.address') }}</label>
-                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.employee.fields.address')" v-model="employee.user.profile.address" rows="3"></textarea>
-                        </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region city-->
-                        <div class="mb-3">
-                            <label for="inputCity" class="form-label">{{ t('views.employee.fields.city') }}</label>
-                            <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.employee.fields.city')" v-model="employee.user.profile.city"/>
-                        </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region postal code-->
-                        <div class="mb-3">
-                            <label for="inputPostalCode" class="form-label">{{ t('views.employee.fields.postal_code') }}</label>
-                            <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.employee.fields.postal_code')" v-model="employee.user.profile.postal_code"/>
-                        </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region country-->
-                        <div class="mb-3">
-                            <label for="inputCountry" class="form-label">{{ t('views.employee.fields.country') }}</label>
-                            <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-theme-21': errors['country']}" v-model="employee.user.profile.country" rules="required" :placeholder="t('views.employee.fields.country')" :label="t('views.employee.fields.country')" @blur="reValidate(errors)">
+                            <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
+                            <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
                                 <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in countriesDDL" :key="c.name" :value="c.code">{{ c.name }}</option>
+                                <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
                             </VeeField>
-                            <ErrorMessage name="country" class="text-theme-21" />
+                            <ErrorMessage name="company_id" class="text-theme-21" />
                         </div>
                     <!-- #endregion -->
                     
-                    <!-- #region tax id-->
-                        <div class="mb-3">
-                            <label for="inputTaxId" class="form-label">{{ t('views.employee.fields.tax_id') }}</label>
-                            <VeeField id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-theme-21': errors['tax_id']}" :placeholder="t('views.employee.fields.tax_id')" :label="t('views.employee.fields.tax_id')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.tax_id" />
-                            <ErrorMessage name="tax_id" class="text-theme-21" />
+                    <!-- #region code -->
+                    <div class="mb-3">
+                        <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
+                        <div class="flex items-center">
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
+                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
+                        <ErrorMessage name="code" class="text-theme-21" />
+                    </div>
                     <!-- #endregion -->
                     
-                    <!-- #region ic num-->
-                        <div class="mb-3">
-                            <label for="inputIcNum" class="form-label">{{ t('views.employee.fields.ic_num') }}</label>
-                            <VeeField id="inputIcNum" name="ic_num" as="input" :class="{'form-control':true, 'border-theme-21': errors['ic_num']}" :placeholder="t('views.employee.fields.ic_num')" :label="t('views.employee.fields.ic_num')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.ic_num" />
-                            <ErrorMessage name="ic_num" class="text-theme-21" />
-                        </div>
+                    <!-- #region name -->
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
+                        <ErrorMessage name="name" class="text-theme-21" />
+                    </div>
                     <!-- #endregion -->
                     
-                    <!-- #region join date-->
-                        <div class="mb-3" v-if="mode === 'create'">
-                            <label for="inputJoinDate" class="form-label">{{ t('views.employee.fields.join_date') }}</label>
-                            <VeeField name="join_date" v-slot="{ field }" rules="required" :label="t('views.employee.fields.join_date')">
-                                <Litepicker v-model="employee.join_date" class="form-control" v-bind="field" :options="{ autoApply: false, showWeekNumbers: false, dropdowns: { minYear: 1990, maxYear: null, months: true, years: true, }, format: 'YYYY-MM-DD'}" />
-                            </VeeField>
-                            <ErrorMessage name="join_date" class="text-theme-21" />
-                        </div>
+                    <!-- #region address -->
+                    <div class="mb-3">
+                        <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address" rows="3"></textarea>
+                    </div>
                     <!-- #endregion -->
                     
-                    <!-- #region remarks-->
-                        <div class="mb-3">
-                            <label for="inputRemarks" class="form-label">{{ t('views.employee.fields.remarks') }}</label>
-                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.employee.fields.remarks')" v-model="employee.user.profile.remarks" rows="3"></textarea>
-                        </div>
+                    <!-- #region city -->
+                    <div class="mb-3">
+                        <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city"/>
+                    </div>
                     <!-- #endregion -->
                     
-                    <!-- #region status-->
-                        <div class="mb-3">
-                            <label for="inputStatus" class="form-label">{{ t('views.employee.fields.status') }}</label>
-                            <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.status" rules="required" :label="t('views.employee.fields.status')">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                            </VeeField>
-                            <ErrorMessage name="status" class="text-theme-21" />
-                        </div>
+                    <!-- #region contact -->
+                    <div class="mb-3">
+                        <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
+                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact"/>
+                    </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region remarks -->
+                    <div class="mb-3">
+                        <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
+                    </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region status -->
+                    <div class="mb-3">
+                        <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
+                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </VeeField>
+                        <ErrorMessage name="status" class="text-theme-21" />
+                    </div>
                     <!-- #endregion -->
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
@@ -215,70 +188,58 @@
 </template>
 
 <script setup>
-// Vue Import
-import { inject, onMounted, ref, computed, watch } from 'vue'
-// Helper Import
-import axios from '../../axios';
-import mainMixins from '../../mixins';
-// Core Components Import
-import { useStore } from '../../store/index';
-// Components Import
-import DataList from '../../global-components/data-list/Main'
-import AlertPlaceholder from '../../global-components/alert-placeholder/Main'
+//#region Imports
+import { onMounted, ref, computed, watch } from "vue";
+import axios from "@/axios";
+import { useI18n } from "vue-i18n";
+import { route } from "@/ziggy";
+import dom from "@left4code/tw-starter/dist/js/dom";
+import { useUserContextStore } from "@/stores/user-context";
+import DataList from "@/global-components/data-list/Main";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+//#endregion
 
-// Declarations
-const store = useStore();
+//#region Declarations
+const { t } = useI18n();
+//#endregion
 
-// Mixins
-const { t, route } = mainMixins();
+//#region Data - Pinia
+const userContextStore = useUserContextStore();
+const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
+//#endregion
 
-// Data - VueX
-const selectedUserCompany = computed(() => store.state.main.selectedUserCompany );
-
-// Data - UI
+//#region Data - UI
 const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
 const expandDetail = ref(null);
+//#endregion
 
-// Data - Views
-const employeeList = ref({});
-const employee = ref({
-    user: {
-        company: { 
-            hId: '',
-            name: '' 
-        },
+//#region Data - Views
+const branchList = ref({});
+const branch = ref({
+    company: { 
         hId: '',
-        name: '',
-        email: '',
-        profile: {
-            hId: '',
-            img_path: '',
-            address: '',
-            city: '',
-            postal_code: '',
-            country: '',
-            tax_id: '',
-            ic_num: '',
-            remarks: '',
-            status: 1,
-        },
+        name: '' 
     },
-    join_date: '',
+    code: '',
+    name: '',
+    address: '',
+    city: '',
+    contact: '',
+    remarks: '',
     status: 1,
 });
 const statusDDL = ref([]);
-const countriesDDL = ref([]);
+const companyDDL = ref([]);
+//#endregion
 
-// onMounted
+//#region onMounted
 onMounted(() => {
-    const setDashboardLayout = inject('setDashboardLayout');
-    setDashboardLayout(false);
-  
     if (selectedUserCompany.value !== '') {
-        getAllEmployee({ page: 1 });
+        getAllBranch({ page: 1 });
+        getDDLSync();
     } else  {
         
     }
@@ -287,39 +248,45 @@ onMounted(() => {
 
     loading.value = false;
 });
+//#endregion
 
-// Methods
-function getAllEmployee(args) {
-    employeeList.value = {};
+//#region Methods
+const getAllBranch = (args) => {
+    branchList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
     let companyId = selectedUserCompany.value;
 
-    axios.get(route('api.get.db.company.employee.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
-        employeeList.value = response.data;
+    axios.get(route('api.get.db.company.branch.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+        branchList.value = response.data;
         loading.value = false;
     });
 }
 
-function getDDL() {
-    axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
-        countriesDDL.value = response.data;
-    });
-
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-function onSubmit(values, actions) {
+const getDDLSync = () => {
+    axios.get(route('api.get.db.company.company.read.all_active', {
+            companyId: selectedUserCompany.value,
+            paginate: false
+        })).then(response => {
+            companyDDL.value = response.data;
+    });
+}
+
+const onSubmit = (values, actions) => {
     loading.value = true;
 
-    var formData = new FormData(cash('#employeeForm')[0]); 
+    var formData = new FormData(dom('#branchForm')[0]); 
     formData.append('company_id', selectedUserCompany.value);
     
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.company.employee.save'), formData).then(response => {
+        axios.post(route('api.post.db.company.branch.save'), formData).then(response => {
             backToList();
         }).catch(e => {
             handleError(e, actions);
@@ -327,7 +294,7 @@ function onSubmit(values, actions) {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.company.employee.edit', employee.value.hId), formData).then(response => {
+        axios.post(route('api.post.db.company.branch.edit', branch.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -338,7 +305,7 @@ function onSubmit(values, actions) {
     } else { }
 }
 
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -355,66 +322,54 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-function emptyEmployee() {
+const emptybranch = () => {
     return {
-        company: { 
+        company: {
             hId: '',
-            name: '' 
+            name: ''
         },
-        user: {
-            hId: '',
-            name: '',
-            email: '',
-            profile: {
-                hId: '',
-                img_path: '',
-                address: '',
-                city: '',
-                postal_code: '',
-                country: '',
-                tax_id: '',
-                ic_num: '',
-                remarks: '',
-                status: 1,
-            },
-        },
-        join_date: '',
+        code: '[AUTO]',
+        name: '',
+        address: '',
+        city: '',
+        contact: '',
+        remarks: '',
         status: 1,
     }
 }
 
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
-    employee.value = emptyEmployee();
+    branch.value = emptybranch();
 }
 
-function onDataListChange({page, pageSize, search}) {
-    getAllEmployee({page, pageSize, search});
+const onDataListChange = ({page, pageSize, search}) => {
+    getAllBranch({page, pageSize, search});
 }
 
-function editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
-    employee.value = employeeList.value.data[index];
+    branch.value = branchList.value.data[index];
 }
 
-function deleteSelected(index) {
-    deleteId.value = employeeList.value.data[index].hId;
+const deleteSelected = (index) => {
+    deleteId.value = branchList.value.data[index].hId;
 }
 
-function confirmDelete() {
-    axios.post(route('api.post.db.company.employee.delete', deleteId.value)).then(response => {
+const confirmDelete = () => {
+    axios.post(route('api.post.db.company.branch.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
         alertErrors.value = e.response.data;
@@ -423,17 +378,17 @@ function confirmDelete() {
     });
 }
 
-function showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
-    getAllEmployee({ page: employeeList.value.current_page, pageSize: employeeList.value.per_page });
+    getAllBranch({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
 }
 
-function toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -441,35 +396,21 @@ function toggleDetail(idx) {
     }
 }
 
-function handleUpload(e) {
-    const files = e.target.files;
-
-    let filename = files[0].name;
-
-    const fileReader = new FileReader()
-    fileReader.addEventListener('load', () => {
-        employee.value.user.profile.img_path = fileReader.result
-    })
-    fileReader.readAsDataURL(files[0])
+const generateCode = () => {
+    if (branch.value.code === '[AUTO]') branch.value.code = '';
+    else  branch.value.code = '[AUTO]'
 }
+//#endregion
 
-// Computed
-const retrieveImage = computed(() => {
-    if (employee.value.user.profile.img_path && employee.value.user.profile.img_path !== '') {
-        if (employee.value.user.profile.img_path.includes('data:image')) {
-            return employee.value.user.profile.img_path;
-        } else {
-            return '/storage/' + employee.value.user.profile.img_path;
-        }
-    } else {
-        return '/images/def-user.png';
-    }
-});
+//#region Computed
+//#endregion
 
-// Watcher
+//#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
-        getAllEmployee({ page: 1 });
+        getAllBranch({ page: 1 });
+        getDDLSync();
     }
 });
+//#endregion
 </script>
