@@ -307,7 +307,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function getAllPO(args) {
+const getAllPO = (args) => {
     poList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -320,7 +320,7 @@ function getAllPO(args) {
     });
 }
 
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#poForm')[0]); 
@@ -330,23 +330,23 @@ function onSubmit(values, actions) {
     } else { }
 }
 
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllPO({ page: poList.value.current_page, pageSize: poList.value.per_page });
 }
 
-function getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-function getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.supplier.supplier.read', {
             companyId: selectedUserCompany.value,
             paginate: false
@@ -362,7 +362,7 @@ function getDDLSync() {
     });
 }
 
-function gotoTabs(selectedTab) {
+const gotoTabs = (selectedTab) => {
     if (tabs.value.includes(selectedTab)) {
         tabs.value.splice(tabs.value.indexOf(selectedTab),1);
     } else {
@@ -370,11 +370,11 @@ function gotoTabs(selectedTab) {
     }
 }
 
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-function filterProducts() {
+const filterProducts = () => {
     
 }
 //#endregion
