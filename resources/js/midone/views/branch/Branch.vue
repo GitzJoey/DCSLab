@@ -107,11 +107,11 @@
                     <!--#region Company -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
-                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
+                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
                         </VeeField>
-                        <ErrorMessage name="company_id" class="text-theme-21" />
+                        <ErrorMessage name="company_id" class="text-danger" />
                     </div>
                     <!-- endregion -->
                     
@@ -119,18 +119,18 @@
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
-                        <ErrorMessage name="code" class="text-theme-21" />
+                        <ErrorMessage name="code" class="text-danger" />
                     </div>
                     <!-- endregion -->
 
                     <!--#region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
-                        <ErrorMessage name="name" class="text-theme-21" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
+                        <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <!-- endregion -->
 
@@ -165,14 +165,14 @@
                     <!--#region Status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
-                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
+                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="status" class="text-theme-21" />
+                        <ErrorMessage name="status" class="text-danger" />
                     </div>
                     <!-- endregion -->
-                    
+
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
