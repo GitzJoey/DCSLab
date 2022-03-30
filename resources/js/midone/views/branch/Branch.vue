@@ -104,54 +104,74 @@
         <div class="loader-container">
             <VeeForm id="branchForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <div class="mb-3">
-                        <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
-                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
-                        </VeeField>
-                        <ErrorMessage name="company_id" class="text-danger" />
-                    </div>
+                    <!-- #region company -->
+                        <div class="mb-3">
+                            <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
+                            <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
+                            </VeeField>
+                            <ErrorMessage name="company_id" class="text-theme-21" />
+                        </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
-                        <ErrorMessage name="code" class="text-danger" />
+                        <ErrorMessage name="code" class="text-theme-21" />
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
-                        <ErrorMessage name="name" class="text-danger" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
+                        <ErrorMessage name="name" class="text-theme-21" />
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
-                        <VeeField id="inputAddress" name="address" type="text" :class="{'form-control':true, 'border-danger': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
-                        <ErrorMessage name="address" class="text-danger" />
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address" rows="3"></textarea>
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region city -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <VeeField id="inputCity" name="city" type="text" :class="{'form-control':true, 'border-danger': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
-                        <ErrorMessage name="city" class="text-danger" />
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city"/>
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <VeeField id="inputContact" name="contact" type="text" :class="{'form-control':true, 'border-danger': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
-                        <ErrorMessage name="contact" class="text-danger" />
+                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact"/>
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
-                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
+                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="status" class="text-danger" />
+                        <ErrorMessage name="status" class="text-theme-21" />
                     </div>
+                    <!-- #endregion -->
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -218,7 +238,7 @@ const companyDDL = ref([]);
 //#region onMounted
 onMounted(() => {
     if (selectedUserCompany.value !== '') {
-        getAllBranches({ page: 1 });
+        getAllBranch({ page: 1 });
         getDDLSync();
     } else  {
         
@@ -231,7 +251,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function getAllBranches(args) {
+const getAllBranch = (args) => {
     branchList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -244,13 +264,13 @@ function getAllBranches(args) {
     });
 }
 
-function getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-function getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.company.company.read.all_active', {
             companyId: selectedUserCompany.value,
             paginate: false
@@ -259,7 +279,7 @@ function getDDLSync() {
     });
 }
 
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#branchForm')[0]); 
@@ -285,7 +305,7 @@ function onSubmit(values, actions) {
     } else { }
 }
 
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -302,15 +322,15 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-function emptyBranch() {
+const emptybranch = () => {
     return {
         company: {
             hId: '',
@@ -326,31 +346,29 @@ function emptyBranch() {
     }
 }
 
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
-    branch.value = emptyBranch();
-
-    branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+    branch.value = emptybranch();
 }
 
-function onDataListChange({page, pageSize, search}) {
-    getAllBranches({page, pageSize, search});
+const onDataListChange = ({page, pageSize, search}) => {
+    getAllBranch({page, pageSize, search});
 }
 
-function editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     branch.value = branchList.value.data[index];
 }
 
-function deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = branchList.value.data[index].hId;
 }
 
-function confirmDelete() {
+const confirmDelete = () => {
     axios.post(route('api.post.db.company.branch.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
@@ -360,17 +378,17 @@ function confirmDelete() {
     });
 }
 
-function showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
-    getAllBranches({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
+    getAllBranch({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
 }
 
-function toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -378,7 +396,7 @@ function toggleDetail(idx) {
     }
 }
 
-function generateCode() {
+const generateCode = () => {
     if (branch.value.code === '[AUTO]') branch.value.code = '';
     else  branch.value.code = '[AUTO]'
 }
@@ -390,7 +408,7 @@ function generateCode() {
 //#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
-        getAllBranches({ page: 1 });
+        getAllBranch({ page: 1 });
         getDDLSync();
     }
 });
