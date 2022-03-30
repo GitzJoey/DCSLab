@@ -137,7 +137,7 @@
                     <!-- #region address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
-                        <input id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address">
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address" rows="3"></textarea>
                     </div>
                     <!-- #endregion -->
 
