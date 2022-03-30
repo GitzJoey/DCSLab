@@ -104,7 +104,7 @@
         <div class="loader-container">
             <VeeForm id="warehouseForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <!--#region company_id -->
+                    <!--#region company_id-->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.warehouse.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="warehouse.company.hId" :label="t('views.warehouse.fields.company_id')" rules="required" @blur="reValidate(errors)">
@@ -113,9 +113,9 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Code -->
+                    <!--#region code-->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.warehouse.fields.code') }}</label>
                         <div class="flex items-center">
@@ -124,45 +124,45 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Name -->
+                    <!--#region name-->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.warehouse.fields.name') }}</label>
                         <VeeField id="inputName" name="name" type="text :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.warehouse.fields.name')" :label="t('views.warehouse.fields.name')" rules="required" @blur="reValidate(errors)" v-model="warehouse.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Address -->
+                    <!--#region address-->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address"></textarea>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!-#region city -->
+                    <!--#region city-->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
                         <textarea id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city"></textarea>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!-#region contact -->
+                    <!--#region contact-->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
                         <textarea id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact"></textarea>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!-#region Remarks -->
+                    <!--#region remarks-->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.warehouse.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.warehouse.fields.remarks')" v-model="warehouse.remarks" rows="3"></textarea>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Status -->
+                    <!--#region status-->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.warehouse.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="warehouse.status" rules="required" @blur="reValidate(errors)">
@@ -171,7 +171,7 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
                     
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">

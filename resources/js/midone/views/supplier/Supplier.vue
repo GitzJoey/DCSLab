@@ -145,7 +145,7 @@
                     </TabList>
                     <TabPanels class="border-l border-r border-b">
                         <TabPanel class="leading-relaxed p-5">
-                            <!--#region Code -->
+                            <!--#region Code-->
                             <div class="mb-3">
                                 <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
                                 <div class="flex items-center">
@@ -154,55 +154,55 @@
                                 </div>
                                 <ErrorMessage name="code" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Name -->
+                            <!--#region Name-->
                             <div class="mb-3">
                                 <label for="inputName" class="form-label">{{ t('views.supplier.fields.name') }}</label>
                                 <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.supplier.fields.name')" :label="t('views.supplier.fields.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.name" />
                                 <ErrorMessage name="name" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Address -->
+                            <!--#region Address-->
                             <div class="mb-3">
                                 <label for="inputAddress" class="form-label">{{ t('views.supplier.fields.address') }}</label>
                                 <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.supplier.fields.address')" v-model="supplier.address" rows="3"></textarea>
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Contact -->
+                            <!--#region Contact-->
                             <div class="mb-3">
                                 <label for="inputContact" class="form-label">{{ t('views.supplier.fields.contact') }}</label>
                                 <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.supplier.fields.contact')" v-model="supplier.contact" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region City -->
+                            <!--#region City-->
                             <div class="mb-3">
                                 <label for="inputCity" class="form-label">{{ t('views.supplier.fields.city') }}</label>
                                 <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.supplier.fields.city')" v-model="supplier.city" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Taxable Enterprise -->
+                            <!--#region Taxable Enterprise-->
                             <div class="mb-3">
                                 <label for="inputTaxableEnterprise">{{ t('views.supplier.fields.taxable_enterprise') }}</label>
                                 <div class="form-switch mt-2">
                                     <input id="inputTaxableEnterprise" type="checkbox" class="form-check-input" name="taxable_enterprise" v-model="supplier.taxable_enterprise" :true-value="1" :false-value="0">
                                 </div>
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Tax Id -->
+                            <!--#region Tax Id-->
                             <div class="mb-3">
                                 <label for="inputTaxId" class="form-label">{{ t('views.supplier.fields.tax_id') }}</label>
                                 <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.supplier.fields.tax_id')" :label="t('views.supplier.fields.tax_id')" @blur="reValidate(errors)" v-model="supplier.tax_id" />
                                 <ErrorMessage name="tax_id" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Payment Term Type -->                
+                            <!--#region Payment Term Type-->                
                             <div class="mb-3">
                                 <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
                                 <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
@@ -211,9 +211,9 @@
                                 </VeeField>
                                 <ErrorMessage name="payment_term_type" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Payment Term -->
+                            <!--#region Payment Term-->
                             <div class="mb-3">
                                 <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
                                 <div class="mt-2">
@@ -221,9 +221,9 @@
                                     <ErrorMessage name="payment_term_type" class="text-danger" />
                                 </div>
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Status -->
+                            <!--#region Status-->
                             <div class="mb-3">
                                 <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
                                 <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['status']}" id="inputStatus" name="status" :label="t('views.supplier.fields.status')" rules="required" @blur="reValidate(errors)" v-model="supplier.status">
@@ -232,33 +232,33 @@
                                 </VeeField>
                                 <ErrorMessage name="status" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Remarks -->
+                            <!--#region Remarks-->
                             <div class="mb-3">
                                 <label for="inputRemarks" class="form-label">{{ t('views.supplier.fields.remarks') }}</label>
                                 <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" rows="3"></textarea>
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
                         </TabPanel>
                         <TabPanel class="leading-relaxed p-5">
 
-                            <!-- #region POC Name -->
+                            <!-- #region POC Name-->
                             <div class="mb-3">
                                 <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
                                 <VeeField id="inputPOCName" name="poc_name" type="text" :class="{'form-control':true, 'border-danger': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
                                 <ErrorMessage name="poc_name" class="text-danger" />
                             </div>
-                            <!-- #endregion -->
+                            <!-- #endregion-->
 
-                            <!-- #region Email -->
+                            <!-- #region Email-->
                             <div class="mb-3">
                                 <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
                                 <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
                                 <ErrorMessage name="email" class="text-danger" />
                             </div>
-                            <!-- #endregion -->
+                            <!-- #endregion-->
 
                         </TabPanel>
                         <TabPanel class="leading-relaxed p-5">

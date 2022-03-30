@@ -167,7 +167,7 @@
         <div class="loader-container">
             <VeeForm id="productForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <!--#region Code -->
+                    <!--#region code-->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product.fields.code') }}</label>
                         <div class="flex items-center">
@@ -176,9 +176,9 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Group Id -->
+                    <!--#region group id-->
                     <div class="mb-3">
                         <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
                         <select id="product_group_id" name="product_group_id" class="form-control form-select" v-model="product.product_group.hId">
@@ -187,9 +187,9 @@
                         </select>
                         <ErrorMessage name="product_group_id" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Brand Id -->
+                    <!--#region brand id-->
                     <div class="mb-3">
                         <label class="form-label" for="brand_id">{{ t('views.product.fields.brand_id') }}</label>
                         <VeeField as="select" id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-danger': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" rules="required" @blur="reValidate(errors)">
@@ -198,17 +198,17 @@
                         </VeeField>
                         <ErrorMessage name="brand_id" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Name -->
+                    <!--#region name-->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.product.fields.name') }}</label>
                         <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Product Type -->
+                    <!--#region product type-->
                     <div class="mb-3">
                         <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
                         <VeeField as="select" id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-danger': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" rules="required" @blur="reValidate(errors)">
@@ -217,24 +217,24 @@
                         </VeeField>
                         <ErrorMessage name="product_type" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Taxable Supply -->
+                    <!--#region taxable supply-->
                     <div class="mb-3">
                         <label for="inputTaxableSupply" class="form-label">{{ t('views.product.fields.taxable_supply') }}</label>
                         <div class="form-switch mt-2">
                             <input id="inputTaxableSupply" type="checkbox" class="form-check-input" name="taxable_supply" v-model="product.taxable_supply" :true-value="1" :false-value="0">
                         </div>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Standard Rated Supply -->
+                    <!--#region standard rated supply-->
                     <div class="mb-3">
                         <label for="inputStandardRatedSupply" class="form-label">{{ t('views.product.fields.standard_rated_supply') }}</label>
                         <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" type="text" :class="{'form-control':true, 'border-danger': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
                         <ErrorMessage name="standard_rated_supply" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
                     <div class="mb-3">
                         <label for="inputUnit" class="form-label">{{ t('views.product.fields.units.title') }}</label>
@@ -248,7 +248,7 @@
                         </div>
                         <div class="grid grid-cols-9 gap-2 mb-2" v-for="(pu, puIdx) in product.product_units">
                             
-                            <!--#region Unit Code -->
+                            <!--#region unit code-->
                             <div class="col-span-2">
                                 <input type="hidden" :name="'product_units_hId[' + puIdx + ']'" v-model="pu.hId" />
                                 <div class="flex items-center">
@@ -258,9 +258,9 @@
                                 <ErrorMessage :name="'product_units_code[' + puIdx + ']'" class="text-danger" />
                                 <ErrorMessage :name="'product_units_code.' + puIdx" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Unit DDL -->
+                            <!--#region unit ddl-->
                             <div class="col-span-2">
                                 <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['unit_id[' + puIdx + ']']|errors['unit_id.' + puIdx]}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
@@ -269,29 +269,29 @@
                                 <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-danger" />
                                 <ErrorMessage :name="'unit_id.' + puIdx" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Conv Value -->
+                            <!--#region conv value-->
                             <div class="col-span-2">
                                 <VeeField type="text" :class="{'form-control text-right':true, 'border-danger':errors['conv_value[' + puIdx +']']|errors['conv_value.' + puIdx]}" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
                                 <ErrorMessage :name="'conv_value[' + puIdx +']'" class="text-danger" />
                                 <ErrorMessage :name="'conv_value.' + puIdx" class="text-danger" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Is Base -->
+                            <!--#region is base-->
                             <div class="flex items-center justify-center">
                                 <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" :true-value="1" :false-value="0" @click="changeIsBase(puIdx)"> 
                                 <input type="hidden" v-model="pu.is_base" :name="'is_base[' + puIdx + ']'" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
-                            <!--#region Is Primary -->
+                            <!--#region is primary-->
                             <div class="flex items-center justify-center">
                                 <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary_unit" :true-value="1" :false-value="0" @click="changeIsPrimary(puIdx)">
                                 <input type="hidden" v-model="pu.is_primary_unit" :name="'is_primary_unit[' + puIdx + ']'" />
                             </div>
-                            <!--#endregion -->
+                            <!--#endregion-->
 
                             <div class="flex items-center justify-center">
                                 <button class="btn btn-sm btn-secondary" v-if="puIdx !== 0" @click.prevent="deleteUnitSelected(puIdx)"><TrashIcon class="w-3 h-4" /></button>
@@ -300,42 +300,42 @@
                         <button class="btn btn-sm btn-secondary w-24" @click.prevent="createNewUnit"><PlusIcon class="w-3 h-4" /></button>
                     </div>
 
-                    <!--#region Input Point -->
+                    <!--#region input point-->
                     <div class="mb-3">
                         <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
                         <VeeField id="inputPoint" name="point" type="text" :class="{'form-control':true, 'border-danger': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric|max_value:1000" v-model="product.point" />
                         <ErrorMessage name="point" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Serial Number -->
+                    <!--#region serial number-->
                     <div class="mb-3">
                         <label for="inputUseSerialNumber" class="form-label">{{ t('views.product.fields.use_serial_number') }}</label>
                         <div class="form-switch mt-2">
                             <input id="inputUseSerialNumber" type="checkbox" class="form-check-input" name="use_serial_number" v-model="product.use_serial_number" :true-value="1" :false-value="0">
                         </div>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Has Expiry Date -->
+                    <!--#region has expiry date-->
                     <div class="mb-3">
                         <label for="inputHasExpiryDate" class="form-label">{{ t('views.product.fields.has_expiry_date') }}</label>
                         <div class="form-switch mt-2">
                             <input id="inputHasExpiryDate" type="checkbox" class="form-check-input" name="has_expiry_date" v-model="product.has_expiry_date" :true-value="1" :false-value="0">
                         </div>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Price Include VAT -->
+                    <!--#region price include vat-->
                     <div class="mb-3">
                         <label for="inputPriceIncludeVAT" class="form-label">{{ t('views.product.fields.price_include_vat') }}</label>
                         <div class="form-switch mt-2">
                             <input id="inputPriceIncludeVAT" type="checkbox" class="form-check-input" name="price_include_vat" v-model="product.price_include_vat" :true-value="1" :false-value="0">
                         </div>
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Status -->
+                    <!--#region status-->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.product.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="product.status" rules="required" @blur="reValidate(errors)">
@@ -344,15 +344,14 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
-                    <!--#endregion -->
+                    <!--#endregion-->
 
-                    <!--#region Remarks -->
+                    <!--#region remarks-->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.product.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.product.fields.remarks')" v-model="product.remarks" rows="3"></textarea>
                     </div>
-                    <!--#endregion -->
-
+                    <!--#endregion-->
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
