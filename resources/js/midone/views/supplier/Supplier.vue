@@ -182,7 +182,7 @@
                                 <ErrorMessage name="tax_id" class="text-danger" />
                             </div>
                             <div class="mb-3">
-                                <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
+                                <label for="inputPaymentTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
                                 <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
