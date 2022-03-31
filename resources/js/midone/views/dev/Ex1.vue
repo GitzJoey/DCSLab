@@ -18,7 +18,7 @@
                             <div class="mb-3">
                                 <label for="inputCode" class="form-label">{{ t('views.supplier.fields.code') }}</label>
                                 <div class="flex items-center">
-                                    <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
+                                    <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.supplier.fields.code')" :label="t('views.supplier.fields.code')" rules="required" @blur="reValidate(errors)" v-model="supplier.code" :readonly="mode === 'create' && supplier.code === '[AUTO]'" />
                                     <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                                 </div>
                                 <ErrorMessage name="code" class="text-danger" />
@@ -31,7 +31,7 @@
                         <TabPanel class="leading-relaxed p-5">
                             <div class="mb-3">
                                 <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
-                                <VeeField id="inputPOCName" name="poc_name" as="input" :class="{'form-control':true, 'border-danger': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" v-model="supplier.supplier_poc.name" />
+                                <VeeField id="inputPOCName" name="poc_name" type="text" :class="{'form-control':true, 'border-danger': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" v-model="supplier.supplier_poc.name" />
                                 <ErrorMessage name="poc_name" class="text-danger" />
                             </div>
                             <div class="mb-3">

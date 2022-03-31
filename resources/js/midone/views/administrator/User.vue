@@ -98,12 +98,12 @@
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.user.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-danger': errors['name']}" rules="required|alpha" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" rules="required|alpha" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputEmail" class="form-label">{{ t('views.user.fields.email') }}</label>
-                        <VeeField id="inputEmail" name="email" as="input" :class="{'form-control':true, 'border-danger': errors['email']}" rules="required|email" :placeholder="t('views.user.fields.email')" :label="t('views.user.fields.email')" @blur="reValidate(errors)" v-model="user.email" :readonly="mode === 'edit'" />
+                        <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" rules="required|email" :placeholder="t('views.user.fields.email')" :label="t('views.user.fields.email')" @blur="reValidate(errors)" v-model="user.email" :readonly="mode === 'edit'" />
                         <ErrorMessage name="email" class="text-danger" />
                     </div>
                     <div class="mb-3">
@@ -147,12 +147,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="inputTaxId" class="form-label">{{ t('views.user.fields.tax_id') }}</label>
-                        <VeeField id="inputTaxId" name="tax_id" as="input" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.user.fields.tax_id')" :label="t('views.user.fields.tax_id')" @blur="reValidate(errors)" v-model="user.profile.tax_id" />
+                        <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.user.fields.tax_id')" :label="t('views.user.fields.tax_id')" @blur="reValidate(errors)" v-model="user.profile.tax_id" />
                         <ErrorMessage name="tax_id" class="text-danger" />
                     </div>
                     <div class="mb-3">
                         <label for="inputICNum" class="form-label">{{ t('views.user.fields.ic_num') }}</label>
-                        <VeeField id="inputICNum" name="ic_num" as="input" :class="{'form-control':true, 'border-danger': errors['ic_num']}" rules="required" :placeholder="t('views.user.fields.ic_num')" :label="t('views.user.fields.ic_num')" @blur="reValidate(errors)" v-model="user.profile.ic_num" />
+                        <VeeField id="inputICNum" name="ic_num" type="text" :class="{'form-control':true, 'border-danger': errors['ic_num']}" rules="required" :placeholder="t('views.user.fields.ic_num')" :label="t('views.user.fields.ic_num')" @blur="reValidate(errors)" v-model="user.profile.ic_num" />
                         <ErrorMessage name="ic_num" class="text-danger" />
                     </div>
                     <div class="mb-3">
