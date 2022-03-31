@@ -369,6 +369,7 @@ const deleteSelected = (index) => {
 }
 
 const confirmDelete = () => {
+    deleteModalShow.value = false;
     axios.post(route('api.post.db.company.branch.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
