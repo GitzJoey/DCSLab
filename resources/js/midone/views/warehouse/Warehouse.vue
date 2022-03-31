@@ -115,7 +115,7 @@
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.warehouse.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code"  :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.warehouse.fields.code')" :label="t('views.warehouse.fields.code')" rules="required" @blur="reValidate(errors)" v-model="warehouse.code" :readonly="warehouse.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.warehouse.fields.code')" :label="t('views.warehouse.fields.code')" rules="required" @blur="reValidate(errors)" v-model="warehouse.code" :readonly="warehouse.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
