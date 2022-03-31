@@ -180,10 +180,10 @@
                                 <label for="inputTaxId" class="form-label">{{ t('views.supplier.fields.tax_id') }}</label>
                                 <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" rules="required" :placeholder="t('views.supplier.fields.tax_id')" :label="t('views.supplier.fields.tax_id')" @blur="reValidate(errors)" v-model="supplier.tax_id" />
                                 <ErrorMessage name="tax_id" class="text-danger" />
-                            </div>                        
+                            </div>
                             <div class="mb-3">
-                                <label for="inputPaymnetTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
-                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymnetTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
+                                <label for="inputPaymentTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymentTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                                 </VeeField>
@@ -344,7 +344,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function getAllSupplier(args) {
+const getAllSupplier = (args) => {
     supplierList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -357,7 +357,7 @@ function getAllSupplier(args) {
     });
 }
 
-function getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
@@ -367,13 +367,13 @@ function getDDL() {
     });
 }
 
-function getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.product.product.read', { "companyId": selectedUserCompany.value, "paginate": false })).then(response => {
         productLists.value = response.data;
     });
 }
 
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#supplierForm')[0]); 
@@ -399,7 +399,7 @@ function onSubmit(values, actions) {
     } else { }
 }
 
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -416,15 +416,15 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-function emptySupplier() {
+const emptySupplier = () => {
     return {
         code: '[AUTO]',
         name: '',
@@ -450,30 +450,30 @@ function emptySupplier() {
     }
 }
 
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
     supplier.value = emptySupplier();
 }
 
-function onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllSupplier({page, pageSize, search});
 }
 
-function editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     supplier.value = supplierList.value.data[index];
 }
 
-function deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = supplierList.value.data[index].hId;
     deleteModalShow.value = true;
 }
 
-function confirmDelete() {
+const confirmDelete = () => {
     deleteModalShow.value = false;
     axios.post(route('api.post.db.supplier.supplier.delete', deleteId.value)).then(response => {
         backToList();
@@ -484,17 +484,17 @@ function confirmDelete() {
     });
 }
 
-function showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllSupplier({ page: supplierList.value.current_page, pageSize: supplierList.value.per_page });
 }
 
-function toggleDetail(idx) {
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -502,7 +502,7 @@ function toggleDetail(idx) {
     }
 }
 
-function generateCode() {
+const generateCode = () => {
     if (supplier.value.code === '[AUTO]') supplier.value.code = '';
     else  supplier.value.code = '[AUTO]'
 }

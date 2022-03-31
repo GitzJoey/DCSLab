@@ -71,27 +71,23 @@
                         </template>
                     </tbody>
                 </table>
-                <div id="delete-confirmation-modal" class="modal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-body p-0">
-                                <div class="p-5 text-center">
-                                    <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
-                                    <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
-                                    <div class="text-slate-600 mt-2">
-                                        {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
-                                    </div>
-                                </div>
-                                <div class="px-5 pb-8 text-center">
-                                    <button type="button" data-tw-dismiss="modal" class="btn btn-outline-secondary w-24 mr-1">
-                                        {{ t('components.buttons.cancel') }}
-                                    </button>
-                                    <button type="button" data-tw-dismiss="modal" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
-                                </div>
+                <Modal :show="deleteModalShow" @hidden="deleteModalShow = false">
+                    <ModalBody class="p-0">
+                        <div class="p-5 text-center">
+                            <XCircleIcon class="w-16 h-16 text-danger mx-auto mt-3" />
+                            <div class="text-3xl mt-5">{{ t('components.data-list.delete_confirmation.title') }}</div>
+                            <div class="text-slate-600 mt-2">
+                                {{ t('components.data-list.delete_confirmation.desc_1') }}<br />{{ t('components.data-list.delete_confirmation.desc_2') }}
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <div class="px-5 pb-8 text-center">
+                            <button type="button" class="btn btn-outline-secondary w-24 mr-1" @click="deleteModalShow = false">
+                                {{ t('components.buttons.cancel') }}
+                            </button>
+                            <button type="button" class="btn btn-danger w-24" @click="confirmDelete">{{ t('components.buttons.delete') }}</button>
+                        </div>
+                    </ModalBody>
+                </Modal>
             </template>
         </DataList>
     </div>
@@ -104,6 +100,7 @@
         <div class="loader-container">
             <VeeForm id="warehouseForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
+                    <!-- #region Company -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.warehouse.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="warehouse.company.hId" :label="t('views.warehouse.fields.company_id')" rules="required" @blur="reValidate(errors)">
@@ -112,38 +109,56 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.warehouse.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.warehouse.fields.code')" :label="t('views.warehouse.fields.code')" rules="required" @blur="reValidate(errors)" v-model="warehouse.code" :readonly="warehouse.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.warehouse.fields.code')" :label="t('views.warehouse.fields.code')" rules="required" @blur="reValidate(errors)" v-model="warehouse.code" :readonly="warehouse.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.warehouse.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.warehouse.fields.name')" :label="t('views.warehouse.fields.name')" rules="required" @blur="reValidate(errors)" v-model="warehouse.name" />
+                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.warehouse.fields.name')" :label="t('views.warehouse.fields.name')" rules="required" @blur="reValidate(errors)" v-model="warehouse.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
-                        <VeeField id="inputAddress" name="address" type="text" :class="{'form-control':true, 'border-danger': errors['address']}" :placeholder="t('views.warehouse.fields.address')" :label="t('views.warehouse.fields.address')" rules="required" @blur="reValidate(errors)" v-model="warehouse.address" />
-                        <ErrorMessage name="address" class="text-danger" />
+                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address" rows="3"></textarea>
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region City -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
-                        <VeeField id="inputCity" name="city" type="text" :class="{'form-control':true, 'border-danger': errors['city']}" :placeholder="t('views.warehouse.fields.city')" :label="t('views.warehouse.fields.city')" rules="required" @blur="reValidate(errors)" v-model="warehouse.city" />
-                        <ErrorMessage name="city" class="text-danger" />
+                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
-                        <VeeField id="inputContact" name="contact" type="text" :class="{'form-control':true, 'border-danger': errors['contact']}" :placeholder="t('views.warehouse.fields.contact')" :label="t('views.warehouse.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="warehouse.contact" />
-                        <ErrorMessage name="contact" class="text-danger" />
+                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.warehouse.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.warehouse.fields.remarks')" v-model="warehouse.remarks" rows="3"></textarea>
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.warehouse.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="warehouse.status" rules="required" @blur="reValidate(errors)">
@@ -152,6 +167,8 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+                    
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -231,7 +248,7 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function getAllWarehouse(args) {
+const getAllWarehouse = (args) => {
     warehouseList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -244,13 +261,13 @@ function getAllWarehouse(args) {
     });
 }
 
-function getDDL() {
+const getDDL = () => {
     axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
         statusDDL.value = response.data;
     });
 }
 
-function getDDLSync() {
+const getDDLSync = () => {
     axios.get(route('api.get.db.company.company.read.all_active', {
             companyId: selectedUserCompany.value,
             paginate: false
@@ -259,7 +276,7 @@ function getDDLSync() {
     });
 }
 
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#warehouseForm')[0]); 
@@ -285,7 +302,7 @@ function onSubmit(values, actions) {
     } else { }
 }
 
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -302,15 +319,15 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-function reValidate(errors) {
+const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-function emptywarehouse() {
+const emptywarehouse = () => {
     return {
         company: {
             hId: '',
@@ -326,29 +343,31 @@ function emptywarehouse() {
     }
 }
 
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
 }
 
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
     warehouse.value = emptywarehouse();
 }
 
-function onDataListChange({page, pageSize, search}) {
+const onDataListChange = ({page, pageSize, search}) => {
     getAllWarehouse({page, pageSize, search});
 }
 
-function editSelected(index) {
+const editSelected = (index) => {
     mode.value = 'edit';
     warehouse.value = warehouseList.value.data[index];
 }
 
-function deleteSelected(index) {
+const deleteSelected = (index) => {
     deleteId.value = warehouseList.value.data[index].hId;
+    deleteModalShow.value = true;
 }
 
-function confirmDelete() {
+const confirmDelete = () => {
+    deleteModalShow.value = false;
     axios.post(route('api.post.db.company.warehouse.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
@@ -358,17 +377,17 @@ function confirmDelete() {
     });
 }
 
-function showSelected(index) {
+const showSelected = (index) => {
     toggleDetail(index);
 }
 
-function backToList() {
+const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
     getAllWarehouse({ page: warehouseList.value.current_page, pageSize: warehouseList.value.per_page });
 }
 
-function toggleDetail(idx) {
+const toggleDetail = (idx) => {x
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
@@ -376,7 +395,7 @@ function toggleDetail(idx) {
     }
 }
 
-function generateCode() {
+const generateCode = () => {
     if (warehouse.value.code === '[AUTO]') warehouse.value.code = '';
     else  warehouse.value.code = '[AUTO]'
 }
