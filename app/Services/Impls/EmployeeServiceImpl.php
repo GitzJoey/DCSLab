@@ -6,10 +6,11 @@ use Exception;
 use App\Models\User;
 
 use App\Models\Employee;
+use App\Services\UserService;
 use App\Actions\RandomGenerator;
 use App\Services\EmployeeService;
-use App\Services\UserService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
 
@@ -25,7 +26,9 @@ class EmployeeServiceImpl implements EmployeeService
         DB::beginTransaction();
 
         try {
-            $userService = app(UserService::class);
+            $container = Container::getInstance();
+            $userService = $container->make(UserService::class);
+
             $user_id = $userService->create(
                 $user[0]['name'],
                 $user[0]['email'],
@@ -113,6 +116,29 @@ class EmployeeServiceImpl implements EmployeeService
         $retval = false;
         try {
             $employee = Employee::find($id);
+
+            $container = Container::getInstance();
+            $userService = $container->make(UserService::class);
+
+            $user = User::find($employee->user_id);
+
+            $profile = $user->profile()->first();
+
+            $profileTemp = array(
+                'first_name' => $profile['first_name'],
+                'last_name' => $profile['last_name'],
+                'address' => $profile['address'],
+                'city' => $profile['city'],
+                'postal_code' => $profile['postal_code'],
+                'country' => $profile['country'],
+                'status' => 0,
+                'tax_id' => $profile['tax_id'],
+                'ic_num' => $profile['ic_num'],
+                'remarks' => $profile['remarks']
+            );
+
+            $userService->updateProfile($user, $profileTemp, true);
+
             $retval = $employee->delete();
 
             DB::commit();

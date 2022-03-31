@@ -2,19 +2,20 @@
 
 namespace Tests\Feature\Service;
 
-use App\Actions\RandomGenerator;
-use App\Services\SupplierService;
+use App\Models\User;
 use App\Models\Company;
 use App\Models\Supplier;
-use App\Models\User;
+use Tests\ServiceTestCase;
+use App\Actions\RandomGenerator;
+use App\Services\SupplierService;
+use Illuminate\Support\Collection;
+use Illuminate\Container\Container;
+use Vinkla\Hashids\Facades\Hashids;
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
-use Tests\ServiceTestCase;
-use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierServiceTest extends ServiceTestCase
 {
@@ -24,7 +25,8 @@ class SupplierServiceTest extends ServiceTestCase
     {
         parent::setUp();
 
-        $this->service = app(SupplierService::class);
+        $container = Container::getInstance();
+        $this->service = $container->make(SupplierService::class);
 
         if (User::count() == 0)
             $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);

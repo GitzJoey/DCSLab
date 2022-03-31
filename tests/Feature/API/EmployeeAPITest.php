@@ -2,15 +2,16 @@
 
 namespace Tests\Feature\API;
 
-use App\Actions\RandomGenerator;
-use App\Models\Employee;
-use App\Models\Company;
-use App\Services\EmployeeService;
-use App\Services\RoleService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Employee;
+use App\Services\RoleService;
+use App\Actions\RandomGenerator;
+use App\Services\EmployeeService;
+use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EmployeeAPITest extends APITestCase
 {
@@ -248,7 +249,8 @@ class EmployeeAPITest extends APITestCase
         }
 
         $rolesId = [];
-        $roleService = app(RoleService::class);
+        $container = Container::getInstance();
+        $roleService = $container->make(RoleService::class);
         array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
 
         $profile = array (
@@ -275,7 +277,9 @@ class EmployeeAPITest extends APITestCase
 
         $joinDate = date("Y-m-d", mt_rand(1609459201,1640995201));
 
-        $employeeService = app(EmployeeService::class);
+        $container = Container::getInstance();
+        $employeeService = $container->make(EmployeeService::class);
+        
         $employeeId = $employeeService->create(
             $companyId,
             $user,
@@ -321,7 +325,8 @@ class EmployeeAPITest extends APITestCase
         }
 
         $rolesId = [];
-        $roleService = app(RoleService::class);
+        $container = Container::getInstance();
+        $roleService = $container->make(RoleService::class);
         array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
 
         $profile = array (
@@ -348,7 +353,9 @@ class EmployeeAPITest extends APITestCase
 
         $joinDate = date("Y-m-d", mt_rand(1609459201,1640995201));
 
-        $employeeService = app(EmployeeService::class);
+        $container = Container::getInstance();
+        $employeeService = $container->make(EmployeeService::class);
+
         $employeeId = $employeeService->create(
             $companyId,
             $user,
@@ -394,7 +401,8 @@ class EmployeeAPITest extends APITestCase
         }
 
         $rolesId = [];
-        $roleService = app(RoleService::class);
+        $container = Container::getInstance();
+        $roleService = $container->make(RoleService::class);
         array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
 
         $profile = array (
@@ -421,7 +429,9 @@ class EmployeeAPITest extends APITestCase
 
         $joinDate = date("Y-m-d", mt_rand(1609459201,1640995201));
 
-        $employeeService = app(EmployeeService::class);
+        $container = Container::getInstance();
+        $employeeService = $container->make(EmployeeService::class);
+
         $employeeId = $employeeService->create(
             $companyId,
             $user,
@@ -472,7 +482,8 @@ class EmployeeAPITest extends APITestCase
         }
 
         $rolesId = [];
-        $roleService = app(RoleService::class);
+        $container = Container::getInstance();
+        $roleService = $container->make(RoleService::class);
         array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
 
         $profile = array (
@@ -499,7 +510,9 @@ class EmployeeAPITest extends APITestCase
 
         $joinDate = date("Y-m-d", mt_rand(1609459201,1640995201));
 
-        $employeeService = app(EmployeeService::class);
+        $container = Container::getInstance();
+        $employeeService = $container->make(EmployeeService::class);
+
         $employeeId = $employeeService->create(
             $companyId,
             $user,

@@ -9,6 +9,7 @@ use Tests\ServiceTestCase;
 use App\Services\BranchService;
 use App\Actions\RandomGenerator;
 use Illuminate\Support\Collection;
+use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -22,7 +23,8 @@ class BranchServiceTest extends ServiceTestCase
     {
         parent::setUp();
 
-        $this->service = app(BranchService::class);
+        $container = Container::getInstance();
+        $this->service = $container->make(BranchService::class);
 
         if (Branch::count() < 2)
             $this->artisan('db:seed', ['--class' => 'BranchTableSeeder']);

@@ -2,15 +2,16 @@
 
 namespace Tests\Feature\Service;
 
+use TypeError;
 use App\Models\Role;
 use App\Models\User;
+use Tests\ServiceTestCase;
 use App\Services\UserService;
+use Illuminate\Support\Collection;
+use Illuminate\Container\Container;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
-use Tests\ServiceTestCase;
-use TypeError;
 
 class UserServiceTest extends ServiceTestCase
 {
@@ -20,7 +21,8 @@ class UserServiceTest extends ServiceTestCase
     {
         parent::setUp();
 
-        $this->service = app(UserService::class);
+        $container = Container::getInstance();
+        $this->service = $container->make(UserService::class);
 
         if (User::count() < 2)
             $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);

@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\API;
 
-use App\Actions\RandomGenerator;
 use App\Models\Branch;
+use Tests\APITestCase;
 use App\Models\Company;
 use App\Services\BranchService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\APITestCase;
+use App\Actions\RandomGenerator;
+use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BranchAPITest extends APITestCase
 {
@@ -239,7 +240,10 @@ class BranchAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = $this->faker->sentence();
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $branchService = app(BranchService::class);
+        
+        $container = Container::getInstance();
+        $branchService = $container->make(BranchService::class);
+
         $branchId = $branchService->create(
             $companyId,
             $code,
@@ -278,7 +282,10 @@ class BranchAPITest extends APITestCase
         $contact = null;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $branchService = app(BranchService::class);
+
+        $container = Container::getInstance();
+        $branchService = $container->make(BranchService::class);
+        
         $branchId = $branchService->create(
             $companyId,
             $code,
@@ -317,7 +324,10 @@ class BranchAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $branchService = app(BranchService::class);
+
+        $container = Container::getInstance();
+        $branchService = $container->make(BranchService::class);
+
         $branchId = $branchService->create(
             $companyId,
             $code,
@@ -356,7 +366,10 @@ class BranchAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $branchService = app(BranchService::class);
+
+        $container = Container::getInstance();
+        $branchService = $container->make(BranchService::class);
+
         $branchId = $branchService->create(
             $companyId,
             $code,
@@ -395,7 +408,10 @@ class BranchAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $branchService = app(BranchService::class);
+
+        $container = Container::getInstance();
+        $branchService = $container->make(BranchService::class);
+
         $branchId = $branchService->create(
             $companyId,
             $code,

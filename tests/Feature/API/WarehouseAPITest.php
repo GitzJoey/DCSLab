@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Warehouse;
 use App\Actions\RandomGenerator;
 use App\Services\WarehouseService;
+use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -237,7 +238,10 @@ class WarehouseAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $warehouseService = app(WarehouseService::class);
+
+        $container = Container::getInstance();
+        $warehouseService = $container->make(WarehouseService::class);
+
         $warehouseId = $warehouseService->create(
             $companyId,
             $code,
@@ -276,7 +280,10 @@ class WarehouseAPITest extends APITestCase
         $contact = null;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $warehouseService = app(WarehouseService::class);
+
+        $container = Container::getInstance();
+        $warehouseService = $container->make(WarehouseService::class);
+
         $warehouseId = $warehouseService->create(
             $companyId,
             $code,
@@ -314,7 +321,10 @@ class WarehouseAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $warehouseService = app(WarehouseService::class);
+
+        $container = Container::getInstance();
+        $warehouseService = $container->make(WarehouseService::class);
+
         $warehouseId = $warehouseService->create(
             $companyId,
             $code,
@@ -353,7 +363,10 @@ class WarehouseAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $warehouseService = app(WarehouseService::class);
+
+        $container = Container::getInstance();
+        $warehouseService = $container->make(WarehouseService::class);
+
         $warehouseId = $warehouseService->create(
             $companyId,
             $code,
@@ -392,7 +405,10 @@ class WarehouseAPITest extends APITestCase
         $contact = $this->faker->e164PhoneNumber;
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        $warehouseService = app(WarehouseService::class);
+
+        $container = Container::getInstance();
+        $warehouseService = $container->make(WarehouseService::class);
+
         $warehouseId = $warehouseService->create(
             $companyId,
             $code,

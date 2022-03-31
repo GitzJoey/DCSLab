@@ -7,6 +7,7 @@ use Tests\APITestCase;
 use App\Models\Company;
 use App\Actions\RandomGenerator;
 use App\Services\CompanyService;
+use Illuminate\Container\Container;
 use Database\Seeders\CompanyTableSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -122,7 +123,9 @@ class CompanyAPITest extends APITestCase
         $status = 1;
         $userId = $this->user->id;
 
-        $companyService = app(CompanyService::class);
+        $container = Container::getInstance();
+        $companyService = $container->make(CompanyService::class);
+
         $companyId = $companyService->create(
             $code,
             $name,
@@ -158,7 +161,9 @@ class CompanyAPITest extends APITestCase
             $status = 1;
             $userId = $this->user->id;
     
-            $companyService = app(CompanyService::class);
+            $container = Container::getInstance();
+            $companyService = $container->make(CompanyService::class);
+            
             $response = $companyService->create(
                 $code,
                 $name,
