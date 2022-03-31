@@ -1,14 +1,15 @@
 <template>
   <div class="top-bar">
     <nav class="-intro-x mr-auto hidden sm:flex">
-        <Dropdown id="company-dropdown" class="intro-x mr-auto sm:mr-6" data-tw-placement="bottom-start">
+        <template v-if="userCompanyLists.length !== 0">
+          <Dropdown id="company-dropdown" class="intro-x mr-auto sm:mr-6" data-tw-placement="bottom-start">
             <DropdownToggle tag="div" class="notification cursor-pointer" role="button">
-                <div class="flex flex-row">
-                    <UmbrellaIcon class="notification__icon dark:text-slate-300 mr-2" />
-                    <LoadingIcon icon="puff" v-if="selectedCompany === ''"/> <div class="text-gray-700 dark:text-slate-300" v-else><strong>{{ selectedCompany }}</strong></div>
-                </div>
-            </DropdownToggle>
-            <DropdownMenu class="w-56">
+              <div class="flex flex-row">
+                <UmbrellaIcon class="notification__icon dark:text-slate-300 mr-2" />
+                <LoadingIcon icon="puff" v-if="selectedCompany === ''"/> <div class="text-gray-700 dark:text-slate-300" v-else><strong>{{ selectedCompany }}</strong></div>
+              </div>
+              </DropdownToggle>
+              <DropdownMenu class="w-56">
                 <DropdownContent class="notification-content__box dark:bg-dark-6">
                   <div class="p-2" v-for="(c, cIdx) in userCompanyLists">
                     <a href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
@@ -16,8 +17,9 @@
                     </a>
                   </div>
                 </DropdownContent>
-            </DropdownMenu>            
-        </Dropdown>
+              </DropdownMenu>            
+          </Dropdown>
+        </template>
     </nav>
 
     <div class="mr-auto sm:mr-6 hover:animate-pulse">
