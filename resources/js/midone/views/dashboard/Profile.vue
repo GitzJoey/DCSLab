@@ -48,7 +48,7 @@
                                 <div class="p-5">
                                     <div class="mb-3">
                                         <label class="form-label" for="name">{{ t('views.profile.fields.name') }}</label>
-                                        <VeeField type="text" :class="{'form-control':true, 'border-danger':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" rules="required" v-model="userContext.name" />
+                                        <VeeField as="input" :class="{'form-control':true, 'border-danger':errors['name']}" :label="t('views.profile.fields.name')" id="name" name="name" rules="required" v-model="userContext.name" />
                                         <ErrorMessage name="name" class="text-danger" />
                                     </div>
                                     <div class="mb-3">
@@ -96,12 +96,12 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="tax_id">{{ t('views.profile.fields.tax_id') }}</label>
-                                        <VeeField type="text" :class="{'form-control':true, 'border-danger':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" rules="required" v-model="userContext.profile.tax_id" />
+                                        <VeeField as="input" :class="{'form-control':true, 'border-danger':errors['tax_id']}" :label="t('views.profile.fields.tax_id')" id="tax_id" name="tax_id" rules="required" v-model="userContext.profile.tax_id" />
                                         <ErrorMessage name="tax_id" class="text-danger" />
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="ic_num">{{ t('views.profile.fields.ic_num') }}</label>
-                                        <VeeField type="text" :class="{'form-control':true, 'border-danger':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" rules="required" v-model="userContext.profile.ic_num" />
+                                        <VeeField as="input" :class="{'form-control':true, 'border-danger':errors['ic_num']}" :label="t('views.profile.fields.ic_num')" id="ic_num" name="ic_num" rules="required" v-model="userContext.profile.ic_num" />
                                         <ErrorMessage name="ic_num" class="text-danger" />
                                     </div>
                                     <div class="mb-3">
