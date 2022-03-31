@@ -104,54 +104,74 @@
         <div class="loader-container">
             <VeeForm id="branchForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <div class="mb-3">
-                        <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
-                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
-                        </VeeField>
-                        <ErrorMessage name="company_id" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
-                        <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
-                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                    <!-- #region company -->
+                        <div class="mb-3">
+                            <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
+                            <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-theme-21': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
+                            </VeeField>
+                            <ErrorMessage name="company_id" class="text-theme-21" />
                         </div>
-                        <ErrorMessage name="code" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
-                        <ErrorMessage name="name" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
-                        <VeeField id="inputAddress" name="address" as="input" :class="{'form-control':true, 'border-theme-21': errors['address']}" :placeholder="t('views.branch.fields.address')" :label="t('views.branch.fields.address')" rules="required" @blur="reValidate(errors)" v-model="branch.address" />
-                        <ErrorMessage name="address" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
-                        <VeeField id="inputCity" name="city" as="input" :class="{'form-control':true, 'border-theme-21': errors['city']}" :placeholder="t('views.branch.fields.city')" :label="t('views.branch.fields.city')" rules="required" @blur="reValidate(errors)" v-model="branch.city" />
-                        <ErrorMessage name="city" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
-                        <VeeField id="inputContact" name="contact" as="input" :class="{'form-control':true, 'border-theme-21': errors['contact']}" :placeholder="t('views.branch.fields.contact')" :label="t('views.branch.fields.contact')" rules="required" @blur="reValidate(errors)" v-model="branch.contact" />
-                        <ErrorMessage name="contact" class="text-theme-21" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
-                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
-                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :value="c.code">{{ t(c.name) }}</option>
-                        </VeeField>
-                        <ErrorMessage name="status" class="text-theme-21" />
-                    </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region code -->
+                        <div class="mb-3">
+                            <label for="inputCode" class="form-label">{{ t('views.branch.fields.code') }}</label>
+                            <div class="flex items-center">
+                                <VeeField id="inputCode" name="code" as="input" :class="{'form-control':true, 'border-theme-21': errors['code']}" :placeholder="t('views.branch.fields.code')" :label="t('views.branch.fields.code')" rules="required" @blur="reValidate(errors)" v-model="branch.code" :readonly="branch.code === '[AUTO]'" />
+                                <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                            </div>
+                            <ErrorMessage name="code" class="text-theme-21" />
+                        </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region name -->
+                        <div class="mb-3">
+                            <label for="inputName" class="form-label">{{ t('views.branch.fields.name') }}</label>
+                            <VeeField id="inputName" name="name" as="input" :class="{'form-control':true, 'border-theme-21': errors['name']}" :placeholder="t('views.branch.fields.name')" :label="t('views.branch.fields.name')" rules="required" @blur="reValidate(errors)" v-model="branch.name" />
+                            <ErrorMessage name="name" class="text-theme-21" />
+                        </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region addresss -->
+                        <div class="mb-3">
+                            <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
+                            <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address" rows="3"></textarea>
+                        </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region city -->
+                        <div class="mb-3">
+                            <label for="inputCity" class="form-label">{{ t('views.branch.fields.city') }}</label>
+                            <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city"/>
+                        </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region contact -->
+                        <div class="mb-3">
+                            <label for="inputContact" class="form-label">{{ t('views.branch.fields.contact') }}</label>
+                            <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.branch.fields.contact')" v-model="branch.contact"/>
+                        </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region remarks -->
+                        <div class="mb-3">
+                            <label for="inputRemarks" class="form-label">{{ t('views.branch.fields.remarks') }}</label>
+                            <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.branch.fields.remarks')" v-model="branch.remarks" rows="3"></textarea>
+                        </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region status -->
+                        <div class="mb-3">
+                            <label for="status" class="form-label">{{ t('views.branch.fields.status') }}</label>
+                            <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-theme-21': errors['status']}" v-model="branch.status" rules="required" @blur="reValidate(errors)">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            </VeeField>
+                            <ErrorMessage name="status" class="text-theme-21" />
+                        </div>
+                    <!-- #endregion -->
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -219,7 +239,7 @@ onMounted(() => {
     setDashboardLayout(false);
   
     if (selectedUserCompany.value !== '') {
-        getAllBranches({ page: 1 });
+        getAllBranch({ page: 1 });
         getDDLSync();
     } else  {
         
@@ -231,7 +251,7 @@ onMounted(() => {
 });
 
 // Methods
-function getAllBranches(args) {
+function getAllBranch(args) {
     branchList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
@@ -310,7 +330,7 @@ function reValidate(errors) {
     alertErrors.value = errors;
 }
 
-function emptyBranch() {
+function emptybranch() {
     return {
         company: {
             hId: '',
@@ -332,13 +352,11 @@ function resetAlertErrors() {
 
 function createNew() {
     mode.value = 'create';
-    branch.value = emptyBranch();
-
-    branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+    branch.value = emptybranch();
 }
 
 function onDataListChange({page, pageSize, search}) {
-    getAllBranches({page, pageSize, search});
+    getAllBranch({page, pageSize, search});
 }
 
 function editSelected(index) {
@@ -367,7 +385,7 @@ function showSelected(index) {
 function backToList() {
     resetAlertErrors();
     mode.value = 'list';
-    getAllBranches({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
+    getAllBranch({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
 }
 
 function toggleDetail(idx) {
@@ -387,7 +405,7 @@ function generateCode() {
 // Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
-        getAllBranches({ page: 1 });
+        getAllBranch({ page: 1 });
         getDDLSync();
     }
 });

@@ -2,32 +2,32 @@
 
 namespace Tests\Feature\API;
 
-use App\Models\Branch;
 use Tests\APITestCase;
 use App\Models\Company;
-use App\Services\BranchService;
+use App\Models\Warehouse;
 use App\Actions\RandomGenerator;
+use App\Services\WarehouseService;
 use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class BranchAPITest extends APITestCase
+class WarehouseAPITest extends APITestCase
 {
     use WithFaker;
 
     public function test_api_call_require_authentication()
     {
-        $api = $this->getJson('/api/get/dashboard/company/branch/read');
+        $api = $this->getJson('/api/get/dashboard/company/warehouse/read');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/company/branch/save');
+        $api = $this->getJson('/api/post/dashboard/company/warehouse/save');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/company/branch/edit/1');
+        $api = $this->getJson('/api/post/dashboard/company/warehouse/edit/1');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/company/branch/delete/1');
+        $api = $this->getJson('/api/post/dashboard/company/warehouse/delete/1');
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
@@ -40,7 +40,7 @@ class BranchAPITest extends APITestCase
         $paginate = 1;
         $perPage = 10;
 
-        $api = $this->getJson(route('api.get.db.company.branch.read', [
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
             'paginate' => $paginate,
@@ -59,7 +59,7 @@ class BranchAPITest extends APITestCase
         $paginate = 1;
         $perPage = 10;
 
-        $api = $this->getJson(route('api.get.db.company.branch.read', [
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
             'paginate' => $paginate,
@@ -74,11 +74,11 @@ class BranchAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = Company::inRandomOrder()->get()[0]->id;
-        $search = "";
+        $search = '';
         $paginate = 1;
         $perPage = -10;
-
-        $api = $this->getJson(route('api.get.db.company.branch.read', [
+        
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
             'paginate' => $paginate,
@@ -93,10 +93,10 @@ class BranchAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = Company::inRandomOrder()->get()[0]->id;
-        $search = "";
+        $search = '';
         $perPage = 10;
-
-        $api = $this->getJson(route('api.get.db.company.branch.read', [
+        
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
             'perPage' => $perPage
@@ -108,8 +108,8 @@ class BranchAPITest extends APITestCase
     public function test_api_call_read_with_null_param()
     {
         $this->actingAs($this->user);
-
-        $api = $this->getJson(route('api.get.db.company.branch.read', [
+        
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
             'companyId' => null,
             'search' => null,
             'paginate' => null,
@@ -132,7 +132,7 @@ class BranchAPITest extends APITestCase
         $remarks = $this->faker->sentence();
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
-        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => Hashids::encode($companyId),
             'code' => $code, 
             'name' => $name,
@@ -159,7 +159,7 @@ class BranchAPITest extends APITestCase
         $remarks = '';
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
-        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => Hashids::encode($companyId),
             'code' => $code, 
             'name' => $name,
@@ -177,8 +177,8 @@ class BranchAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Branch::inRandomOrder()->get()[0]->company_id;
-        $code = Branch::where('company_id', $companyId)->inRandomOrder()->first()->code;
+        $companyId = Warehouse::inRandomOrder()->get()[0]->company_id;;
+        $code = Warehouse::where('company_id', $companyId)->inRandomOrder()->first()->code;
         $name = $this->faker->name;
         $address = $this->faker->address;
         $city = $this->faker->city;
@@ -186,7 +186,7 @@ class BranchAPITest extends APITestCase
         $remarks = $this->faker->sentence();
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
-        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => Hashids::encode($companyId),
             'code' => $code, 
             'name' => $name,
@@ -207,15 +207,14 @@ class BranchAPITest extends APITestCase
         $companyId = null;
         $code = null;
         $name = null;
-        $name = null;
         $address = null;
         $city = null;
         $contact = null;
         $remarks = null;
         $status = null;
 
-        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
-            'company_id' => $companyId,
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
+            'company_id' => Hashids::encode($companyId),
             'code' => $code, 
             'name' => $name,
             'address' => $address,
@@ -231,20 +230,19 @@ class BranchAPITest extends APITestCase
     public function test_api_call_edit_with_all_field_filled()
     {
         $this->actingAs($this->user);
-
         $companyId = Company::inRandomOrder()->get()[0]->id;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
-        $remarks = $this->faker->sentence();
+        $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
-        
-        $container = Container::getInstance();
-        $branchService = $container->make(BranchService::class);
 
-        $branchId = $branchService->create(
+        $container = Container::getInstance();
+        $warehouseService = $container->make(WarehouseService::class);
+
+        $warehouseId = $warehouseService->create(
             $companyId,
             $code,
             $name,
@@ -254,9 +252,9 @@ class BranchAPITest extends APITestCase
             $remarks,
             $status
         );
-        $branchId = $branchId->id;
+        $warehouseId = $warehouseId->id;
 
-        $api_edit = $this->json('POST', route('api.post.db.company.branch.edit', [ 'id' => $branchId ]), [
+        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => $warehouseId ]), [
             'company_id' => Hashids::encode(Company::inRandomOrder()->get()[0]->id),
             'code' => (new RandomGenerator())->generateNumber(1, 9999) . 'new',
             'name' => $this->faker->name,
@@ -284,9 +282,9 @@ class BranchAPITest extends APITestCase
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $container = Container::getInstance();
-        $branchService = $container->make(BranchService::class);
-        
-        $branchId = $branchService->create(
+        $warehouseService = $container->make(WarehouseService::class);
+
+        $warehouseId = $warehouseService->create(
             $companyId,
             $code,
             $name,
@@ -296,16 +294,16 @@ class BranchAPITest extends APITestCase
             $remarks,
             $status
         );
-        $branchId = $branchId->id;
+        $warehouseId = $warehouseId->id;
 
-        $api_edit = $this->json('POST', route('api.post.db.company.branch.edit', [ 'id' => $branchId ]), [
+        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => $warehouseId ]), [
             'company_id' => Hashids::encode(Company::inRandomOrder()->get()[0]->id),
             'code' => (new RandomGenerator())->generateNumber(1, 9999) . 'new',
             'name' => $this->faker->name,
-            'address' => '',
-            'city' => '',
-            'contact' => '',
-            'remarks' => '',
+            'address' => $this->faker->address,
+            'city' => $this->faker->city,
+            'contact' => $this->faker->e164PhoneNumber,
+            'remarks' => $this->faker->sentence,
             'status' => (new RandomGenerator())->generateNumber(0, 1),
         ]);
 
@@ -315,9 +313,8 @@ class BranchAPITest extends APITestCase
     public function test_api_call_edit_with_existing_code()
     {
         $this->actingAs($this->user);
-
-        $companyId = Branch::inRandomOrder()->get()[0]->company_id;
-        $code = Branch::where('company_id', $companyId)->inRandomOrder()->first()->code;
+        $companyId = Warehouse::inRandomOrder()->get()[0]->company_id;
+        $code = Warehouse::where('company_id', $companyId)->inRandomOrder()->first()->code;
         $name = $this->faker->name;
         $address = $this->faker->address;
         $city = $this->faker->city;
@@ -326,9 +323,9 @@ class BranchAPITest extends APITestCase
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $container = Container::getInstance();
-        $branchService = $container->make(BranchService::class);
+        $warehouseService = $container->make(WarehouseService::class);
 
-        $branchId = $branchService->create(
+        $warehouseId = $warehouseService->create(
             $companyId,
             $code,
             $name,
@@ -338,11 +335,11 @@ class BranchAPITest extends APITestCase
             $remarks,
             $status
         );
-        $branchId = $branchId->id;
+        $warehouseId = $warehouseId->id;
 
-        $api_edit = $this->json('POST', route('api.post.db.company.branch.edit', [ 'id' => $branchId ]), [
-            'company_id' => Hashids::encode(Branch::inRandomOrder()->get()[0]->company_id),
-            'code' => Branch::where('company_id', $companyId)->inRandomOrder()->first()->code,
+        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => $warehouseId ]), [
+            'company_id' => Hashids::encode(Company::inRandomOrder()->get()[0]->id),
+            'code' => (new RandomGenerator())->generateNumber(1, 9999) . 'new',
             'name' => $this->faker->name,
             'address' => $this->faker->address,
             'city' => $this->faker->city,
@@ -351,7 +348,7 @@ class BranchAPITest extends APITestCase
             'status' => (new RandomGenerator())->generateNumber(0, 1),
         ]);
 
-        $this->assertTrue(true);
+        $api_edit->assertSuccessful();
     }
 
     public function test_api_call_edit_with_null_param()
@@ -368,9 +365,9 @@ class BranchAPITest extends APITestCase
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $container = Container::getInstance();
-        $branchService = $container->make(BranchService::class);
+        $warehouseService = $container->make(WarehouseService::class);
 
-        $branchId = $branchService->create(
+        $warehouseId = $warehouseService->create(
             $companyId,
             $code,
             $name,
@@ -380,9 +377,9 @@ class BranchAPITest extends APITestCase
             $remarks,
             $status
         );
-        $branchId = $branchId->id;
+        $warehouseId = $warehouseId->id;
 
-        $api_edit = $this->json('POST', route('api.post.db.company.branch.edit', [ 'id' => $branchId ]), [
+        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => $warehouseId ]), [
             'company_id' => null,
             'code' => null,
             'name' => null,
@@ -390,7 +387,7 @@ class BranchAPITest extends APITestCase
             'city' => null,
             'contact' => null,
             'remarks' => null,
-            'status' => null,
+            'status' => null
         ]);
 
         $api_edit->assertStatus(500);
@@ -410,9 +407,9 @@ class BranchAPITest extends APITestCase
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $container = Container::getInstance();
-        $branchService = $container->make(BranchService::class);
+        $warehouseService = $container->make(WarehouseService::class);
 
-        $branchId = $branchService->create(
+        $warehouseId = $warehouseService->create(
             $companyId,
             $code,
             $name,
@@ -422,12 +419,12 @@ class BranchAPITest extends APITestCase
             $remarks,
             $status
         );
-        $branchId = $branchId->id;
+        $warehouseId = $warehouseId->id;
 
-        $this->json('POST', route('api.post.db.company.branch.delete', $branchId));
-
-        $this->assertSoftDeleted('branches', [
-            'id' => $branchId
+        $this->json('POST', route('api.post.db.company.warehouse.delete', $warehouseId));
+ 
+        $this->assertSoftDeleted('warehouses', [
+            'id' => $warehouseId
         ]);
     }
 }

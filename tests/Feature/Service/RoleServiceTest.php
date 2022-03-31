@@ -2,12 +2,13 @@
 
 namespace Tests\Feature\Service;
 
-use App\Services\RoleService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
-use Tests\ServiceTestCase;
 use TypeError;
+use Tests\ServiceTestCase;
+use App\Services\RoleService;
+use Illuminate\Support\Collection;
+use Illuminate\Container\Container;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RoleServiceTest extends ServiceTestCase
 {
@@ -15,7 +16,8 @@ class RoleServiceTest extends ServiceTestCase
     {
         parent::setUp();
 
-        $this->service = app(RoleService::class);
+        $container = Container::getInstance();
+        $this->service = $container->make(RoleService::class);
     }
 
     public function test_call_read_with_empty_param()

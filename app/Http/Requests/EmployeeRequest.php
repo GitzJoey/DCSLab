@@ -4,11 +4,12 @@ namespace App\Http\Requests;
 
 use App\Rules\uniqueCode;
 use App\Rules\validDropDownValue;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Http\FormRequest;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use App\Rules\deactivateDefaultCompany;
+use Illuminate\Foundation\Http\FormRequest;
 
-class WarehouseRequest extends FormRequest
+class EmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +28,12 @@ class WarehouseRequest extends FormRequest
      */
     public function rules()
     {
-        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
-
         $nullableArr = [
-            'address' => 'nullable',
-            'city' => 'nullable',
-            'contact' => 'nullable',
-            'remarks' => 'nullable',
+            'address' => 'nullable|max:255',
+            'city' => 'nullable|max:255',
+            'postal_code' => 'nullable',
+            'img_path' => 'nullable',
+            'remarks' => 'nullable|max:255',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -41,16 +41,24 @@ class WarehouseRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', 'bail'],
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'warehouses', companyId: $companyId)],
-                    'name' => 'required|min:2|max:255',
+                    'name' => 'required|min:3|max:255',
+                    'email' => 'required|email|max:255',
+                    'country' => 'required',
+                    'tax_id' => 'required',
+                    'ic_num' => 'required|min:12|max:255',
+                    'join_date' => 'required',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
-                    'code' => new uniqueCode(table: 'warehouses', companyId: $companyId, exceptId: $this->route('id')),
-                    'name' => 'required|max:255',
+                    'name' => 'required|min:3|max:255',
+                    'email' => 'required|email|max:255',
+                    'country' => 'required',
+                    'tax_id' => 'required',
+                    'ic_num' => 'required|min:12|max:255',
                     'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
                 ];
                 return array_merge($rules_update, $nullableArr);

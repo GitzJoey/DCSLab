@@ -15,7 +15,12 @@ interface CompanyService
         int $userId
     ) : Company;
 
-    public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10);
+    public function read(
+        int $userId, 
+        string $search = '', 
+        bool $paginate = true,
+        int $perPage = 10
+    );
 
     public function getAllActiveCompany(int $userId);
 

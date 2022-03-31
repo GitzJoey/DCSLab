@@ -7,6 +7,7 @@
             "company-company": "Perusahaan",
             "company-branch": "Cabang",
             "company-warehouse": "Gudang",
+            "company-employee": "Karyawan",
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
@@ -226,7 +227,7 @@
                 "taxable_supply": "Produk Kena Pajak",
                 "standard_rated_supply": "PPN",
                 "price_include_vat": "Harga Termasuk Pajak",
-                "remarks": "Remarks",
+                "remarks": "Keterangan",
                 "point": "Poin",
                 "use_serial_number": "Memakai Nomor Serial",
                 "has_expiry_date": "Tanggal Kadaluarsa",
@@ -277,7 +278,7 @@
                 "payment_term_type": "Ketentuan Pembayaran",
                 "payment_term": "Tempo",
                 "tax_id": "NPWP",
-                "remarks": "Remarks",
+                "remarks": "Keterangan",
                 "status": "Status",
                 "poc": {
                     "label": "Penanggung Jawab",
@@ -349,8 +350,7 @@
                 "remarks": "Keterangan",
                 "status": "Status"
             }
-        }
-        ,
+        },
         "warehouse": {
             "table": {
                 "title": " Daftar Gudang",
@@ -375,6 +375,38 @@
                 "address": "Alamat",
                 "city": "Kota",
                 "contact": "Kontak",
+                "remarks": "Keterangan",
+                "status": "Status"
+            }
+        },
+        "employee": {
+            "table": {
+                "title": "Daftar Karyawan",
+                "cols": {
+                    "company": "Perusahaan",
+                    "name": "Nama",
+                    "email": "Email",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Karyawan",
+                "edit": "Ubah Karyawan",
+                "show": "Tampilkan Karyawan",
+                "delete": "Hapus Karyawan"
+            },
+            "fields": {
+                "company_id": "Perusahaan",
+                "name": "Nama",
+                "email": "Email",
+                "picture" : "Gambar",
+                "address": "Alamat",
+                "city": "Kota",
+                "postal_code": "Kode Pos",
+                "country": "CounNegaratry",
+                "tax_id": "Nomor Pajak",
+                "ic_num": "Nomor Kependudukan",
+                "join_date": "Tanggal Bergabung",
                 "remarks": "Keterangan",
                 "status": "Status"
             }

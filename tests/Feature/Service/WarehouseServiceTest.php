@@ -3,12 +3,13 @@
 namespace Tests\Feature\Service;
 
 use TypeError;
-use App\Models\Warehouse;
 use App\Models\Company;
+use App\Models\Warehouse;
 use Tests\ServiceTestCase;
-use App\Services\WarehouseService;
 use App\Actions\RandomGenerator;
+use App\Services\WarehouseService;
 use Illuminate\Support\Collection;
+use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -22,7 +23,8 @@ class WarehouseServiceTest extends ServiceTestCase
     {
         parent::setUp();
 
-        $this->service = app(WarehouseService::class);
+        $container = Container::getInstance();
+        $this->service = $container->make(WarehouseService::class);
 
         if (Warehouse::count() < 2)
             $this->artisan('db:seed', ['--class' => 'WarehouseTableSeeder']);
