@@ -209,6 +209,7 @@ const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
+const deleteModalShow = ref(false);
 const expandDetail = ref(null);
 //#endregion
 
