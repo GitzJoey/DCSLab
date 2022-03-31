@@ -365,6 +365,7 @@ const editSelected = (index) => {
 
 const deleteSelected = (index) => {
     deleteId.value = branchList.value.data[index].hId;
+    deleteModalShow.value = true;
 }
 
 const confirmDelete = () => {
