@@ -36,7 +36,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
-                                <VeeField id="inputEmail" name="email" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
+                                <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
                                 <ErrorMessage name="email" class="text-danger" />
                             </div>
                         </TabPanel>
