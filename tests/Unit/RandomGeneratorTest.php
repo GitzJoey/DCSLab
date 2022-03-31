@@ -18,7 +18,7 @@ class RandomGeneratorTest extends TestCase
         $this->assertIsNumeric($this->instance->seed(1));
         $this->assertIsNumeric($this->instance->seed(-1));
         $this->assertIsNumeric($this->instance->seed(29384723));
-        $this->assertIsNumeric($this->instance->seed(34.3));
+        $this->assertIsNumeric($this->instance->seed(intval(34.3)));
         $this->assertIsNumeric($this->instance->seed(0));
     }
 
