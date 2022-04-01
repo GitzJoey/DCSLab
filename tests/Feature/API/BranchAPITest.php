@@ -16,6 +16,12 @@ class BranchAPITest extends APITestCase
 {
     use WithFaker;
 
+    protected function setUp(): void
+    {
+        Parent::setUp();
+
+    }
+    
     public function test_api_call_require_authentication()
     {
         $api = $this->getJson('/api/get/dashboard/company/branch/read');
@@ -48,6 +54,25 @@ class BranchAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first',
+                'last',
+                'prev',
+                'next'
+            ], 
+            'meta'=> [
+                'current_page',
+                'from',
+                'last_page',
+                'links',
+                'path',
+                'per_page',
+                'to',
+                'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_with_special_char_in_search()
