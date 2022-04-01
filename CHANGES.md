@@ -1,5 +1,5 @@
 # Change Logs
-  * **v0.3 ()**
+  * **v0.3 (2022-04-02)**
     * Upgrade the code to be compatible with PHP 8.1
     * Upgrade the code to be compatible with Laravel to 9
     * Upgrade Midone template to use Tailwindcss 3 (move from sass to css and using postcss)
