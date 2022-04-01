@@ -103,6 +103,6 @@ class WarehouseController extends BaseController
     {
         $result = $this->warehouseService->delete($id);
 
-        return is_null($result) ? response()->error():response()->success();
+        return $result ? response()->error():response()->success();
     }
 }

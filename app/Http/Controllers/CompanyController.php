@@ -122,6 +122,6 @@ class CompanyController extends BaseController
 
         $result = $this->companyService->delete($userId, $id);
 
-        return is_null($result) ? response()->error():response()->success();
+        return $result ? response()->error():response()->success();
     }
 }
