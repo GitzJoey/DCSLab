@@ -96,6 +96,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Supplier::class);
     }
 
+    public function employee()
+    {
+        return $this->hasMany(Employee::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();

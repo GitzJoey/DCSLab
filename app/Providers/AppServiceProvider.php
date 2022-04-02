@@ -20,6 +20,7 @@ use App\Services\ProductGroupService;
 use App\Services\UnitService;
 use App\Services\BranchService;
 use App\Services\WarehouseService;
+use App\Services\EmployeeService;
 #endregion
 
 use App\Services\Impls\DashboardServiceImpl;
@@ -37,6 +38,7 @@ use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
+use App\Services\Impls\EmployeeServiceImpl;
 #endregion
 
 class AppServiceProvider extends ServiceProvider
@@ -103,6 +105,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(WarehouseService::class, function (){
             return new WarehouseServiceImpl();
+        });
+
+        $this->app->singleton(EmployeeService::class, function (){
+            return new EmployeeServiceImpl();
         });
         
         #endregion
