@@ -85,7 +85,7 @@ class SupplierController extends BaseController
             $supplier_products
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function update($id, SupplierRequest $supplierRequest)
@@ -122,14 +122,14 @@ class SupplierController extends BaseController
             $products
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function delete($id)
     {
         $result = $this->supplierService->delete($id);
 
-        return $result ? response()->error():response()->success();
+        return !$result ? response()->error() : response()->success();
     }
 
     public function getPaymentTermType()

@@ -84,7 +84,7 @@ class CompanyController extends BaseController
             $userId
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function update($id, CompanyRequest $companyRequest)
@@ -110,7 +110,7 @@ class CompanyController extends BaseController
             $request['status']
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function delete($id)
@@ -122,6 +122,6 @@ class CompanyController extends BaseController
 
         $result = $this->companyService->delete($userId, $id);
 
-        return $result ? response()->error():response()->success();
+        return !$result ? response()->error() : response()->success();
     }
 }

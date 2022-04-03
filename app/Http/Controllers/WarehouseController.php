@@ -68,7 +68,7 @@ class WarehouseController extends BaseController
             $status,
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function update($id, WarehouseRequest $warehouseRequest)
@@ -103,6 +103,6 @@ class WarehouseController extends BaseController
     {
         $result = $this->warehouseService->delete($id);
 
-        return $result ? response()->error():response()->success();
+        return !$result ? response()->error() : response()->success();
     }
 }

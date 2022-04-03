@@ -32,6 +32,6 @@ class APITestCase extends TestCase
             $seed_company->callWith(CompanyTableSeeder::class, [2]);
         }
 
-        $this->user = User::inRandomOrder()->first();
+        $this->user = User::whereHas('companies')->inRandomOrder()->first();
     }
 } 
