@@ -323,7 +323,7 @@ class BranchAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $company = $this->user->companies()->whereHas('branch')->inRandomOrder()->first();
+        $company = $this->user->companies()->whereHas('branches')->inRandomOrder()->first();
         if (!$company)
             $this->markTestSkipped('No suitable company found');
 
@@ -362,7 +362,7 @@ class BranchAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $company = $this->user->companies()->whereHas('branch')->inRandomOrder()->first();
+        $company = $this->user->companies()->whereHas('branches')->inRandomOrder()->first();
 
         $branch = Branch::whereCompanyId($company->id)->inRandomOrder()->first();
         if (!$branch)
