@@ -76,8 +76,6 @@ class Product extends Model
         'pivot'
     ];
 
-    protected $appends = ['hId'];
-
     public function hId() : Attribute
     {
         return Attribute::make(

@@ -54,8 +54,6 @@ class Supplier extends Model
         'pivot'
     ];
 
-    protected $appends = ['hId'];
-
     public function hId() : Attribute
     {
         return Attribute::make(
