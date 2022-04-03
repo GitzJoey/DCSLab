@@ -67,7 +67,6 @@ class Product extends Model
         'company_id',
         'product_group_id',
         'brand_id',
-        'unit_id',
         'created_by',
         'updated_by',
         'deleted_by',

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\ProductUnit;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -45,11 +46,11 @@ class Unit extends Model
         'deleted_at'
     ];
 
-    protected $appends = ['hId'];
-
-    public function getHIdAttribute() : string
+    public function hId() : Attribute
     {
-        return HashIds::encode($this->attributes['id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['id'])
+        );
     }
 
     public function company()
@@ -57,12 +58,7 @@ class Unit extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
-
-    public function product_unit()
+    public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
     }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Supplier;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -39,21 +40,25 @@ class SupplierProduct extends Model
         'deleted_at'
     ];
 
-    protected $appends = ['hId', 'supplier_hId', 'product_hId'];
-
-    public function getHIdAttribute() : string
+    public function hId() : Attribute
     {
-        return HashIds::encode($this->attributes['id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['id'])
+        );
+    }
+    
+    public function supplier_hId() : Attribute
+    {
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['supplier_id'])
+        );
     }
 
-    public function getSupplier_hIdAttribute() : string
+    public function product_hId() : Attribute
     {
-        return HashIds::encode($this->attributes['supplier_id']);
-    }
-
-    public function getProduct_hIdAttribute() : string
-    {
-        return HashIds::encode($this->attributes['product_id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['product_id'])
+        );
     }
 
     public function company()

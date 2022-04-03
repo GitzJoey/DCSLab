@@ -67,8 +67,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['hId'];
-
     public function hId() : Attribute
     {
         return Attribute::make(
@@ -91,7 +89,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Company::class);
     }
 
-    public function supplier()
+    public function suppliers()
     {
         return $this->hasMany(Supplier::class);
     }

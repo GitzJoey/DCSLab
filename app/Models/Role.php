@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Laratrust\Models\LaratrustRole;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,10 +21,10 @@ class Role extends LaratrustRole
         'pivot',
     ];
 
-    protected $appends = ['hId'];
-
-    public function getHIdAttribute() : string
+    public function hId() : Attribute
     {
-        return HashIds::encode($this->attributes['id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['id'])
+        );
     }
 }
