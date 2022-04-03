@@ -43,7 +43,6 @@ class Branch extends Model
 
     protected static $logOnlyDirty = true;
 
-
     protected $hidden = [
         'id',
         'company_id',

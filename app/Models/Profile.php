@@ -57,16 +57,16 @@ class Profile extends Model
         'deleted_at',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function hId() : Attribute
     {
         return Attribute::make(
             get: fn () => HashIds::encode($this->attributes['id'])
         );
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getActivitylogOptions(): LogOptions
