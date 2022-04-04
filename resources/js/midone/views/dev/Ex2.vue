@@ -16,7 +16,6 @@
 <script setup>
 //#region Imports
 import { onMounted, ref } from "vue";
-import Player from "@vimeo/player";
 //#endregion
 
 //#region Declarations

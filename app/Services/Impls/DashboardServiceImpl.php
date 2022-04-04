@@ -23,7 +23,9 @@ class DashboardServiceImpl implements DashboardService
 
         $openAllMenu = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() ? true:false;
 
-        array_push($menu, $this->createMenu_Dashboard());
+        $hasUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() ? true:false;
+
+        array_push($menu, $this->createMenu_Dashboard(false));
 
         array_push($menu, $this->createMenu_Company());
 
@@ -44,12 +46,18 @@ class DashboardServiceImpl implements DashboardService
         return $menu;
     }
 
-    private function createMenu_Dashboard(): array
+    private function createMenu_Dashboard($showDemo): array
     {
         $maindashboard = array(
             'icon' => '',
             'pageName' => 'side-menu-dashboard-maindashboard',
             'title' => 'components.menu.main-dashboard'
+        );
+
+        $demo = array(
+            'icon' => '',
+            'pageName' => 'side-menu-dashboard-demo',
+            'title' => 'components.menu.main-demo'
         );
 
         $root_array = array(
@@ -60,8 +68,11 @@ class DashboardServiceImpl implements DashboardService
             ]
         );
 
-        array_push($root_array['subMenu'], $maindashboard);
-
+        if ($showDemo) 
+            array_push($root_array['subMenu'], $maindashboard, $demo);
+        else
+            array_push($root_array['subMenu'], $maindashboard);
+        
         return $root_array;
     }
 
