@@ -7,7 +7,6 @@
             <div class="grid grid-col-4">
                 
             </div>
-            <div data-vimeo-id="19231868" data-vimeo-width="640" id="handstick"></div>
         </div>
         <div class="loader-overlay" v-if="loading"></div>
     </div>
@@ -33,14 +32,6 @@ const loading = ref(false);
 
 //#region onMounted
 onMounted(() => {
-    const player = new Player('handstick', {
-        id: 19231868,
-        width: 640
-    });
-
-    player.on('play', function() {
-        console.log('played the video!');
-    })
 });
 //#endregion
 
