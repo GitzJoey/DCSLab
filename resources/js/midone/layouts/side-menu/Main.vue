@@ -224,7 +224,7 @@ function setDashboardLayout(settings) {
 
 watch(
   computed(() => route.path),
-  () => {    
+  () => {
     formattedMenu.value = $h.toRaw(nestedMenu(sideMenu.value, route));
   }
 );

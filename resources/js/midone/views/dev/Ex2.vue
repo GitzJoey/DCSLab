@@ -1,10 +1,20 @@
 <template>
-
+    <div class="intro-y box">
+        <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
+            <h2 class="font-medium text-base mr-auto">Vimeo Player Demo</h2>
+        </div>
+        <div class="loader-container">
+            <div class="grid grid-col-4">
+                
+            </div>
+        </div>
+        <div class="loader-overlay" v-if="loading"></div>
+    </div>
 </template>
 
 <script setup>
 //#region Imports
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 //#endregion
 
 //#region Declarations
@@ -14,6 +24,7 @@ import { onMounted } from "vue";
 //#endregion
 
 //#region Data - UI
+const loading = ref(false);
 //#endregion
 
 //#region Data - Views
@@ -21,7 +32,6 @@ import { onMounted } from "vue";
 
 //#region onMounted
 onMounted(() => {
-
 });
 //#endregion
 
