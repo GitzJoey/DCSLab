@@ -33,6 +33,28 @@ import axios from "axios";
 //#region Data - UI
 const loading = ref(false);
 const vimeoAccessToken = ref('cab792ad9307652baa044008e13a97a0');
+const playLists = ref([
+    '691786534',
+    '656704401',
+    '194312144',
+    '271420004',
+    '676300668',
+    '290120770',
+    '283265177',
+    '286216759',
+    '680668269',
+    '676644046',
+    '242979596',
+    '281866463',
+    '585797977',
+    '572113578',
+    '251997032',
+    '290120770',
+    '292251793',
+    '292658104',
+    '297648729',
+    '300061053',
+]);
 //#endregion
 
 //#region Data - Views
@@ -48,31 +70,10 @@ onMounted(() => {
     player.on('play', function() {
         console.log('played the video!');
     });
-
-    loadPlaylist();
 });
 //#endregion
 
 //#region Methods
-const loadPlaylist = () => {
-    let data = {
-
-    };
-
-    let headers = {
-        'Authorization': 'basic base64_encode(gitzjoey:pIdeOO1232$',
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.vimeo.*+json;version=3.4'
-    };
-
-    axios.post('https://api.vimeo.com/oauth/authorize/client', data, {
-        headers: headers
-    }).then((response) => {
-        console.log(response);
-    }).catch((error) => {
-        console.log(error);
-    })
-}
 //#endregion
 
 //#region Computed
