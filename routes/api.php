@@ -23,11 +23,7 @@ use App\Http\Controllers\WarehouseController;
 #endregion
 
 Route::bind('id', function ($id) {
-    if (!is_numeric($id)) {
-        return \Vinkla\Hashids\Facades\Hashids::decode($id)[0];
-    } else {
-        return $id;
-    }
+    return !is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
 });
 
 Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
