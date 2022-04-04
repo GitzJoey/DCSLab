@@ -52,7 +52,7 @@ class ProfileController extends BaseController
 
         $result = $this->userService->updateProfile($user, $profile, true);
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function changePassword(ProfileRequest $profileRequest)
@@ -80,7 +80,7 @@ class ProfileController extends BaseController
         if (array_key_exists('apiToken', $request))
             $this->userService->resetTokens($usr->id);
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function updateRoles(ProfileRequest $profileRequest)
@@ -93,7 +93,7 @@ class ProfileController extends BaseController
 
         $result = $this->userService->updateRoles($usr, $rolesId, true);
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function sendEmailVerification()

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Vinkla\Hashids\Facades\Hashids;
 use Laratrust\Models\LaratrustPermission;
 
@@ -16,10 +17,10 @@ class Permission extends LaratrustPermission
         'updated_at',
     ];
 
-    protected $appends = ['hId'];
-
-    public function getHIdAttribute() : string
+    public function hId() : Attribute
     {
-        return HashIds::encode($this->attributes['id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['id'])
+        );
     }
 }

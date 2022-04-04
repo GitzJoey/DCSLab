@@ -131,7 +131,7 @@ class ProductController extends BaseController
             $product_units
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function update($id, ProductRequest $productRequest)
@@ -210,7 +210,7 @@ class ProductController extends BaseController
     {
         $result = $this->productService->delete($id);
 
-        return $result ? response()->error():response()->success();
+        return !$result ? response()->error() : response()->success();
     }
 
     public function getProductType(Request $request)

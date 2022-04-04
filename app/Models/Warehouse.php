@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Company;
-
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -43,7 +43,6 @@ class Warehouse extends Model
 
     protected static $logOnlyDirty = true;
 
-
     protected $hidden = [
         'id',
         'created_by',
@@ -54,13 +53,13 @@ class Warehouse extends Model
         'deleted_at'
     ];
 
-    protected $appends = ['hId'];
-
-    public function getHIdAttribute() : string
+    public function hId() : Attribute
     {
-        return HashIds::encode($this->attributes['id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['id'])
+        );
     }
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);

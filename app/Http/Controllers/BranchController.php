@@ -24,8 +24,15 @@ class BranchController extends BaseController
     public function read(Request $request)
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
+        $search = !is_null($search) ? $search : '';
+
         $paginate = $request->has('paginate') ? $request['paginate']:true;
+        $paginate = !is_null($paginate) ? $paginate : true;
+        $paginate = is_numeric($paginate) ? abs($paginate) : true;
+
         $perPage = $request->has('perPage') ? $request['perPage']:10;
+        $perPage = !is_null($perPage) ? $perPage : 10;
+        $perPage = is_numeric($perPage) ? abs($perPage) : 10;  
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
@@ -69,7 +76,7 @@ class BranchController extends BaseController
             $status,
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function update($id, BranchRequest $branchRequest)
@@ -104,6 +111,6 @@ class BranchController extends BaseController
     {
         $result = $this->branchService->delete($id);
 
-        return is_null($result) ? response()->error():response()->success();
+        return !$result ? response()->error() : response()->success();
     }
 }

@@ -103,7 +103,7 @@ class UserController extends BaseController
             $profile
         );
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function update($id, UserRequest $userRequest)
@@ -153,7 +153,7 @@ class UserController extends BaseController
         if (array_key_exists('apiToken', $request))
             $this->userService->resetTokens($id);
 
-        return is_null($result) ? response()->error():response()->success();
+        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function resetPassword($id)
