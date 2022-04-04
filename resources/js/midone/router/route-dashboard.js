@@ -26,7 +26,7 @@ export default {
             name: 'side-menu-dashboard-demo',
             component: Demo,
             meta: {
-                remember: false,
+                remember: true,
                 log_route: false 
             }
         },
