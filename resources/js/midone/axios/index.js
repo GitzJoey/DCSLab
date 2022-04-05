@@ -8,12 +8,12 @@ const defaultAxiosInstance = axios.create({
     }
 });    
 
-defaultAxios.interceptors.request.use(function (config) {
+defaultAxiosInstance.interceptors.request.use(function (config) {
     config.headers.common['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
     return config;
 });
 
-defaultAxios.interceptors.response.use(response => {
+defaultAxiosInstance.interceptors.response.use(response => {
     return response;
 }, error => {
     window.location.href = '/dashboard';
