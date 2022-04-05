@@ -1,18 +1,18 @@
 import axios from "axios";
 
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-axios.defaults.headers.common["Accept"] = "application/json"
-axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').content;
+let defaultAxios = axios.create({
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+    }
+});    
 
-axios.interceptors.request.use(function (config) {
+defaultAxios.interceptors.request.use(function (config) {
     config.headers.common['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
     return config;
 });
 
-axios.interceptors.response.use(response => {
-    return response;
-}, error => {
-    window.location.href = '/dashboard';
-});
-
-export default axios;
+let plainAxios = axios.create();
+    
+export { defaultAxios as default, plainAxios }

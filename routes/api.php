@@ -26,6 +26,7 @@ Route::bind('id', function ($id) {
     return !is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
 });
 
+Route::get('test', function() { return 1; })->name('test');
 Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => 'throttle:3,1'])->name('api.auth');
 
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {

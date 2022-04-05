@@ -1,17 +1,27 @@
 <template>
+
     <div class="intro-y box">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
             <h2 class="font-medium text-base mr-auto">Vimeo Player Demo</h2>
         </div>
         <div class="loader-container">
-            <div class="grid grid-cols-6 gap-3">
+            <div class="grid grid-cols-6 my-3">
                 <div class="col-span-4">
-                    <div data-vimeo-id="19231868" data-vimeo-width="640" id="handstick"></div>
+                    <div class="flex justify-center items-center">
+                        <div class="box-content m-2 px-3 aspect-w-16 aspect-h-9">
+                            <div id="handstick"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-span-2">
-                    aaaaaaaa
+                <div class="col-span-2 border-l">
+                    <div class="flex flex-col justify-center items-center">
+                        <div class="box-content w-64 h-48 m-2 border" v-for="p in playLists">
+                            
+                        </div>
+                    </div>
                 </div>                
             </div>
+            <button class="btn" type="button" @click="loadVimeoThumb('300061053')">Click</button>
         </div>
         <div class="loader-overlay" v-if="loading"></div>
     </div>
@@ -21,7 +31,7 @@
 //#region Imports
 import { onMounted, ref } from "vue";
 import Player from "@vimeo/player";
-import axios from "axios";
+import { default as axios, plainAxios } from "@/axios";
 //#endregion
 
 //#region Declarations
@@ -70,10 +80,26 @@ onMounted(() => {
     player.on('play', function() {
         console.log('played the video!');
     });
+
+
+    axios.get('/api/test').then(response => { console.log(response.data); });
+    plainAxios.get('/api/test').then(response => { console.log(response.data); });
 });
 //#endregion
 
 //#region Methods
+const loadVimeoThumb = (vId) => {
+    fetch('https://api.vimeo.com/videos/300061053/pictures', {
+        headers: {
+            'Authorization': 'Bearer cab792ad9307652baa044008e13a97a0',
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        console.log(response);
+    }).catch(response => {
+        console.log(response);
+    });
+}
 //#endregion
 
 //#region Computed
