@@ -16,7 +16,7 @@
                 <div class="col-span-2 border-l">
                     <div class="flex flex-col justify-center items-center">
                         <div class="box-content w-64 h-48 m-2 border" v-for="p in playLists">
-                            <img src="https://i.vimeocdn.com/video/1400315973-aae13400bbd6fb92520a09e07790db858747c056025772ab5cb1485760caac27-d_100x75?r=pad" alt=""/>
+                            <img :src="p.thumb" alt="" />
                         </div>
                     </div>
                 </div>                
@@ -29,7 +29,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Player from "@vimeo/player";
 import { default as axios, plainAxios } from "@/axios";
 import _ from "lodash";
@@ -44,7 +44,7 @@ import _ from "lodash";
 //#region Data - UI
 const loading = ref(false);
 //cab792ad9307652baa044008e13a97a0
-const vimeoAccessToken = ref('');
+const vimeoAccessToken = ref('cab792ad9307652baa044008e13a97a0');
 const playLists = ref([]);
 //#endregion
 
@@ -67,35 +67,32 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-const loadVimeoThumb = (vId) => {
-    plainAxios.get('https://api.vimeo.com/videos/' + vId + '/pictures', {
+const loadVimeoThumb = async (vId) => {
+    let response = await plainAxios.get('https://api.vimeo.com/videos/' + vId + '/pictures', {
         headers: {
             'Authorization': 'Bearer ' + vimeoAccessToken.value
         }
-    }).then(response => {
-        return response.data.data[0].sizes[0].link;
-    })
+    });
+
+    return response.data.data[0].sizes[0].link;
 }
 
 const getPlayLists = () => {
     let vIds = [
         '691786534', '656704401', '194312144', '271420004', '676300668',
-        '290120770', '283265177', '286216759', '680668269', '676644046',
-        '242979596', '281866463', '585797977', '572113578', '251997032',
-        '290120770', '292251793', '292658104', '297648729', '300061053',
+        //'290120770', '283265177', '286216759', '680668269', '676644046',
+        //'242979596', '281866463', '585797977', '572113578', '251997032',
+        //'290120770', '292251793', '292658104', '297648729', '300061053',
     ];
 
-    setTimeout(() => {
-        _.map(vIds, async (v) => {
-            let thumbLink = await loadVimeoThumb(v);
-            console.log(thumbLink);
-            playLists.value.push({
-                vId: v,
-                thumb: thumbLink
-            });
+    _.map(vIds, async (v) => {
+        let thumbLink = await loadVimeoThumb(v);
+
+        playLists.value.push({
+            vId: v,
+            thumb: thumbLink
         });
-    }, 5000)
- 
+    }); 
 }
 //#endregion
 
