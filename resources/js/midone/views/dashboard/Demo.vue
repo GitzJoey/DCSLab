@@ -43,7 +43,8 @@ import _ from "lodash";
 
 //#region Data - UI
 const loading = ref(false);
-const vimeoAccessToken = ref('cab792ad9307652baa044008e13a97a0');
+//cab792ad9307652baa044008e13a97a0
+const vimeoAccessToken = ref('');
 const playLists = ref([]);
 //#endregion
 
@@ -69,7 +70,7 @@ onMounted(() => {
 const loadVimeoThumb = (vId) => {
     plainAxios.get('https://api.vimeo.com/videos/' + vId + '/pictures', {
         headers: {
-            'Authorization': 'Bearer cab792ad9307652baa044008e13a97a0'
+            'Authorization': 'Bearer ' + vimeoAccessToken.value
         }
     }).then(response => {
         return response.data.data[0].sizes[0].link;
