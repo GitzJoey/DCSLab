@@ -19,6 +19,6 @@ defaultAxiosInstance.interceptors.response.use(response => {
     window.location.href = '/dashboard';
 });
 
-const AxiosInstance = axios.create();
+const axiosInstance = axios.create();
     
-export { defaultAxiosInstance as default, AxiosInstance }
+export { defaultAxiosInstance as default, axiosInstance }
