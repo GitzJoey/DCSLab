@@ -28,6 +28,7 @@ import { Chart,CryptoMarket, Snaps, Screener } from "vue-tradingview-widgets";
 //#endregion
 
 //#region Data - Views
+//marketstack 194133f1ee2d75a7dcd1db724f6ba002
 //#endregion
 
 //#region onMounted
