@@ -25,7 +25,7 @@ class DashboardServiceImpl implements DashboardService
 
         $hasUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() ? true:false;
 
-        array_push($menu, $this->createMenu_Dashboard(false));
+        array_push($menu, $this->createMenu_Dashboard(true));
 
         array_push($menu, $this->createMenu_Company());
 
