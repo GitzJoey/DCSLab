@@ -1,5 +1,4 @@
 const colors = require("tailwindcss/colors");
-
 const {
   toRGB,
   withOpacityValue,
