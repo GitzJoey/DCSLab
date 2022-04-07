@@ -48,6 +48,7 @@
         "vue-i18n": "^9.1.9",
         "vue-router": "^4.0.12",
         "vue-router-multiguard": "^1.0.3",
+        "vue-tradingview-widgets": "^1.0.2",
         "ziggy-js": "^1.4.3"
     }
 }
