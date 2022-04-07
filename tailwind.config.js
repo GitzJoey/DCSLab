@@ -1,11 +1,5 @@
 const colors = require("tailwindcss/colors");
 
-delete colors['lightBlue'];
-delete colors['warmGray'];
-delete colors['trueGray'];
-delete colors['coolGray'];
-delete colors['blueGray'];
-
 const {
   toRGB,
   withOpacityValue,
@@ -23,7 +17,40 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        rgb: toRGB(colors),
+        rgb: toRGB({
+          inherit: colors.inherit,
+          current: colors.current,
+          transparent: colors.transparent,
+          black: colors.black,
+          white: colors.white,
+          slate: colors.slate,
+          gray: colors.gray,
+          zinc: colors.zinc,
+          neutral: colors.neutral,
+          stone: colors.stone,
+          red: colors.red,
+          orange: colors.orange,
+          amber: colors.amber,
+          yellow: colors.yellow,
+          lime: colors.lime,
+          green: colors.green,
+          emerald: colors.emerald,
+          teal: colors.teal,
+          cyan: colors.cyan,
+          sky: colors.sky,
+          blue: colors.blue,
+          indigo: colors.indigo,
+          violet: colors.violet,
+          purple: colors.purple,
+          fuchsia: colors.fuchsia,
+          pink: colors.pink,
+          rose: colors.rose,
+          sky: colors.sky,
+          stone: colors.stone,
+          neutral: colors.neutral,
+          gray: colors.gray,
+          slate: colors.slate,
+        }),
         primary: withOpacityValue("--color-primary"),
         secondary: withOpacityValue("--color-secondary"),
         success: withOpacityValue("--color-success"),
