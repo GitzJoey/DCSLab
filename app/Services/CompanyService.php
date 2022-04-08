@@ -27,7 +27,7 @@ interface CompanyService
         int $id,
         string $code,
         string $name,
-        string $address,
+        ?string $address = null,
         int $default,
         int $status
     ) : Company;
