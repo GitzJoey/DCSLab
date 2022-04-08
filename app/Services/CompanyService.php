@@ -9,7 +9,7 @@ interface CompanyService
     public function create(
         string $code,
         string $name,
-        ?string $address = null,
+        string $address,
         int $default,
         int $status,
         int $userId
@@ -27,7 +27,7 @@ interface CompanyService
         int $id,
         string $code,
         string $name,
-        ?string $address = null,
+        string $address,
         int $default,
         int $status
     ) : Company;
