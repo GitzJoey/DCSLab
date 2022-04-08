@@ -124,12 +124,15 @@
         <router-view />
       </div>
 
+      <Notification refKey="popNotification" class="flex flex-col sm:flex-row" :options="{ duration: 3000 }">
+        <div class="font-medium">{{ popNotificationMessage }} </div>
+      </Notification>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch, provide } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { helper as $h } from "@/utils/helper";
 import { getLang, switchLang } from "@/lang";
@@ -161,6 +164,17 @@ const userContext = computed(() => userContextStore.userContext);
 const menuMode = ref('side');
 const showBackToTop = ref(false);
 const showTheme = ref(false);
+const popNotificationMessage = ref('');
+
+const popNotification = ref();
+
+provide("bind[popNotification]", (el) => {
+  popNotification.value = el;
+});
+
+provide('triggerPopNotification', (message) => {
+  popNotificationToast(message);
+});
 
 window.addEventListener('scroll', handleScroll);
 
@@ -178,7 +192,7 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 
-function handleScroll() {
+const handleScroll = () =>  {
   if (window.scrollY > 100) {
     showBackToTop.value = true;
   } else {
@@ -186,7 +200,7 @@ function handleScroll() {
   }
 }
 
-function localeSetup() {
+const localeSetup = () => {
   if (localStorage.getItem('DCSLAB_LANG') === null) {
     localStorage.setItem('DCSLAB_LANG', getLang());
   }
@@ -196,13 +210,13 @@ function localeSetup() {
   }
 }
 
-function goToLastRoute() {
+const goToLastRoute = () => {
   if (sessionStorage.getItem('DCSLAB_LAST_ROUTE') !== null) {
     router.push({ name: sessionStorage.getItem('DCSLAB_LAST_ROUTE') });
   }
 }
 
-function switchMenu() {
+const switchMenu = () => {
   if (menuMode.value === 'simple') {
     menuMode.value = 'side'
   } else {
@@ -210,17 +224,22 @@ function switchMenu() {
   }
 }
 
-function easterClick() {
+const easterClick = () => {
   showTheme.value = !showTheme.value;
 }
 
-function setDashboardLayout(settings) {
+const setDashboardLayout = (settings) => {
   let theme = settings.theme;
 
   if (theme.indexOf('-mini') > 0) {
     menuMode.value = 'simple';
   }
 }
+
+const popNotificationToast = (message) => {
+    popNotificationMessage.value = message;
+    popNotification.value.showToast();
+} 
 
 watch(
   computed(() => route.path),
