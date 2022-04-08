@@ -24,9 +24,6 @@ class CompanyController extends BaseController
     public function read(Request $request)
     {
         $userId = Auth::id();
-        // $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        // $paginate = $request->has('paginate') ? $request['paginate']:true;
-        // $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $search = $request->has('search') ? $request['search'] : '';
         $search = is_null($search) == false ? $search : '';
