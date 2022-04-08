@@ -176,6 +176,14 @@ provide('triggerPopNotification', (message) => {
   popNotificationToast(message);
 });
 
+const handlescroll = () => {
+  if (window.scrollY > 100) {
+    showBackToTop.value = true;
+  } else {
+    showBackToTop.value = false;
+  }
+}
+
 window.addEventListener('scroll', handlescroll);
 
 onMounted(async () => {
@@ -191,14 +199,6 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handlescroll);
 });
-
-function handlescroll() {
-  if (window.scrollY > 100) {
-    showBackToTop.value = true;
-  } else {
-    showBackToTop.value = false;
-  }
-}
 
 const localeSetup = () => {
   if (localStorage.getItem('DCSLAB_LANG') === null) {
