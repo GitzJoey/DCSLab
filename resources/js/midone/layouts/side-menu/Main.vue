@@ -176,7 +176,7 @@ provide('triggerPopNotification', (message) => {
   popNotificationToast(message);
 });
 
-window.addEventListener('scroll', handleScroll);
+window.addEventListener('scroll', handlescroll);
 
 onMounted(async () => {
   dom("body").removeClass("error-page").removeClass("login").addClass("main");
@@ -189,10 +189,10 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('scroll', handlescroll);
 });
 
-const handleScroll = () =>  {
+function handlescroll() {
   if (window.scrollY > 100) {
     showBackToTop.value = true;
   } else {
