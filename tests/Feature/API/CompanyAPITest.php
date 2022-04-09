@@ -33,6 +33,349 @@ class CompanyAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
+    public function test_api_call_save_with_all_field_filled()
+    {
+        $this->actingAs($this->user);
+
+        $code = (new RandomGenerator())->generateNumber(1, 9999);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = 0;
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $userId = $this->user->id;
+
+        $api = $this->json('POST', route('api.post.db.company.company.save'), [
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('companies', [
+            'code' => $code,
+            'name' => $name
+        ]);
+    }
+
+    public function test_api_call_save_with_minimal_field_filled()
+    {
+        $this->actingAs($this->user);
+
+        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $name = $this->faker->name;
+        $address = '';
+        $default = 0;
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $userId = $this->user->id;
+
+        $api = $this->json('POST', route('api.post.db.company.company.save'), [
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('companies', [
+            'code' => $code,
+            'name' => $name
+        ]);
+    }
+
+    public function test_api_call_save_with_existing_code()
+    {
+        $this->actingAs($this->user);
+
+        $code = $this->user->companies->random(1)->first()->code;
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = 1;
+        $status = 1;
+        $userId = $this->user->id;
+
+        $api = $this->json('POST', route('api.post.db.company.company.save'), [
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('companies', [
+            'code' => $code,
+            'name' => $name
+        ]);
+    }
+
+    public function test_api_call_save_with_null_param()
+    {
+        $this->actingAs($this->user);
+
+        $code = null;
+        $name = null;
+        $address = null;
+        $default = null;
+        $status = null;
+        $userId = null;
+
+        $api = $this->json('POST', route('api.post.db.company.company.save'), [
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+
+        $api->assertStatus(500);
+        $api->assertJsonStructure([
+            'message'
+        ]);
+    }
+
+    public function test_api_call_save_with_empty_string_param()
+    {
+        $this->actingAs($this->user);
+
+        $code = '';
+        $name = '';
+        $address = '';
+        $default = '';
+        $status = '';
+        $userId = '';
+
+        $api = $this->json('POST', route('api.post.db.company.company.save'), [
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+
+        $api->assertStatus(500);
+        $api->assertJsonStructure([
+            'message'
+        ]);
+    }
+
+    public function test_api_call_edit_with_all_field_filled()
+    {
+        $this->actingAs($this->user);
+
+        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = (new RandomGenerator())->generateNumber(0, 1);
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $userId = $this->user->id;
+
+        $company = Company::create([
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+        $companyId = $company->id;
+
+        $newCode = (new RandomGenerator())->generateNumber(1, 9999) . 'new';
+        $newName = $this->faker->name;
+        $newAddress = $this->faker->address;
+        $newDefault = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+
+        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'code' => $newCode,
+            'name' => $newName,
+            'address' => $newAddress,
+            'default' => $newDefault,
+            'status' => $newStatus
+        ]);
+
+        $api_edit->assertSuccessful();
+        $this->assertDatabaseHas('companies', [
+            'id' => $companyId,
+            'code' => $newCode
+        ]);
+    }
+
+    public function test_api_call_edit_with_minimal_field_filled()
+    {
+        $this->actingAs($this->user);
+
+        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $name = $this->faker->name;
+        $address = '';
+        $default = (new RandomGenerator())->generateNumber(0, 1);
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $userId = $this->user->id;
+
+        $company = Company::create([
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+        $companyId = $company->id;
+
+        $newCode = (new RandomGenerator())->generateNumber(1, 9999) . 'new';
+        $newName = $this->faker->name;
+        $newAddress = '';
+        $newDefault = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+
+        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'code' => $newCode,
+            'name' => $newName,
+            'address' => $newAddress,
+            'default' => $newDefault,
+            'status' => $newStatus
+        ]);
+
+        $api_edit->assertSuccessful();
+        $this->assertDatabaseHas('companies', [
+            'id' => $companyId,
+            'code' => $newCode
+        ]);
+    }
+
+    public function test_api_call_edit_with_existing_code()
+    {
+        $this->actingAs($this->user);
+
+        $code = $this->user->companies->random(1)->first()->code;
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = 1;
+        $status = 1;
+        $userId = $this->user->id;
+
+        $company = Company::create([
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+        $companyId = $company->id;
+
+        $newCode = (new RandomGenerator())->generateNumber(1, 9999) . 'new';
+        $newName = $this->faker->name;
+        $newAddress = $this->faker->address;
+        $newDefault = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+
+        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'code' => $newCode,
+            'name' => $newName,
+            'address' => $newAddress,
+            'default' => $newDefault,
+            'status' => $newStatus
+        ]);
+
+        $api_edit->assertSuccessful();
+        $this->assertDatabaseHas('companies', [
+            'id' => $companyId,
+            'code' => $newCode
+        ]);
+    }
+
+    public function test_api_call_edit_with_null_param()
+    {
+        $this->actingAs($this->user);
+
+        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = (new RandomGenerator())->generateNumber(0, 1);
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $userId = $this->user->id;
+
+        $company = Company::create([
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+        $companyId = $company->id;
+
+        $newCode = null;
+        $newName = null;
+        $newAddress = null;
+        $newDefault = null;
+        $newStatus = null;
+
+        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'code' => $newCode,
+            'name' => $newName,
+            'address' => $newAddress,
+            'default' => $newDefault,
+            'status' => $newStatus
+        ]);
+
+        $api_edit->assertStatus(500);
+        $api_edit->assertJsonStructure([
+            'message'
+        ]);
+    }
+
+    public function test_api_call_delete()
+    {
+        $this->actingAs($this->user);
+
+        $isDefault = 0;
+        do {
+            $code = (new RandomGenerator())->generateNumber(1,9999);
+            $name = $this->faker->name;
+            $address = $this->faker->address;
+            $default = 0;
+            $status = 1;
+            $userId = $this->user->id;
+
+            $company = Company::create([
+                'code' => $code,
+                'name' => $name,
+                'address' => $address,
+                'default' => $default,
+                'status' => $status,
+                'userId' => $userId
+            ]);
+            $companyId = $company->id;
+
+            $isDefault = Company::where('id', $companyId)->first()->default;
+        } while ($isDefault == 1);
+
+        $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
+
+        $api->assertSuccessful();
+        $this->assertSoftDeleted('companies', [
+            'id' => $companyId
+        ]);
+    }
+
+    public function test_api_call_delete_nonexistance_id()
+    {
+        $this->actingAs($this->user);
+
+        $api = $this->json('POST', route('api.post.db.company.company.delete', (new RandomGenerator())->generateAlphaNumeric(5)));
+
+        $api->assertStatus(500);
+    }
+
     public function test_api_call_read_when_user_have_companies_read_with_empty_search()
     {
         if (User::count() == 0)
@@ -320,284 +663,6 @@ class CompanyAPITest extends APITestCase
             'perPage' => null,
             
         ]));
-
-        $api->assertSuccessful();
-    }
-
-    public function test_api_call_save_with_all_field_filled()
-    {
-        $this->actingAs($this->user);
-
-        $companyId = Company::inRandomOrder()->get()[0]->id;
-        $code = (new RandomGenerator())->generateNumber(1, 9999);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $city = $this->faker->city;
-        $contact = $this->faker->e164PhoneNumber;
-        $remarks = $this->faker->sentence();
-        $status = (new RandomGenerator())->generateNumber(0, 1);
-
-        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
-            'company_id' => Hashids::encode($companyId),
-            'code' => $code, 
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status
-        ]);
-
-        $api->assertSuccessful();
-    }
-
-    public function test_api_call_save_with_minimal_field_filled()
-    {
-        $this->actingAs($this->user);
-
-        $code = (new RandomGenerator())->generateNumber(1,9999);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 0;
-        $status = 1;
-        $userId = $this->user->id;
-
-        $api = $this->json('POST', route('api.post.db.company.company.save'), [
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'default' => $default,
-            'status' => $status,
-            'userId' => $userId
-        ]);
-
-        $api->assertSuccessful();
-    }
-
-    public function test_api_call_save_with_existing_code()
-    {
-        $this->actingAs($this->user);
-
-        $companyId = Company::inRandomOrder()->get()[0]->id;
-        $code = Company::where('id', $companyId)->inRandomOrder()->first()->code;
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 1;
-        $status = 1;
-        $userId = $this->user->id;
-
-        $api = $this->json('POST', route('api.post.db.company.company.save'), [
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'default' => $default,
-            'status' => $status,
-            'userId' => $userId
-        ]);
-
-        // $api->assertStatus(422);
-        $api->assertSuccessful();
-    }
-
-    public function test_api_call_save_with_null_param()
-    {
-        $this->actingAs($this->user);
-
-        $code = null;
-        $name = null;
-        $address = null;
-        $default = null;
-        $status = null;
-        $userId = null;
-
-        $api = $this->json('POST', route('api.post.db.company.company.save'), [
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'default' => $default,
-            'status' => $status,
-            'userId' => $userId
-        ]);
-
-        $api->assertStatus(500);
-    }
-
-    public function test_api_call_edit_with_all_field_filled()
-    {
-        $this->actingAs($this->user);
-
-        $code = (new RandomGenerator())->generateNumber(1,9999);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 1;
-        $status = 1;
-        $userId = $this->user->id;
-
-        $container = Container::getInstance();
-        $companyService = $container->make(CompanyService::class);
-
-        $companyId = $companyService->create(
-            $code,
-            $name,
-            $address,
-            $default,
-            $status,
-            $userId
-        );
-        $companyId = $companyId->id;
-        $companyId = Hashids::encode($companyId);
-
-        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => $companyId ]), [
-            'code' => (new RandomGenerator())->generateNumber(1, 9999) . 'new',
-            'name' => $this->faker->name,
-            'address' => $this->faker->address,
-            'default' => 1,
-            'status' => 1
-        ]);
-
-        $api_edit->assertSuccessful();
-    }
-
-    public function test_api_call_edit_with_minimal_field_filled()
-    {
-        $this->actingAs($this->user);
-
-        $code = (new RandomGenerator())->generateNumber(1,9999);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 0;
-        $status = 1;
-        $userId = $this->user->id;
-
-        $container = Container::getInstance();
-        $companyService = $container->make(CompanyService::class);
-
-        $companyId = $companyService->create(
-            $code,
-            $name,
-            $address,
-            $default,
-            $status,
-            $userId
-        );
-        $companyId = $companyId->id;
-        $companyId = Hashids::encode($companyId);
-
-        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => $companyId ]), [
-            'code' => (new RandomGenerator())->generateNumber(1, 9999) . 'new',
-            'name' => $this->faker->name,
-            'address' => '',
-            'default' => 0,
-            'status' => 1
-        ]);
-
-        $api_edit->assertSuccessful();
-    }
-
-    public function test_api_call_edit_with_existing_code()
-    {
-        $this->actingAs($this->user);
-
-        $companyId = Company::inRandomOrder()->get()[0]->id;
-        $code = Company::where('id', $companyId)->inRandomOrder()->first()->code;
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 1;
-        $status = 1;
-        $userId = $this->user->id;
-
-        $container = Container::getInstance();
-        $companyService = $container->make(CompanyService::class);
-
-        $companyId = $companyService->create(
-            $code,
-            $name,
-            $address,
-            $default,
-            $status,
-            $userId
-        );
-        $companyId = $companyId->id;
-        $companyId = Hashids::encode($companyId);
-
-        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => $companyId ]), [
-            'id' => $companyId,
-            'code' => (new RandomGenerator())->generateNumber(1, 9999) . 'new',
-            'name' => $this->faker->name,
-            'address' => $this->faker->address,
-            'default' => 1,
-            'status' => 1
-        ]);
-
-        $api_edit->assertSuccessful();
-    }
-
-    public function test_api_call_edit_with_null_param()
-    {
-        $this->actingAs($this->user);
-
-        $code = (new RandomGenerator())->generateNumber(1,9999);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 1;
-        $status = 1;
-        $userId = $this->user->id;
-
-        $container = Container::getInstance();
-        $companyService = $container->make(CompanyService::class);
-
-        $companyId = $companyService->create(
-            $code,
-            $name,
-            $address,
-            $default,
-            $status,
-            $userId
-        );
-        $companyId = $companyId->id;
-        $companyId = Hashids::encode($companyId);
-
-        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => $companyId ]), [
-            'code' => null,
-            'name' => null,
-            'address' => null,
-            'default' => 0,
-            'status' => null
-        ]);
-
-        $api_edit->assertStatus(500);
-    }
-
-    public function test_api_call_delete()
-    {
-        $this->actingAs($this->user);
-
-        $isDefault = 0;
-        do {
-            $code = (new RandomGenerator())->generateNumber(1,9999);
-            $name = $this->faker->name;
-            $address = $this->faker->address;
-            $default = 0;
-            $status = 1;
-            $userId = $this->user->id;
-    
-            $container = Container::getInstance();
-            $companyService = $container->make(CompanyService::class);
-            
-            $response = $companyService->create(
-                $code,
-                $name,
-                $address,
-                $default,
-                $status,
-                $userId
-            );
-            $companyId = $response->id;
-
-            $isDefault = Company::where('id', $companyId)->first()->default;
-        } while ($isDefault == 1);
-
-        $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
 
         $api->assertSuccessful();
     }
