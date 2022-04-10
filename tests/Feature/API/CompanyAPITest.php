@@ -107,6 +107,9 @@ class CompanyAPITest extends APITestCase
         ]);
 
         $api->assertStatus(500);       
+        $api->assertJsonStructure([
+            'errors'
+        ]);
     }
 
     public function test_api_call_save_with_null_param()
@@ -441,6 +444,9 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'errors'
+        ]);
     }
 
     public function test_api_call_read_when_user_have_companies_without_pagination()
