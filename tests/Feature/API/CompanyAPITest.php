@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Tests\APITestCase;
 use App\Models\Company;
@@ -10,6 +11,7 @@ use App\Actions\RandomGenerator;
 use App\Services\CompanyService;
 use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Hash;
 use Database\Seeders\CompanyTableSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,7 +39,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $code = (new RandomGenerator())->generateNumber(1, 9999);
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 0;
@@ -64,7 +66,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = '';
         $default = 0;
@@ -107,11 +109,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
 
-        $api->assertSuccessful();
-        $this->assertDatabaseHas('companies', [
-            'code' => $code,
-            'name' => $name
-        ]);
+        $api->assertStatus(500);       
     }
 
     public function test_api_call_save_with_null_param()
@@ -170,7 +168,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = (new RandomGenerator())->generateNumber(0, 1);
@@ -212,7 +210,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $code = (new RandomGenerator())->generateNumber(1,9999);
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = '';
         $default = (new RandomGenerator())->generateNumber(0, 1);
@@ -285,33 +283,15 @@ class CompanyAPITest extends APITestCase
             'status' => $newStatus
         ]);
 
-        $api_edit->assertSuccessful();
-        $this->assertDatabaseHas('companies', [
-            'id' => $companyId,
-            'code' => $newCode
+        $api_edit->assertStatus(500);
+        $api_edit->assertJsonStructure([
+            'message'
         ]);
     }
 
     public function test_api_call_edit_with_null_param()
     {
         $this->actingAs($this->user);
-
-        $code = (new RandomGenerator())->generateNumber(1,9999);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = (new RandomGenerator())->generateNumber(0, 1);
-        $status = (new RandomGenerator())->generateNumber(0, 1);
-        $userId = $this->user->id;
-
-        $company = Company::create([
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'default' => $default,
-            'status' => $status,
-            'userId' => $userId
-        ]);
-        $companyId = $company->id;
 
         $newCode = null;
         $newName = null;
@@ -337,27 +317,22 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $isDefault = 0;
-        do {
-            $code = (new RandomGenerator())->generateNumber(1,9999);
-            $name = $this->faker->name;
-            $address = $this->faker->address;
-            $default = 0;
-            $status = 1;
-            $userId = $this->user->id;
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = 0;
+        $status = 1;
+        $userId = $this->user->id;
 
-            $company = Company::create([
-                'code' => $code,
-                'name' => $name,
-                'address' => $address,
-                'default' => $default,
-                'status' => $status,
-                'userId' => $userId
-            ]);
-            $companyId = $company->id;
-
-            $isDefault = Company::where('id', $companyId)->first()->default;
-        } while ($isDefault == 1);
+        $company = Company::create([
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+        $companyId = $company->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
 
@@ -403,6 +378,15 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_when_user_have_companies_with_special_char_in_search()
@@ -432,6 +416,15 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_when_user_have_companies_with_negative_value_in_perpage_param()
@@ -516,14 +509,23 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_empty_search()
     {
-        $container = Container::getInstance();
-        $userService = $container->make(UserService::class);
-
         $user = User::doesnthave('companies')->get();
 
         if ($user->count() == 0) {
-            $email = $this->faker->email;
-            $selectedUser = $userService->register('testing', $email, 'password', 'on');
+            $user = new User();
+            $user->name = 'testing';
+            $user->email = $this->faker->email;
+
+            if (empty($password)) {
+                $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
+                $user->password_changed_at = null;
+            } else {
+                $user->password = Hash::make($password);
+                $user->password_changed_at = Carbon::now();
+            }
+
+            $user->save();
+            $selectedUser = $user;
         } else {
             $selectedUser = $user->shuffle()->first();
         }
@@ -548,14 +550,23 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_special_char_in_search()
     {
-        $container = Container::getInstance();
-        $userService = $container->make(UserService::class);
-
         $user = User::doesnthave('companies')->get();
 
         if ($user->count() == 0) {
-            $email = $this->faker->email;
-            $selectedUser = $userService->register('testing', $email, 'password', 'on');
+            $user = new User();
+            $user->name = 'testing';
+            $user->email = $this->faker->email;
+
+            if (empty($password)) {
+                $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
+                $user->password_changed_at = null;
+            } else {
+                $user->password = Hash::make($password);
+                $user->password_changed_at = Carbon::now();
+            }
+
+            $user->save();
+            $selectedUser = $user;
         } else {
             $selectedUser = $user->shuffle()->first();
         }
@@ -580,14 +591,23 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_negative_value_in_perpage_param()
     {
-        $container = Container::getInstance();
-        $userService = $container->make(UserService::class);
-
         $user = User::doesnthave('companies')->get();
 
         if ($user->count() == 0) {
-            $email = $this->faker->email;
-            $selectedUser = $userService->register('testing', $email, 'password', 'on');
+            $user = new User();
+            $user->name = 'testing';
+            $user->email = $this->faker->email;
+
+            if (empty($password)) {
+                $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
+                $user->password_changed_at = null;
+            } else {
+                $user->password = Hash::make($password);
+                $user->password_changed_at = Carbon::now();
+            }
+
+            $user->save();
+            $selectedUser = $user;
         } else {
             $selectedUser = $user->shuffle()->first();
         }
@@ -612,14 +632,23 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_without_pagination()
     {
-        $container = Container::getInstance();
-        $userService = $container->make(UserService::class);
-
         $user = User::doesnthave('companies')->get();
 
         if ($user->count() == 0) {
-            $email = $this->faker->email;
-            $selectedUser = $userService->register('testing', $email, 'password', 'on');
+            $user = new User();
+            $user->name = 'testing';
+            $user->email = $this->faker->email;
+
+            if (empty($password)) {
+                $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
+                $user->password_changed_at = null;
+            } else {
+                $user->password = Hash::make($password);
+                $user->password_changed_at = Carbon::now();
+            }
+
+            $user->save();
+            $selectedUser = $user;
         } else {
             $selectedUser = $user->shuffle()->first();
         }
@@ -642,18 +671,6 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_null_param()
     {
-        $container = Container::getInstance();
-        $userService = $container->make(UserService::class);
-
-        $user = User::doesnthave('companies')->get();
-
-        if ($user->count() == 0) {
-            $email = $this->faker->email;
-            $selectedUser = $userService->register('testing', $email, 'password', 'on');
-        } else {
-            $selectedUser = $user->shuffle()->first();
-        }
-
         $this->actingAs($this->user);
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
