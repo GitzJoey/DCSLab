@@ -21,13 +21,13 @@ const loading = ref(false);
 
 //#region onMounted
 onMounted(() => {
-   listenPusher 
+   listenPusher(); 
 });
 //#endregion
 
 //#region Methods
 const listenPusher = () => {
-    Echo.channel('pusher-channel').listen('pusher-event', (e) => {
+    Echo.channel('pusher-channel').listen('..pusher-event', (e) => {
         console.log(e);
         console.log('triggered');
     });
