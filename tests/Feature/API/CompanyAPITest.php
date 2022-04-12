@@ -358,7 +358,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::where('default', '=', 1)->first()->id;
+        $companyId = $this->user->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
 
@@ -419,15 +419,6 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_have_companies_with_negative_value_in_perpage_param()
     {
-        if (User::count() == 0)
-            $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
-
-        if (User::has('companies')->count() == 0) {
-            $companyPerUser = 3;
-            $companySeeder = new CompanyTableSeeder();
-            $companySeeder->callWith(CompanyTableSeeder::class, [$companyPerUser]);    
-        }
-
         $this->actingAs($this->user);
 
         $userId = User::has('companies')->get()->first()->id;
@@ -451,15 +442,6 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_have_companies_without_pagination()
     {
-        if (User::count() == 0)
-            $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
-
-        if (User::has('companies')->count() == 0) {
-            $companyPerUser = 3;
-            $companySeeder = new CompanyTableSeeder();
-            $companySeeder->callWith(CompanyTableSeeder::class, [$companyPerUser]);    
-        }
-
         $this->actingAs($this->user);
 
         $userId = User::has('companies')->get()->first()->id;
@@ -487,15 +469,6 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_have_companies_with_null_param()
     {
-        if (User::count() == 0)
-            $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
-
-        if (User::has('companies')->count() == 0) {
-            $companyPerUser = 3;
-            $companySeeder = new CompanyTableSeeder();
-            $companySeeder->callWith(CompanyTableSeeder::class, [$companyPerUser]);    
-        }
-
         $this->actingAs($this->user);
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
@@ -523,13 +496,8 @@ class CompanyAPITest extends APITestCase
         $user = new User();
         $user->name = 'testing';
         $user->email = $this->faker->email;
-        if (empty($password)) {
-            $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
-            $user->password_changed_at = null;
-        } else {
-            $user->password = Hash::make($password);
-            $user->password_changed_at = Carbon::now();
-        }
+        $user->password = Hash::make("abcde12345");
+        $user->password_changed_at = Carbon::now();
         $user->save();
 
         $this->actingAs($user);
@@ -548,34 +516,34 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_special_char_in_search()
     {
-        $user = User::doesnthave('companies')->get();
-
-        if ($user->count() == 0) {
-            $user = new User();
-            $user->name = 'testing';
-            $user->email = $this->faker->email;
-
-            if (empty($password)) {
-                $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
-                $user->password_changed_at = null;
-            } else {
-                $user->password = Hash::make($password);
-                $user->password_changed_at = Carbon::now();
-            }
-
-            $user->save();
-            $selectedUser = $user;
+        $user = new User();
+        $user->name = 'testing';
+        $user->email = $this->faker->email;
+        if (empty($password)) {
+            $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
+            $user->password_changed_at = null;
         } else {
-            $selectedUser = $user->shuffle()->first();
+            $user->password = Hash::make($password);
+            $user->password_changed_at = Carbon::now();
         }
+        $user->save();
 
-        $this->actingAs($this->user);
+        $this->actingAs($user);
 
-        $userId = $selectedUser->id;
+        $userId = $user->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
         $perPage = 10;
@@ -589,6 +557,15 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_negative_value_in_perpage_param()
@@ -630,6 +607,9 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'errors'
+        ]);
     }
 
     public function test_api_call_read_when_user_doesnt_have_companies_without_pagination()
