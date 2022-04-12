@@ -227,7 +227,7 @@ class CompanyAPITest extends APITestCase
         ]);
         $companyId = $company->id;
 
-        $newCode = (new RandomGenerator())->generateNumber(1, 9999) . 'new';
+        $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
         $newAddress = '';
         $newDefault = (new RandomGenerator())->generateNumber(0, 1);
@@ -252,7 +252,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $code = $this->user->companies->random(1)->first()->code;
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 1;
