@@ -434,7 +434,7 @@ class CompanyAPITest extends APITestCase
             
         ]));
 
-        $api->assertSuccessful();
+        $api->assertStatus(500);
         $api->assertJsonStructure([
             'errors'
         ]);
