@@ -387,7 +387,7 @@ const backToList = () => {
     getAllWarehouse({ page: warehouseList.value.current_page, pageSize: warehouseList.value.per_page });
 }
 
-const toggleDetail = (idx) => {x
+const toggleDetail = (idx) => {
     if (expandDetail.value === idx) {
         expandDetail.value = null;
     } else {
