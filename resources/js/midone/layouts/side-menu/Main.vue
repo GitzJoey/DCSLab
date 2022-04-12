@@ -127,6 +127,8 @@
       <Notification refKey="popNotification" class="flex flex-col sm:flex-row" :options="{ duration: 3000 }">
         <div class="font-medium">{{ popNotificationMessage }} </div>
       </Notification>
+
+      <Pusher />
     </div>
   </div>
 </template>
@@ -146,6 +148,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main.vue";
 import MainColorSwitcher from "@/components/main-color-switcher/Main.vue";
 import SideMenuTooltip from "@/components/side-menu-tooltip/Main.vue";
 import BackToTop from "@/components/back-to-top/Main.vue";
+import Pusher from "@/components/pusher/Main.vue";
 import { linkTo, nestedMenu, enter, leave } from "./index";
 import dom from "@left4code/tw-starter/dist/js/dom";
 
