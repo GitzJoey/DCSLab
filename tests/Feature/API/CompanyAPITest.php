@@ -252,13 +252,12 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $company = Company::inRandomOrder()->first();
-        $companyId = $company->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
 
-        $newCode = $this->user->companies->random(1)->first()->code;
+        $newCode = $this->user->companies->random(1)->whereNotIn('id', [$companyId])->first()->code;
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
-        $newDefault = (new RandomGenerator())->generateNumber(0, 1);
+        $newDefault = 0;
         $newStatus = (new RandomGenerator())->generateNumber(0, 1);
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
