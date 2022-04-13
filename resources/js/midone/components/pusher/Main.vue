@@ -27,10 +27,7 @@ onMounted(() => {
 
 //#region Methods
 const listenPusher = () => {
-    Echo.channel('pusher-channel').listen('..pusher-event', (e) => {
-        console.log(e);
-        console.log('triggered');
-    });
+    Echo.channel('public').listen('PusherEvent', (e) => { console.log(e); });
 }
 //#endregion
 

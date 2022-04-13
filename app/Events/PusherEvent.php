@@ -33,11 +33,6 @@ class PusherEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('pusher-channel');
-    }
-
-    public function broadcastAs()
-    {
-        return 'pusher-event';
+        return new Channel('public');
     }
 }
