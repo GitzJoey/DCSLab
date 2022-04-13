@@ -252,25 +252,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-<<<<<<< HEAD
         $company = Company::inRandomOrder()->first();
-=======
-        $code = (new RandomGenerator())->generateAlphaNumeric(5);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $default = 1;
-        $status = 1;
-        $userId = $this->user->id;
-
-        $company = Company::create([
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'default' => $default,
-            'status' => $status,
-            'userId' => $userId
-        ]);
->>>>>>> 48c8ecd8ee1e3a47502d50eb5a292c543e10c8a6
         $companyId = $company->id;
 
         $newCode = $this->user->companies->random(1)->first()->code;
