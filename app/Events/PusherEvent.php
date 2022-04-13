@@ -7,10 +7,11 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PusherEvent implements ShouldBroadcast
+class PusherEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -33,6 +34,11 @@ class PusherEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('public');
+        return new Channel('public-channel');
+    }
+
+    public function broadcastAs()
+    {
+        return 'event-pusher';
     }
 }
