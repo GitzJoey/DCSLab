@@ -553,8 +553,8 @@ class CompanyAPITest extends APITestCase
         $user = new User();
         $user->name = 'testing';
         $user->email = $this->faker->email;
-        $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
-        $user->password_changed_at = null;
+        $user->password = Hash::make("abcde12345");
+        $user->password_changed_at = Carbon::now();
         $user->save();
 
         $this->actingAs($user);
