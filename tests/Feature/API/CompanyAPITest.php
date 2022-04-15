@@ -517,13 +517,8 @@ class CompanyAPITest extends APITestCase
         $user = new User();
         $user->name = 'testing';
         $user->email = $this->faker->email;
-        if (empty($password)) {
-            $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
-            $user->password_changed_at = null;
-        } else {
-            $user->password = Hash::make($password);
-            $user->password_changed_at = Carbon::now();
-        }
+        $user->password = Hash::make("abcde12345");
+        $user->password_changed_at = Carbon::now();
         $user->save();
 
         $this->actingAs($user);
@@ -555,30 +550,16 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_negative_value_in_perpage_param()
     {
-        $user = User::doesnthave('companies')->get();
+        $user = new User();
+        $user->name = 'testing';
+        $user->email = $this->faker->email;
+        $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
+        $user->password_changed_at = null;
+        $user->save();
 
-        if ($user->count() == 0) {
-            $user = new User();
-            $user->name = 'testing';
-            $user->email = $this->faker->email;
+        $this->actingAs($user);
 
-            if (empty($password)) {
-                $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
-                $user->password_changed_at = null;
-            } else {
-                $user->password = Hash::make($password);
-                $user->password_changed_at = Carbon::now();
-            }
-
-            $user->save();
-            $selectedUser = $user;
-        } else {
-            $selectedUser = $user->shuffle()->first();
-        }
-
-        $this->actingAs($this->user);
-
-        $userId = $selectedUser->id;
+        $userId = $user->id;
         $search = '';
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
         $perPage = -10;
@@ -605,30 +586,16 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_without_pagination()
     {
-        $user = User::doesnthave('companies')->get();
+        $user = new User();
+        $user->name = 'testing';
+        $user->email = $this->faker->email;
+        $user->password = Hash::make("abcde12345");
+        $user->password_changed_at = Carbon::now();
+        $user->save();
 
-        if ($user->count() == 0) {
-            $user = new User();
-            $user->name = 'testing';
-            $user->email = $this->faker->email;
+        $this->actingAs($user);
 
-            if (empty($password)) {
-                $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
-                $user->password_changed_at = null;
-            } else {
-                $user->password = Hash::make($password);
-                $user->password_changed_at = Carbon::now();
-            }
-
-            $user->save();
-            $selectedUser = $user;
-        } else {
-            $selectedUser = $user->shuffle()->first();
-        }
-
-        $this->actingAs($this->user);
-
-        $userId = $selectedUser->id;
+        $userId = $user->id;
         $search = '';
         $perPage = 10;
 
