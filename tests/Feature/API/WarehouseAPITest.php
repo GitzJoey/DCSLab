@@ -66,7 +66,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = '';
@@ -97,7 +97,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Warehouse::inRandomOrder()->get()[0]->company_id;;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = $this->user->companies->random(1)->first()->code;
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -291,29 +291,31 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Warehouse::inRandomOrder()->get()[0]->company_id;
-        $code = $this->user->companies->random(1)->first()->code;
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $city = $this->faker->city;
-        $contact = $this->faker->e164PhoneNumber;
-        $remarks = $this->faker->sentence();
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $companyId = $this->user->companies->random(1)->first()->id;
 
-        $warehouse = Warehouse::create([
-            'company_id' => $companyId,
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status
-        ]);
-        $warehouseId = $warehouse->id;
+        for ($i = 0; $i < 3; $i++) {
+            $code = $this->user->companies->random(1)->first()->code;
+            $name = $this->faker->name;
+            $address = $this->faker->address;
+            $city = $this->faker->city;
+            $contact = $this->faker->e164PhoneNumber;
+            $remarks = $this->faker->sentence();
+            $status = (new RandomGenerator())->generateNumber(0, 1);
+    
+            Warehouse::create([
+                'company_id' => $companyId,
+                'code' => $code,
+                'name' => $name,
+                'address' => $address,
+                'city' => $city,
+                'contact' => $contact,
+                'remarks' => $remarks,
+                'status' => $status
+            ]);
+        }
 
-        $newCompanyId = $this->user->companies->random(1)->first()->id;
-        $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
+        $warehouseId = Warehouse::where('company_id', $companyId)->inRandomOrder()->first()->id;
+        $newCode = Warehouse::where('company_id', $companyId)->whereNotIn('id', [$warehouseId])->inRandomOrder()->first()->id;
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
         $newCity = $this->faker->city;
@@ -322,7 +324,7 @@ class WarehouseAPITest extends APITestCase
         $newStatus = (new RandomGenerator())->generateNumber(0, 1);
 
         $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
-            'company_id' => Hashids::encode($newCompanyId),
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -332,10 +334,9 @@ class WarehouseAPITest extends APITestCase
             'status' => $newStatus,
         ]);
 
-        $api_edit->assertSuccessful();
-        $this->assertDatabaseHas('warehouses', [
-            'id' => $warehouseId,
-            'code' => $newCode
+        $api_edit->assertStatus(500);
+        $api_edit->assertJsonStructure([
+            'message'
         ]);
     }
 
@@ -386,7 +387,7 @@ class WarehouseAPITest extends APITestCase
         $warehouseId = $warehouse->id;
 
         $this->json('POST', route('api.post.db.company.warehouse.delete', Hashids::encode($warehouseId)));
- 
+        
         $this->assertSoftDeleted('warehouses', [
             'id' => $warehouseId
         ]);
