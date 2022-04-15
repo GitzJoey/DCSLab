@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\RandomGenerator;
 use App\Models\Branch;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,9 +32,17 @@ class BranchTableSeeder extends Seeder
         foreach($companies as $c) {
             for($i = 0; $i < $branchPerCompanies; $i++)
             {
-                Branch::factory()->create([
-                    'company_id' => $c
-                ]);
+                $makeItActiveStatus = (new RandomGenerator())->randomTrueOrFalse();
+
+                if($makeItActiveStatus) {
+                    Branch::factory()->setStatusActive()->create([
+                        'company_id' => $c
+                    ]);
+                } else {
+                    Branch::factory()->setStatusInactive()->create([
+                        'company_id' => $c
+                    ]);
+                }
             }
         }
     }

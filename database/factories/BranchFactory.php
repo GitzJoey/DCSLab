@@ -32,8 +32,25 @@ class BranchFactory extends Factory
             'address' => $faker->address(),
             'city' => $branch_name,
             'contact' => $faker->e164PhoneNumber(),
-            'remarks' => '',
-            'status' => 1
+            'remarks' => ''
         ];
+    }
+
+    public function setStatusActive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => 1
+            ];
+        });
+    }
+
+    public function setStatusInactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => 0
+            ];
+        });
     }
 }

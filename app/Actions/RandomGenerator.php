@@ -28,7 +28,7 @@ class RandomGenerator
 
     public function generateRandomTimer(): string
     {
-        return mt_rand(0,23).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT);        
+        return mt_rand(0,23).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT);
     }
 
     public function generateFixedLengthNumber(int $length = 2): int

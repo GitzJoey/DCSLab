@@ -25,8 +25,25 @@ class CompanyFactory extends Factory
         $faker = \Faker\Factory::create('id_ID');
         return [
             'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $faker->company(),
-            'status' => 1,
+            'name' => $faker->company()
         ];
+    }
+
+    public function setStatusActive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => 1
+            ];
+        });
+    }
+
+    public function setStatusInactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => 0
+            ];
+        });
     }
 }
