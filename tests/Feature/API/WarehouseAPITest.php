@@ -208,7 +208,6 @@ class WarehouseAPITest extends APITestCase
         ]);
         $warehouseId = $warehouse->id;
 
-        $newCompanyId = $this->user->companies->random(1)->first()->id;
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
@@ -218,7 +217,7 @@ class WarehouseAPITest extends APITestCase
         $newStatus = (new RandomGenerator())->generateNumber(0, 1);
 
         $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
-            'company_id' => Hashids::encode($newCompanyId),
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -260,7 +259,6 @@ class WarehouseAPITest extends APITestCase
         ]);
         $warehouseId = $warehouse->id;
 
-        $newCompanyId = $this->user->companies->random(1)->first()->id;
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
         $newAddress = null;
@@ -270,7 +268,7 @@ class WarehouseAPITest extends APITestCase
         $newStatus = (new RandomGenerator())->generateNumber(0, 1);
 
         $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
-            'company_id' => Hashids::encode($newCompanyId),
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -387,7 +385,7 @@ class WarehouseAPITest extends APITestCase
         $warehouseId = $warehouse->id;
 
         $this->json('POST', route('api.post.db.company.warehouse.delete', Hashids::encode($warehouseId)));
-        
+
         $this->assertSoftDeleted('warehouses', [
             'id' => $warehouseId
         ]);
