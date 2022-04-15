@@ -593,7 +593,13 @@ class CompanyAPITest extends APITestCase
 
         $api->assertSuccessful();
         $api->assertJsonStructure([
-            'errors'
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
         ]);
     }
 
