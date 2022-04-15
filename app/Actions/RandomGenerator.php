@@ -26,6 +26,11 @@ class RandomGenerator
         return self::$RSeed % ($max - $min + 1) + $min;
     }
 
+    public function generateRandomTimer(): string
+    {
+        return mt_rand(0,23).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT);        
+    }
+
     public function generateFixedLengthNumber(int $length = 2): int
     {
         if ($length < 2) $length = 2;
