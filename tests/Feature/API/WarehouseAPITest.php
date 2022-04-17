@@ -35,7 +35,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -187,7 +187,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -292,7 +292,7 @@ class WarehouseAPITest extends APITestCase
         $companyId = $this->user->companies->random(1)->first()->id;
 
         for ($i = 0; $i < 3; $i++) {
-            $code = $this->user->companies->random(1)->first()->code;
+            $code = (new RandomGenerator())->generateAlphaNumeric(5);
             $name = $this->faker->name;
             $address = $this->faker->address;
             $city = $this->faker->city;

@@ -343,7 +343,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = $this->user->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
 
@@ -400,6 +400,15 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_when_user_have_companies_with_negative_value_in_perpage_param()
@@ -464,15 +473,9 @@ class CompanyAPITest extends APITestCase
             
         ]));
 
-        $api->assertSuccessful();
+        $api->assertStatus(500);       
         $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
+            'errors'
         ]);
     }
 
@@ -620,7 +623,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_doesnt_have_companies_with_null_param()
     {
-        $this->actingAs($this->user);
+        $user = new User();
+        $user->name = 'testing';
+        $user->email = $this->faker->email;
+        $user->password = Hash::make("abcde12345");
+        $user->password_changed_at = Carbon::now();
+        $user->save();
+
+        $this->actingAs($user);
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => null,
@@ -630,15 +640,9 @@ class CompanyAPITest extends APITestCase
             
         ]));
 
-        $api->assertSuccessful();
+        $api->assertStatus(500);       
         $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
+            'errors'
         ]);
     }
 }
