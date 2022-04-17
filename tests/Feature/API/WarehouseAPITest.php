@@ -99,6 +99,27 @@ class WarehouseAPITest extends APITestCase
 
         $companyId = $this->user->companies->random(1)->first()->id;
 
+        for ($i = 0; $i < 3; $i++) {
+            $code = (new RandomGenerator())->generateAlphaNumeric(5);
+            $name = $this->faker->name;
+            $address = $this->faker->address;
+            $city = $this->faker->city;
+            $contact = $this->faker->e164PhoneNumber;
+            $remarks = $this->faker->sentence();
+            $status = (new RandomGenerator())->generateNumber(0, 1);
+    
+            Warehouse::create([
+                'company_id' => $companyId,
+                'code' => $code,
+                'name' => $name,
+                'address' => $address,
+                'city' => $city,
+                'contact' => $contact,
+                'remarks' => $remarks,
+                'status' => $status
+            ]);
+        }
+
         $code = Warehouse::whereIn('company_id', [$companyId])->inRandomOrder()->first()->code;
         $name = $this->faker->name;
         $address = $this->faker->address;
