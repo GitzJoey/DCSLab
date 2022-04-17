@@ -98,7 +98,8 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
-        $code = Warehouse::where('company_id', $companyId)->inRandomOrder()->first()->id;
+
+        $code = Warehouse::whereIn('company_id', [$companyId])->inRandomOrder()->first()->code;
         $name = $this->faker->name;
         $address = $this->faker->address;
         $city = $this->faker->city;
