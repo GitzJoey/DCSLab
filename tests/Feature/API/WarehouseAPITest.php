@@ -99,26 +99,24 @@ class WarehouseAPITest extends APITestCase
 
         $companyId = $this->user->companies->random(1)->first()->id;
 
-        for ($i = 0; $i < 3; $i++) {
-            $code = (new RandomGenerator())->generateAlphaNumeric(5);
-            $name = $this->faker->name;
-            $address = $this->faker->address;
-            $city = $this->faker->city;
-            $contact = $this->faker->e164PhoneNumber;
-            $remarks = $this->faker->sentence();
-            $status = (new RandomGenerator())->generateNumber(0, 1);
-    
-            Warehouse::create([
-                'company_id' => $companyId,
-                'code' => $code,
-                'name' => $name,
-                'address' => $address,
-                'city' => $city,
-                'contact' => $contact,
-                'remarks' => $remarks,
-                'status' => $status
-            ]);
-        }
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $remarks = $this->faker->sentence();
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+
+        Warehouse::create([
+            'company_id' => $companyId,
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'remarks' => $remarks,
+            'status' => $status
+        ]);
 
         $code = Warehouse::whereIn('company_id', [$companyId])->inRandomOrder()->first()->code;
         $name = $this->faker->name;
@@ -272,7 +270,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = null;
@@ -376,7 +374,28 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', Hashids::encode((new RandomGenerator())->generateNumber(1, 9999))), [
+        $companyId = $this->user->companies->random(1)->first()->id;
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $remarks = $this->faker->sentence();
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+
+        $warehouse = Warehouse::create([
+            'company_id' => $companyId,
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'remarks' => $remarks,
+            'status' => $status
+        ]);
+        $warehouseId = $warehouse->id;
+
+        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
             'company_id' => null,
             'code' => null,
             'name' => null,
@@ -397,7 +416,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -441,7 +460,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $search = "";
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
         $perPage = 10;
@@ -460,7 +479,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
         $perPage = 10;
@@ -479,7 +498,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $search = '';
         $paginate = 1;
         $perPage = -10;
@@ -501,7 +520,7 @@ class WarehouseAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = Company::inRandomOrder()->get()[0]->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $search = '';
         $perPage = 10;
         
