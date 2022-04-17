@@ -25,8 +25,8 @@ class CommonController extends BaseController
     public function getStatus()
     {
         return [
-            ['name' => 'components.dropdown.values.statusDDL.active', 'code' => '1'],
-            ['name' => 'components.dropdown.values.statusDDL.inactive', 'code' => '0'],
+            ['name' => 'components.dropdown.values.statusDDL.active', 'code' => 'ACTIVE'],
+            ['name' => 'components.dropdown.values.statusDDL.inactive', 'code' => 'INACTIVE'],
         ];
     }
 
