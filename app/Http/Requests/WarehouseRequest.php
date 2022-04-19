@@ -67,4 +67,18 @@ class WarehouseRequest extends FormRequest
             'company_id' => trans('validation_attributes.company'),
         ];
     }
+
+    public function validationData()
+    {
+        $additionalArray = [];
+
+        return array_merge($this->all(), $additionalArray);
+    }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            
+        ]);
+    }
 }

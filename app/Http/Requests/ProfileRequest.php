@@ -64,4 +64,18 @@ class ProfileRequest extends FormRequest
         }
 
     }
+
+    public function validationData()
+    {
+        $additionalArray = [];
+
+        return array_merge($this->all(), $additionalArray);
+    }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            
+        ]);
+    }
 }
