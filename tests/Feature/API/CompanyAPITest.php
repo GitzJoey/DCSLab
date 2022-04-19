@@ -202,7 +202,8 @@ class CompanyAPITest extends APITestCase
         $api_edit->assertSuccessful();
         $this->assertDatabaseHas('companies', [
             'id' => $companyId,
-            'code' => $newCode
+            'code' => $newCode,
+            'name' => $newName
         ]);
     }
 
@@ -244,7 +245,11 @@ class CompanyAPITest extends APITestCase
         $api_edit->assertSuccessful();
         $this->assertDatabaseHas('companies', [
             'id' => $companyId,
-            'code' => $newCode
+            'code' => $newCode,
+            'name' => $newName,
+            'address' => $newAddress,
+            'default' => $newDefault,
+            'status' => $newStatus
         ]);
     }
 
@@ -343,7 +348,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->user->companies()->where('default', '=', 1)->first()->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
 
@@ -415,7 +420,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $userId = User::has('companies')->get()->first()->id;
+        $userId = $this->user->id;
         $search = '';
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
         $perPage = -10;
@@ -438,7 +443,7 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $userId = User::has('companies')->get()->first()->id;
+        $userId = $this->user->id;
         $search = '';
         $perPage = 10;
 
