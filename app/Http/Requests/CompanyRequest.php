@@ -40,14 +40,14 @@ class CompanyRequest extends FormRequest
                 $rules_store = [
                     'code' => ['required', 'max:255', new uniqueCode(table: 'companies', userId: $userId)],
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
                     'code' => ['required', 'max:255', new uniqueCode(table: 'companies', userId: $userId)],
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->has('default'), $this->input('status'))]
+                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS'), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -67,7 +67,7 @@ class CompanyRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'default' => $this->has('default') ? (bool)$this->default : false
+            'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false
         ]);
     }
 }
