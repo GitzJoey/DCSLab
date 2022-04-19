@@ -85,4 +85,18 @@ class ProductRequest extends FormRequest
             'conv_value.*' => trans('validation_attributes.conv_value'),
         ];
     }
+
+    public function validationData()
+    {
+        $additionalArray = [];
+
+        return array_merge($this->all(), $additionalArray);
+    }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            
+        ]);
+    }
 }

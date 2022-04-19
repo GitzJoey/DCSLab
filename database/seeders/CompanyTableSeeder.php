@@ -41,10 +41,16 @@ class CompanyTableSeeder extends Seeder
             $cIds = [];
             for($i = 0; $i < $companiesPerUsers; $i++)
             {
-                $comp = Company::factory()->make();
+                $makeItActiveStatus = (new RandomGenerator())->randomTrueOrFalse();
+                if ($makeItActiveStatus) {
+                    $comp = Company::factory()->setStatusActive()->make();
+                } else {
+                    $comp = Company::factory()->setStatusInactive()->make();
+                }
 
                 if ($i == $rand) {
                     $comp->default = 1;
+                    $comp->status = 1;
                 }
 
                 $comp->save();

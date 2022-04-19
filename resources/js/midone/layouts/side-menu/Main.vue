@@ -124,12 +124,17 @@
         <router-view />
       </div>
 
+      <Notification refKey="popNotification" class="flex flex-col sm:flex-row" :options="{ duration: 3000 }">
+        <div class="font-medium">{{ popNotificationMessage }} </div>
+      </Notification>
+
+      <Pusher />
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch, provide } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { helper as $h } from "@/utils/helper";
 import { getLang, switchLang } from "@/lang";
@@ -143,6 +148,7 @@ import DarkModeSwitcher from "@/components/dark-mode-switcher/Main.vue";
 import MainColorSwitcher from "@/components/main-color-switcher/Main.vue";
 import SideMenuTooltip from "@/components/side-menu-tooltip/Main.vue";
 import BackToTop from "@/components/back-to-top/Main.vue";
+import Pusher from "@/components/pusher/Main.vue";
 import { linkTo, nestedMenu, enter, leave } from "./index";
 import dom from "@left4code/tw-starter/dist/js/dom";
 
@@ -161,8 +167,27 @@ const userContext = computed(() => userContextStore.userContext);
 const menuMode = ref('side');
 const showBackToTop = ref(false);
 const showTheme = ref(false);
+const popNotificationMessage = ref('');
 
-window.addEventListener('scroll', handleScroll);
+const popNotification = ref();
+
+provide("bind[popNotification]", (el) => {
+  popNotification.value = el;
+});
+
+provide('triggerPopNotification', (message) => {
+  popNotificationToast(message);
+});
+
+const handlescroll = () => {
+  if (window.scrollY > 100) {
+    showBackToTop.value = true;
+  } else {
+    showBackToTop.value = false;
+  }
+}
+
+window.addEventListener('scroll', handlescroll);
 
 onMounted(async () => {
   dom("body").removeClass("error-page").removeClass("login").addClass("main");
@@ -175,18 +200,10 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('scroll', handlescroll);
 });
 
-function handleScroll() {
-  if (window.scrollY > 100) {
-    showBackToTop.value = true;
-  } else {
-    showBackToTop.value = false;
-  }
-}
-
-function localeSetup() {
+const localeSetup = () => {
   if (localStorage.getItem('DCSLAB_LANG') === null) {
     localStorage.setItem('DCSLAB_LANG', getLang());
   }
@@ -196,13 +213,13 @@ function localeSetup() {
   }
 }
 
-function goToLastRoute() {
+const goToLastRoute = () => {
   if (sessionStorage.getItem('DCSLAB_LAST_ROUTE') !== null) {
     router.push({ name: sessionStorage.getItem('DCSLAB_LAST_ROUTE') });
   }
 }
 
-function switchMenu() {
+const switchMenu = () => {
   if (menuMode.value === 'simple') {
     menuMode.value = 'side'
   } else {
@@ -210,11 +227,11 @@ function switchMenu() {
   }
 }
 
-function easterClick() {
+const easterClick = () => {
   showTheme.value = !showTheme.value;
 }
 
-function setDashboardLayout(settings) {
+const setDashboardLayout = (settings) => {
   let theme = settings.theme;
 
   if (theme.indexOf('-mini') > 0) {
@@ -222,9 +239,14 @@ function setDashboardLayout(settings) {
   }
 }
 
+const popNotificationToast = (message) => {
+    popNotificationMessage.value = message;
+    popNotification.value.showToast();
+} 
+
 watch(
   computed(() => route.path),
-  () => {    
+  () => {
     formattedMenu.value = $h.toRaw(nestedMenu(sideMenu.value, route));
   }
 );

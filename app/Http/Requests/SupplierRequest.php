@@ -86,4 +86,11 @@ class SupplierRequest extends FormRequest
 
         return array_merge($this->all(), $additionalArray);
     }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            
+        ]);
+    }
 }

@@ -58,7 +58,12 @@ class WarehouseAPITest extends APITestCase
         $api->assertSuccessful();
         $this->assertDatabaseHas('warehouses', [
             'code' => $code,
-            'name' => $name
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'remarks' => $remarks,
+            'status' => $status
         ]);
     }
 
@@ -89,7 +94,12 @@ class WarehouseAPITest extends APITestCase
         $api->assertSuccessful();
         $this->assertDatabaseHas('warehouses', [
             'code' => $code,
-            'name' => $name
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'remarks' => $remarks,
+            'status' => $status
         ]);
     }
 
@@ -208,40 +218,21 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
-        $code = (new RandomGenerator())->generateAlphaNumeric(5);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $city = $this->faker->city;
-        $contact = $this->faker->e164PhoneNumber;
-        $remarks = $this->faker->sentence;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $warehouse = Warehouse::create([
             'company_id' => $companyId,
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status
+            'code' => (new RandomGenerator())->generateAlphaNumeric(5),
+            'name' => $this->faker->name,
+            'address' => $this->faker->address,
+            'city' => $this->faker->city,
+            'contact' => $this->faker->e164PhoneNumber,
+            'remarks' => $this->faker->sentence,
+            'status' => (new RandomGenerator())->generateNumber(0, 1)
         ]);
         $warehouseId = $warehouse->id;
 
-        $newCode = '';
-        do {
-            $tempCode = (new RandomGenerator())->generateAlphaNumeric(5);
-            $countCode = Warehouse::where([
-                ['company_id', '=', $companyId],
-                ['code', '=', $tempCode]
-            ])->get()->count();
-
-            if ($countCode == 0) {
-                $newCode = $tempCode . 'new';
-            }
-        } while ($countCode != 0);
-
         $newName = $this->faker->name;
+        $newCode = (new RandomGenerator())->generateAlphaNumeric(5).'new';
         $newAddress = $this->faker->address;
         $newCity = $this->faker->city;
         $newContact = $this->faker->e164PhoneNumber;
@@ -256,13 +247,19 @@ class WarehouseAPITest extends APITestCase
             'city' => $newCity,
             'contact' => $newContact,
             'remarks' => $newRemarks,
-            'status' => $newStatus,
+            'status' => $newStatus
         ]);
 
         $api_edit->assertSuccessful();
         $this->assertDatabaseHas('warehouses', [
             'id' => $warehouseId,
-            'code' => $newCode
+            'code' => $newCode,
+            'name' => $newName,
+            'address' => $newAddress,
+            'city' => $newCity,
+            'contact' => $newContact,
+            'remarks' => $newRemarks,
+            'status' => $newStatus
         ]);
     }
 
@@ -462,7 +459,7 @@ class WarehouseAPITest extends APITestCase
 
         $companyId = $this->user->companies->random(1)->first()->id;
         $search = "";
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.warehouse.read', [
@@ -473,6 +470,15 @@ class WarehouseAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_with_special_char_in_search()
@@ -481,7 +487,7 @@ class WarehouseAPITest extends APITestCase
 
         $companyId = $this->user->companies->random(1)->first()->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.warehouse.read', [
@@ -492,6 +498,15 @@ class WarehouseAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_with_negative_value_in_perpage_param()

@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow-md fixed bottom-0 right-0 box border rounded-full h-12 px-5 flex items-center justify-center z-50 mb-5 mr-5" v-if="visible">
+    <div class="shadow-md fixed bottom-0 right-0 box border rounded-full h-6 px-2 flex items-center justify-center z-50 mb-5 mr-5" v-if="visible">
         <div class="cursor-pointer hover:animate-bounce" @click.prevent="goTop" @contextmenu.prevent="easterClick">
             <ChevronUpIcon />
         </div>

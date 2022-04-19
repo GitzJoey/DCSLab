@@ -4,6 +4,7 @@ import MainDashboard from "@/views/dashboard/MainDashboard.vue";
 import Profile from "@/views/dashboard/Profile.vue";
 import Inbox from "@/views/dashboard/Inbox.vue";
 import Activity from "@/views/dashboard/Activity.vue";
+import Demo from "@/views/dashboard/Demo.vue";
 
 const root = '/dashboard';
 
@@ -18,6 +19,15 @@ export default {
             meta: {
                 remember: false,
                 log_route: true 
+            }
+        },
+        {
+            path: root + '/demo',
+            name: 'side-menu-dashboard-demo',
+            component: Demo,
+            meta: {
+                remember: false,
+                log_route: false 
             }
         },
         {
