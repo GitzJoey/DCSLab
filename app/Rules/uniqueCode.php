@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Config;
 
+use App\Services\CompanyService;
 use App\Services\BranchService;
 use App\Services\ProductService;
 use App\Services\SupplierService;
@@ -14,10 +15,12 @@ use App\Services\WarehouseService;
 
 class uniqueCode implements Rule
 {
+    private int $userId;
     private int $companyId;
     private ?int $exceptId;
     private string $table;
 
+    private CompanyService $companyService;
     private BranchService $branchService;
     private WarehouseService $warehouseService;
     private SupplierService $supplierService;
@@ -28,13 +31,17 @@ class uniqueCode implements Rule
      *
      * @return void
      */
-    public function __construct(string $table, int $companyId, ?int $exceptId = null)
+    public function __construct(string $table, ?int $userId = null, ?int $companyId = null, ?int $exceptId = null)
     {
         $this->table = $table;
-        $this->companyId = $companyId;
+        $this->userId = $userId ? $userId : null;
+        $this->companyId = $companyId ? $companyId : null;
         $this->exceptId = $exceptId ? $exceptId : null;
 
         switch($this->table) {
+            case 'companies':
+                $this->companyService = Container::getInstance()->make(CompanyService::class); 
+                break;    
             case 'branches':
                 $this->branchService = Container::getInstance()->make(BranchService::class);
                 break;
@@ -66,17 +73,26 @@ class uniqueCode implements Rule
         $is_duplicate = false;
 
         switch($this->table) {
+            case 'companies':
+                if (!is_null($this->userId)) 
+                    $is_duplicate = $this->companyService->isUniqueCode($value, $this->userId, $this->exceptId);
+                break;            
             case 'branches':
-                $is_duplicate = $this->branchService->isUniqueCode($value, $this->companyId, $this->exceptId);
+                if (!is_null($this->companyId))
+                    $is_duplicate = $this->branchService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;
             case 'warehouses':
-                $is_duplicate = $this->warehouseService->isUniqueCode($value, $this->companyId, $this->exceptId);
+                if (!is_null($this->companyId))
+                    $is_duplicate = $this->warehouseService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;    
             case 'suppliers':
-                $is_duplicate = $this->supplierService->isUniqueCode($value, $this->companyId, $this->exceptId);
+                if (!is_null($this->companyId))
+                    $is_duplicate = $this->supplierService->isUniqueCode($value, $this->companyId, $this->exceptId);
                 break;
             case 'products':
-                $is_duplicate = $this->productService->isUniqueCodeForProduct($value, $this->companyId, $this->exceptId);
+                if (!is_null($this->companyId))
+                    $is_duplicate = $this->productService->isUniqueCodeForProduct($value, $this->companyId, $this->exceptId);
+                break;
             default:
                 break;
         }

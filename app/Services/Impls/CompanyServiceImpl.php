@@ -43,7 +43,13 @@ class CompanyServiceImpl implements CompanyService
             }
 
             if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode();
+                $generatedCode = '';
+                do {
+                    $generatedCode = $this->generateUniqueCode();
+
+                } while ($this->isUniqueCode($generatedCode, $userId));
+
+                $code = $generatedCode;
             }
 
             $company = new Company();
@@ -133,10 +139,6 @@ class CompanyServiceImpl implements CompanyService
         try {
             $company = Company::find($id);
 
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company->id);
-            }
-
             $company->update([
                 'code' => $code,
                 'name' => $name,
@@ -194,9 +196,10 @@ class CompanyServiceImpl implements CompanyService
         return $code;
     }
 
-    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
+    public function isUniqueCode(string $code, int $userId, ?int $exceptId = null): bool
     {
-        $result = Company::where('id', '=', $companyId)->where('code', '=' , $code);
+        $user = User::find($userId);
+        $result = $user->companies()->where('code', '=' , $code);
 
         if($exceptId)
             $result = $result->where('id', '<>', $exceptId);
