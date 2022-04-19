@@ -15,8 +15,8 @@ use App\Services\WarehouseService;
 
 class uniqueCode implements Rule
 {
-    private int $userId;
-    private int $companyId;
+    private ?int $userId;
+    private ?int $companyId;
     private ?int $exceptId;
     private string $table;
 
