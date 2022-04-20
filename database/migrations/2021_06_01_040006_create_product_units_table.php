@@ -19,9 +19,9 @@ class CreateProductUnitsTable extends Migration
             $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('unit_id')->references('id')->on('units');
             $table->string('code')->nullable();
-            $table->boolean('is_base')->default(0);
+            $table->boolean('is_base')->default(false);
             $table->decimal('conversion_value', 19, 2)->nullable();
-            $table->boolean('is_primary_unit')->default(0);
+            $table->boolean('is_primary_unit')->default(false);
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
