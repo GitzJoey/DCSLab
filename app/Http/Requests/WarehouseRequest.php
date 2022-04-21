@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ActiveStatus;
 use App\Rules\uniqueCode;
-use App\Rules\validDropDownValue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseRequest extends FormRequest
@@ -43,7 +44,7 @@ class WarehouseRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'warehouses', companyId: $companyId)],
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
+                    'status' => [new Enum(ActiveStatus::class)]
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -51,7 +52,7 @@ class WarehouseRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => new uniqueCode(table: 'warehouses', companyId: $companyId, exceptId: $this->route('id')),
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')]
+                    'status' => [new Enum(ActiveStatus::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -78,7 +79,7 @@ class WarehouseRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            
+            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::to($this->status) : null
         ]);
     }
 }

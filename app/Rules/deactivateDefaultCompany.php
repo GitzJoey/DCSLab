@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Contracts\Validation\Rule;
 
 class deactivateDefaultCompany implements Rule
@@ -13,7 +14,7 @@ class deactivateDefaultCompany implements Rule
      *
      * @return void
      */
-    public function __construct(bool $isDefault, int $status)
+    public function __construct(bool $isDefault, ActiveStatus $status)
     {
         $this->isDefault = $isDefault;
         $this->status = $status;
@@ -28,7 +29,7 @@ class deactivateDefaultCompany implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->isDefault == true && $this->status == 0) return false;
+        if ($this->isDefault == true && $this->status == ActiveStatus::INACTIVE) return false;
         else return true;
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
@@ -26,8 +27,8 @@ class Branch extends Model
         'address',
         'city',
         'contact',
-        'remarks',
-        'status'
+        'status',
+        'remarks'
     ];
 
     protected static $logAttributes = [
@@ -37,8 +38,8 @@ class Branch extends Model
         'address',
         'city',
         'contact',
-        'remarks',
-        'status'
+        'status',
+        'remarks'
     ];
 
     protected static $logOnlyDirty = true;
@@ -52,6 +53,10 @@ class Branch extends Model
         'created_at',
         'updated_at',
         'deleted_at'
+    ];
+
+    protected $casts = [
+        'status' => ActiveStatus::class
     ];
 
     public function hId() : Attribute

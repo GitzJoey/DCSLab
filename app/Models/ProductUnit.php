@@ -47,6 +47,11 @@ class ProductUnit extends Model
         'deleted_at'
     ];
 
+    protected $casts = [
+        'is_base' => 'boolean',
+        'is_primary_unit' => 'boolean',
+    ];
+
     public function hId() : Attribute
     {
         return Attribute::make(

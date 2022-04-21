@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -75,7 +76,7 @@ class ProfileRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            
+            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::to($this->status) : null
         ]);
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ActiveStatus;
+use App\Enums\PaymentTerm;
 use App\Rules\uniqueCode;
-use App\Rules\validDropDownValue;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Enum;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierRequest extends FormRequest
@@ -47,10 +49,10 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'suppliers', companyId: $companyId)],
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
-                    'payment_term_type' => 'required',
+                    'status' => [new Enum(ActiveStatus::class)],
+                    'payment_term_type' => [new Enum(PaymentTerm::class)],
                     'payment_term' => 'required|numeric',
-                    'taxable_enterprise' => 'required',
+                    'taxable_enterprise' => 'required|boolean',
                     'email' => ['required', 'email']
                 ];
                 return array_merge($rules_store, $nullableArr);
@@ -59,10 +61,10 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', 'bail'],
                     'code' => new uniqueCode(table: 'suppliers', companyId: $companyId, exceptId: $this->route('id')),
                     'name' => 'required|max:255',
-                    'status' => ['required', new validDropDownValue('ACTIVE_STATUS')],
-                    'payment_term_type' => 'required',
+                    'status' => [new Enum(ActiveStatus::class)],
+                    'payment_term_type' => [new Enum(PaymentTerm::class)],
                     'payment_term' => 'required|numeric',
-                    'taxable_enterprise' => 'required',
+                    'taxable_enterprise' => 'required|boolean',
                     'email' => ['required', 'email']
                 ];
                 return array_merge($rules_update, $nullableArr);
@@ -90,7 +92,9 @@ class SupplierRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            
+            'taxable_enterprise' => $this->has('taxable_enterprise') ? filter_var($this->taxable_enterprise, FILTER_VALIDATE_BOOLEAN) : false,
+            'payment_term_type' => PaymentTerm::isValid($this->payment_term_type) ? PaymentTerm::to($this->payment_term_type) : null,
+            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::to($this->status) : null
         ]);
     }
 }

@@ -16,7 +16,7 @@ class SupplierProductResource extends JsonResource
     {
         return [
             'product' => new ProductResource($this->product),
-            'main_product' => $this->main_product == 1 ? true : false,
+            'main_product' => $this->main_product
         ];
     }
 }

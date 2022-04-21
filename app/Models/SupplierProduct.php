@@ -40,6 +40,10 @@ class SupplierProduct extends Model
         'deleted_at'
     ];
 
+    protected $casts = [
+        'main_product' => 'boolean',
+    ];
+
     public function hId() : Attribute
     {
         return Attribute::make(

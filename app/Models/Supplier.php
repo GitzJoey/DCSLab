@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
+use App\Enums\PaymentTerm;
 use App\Traits\ScopeableByCompany;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -33,11 +35,23 @@ class Supplier extends Model
         'payment_term',
         'taxable_enterprise',
         'tax_id',
-        'remarks',
-        'status'
+        'status',
+        'remarks'
     ];
 
-    protected static $logAttributes = ['code', 'name', 'payment_term_type', 'payment_term', 'contact', 'address', 'city', 'tax_id', 'taxable_enterprise', 'remarks', 'status'];
+    protected static $logAttributes = [
+        'code',
+        'name',
+        'contact',
+        'address',
+        'city',
+        'payment_term_type',
+        'payment_term',
+        'taxable_enterprise',
+        'tax_id',
+        'status',
+        'remarks'
+    ];
 
     protected static $logOnlyDirty = true;
 
@@ -54,6 +68,12 @@ class Supplier extends Model
         'pivot'
     ];
 
+    protected $casts = [
+        'taxable_enterprise' => 'boolean',
+        'payment_term' => PaymentTerm::class,
+        'status' => ActiveStatus::class
+    ];
+    
     public function hId() : Attribute
     {
         return Attribute::make(
