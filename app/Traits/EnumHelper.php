@@ -25,7 +25,7 @@ trait EnumHelper {
 
     public static function isValid($test)
     {
-        if (self::isValidName($test) && self::isValidValue($test)) return true;
+        if (self::isValidName($test) || self::isValidValue($test)) return true;
         else return false;
     }
 
