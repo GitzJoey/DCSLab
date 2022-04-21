@@ -28,4 +28,16 @@ trait EnumHelper {
         if (self::isValidName($test) && self::isValidValue($test)) return true;
         else return false;
     }
+
+    public static function to($name)
+    {
+        foreach(self::cases() as $enums) {
+            if ($enums->name === $name) return $enums;
+        }
+    }
+
+    public static function tryTo($name)
+    {
+        self::to($name);
+    }
 }
