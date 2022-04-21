@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -55,6 +56,10 @@ class Profile extends Model
         'updated_at',
         'deleted_by',
         'deleted_at',
+    ];
+
+    protected $casts = [
+        'status' => ActiveStatus::class
     ];
 
     public function hId() : Attribute
