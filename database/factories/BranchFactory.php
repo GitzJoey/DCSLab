@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\Branch;
 use App\Models\Company;
 
@@ -40,7 +41,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 1
+                'status' => ActiveStatus::ACTIVE
             ];
         });
     }

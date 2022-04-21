@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -33,7 +34,7 @@ class CompanyFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 1
+                'status' => ActiveStatus::ACTIVE
             ];
         });
     }
@@ -42,7 +43,7 @@ class CompanyFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 0
+                'status' => ActiveStatus::INACTIVE
             ];
         });
     }

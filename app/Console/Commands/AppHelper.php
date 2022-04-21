@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use App\Models\Permission;
 use App\Services\RoleService;
 use App\Services\UserService;
@@ -428,7 +429,8 @@ class AppHelper extends Command
 
         $profile = [
             'first_name' => $userName,
-            'status' => 1
+            'country' => 'Singapore',
+            'status' => ActiveStatus::ACTIVE
         ];
 
         $userService->create(

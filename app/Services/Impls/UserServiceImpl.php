@@ -3,7 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
-
+use App\Enums\ActiveStatus;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -45,7 +45,7 @@ class UserServiceImpl implements UserService
         $profile = array (
             'first_name' => $first_name,
             'last_name' => $last_name,
-            'status' => 1,
+            'status' => ActiveStatus::ACTIVE,
         );
 
         $rolesId = array(Role::where('name', Config::get('const.DEFAULT.ROLE.USER'))->first()->id);

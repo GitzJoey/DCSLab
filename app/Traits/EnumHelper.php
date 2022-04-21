@@ -3,27 +3,27 @@
 namespace App\Traits;
 
 trait EnumHelper {
-    public static function isValidName(string $name) : bool
+    public static function isValidName(string $name): bool
     {
         $isValid = false;
-        foreach(self::cases() as $enums) {
-            if ($enums->name === $name) $isValid = true;
+        foreach(self::cases() as $enum) {
+            if ($enum->name === $name) $isValid = true;
         }
 
         return $isValid;
     }
 
-    public static function isValidValue($value) : bool
+    public static function isValidValue($value): bool
     {
         $isValid = false;
-        foreach(self::cases() as $enums) {
-            if ($enums->value === $value) $isValid = true;
+        foreach(self::cases() as $enum) {
+            if ($enum->value === $value) $isValid = true;
         }
 
         return $isValid;
     }
 
-    public static function isValid($test)
+    public static function isValid($test): bool
     {
         if (self::isValidName($test) || self::isValidValue($test)) return true;
         else return false;
@@ -31,13 +31,22 @@ trait EnumHelper {
 
     public static function to($name)
     {
-        foreach(self::cases() as $enums) {
-            if ($enums->name === $name) return $enums;
+        foreach(self::cases() as $enum) {
+            if ($enum->name === $name) return $enum;
         }
     }
 
     public static function tryTo($name)
     {
         self::to($name);
+    }
+
+    public static function toArray(): array
+    {
+        $result = [];
+        foreach(self::cases() as $enum) {
+            $result[$enum->name] = $enum->value;
+        }
+        return $result;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\Warehouse;
 use App\Models\Company;
 
@@ -33,7 +34,7 @@ class WarehouseFactory extends Factory
             'city' => $warehouse_name,
             'contact' => $faker->e164PhoneNumber(),
             'remarks' => '',
-            'status' => 1
+            'status' => ActiveStatus::ACTIVE
         ];
     }
 }

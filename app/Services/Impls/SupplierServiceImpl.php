@@ -3,7 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
-
+use App\Enums\ActiveStatus;
 use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Config;
@@ -99,7 +99,7 @@ class SupplierServiceImpl implements SupplierService
 
         $profile = [
             'first_name' => $poc['name'],
-            'status' => 1
+            'status' => ActiveStatus::ACTIVE
         ];
 
         $usr = $userService->create($poc['name'], $poc['email'], '', [$rolesId], $profile);
