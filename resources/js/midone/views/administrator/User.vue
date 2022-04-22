@@ -322,7 +322,7 @@ const getDDL = () => {
 const onSubmit = (values, actions) => {
     loading.value = true;
 
-    var formData = new FormData(dom('#userForm')[0]); 
+    var formData = new FormData(dom('#userForm')[0]);
 
     if (mode.value === 'create') {
         axios.post(route('api.post.db.admin.users.save'), formData, {
