@@ -23,7 +23,7 @@ class WarehouseResource extends JsonResource
             'city' => $this->city,
             'contact' => $this->contact,
             'remarks' => $this->remarks,
-            'status' => $this->status
+            'status' => $this->status->name
         ];
     }
 }

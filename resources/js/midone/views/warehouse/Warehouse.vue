@@ -22,8 +22,8 @@
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>{{ item.remarks }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status === 1" />
-                                    <XIcon v-if="item.status === 0" />
+                                    <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
+                                    <XIcon v-if="item.status === 'INACTIVE'" />
                                 </td>
                                 <td class="table-report__action w-56">
                                     <div class="flex justify-center items-center">
@@ -62,8 +62,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.warehouse.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status === 'ACTIVE'">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.status === 'INACTIVE'">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -226,7 +226,7 @@ const warehouse = ref({
     city: '',
     contact: '',
     remarks: '',
-    status: 1,
+    status: 'ACTIVE',
 });
 const statusDDL = ref([]);
 const companyDDL = ref([]);
@@ -339,7 +339,7 @@ const emptywarehouse = () => {
         city: '',
         contact: '',
         remarks: '',
-        status: 1,
+        status: 'ACTIVE',
     }
 }
 

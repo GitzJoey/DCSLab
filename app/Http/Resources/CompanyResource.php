@@ -19,8 +19,8 @@ class CompanyResource extends JsonResource
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,
-            'default' => $this->default == 1 ? true : false,
-            'status' => $this->status
+            'default' => $this->default,
+            'status' => $this->status->name
         ];
     }
 }

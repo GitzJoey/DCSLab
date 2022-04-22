@@ -125,7 +125,7 @@
       </div>
 
       <Notification refKey="popNotification" class="flex flex-col sm:flex-row" :options="{ duration: 3000 }">
-        <div class="font-medium">{{ popNotificationMessage }} </div>
+        <div class="w-24 font-medium">{{ popNotificationMessage }} </div>
       </Notification>
 
       <Pusher />

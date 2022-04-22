@@ -25,8 +25,8 @@ class CreateProductsTable extends Migration
             $table->integer('standard_rated_supply')->default(0);
             $table->boolean('price_include_vat')->default(false);
             $table->integer('point')->nullable();
-            $table->integer('use_serial_number')->nullable();
-            $table->integer('has_expiry_date')->nullable();
+            $table->boolean('use_serial_number')->default(false);
+            $table->boolean('has_expiry_date')->default(false);
             $table->integer('status')->nullable();
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PaymentTerm;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
 use App\Services\SupplierService;
@@ -135,11 +136,11 @@ class SupplierController extends BaseController
     public function getPaymentTermType()
     {
         return [
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => 'PIA'],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => 'NET'],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => 'EOM'],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => 'COD'],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => 'CND']            
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTerm::PAYMENT_IN_ADVANCE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTerm::X_DAYS_AFTER_INVOICE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTerm::END_OF_MONTH->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTerm::CASH_ON_DELIVERY->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTerm::CASH_ON_NEXT_DELIVERY->name]
         ];
     }
 }

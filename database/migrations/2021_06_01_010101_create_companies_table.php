@@ -18,7 +18,7 @@ class CreateCompaniesTable extends Migration
             $table->string('code');
             $table->string('name')->nullable();
             $table->string('address')->nullable();
-            $table->integer('default')->default(0);
+            $table->boolean('default')->default(false);
 			$table->integer('status')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);

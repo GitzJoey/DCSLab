@@ -22,8 +22,8 @@ class BranchResource extends JsonResource
             'address' => $this->address,
             'city' => $this->city,
             'contact' => $this->contact,
-            'remarks' => $this->remarks,
-            'status' => $this->status
+            'status' => $this->status->name,
+            'remarks' => $this->remarks
         ];
     }
 }

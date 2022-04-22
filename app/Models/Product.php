@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use App\Traits\ScopeableByCompany;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -76,6 +77,14 @@ class Product extends Model
         'pivot'
     ];
 
+    protected $casts = [
+        'taxable_supply' => 'boolean',
+        'price_include_vat' => 'boolean',
+        'use_serial_number' => 'boolean',
+        'has_expiry_date' => 'boolean',
+        'status' => ActiveStatus::class
+    ];
+    
     public function hId() : Attribute
     {
         return Attribute::make(

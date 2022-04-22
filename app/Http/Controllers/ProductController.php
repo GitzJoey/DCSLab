@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductType;
 use App\Services\ProductService;
 
 use Vinkla\Hashids\Facades\Hashids;
@@ -217,20 +218,20 @@ class ProductController extends BaseController
     {
         if ($request->has('type') && $request['type'] == 'products') {
             return [
-                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => 1],
-                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => 2],
-                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => 3],
+                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
             ];
         } else if ($request->has('type') && $request['type'] == 'service'){
             return [
-                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => 4]            
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name]
             ];
         } else {
             return [
-                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => 1],
-                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => 2],
-                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => 3],
-                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => 4]            
+                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name]
             ];
         }
     }

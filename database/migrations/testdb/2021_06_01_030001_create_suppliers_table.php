@@ -24,7 +24,7 @@ class CreateSuppliersTable extends Migration
             $table->string('city')->nullable();
             $table->string('payment_term_type');
             $table->integer('payment_term')->default(0);
-            $table->integer('taxable_enterprise')->nullable();
+            $table->boolean('taxable_enterprise')->default(false);
             $table->string('tax_id')->nullable();
             $table->integer('status');
             $table->string('remarks')->nullable();

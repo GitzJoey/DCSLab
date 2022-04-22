@@ -16,7 +16,10 @@ defaultAxiosInstance.interceptors.request.use(function (config) {
 defaultAxiosInstance.interceptors.response.use(response => {
     return response;
 }, error => {
-    window.location.href = '/dashboard';
+    switch(error.response.status) {
+        default:
+            return Promise.reject(error);
+    }
 });
 
 const axiosInstance = axios.create();

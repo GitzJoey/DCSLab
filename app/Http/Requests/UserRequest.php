@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\validDropDownValue;
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Enum;
 
 class UserRequest extends FormRequest
 {
@@ -45,7 +46,7 @@ class UserRequest extends FormRequest
                 'roles' => 'required',
                 'tax_id' => 'required',
                 'ic_num' => 'required',
-                'status' => 'required',
+                'status' => [new Enum(ActiveStatus::class)],
                 'country' => 'required',
             ];
 
@@ -58,7 +59,7 @@ class UserRequest extends FormRequest
                 'roles' => 'required',
                 'tax_id' => 'required',
                 'ic_num' => 'required',
-                'status' => new validDropDownValue('ACTIVE_STATUS'),
+                'status' => [new Enum(ActiveStatus::class)],
                 'country' => 'required'
             ];
 
@@ -93,7 +94,7 @@ class UserRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            
+            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }
 }

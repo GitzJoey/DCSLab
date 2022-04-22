@@ -17,9 +17,9 @@ class ProductUnitResource extends JsonResource
         return [
             'code' => $this->code,
             'unit' => new UnitResource($this->unit),
-            'is_base' => $this->is_base == 1 ? true : false,
+            'is_base' => $this->is_base,
             'conversion_value' => $this->conversion_value,
-            'is_primary_unit' => $this->is_primary_unit == 1 ? true : false,
+            'is_primary_unit' => $this->is_primary_unit,
             'remarks' => $this->remarks
         ];
     }

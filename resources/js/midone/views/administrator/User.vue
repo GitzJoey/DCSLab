@@ -58,8 +58,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.profile.status === 1">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.profile.status === 0">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.profile.status === 'ACTIVE'">{{ t('components.dropdown.values.statusDDL.active') }}</span>
+                                            <span v-if="item.profile.status === 'INACTIVE'">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -270,7 +270,7 @@ const user = ref({
     selected_roles: [],
     profile: {
         country: '',
-        status: 1,
+        status: 'ACTIVE',
         img_path: ''
     },
     selected_settings: {
@@ -322,7 +322,7 @@ const getDDL = () => {
 const onSubmit = (values, actions) => {
     loading.value = true;
 
-    var formData = new FormData(dom('#userForm')[0]); 
+    var formData = new FormData(dom('#userForm')[0]);
 
     if (mode.value === 'create') {
         axios.post(route('api.post.db.admin.users.save'), formData, {
@@ -384,7 +384,7 @@ const emptyUser = () => {
         profile: {
             img_path: '',
             country: '',
-            status: 1,
+            status: 'ACTIVE',
         },
         selected_settings: {
             theme: 'side-menu-light-full',

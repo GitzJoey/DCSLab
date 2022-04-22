@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use App\Models\Product;
 use App\Models\Company;
 use App\Models\ProductGroup;
@@ -40,7 +41,7 @@ class ProductFactory extends Factory
             'use_serial_number' => $faker->numberBetween(0, 1),
             'has_expiry_date' => $faker->numberBetween(0, 1),
             'product_type' => $faker->numberBetween(1, 3),
-            'status' => 1
+            'status' => ActiveStatus::ACTIVE
         ];
     }
 }

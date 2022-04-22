@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use App\Models\Permission;
 use App\Services\RoleService;
 use App\Services\UserService;
@@ -73,7 +74,7 @@ class AppHelper extends Command
         {
             if (is_null($option)) {
                 $this->info('Available Helper:');
-                $this->info('[1] Update Composer And NPM           [7] Convert hId to Id');
+                $this->info('[1] Update Composer And NPM           [7] Id <-> hId');
                 $this->info('[2] Clear All Cache                   [8]');
                 $this->info('[3] Change User Roles                 [9]');
                 $this->info('[4] Data Seeding                      [10]');
@@ -108,7 +109,7 @@ class AppHelper extends Command
                     $this->createAdminDevUser();
                     break;
                 case 7:
-                    $this->convertHashIdToId();
+                    $this->encodeDecodeInputValue();
                     break;
                 case 'X':
                     $loop = false;
@@ -338,20 +339,26 @@ class AppHelper extends Command
         }
     }
 
-    private function convertHashIdToId()
+    private function encodeDecodeInputValue()
     {
         if (!is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
-            $hId = $args[0];
+            $input = $args[0];
         } else {
-            $hId = $this->ask('Enter hId:', '');
+            $input = $this->ask('Enter value:', '');
         }
 
         try {
-            $this->info('Id: ' . Hashids::decode($hId)[0]);
+            if (is_numeric($input)) {
+                $this->info('Assuming input value as Id.');
+                $this->info('hId: ' . Hashids::encode($input));
+            } else {
+                $this->info('Assuming input value as hId.');
+                $this->info('Id: ' . Hashids::decode($input)[0]);
+            }
         } catch(Exception $e) {
-            $this->info('Id: '.'Invalid');
+            $this->info('Input is invalid.');
         }
     }
 
@@ -428,7 +435,8 @@ class AppHelper extends Command
 
         $profile = [
             'first_name' => $userName,
-            'status' => 1
+            'country' => 'Singapore',
+            'status' => ActiveStatus::ACTIVE
         ];
 
         $userService->create(

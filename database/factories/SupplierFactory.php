@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use App\Models\Supplier;
 use App\Models\Company;
 
@@ -47,7 +48,7 @@ class SupplierFactory extends Factory
             'taxable_enterprise' => $faker->numberBetween(0, 1),
             'tax_id' => $faker->creditCardNumber(),
             'remarks' => $faker->word(),
-            'status' => 1
+            'status' => ActiveStatus::ACTIVE
         ];
     }
 }
