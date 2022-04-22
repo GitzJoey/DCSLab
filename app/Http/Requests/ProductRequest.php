@@ -105,8 +105,8 @@ class ProductRequest extends FormRequest
             'use_serial_number' => $this->has('use_serial_number') ? filter_var($this->use_serial_number, FILTER_VALIDATE_BOOLEAN) : false,
             'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,
             'has_expiry_date' => $this->has('has_expiry_date') ? filter_var($this->has_expiry_date, FILTER_VALIDATE_BOOLEAN) : false,
-            'product_type' => ProductType::isValid($this->product_type) ? ProductType::to($this->product_type) : null,
-            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value->status : null
+            'product_type' => ProductType::isValid($this->product_type) ? ProductType::fromName($this->product_type)->value : null,
+            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }
 }

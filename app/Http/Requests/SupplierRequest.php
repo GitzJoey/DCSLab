@@ -93,8 +93,8 @@ class SupplierRequest extends FormRequest
     {
         $this->merge([
             'taxable_enterprise' => $this->has('taxable_enterprise') ? filter_var($this->taxable_enterprise, FILTER_VALIDATE_BOOLEAN) : false,
-            'payment_term_type' => PaymentTerm::isValid($this->payment_term_type) ? PaymentTerm::to($this->payment_term_type) : null,
-            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value->status : null
+            'payment_term_type' => PaymentTerm::isValid($this->payment_term_type) ? PaymentTerm::fromName($this->payment_term_type)->value : -1,
+            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }
 }
