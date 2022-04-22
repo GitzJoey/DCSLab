@@ -29,14 +29,14 @@ trait EnumHelper {
         else return false;
     }
 
-    public static function to($name)
+    public static function fromName($name)
     {
         foreach(self::cases() as $enum) {
             if ($enum->name === $name) return $enum;
         }
     }
 
-    public static function tryTo($name)
+    public static function tryFromName($name)
     {
         self::to($name);
     }
