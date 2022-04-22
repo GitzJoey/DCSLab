@@ -38,7 +38,7 @@ trait EnumHelper {
 
     public static function tryFromName($name)
     {
-        self::to($name);
+        self::fromName($name);
     }
 
     public static function toArray(): array
