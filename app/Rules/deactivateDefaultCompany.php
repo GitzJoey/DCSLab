@@ -14,7 +14,7 @@ class deactivateDefaultCompany implements Rule
      *
      * @return void
      */
-    public function __construct(bool $isDefault, ActiveStatus $status)
+    public function __construct(bool $isDefault, int $status)
     {
         $this->isDefault = $isDefault;
         $this->status = $status;
@@ -29,7 +29,7 @@ class deactivateDefaultCompany implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->isDefault == true && $this->status == ActiveStatus::INACTIVE) return false;
+        if ($this->isDefault == true && $this->status == ActiveStatus::INACTIVE->value) return false;
         else return true;
     }
 
