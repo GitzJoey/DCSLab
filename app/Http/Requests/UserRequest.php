@@ -94,7 +94,7 @@ class UserRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'status' => ActiveStatus::isValid($this->status) ? $this->status : null
+            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : null
         ]);
     }
 }
