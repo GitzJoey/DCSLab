@@ -79,7 +79,7 @@ class BranchRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::to($this->status) : null
+            'status' => ActiveStatus::isValid($this->status) ? $this->status : null
         ]);
     }
 }

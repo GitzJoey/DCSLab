@@ -71,7 +71,7 @@ class CompanyRequest extends FormRequest
     {
         $this->merge([
             'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
-            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::to($this->status) : null
+            'status' => ActiveStatus::isValid($this->status) ? $this->status : null
         ]);
     }
 }
