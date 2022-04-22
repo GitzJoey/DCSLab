@@ -9,11 +9,11 @@ interface CompanyService
     public function create(
         string $code,
         string $name,
-        ?string $address = null,
+        string $address,
         int $default,
         int $status,
         int $userId
-    ) : Company;
+    ): Company;
 
     public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10);
 
@@ -30,7 +30,7 @@ interface CompanyService
         string $address,
         int $default,
         int $status
-    ) : Company;
+    ): Company;
 
     public function delete(int $userId, int $id): bool;
 

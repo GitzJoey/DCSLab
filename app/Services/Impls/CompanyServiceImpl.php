@@ -24,7 +24,7 @@ class CompanyServiceImpl implements CompanyService
     public function create(
         string $code, 
         string $name, 
-        ?string $address = null, 
+        string $address, 
         int $default, 
         int $status, 
         int $userId
@@ -47,7 +47,7 @@ class CompanyServiceImpl implements CompanyService
                 do {
                     $generatedCode = $this->generateUniqueCode();
 
-                } while ($this->isUniqueCode($generatedCode, $userId));
+                } while (!$this->isUniqueCode($generatedCode, $userId));
 
                 $code = $generatedCode;
             }
@@ -199,6 +199,9 @@ class CompanyServiceImpl implements CompanyService
     public function isUniqueCode(string $code, int $userId, ?int $exceptId = null): bool
     {
         $user = User::find($userId);
+
+        if ($user->companies->count() == 0) return true;
+
         $result = $user->companies()->where('code', '=' , $code);
 
         if($exceptId)

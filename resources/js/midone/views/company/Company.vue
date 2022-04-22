@@ -187,7 +187,7 @@ const company = ref({
     name: '',
     address: '',
     default: false,
-    status: 1
+    status: 'ACTIVE'
 });
 const statusDDL = ref([]);
 //#endregion
@@ -276,7 +276,7 @@ const emptyCompany = () => {
         name: '',
         address: '',
         default: false,
-        status: 'ACTIVE',
+        status: 'ACTIVE'
     }
 }
 
