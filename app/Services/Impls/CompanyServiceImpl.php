@@ -205,7 +205,7 @@ class CompanyServiceImpl implements CompanyService
         $result = $user->companies()->where('code', '=' , $code);
 
         if($exceptId)
-            $result = $result->where('id', '<>', $exceptId);
+            $result = $result->get()->where('id', '<>', $exceptId);
 
         return $result->count() == 0 ? true:false;
     }

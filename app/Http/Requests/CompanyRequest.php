@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 use Illuminate\Validation\Rules\Enum;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CompanyRequest extends FormRequest
 {
@@ -29,6 +30,8 @@ class CompanyRequest extends FormRequest
      */
     public function rules()
     {
+        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
+
         $nullableArr = [
             'address' => 'nullable',
         ];
@@ -47,7 +50,8 @@ class CompanyRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'companies', userId: $userId)],
+                    'company_id' => ['required', 'bail'],
+                    'code' => ['required', 'max:255', new uniqueCode(table: 'companies', userId: $userId, exceptId: $companyId)],
                     'name' => 'required|max:255',
                     'default' => 'required|boolean',
                     'status' => [new Enum(ActiveStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
@@ -60,6 +64,13 @@ class CompanyRequest extends FormRequest
         }
     }
 
+    public function attributes()
+    {
+        return [
+            'company_id' => trans('validation_attributes.company'),
+        ];
+    }
+    
     public function validationData()
     {
         $additionalArray = [];

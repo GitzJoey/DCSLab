@@ -168,7 +168,7 @@ const { t } = useI18n();
 
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
-const userContext = computed(() => userContextStore.userContext);
+const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 //#endregion
 
 //#region Data - UI
@@ -234,6 +234,8 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
+        formData.append('company_id', selectedUserCompany.value);
+
         axios.post(route('api.post.db.company.company.edit', company.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
