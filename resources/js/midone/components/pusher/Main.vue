@@ -1,5 +1,6 @@
 <template>
     <Notification refKey="pusherNotification" class="flex flex-col sm:flex-row" :options="{ duration: 3000 }">
+        <BellRingIcon class="animate-bounce"/>
         <div class="ml-4 mr-4">
             <div class="font-medium">Beep...Beep!</div>
             <div class="text-slate-500 mt-1">{{ pusherNotificationMessage }}</div>
@@ -9,14 +10,12 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref, provide } from "vue";
+import { onMounted, ref, provide, inject } from "vue";
 //#endregion
 
 //#region Declarations
 const pusherNotification = ref();
-//#endregion
 
-//#region 
 provide("bind[pusherNotification]", (el) => {
   pusherNotification.value = el;
 });
@@ -24,6 +23,8 @@ provide("bind[pusherNotification]", (el) => {
 provide('triggerPusherNotification', (message) => {
   pusherNotificationToast(message);
 });
+
+const triggerPopNotification = inject('triggerPopNotification');
 //#endregion
 
 //#region Data - Pinia
@@ -44,7 +45,9 @@ onMounted(() => {
 
 //#region Methods
 const listenPusher = () => {
-    Echo.channel('public-channel').listen('.event-pusher', (e) => { pusherNotificationToast(e); });
+    Echo.channel('public-channel').listen('.event-pusher', (e) => { 
+        pusherNotificationToast(e);
+    });
 }
 
 const pusherNotificationToast = (message) => {
