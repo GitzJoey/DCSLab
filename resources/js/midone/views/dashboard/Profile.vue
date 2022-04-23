@@ -303,6 +303,18 @@ const getRoles = () => {
     })
 }
 
+const updateRoles = (role) => {
+    axios.post(route('api.post.db.core.profile.update.roles'), {
+        'roles': role  
+    }).then(response => {
+        createSuccessAlert('changeRoles');
+    }).catch(e => {
+
+    }).finally(() => {
+
+    });
+}
+
 const onSubmit = (values, actions) => {
     if (mode.value === 'personal_info') {
         axios.post(route('api.post.db.core.profile.update.profile'), new FormData(dom('#profileForm')[0])).then(response => {
@@ -383,6 +395,10 @@ const createSuccessAlert = (type) => {
     } else if (type === 'changeProfile') {
         alertErrors.value = {
             profile: t('components.alert-placeholder.success_alert.profile_changed_successfully')
+        };
+    } else if (type === 'changeRoles') {
+        alertErrors.value = {
+            roles: t('components.alert-placeholder.success_alert.roles_changed_successfully')
         };
     } else if (type === 'changeSettings') {
         alertErrors.value = {

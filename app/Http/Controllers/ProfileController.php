@@ -89,10 +89,10 @@ class ProfileController extends BaseController
 
         $usr = Auth::user();
 
-        $rolesId = [];
+        //$rolesId = [];
 
-        $result = $this->userService->updateRoles($usr, $rolesId, true);
-
+        //$result = $this->userService->updateRoles($usr, $rolesId, true);
+        $result = '';
         return is_null($result) ? response()->error() : response()->success();
     }
 
