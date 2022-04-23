@@ -307,8 +307,6 @@ class UserServiceImpl implements UserService
         $timer_start = microtime(true);
 
         try {
-            !$useTransactions ? : DB::commit();
-
             $retval = 0;
             foreach ($settings as $key => $value) {
                 $setting = $user->settings()->where('key', $key)->first();
@@ -319,6 +317,8 @@ class UserServiceImpl implements UserService
                     ]);
                 }
             }
+
+            !$useTransactions ? : DB::commit();
 
             return $retval;
         } catch (Exception $e) {
