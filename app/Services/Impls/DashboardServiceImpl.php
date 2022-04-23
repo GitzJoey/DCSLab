@@ -15,38 +15,34 @@ class DashboardServiceImpl implements DashboardService
     
     public function createMenu(): array
     {
-        $usr = Auth::user();
-        $usrRoles = $usr->roles;
-        $hasCompany = $usr->companies->count() != 0 ? true:false;
-
         $menu = [];
 
-        $openAllMenu = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() ? true:false;
+        $usr = Auth::user();
 
+        $usrRoles = $usr->roles;
         $hasUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() ? true:false;
+        $hasOnlyUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() && $usrRoles->count() == 1 ? true:false;
+        $hasDevRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() ? true:false;
+        $hasAdminRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() ? true:false;
 
-        array_push($menu, $this->createMenu_Dashboard(false));
+        $hasCompany = $usr->companies->count() != 0 ? true:false;
 
-        array_push($menu, $this->createMenu_Company($hasCompany));
+        $showDemoMenu = false;
 
-        if($hasCompany) {
-            array_push($menu, $this->createMenu_Product());
-            array_push($menu, $this->createMenu_Supplier());
-            //array_push($menu, $this->createMenu_Customer());
-            array_push($menu, $this->createMenu_PurchaseOrder());
-            //array_push($menu, $this->createMenu_SalesOrder());    
-        }
-
-        if ($usrRoles->where('name', Config::get('const.DEFAULT.ROLE.ADMIN'))->isNotEmpty() || $openAllMenu)
-            array_push($menu, $this->createMenu_Administrator());
-    
-        if ($usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() || $openAllMenu)
-            array_push($menu, $this->createMenu_DevTool());    
+        $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
+        $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_SalesOrder($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
+        $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 
         return $menu;
     }
 
-    private function createMenu_Dashboard($showDemo): array
+    private function createMenu_Dashboard(array $menu, bool $showDemo): array
     {
         $maindashboard = array(
             'icon' => '',
@@ -73,11 +69,15 @@ class DashboardServiceImpl implements DashboardService
         else
             array_push($root_array['subMenu'], $maindashboard);
         
-        return $root_array;
+        array_push($menu, $root_array);
+
+        return $menu;
     }
 
-    private function createMenu_Company($hasCompany): array
+    private function createMenu_Company(array $menu, bool $hasOnlyUserRole, bool $hasCompany, bool $hasDevRole): array
     {
+        if ($hasOnlyUserRole) return $menu;
+
         $company = array(
             'icon' => '',
             'pageName' => 'side-menu-company-company',
@@ -104,15 +104,17 @@ class DashboardServiceImpl implements DashboardService
             ]
         );
 
-        if ($hasCompany)
+        if ($hasCompany || $hasDevRole)
             array_push($root_array['subMenu'], $company, $branches, $warehouses);
         else 
             array_push($root_array['subMenu'], $company);
 
-        return $root_array;
+        array_push($menu, $root_array);
+
+        return $menu;
     }
 
-    private function createMenu_Administrator(): array
+    private function createMenu_Administrator(array $menu, bool $hasAdminRole, bool $hasDevRole): array
     {
         $user = array(
             'icon' => '',
@@ -130,10 +132,13 @@ class DashboardServiceImpl implements DashboardService
 
         array_push($root_array['subMenu'], $user);
 
-        return $root_array;
+        if ($hasAdminRole || $hasDevRole)
+            array_push($menu, $root_array);
+
+        return $menu;
     }
 
-    private function createMenu_DevTool(): array
+    private function createMenu_DevTool(array $menu, bool $hasDevRole): array
     {
         $dbbackup = array(
             'icon' => '',
@@ -175,10 +180,13 @@ class DashboardServiceImpl implements DashboardService
         array_push($root_array['subMenu'], $dbbackup);
         array_push($root_array['subMenu'], $playground);
 
-        return $root_array;
+        if ($hasDevRole)
+            array_push($menu, $root_array);
+
+        return $menu;
     }
 
-    private function createMenu_Product(): array
+    private function createMenu_Product(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
         $product = array(
             'icon' => '',
@@ -203,10 +211,13 @@ class DashboardServiceImpl implements DashboardService
         array_push($root_array['subMenu'], $product);
         array_push($root_array['subMenu'], $service);
 
-        return $root_array; 
+        if ($hasCompany || $hasDevRole)
+            array_push($menu, $root_array);
+
+        return $menu;
     }
 
-    private function createMenu_Supplier(): array
+    private function createMenu_Supplier(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
         $supplier = array(
             'icon' => '',
@@ -224,17 +235,18 @@ class DashboardServiceImpl implements DashboardService
 
         array_push($root_array['subMenu'], $supplier);
 
-        return $root_array;
+        if ($hasCompany || $hasDevRole)
+            array_push($menu, $root_array);
+
+        return $menu;
     }
 
-    private function createMenu_Customer(): array
+    private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
-        return array(
-
-        );
+        return $menu;
     }
 
-    private function createMenu_PurchaseOrder(): array
+    private function createMenu_PurchaseOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
         $po = array(
             'icon' => '',
@@ -252,13 +264,14 @@ class DashboardServiceImpl implements DashboardService
 
         array_push($root_array['subMenu'], $po);
 
-        return $root_array;
+        if ($hasCompany || $hasDevRole)
+            array_push($menu, $root_array);
+
+        return $menu;
     }
 
-    private function createMenu_SalesOrder(): array
+    private function createMenu_SalesOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
-        return array(
-
-        );
+        return $menu;
     }
 }
