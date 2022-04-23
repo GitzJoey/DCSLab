@@ -157,6 +157,7 @@ import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
 import { useUserContextStore } from "@/stores/user-context";
+import { useSideMenuStore } from "@/stores/side-menu";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
@@ -169,6 +170,7 @@ const { t } = useI18n();
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
+const sideMenuStore = useSideMenuStore();
 //#endregion
 
 //#region Data - UI
@@ -228,6 +230,7 @@ const onSubmit = (values, actions) => {
         axios.post(route('api.post.db.company.company.save'), formData).then(response => {
             backToList();
             userContextStore.fetchUserContext();
+            sideMenuStore.fetchMenu();
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
@@ -341,7 +344,7 @@ const toggleDetail = (idx) => {
 
 const generateCode = () => {
     if (company.value.code === '[AUTO]') company.value.code = '';
-    else  company.value.code = '[AUTO]'
+    else company.value.code = '[AUTO]'
 }
 //#endregion
 

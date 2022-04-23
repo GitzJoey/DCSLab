@@ -23,7 +23,7 @@ interface UserService
 
     public function read(string $search = '', bool $paginate = true, int $perPage = 10);
 
-    public function readBy(string $key, string $value);
+    public function readBy(string $key, string $value, ?bool $useCache = true);
 
     public function update(
         int $id,

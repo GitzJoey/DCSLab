@@ -157,14 +157,14 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function readBy(string $key, string $value)
+    public function readBy(string $key, string $value, ?bool $useCache = true)
     {
         $timer_start = microtime(true);
 
         try {
             switch(strtoupper($key)) {
                 case 'ID':
-                    if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
+                    if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED') && $useCache)
                         return User::with('roles.permissions', 'profile', 'companies')->find($value);
     
                     return Cache::tags([$value])->remember('readByID'.$value, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($value) {
