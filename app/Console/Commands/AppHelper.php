@@ -79,7 +79,7 @@ class AppHelper extends Command
                 $this->info('[3] Change User Roles                 [9]');
                 $this->info('[4] Data Seeding                      [10]');
                 $this->info('[5] Wipe Database                     [11]');
-                $this->info('[6] Create Acministrator/Dev User     [12]');
+                $this->info('[6] Create Administrator/Dev User     [12]');
                 $this->info('[X] Exit');
             }
 
