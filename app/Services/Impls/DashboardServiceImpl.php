@@ -27,7 +27,7 @@ class DashboardServiceImpl implements DashboardService
 
         array_push($menu, $this->createMenu_Dashboard(false));
 
-        array_push($menu, $this->createMenu_Company());
+        array_push($menu, $this->createMenu_Company($hasCompany));
 
         if($hasCompany) {
             array_push($menu, $this->createMenu_Product());
@@ -76,7 +76,7 @@ class DashboardServiceImpl implements DashboardService
         return $root_array;
     }
 
-    private function createMenu_Company(): array
+    private function createMenu_Company($hasCompany): array
     {
         $company = array(
             'icon' => '',
@@ -104,7 +104,10 @@ class DashboardServiceImpl implements DashboardService
             ]
         );
 
-        array_push($root_array['subMenu'], $company, $branches, $warehouses);
+        if ($hasCompany)
+            array_push($root_array['subMenu'], $company, $branches, $warehouses);
+        else 
+            array_push($root_array['subMenu'], $company);
 
         return $root_array;
     }
