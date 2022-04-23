@@ -112,12 +112,12 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function createNew() {
+const createNew = () => {
     mode.value = 'create';
     message.value = emptyMessage();
 }
 
-function emptyMessage() {
+const emptyMessage = () => {
     return {
         to: [],
         subject: '',
@@ -125,7 +125,7 @@ function emptyMessage() {
     };
 }
 
-function getMessages(folder) {
+const getMessages = (folder) => {
     messageFolder.value = folder;
     if (folder === 'inbox') {
         axios.get(route('api.get.db.core.inbox.list.thread')).then(response => {
@@ -142,11 +142,11 @@ function getMessages(folder) {
     }
 }
 
-function checkAll() {
+const checkAll = () => {
 
 }
 
-function backToList() {
+const backToList = () => {
     mode.value = 'list';
 }
 //#endregion

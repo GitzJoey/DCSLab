@@ -292,18 +292,18 @@ onMounted(() => {
 //#endregion
 
 //#region Methods
-function changeTab(name) {
+const changeTab = (name) => {
     mode.value = name;
     resetAlertErrors();
 }
 
-function getRoles() {
+const getRoles = () => {
     axios.get(route('api.get.db.admin.users.roles.read')).then(response => {
         rolesList.value = response.data;
     })
 }
 
-function onSubmit(values, actions) {
+const onSubmit = (values, actions) => {
     if (mode.value === 'personal_info') {
         axios.post(route('api.post.db.core.profile.update.profile'), new FormData(dom('#profileForm')[0])).then(response => {
             createSuccessAlert('changeProfile');
@@ -334,7 +334,7 @@ function onSubmit(values, actions) {
     }
 }
 
-function handleError(e, actions) {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
@@ -351,11 +351,11 @@ function handleError(e, actions) {
     }
 }
 
-function invalidSubmit(e) {
+const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
 }
 
-function sendVerificationLink() {
+const sendVerificationLink = () => {
     axios.post(route('api.post.db.core.profile.send_email_verification')).then(response => {
         createSuccessAlert('sendVerificationLink');
     }).catch(e => {
@@ -365,17 +365,17 @@ function sendVerificationLink() {
     });
 }
 
-function resetAlertErrors() {
+const resetAlertErrors = () => {
     alertErrors.value = [];
     alertType.value = '';
     alertTitle.value = '';
 }
 
-function isEmptyObject(obj) {
+const isEmptyObject = (obj) => {
     return _.isEmpty(obj);
 }
 
-function createSuccessAlert(type) {
+const createSuccessAlert = (type) => {
     if (type === 'changePassword') {
         alertErrors.value = {
             password: t('components.alert-placeholder.success_alert.password_changed_successfully')
@@ -395,9 +395,9 @@ function createSuccessAlert(type) {
     } else {
 
     }
+    
     alertType.value = 'success';
     alertTitle.value = 'Success';
-
 }
 //#endregion
 </script>
