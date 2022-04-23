@@ -22,7 +22,7 @@ class ProfileController extends BaseController
 
     public function readProfile()
     {
-        $result = $this->userService->readBy('ID', Auth::id());
+        $result = $this->userService->readBy('ID', Auth::id(), false);
         
         if (is_null($result)) {
             return response()->error();
