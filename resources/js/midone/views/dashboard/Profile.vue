@@ -186,12 +186,12 @@
                                 <div class="grid grid-cols-2 gap-2 place-items-center">
                                     <div class="flex flex-col">
                                         <img alt="" :src="assetPath('pos_system.png')" width="100" height="100" />
-                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRoles('pos')"><CheckIcon class="text-success" /></div>
+                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRolePOSOwner"><CheckIcon class="text-success" /></div>
                                         <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('pos')">{{ t('components.buttons.activate') }}</button>
                                     </div>
                                     <div class="text-center">
                                         <img alt="" :src="assetPath('warehouse_system.png')" width="100" height="100" />
-                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRoles('wh')"><CheckIcon class="text-success" /></div>
+                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRoleWHOwner"><CheckIcon class="text-success" /></div>
                                         <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
                                     </div>
                                 </div>
@@ -249,6 +249,7 @@ import { helper } from "@/utils/helper";
 import { route } from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
+import { useSideMenuStore } from "../../stores/side-menu";
 import AlertPlaceholder from '@/global-components/alert-placeholder/Main'
 //#endregion
 
@@ -259,6 +260,7 @@ const { t } = useI18n();
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
 const userContext = computed(() => userContextStore.userContext );
+const sideMenuStore = useSideMenuStore();
 //#endregion
 
 //#region Data - UI
@@ -311,15 +313,12 @@ const updateRoles = (role) => {
     }).then(response => {
         createSuccessAlert('changeRoles');
         userContextStore.fetchUserContext();
+        sideMenuStore.fetchMenu();
     }).catch(e => {
 
     }).finally(() => {
-
+        
     });
-}
-
-const hasRoles = (name) => {
-
 }
 
 const onSubmit = (values, actions) => {
@@ -425,6 +424,12 @@ const createSuccessAlert = (type) => {
 //#endregion
 
 //#region Computed
+const hasRolePOSOwner = computed(() => {
+    return userContext.value.roles_description.includes('POS-owner');
+});
 
+const hasRoleWHOwner = computed(() => {
+    return false;
+});
 //#endregion
 </script>

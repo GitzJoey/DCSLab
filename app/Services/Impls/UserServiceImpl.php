@@ -286,9 +286,9 @@ class UserServiceImpl implements UserService
         $timer_start = microtime(true);
 
         try {
-            !$useTransactions ? : DB::commit();
-
             $updated_usr = $user->syncRoles($rolesId);
+
+            !$useTransactions ? : DB::commit();
 
             return $updated_usr;
         } catch (Exception $e) {
