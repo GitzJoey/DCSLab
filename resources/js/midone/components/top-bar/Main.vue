@@ -185,7 +185,6 @@ function logout() {
 }
 
 watch(userContext, () => {
-  console.log('triggerd');
   setSelectedCompany(userContext.value.companies, selectedUserCompany.value);
 });
 
