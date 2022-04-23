@@ -184,13 +184,15 @@
                         <div class="p-5">
                             <div class="mb-3">
                                 <div class="grid grid-cols-2 gap-2 place-items-center">
-                                    <div class="text-center">
+                                    <div class="flex flex-col">
                                         <img alt="" :src="assetPath('pos_system.png')" width="100" height="100" />
-                                        <button class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('pos')">{{ t('components.buttons.activate') }}</button>
+                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRoles('pos')"><CheckIcon class="text-success" /></div>
+                                        <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('pos')">{{ t('components.buttons.activate') }}</button>
                                     </div>
                                     <div class="text-center">
                                         <img alt="" :src="assetPath('warehouse_system.png')" width="100" height="100" />
-                                        <button class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
+                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRoles('wh')"><CheckIcon class="text-success" /></div>
+                                        <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -308,11 +310,16 @@ const updateRoles = (role) => {
         'roles': role  
     }).then(response => {
         createSuccessAlert('changeRoles');
+        userContextStore.fetchUserContext();
     }).catch(e => {
 
     }).finally(() => {
 
     });
+}
+
+const hasRoles = (name) => {
+
 }
 
 const onSubmit = (values, actions) => {
@@ -415,5 +422,9 @@ const createSuccessAlert = (type) => {
     alertType.value = 'success';
     alertTitle.value = 'Success';
 }
+//#endregion
+
+//#region Computed
+
 //#endregion
 </script>
