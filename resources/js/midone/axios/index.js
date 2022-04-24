@@ -16,6 +16,7 @@ defaultAxiosInstance.interceptors.request.use(function (config) {
 defaultAxiosInstance.interceptors.response.use(response => {
     return response;
 }, error => {
+    if (error.response == undefined || error.response.status == undefined) return Promise.reject(error);
     switch(error.response.status) {
         default:
             return Promise.reject(error);

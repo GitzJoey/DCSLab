@@ -308,6 +308,10 @@ const getRoles = () => {
 }
 
 const updateRoles = (role) => {
+    if (role == 'pos') {
+        userContext.value.roles_description += ',POS-owner';
+    }
+
     axios.post(route('api.post.db.core.profile.update.roles'), {
         'roles': role  
     }).then(response => {
