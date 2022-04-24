@@ -41,7 +41,7 @@ class ProductGroupServiceImpl implements ProductGroupService
             return $productgroup->hId;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
@@ -104,7 +104,7 @@ class ProductGroupServiceImpl implements ProductGroupService
             return $productgroup->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }

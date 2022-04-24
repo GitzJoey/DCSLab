@@ -68,7 +68,7 @@ class CompanyServiceImpl implements CompanyService
             return $company;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -152,7 +152,7 @@ class CompanyServiceImpl implements CompanyService
             return $company->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -181,7 +181,7 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -232,7 +232,7 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;

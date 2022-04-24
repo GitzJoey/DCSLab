@@ -40,7 +40,7 @@ class BrandServiceImpl implements BrandService
             return $productbrand;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
@@ -90,7 +90,7 @@ class BrandServiceImpl implements BrandService
             return $productbrand->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }

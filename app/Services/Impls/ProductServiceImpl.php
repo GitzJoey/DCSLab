@@ -92,7 +92,7 @@ class ProductServiceImpl implements ProductService
             return $product;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
@@ -232,7 +232,7 @@ class ProductServiceImpl implements ProductService
             return $product;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
@@ -256,7 +256,7 @@ class ProductServiceImpl implements ProductService
             return $retval; 
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
