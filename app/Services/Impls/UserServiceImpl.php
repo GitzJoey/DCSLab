@@ -115,7 +115,7 @@ class UserServiceImpl implements UserService
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -147,7 +147,7 @@ class UserServiceImpl implements UserService
             return null;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -168,7 +168,7 @@ class UserServiceImpl implements UserService
             return null;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -201,7 +201,7 @@ class UserServiceImpl implements UserService
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -228,7 +228,7 @@ class UserServiceImpl implements UserService
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -265,7 +265,7 @@ class UserServiceImpl implements UserService
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -286,7 +286,7 @@ class UserServiceImpl implements UserService
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -316,7 +316,7 @@ class UserServiceImpl implements UserService
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
