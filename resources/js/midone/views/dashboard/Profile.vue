@@ -315,7 +315,7 @@ const updateRoles = async (role) => {
 
     await axios.post(route('api.post.db.core.profile.update.roles'), { 'roles': role });
     await userContextStore.fetchUserContext();
-    await sideMenuStore.fetchMenuAsync();
+    await sideMenuStore.fetchMenu();
 
     createSuccessAlert('changeRoles');
     loading.value = false;    

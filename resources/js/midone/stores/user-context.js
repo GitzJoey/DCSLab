@@ -16,12 +16,6 @@ export const useUserContextStore = defineStore("userContext", {
                 this.userContext = response.data;
             });
         },
-
-        async fetchUserContextAsync() {
-            let response = await axios.get('/api/get/dashboard/core/profile/read');
-            this.userContext = response.data;
-        },
-
         setSelectedUserCompany(hId) {
             this.selectedUserCompany = hId;
         }

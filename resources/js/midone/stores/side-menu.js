@@ -10,10 +10,6 @@ export const useSideMenuStore = defineStore("sideMenu", {
       axios.get('/api/get/dashboard/core/user/menu').then(response => {
         this.menu = response.data;
       });
-    },
-    async fetchMenuAsync() {
-      let response = await axios.get('/api/get/dashboard/core/user/menu');
-      this.menu = response.data;
     }
   }
 });
