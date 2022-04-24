@@ -181,21 +181,24 @@
                         <LoadingIcon icon="puff" />
                     </div>
                     <div class="intro-x" v-if="!isEmptyObject(userContext)">
-                        <div class="p-5">
-                            <div class="mb-3">
-                                <div class="grid grid-cols-2 gap-2 place-items-center">
-                                    <div class="flex flex-col">
-                                        <img alt="" :src="assetPath('pos_system.png')" width="100" height="100" />
-                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRolePOSOwner"><CheckIcon class="text-success" /></div>
-                                        <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('pos')">{{ t('components.buttons.activate') }}</button>
-                                    </div>
-                                    <div class="text-center">
-                                        <img alt="" :src="assetPath('warehouse_system.png')" width="100" height="100" />
-                                        <div class="grid grid-cols-1 place-items-center" v-if="hasRoleWHOwner"><CheckIcon class="text-success" /></div>
-                                        <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
+                        <div class="loader-container">
+                            <div class="p-5">
+                                <div class="mb-3">
+                                    <div class="grid grid-cols-2 gap-2 place-items-center">
+                                        <div class="flex flex-col">
+                                            <img alt="" :src="assetPath('pos_system.png')" width="100" height="100" />
+                                            <div class="grid grid-cols-1 place-items-center" v-if="hasRolePOSOwner"><CheckIcon class="text-success" /></div>
+                                            <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('pos')">{{ t('components.buttons.activate') }}</button>
+                                        </div>
+                                        <div class="text-center">
+                                            <img alt="" :src="assetPath('warehouse_system.png')" width="100" height="100" />
+                                            <div class="grid grid-cols-1 place-items-center" v-if="hasRoleWHOwner"><CheckIcon class="text-success" /></div>
+                                            <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="loader-overlay" v-if="loading"></div>
                         </div>
                     </div>
                 </div>
@@ -307,22 +310,15 @@ const getRoles = () => {
     })
 }
 
-const updateRoles = (role) => {
-    if (role == 'pos') {
-        userContext.value.roles_description += ',POS-owner';
-    }
+const updateRoles = async (role) => {
+    loading.value = true;
 
-    axios.post(route('api.post.db.core.profile.update.roles'), {
-        'roles': role  
-    }).then(response => {
-        createSuccessAlert('changeRoles');
-        userContextStore.fetchUserContext();
-        sideMenuStore.fetchMenu();
-    }).catch(e => {
+    await axios.post(route('api.post.db.core.profile.update.roles'), { 'roles': role });
+    await userContextStore.fetchUserContext();
+    await sideMenuStore.fetchMenuAsync();
 
-    }).finally(() => {
-        
-    });
+    createSuccessAlert('changeRoles');
+    loading.value = false;    
 }
 
 const onSubmit = (values, actions) => {

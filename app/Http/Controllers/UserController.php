@@ -10,7 +10,6 @@ use App\Services\UserService;
 use App\Services\RoleService;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 use Vinkla\Hashids\Facades\Hashids;
 
