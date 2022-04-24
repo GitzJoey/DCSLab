@@ -6,7 +6,6 @@ use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
 use Exception;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -120,11 +119,6 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function flushCache(int $id): void
-    {
-        Cache::tags([$id])->flush();
-    }
-
     public function read(string $search = '', bool $paginate = true, int $perPage = 10)
     {
         $timer_start = microtime(true);
@@ -157,19 +151,14 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function readBy(string $key, string $value, ?bool $useCache = true)
+    public function readBy(string $key, string $value)
     {
         $timer_start = microtime(true);
 
         try {
             switch(strtoupper($key)) {
                 case 'ID':
-                    if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED') && $useCache)
-                        return User::with('roles.permissions', 'profile', 'companies')->find($value);
-    
-                    return Cache::tags([$value])->remember('readByID'.$value, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($value) {
-                        return User::with('roles.permissions', 'profile', 'companies')->find($value);
-                    });
+                    return User::with('roles.permissions', 'profile', 'companies')->find($value);
                 case 'EMAIL':
                     return User::where('email', '=', $value)->first();
                 default:
