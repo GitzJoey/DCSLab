@@ -205,7 +205,7 @@ class UserServiceImpl implements UserService
 
             DB::commit();
 
-            return $usr;
+            return $usr->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e);
@@ -290,7 +290,7 @@ class UserServiceImpl implements UserService
 
             !$useTransactions ? : DB::commit();
 
-            return $updated_usr;
+            return $updated_usr->refresh();
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug($e);
