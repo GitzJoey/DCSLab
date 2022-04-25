@@ -49,4 +49,22 @@ trait EnumHelper {
         }
         return $result;
     }
+
+    public static function toArrayName(): array
+    {
+        $result = [];
+        foreach(self::cases() as $enum) {
+            array_push($result, $enum->name);
+        }
+        return $result;
+    }
+
+    public static function toArrayValue(): array
+    {
+        $result = [];
+        foreach(self::cases() as $enum) {
+            array_push($result, $enum->value);
+        }
+        return $result;
+    }
 }
