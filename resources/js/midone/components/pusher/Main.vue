@@ -45,7 +45,7 @@ onMounted(() => {
 
 //#region Methods
 const listenPusher = () => {
-    Echo.channel('public-channel').listen('.event-pusher', (e) => { 
+    Echo.channel('public-channel').listen('.event-public-pusher', (e) => { 
         pusherNotificationToast(e);
     });
 }
