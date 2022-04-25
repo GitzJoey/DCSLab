@@ -7,6 +7,7 @@ use App\Models\User;
 use Tests\APITestCase;
 use App\Models\Company;
 use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Hash;
 use Database\Seeders\CompanyTableSeeder;
@@ -40,7 +41,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 0;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
         $userId = $this->user->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.save'), [
@@ -67,7 +68,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = '';
         $default = 0;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
         $userId = $this->user->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.save'), [
@@ -94,7 +95,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 1;
-        $status = 1;
+        $status = 'ACTIVE';
         $userId = $this->user->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.save'), [
@@ -172,7 +173,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = (new RandomGenerator())->generateNumber(0, 1);
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
         $userId = $this->user->id;
 
         $company = Company::create([
@@ -189,7 +190,7 @@ class CompanyAPITest extends APITestCase
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
         $newDefault = (new RandomGenerator())->generateNumber(0, 1);
-        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
             'code' => $newCode,
@@ -215,7 +216,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = '';
         $default = (new RandomGenerator())->generateNumber(0, 1);
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
         $userId = $this->user->id;
 
         $company = Company::create([
@@ -232,7 +233,7 @@ class CompanyAPITest extends APITestCase
         $newName = $this->faker->name;
         $newAddress = '';
         $newDefault = (new RandomGenerator())->generateNumber(0, 1);
-        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
             'code' => $newCode,
@@ -263,7 +264,7 @@ class CompanyAPITest extends APITestCase
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
         $newDefault = 0;
-        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
             'code' => $newCode,
@@ -311,7 +312,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 0;
-        $status = 1;
+        $status = 'ACTIVE';
         $userId = $this->user->id;
 
         $company = Company::create([
