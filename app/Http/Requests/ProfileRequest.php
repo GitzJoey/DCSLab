@@ -43,7 +43,7 @@ class ProfileRequest extends FormRequest
                 ];
             case 'updateRoles':
                 return [
-
+                    'roles' => 'required'
                 ];
             case 'updateSettings':
                 return [

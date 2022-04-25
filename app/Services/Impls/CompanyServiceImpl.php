@@ -24,7 +24,7 @@ class CompanyServiceImpl implements CompanyService
     public function create(
         string $code, 
         string $name, 
-        ?string $address = null, 
+        string $address, 
         int $default, 
         int $status, 
         int $userId
@@ -47,7 +47,7 @@ class CompanyServiceImpl implements CompanyService
                 do {
                     $generatedCode = $this->generateUniqueCode();
 
-                } while ($this->isUniqueCode($generatedCode, $userId));
+                } while (!$this->isUniqueCode($generatedCode, $userId));
 
                 $code = $generatedCode;
             }
@@ -68,11 +68,11 @@ class CompanyServiceImpl implements CompanyService
             return $company;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -102,7 +102,7 @@ class CompanyServiceImpl implements CompanyService
             return null;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -120,7 +120,7 @@ class CompanyServiceImpl implements CompanyService
             return null;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -152,11 +152,11 @@ class CompanyServiceImpl implements CompanyService
             return $company->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -181,11 +181,11 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -199,10 +199,13 @@ class CompanyServiceImpl implements CompanyService
     public function isUniqueCode(string $code, int $userId, ?int $exceptId = null): bool
     {
         $user = User::find($userId);
+
+        if ($user->companies->count() == 0) return true;
+
         $result = $user->companies()->where('code', '=' , $code);
 
         if($exceptId)
-            $result = $result->where('id', '<>', $exceptId);
+            $result = $result->get()->where('id', '<>', $exceptId);
 
         return $result->count() == 0 ? true:false;
     }
@@ -229,11 +232,11 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 

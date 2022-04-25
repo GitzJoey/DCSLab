@@ -6,7 +6,6 @@ use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
 use Exception;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -112,17 +111,12 @@ class UserServiceImpl implements UserService
             return $usr;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.' '.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-    }
-
-    public function flushCache(int $id): void
-    {
-        Cache::tags([$id])->flush();
     }
 
     public function read(string $search = '', bool $paginate = true, int $perPage = 10)
@@ -150,10 +144,10 @@ class UserServiceImpl implements UserService
                 return $usr->get();
             }    
         } catch (Exception $e) {
-            return null;
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -164,22 +158,18 @@ class UserServiceImpl implements UserService
         try {
             switch(strtoupper($key)) {
                 case 'ID':
-                    if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED'))
-                        return User::with('roles.permissions', 'profile', 'companies')->find($value);
-    
-                    return Cache::tags([$value])->remember('readByID'.$value, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.1_HOUR'), function() use ($value) {
-                        return User::with('roles.permissions', 'profile', 'companies')->find($value);
-                    });
+                    return User::with('roles.permissions', 'profile', 'companies')->find($value);
                 case 'EMAIL':
                     return User::where('email', '=', $value)->first();
                 default:
                     return null;
             }    
         } catch (Exception $e) {
-            return null;
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -205,14 +195,14 @@ class UserServiceImpl implements UserService
 
             DB::commit();
 
-            return $usr;
+            return $usr->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -235,11 +225,11 @@ class UserServiceImpl implements UserService
             return $retval;
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -272,11 +262,11 @@ class UserServiceImpl implements UserService
             return $retval;
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -286,18 +276,18 @@ class UserServiceImpl implements UserService
         $timer_start = microtime(true);
 
         try {
-            !$useTransactions ? : DB::commit();
-
             $updated_usr = $user->syncRoles($rolesId);
 
-            return $updated_usr;
+            !$useTransactions ? : DB::commit();
+
+            return $updated_usr->refresh();
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -307,8 +297,6 @@ class UserServiceImpl implements UserService
         $timer_start = microtime(true);
 
         try {
-            !$useTransactions ? : DB::commit();
-
             $retval = 0;
             foreach ($settings as $key => $value) {
                 $setting = $user->settings()->where('key', $key)->first();
@@ -320,14 +308,16 @@ class UserServiceImpl implements UserService
                 }
             }
 
+            !$useTransactions ? : DB::commit();
+
             return $retval;
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug($e);
+            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info(__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 

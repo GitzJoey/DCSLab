@@ -16,7 +16,6 @@ export const useUserContextStore = defineStore("userContext", {
                 this.userContext = response.data;
             });
         },
-
         setSelectedUserCompany(hId) {
             this.selectedUserCompany = hId;
         }

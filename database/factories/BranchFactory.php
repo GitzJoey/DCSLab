@@ -50,7 +50,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => 0
+                'status' => ActiveStatus::INACTIVE
             ];
         });
     }

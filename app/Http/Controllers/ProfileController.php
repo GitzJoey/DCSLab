@@ -5,19 +5,22 @@ namespace App\Http\Controllers;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\UserResource;
+use App\Services\RoleService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends BaseController
 {
     private $userService;
+    private $roleService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, RoleService $roleService)
     {
         parent::__construct();
 
         $this->middleware('auth');
         $this->userService = $userService;
+        $this->roleService = $roleService;
     }
 
     public function readProfile()
@@ -89,9 +92,13 @@ class ProfileController extends BaseController
 
         $usr = Auth::user();
 
-        $rolesId = [];
+        $roles = $request['roles'];
+        $rolesId = $usr->roles->pluck('id');
 
-        $result = $this->userService->updateRoles($usr, $rolesId, true);
+        if ($roles === 'pos')
+            $rolesId->push($this->roleService->readBy('NAME', 'POS-owner')->id);
+
+        $result = $this->userService->updateRoles($usr, $rolesId->toArray(), true);
 
         return is_null($result) ? response()->error() : response()->success();
     }

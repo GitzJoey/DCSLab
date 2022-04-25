@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
 use App\Models\ProductGroup;
-use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductGroupFactory extends Factory

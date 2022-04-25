@@ -51,4 +51,22 @@ class SupplierFactory extends Factory
             'status' => ActiveStatus::ACTIVE
         ];
     }
+
+    public function setStatusActive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => ActiveStatus::ACTIVE
+            ];
+        });
+    }
+
+    public function setStatusInactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => ActiveStatus::INACTIVE
+            ];
+        });
+    }
 }

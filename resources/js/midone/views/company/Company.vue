@@ -157,6 +157,7 @@ import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
 import { useUserContextStore } from "@/stores/user-context";
+import { useSideMenuStore } from "@/stores/side-menu";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
@@ -168,7 +169,8 @@ const { t } = useI18n();
 
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
-const userContext = computed(() => userContextStore.userContext);
+const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
+const sideMenuStore = useSideMenuStore();
 //#endregion
 
 //#region Data - UI
@@ -187,7 +189,7 @@ const company = ref({
     name: '',
     address: '',
     default: false,
-    status: 1
+    status: 'ACTIVE'
 });
 const statusDDL = ref([]);
 //#endregion
@@ -228,12 +230,15 @@ const onSubmit = (values, actions) => {
         axios.post(route('api.post.db.company.company.save'), formData).then(response => {
             backToList();
             userContextStore.fetchUserContext();
+            sideMenuStore.fetchMenu();
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
+        formData.append('company_id', selectedUserCompany.value);
+
         axios.post(route('api.post.db.company.company.edit', company.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
@@ -276,7 +281,7 @@ const emptyCompany = () => {
         name: '',
         address: '',
         default: false,
-        status: 'ACTIVE',
+        status: 'ACTIVE'
     }
 }
 
@@ -339,7 +344,7 @@ const toggleDetail = (idx) => {
 
 const generateCode = () => {
     if (company.value.code === '[AUTO]') company.value.code = '';
-    else  company.value.code = '[AUTO]'
+    else company.value.code = '[AUTO]'
 }
 //#endregion
 
