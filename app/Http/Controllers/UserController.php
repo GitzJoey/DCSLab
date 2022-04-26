@@ -31,9 +31,10 @@ class UserController extends BaseController
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $paginate = $request->has('paginate') ? $request['paginate']:true;
+        $page = $request->has('page') ? $request['page']:1;
         $perPage = $request->has('perPage') ? $request['perPage']:10;
 
-        $result = $this->userService->read($search, $paginate, $perPage);
+        $result = $this->userService->read($search, $paginate, $page, $perPage);
         
         if (is_null($result)) {
             return response()->error();

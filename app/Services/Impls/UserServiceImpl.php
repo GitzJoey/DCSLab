@@ -119,7 +119,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function read(string $search = '', bool $paginate = true, int $perPage = 10)
+    public function read(string $search = '', bool $paginate = true, int $page, int $perPage = 10)
     {
         $timer_start = microtime(true);
         try {

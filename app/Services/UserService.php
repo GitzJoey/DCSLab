@@ -21,7 +21,7 @@ interface UserService
         array $profile
     ): ?User ;
 
-    public function read(string $search = '', bool $paginate = true, int $perPage = 10);
+    public function read(string $search = '', bool $paginate = true, int $page, int $perPage = 10);
 
     public function readBy(string $key, string $value);
 
