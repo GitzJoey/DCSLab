@@ -45,7 +45,7 @@ class RoleServiceImpl implements RoleService
             return $role->hId;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
@@ -104,7 +104,7 @@ class RoleServiceImpl implements RoleService
             return $role;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
