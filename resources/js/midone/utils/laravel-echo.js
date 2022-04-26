@@ -11,12 +11,12 @@ const install = app => {
 
     let soketiEcho = new Echo({
         broadcaster: 'pusher',
-        key: process.env.MIX_PUSHER_APP_KEY,
+        key: process.env.MIX_SOKETI_APP_KEY,
         wsHost: process.env.MIX_SOKETI_HOST,
         wsPort: process.env.MIX_SOKETI_PORT,
         wssPort: process.env.MIX_SOKETI_PORT,
         forceTLS: false,
-        encrypted: false,
+        encrypted: true,
         disableStats: true,
         enabledTransports: ['ws'],
     });
