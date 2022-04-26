@@ -23,7 +23,7 @@ class DashboardServiceImpl implements DashboardService
         $hasUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() ? true:false;
         $hasOnlyUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() && $usrRoles->count() == 1 ? true:false;
         $hasDevRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() ? true:false;
-        $hasAdminRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() ? true:false;
+        $hasAdminRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.ADMIN'))->isNotEmpty() ? true:false;
 
         $hasCompany = $usr->companies->count() != 0 ? true:false;
 
