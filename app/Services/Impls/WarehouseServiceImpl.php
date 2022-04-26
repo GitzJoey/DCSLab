@@ -53,7 +53,7 @@ class WarehouseServiceImpl implements WarehouseService
             return $warehouse;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
@@ -121,7 +121,7 @@ class WarehouseServiceImpl implements WarehouseService
             return $warehouse->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
@@ -143,7 +143,7 @@ class WarehouseServiceImpl implements WarehouseService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         }
     }
