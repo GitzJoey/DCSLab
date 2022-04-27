@@ -13,6 +13,7 @@ if (mix.inProduction()) {
 
     mix
         .sass('resources/sass/acorn/styles.scss', 'public/css/acorn/main.css')
+        .copy('resources/js/acorn/', 'public/js/acorn/')
         .version()
     ;
 
@@ -59,6 +60,7 @@ if (mix.inProduction()) {
             devtool: 'source-map'
         })
         .sass('resources/sass/acorn/styles.scss', 'public/css/acorn/main.css')
+        .copy('resources/js/acorn/', 'public/js/acorn/')
         .sourceMaps()
     ;
 
