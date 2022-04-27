@@ -1,0 +1,81 @@
+html[data-color='light-blue'] {
+  --primary: #1ea8e7;
+  --secondary: #6cdbef;
+  --tertiary: #5de3c8;
+  --quaternary: #558df3;
+  --primary-rgb: 30, 168, 231;
+  --secondary-rgb: 108, 219, 239;
+  --tertiary-rgb: 93, 227, 200;
+  --quaternary-rgb: 85, 141, 243;
+
+  --primary-darker: #1b9ad4;
+  --secondary-darker: #61c6d8;
+  --tertiary-darker: #54ccb4;
+  --quaternary-darker: #4c7dd6;
+
+  --body: #4e4e4e;
+  --alternate: #7c7c7c;
+  --muted: #afafaf;
+  --separator: #e6e6e6;
+  --separator-light: #f1f1f1;
+  --body-rgb: 59, 59, 59;
+  --alternate-rgb: 124, 124, 124;
+  --muted-rgb: 176, 176, 176;
+  --separator-rgb: 221, 221, 221;
+  --separator-light-rgb: 241, 241, 241;
+
+  --background: #f9f9f9;
+  --foreground: #ffffff;
+  --background-rgb: 249, 249, 249;
+  --foreground-rgb: 255, 255, 255;
+
+  --background-theme: #eaf0f1;
+  --background-light: #f8f8f8;
+
+  --gradient-1: #1ea8e7;
+  --gradient-2: #21aff0;
+  --gradient-3: #23b3f4;
+
+  --gradient-1-lighter: #2abdff;
+  --gradient-1-darker: #1fa5e2;
+
+  --light-text: #fff;
+  --dark-text: #343a40;
+  --light-text-darker: #eeeeee;
+  --dark-text-darker: #23272b;
+
+  --light-text-rgb: 255, 255, 255;
+  --dark-text-rgb: 52, 58, 64;
+
+  --danger: #cf2637;
+  --info: #279aac;
+  --warning: #ebb71a;
+  --success: #439b38;
+  --light: #dadada;
+  --dark: #4e4e4e;
+  --danger-darker: #771a23;
+  --info-darker: #19545d;
+  --warning-darker: #aa830f;
+  --success-darker: #285422;
+  --light-darker: #c9c9c9;
+  --dark-darker: #282828;
+  --body-darker: #333333;
+  --alternate-darker: #616161;
+  --muted-darker: #888888;
+  --separator-darker: #c0c0c0;
+
+  --danger-rgb: 182, 40, 54;
+  --info-rgb: 41, 138, 153;
+  --warning-rgb: 235, 183, 26;
+  --success-rgb: 65, 139, 56;
+  --light-rgb: 218, 218, 218;
+  --dark-rgb: 78, 78, 78;
+
+  --menu-shadow: 0px 3px 10px rgba(0, 0, 0, 0.12);
+  --menu-shadow-navcolor: 0px 2px 6px rgba(0, 0, 0, 0.05);
+
+  --background-navcolor-light: #fff;
+  --background-navcolor-dark: #242424;
+
+  --theme-image-filter: hue-rotate(0deg);
+}

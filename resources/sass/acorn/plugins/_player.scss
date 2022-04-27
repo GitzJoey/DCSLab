@@ -1,0 +1,129 @@
+.plyr,
+.plyr__video-wrapper,
+.plyr audio,
+.plyr iframe,
+.plyr video,
+.plyr__poster {
+  border-radius: var(--border-radius-lg);
+  background-color: initial;
+}
+
+.plyr__poster {
+  background-size: cover;
+}
+
+.theme-filter-player .plyr__poster {
+  filter: var(--theme-image-filter);
+}
+
+.plyr video.cover {
+  object-fit: cover;
+}
+
+.plyr--video.plyr--stopped .plyr__controls {
+  display: none;
+}
+
+.plyr--video .plyr__control.plyr__tab-focus,
+.plyr--video .plyr__control:hover,
+.plyr--video .plyr__control[aria-expanded='true'],
+.plyr--audio .plyr__control.plyr__tab-focus,
+.plyr--audio .plyr__control:hover,
+.plyr--audio .plyr__control[aria-expanded='true'] {
+  background: var(--primary);
+  color: var(--light-text);
+}
+
+.plyr__control {
+  color: var(--body);
+}
+
+.plyr__control--overlaid {
+  padding: 9px 24px;
+  border-radius: var(--border-radius-md);
+  background: var(--primary) !important;
+  color: var(--light-text);
+}
+
+.plyr--full-ui input[type='range'] {
+  color: var(--primary);
+}
+.plyr__menu__container .plyr__control[role='menuitemradio'][aria-checked='true']::before {
+  background: var(--primary);
+}
+
+.plyr--audio .plyr__controls {
+  background: var(--foreground) !important;
+}
+
+.plyr__menu__container {
+  background: var(--foreground);
+}
+
+.plyr__menu__container .plyr__control--back::before {
+  background: var(--separator);
+  box-shadow: initial;
+}
+
+.plyr--audio .plyr__controls {
+  color: var(--body);
+}
+
+.plyr--video .plyr__control {
+  color: var(--light-text);
+}
+
+.modal-player {
+  .modal-content {
+    background: initial;
+    border: initial;
+  }
+  .plyr,
+  .plyr audio,
+  .plyr iframe,
+  .plyr video,
+  .plyr__poster,
+  .plyr__video-wrapper {
+    background: initial;
+  }
+}
+
+.plyr__menu__container .plyr__control {
+  color: var(--body);
+}
+
+.card-img-top {
+  .plyr,
+  .plyr__video-wrapper,
+  .plyr audio,
+  .plyr iframe,
+  .plyr video,
+  .plyr__poster {
+    border-bottom-left-radius: initial;
+    border-bottom-right-radius: initial;
+  }
+}
+
+.card-img-bottom {
+  .plyr,
+  .plyr__video-wrapper,
+  .plyr audio,
+  .plyr iframe,
+  .plyr video,
+  .plyr__poster {
+    border-top-left-radius: initial;
+    border-top-right-radius: initial;
+  }
+}
+
+.plyr__menu__container {
+  border-radius: var(--border-radius-md);
+}
+
+.plyr__control {
+  border-radius: var(--border-radius-md);
+}
+
+.card .plyr {
+  height: 100%;
+}

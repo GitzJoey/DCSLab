@@ -156,7 +156,7 @@
                     <div class="mb-3">
                         <label for="inputRoles" class="form-label">{{ t('views.user.fields.roles') }}</label>
                         <VeeField as="select" multiple v-slot="{ value }" :class="{'form-control':true, 'border-danger':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selected_roles" rules="required" :label="t('views.user.fields.roles')" @blur="reValidate(errors)">
-                            <option v-for="r in rolesDDL" :key="r.hId" :value="r.hId" :selected="r.hId == value">{{ r.display_name }}</option>
+                            <option v-for="r in rolesDDL" :key="r.hId" :value="r.hId" :selected="value.includes(r.hId)">{{ r.display_name }}</option>
                         </VeeField>
                         <ErrorMessage name="roles[]" class="text-danger" />
                     </div>
@@ -239,7 +239,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref, computed } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { helper } from "@/utils/helper";
 import { useI18n } from "vue-i18n";
@@ -247,6 +247,7 @@ import { route } from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main"
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main"
+import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
 //#region Declarations
@@ -288,11 +289,21 @@ onMounted(() => {
     getUser({ page: 1 });
     getDDL();
 
+    setMode();
+
     loading.value = false;
+});
+
+onUnmounted(() => {
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 });
 //#endregion
 
 //#region Methods
+const setMode = () => {
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
+}
+
 const getUser = (args) => {
     userList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -304,17 +315,31 @@ const getUser = (args) => {
 }
 
 const getDDL = () => {
-    axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
-        countriesDDL.value = response.data;
-    });
+    if (getCachedDDL('countriesDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
+            countriesDDL.value = response.data;
+            setCachedDDL('countriesDDL', response.data);
+        });
+    } else {
+        countriesDDL.value = getCachedDDL('countriesDDL');
+    }
 
-    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-        statusDDL.value = response.data;
-    });
+    if (getCachedDDL('statusDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+            statusDDL.value = response.data;
+            setCachedDDL('statusDDL', response.data);
+        });    
+    } else {
+        statusDDL.value = getCachedDDL('statusDDL');
+    }
 
-    axios.get(route('api.get.db.admin.users.roles.read')).then(response => {
-        rolesDDL.value = response.data;
-    });
+    if (getCachedDDL('rolesDDL') == null) {
+        axios.get(route('api.get.db.admin.users.roles.read')).then(response => {
+            rolesDDL.value = response.data;
+        });
+    } else {
+        rolesDDL.value = getCachedDDL('rolesDDL');
+    }
 }
 
 const onSubmit = (values, actions) => {
@@ -398,7 +423,13 @@ const resetAlertErrors = () => {
 
 const createNew = () => {
     mode.value = 'create';
-    user.value = emptyUser();
+
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+        user.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+    } else {
+        user.value = emptyUser();
+    }
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
@@ -426,6 +457,8 @@ const showSelected = (index) => {
 
 const backToList = () => {
     resetAlertErrors();
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+
     mode.value = 'list';
     getUser({ page: userList.value.current_page, pageSize: userList.value.per_page });
 }
@@ -466,5 +499,8 @@ const retrieveImage = computed(() => {
 //#endregion
 
 //#region Watcher
+watch(user, (newV) => {
+    if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
+}, { deep: true });
 //#endregion
 </script>
