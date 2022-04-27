@@ -13,7 +13,14 @@ interface ProductGroupService
         string $category,
     ): ?ProductGroup;
 
-    public function read(int $companyId, string $category, string $search = '', bool $paginate = true, ?int $perPage = 10);
+    public function read(
+        int $companyId,
+        string $category,
+        string $search = '',
+        bool $paginate = true,
+        int $page,
+        ?int $perPage = 10
+    );
 
     public function readBy(string $key, string $value);
 

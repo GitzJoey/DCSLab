@@ -9,13 +9,19 @@ interface CompanyService
     public function create(
         string $code,
         string $name,
-        string $address,
+        ?string $address,
         int $default,
         int $status,
         int $userId
     ): Company;
 
-    public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10);
+    public function read(
+        int $userId,
+        string $search = '',
+        bool $paginate = true,
+        int $page,
+        int $perPage = 10
+    );
 
     public function getAllActiveCompany(int $userId);
 
@@ -27,7 +33,7 @@ interface CompanyService
         int $id,
         string $code,
         string $name,
-        string $address,
+        ?string $address,
         int $default,
         int $status
     ): Company;

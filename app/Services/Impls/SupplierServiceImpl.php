@@ -42,6 +42,7 @@ class SupplierServiceImpl implements SupplierService
     ): ?Supplier
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
@@ -86,43 +87,66 @@ class SupplierServiceImpl implements SupplierService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     private function createUserPOC(array $poc): User
     {
-        $container = Container::getInstance();
-        $userService = $container->make(UserService::class);
-        $roleService = $container->make(RoleService::class);
+        $timer_start = microtime(true);
 
-        $rolesId = $roleService->readBy('name', 'POS-supplier')->id;
-
-        $profile = [
-            'first_name' => $poc['name'],
-            'status' => ActiveStatus::ACTIVE
-        ];
-
-        $usr = $userService->create($poc['name'], $poc['email'], '', [$rolesId], $profile);
-
-        return $usr;
+        try {
+            $container = Container::getInstance();
+            $userService = $container->make(UserService::class);
+            $roleService = $container->make(RoleService::class);
+    
+            $rolesId = $roleService->readBy('name', 'POS-supplier')->id;
+    
+            $profile = [
+                'first_name' => $poc['name'],
+                'status' => ActiveStatus::ACTIVE
+            ];
+    
+            $usr = $userService->create($poc['name'], $poc['email'], '', [$rolesId], $profile);
+    
+            return $usr;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }        
     }
 
-    public function read(int $companyId, string $search = '', bool $paginate = true, int $perPage = 10)
+    public function read(int $companyId, string $search = '', bool $paginate = true, int $page, int $perPage = 10)
     {
-        if (!$companyId) return null;
+        $timer_start = microtime(true);
 
-        if (empty($search)) {
-            $suppliers = Supplier::with('user.profile', 'company', 'supplierProducts.product')->whereCompanyId($companyId)->latest();
-        } else {
-            $suppliers = Supplier::with('user.profile', 'company', 'supplierProducts.product')->whereCompanyId($companyId)
-                ->where('name', 'like', '%'.$search.'%')->latest();
-        }
+        try {
+            if (!$companyId) return null;
 
-        if ($paginate) {
-            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-            return $suppliers->paginate(abs($perPage));
-        } else {
-            return $suppliers->get();
+            if (empty($search)) {
+                $suppliers = Supplier::with('user.profile', 'company', 'supplierProducts.product')->whereCompanyId($companyId)->latest();
+            } else {
+                $suppliers = Supplier::with('user.profile', 'company', 'supplierProducts.product')->whereCompanyId($companyId)
+                    ->where('name', 'like', '%'.$search.'%')->latest();
+            }
+    
+            if ($paginate) {
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                return $suppliers->paginate(abs($perPage));
+            } else {
+                return $suppliers->get();
+            }
+        } catch (Exception $e) {
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -145,6 +169,7 @@ class SupplierServiceImpl implements SupplierService
     ): ?Supplier
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $supplier = Supplier::find($id);
@@ -189,12 +214,16 @@ class SupplierServiceImpl implements SupplierService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function delete(int $id): bool
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         $retval = false;
         try {
@@ -217,6 +246,9 @@ class SupplierServiceImpl implements SupplierService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -234,11 +266,22 @@ class SupplierServiceImpl implements SupplierService
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $result = Supplier::whereCompanyId($companyId)->where('code', '=' , $code);
+        $timer_start = microtime(true);
 
-        if($exceptId)
-            $result = $result->where('id', '<>', $exceptId);
+        try {
+            $result = Supplier::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        return $result->count() == 0 ? true:false;
+            if($exceptId)
+                $result = $result->where('id', '<>', $exceptId);
+    
+            return $result->count() == 0 ? true:false;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
     }
 }

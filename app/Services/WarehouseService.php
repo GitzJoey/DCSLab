@@ -21,6 +21,7 @@ interface WarehouseService
         int $companyId,
         string $search = '',
         bool $paginate = true,
+        int $page,
         int $perPage = 10
     );
 

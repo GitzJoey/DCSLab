@@ -30,6 +30,7 @@ interface ProductService
         bool $isService = true,
         string $search = '',
         bool $paginate = true,
+        int $page,
         ?int $perPage = 10
     );
 

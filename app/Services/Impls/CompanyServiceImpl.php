@@ -24,7 +24,7 @@ class CompanyServiceImpl implements CompanyService
     public function create(
         string $code, 
         string $name, 
-        string $address, 
+        ?string $address, 
         int $default, 
         int $status, 
         int $userId
@@ -76,7 +76,7 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function read(int $userId, string $search = '', bool $paginate = true, int $perPage = 10)
+    public function read(int $userId, string $search = '', bool $paginate = true, int $page, int $perPage = 10)
     {
         $timer_start = microtime(true);
 
@@ -99,7 +99,7 @@ class CompanyServiceImpl implements CompanyService
                 return $companies->get();
             }
         } catch (Exception $e) {
-            return null;
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -117,7 +117,7 @@ class CompanyServiceImpl implements CompanyService
             $compIds = $usr->companies()->pluck('company_id');
             return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();    
         } catch (Exception $e) {
-            return null;
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -128,7 +128,7 @@ class CompanyServiceImpl implements CompanyService
         int $id, 
         string $code, 
         string $name, 
-        string $address, 
+        ?string $address, 
         int $default, 
         int $status
     ): Company

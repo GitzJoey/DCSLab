@@ -30,6 +30,7 @@ class WarehouseServiceImpl implements WarehouseService
     ): ?Warehouse
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
@@ -55,6 +56,9 @@ class WarehouseServiceImpl implements WarehouseService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -62,25 +66,35 @@ class WarehouseServiceImpl implements WarehouseService
         int $companyId,
         string $search = '',
         bool $paginate = true,
+        int $page,
         int $perPage = 10
     )
     {
-        if (!$companyId) return null;
+        $timer_start = microtime(true);
 
-        $warehouse = Warehouse::with('company')
-                    ->whereCompanyId($companyId);
+        try {
+            if (!$companyId) return null;
 
-        if (empty($search)) {
-            $warehouse = $warehouse->latest();
-        } else {
-            $warehouse = $warehouse->where('name', 'like', '%'.$search.'%')->latest();
-        }
-
-        if ($paginate) {
-            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-            return $warehouse->paginate($perPage);
-        } else {
-            return $warehouse->get();
+            $warehouse = Warehouse::with('company')
+                        ->whereCompanyId($companyId);
+    
+            if (empty($search)) {
+                $warehouse = $warehouse->latest();
+            } else {
+                $warehouse = $warehouse->where('name', 'like', '%'.$search.'%')->latest();
+            }
+    
+            if ($paginate) {
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                return $warehouse->paginate($perPage);
+            } else {
+                return $warehouse->get();
+            }
+        } catch (Exception $e) {
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -97,6 +111,7 @@ class WarehouseServiceImpl implements WarehouseService
     ): ?Warehouse
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $warehouse = Warehouse::find($id);
@@ -123,12 +138,16 @@ class WarehouseServiceImpl implements WarehouseService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function delete(int $id): bool
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         $retval = false;
         try {
@@ -145,6 +164,9 @@ class WarehouseServiceImpl implements WarehouseService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -162,11 +184,22 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $result = Warehouse::whereCompanyId($companyId)->where('code', '=' , $code);
+        $timer_start = microtime(true);
 
-        if($exceptId)
-            $result = $result->where('id', '<>', $exceptId);
+        try {
+            $result = Warehouse::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        return $result->count() == 0 ? true:false;
+            if($exceptId)
+                $result = $result->where('id', '<>', $exceptId);
+    
+            return $result->count() == 0 ? true:false;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
     }
 }
