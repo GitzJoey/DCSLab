@@ -1356,31 +1356,7 @@ html[data-navcolor='dark'] {
 
 // Setting logo path values manually because of Safari url and css variable bug
 html[data-color='light-blue'],
-html[data-color='light-lime'],
-html[data-color='light-green'],
-html[data-color='light-red'],
-html[data-color='light-pink'],
-html[data-color='light-purple'],
-html[data-color='light-teal'],
-html[data-color='light-sky'],
 html[data-color='dark-blue'],
-html[data-color='dark-green'],
-html[data-color='dark-red'],
-html[data-color='dark-pink'],
-html[data-color='dark-purple'],
-html[data-color='dark-lime'],
-html[data-color='dark-sky'],
-html[data-color='dark-teal'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-light.svg);
-  }
-}
-
-html[data-color='light-sky'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-sky-light.svg);
-  }
-}
 
 html[data-color='light-blue'] {
   .logo-default {
@@ -1388,101 +1364,9 @@ html[data-color='light-blue'] {
   }
 }
 
-html[data-color='light-green'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-green-light.svg);
-  }
-}
-
-html[data-color='light-red'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-red-light.svg);
-  }
-}
-
-html[data-color='light-pink'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-pink-light.svg);
-  }
-}
-
-html[data-color='light-purple'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-purple-light.svg);
-  }
-}
-
-html[data-color='light-teal'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-teal-light.svg);
-  }
-}
-
-html[data-color='light-lime'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-lime-light.svg);
-  }
-}
-
 html[data-color='dark-blue'] {
   .logo-default {
     background-image: url(../img/logo/logo-blue-dark.svg);
-  }
-}
-
-html[data-color='dark-green'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-green-dark.svg);
-  }
-}
-
-html[data-color='dark-red'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-red-dark.svg);
-  }
-}
-
-html[data-color='dark-pink'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-pink-dark.svg);
-  }
-}
-
-html[data-color='dark-purple'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-purple-dark.svg);
-  }
-}
-
-html[data-color='dark-lime'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-lime-dark.svg);
-  }
-}
-
-html[data-color='dark-teal'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-teal-dark.svg);
-  }
-}
-
-html[data-color='dark-sky'] {
-  .logo-default {
-    background-image: url(../img/logo/logo-sky-dark.svg);
-  }
-}
-
-html[data-color='light-teal'][data-navcolor='light'],
-html[data-color='dark-teal'][data-navcolor='light'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-teal-light.svg);
-  }
-}
-
-html[data-color='light-sky'][data-navcolor='light'],
-html[data-color='dark-sky'][data-navcolor='light'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-sky-light.svg);
   }
 }
 
@@ -1493,94 +1377,10 @@ html[data-color='dark-blue'][data-navcolor='light'] {
   }
 }
 
-html[data-color='light-green'][data-navcolor='light'],
-html[data-color='dark-green'][data-navcolor='light'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-green-light.svg);
-  }
-}
-
-html[data-color='light-red'][data-navcolor='light'],
-html[data-color='dark-red'][data-navcolor='light'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-red-light.svg);
-  }
-}
-
-html[data-color='light-pink'][data-navcolor='light'],
-html[data-color='dark-pink'][data-navcolor='light'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-pink-light.svg);
-  }
-}
-
-html[data-color='light-purple'][data-navcolor='light'],
-html[data-color='dark-purple'][data-navcolor='light'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-purple-light.svg);
-  }
-}
-
-html[data-color='light-lime'][data-navcolor='light'],
-html[data-color='dark-lime'][data-navcolor='light'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-lime-light.svg);
-  }
-}
-
 html[data-color='light-blue'][data-navcolor='dark'],
 html[data-color='dark-blue'][data-navcolor='dark'] {
   .logo .img {
     background-image: url(../img/logo/logo-blue-dark.svg);
-  }
-}
-
-html[data-color='light-green'][data-navcolor='dark'],
-html[data-color='dark-green'][data-navcolor='dark'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-green-dark.svg);
-  }
-}
-
-html[data-color='light-red'][data-navcolor='dark'],
-html[data-color='dark-red'][data-navcolor='dark'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-red-dark.svg);
-  }
-}
-
-html[data-color='light-pink'][data-navcolor='dark'],
-html[data-color='dark-pink'][data-navcolor='dark'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-pink-dark.svg);
-  }
-}
-
-html[data-color='light-purple'][data-navcolor='dark'],
-html[data-color='dark-purple'][data-navcolor='dark'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-purple-dark.svg);
-  }
-}
-
-html[data-color='light-teal'][data-navcolor='dark'],
-html[data-color='dark-teal'][data-navcolor='dark'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-teal-dark.svg);
-  }
-}
-
-html[data-color='light-lime'][data-navcolor='dark'],
-html[data-color='dark-lime'][data-navcolor='dark'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-lime-dark.svg);
-  }
-}
-
-html[data-color='light-sky'][data-navcolor='dark'],
-html[data-color='dark-sky'][data-navcolor='dark'] {
-  .logo .img {
-    background-image: url(../img/logo/logo-sky-dark.svg);
   }
 }
 
