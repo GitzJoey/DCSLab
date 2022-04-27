@@ -156,7 +156,7 @@
                     <div class="mb-3">
                         <label for="inputRoles" class="form-label">{{ t('views.user.fields.roles') }}</label>
                         <VeeField as="select" multiple v-slot="{ value }" :class="{'form-control':true, 'border-danger':errors['roles[]']}" id="inputRoles" name="roles[]" size="6" v-model="user.selected_roles" rules="required" :label="t('views.user.fields.roles')" @blur="reValidate(errors)">
-                            <option v-for="r in rolesDDL" :key="r.hId" :value="r.hId" :selected="r.hId == value">{{ r.display_name }}</option>
+                            <option v-for="r in rolesDDL" :key="r.hId" :value="r.hId" :selected="value.includes(r.hId)">{{ r.display_name }}</option>
                         </VeeField>
                         <ErrorMessage name="roles[]" class="text-danger" />
                     </div>
@@ -239,7 +239,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref, computed } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { helper } from "@/utils/helper";
 import { useI18n } from "vue-i18n";
@@ -288,11 +288,21 @@ onMounted(() => {
     getUser({ page: 1 });
     getDDL();
 
+    setMode();
+
     loading.value = false;
+});
+
+onUnmounted(() => {
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 });
 //#endregion
 
 //#region Methods
+const setMode = () => {
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
+}
+
 const getUser = (args) => {
     userList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -398,7 +408,13 @@ const resetAlertErrors = () => {
 
 const createNew = () => {
     mode.value = 'create';
-    user.value = emptyUser();
+
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+        user.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+    } else {
+        user.value = emptyUser();
+    }
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
@@ -426,6 +442,8 @@ const showSelected = (index) => {
 
 const backToList = () => {
     resetAlertErrors();
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+
     mode.value = 'list';
     getUser({ page: userList.value.current_page, pageSize: userList.value.per_page });
 }
@@ -466,5 +484,8 @@ const retrieveImage = computed(() => {
 //#endregion
 
 //#region Watcher
+watch(user, (newV) => {
+    if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
+}, { deep: true });
 //#endregion
 </script>
