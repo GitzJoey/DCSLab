@@ -893,17 +893,6 @@
     </div>
     <!-- Search Modal End -->
 
-    <!-- Vendor Scripts Start -->
-    <script src="js/vendor/jquery-3.5.1.min.js"></script>
-    <script src="js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="js/vendor/OverlayScrollbars.min.js"></script>
-    <script src="js/vendor/autoComplete.min.js"></script>
-    <script src="js/vendor/clamp.min.js"></script>
-    <script src="icon/acorn-icons.js"></script>
-    <script src="icon/acorn-icons-interface.js"></script>
-
-    <!-- Vendor Scripts End -->
-
     <!-- Template Base Scripts Start -->
     <script src="js/base/helpers.js"></script>
     <script src="js/base/globals.js"></script>
