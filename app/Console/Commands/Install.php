@@ -51,25 +51,9 @@ class Install extends Command
 
         sleep(3);
 
-        if (!File::exists('.env')) {
-            $this->error('File Not Found: .env');
-            $this->error('Aborted');
-            return false;
-        }
+        $passPreInstallCheck = $this->passPreInstallCheck();
 
-        if (env('DB_PASSWORD', '') == '') {
-            $this->error('Database not configured properly');
-            $this->error('Aborted');
-            return false;
-        }
-
-        if(env('DCSLAB_DATACACHE', true)) {
-            if (!$this->checkRedisConnection()) {
-                $this->error('Data cache is enabled but Redis not configured properly');
-                $this->error('Aborted');
-                return false;
-            }
-        }
+        if (!$passPreInstallCheck) return;
 
         $container = Container::getInstance();
 
@@ -202,5 +186,40 @@ class Install extends Command
         } catch (Exception $e) {
             return false;
         }
+    }
+
+    private function passPreInstallCheck()
+    {
+        if (!File::exists('.env')) {
+            $this->error('File Not Found: .env');
+            $this->error('Aborted');
+            return false;
+        }
+
+        if (env('DB_PASSWORD', '') == '') {
+            $this->error('Database not configured properly');
+            $this->error('Aborted');
+            return false;
+        }
+
+        if (env('DCSLAB_DATACACHE', true)) {
+            if (!$this->checkRedisConnection()) {
+                $this->error('Data cache is enabled but Redis not configured properly');
+                $this->error('Aborted');
+                return false;
+            }
+        }
+
+        if ((env('BROADCAST_DRIVER') == 'pusher' && empty(env('PUSHER_APP_KEY')))) {
+            $this->error('Pusher not configured properly');
+            return false;
+        } 
+
+        if ((env('BROADCAST_DRIVER') == 'soketi' && empty(env('SOKETI_APP_KEY')))) {
+            $this->error('Soketi not configured properly');
+            return false;
+        }
+
+        return true;
     }
 }
