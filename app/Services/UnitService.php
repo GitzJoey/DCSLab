@@ -13,7 +13,13 @@ interface UnitService
         int $category
     ): ?Unit;
 
-    public function read(int $companyId, int $category, string $search = '', bool $paginate = true, ?int $perPage = 10);
+    public function read(
+        int $companyId,
+        int $category,
+        string $search = '',
+        bool $paginate = true,
+        int $page,
+        ?int $perPage = 10);
     
     public function readBy(string $key, string $value);
 

@@ -25,19 +25,17 @@
                                     <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
                                     <XIcon v-if="item.status === 'INACTIVE'" />
                                 </td>
-                                <td class="table-report__action w-56">
+                                <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
-                                        <a class="flex items-center mr-3" href="" @click.prevent="showSelected(itemIdx)">
-                                            <InfoIcon class="w-4 h-4 mr-1" />
-                                            {{ t('components.data-list.view') }}
-                                        </a>
-                                        <a class="flex items-center mr-3" href="" @click.prevent="editSelected(itemIdx)">
-                                            <CheckSquareIcon class="w-4 h-4 mr-1" />
-                                            {{ t('components.data-list.edit') }}
-                                        </a>
-                                        <a class="flex items-center text-danger" href="javascript:;" data-toggle="modal" data-target="#delete-confirmation-modal" @click="deleteSelected(itemIdx)">
-                                            <Trash2Icon class="w-4 h-4 mr-1" /> {{ t('components.data-list.delete') }}
-                                        </a>
+                                        <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.view')" @click.prevent="showSelected(itemIdx)">
+                                            <InfoIcon class="w-4 h-4" />
+                                        </Tippy>
+                                        <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.edit')" @click.prevent="editSelected(itemIdx)">
+                                            <CheckSquareIcon class="w-4 h-4" />
+                                        </Tippy>
+                                        <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.delete')" @click.prevent="deleteSelected(itemIdx)">
+                                            <Trash2Icon class="w-4 h-4 text-danger" />
+                                        </Tippy>
                                     </div>
                                 </td>
                             </tr>

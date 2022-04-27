@@ -26,6 +26,7 @@ class UnitServiceImpl implements UnitService
     ): ?Unit
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
@@ -47,44 +48,66 @@ class UnitServiceImpl implements UnitService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function read(int $companyId, int $category, string $search = '', bool $paginate = true, ?int $perPage = 10)
+    public function read(int $companyId, int $category, string $search = '', bool $paginate = true, int $page, ?int $perPage = 10)
     {
-        $unit = Unit::whereCompanyId($companyId);
+        $timer_start = microtime(true);
+
+        try {
+            $unit = Unit::whereCompanyId($companyId);
          
-        if ($category == Config::get('const.ENUMS.UNIT_CATEGORY.PRODUCTS')) {
-            $unit = $unit->where('category', '<>', Config::get('const.ENUMS.UNIT_CATEGORY.SERVICES'));
-        } else if ($category == Config::get('const.ENUMS.UNIT_CATEGORY.SERVICES')) {
-            $unit = $unit->where('category', '<>', Config::get('const.ENUMS.UNIT_CATEGORY.PRODUCTS'));
-        } else {
-
-        }
-        
-        if (empty($search)) {
-            $unit = $unit->latest();
-        } else {
-            $unit = $unit->where('name', 'like', '%'.$search.'%')->latest();
-        }
-
-        if ($paginate) {
-            $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-            return $unit->paginate($perPage);
-        } else {
-            return $unit->get();
+            if ($category == Config::get('const.ENUMS.UNIT_CATEGORY.PRODUCTS')) {
+                $unit = $unit->where('category', '<>', Config::get('const.ENUMS.UNIT_CATEGORY.SERVICES'));
+            } else if ($category == Config::get('const.ENUMS.UNIT_CATEGORY.SERVICES')) {
+                $unit = $unit->where('category', '<>', Config::get('const.ENUMS.UNIT_CATEGORY.PRODUCTS'));
+            } else {
+    
+            }
+            
+            if (empty($search)) {
+                $unit = $unit->latest();
+            } else {
+                $unit = $unit->where('name', 'like', '%'.$search.'%')->latest();
+            }
+    
+            if ($paginate) {
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                return $unit->paginate($perPage);
+            } else {
+                return $unit->get();
+            }
+        } catch (Exception $e) {
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function readBy(string $key, string $value)
     {
-        switch(strtoupper($key)) {
-            case 'ID':
-                return Unit::find($value);
-            case 'CATEGORY':
-                return Unit::where('category', '=', $value)->get();
-            default:
-                return null;
+        $timer_start = microtime(true);
+
+        try {
+            switch(strtoupper($key)) {
+                case 'ID':
+                    return Unit::find($value);
+                case 'CATEGORY':
+                    return Unit::where('category', '=', $value)->get();
+                default:
+                    return null;
+            }
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -97,6 +120,7 @@ class UnitServiceImpl implements UnitService
     ): ?Unit
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $unit = Unit::find($id);
@@ -119,14 +143,37 @@ class UnitServiceImpl implements UnitService
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function delete(int $id): bool
     {
-        $unit = Unit::find($id);
+        DB::beginTransaction();
+        $timer_start = microtime(true);
 
-        return $unit->delete();
+        $retval = false;
+
+        try {
+            $unit = Unit::find($id);
+
+            if ($unit) {
+                $retval = $unit->delete();
+            }
+
+            DB::commit();
+
+            return $retval;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
     }
 
     public function generateUniqueCode(int $companyId): string
@@ -143,11 +190,22 @@ class UnitServiceImpl implements UnitService
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $result = Unit::whereCompanyId($companyId)->where('code', '=' , $code);
+        $timer_start = microtime(true);
 
-        if($exceptId)
-            $result = $result->where('id', '<>', $exceptId);
+        try {
+            $result = Unit::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        return $result->count() == 0 ? true:false;
+            if($exceptId)
+                $result = $result->where('id', '<>', $exceptId);
+    
+            return $result->count() == 0 ? true:false;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
     }
 }
