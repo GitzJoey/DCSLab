@@ -247,6 +247,7 @@ import { route } from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main"
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main"
+import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
 //#region Declarations
@@ -314,17 +315,31 @@ const getUser = (args) => {
 }
 
 const getDDL = () => {
-    axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
-        countriesDDL.value = response.data;
-    });
+    if (getCachedDDL('countriesDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.countries')).then(response => {
+            countriesDDL.value = response.data;
+            setCachedDDL('countriesDDL', response.data);
+        });
+    } else {
+        countriesDDL.value = getCachedDDL('countriesDDL');
+    }
 
-    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-        statusDDL.value = response.data;
-    });
+    if (getCachedDDL('statusDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+            statusDDL.value = response.data;
+            setCachedDDL('statusDDL', response.data);
+        });    
+    } else {
+        statusDDL.value = getCachedDDL('statusDDL');
+    }
 
-    axios.get(route('api.get.db.admin.users.roles.read')).then(response => {
-        rolesDDL.value = response.data;
-    });
+    if (getCachedDDL('rolesDDL') == null) {
+        axios.get(route('api.get.db.admin.users.roles.read')).then(response => {
+            rolesDDL.value = response.data;
+        });
+    } else {
+        rolesDDL.value = getCachedDDL('rolesDDL');
+    }
 }
 
 const onSubmit = (values, actions) => {
