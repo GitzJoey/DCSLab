@@ -12,6 +12,11 @@ if (mix.inProduction()) {
     ;
 
     mix
+        .sass('resources/sass/acorn/styles.scss', 'public/css/acorn/main.css')
+        .version()
+    ;
+
+    mix
         .webpackConfig({
             resolve: {
                 alias: {
@@ -46,6 +51,14 @@ if (mix.inProduction()) {
         })
         .sass('resources/sass/start/main.scss', 'public/css/start/main.css')
         .js('resources/js/start/main.js', 'public/js/start/main.js')
+        .sourceMaps()
+    ;
+
+    mix
+        .webpackConfig({
+            devtool: 'source-map'
+        })
+        .sass('resources/sass/acorn/styles.scss', 'public/css/acorn/main.css')
         .sourceMaps()
     ;
 

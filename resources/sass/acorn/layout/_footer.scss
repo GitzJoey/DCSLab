@@ -1,0 +1,76 @@
+html[data-footer='true'] {
+  body {
+    min-height: 100%;
+    position: relative;
+    padding-bottom: var(--footer-size);
+  }
+
+  #root > footer {
+    border-top: 1px solid var(--separator);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: var(--footer-size);
+    display: flex;
+
+    padding-left: calc(var(--nav-size) + var(--main-spacing-horizontal));
+    padding-right: var(--main-spacing-horizontal);
+
+    & > .container-fluid,
+    & > .container-lg,
+    & > .container-md,
+    & > .container-sm,
+    & > .container-xl {
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .footer-content {
+      display: flex;
+      width: 100%;
+      align-items: center;
+    }
+  }
+}
+
+html[data-footer='true'][data-placement='horizontal'] {
+  #root > footer {
+    padding-left: var(--main-spacing-horizontal);
+  }
+}
+
+html[data-footer='true'][data-placement='vertical'] #root > footer {
+  @include respond-below(lg) {
+    padding-left: calc(var(--main-spacing-horizontal) + var(--footer-size));
+  }
+}
+
+html[data-footer='true'][data-placement='vertical'][data-behaviour='unpinned'] #root > footer {
+  padding-left: calc(var(--main-spacing-horizontal) + var(--footer-size));
+}
+
+html[data-footer='true'][data-layout='fluid'] {
+  #root > footer .container {
+    width: 100%;
+    max-width: initial;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+html[data-footer='true'][data-layout='boxed'] {
+  @include respond-below(lg) {
+    #root > footer .container {
+      width: 100%;
+      max-width: initial;
+      padding-right: 0;
+      padding-left: 0;
+    }
+  }
+}
+
+html:not([data-footer='true']) {
+  #root > footer {
+    display: none;
+  }
+}
