@@ -1,0 +1,10 @@
+.progress-bar-line,
+.progress-bar-circle,
+.progress-bar-semi-circle,
+.progress-bar-square {
+  position: relative;
+}
+
+.progress-bar-line .progressbar-text {
+  margin-top: 15px !important;
+}

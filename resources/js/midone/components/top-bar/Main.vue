@@ -178,6 +178,7 @@ function goTo(page) {
 function logout() {
   tailwind.Dropdown.getOrCreateInstance(document.querySelector("#main-dropdown")).hide();
   axios.post('/logout').then(response => {
+    sessionStorage.clear();
     window.location.href = '/';
   }).catch(e => {
 

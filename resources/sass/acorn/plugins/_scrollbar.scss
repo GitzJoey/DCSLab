@@ -1,0 +1,185 @@
+.scroll-out .os-host {
+  margin-right: -15px;
+  padding-right: 15px;
+  margin-left: -15px;
+  padding-left: 15px;
+  position: relative;
+}
+
+.scroll-out-negative {
+  .os-padding {
+    margin-right: 15px;
+  }
+
+  .os-host {
+    margin-right: -15px;
+  }
+}
+
+.os-theme-dark > .os-scrollbar > .os-scrollbar-track,
+.os-theme-dark > .os-scrollbar > .os-scrollbar-track,
+.os-theme-light > .os-scrollbar > .os-scrollbar-track,
+.os-theme-light > .os-scrollbar > .os-scrollbar-track {
+  background: rgba(var(--muted-rgb), 0.15);
+}
+
+.os-theme-dark > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle,
+.os-theme-light > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle {
+  background: rgba(var(--muted-rgb), 0.4);
+}
+
+.os-theme-dark > .os-scrollbar:hover > .os-scrollbar-track > .os-scrollbar-handle,
+.os-theme-light > .os-scrollbar:hover > .os-scrollbar-track > .os-scrollbar-handle {
+  background: rgba(var(--muted-rgb), 0.5);
+}
+
+.os-theme-dark > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle.active,
+.os-theme-light > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle.active {
+  background: rgba(var(--muted-rgb), 0.5);
+}
+
+.os-theme-dark > .os-scrollbar-vertical,
+.os-theme-light > .os-scrollbar-vertical {
+  width: 8px;
+}
+
+.os-theme-dark > .os-scrollbar-horizontal,
+.os-theme-light > .os-scrollbar-horizontal {
+  height: 8px;
+}
+
+.scroll.fix-margin .os-scrollbar-vertical {
+  height: calc(100% - 15px);
+}
+
+.scroll-track-visible {
+  &.os-theme-dark > .os-scrollbar > .os-scrollbar-track,
+  .os-theme-dark > .os-scrollbar > .os-scrollbar-track,
+  &.os-theme-light > .os-scrollbar > .os-scrollbar-track,
+  .os-theme-light > .os-scrollbar > .os-scrollbar-track {
+    background: rgba(var(--separator-rgb), 0.5);
+  }
+
+  &.os-theme-dark > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle,
+  .os-theme-dark > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle,
+  &.os-theme-light > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle,
+  .os-theme-light > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle {
+    background: rgba(var(--muted-rgb), 0.5);
+  }
+
+  &.os-theme-dark > .os-scrollbar:hover > .os-scrollbar-track > .os-scrollbar-handle,
+  .os-theme-dark > .os-scrollbar:hover > .os-scrollbar-track > .os-scrollbar-handle,
+  &.os-theme-light > .os-scrollbar:hover > .os-scrollbar-track > .os-scrollbar-handle,
+  .os-theme-light > .os-scrollbar:hover > .os-scrollbar-track > .os-scrollbar-handle {
+    background: rgba(var(--muted-rgb), 0.6);
+  }
+
+  &.os-theme-dark > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle.active,
+  .os-theme-dark > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle.active,
+  &.os-theme-light > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle.active,
+  .os-theme-light > .os-scrollbar > .os-scrollbar-track > .os-scrollbar-handle.active {
+    background: rgba(var(--muted-rgb), 0.6);
+  }
+}
+
+// Webkit scrollbar overrides
+
+.select2-results,
+.tagify__dropdown,
+.html-editor,
+textarea,
+#scrollSpyMenu,
+.override-native,
+.dataTables_scrollBody {
+  ::-webkit-scrollbar,
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background: transparent;
+    border-radius: var(--border-radius-md);
+    cursor: default !important;
+  }
+
+  ::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--border-radius-md);
+    background: rgba(var(--muted-rgb), 0.4);
+    cursor: default !important;
+  }
+
+  ::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-button {
+    background: transparent;
+    width: 4px;
+    height: 3px;
+    cursor: default !important;
+  }
+
+  ::-webkit-scrollbar-track-piece,
+  &::-webkit-scrollbar-track-piece {
+    background: rgba(var(--muted-rgb), 0.15);
+    border-radius: var(--border-radius-md);
+    cursor: default !important;
+  }
+}
+
+.tagify__dropdown {
+  ::-webkit-scrollbar,
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  ::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 14px 14px rgba(var(--muted-rgb), 0.15);
+    border: solid 5px transparent;
+    background: initial !important;
+  }
+
+  ::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 14px 14px rgba(var(--muted-rgb), 0.4);
+    border: solid 5px transparent;
+    border-radius: 14px;
+    background: initial !important;
+  }
+
+  ::-webkit-scrollbar-track-piece,
+  &::-webkit-scrollbar-track-piece {
+    background: initial !important;
+  }
+}
+
+// Custom Body Scrollbar
+body.custom-scrollbar {
+  ::-webkit-scrollbar,
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+    border-radius: var(--border-radius-md);
+    cursor: default !important;
+  }
+
+  ::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--border-radius-md);
+    background: rgba(var(--alternate-rgb), 0.5);
+    cursor: default !important;
+  }
+
+  ::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-button {
+    background: transparent;
+    width: 6px;
+    height: 0;
+    cursor: default !important;
+  }
+
+  ::-webkit-scrollbar-track-piece,
+  &::-webkit-scrollbar-track-piece {
+    background: rgba(var(--muted-rgb), 0.15);
+    border-radius: var(--border-radius-md);
+    cursor: default !important;
+  }
+}

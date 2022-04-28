@@ -1,0 +1,149 @@
+.time-picker {
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: initial !important;
+  background: initial !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  white-space: nowrap !important;
+  display: none;
+}
+
+.time-picker-container {
+  .select2-container {
+    width: 60px !important;
+  }
+
+  .select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered {
+    text-align: center;
+    padding-right: 1.25rem;
+    padding-left: 0.75rem;
+  }
+
+  label {
+    display: block;
+  }
+
+  .select2 {
+    display: inline-block;
+    margin-right: 0.25rem;
+  }
+}
+
+.time-picker-dropdown.select2-dropdown {
+  padding: 0.75rem 0.25rem 0.75rem 0.25rem;
+
+  .select2-results__option {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+    text-align: center;
+  }
+}
+
+.top-label.custom-control-container.time-picker-container {
+  padding: 1.25rem 0.75rem 0 0.75rem !important;
+
+  .select2-selection {
+    min-height: unset !important;
+    border: initial !important;
+  }
+
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    padding: 0.5rem 0.25rem 0 0.25rem !important;
+    text-align: left;
+  }
+
+  .select2-container {
+    width: 50px !important;
+    margin-right: -10px !important;
+  }
+
+  .select2 {
+    margin-right: initial;
+  }
+
+  .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow {
+    right: 7px;
+    margin-top: 4px;
+  }
+
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    min-height: 30px !important;
+    height: unset !important;
+    line-height: 1.5;
+  }
+
+  .select2-container--bootstrap4 .select2-selection--single {
+    min-height: unset !important;
+    height: unset !important;
+    background: transparent;
+  }
+
+  &.focus {
+    border-color: rgba(var(--primary-rgb), 1) !important;
+  }
+}
+
+.filled.custom-control-container.time-picker-container {
+  padding-top: 0.275rem;
+  padding-bottom: 0.275rem;
+
+  .select2-selection {
+    min-height: unset !important;
+    background: initial !important;
+  }
+
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: initial !important;
+  }
+
+  .select2-container--open .select2-selection {
+    border-color: transparent !important;
+  }
+
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-top: 4px;
+    text-align: left;
+  }
+
+  .select2-container {
+    width: 50px !important;
+    margin-right: -8px !important;
+  }
+
+  .select2-container--bootstrap4 .select2-selection--single .select2-selection__arrow {
+    right: 10px;
+    margin-top: 2px;
+  }
+
+  &.focus {
+    border-color: rgba(var(--primary-rgb), 1) !important;
+    background: initial !important;
+  }
+}
+
+.select2-dropdown.select2-dropdown--below.time-top-label-dropdown {
+  width: 60px !important;
+  left: -7px !important;
+  margin-top: 5px !important;
+}
+
+.select2-dropdown.select2-dropdown--above.time-top-label-dropdown {
+  width: 60px !important;
+  left: -7px !important;
+  margin-top: -22px !important;
+}
+
+.select2-dropdown.select2-dropdown--below.time-filled-dropdown {
+  width: 60px !important;
+  left: -19px !important;
+  margin-top: 8px !important;
+}
+
+.select2-dropdown.select2-dropdown--above.time-filled-dropdown {
+  width: 60px !important;
+  left: -19px !important;
+  margin-top: -7px !important;
+}

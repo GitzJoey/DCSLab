@@ -1,0 +1,208 @@
+.datepicker.dropdown-menu {
+  padding: 1.25rem;
+  box-shadow: initial;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--primary);
+  background: var(--foreground);
+  color: var(--body);
+  font-size: 1em;
+}
+
+.datepicker-dropdown:before {
+  border-bottom-color: var(--primary);
+}
+
+.datepicker-dropdown:after {
+  border-bottom: 6px solid var(--foreground);
+}
+
+.datepicker-dropdown.datepicker-orient-top:before {
+  border-top: 7px solid var(--primary);
+}
+
+.datepicker-dropdown.datepicker-orient-top:after {
+  border-top: 6px solid var(--foreground);
+}
+
+.datepicker table tr td.active.active,
+.datepicker table tr td.active.highlighted.active,
+.datepicker table tr td.active.highlighted:active,
+.datepicker table tr td.active:active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--light-text);
+}
+
+.datepicker table tr td {
+  text-shadow: initial !important;
+}
+
+.datepicker table tr td.active.active.focus,
+.datepicker table tr td.active.active:focus,
+.datepicker table tr td.active.active:hover,
+.datepicker table tr td.active.highlighted.active.focus,
+.datepicker table tr td.active.highlighted.active:focus,
+.datepicker table tr td.active.highlighted.active:hover,
+.datepicker table tr td.active.highlighted:active.focus,
+.datepicker table tr td.active.highlighted:active:focus,
+.datepicker table tr td.active.highlighted:active:hover,
+.datepicker table tr td.active:active.focus,
+.datepicker table tr td.active:active:focus,
+.datepicker table tr td.active:active:hover {
+  background-color: var(--primary-darker) !important;
+  border-color: var(--primary-darker) !important;
+  color: var(--light-text);
+}
+
+.datepicker table tr td.new,
+.datepicker table tr td.old {
+  color: var(--muted);
+}
+
+.datepicker table tr td.day:hover,
+.datepicker table tr td.focused {
+  background: rgba(var(--separator-rgb), 0.6) !important;
+  cursor: pointer;
+}
+
+.datepicker table tr td span.active.active,
+.datepicker table tr td span.active.disabled.active,
+.datepicker table tr td span.active.disabled:active,
+.datepicker table tr td span.active.disabled:hover.active,
+.datepicker table tr td span.active.disabled:hover:active,
+.datepicker table tr td span.active:active,
+.datepicker table tr td span.active:hover.active,
+.datepicker table tr td span.active:hover:active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--light-text);
+}
+
+.datepicker table tr td span.active.active.focus,
+.datepicker table tr td span.active.active:focus,
+.datepicker table tr td span.active.active:hover,
+.datepicker table tr td span.active.disabled.active.focus,
+.datepicker table tr td span.active.disabled.active:focus,
+.datepicker table tr td span.active.disabled.active:hover,
+.datepicker table tr td span.active.disabled:active.focus,
+.datepicker table tr td span.active.disabled:active:focus,
+.datepicker table tr td span.active.disabled:active:hover,
+.datepicker table tr td span.active.disabled:hover.active.focus,
+.datepicker table tr td span.active.disabled:hover.active:focus,
+.datepicker table tr td span.active.disabled:hover.active:hover,
+.datepicker table tr td span.active.disabled:hover:active.focus,
+.datepicker table tr td span.active.disabled:hover:active:focus,
+.datepicker table tr td span.active.disabled:hover:active:hover,
+.datepicker table tr td span.active:active.focus,
+.datepicker table tr td span.active:active:focus,
+.datepicker table tr td span.active:active:hover,
+.datepicker table tr td span.active:hover.active.focus,
+.datepicker table tr td span.active:hover.active:focus,
+.datepicker table tr td span.active:hover.active:hover,
+.datepicker table tr td span.active:hover:active.focus,
+.datepicker table tr td span.active:hover:active:focus,
+.datepicker table tr td span.active:hover:active:hover {
+  background-color: var(--primary-darker) !important;
+  border-color: var(--primary-darker) !important;
+  color: var(--light-text);
+}
+
+.datepicker table tr td,
+.datepicker table tr th,
+.datepicker table tr td span {
+  border-radius: var(--border-radius-sm);
+}
+
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover,
+.datepicker .prev:hover,
+.datepicker tfoot tr th:hover {
+  background: var(--primary);
+  color: var(--light-text);
+}
+
+.datepicker table tr td span:hover {
+  background: var(--primary);
+  color: var(--light-text);
+}
+
+.datepicker table tr td span.focused {
+  background: var(--separator);
+  color: var(--body);
+}
+
+.datepicker.datepicker-inline,
+.datepicker.datepicker-inline table {
+  width: 100%;
+}
+
+.datepicker table tr td,
+.datepicker table tr th {
+  width: 29px;
+  height: 29px;
+  line-height: 1;
+}
+
+.datepicker table th {
+  font-weight: initial;
+  color: var(--alternate);
+}
+
+.input-daterange {
+  width: unset;
+}
+
+.input-daterange input {
+  border-radius: var(--border-radius-md) !important;
+  text-align: left;
+}
+
+.datepicker table tr td.selected,
+.datepicker table tr td.selected.highlighted {
+  background: var(--primary);
+  color: var(--light-text);
+}
+
+.datepicker table tr td.selected.highlighted:hover,
+.datepicker table tr td.selected:hover {
+  background-color: var(--primary-darker) !important;
+  border-color: var(--primary-darker) !important;
+  color: var(--light-text);
+}
+
+.datepicker table tr td.range {
+  background: rgba(var(--separator-rgb), 0.6) !important;
+  color: var(--body);
+}
+
+.datepicker table .range-start.day {
+  border-top-right-radius: initial;
+  border-bottom-right-radius: initial;
+}
+
+.datepicker table .range-end.day {
+  border-top-left-radius: initial;
+  border-bottom-left-radius: initial;
+}
+
+.datepicker table .range-start.range-end.day {
+  border-radius: var(--border-radius-sm);
+}
+
+.datepicker table tr td.range:hover {
+  background-color: var(--muted) !important;
+  border-color: var(--muted) !important;
+  color: var(--light-text);
+}
+
+.datepicker-orient-top {
+  margin-top: 15px;
+}
+
+.form-floating .date-picker.show {
+  & ~ label {
+    -webkit-transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+    color: var(--muted);
+  }
+}

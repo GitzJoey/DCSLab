@@ -1,0 +1,187 @@
+a {
+  transition: color var(--transition-time-short);
+  text-decoration: initial;
+  color: var(--primary);
+  outline: initial !important;
+  &:hover,
+  &:active {
+    text-decoration: initial;
+    color: var(--secondary);
+  }
+}
+
+a.body {
+  color: var(--body);
+  &:hover,
+  &:active {
+    color: var(--primary);
+  }
+}
+
+.body-link {
+  color: var(--body);
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.alternate-link {
+  color: var(--alternate);
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.muted-link {
+  color: var(--muted);
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.underline-link {
+  text-decoration: underline;
+}
+
+.underline-hover-link {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+img {
+  object-fit: cover;
+}
+
+.absolute-center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-center-vertical {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.absolute-center-horizontal {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-10 {
+  opacity: 0.1;
+}
+
+.opacity-25 {
+  opacity: 0.25;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.opacity-75 {
+  opacity: 0.75;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
+.grayscale {
+  filter: grayscale(1);
+}
+
+.img-fluid-width {
+  max-width: 100%;
+  height: auto;
+}
+
+.img-fluid-height {
+  max-height: 100%;
+  width: auto;
+}
+
+.shadow {
+  @include shadow-basic();
+}
+
+.shadow-deep {
+  @include shadow-deep();
+}
+
+.bg-cover-center {
+  background-size: cover;
+  background-position: center;
+}
+
+.z-index-1 {
+  z-index: 1;
+}
+
+.z-index-1000 {
+  z-index: 1000;
+}
+
+.basic-transform-transition {
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+  pointer-events: none;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+}
+
+.fixed-background {
+  background: url('../img/background/background-blue.webp') no-repeat center center fixed;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.hover-trigger:hover {
+  .visible-hover {
+    visibility: visible !important;
+  }
+}
+
+.cursor-default {
+  cursor: default;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.theme-filter {
+  filter: var(--theme-image-filter);
+}
+.flex-grow-1 {
+  flex: 1;
+}
+
+.achievement {
+  width: 75px;
+  height: 75px;
+}
+
+.achievement.bg svg {
+  fill: var(--separator-light);
+}
+
+.achievement.level svg {
+  fill: var(--primary);
+}
+
+.absolute-profile {
+  top: -6.5rem;
+}
