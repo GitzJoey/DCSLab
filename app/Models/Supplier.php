@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActiveStatus;
-use App\Enums\PaymentTerm;
+use App\Enums\PaymentTermType;
 use App\Traits\ScopeableByCompany;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -70,7 +70,7 @@ class Supplier extends Model
 
     protected $casts = [
         'taxable_enterprise' => 'boolean',
-        'payment_term' => PaymentTerm::class,
+        'payment_term_type' => PaymentTermType::class,
         'status' => ActiveStatus::class
     ];
     
