@@ -272,7 +272,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
@@ -280,6 +280,7 @@ import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
 //#region Declarations
@@ -339,13 +340,23 @@ onMounted(() => {
         
     }
 
+    setMode();
+
     getDDL();
 
     loading.value = false;
 });
+
+onUnmounted(() => {
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+});
 //#endregion
 
 //#region Methods
+const setMode = () => {
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
+}
+
 const getAllSupplier = (args) => {
     supplierList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -360,9 +371,14 @@ const getAllSupplier = (args) => {
 }
 
 const getDDL = () => {
-    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-        statusDDL.value = response.data;
-    });
+    if (getCachedDDL('statusDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+            statusDDL.value = response.data;
+            setCachedDDL('statusDDL', response.data);
+        });    
+    } else {
+        statusDDL.value = getCachedDDL('statusDDL');
+    }
 
     axios.get(route('api.get.db.supplier.common.list.payment_term')).then(response => {
         paymentTermDDL.value = response.data;
@@ -458,7 +474,13 @@ const resetAlertErrors = () => {
 
 const createNew = () => {
     mode.value = 'create';
-    supplier.value = emptySupplier();
+    
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+        user.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+    } else {
+        user.value = emptyUser();
+    }
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
@@ -492,6 +514,8 @@ const showSelected = (index) => {
 
 const backToList = () => {
     resetAlertErrors();
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+
     mode.value = 'list';
     getAllSupplier({ page: supplierList.value.current_page, pageSize: supplierList.value.per_page });
 }
@@ -542,5 +566,9 @@ watch(computed(() => supplier.value.selected_products), (n, o) => {
         });
     }
 });
+
+watch(supplier, (newV) => {
+    if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
+}, { deep: true });
 //#endregion
 </script>
