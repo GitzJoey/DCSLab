@@ -365,10 +365,10 @@ const createNew = () => {
     mode.value = 'create';
     
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
-        user.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        branch.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
-        user.value = emptyUser();
+        branch.value = emptyBranch();
     }
 
     branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });

@@ -545,10 +545,10 @@ const createNew = () => {
     mode.value = 'create';
     
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
-        user.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        product.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
-        user.value = emptyUser();
+        product.value = emptyProduct();
     }
 }
 

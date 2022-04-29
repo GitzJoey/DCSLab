@@ -341,7 +341,7 @@ const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptywarehouse = () => {
+const emptyWarehouse = () => {
     return {
         company: {
             hId: '',
@@ -365,13 +365,13 @@ const createNew = () => {
     mode.value = 'create';
     
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
-        user.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        warehouse.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
-        user.value = emptyUser();
+        warehouse.value = emptyWarehouse();
     }
 
-    branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+    warehouse.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
