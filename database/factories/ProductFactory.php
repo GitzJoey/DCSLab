@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
+use App\Enums\ProductType;
 use App\Models\Product;
 use App\Models\Company;
 use App\Models\ProductGroup;
@@ -30,36 +31,21 @@ class ProductFactory extends Factory
     {
         $faker = \Faker\Factory::create('id_ID');
 
+        $product_type = $faker->randomElement(ProductType::toArrayValue());
+        $status = $faker->randomElement(ActiveStatus::toArrayValue());
+
         return [
             'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-            'taxable_supply' => $faker->numberBetween(0, 1),
+            'taxable_supply' => (new RandomGenerator())->randomTrueOrFalse(),
             'standard_rated_supply' => $faker->numberBetween(1, 10),
-            'price_include_vat' => $faker->numberBetween(0, 1),
+            'price_include_vat' => (new RandomGenerator())->randomTrueOrFalse(),
             'remarks' => $faker->word(),
-            'point' => 0,
-            'use_serial_number' => $faker->numberBetween(0, 1),
-            'has_expiry_date' => $faker->numberBetween(0, 1),
-            'product_type' => $faker->numberBetween(1, 3),
-            'status' => ActiveStatus::ACTIVE
+            'point' => $faker->numberBetween(1, 100),
+            'product_type' => $product_type,
+            'use_serial_number' => (new RandomGenerator())->randomTrueOrFalse(),
+            'has_expiry_date' => (new RandomGenerator())->randomTrueOrFalse(),
+            'status' => $status
         ];
-    }
-
-    public function setStatusActive()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'status' => ActiveStatus::ACTIVE
-            ];
-        });
-    }
-
-    public function setStatusInactive()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'status' => ActiveStatus::INACTIVE
-            ];
-        });
     }
 }
