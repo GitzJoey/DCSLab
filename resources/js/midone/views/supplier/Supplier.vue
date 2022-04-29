@@ -476,10 +476,10 @@ const createNew = () => {
     mode.value = 'create';
     
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
-        user.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        supplier.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
-        user.value = emptyUser();
+        supplier.value = emptySupplier();
     }
 }
 
