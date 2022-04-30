@@ -380,9 +380,14 @@ const getDDL = () => {
         statusDDL.value = getCachedDDL('statusDDL');
     }
 
-    axios.get(route('api.get.db.supplier.common.list.payment_term')).then(response => {
-        paymentTermDDL.value = response.data;
-    });
+    if (getCachedDDL('api.get.db.supplier.common.list.payment_term') == null) {
+        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+            paymentTermDDL.value = response.data;
+            setCachedDDL('paymentTermDDL', response.data);
+        });    
+    } else {
+        paymentTermDDL.value = getCachedDDL('paymentTermDDL');
+    }
 }
 
 const getDDLSync = () => {

@@ -240,9 +240,9 @@ onMounted(() => {
         
     }
 
-    getDDL();
-
     setMode();
+    
+    getDDL();  
 
     loading.value = false;
 });
