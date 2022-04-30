@@ -150,7 +150,7 @@
 
 <script setup>
 //#region Vue Import
-import { onMounted, ref, computed } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
@@ -159,6 +159,7 @@ import { useSideMenuStore } from "@/stores/side-menu";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
 //#region Declarations
@@ -197,11 +198,21 @@ onMounted(() => {
     getAllCompany({ page: 1 });
     getDDL();
 
+    setMode();
+
     loading.value = false;
+});
+
+onUnmounted(() => {
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 });
 //#endregion
 
 //#region Methods
+const setMode = () => {
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
+}
+
 const getAllCompany = (args) => {
     companyList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -214,9 +225,14 @@ const getAllCompany = (args) => {
 }
 
 const getDDL = () => {
-    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-        statusDDL.value = response.data;
-    });
+    if (getCachedDDL('statusDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+            statusDDL.value = response.data;
+            setCachedDDL('statusDDL', response.data);
+        });    
+    } else {
+        statusDDL.value = getCachedDDL('statusDDL');
+    }
 }
 
 const onSubmit = (values, actions) => {
@@ -290,7 +306,13 @@ const resetAlertErrors = () => {
 
 const createNew = () => {
     mode.value = 'create';
-    company.value = emptyCompany();
+    
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+        company.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+    } else {
+        company.value = emptyCompany();
+    }
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
@@ -324,6 +346,8 @@ const showSelected = (index) => {
 
 const backToList = () => {
     resetAlertErrors();
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+
     mode.value = 'list';
 
     if (companyList.value.data.length == 0) {
@@ -351,5 +375,8 @@ const generateCode = () => {
 //#endregion
 
 //#region Watcher
+watch(company, (newV) => {
+    if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
+}, { deep: true });
 //#endregion
 </script>

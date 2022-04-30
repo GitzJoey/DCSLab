@@ -183,7 +183,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
@@ -191,6 +191,7 @@ import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
 //#region Declarations
@@ -241,11 +242,21 @@ onMounted(() => {
 
     getDDL();
 
+    setMode();
+
     loading.value = false;
+});
+
+onUnmounted(() => {
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 });
 //#endregion
 
 //#region Methods
+const setMode = () => {
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
+}
+
 const getAllBranches = (args) => {
     branchList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -260,9 +271,14 @@ const getAllBranches = (args) => {
 }
 
 const getDDL = () => {
-    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-        statusDDL.value = response.data;
-    });
+    if (getCachedDDL('statusDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+            statusDDL.value = response.data;
+            setCachedDDL('statusDDL', response.data);
+        });    
+    } else {
+        statusDDL.value = getCachedDDL('statusDDL');
+    }
 }
 
 const getDDLSync = () => {
@@ -348,7 +364,13 @@ const resetAlertErrors = () => {
 
 const createNew = () => {
     mode.value = 'create';
-    branch.value = emptyBranch();
+    
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+        branch.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+    } else {
+        branch.value = emptyBranch();
+    }
 
     branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
@@ -384,6 +406,8 @@ const showSelected = (index) => {
 
 const backToList = () => {
     resetAlertErrors();
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+
     mode.value = 'list';
     getAllBranches({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
 }
@@ -412,5 +436,9 @@ watch(selectedUserCompany, () => {
         getDDLSync();
     }
 });
+
+watch(branch, (newV) => {
+    if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
+}, { deep: true });
 //#endregion
 </script>

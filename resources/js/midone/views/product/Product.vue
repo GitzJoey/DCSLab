@@ -312,7 +312,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
@@ -320,6 +320,7 @@ import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
 //#region Declarations
@@ -383,13 +384,23 @@ onMounted(() => {
         
     }
 
+    setMode();
+
     getDDL();
 
     loading.value = false;
 });
+
+onUnmounted(() => {
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+});
 //#endregion
 
 //#region Methods
+const setMode = () => {
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
+}
+
 const getAllProducts = (args) => {
     productList.value = {};
     if (args.pageSize === undefined) args.pageSize = 10;
@@ -404,9 +415,14 @@ const getAllProducts = (args) => {
 }
 
 const getDDL = () => {
-    axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-        statusDDL.value = response.data;
-    });
+    if (getCachedDDL('statusDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
+            statusDDL.value = response.data;
+            setCachedDDL('statusDDL', response.data);
+        });    
+    } else {
+        statusDDL.value = getCachedDDL('statusDDL');
+    }
 
     axios.get(route('api.get.db.product.common.list.product_type', {
             type: 'products'
@@ -528,7 +544,13 @@ const resetAlertErrors = () => {
 
 const createNew = () => {
     mode.value = 'create';
-    product.value = emptyProduct();
+    
+    if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+        product.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+    } else {
+        product.value = emptyProduct();
+    }
 }
 
 const createNewUnit = () => {
@@ -585,6 +607,8 @@ const showSelected = (index) => {
 
 const backToList = () => {
     resetAlertErrors();
+    sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+
     mode.value = 'list';
     getAllProducts({ page: productList.value.current_page, pageSize: productList.value.per_page });
 }
@@ -646,5 +670,9 @@ watch(selectedUserCompany, () => {
         getDDLSync();
     }
 });
+
+watch(product, (newV) => {
+    if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
+}, { deep: true });
 //#endregion
 </script>
