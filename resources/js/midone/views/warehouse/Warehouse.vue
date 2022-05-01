@@ -335,6 +335,7 @@ const handleError = (e, actions) => {
 
 const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
+    if (dom('.border-danger').length !== 0) dom('.border-danger')[0].scrollIntoView({ behavior: "smooth" });
 }
 
 const reValidate = (errors) => {
