@@ -240,7 +240,9 @@ onMounted(() => {
         
     }
 
-    getDDL();
+    setMode();
+    
+    getDDL();  
 
     setMode();
 
