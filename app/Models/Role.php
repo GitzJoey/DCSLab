@@ -18,7 +18,6 @@ class Role extends LaratrustRole
         'description',
         'created_at',
         'updated_at',
-        'pivot',
     ];
 
     public function hId() : Attribute
