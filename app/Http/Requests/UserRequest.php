@@ -16,7 +16,15 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
+        $authd = true;
+
+        if (!Auth::check()) $authd = false;
+        if (empty(Auth::user()->roles)) $authd = false;
+
+        if ($this->route()->getActionMethod() == 'store' && !Auth::user()->hasPermission('create-user')) $authd = false;
+        if ($this->route()->getActionMethod() == 'update' && !Auth::user()->hasPermission('update-user')) $authd = false;
+        
+        return $authd;
     }
 
     /**
