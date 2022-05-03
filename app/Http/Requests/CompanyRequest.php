@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
+use App\Enums\UserRoles;
 use App\Rules\uniqueCode;
 use App\Rules\deactivateDefaultCompany;
 use Illuminate\Support\Facades\Auth;
