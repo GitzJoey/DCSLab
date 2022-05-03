@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
+use App\Enums\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -24,6 +25,8 @@ class UserRequest extends FormRequest
         if ($this->route()->getActionMethod() == 'store' && !Auth::user()->hasPermission('create-user')) $authd = false;
         if ($this->route()->getActionMethod() == 'update' && !Auth::user()->hasPermission('update-user')) $authd = false;
         
+        if (Auth::user()->hasRole(UserRoles::DEVELOPER->value)) $authd = true;
+
         return $authd;
     }
 
