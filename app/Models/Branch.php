@@ -44,16 +44,7 @@ class Branch extends Model
 
     protected static $logOnlyDirty = true;
 
-    protected $hidden = [
-        'id',
-        'company_id',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-        'created_at',
-        'updated_at',
-        'deleted_at'
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'status' => ActiveStatus::class

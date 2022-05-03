@@ -10,12 +10,7 @@ class Permission extends LaratrustPermission
 {
     public $guarded = [];
 
-    protected $hidden = [
-        'id',
-        'description',
-        'created_at',
-        'updated_at',
-    ];
+    protected $hidden = [];
 
     public function hId() : Attribute
     {

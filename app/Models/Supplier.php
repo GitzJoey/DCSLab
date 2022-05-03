@@ -55,17 +55,7 @@ class Supplier extends Model
 
     protected static $logOnlyDirty = true;
 
-    protected $hidden = [
-        'id',
-        'company_id',
-        'user_id',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'taxable_enterprise' => 'boolean',

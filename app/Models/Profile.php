@@ -47,16 +47,7 @@ class Profile extends Model
 
     protected static $logOnlyDirty = true;
 
-    protected $hidden = [
-        'id',
-        'user_id',
-        'created_by',
-        'created_at',
-        'updated_by',
-        'updated_at',
-        'deleted_by',
-        'deleted_at',
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'status' => ActiveStatus::class
