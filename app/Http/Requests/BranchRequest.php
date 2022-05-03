@@ -19,6 +19,16 @@ class BranchRequest extends FormRequest
     public function authorize()
     {
         return Auth::check();
+
+        if (!Auth::check()) return false;
+        if (empty(Auth::user()->roles)) return false;
+
+        if (Auth::user()->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($this->route()->getActionMethod() == 'store' && !Auth::user()->hasPermission('create-branch')) return false;
+        if ($this->route()->getActionMethod() == 'update' && !Auth::user()->hasPermission('update-branch')) return false;
+
+        return false;
     }
 
     /**

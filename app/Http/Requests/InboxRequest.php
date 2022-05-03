@@ -15,6 +15,13 @@ class InboxRequest extends FormRequest
     public function authorize()
     {
         return Auth::check();
+        
+        if (!Auth::check()) return false;
+        if (empty(Auth::user()->roles)) return false;
+
+        if (Auth::user()->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        return false;
     }
 
     /**
