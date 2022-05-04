@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRoles;
 use App\Services\RoleService;
 use App\Services\UserService;
 
@@ -23,7 +24,7 @@ class UserTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($truncate = false, $count = 4)
+    public function run($truncate = false, $count = 4, UserRoles $role = UserRoles::USER)
     {
         if ($truncate) $this->truncateUsersTables();
 
@@ -35,9 +36,7 @@ class UserTableSeeder extends Seeder
             try {
                 $name = $faker->name;
 
-                $usr = User::factory()->make([
-                    'name' => str_replace(' ', '', $name)
-                ]);
+                $usr = User::factory()->make();
 
                 $usr->created_at = Carbon::now();
                 $usr->updated_at = Carbon::now();
@@ -52,7 +51,7 @@ class UserTableSeeder extends Seeder
                 $usr->profile()->save($profile);
 
                 $setting = $instances->make(UserService::class)->createDefaultSetting();
-                $roles = $instances->make(RoleService::class)->readBy('NAME', Config::get('const.DEFAULT.ROLE.USER'));
+                $roles = $instances->make(RoleService::class)->readBy('NAME', $role->value);
 
                 $usr->attachRoles([$roles->id]);
 

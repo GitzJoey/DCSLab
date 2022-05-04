@@ -34,9 +34,15 @@ class ProductFactory extends Factory
         $product_type = $faker->randomElement(ProductType::toArrayValue());
         $status = $faker->randomElement(ActiveStatus::toArrayValue());
 
+        $productName = [
+            'adjective' => ['Small', 'Ergonomic', 'Rustic', 'Intelligent', 'Gorgeous', 'Incredible', 'Fantastic', 'Practical', 'Sleek', 'Awesome', 'Enormous', 'Mediocre', 'Synergistic', 'Heavy Duty', 'Lightweight', 'Aerodynamic', 'Durable'],
+            'material' => ['Steel', 'Wooden', 'Concrete', 'Plastic', 'Cotton', 'Granite', 'Rubber', 'Leather', 'Silk', 'Wool', 'Linen', 'Marble', 'Iron', 'Bronze', 'Copper', 'Aluminum', 'Paper'],
+            'product' => ['Chair', 'Car', 'Computer', 'Gloves', 'Pants', 'Shirt', 'Table', 'Shoes', 'Hat', 'Plate', 'Knife', 'Bottle', 'Coat', 'Lamp', 'Keyboard', 'Bag', 'Bench', 'Clock', 'Watch', 'Wallet'],
+        ];
+
         return [
             'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+            'name' => $faker->randomElement($productName['adjective']).' '.$faker->randomElement($productName['material']).' '.$faker->randomElement($productName['product']),
             'taxable_supply' => (new RandomGenerator())->randomTrueOrFalse(),
             'standard_rated_supply' => $faker->numberBetween(1, 10),
             'price_include_vat' => (new RandomGenerator())->randomTrueOrFalse(),

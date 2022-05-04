@@ -96,7 +96,7 @@
                 <div class="p-5">
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.user.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" rules="required|alpha" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" rules="required|alpha_num" :placeholder="t('views.user.fields.name')" :label="t('views.user.fields.name')" @blur="reValidate(errors)" v-model="user.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <div class="mb-3">

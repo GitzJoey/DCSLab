@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActiveStatus;
+use App\Enums\ProductType;
 use App\Traits\ScopeableByCompany;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -63,26 +64,15 @@ class Product extends Model
 
     protected static $logOnlyDirty = true;
 
-    protected $hidden = [
-        'id',
-        'company_id',
-        'product_group_id',
-        'brand_id',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'pivot'
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'taxable_supply' => 'boolean',
         'price_include_vat' => 'boolean',
         'use_serial_number' => 'boolean',
         'has_expiry_date' => 'boolean',
-        'status' => ActiveStatus::class
+        'status' => ActiveStatus::class,
+        'product_type' => ProductType::class
     ];
     
     public function hId() : Attribute

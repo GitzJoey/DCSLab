@@ -29,7 +29,7 @@ class BranchFactory extends Factory
 
         return [
             'code' => $faker->numberBetween(01, 10),
-            'name' => $branch_name,
+            'name' => 'Kantor Cabang '.$faker->randomElement(['Utama','Pembantu','Daerah']).' '.$branch_name,
             'address' => $faker->address(),
             'city' => $branch_name,
             'contact' => $faker->e164PhoneNumber(),

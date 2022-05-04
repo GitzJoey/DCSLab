@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
+use App\Enums\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -16,7 +17,15 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
+        if (!Auth::check()) return false;
+        if (empty(Auth::user()->roles)) return false;
+
+        if (Auth::user()->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($this->route()->getActionMethod() == 'store' && !Auth::user()->hasPermission('create-user')) return false;
+        if ($this->route()->getActionMethod() == 'update' && !Auth::user()->hasPermission('update-user')) return false;
+
+        return false;
     }
 
     /**
@@ -41,7 +50,7 @@ class UserRequest extends FormRequest
 
         if ($this->route()->getActionMethod() == 'store') {
             $rules_store = [
-                'name' => 'required|alpha',
+                'name' => 'required|alpha_num',
                 'email' => 'required|email|max:255|unique:users',
                 'roles' => 'required',
                 'tax_id' => 'required',
@@ -54,7 +63,7 @@ class UserRequest extends FormRequest
         } else if ($this->route()->getActionMethod() == 'update') {
             $id = $this->route()->parameter('id');
             $rules_update = [
-                'name' => 'required|alpha',
+                'name' => 'required|alpha_num',
                 'email' => 'required|email|max:255|unique:users,email,'.$id,
                 'roles' => 'required',
                 'tax_id' => 'required',
