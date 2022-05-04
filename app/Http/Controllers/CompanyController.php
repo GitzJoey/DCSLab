@@ -111,7 +111,7 @@ class CompanyController extends BaseController
         $userId = Auth::id();
         $default = 0;
 
-        if (array_key_exists('default', $request)) {
+        if ($request['default'] == true) {
             $this->companyService->resetDefaultCompany($userId);
             $default = 1;
         };
