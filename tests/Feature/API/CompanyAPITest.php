@@ -66,7 +66,7 @@ class CompanyAPITest extends APITestCase
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = '';
+        $address = null;
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
         $userId = $this->user->id;
@@ -107,7 +107,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
 
-        $api->assertStatus(500);       
+        $api->assertStatus(422);       
         $api->assertJsonStructure([
             'errors'
         ]);
@@ -173,7 +173,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = (new RandomGenerator())->generateNumber(0, 1);
-        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+        $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
         $userId = $this->user->id;
 
         $company = Company::create([
@@ -193,6 +193,7 @@ class CompanyAPITest extends APITestCase
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -214,9 +215,9 @@ class CompanyAPITest extends APITestCase
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = '';
+        $address = null;
         $default = (new RandomGenerator())->generateNumber(0, 1);
-        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+        $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
         $userId = $this->user->id;
 
         $company = Company::create([
@@ -231,11 +232,12 @@ class CompanyAPITest extends APITestCase
 
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
-        $newAddress = '';
+        $newAddress = null;
         $newDefault = (new RandomGenerator())->generateNumber(0, 1);
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
