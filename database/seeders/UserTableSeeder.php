@@ -36,9 +36,7 @@ class UserTableSeeder extends Seeder
             try {
                 $name = $faker->name;
 
-                $usr = User::factory()->make([
-                    'name' => str_replace(' ', '', $name)
-                ]);
+                $usr = User::factory()->make();
 
                 $usr->created_at = Carbon::now();
                 $usr->updated_at = Carbon::now();
