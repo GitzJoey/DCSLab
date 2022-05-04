@@ -50,7 +50,7 @@ class UserRequest extends FormRequest
 
         if ($this->route()->getActionMethod() == 'store') {
             $rules_store = [
-                'name' => 'required|alpha',
+                'name' => 'required|alpha_num',
                 'email' => 'required|email|max:255|unique:users',
                 'roles' => 'required',
                 'tax_id' => 'required',
@@ -63,7 +63,7 @@ class UserRequest extends FormRequest
         } else if ($this->route()->getActionMethod() == 'update') {
             $id = $this->route()->parameter('id');
             $rules_update = [
-                'name' => 'required|alpha',
+                'name' => 'required|alpha_num',
                 'email' => 'required|email|max:255|unique:users,email,'.$id,
                 'roles' => 'required',
                 'tax_id' => 'required',
