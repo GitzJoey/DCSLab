@@ -3,6 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ProductGroupCategory;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -79,7 +80,7 @@ class ProductGroupServiceImpl implements ProductGroupService
             $productGroup = ProductGroup::whereCompanyId($companyId);
 
             if (!empty($category)) {
-                $productGroup = $productGroup->where('category', '=', Config::get('const.ENUMS.CATEGORY_TYPE'));
+                $productGroup = $productGroup->where('category', '=', ProductGroupCategory::PRODUCTS->value);
             } 
     
             if (empty($search)) {
