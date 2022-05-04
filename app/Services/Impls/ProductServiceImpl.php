@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductUnit;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ProductType;
 use App\Services\ProductService;
 
 use Exception;
@@ -120,9 +121,9 @@ class ProductServiceImpl implements ProductService
                         ->whereCompanyId($companyId);
     
             if (!$isProduct && $isService) {
-                $product = $product->where('product_type', '=', Config::get('const.ENUMS.PRODUCT_TYPE.SVC'));
+                $product = $product->where('product_type', '=', ProductType::SERVICE->value);
             } else if ($isProduct && !$isService) {
-                $product = $product->where('product_type', '<>', Config::get('const.ENUMS.PRODUCT_TYPE.SVC'));
+                $product = $product->where('product_type', '<>', ProductType::SERVICE->value);
             } else if ($isProduct && $isService) {
                 
             } else {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UnitCategory;
 use App\Http\Resources\UnitResource;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class UnitController extends BaseController
         $perPage = $request->has('perPage') ? $request['perPage']:10;
 
         $companyId = Hashids::decode($request['companyId'])[0];
-        $category = $request->has('category') ? intVal($request['category']):Config::get('const.ENUMS.UNIT_CATEGORY.PRODUCTS');
+        $category = $request->has('category') ? intVal($request['category']):UnitCategory::PRODUCTS;
  
         $result = $this->unitService->read($companyId, $category, $search, $paginate, $perPage);
         
