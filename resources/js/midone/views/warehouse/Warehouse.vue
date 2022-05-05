@@ -7,6 +7,7 @@
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.company') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.branch') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.name') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.remarks') }}</th>
@@ -18,6 +19,7 @@
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
                                 <td>{{ item.company.name }}</td>
+                                <td>{{ item.branch.name }}</td>
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>{{ item.remarks }}</td>
@@ -44,6 +46,10 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.warehouse.fields.company_id') }}</div>
                                         <div class="flex-1">{{ item.company.name }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.warehouse.fields.branch_id') }}</div>
+                                        <div class="flex-1">{{ item.branch.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.warehouse.fields.code') }}</div>
@@ -106,6 +112,17 @@
                             <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-danger" />
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Branch -->
+                    <div class="mb-3">
+                        <label class="form-label" for="inputBranch_id">{{ t('views.warehouse.fields.branch_id') }}</label>
+                        <VeeField as="select" id="branch_id" name="branch_id" :class="{'form-control form-select':true, 'border-danger': errors['branch_id']}" v-model="warehouse.branch.hId" :label="t('views.warehouse.fields.branch_id')" rules="required" @blur="reValidate(errors)">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in branchDDL" :value="c.hId">{{ c.name }}</option>
+                        </VeeField>
+                        <ErrorMessage name="branch_id" class="text-danger" />
                     </div>
                     <!-- #endregion -->
 
@@ -219,6 +236,10 @@ const warehouse = ref({
         hId: '',
         name: '' 
     },
+    branch: { 
+        hId: '',
+        name: '' 
+    },
     code: '',
     name: '',
     address: '',
@@ -229,6 +250,7 @@ const warehouse = ref({
 });
 const statusDDL = ref([]);
 const companyDDL = ref([]);
+const branchDDL = ref([]);
 //#endregion
 
 //#region onMounted
@@ -345,6 +367,10 @@ const reValidate = (errors) => {
 const emptyWarehouse = () => {
     return {
         company: {
+            hId: '',
+            name: ''
+        },
+        branch: {
             hId: '',
             name: ''
         },

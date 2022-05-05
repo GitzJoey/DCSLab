@@ -36,6 +36,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -46,6 +47,7 @@ class WarehouseAPITest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($branchId),
             'code' => $code, 
             'name' => $name,
             'address' => $address,
@@ -72,6 +74,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = '';
@@ -82,6 +85,7 @@ class WarehouseAPITest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($branchId),
             'code' => $code, 
             'name' => $name,
             'address' => $address,
@@ -108,6 +112,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
@@ -119,6 +124,7 @@ class WarehouseAPITest extends APITestCase
 
         Warehouse::create([
             'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => $code,
             'name' => $name,
             'address' => $address,
@@ -138,6 +144,7 @@ class WarehouseAPITest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($branchId),
             'code' => $code, 
             'name' => $name,
             'address' => $address,
@@ -158,6 +165,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = null;
+        $branchId = null;
         $code = null;
         $name = null;
         $address = null;
@@ -168,6 +176,7 @@ class WarehouseAPITest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => $code, 
             'name' => $name,
             'address' => $address,
@@ -188,6 +197,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = '';
+        $branchId = '';
         $code = '';
         $name = '';
         $address = '';
@@ -198,6 +208,7 @@ class WarehouseAPITest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
             'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => $code, 
             'name' => $name,
             'address' => $address,
@@ -218,9 +229,11 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
 
         $warehouse = Warehouse::create([
             'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => (new RandomGenerator())->generateAlphaNumeric(5),
             'name' => $this->faker->name,
             'address' => $this->faker->address,
@@ -241,6 +254,7 @@ class WarehouseAPITest extends APITestCase
 
         $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
             'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($branchId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -268,6 +282,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = null;
@@ -278,6 +293,7 @@ class WarehouseAPITest extends APITestCase
 
         $warehouse = Warehouse::create([
             'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => $code,
             'name' => $name,
             'address' => $address,
@@ -298,6 +314,7 @@ class WarehouseAPITest extends APITestCase
 
         $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
             'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($branchId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -319,6 +336,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
 
         for ($i = 0; $i < 3; $i++) {
             $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -331,6 +349,7 @@ class WarehouseAPITest extends APITestCase
     
             Warehouse::create([
                 'company_id' => $companyId,
+                'branch_id' => $branchId,
                 'code' => $code,
                 'name' => $name,
                 'address' => $address,
@@ -352,6 +371,7 @@ class WarehouseAPITest extends APITestCase
 
         $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
             'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($branchId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -372,6 +392,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -382,6 +403,7 @@ class WarehouseAPITest extends APITestCase
 
         $warehouse = Warehouse::create([
             'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => $code,
             'name' => $name,
             'address' => $address,
@@ -394,6 +416,7 @@ class WarehouseAPITest extends APITestCase
 
         $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
             'company_id' => null,
+            'branch_id' => null,
             'code' => null,
             'name' => null,
             'address' => null,
@@ -414,6 +437,7 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -424,6 +448,7 @@ class WarehouseAPITest extends APITestCase
 
         $warehouse = Warehouse::create([
             'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => $code,
             'name' => $name,
             'address' => $address,
@@ -458,12 +483,14 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
+        $branchId = $this->user->branches->random(1)->first()->id;
         $search = "";
         $paginate = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.warehouse.read', [
             'companyId' => Hashids::encode($companyId),
+            'branchId' => Hashids::encode($branchId),
             'search' => $search,
             'paginate' => $paginate,
             'perPage' => $perPage
