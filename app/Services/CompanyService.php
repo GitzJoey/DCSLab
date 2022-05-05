@@ -10,7 +10,7 @@ interface CompanyService
         string $code,
         string $name,
         ?string $address,
-        int $default,
+        bool $default,
         int $status,
         int $userId
     ): Company;
@@ -34,7 +34,7 @@ interface CompanyService
         string $code,
         string $name,
         ?string $address,
-        int $default,
+        bool $default,
         int $status
     ): Company;
 

@@ -83,11 +83,11 @@ class CompanyController extends BaseController
         $request = $companyRequest->validated();
 
         $userId = Auth::id();
-        $default = 0;
+        $default = false;
 
         if (array_key_exists('default', $request) && $request['default']) {
             $this->companyService->resetDefaultCompany($userId);
-            $default = 1;
+            $default = true;
         };
 
         $code = $request['code'];
@@ -109,11 +109,11 @@ class CompanyController extends BaseController
         $request = $companyRequest->validated();
 
         $userId = Auth::id();
-        $default = 0;
+        $default = false;
 
         if ($request['default'] == true) {
             $this->companyService->resetDefaultCompany($userId);
-            $default = 1;
+            $default = true;
         };
 
         $code = $request['code'];
