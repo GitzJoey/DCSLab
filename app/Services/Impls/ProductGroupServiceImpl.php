@@ -3,6 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ProductGroupCategory;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -79,7 +80,7 @@ class ProductGroupServiceImpl implements ProductGroupService
             $productGroup = ProductGroup::whereCompanyId($companyId);
 
             if (!empty($category)) {
-                $productGroup = $productGroup->where('category', '=', Config::get('const.ENUMS.CATEGORY_TYPE'));
+                $productGroup = $productGroup->where('category', '=', ProductGroupCategory::PRODUCTS->value);
             } 
     
             if (empty($search)) {
@@ -95,6 +96,7 @@ class ProductGroupServiceImpl implements ProductGroupService
                 return $productGroup->get();
             }
         } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;

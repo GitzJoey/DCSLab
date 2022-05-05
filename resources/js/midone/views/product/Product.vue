@@ -424,11 +424,14 @@ const getDDL = () => {
         statusDDL.value = getCachedDDL('statusDDL');
     }
 
-    axios.get(route('api.get.db.product.common.list.product_type', {
-            type: 'products'
-        })).then(response => {
+    if (getCachedDDL('productTypeDDL') == null) {
+        axios.get(route('api.get.db.product.common.list.product_type')).then(response => {
             productTypeDDL.value = response.data;
-    });
+            setCachedDDL('productTypeDDL', response.data);
+        });    
+    } else {
+        productTypeDDL.value = getCachedDDL('productTypeDDL');
+    }
 }
 
 const getDDLSync = () => {
@@ -500,6 +503,7 @@ const handleErrorr = (e, actions) => {
 
 const invalidSubmit = (e) => {
     alertErrors.value = e.errors;
+    if (dom('.border-danger').length !== 0) dom('.border-danger')[0].scrollIntoView({ behavior: "smooth" });
 }
 
 const reValidate = (errors) => {

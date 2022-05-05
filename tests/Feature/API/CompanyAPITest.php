@@ -66,7 +66,7 @@ class CompanyAPITest extends APITestCase
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = '';
+        $address = null;
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
         $userId = $this->user->id;
@@ -107,7 +107,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
 
-        $api->assertStatus(500);       
+        $api->assertStatus(422);       
         $api->assertJsonStructure([
             'errors'
         ]);
@@ -172,8 +172,8 @@ class CompanyAPITest extends APITestCase
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
-        $default = (new RandomGenerator())->generateNumber(0, 1);
-        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+        $default = 0;
+        $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
         $userId = $this->user->id;
 
         $company = Company::create([
@@ -189,10 +189,11 @@ class CompanyAPITest extends APITestCase
         $newCode = (new RandomGenerator())->generateNumber(1, 9999) . 'new';
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
-        $newDefault = (new RandomGenerator())->generateNumber(0, 1);
+        $newDefault = 0;
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -214,9 +215,9 @@ class CompanyAPITest extends APITestCase
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = '';
-        $default = (new RandomGenerator())->generateNumber(0, 1);
-        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+        $address = null;
+        $default = 0;
+        $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
         $userId = $this->user->id;
 
         $company = Company::create([
@@ -231,11 +232,12 @@ class CompanyAPITest extends APITestCase
 
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
-        $newAddress = '';
-        $newDefault = (new RandomGenerator())->generateNumber(0, 1);
+        $newAddress = null;
+        $newDefault = 0;
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -243,6 +245,7 @@ class CompanyAPITest extends APITestCase
             'status' => $newStatus
         ]);
 
+        
         $api_edit->assertSuccessful();
         $this->assertDatabaseHas('companies', [
             'id' => $companyId,
@@ -250,7 +253,7 @@ class CompanyAPITest extends APITestCase
             'name' => $newName,
             'address' => $newAddress,
             'default' => $newDefault,
-            'status' => $newStatus
+            'status' => ActiveStatus::fromName($newStatus)
         ]);
     }
 
@@ -267,6 +270,7 @@ class CompanyAPITest extends APITestCase
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', [ 'id' => Hashids::encode($companyId) ]), [
+            'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
             'address' => $newAddress,
@@ -274,9 +278,9 @@ class CompanyAPITest extends APITestCase
             'status' => $newStatus
         ]);
 
-        $api_edit->assertStatus(500);
+        $api_edit->assertStatus(422);
         $api_edit->assertJsonStructure([
-            'message'
+            'errors'
         ]);
     }
 
@@ -284,24 +288,28 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $newCode = null;
-        $newName = null;
-        $newAddress = null;
-        $newDefault = null;
-        $newStatus = null;
+        // $newCode = null;
+        // $newName = null;
+        // $newAddress = null;
+        // $newDefault = null;
+        // $newStatus = null;
 
-        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', null), [
-            'code' => $newCode,
-            'name' => $newName,
-            'address' => $newAddress,
-            'default' => $newDefault,
-            'status' => $newStatus
-        ]);
+        // $api_edit = $this->json('POST', route('api.post.db.company.company.edit', null), [
+        //     'company_id' => null,
+        //     'code' => $newCode,
+        //     'name' => $newName,
+        //     'address' => $newAddress,
+        //     'default' => $newDefault,
+        //     'status' => $newStatus
+        // ]);
 
-        $api_edit->assertStatus(500);
-        $api_edit->assertJsonStructure([
-            'message'
-        ]);
+        // $api_edit->assertStatus(500);
+        // $api_edit->assertJsonStructure([
+        //     'message'
+        // ]);
+
+        // masi bgng oh soale kan with null param ya, nah ini mandeg koh blm ke asert status
+        $this->assertTrue(false);
     }
 
     public function test_api_call_delete()
@@ -312,7 +320,7 @@ class CompanyAPITest extends APITestCase
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 0;
-        $status = 'ACTIVE';
+        $status = 1;
         $userId = $this->user->id;
 
         $company = Company::create([
@@ -349,8 +357,24 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        $companyId = $this->user->companies()->where('default', '=', 1)->first()->id;
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = 1;
+        $status = 1;
+        $userId = $this->user->id;
 
+        $company = Company::create([
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status,
+            'userId' => $userId
+        ]);
+        $this->user->companies()->attach([$company->id]);
+
+        $companyId = $this->user->companies->where('default', '=', 1)->first()->id;
         $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
 
         $api->assertStatus(500);
@@ -366,13 +390,15 @@ class CompanyAPITest extends APITestCase
         $userId = $this->user->id;
         $search = "";
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $page = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
-            'perPage' => $perPage,
+            'page' => $page,
+            'perPage' => $perPage
             
         ]));
 
@@ -395,14 +421,15 @@ class CompanyAPITest extends APITestCase
         $userId = $this->user->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $page = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
-            'perPage' => $perPage,
-            
+            'page' => $page,
+            'perPage' => $perPage,          
         ]));
 
         $api->assertSuccessful();
@@ -424,19 +451,27 @@ class CompanyAPITest extends APITestCase
         $userId = $this->user->id;
         $search = '';
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $page = 1;
         $perPage = -10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
+            'page' => $page,
             'perPage' => $perPage,
             
         ]));
 
-        $api->assertStatus(500);
+        $api->assertStatus(200);
         $api->assertJsonStructure([
-            'errors'
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
         ]);
     }
 
@@ -446,11 +481,13 @@ class CompanyAPITest extends APITestCase
 
         $userId = $this->user->id;
         $search = '';
+        $page = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
+            'page' => $page,
             'perPage' => $perPage,
             
         ]));
@@ -475,13 +512,20 @@ class CompanyAPITest extends APITestCase
             'userId' => null,
             'search' => null,
             'paginate' => null,
+            'page' => null,
             'perPage' => null,
             
         ]));
 
-        $api->assertStatus(500);       
+        $api->assertStatus(200);       
         $api->assertJsonStructure([
-            'errors'
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
         ]);
     }
 
@@ -499,12 +543,14 @@ class CompanyAPITest extends APITestCase
         $userId = $user->id;
         $search = '';
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $page = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
+            'page' => $page,
             'perPage' => $perPage,
             
         ]));
@@ -535,12 +581,14 @@ class CompanyAPITest extends APITestCase
         $userId = $user->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $page = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
+            'page' => $page,
             'perPage' => $perPage,
             
         ]));
@@ -571,12 +619,14 @@ class CompanyAPITest extends APITestCase
         $userId = $user->id;
         $search = '';
         $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $page = 1;
         $perPage = -10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
+            'page' => $page,
             'perPage' => $perPage,
             
         ]));
@@ -606,11 +656,13 @@ class CompanyAPITest extends APITestCase
 
         $userId = $user->id;
         $search = '';
+        $page = 1;
         $perPage = 10;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
+            'page' => $page,
             'perPage' => $perPage,
             
         ]));
@@ -642,13 +694,20 @@ class CompanyAPITest extends APITestCase
             'userId' => null,
             'search' => null,
             'paginate' => null,
+            'page' => null,
             'perPage' => null,
             
         ]));
 
-        $api->assertStatus(500);       
+        $api->assertStatus(200);       
         $api->assertJsonStructure([
-            'errors'
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
         ]);
     }
 }

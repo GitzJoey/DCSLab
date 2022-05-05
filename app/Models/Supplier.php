@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActiveStatus;
-use App\Enums\PaymentTerm;
+use App\Enums\PaymentTermType;
 use App\Traits\ScopeableByCompany;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -55,22 +55,11 @@ class Supplier extends Model
 
     protected static $logOnlyDirty = true;
 
-    protected $hidden = [
-        'id',
-        'company_id',
-        'user_id',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-        'created_at',
-        'updated_at',
-        'deleted_at',
-        'pivot'
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'taxable_enterprise' => 'boolean',
-        'payment_term' => PaymentTerm::class,
+        'payment_term_type' => PaymentTermType::class,
         'status' => ActiveStatus::class
     ];
     

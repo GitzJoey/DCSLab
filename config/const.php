@@ -31,31 +31,5 @@ return [
         'KEYWORDS' => [
             'AUTO' => '[AUTO]',
         ]
-    ],
-
-    'ENUMS' => [
-        'ACTIVE_STATUS' => [
-            'ACTIVE' => 1,
-            'INACTIVE' => 0
-        ],
-        'PRODUCT_TYPE' => [
-            'RAW_MATERIAL' => 1,
-            'WORK_IN_PROGRESS' => 2,
-            'FINISHED_GOODS' => 3,
-            'SERVICE' => 4
-        ],
-        'PAYMENT_TERM' => [
-            'PAYMENT_IN_ADVANCE' => 'PIA',
-            '30DAYS_AFTER_INVOICE' => 'NET30',
-            'END_OF_MONTH' => 'EOM',
-            'CASH_ON_DELIVERY' => 'COD',
-            'CASH_ON_NEXT_DELIVERY' => 'CND',
-            'CASH_BEFORE_SHIPMENT' => 'CBS'
-        ],
-        'UNIT_CATEGORY' => [
-            'PRODUCTS' => 1,
-            'SERVICES' => 2,
-            'PRODUCTS_AND_SERVICES' => 3
-        ]
-    ],
+    ]
 ];

@@ -36,15 +36,7 @@ class Unit extends Model
 
     protected static $logOnlyDirty = true;
 
-    protected $hidden = [
-        'id',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-        'created_at',
-        'update_at',
-        'deleted_at'
-    ];
+    protected $hidden = [];
 
     public function hId() : Attribute
     {

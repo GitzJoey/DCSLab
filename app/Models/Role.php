@@ -13,13 +13,7 @@ class Role extends LaratrustRole
 
     public $guarded = [];
 
-    protected $hidden = [
-        'id',
-        'description',
-        'created_at',
-        'updated_at',
-        'pivot',
-    ];
+    protected $hidden = [];
 
     public function hId() : Attribute
     {

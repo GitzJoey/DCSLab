@@ -3,6 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
+use App\Enums\UnitCategory;
 use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -61,10 +62,10 @@ class UnitServiceImpl implements UnitService
         try {
             $unit = Unit::whereCompanyId($companyId);
          
-            if ($category == Config::get('const.ENUMS.UNIT_CATEGORY.PRODUCTS')) {
-                $unit = $unit->where('category', '<>', Config::get('const.ENUMS.UNIT_CATEGORY.SERVICES'));
-            } else if ($category == Config::get('const.ENUMS.UNIT_CATEGORY.SERVICES')) {
-                $unit = $unit->where('category', '<>', Config::get('const.ENUMS.UNIT_CATEGORY.PRODUCTS'));
+            if ($category == UnitCategory::PRODUCTS) {
+                $unit = $unit->where('category', '<>', UnitCategory::SERVICES->value);
+            } else if ($category == UnitCategory::SERVICES) {
+                $unit = $unit->where('category', '<>', UnitCategory::PRODUCTS->value);
             } else {
     
             }
@@ -82,6 +83,7 @@ class UnitServiceImpl implements UnitService
                 return $unit->get();
             }
         } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;

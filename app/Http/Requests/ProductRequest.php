@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
 use App\Enums\ProductType;
+use App\Enums\UserRoles;
 use App\Rules\uniqueCode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,16 @@ class ProductRequest extends FormRequest
     public function authorize()
     {
         return Auth::check();
+        
+        if (!Auth::check()) return false;
+        if (empty(Auth::user()->roles)) return false;
+
+        if (Auth::user()->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($this->route()->getActionMethod() == 'store' && !Auth::user()->hasPermission('create-product')) return false;
+        if ($this->route()->getActionMethod() == 'update' && !Auth::user()->hasPermission('update-product')) return false;
+
+        return false;
     }
 
     /**
