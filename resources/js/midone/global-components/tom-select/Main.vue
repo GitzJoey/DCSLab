@@ -8,8 +8,8 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
-import { setValue, init, reInit } from "./index";
+import { computed, watch, toRaw } from "vue";
+import { setValue, init, updateValue } from "./index";
 import dom from "@left4code/tw-starter/dist/js/dom";
 
 const vSelectDirective = {
@@ -24,8 +24,15 @@ const vSelectDirective = {
   },
   updated(el, { value }) {
     const clonedEl = dom(el).next()[0];
-    setValue(clonedEl, value.props);
-    reInit(el, clonedEl, value.props, value.emit, value.computedOptions);
+    const modelValue = toRaw(value.props.modelValue);
+    updateValue(
+      el,
+      clonedEl,
+      modelValue,
+      value.props,
+      value.emit,
+      value.computedOptions
+    );
   },
 };
 

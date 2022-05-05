@@ -288,28 +288,21 @@ class CompanyAPITest extends APITestCase
     {
         $this->actingAs($this->user);
 
-        // $newCode = null;
-        // $newName = null;
-        // $newAddress = null;
-        // $newDefault = null;
-        // $newStatus = null;
+        $companyId = $this->user->companies->first()->id;
 
-        // $api_edit = $this->json('POST', route('api.post.db.company.company.edit', null), [
-        //     'company_id' => null,
-        //     'code' => $newCode,
-        //     'name' => $newName,
-        //     'address' => $newAddress,
-        //     'default' => $newDefault,
-        //     'status' => $newStatus
-        // ]);
+        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', Hashids::encode($companyId)), [
+             'company_id' => null,
+             'code' => null,
+             'name' => null,
+             'address' => null,
+             'default' => null,
+             'status' => null
+        ]);
 
-        // $api_edit->assertStatus(500);
-        // $api_edit->assertJsonStructure([
-        //     'message'
-        // ]);
-
-        // masi bgng oh soale kan with null param ya, nah ini mandeg koh blm ke asert status
-        $this->assertTrue(false);
+        $api_edit->assertStatus(500);
+        $api_edit->assertJsonStructure([
+             'message'
+        ]);
     }
 
     public function test_api_call_delete()
@@ -389,7 +382,7 @@ class CompanyAPITest extends APITestCase
 
         $userId = $this->user->id;
         $search = "";
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $page = 1;
         $perPage = 10;
 
@@ -420,7 +413,7 @@ class CompanyAPITest extends APITestCase
 
         $userId = $this->user->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $page = 1;
         $perPage = 10;
 

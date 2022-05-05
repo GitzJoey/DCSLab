@@ -25,7 +25,7 @@ class CompanyServiceImpl implements CompanyService
         string $code, 
         string $name, 
         ?string $address, 
-        int $default, 
+        bool $default, 
         int $status, 
         int $userId
     ): Company
@@ -38,7 +38,7 @@ class CompanyServiceImpl implements CompanyService
             if (!$usr) return null;
 
             if ($usr->companies()->count() == 0) {
-                $default = 1;
+                $default = true;
                 $status = 1;
             }
 
@@ -130,7 +130,7 @@ class CompanyServiceImpl implements CompanyService
         string $code, 
         string $name, 
         ?string $address, 
-        int $default, 
+        bool $default, 
         int $status
     ): Company
     {
