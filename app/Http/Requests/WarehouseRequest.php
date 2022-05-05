@@ -53,6 +53,7 @@ class WarehouseRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', 'bail'],
+                    'branch_id' => ['required', 'bail'],
                     'code' => ['required', 'max:255', new uniqueCode(table: 'warehouses', companyId: $companyId)],
                     'name' => 'required|max:255',
                     'status' => [new Enum(ActiveStatus::class)]
@@ -61,6 +62,7 @@ class WarehouseRequest extends FormRequest
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
+                    'branch_id' => ['required', 'bail'],
                     'code' => new uniqueCode(table: 'warehouses', companyId: $companyId, exceptId: $this->route('id')),
                     'name' => 'required|max:255',
                     'status' => [new Enum(ActiveStatus::class)]
