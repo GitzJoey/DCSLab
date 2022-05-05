@@ -22,6 +22,7 @@ class Warehouse extends Model
     
     protected $fillable = [
         'company_id',
+        'branch_id',
         'code',
         'name',
         'address',
@@ -33,6 +34,7 @@ class Warehouse extends Model
 
     protected static $logAttributes = [
         'company_id',
+        'branch_id',
         'code',
         'name',
         'address',

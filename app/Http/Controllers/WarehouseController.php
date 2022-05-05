@@ -61,6 +61,7 @@ class WarehouseController extends BaseController
         $request = $warehouseRequest->validated();
         
         $company_id = Hashids::decode($request['company_id'])[0];
+        $branch_id = Hashids::decode($request['branch_id'])[0];
         $code = $request['code'];
         $name = $request['name'];
         $address = $request['address'];
@@ -71,6 +72,7 @@ class WarehouseController extends BaseController
 
         $result = $this->warehouseService->create(
             $company_id,
+            $branch_id,
             $code, 
             $name,
             $address,
@@ -88,6 +90,7 @@ class WarehouseController extends BaseController
         $request = $warehouseRequest->validated();
 
         $company_id = Hashids::decode($request['company_id'])[0];
+        $branch_id = Hashids::decode($request['branch_id'])[0];
         $code = $request['code'];
         $name = $request['name'];
         $address = $request['address'];
@@ -99,6 +102,7 @@ class WarehouseController extends BaseController
         $warehouse = $this->warehouseService->update(
             $id,
             $company_id,
+            $branch_id,
             $code, 
             $name,
             $address,

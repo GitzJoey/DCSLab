@@ -357,6 +357,7 @@
                 "title": "Warehouse Lists",
                 "cols": {
                     "company": "Company",
+                    "branch": "Branch",
                     "code": "Code",
                     "name": "Name",
                     "remarks": "Remarks",
@@ -371,6 +372,7 @@
             },
             "fields": {
                 "company_id": "Company",
+                "branch_id": "Branch",
                 "code": "Code",
                 "name": "Name",
                 "address": "Address",
