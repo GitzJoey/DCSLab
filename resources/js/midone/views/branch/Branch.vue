@@ -371,8 +371,7 @@ const createNew = () => {
     } else {
         branch.value = emptyBranch();
     }
-
-    branch.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+    branch.value.company.hId = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
 const onDataListChange = ({page, pageSize, search}) => {

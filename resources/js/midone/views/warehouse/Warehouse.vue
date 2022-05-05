@@ -372,7 +372,7 @@ const createNew = () => {
         warehouse.value = emptyWarehouse();
     }
 
-    warehouse.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+    warehouse.value.company.hId = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
