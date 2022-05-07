@@ -3,14 +3,15 @@
 namespace Tests\Feature\Service;
 
 use TypeError;
-use App\Models\Warehouse;
-use App\Models\Company;
-use Tests\ServiceTestCase;
-use App\Services\WarehouseService;
-use App\Actions\RandomGenerator;
 use App\Models\Branch;
+use App\Models\Company;
+use App\Models\Warehouse;
+use Tests\ServiceTestCase;
+use App\Actions\RandomGenerator;
+use App\Services\WarehouseService;
 use Illuminate\Support\Collection;
 use Vinkla\Hashids\Facades\Hashids;
+use Database\Seeders\BranchTableSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -69,8 +70,12 @@ class WarehouseServiceTest extends ServiceTestCase
 
     public function test_call_create()
     {
-        $company_id = Company::inRandomOrder()->get()[0]->id;
-        $branch_id = Branch::inRandomOrder()->get()[0]->id;
+        $companyId = Company::inRandomOrder()->get()[0]->id;
+
+        $branchSeeder = new BranchTableSeeder();
+        $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
+        $branchId = Branch::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
+        
         $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -80,8 +85,8 @@ class WarehouseServiceTest extends ServiceTestCase
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $response = $this->service->create(
-            $company_id,
-            $branch_id,
+            $companyId,
+            $branchId,
             $code,
             $name,
             $address,
@@ -94,8 +99,8 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
 
         $this->assertDatabaseHas('warehouses', [
-            'company_id' => $company_id,
-            'branch_id' => $branch_id,
+            'company_id' => $companyId,
+            'branch_id' => $branchId,
             'code' => $code,
             'name' => $name,
             'address' => $address,

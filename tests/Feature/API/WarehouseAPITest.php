@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Warehouse;
 use App\Actions\RandomGenerator;
 use App\Services\WarehouseService;
+use Database\Seeders\BranchTableSeeder;
 use Illuminate\Container\Container;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -112,7 +113,10 @@ class WarehouseAPITest extends APITestCase
         $this->actingAs($this->user);
 
         $companyId = $this->user->companies->random(1)->first()->id;
-        $branchId = $this->user->branches->random(1)->first()->id;
+
+        $branchSeeder = new BranchTableSeeder();
+        $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
+        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
