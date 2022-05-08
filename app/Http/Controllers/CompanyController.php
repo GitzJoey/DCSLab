@@ -90,8 +90,13 @@ class CompanyController extends BaseController
             $default = true;
         };
 
-        $code = $request['code'];
-
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->companyService->generateUniqueCode() : $request['code'];
+        if (!$this->companyService->isUniqueCode($code, $userId)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
+        
         $result = $this->companyService->create(
             $code,
             $request['name'],
@@ -116,7 +121,12 @@ class CompanyController extends BaseController
             $default = true;
         };
 
-        $code = $request['code'];
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->companyService->generateUniqueCode() : $request['code'];
+        if (!$this->companyService->isUniqueCode($code, $userId, $id)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
 
         $result = $this->companyService->update(
             $id,
