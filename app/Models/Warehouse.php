@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\Branch;
-use App\Models\Company;
 use App\Enums\ActiveStatus;
-use Spatie\Activitylog\LogOptions;
-use Vinkla\Hashids\Facades\Hashids;
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\Company;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+use Vinkla\Hashids\Facades\Hashids;
 
 class Warehouse extends Model
 {
@@ -23,6 +22,7 @@ class Warehouse extends Model
     
     protected $fillable = [
         'company_id',
+        'branch_id',
         'code',
         'name',
         'address',
@@ -34,6 +34,7 @@ class Warehouse extends Model
 
     protected static $logAttributes = [
         'company_id',
+        'branch_id',
         'code',
         'name',
         'address',
