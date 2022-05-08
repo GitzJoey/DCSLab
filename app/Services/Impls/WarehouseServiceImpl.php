@@ -20,6 +20,7 @@ class WarehouseServiceImpl implements WarehouseService
     
     public function create(
         int $company_id,
+        int $branch_id,
         string $code,
         string $name,
         ?string $address = null,
@@ -39,6 +40,7 @@ class WarehouseServiceImpl implements WarehouseService
 
             $warehouse = new Warehouse();
             $warehouse->company_id = $company_id;
+            $warehouse->branch_id = $branch_id;
             $warehouse->code = $code;
             $warehouse->name = $name;
             $warehouse->address = $address;
@@ -102,6 +104,7 @@ class WarehouseServiceImpl implements WarehouseService
     public function update(
         int $id,
         int $company_id,
+        int $branch_id,
         string $code,
         string $name,
         ?string $address = null,
@@ -123,6 +126,7 @@ class WarehouseServiceImpl implements WarehouseService
     
             $warehouse->update([
                 'company_id' => $company_id,
+                'branch_id' => $branch_id,
                 'code' => $code,
                 'name' => $name,
                 'address' => $address,
