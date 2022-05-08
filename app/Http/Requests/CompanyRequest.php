@@ -53,7 +53,7 @@ class CompanyRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'companies', userId: $userId)],
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'default' => 'required|boolean',
                     'status' => [new Enum(ActiveStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
@@ -62,7 +62,7 @@ class CompanyRequest extends FormRequest
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'companies', userId: $userId, exceptId: $companyId)],
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'default' => 'required|boolean',
                     'status' => [new Enum(ActiveStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]

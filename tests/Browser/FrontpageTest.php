@@ -20,4 +20,19 @@ class FrontpageTest extends DuskTestCase
                     ->assertSee('DCSLab');
         });
     }
+
+    public function test_registerpage_is_showing()
+    {
+
+    }
+
+    public function test_loginpage_is_showing()
+    {
+
+    }
+
+    public function test_resetpasswordpage_is_showing()
+    {
+        
+    }
 }
