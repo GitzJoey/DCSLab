@@ -62,6 +62,11 @@ class Warehouse extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
