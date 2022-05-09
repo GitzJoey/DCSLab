@@ -62,7 +62,14 @@ class BranchController extends BaseController
         $request = $branchRequest->validated();
         
         $company_id = Hashids::decode($request['company_id'])[0];
-        $code = $request['code'];
+
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->branchService->generateUniqueCode($company_id) : $request['code'];
+        if (!$this->branchService->isUniqueCode($code, $company_id)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
+
         $name = $request['name'];
         $address = $request['address'];
         $city = $request['city'];
@@ -89,7 +96,14 @@ class BranchController extends BaseController
         $request = $branchRequest->validated();
 
         $company_id = Hashids::decode($request['company_id'])[0];
-        $code = $request['code'];
+
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->branchService->generateUniqueCode($company_id) : $request['code'];
+        if (!$this->branchService->isUniqueCode($code, $company_id, $id)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
+
         $name = $request['name'];
         $address = $request['address'];
         $city = $request['city'];
