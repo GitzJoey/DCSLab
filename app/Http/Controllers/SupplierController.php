@@ -117,7 +117,7 @@ class SupplierController extends BaseController
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->supplierService->generateUniqueCode($company_id) : $request['code'];
-        if (!$this->supplierService->isUniqueCode($code, $company_id)) {
+        if (!$this->supplierService->isUniqueCode($code, $company_id, $id)) {
             return response()->error([
                 'code' => trans('rules.unique_code')
             ]);
