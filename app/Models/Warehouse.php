@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use App\Enums\ActiveStatus;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-
+use App\Models\Branch;
 use App\Models\Company;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Enums\ActiveStatus;
 use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-
 use Vinkla\Hashids\Facades\Hashids;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Warehouse extends Model
 {
