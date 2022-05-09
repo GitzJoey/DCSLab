@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Enums\ActiveStatus;
 use App\Enums\PaymentTerm;
 use App\Enums\UserRoles;
-use App\Rules\uniqueCode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -58,7 +57,7 @@ class SupplierRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', 'bail'],
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'suppliers', companyId: $companyId)],
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(ActiveStatus::class)],
                     'payment_term_type' => [new Enum(PaymentTerm::class)],
@@ -70,7 +69,7 @@ class SupplierRequest extends FormRequest
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
-                    'code' => new uniqueCode(table: 'suppliers', companyId: $companyId, exceptId: $this->route('id')),
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(ActiveStatus::class)],
                     'payment_term_type' => [new Enum(PaymentTerm::class)],

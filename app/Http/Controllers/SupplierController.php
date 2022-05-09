@@ -64,7 +64,12 @@ class SupplierController extends BaseController
         
         $company_id = Hashids::decode($request['company_id'])[0];
 
-        $code = $request['code'];
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->supplierService->generateUniqueCode($company_id) : $request['code'];
+        if (!$this->supplierService->isUniqueCode($code, $company_id)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
 
         $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
 
@@ -111,6 +116,12 @@ class SupplierController extends BaseController
         $request = $supplierRequest->validated();
         $company_id = Hashids::decode($request['company_id'])[0];
 
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->supplierService->generateUniqueCode($company_id) : $request['code'];
+        if (!$this->supplierService->isUniqueCode($code, $company_id)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
 
         $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
 
