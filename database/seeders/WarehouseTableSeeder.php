@@ -28,7 +28,7 @@ class WarehouseTableSeeder extends Seeder
             }
         } else {
             $companies = Company::get()->pluck('id');
-        }        
+        }
 
         foreach($companies as $c) {
             for($i = 0; $i < $warehousePerCompanies; $i++)
