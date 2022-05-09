@@ -94,11 +94,9 @@ class CompanyController extends BaseController
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-                $isUniqueCode = $this->companyService->isUniqueCode($code, $userId);
-            } while ($isUniqueCode == false);
+            } while ($this->companyService->isUniqueCode($code, $userId) == false);
         } else {
-            $isUniqueCode = $this->companyService->isUniqueCode($code, $userId);
-            if ($isUniqueCode == false) {
+            if ($this->companyService->isUniqueCode($code, $userId) == false) {
                 return response()->error([
                     'code' => trans('rules.unique_code')
                 ]);
@@ -133,11 +131,9 @@ class CompanyController extends BaseController
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-                $isUniqueCode = $this->companyService->isUniqueCode($code, $userId, $id);
-            } while ($isUniqueCode == false);
+            } while ($this->companyService->isUniqueCode($code, $userId, $id) == false);
         } else {
-            $isUniqueCode = $this->companyService->isUniqueCode($code, $userId, $id);
-            if ($isUniqueCode == false) {
+            if ($this->companyService->isUniqueCode($code, $userId, $id) == false) {
                 return response()->error([
                     'code' => trans('rules.unique_code')
                 ]);
