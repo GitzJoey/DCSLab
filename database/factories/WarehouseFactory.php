@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Enums\ActiveStatus;
-use App\Models\Warehouse;
 use App\Models\Company;
+use App\Models\Warehouse;
+use App\Enums\ActiveStatus;
 
+use App\Actions\RandomGenerator;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class WarehouseFactory extends Factory
@@ -28,7 +29,7 @@ class WarehouseFactory extends Factory
         $warehouse_name = $faker->city();
 
         return [
-            'code' => $faker->numberBetween(01, 10),
+            'code' => (new RandomGenerator())->generateAlphaNumeric(5),
             'name' => 'Gudang '.$warehouse_name,
             'address' => $faker->address(),
             'city' => $warehouse_name,
