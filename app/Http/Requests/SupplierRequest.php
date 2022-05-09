@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Enums\ActiveStatus;
 use App\Enums\PaymentTerm;
 use App\Enums\UserRoles;
-use App\Rules\uniqueCode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
