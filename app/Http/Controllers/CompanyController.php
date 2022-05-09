@@ -98,7 +98,7 @@ class CompanyController extends BaseController
             } while ($isUniqueCode == false);
         } else {
             $isUniqueCode = $this->companyService->isUniqueCode($code, $userId);
-            if ($isUniqueCode = false) {
+            if ($isUniqueCode == false) {
                 return response()->error([
                     'code' => trans('rules.unique_code')
                 ]);
@@ -137,7 +137,7 @@ class CompanyController extends BaseController
             } while ($isUniqueCode == false);
         } else {
             $isUniqueCode = $this->companyService->isUniqueCode($code, $userId, $id);
-            if ($isUniqueCode = false) {
+            if ($isUniqueCode == false) {
                 return response()->error([
                     'code' => trans('rules.unique_code')
                 ]);
