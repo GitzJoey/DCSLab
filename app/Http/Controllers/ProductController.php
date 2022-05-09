@@ -103,11 +103,17 @@ class ProductController extends BaseController
         
         $company_id = Hashids::decode($request['company_id'])[0];
 
-        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->productService->generateUniqueCodeForProduct($company_id) : $request['code'];
-        if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
-            return response()->error([
-                'code' => trans('rules.unique_code')
-            ]);
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->productService->generateUniqueCodeForProduct($company_id);
+            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id));
+        } else {
+            if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
+                return response()->error([
+                    'code' => trans('rules.unique_code')
+                ]);
+            }
         }
         
         $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
@@ -172,11 +178,17 @@ class ProductController extends BaseController
 
         $company_id = Hashids::decode($request['company_id'])[0];
 
-        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->productService->generateUniqueCodeForProduct($company_id) : $request['code'];
-        if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $id)) {
-            return response()->error([
-                'code' => trans('rules.unique_code')
-            ]);
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->productService->generateUniqueCodeForProduct($company_id);
+            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id, $id));
+        } else {
+            if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $id)) {
+                return response()->error([
+                    'code' => trans('rules.unique_code')
+                ]);
+            }
         }
 
         $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
