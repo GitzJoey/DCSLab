@@ -100,7 +100,7 @@ class WarehouseController extends BaseController
         $branch_id = Hashids::decode($request['branch_id'])[0];
 
         $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->warehouseService->generateUniqueCode($company_id) : $request['code'];
-        if (!$this->warehouseService->isUniqueCode($code, $company_id)) {
+        if (!$this->warehouseService->isUniqueCode($code, $company_id, $id)) {
             return response()->error([
                 'code' => trans('rules.unique_code')
             ]);
