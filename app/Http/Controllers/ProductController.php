@@ -63,8 +63,19 @@ class ProductController extends BaseController
     public function readServices(Request $request)
     {
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
+        $search = !is_null($search) ? $search : '';
+
         $paginate = $request->has('paginate') ? $request['paginate']:true;
+        $paginate = !is_null($paginate) ? $paginate : true;
+        $paginate = is_numeric($paginate) ? abs($paginate) : true;
+
+        $page = $request->has('page') ? $request['page']:1;
+        $page = !is_null($page) ? $page : 1;
+        $page = is_numeric($page) ? abs($page) : 1; 
+
         $perPage = $request->has('perPage') ? $request['perPage']:10;
+        $perPage = !is_null($perPage) ? $perPage : 10;
+        $perPage = is_numeric($perPage) ? abs($perPage) : 10; 
 
         $companyId = Hashids::decode($request['companyId'])[0];
 
@@ -74,6 +85,7 @@ class ProductController extends BaseController
                     isService: true, 
                     search: $search, 
                     paginate: $paginate, 
+                    page: $page,
                     perPage: $perPage);
         
         if (is_null($result)) {
@@ -91,7 +103,13 @@ class ProductController extends BaseController
         
         $company_id = Hashids::decode($request['company_id'])[0];
 
-        $code = $request['code'];
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->productService->generateUniqueCodeForProduct($company_id) : $request['code'];
+        if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
+        
         $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
@@ -152,8 +170,15 @@ class ProductController extends BaseController
     {
         $request = $productRequest->validated();
 
-        $code = $request['code'];
         $company_id = Hashids::decode($request['company_id'])[0];
+
+        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->productService->generateUniqueCodeForProduct($company_id) : $request['code'];
+        if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $id)) {
+            return response()->error([
+                'code' => trans('rules.unique_code')
+            ]);
+        }
+
         $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
