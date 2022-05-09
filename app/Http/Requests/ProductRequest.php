@@ -57,7 +57,7 @@ class ProductRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', 'bail'],
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'products', companyId: $companyId)],
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                     'brand_id' => 'required',
                     'taxable_supply' => 'required|boolean',
@@ -73,7 +73,7 @@ class ProductRequest extends FormRequest
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', 'bail'],
-                    'code' => ['required', 'max:255', new uniqueCode(table: 'products', companyId: $companyId, exceptId: $this->route('id'))],
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                     'brand_id' => 'required',
                     'taxable_supply' => 'required|boolean',
