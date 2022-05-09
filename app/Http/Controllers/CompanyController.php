@@ -90,11 +90,17 @@ class CompanyController extends BaseController
             $default = true;
         };
 
-        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->companyService->generateUniqueCode() : $request['code'];
-        if (!$this->companyService->isUniqueCode($code, $userId)) {
-            return response()->error([
-                'code' => trans('rules.unique_code')
-            ]);
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->companyService->generateUniqueCode();
+            } while (!$this->companyService->isUniqueCode($code, $userId));
+        } else {
+            if (!$this->companyService->isUniqueCode($code, $userId)) {
+                return response()->error([
+                    'code' => trans('rules.unique_code')
+                ]);
+            }
         }
         
         $result = $this->companyService->create(
@@ -121,11 +127,17 @@ class CompanyController extends BaseController
             $default = true;
         };
 
-        $code = $request['code'] == config('const.DEFAULT.KEYWORDS.AUTO') ? $code = $this->companyService->generateUniqueCode() : $request['code'];
-        if (!$this->companyService->isUniqueCode($code, $userId, $id)) {
-            return response()->error([
-                'code' => trans('rules.unique_code')
-            ]);
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->companyService->generateUniqueCode();
+            } while (!$this->companyService->isUniqueCode($code, $userId, $id));
+        } else {
+            if (!$this->companyService->isUniqueCode($code, $userId, $id)) {
+                return response()->error([
+                    'code' => trans('rules.unique_code')
+                ]);
+            }
         }
 
         $result = $this->companyService->update(
