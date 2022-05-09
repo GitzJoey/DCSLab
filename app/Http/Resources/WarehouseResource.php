@@ -17,6 +17,7 @@ class WarehouseResource extends JsonResource
         return [
             'hId' => $this->hId,
             'company' => new CompanyResource($this->company),
+            'branch' => new BranchResource($this->branch),
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,
