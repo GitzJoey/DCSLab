@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Actions\RandomGenerator;
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Warehouse;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use App\Actions\RandomGenerator;
+use Illuminate\Database\Eloquent\Collection;
 
 class WarehouseTableSeeder extends Seeder
 {
@@ -27,15 +28,17 @@ class WarehouseTableSeeder extends Seeder
             }
         } else {
             $companies = Company::get()->pluck('id');
-        }
+        }        
 
         foreach($companies as $c) {
             for($i = 0; $i < $warehousePerCompanies; $i++)
             {
-                $branch = Warehouse::factory()->create([
-                    'company_id' => $c
+                $branchId = Branch::whereRelation('company', 'id', '=', $c)->inRandomOrder()->first()->id;
+                Warehouse::factory()->create([
+                    'company_id' => $c,
+                    'branch_id' => $branchId
                 ]);    
-            }    
+            }
         }
     }
 }
