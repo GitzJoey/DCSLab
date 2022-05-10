@@ -110,9 +110,9 @@ class ProductGroupServiceImpl implements ProductGroupService
         try {
             if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED')) return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
 
-            if (!Cache::has($key)) return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+            if (!Cache::tags([auth()->user()->id, __METHOD__])->has($key)) return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
 
-            return Cache::get($key);
+            return Cache::tags([auth()->user()->id, __METHOD__])->get($key);
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
