@@ -66,6 +66,8 @@ class CompanyServiceImpl implements CompanyService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $company;
         } catch (Exception $e) {
             DB::rollBack();
@@ -205,6 +207,8 @@ class CompanyServiceImpl implements CompanyService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $company->refresh();
         } catch (Exception $e) {
             DB::rollBack();
@@ -233,6 +237,8 @@ class CompanyServiceImpl implements CompanyService
             }
 
             DB::commit();
+
+            $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
@@ -268,7 +274,7 @@ class CompanyServiceImpl implements CompanyService
 
     public function isDefaultCompany(int $companyId): bool
     {
-        return Company::where('id', '=', $companyId)->first()->default == 1 ? true:false;
+        return Company::where('id', '=', $companyId)->first()->default;
     }
 
     public function resetDefaultCompany(int $userId): bool
