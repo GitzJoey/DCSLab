@@ -4,6 +4,7 @@ namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
+use App\Enums\UserRoles;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -47,7 +48,7 @@ class UserServiceImpl implements UserService
             'status' => ActiveStatus::ACTIVE,
         );
 
-        $rolesId = array(Role::where('name', Config::get('const.DEFAULT.ROLE.USER'))->first()->id);
+        $rolesId = array(Role::where('name', UserRoles::USER->value)->first()->id);
 
         $usr = $this->create(
             $name,

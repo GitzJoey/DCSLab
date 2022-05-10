@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Enums\UserRoles;
 use App\Services\DashboardService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -20,10 +21,10 @@ class DashboardServiceImpl implements DashboardService
         $usr = Auth::user();
 
         $usrRoles = $usr->roles;
-        $hasUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() ? true:false;
-        $hasOnlyUserRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.USER'))->isNotEmpty() && $usrRoles->count() == 1 ? true:false;
-        $hasDevRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.DEV'))->isNotEmpty() ? true:false;
-        $hasAdminRole = $usrRoles->where('name', Config::get('const.DEFAULT.ROLE.ADMIN'))->isNotEmpty() ? true:false;
+        $hasUserRole = $usrRoles->where('name', UserRoles::USER->value)->isNotEmpty() ? true:false;
+        $hasOnlyUserRole = $usrRoles->where('name', UserRoles::USER->value)->isNotEmpty() && $usrRoles->count() == 1 ? true:false;
+        $hasDevRole = $usrRoles->where('name', UserRoles::DEVELOPER->value)->isNotEmpty() ? true:false;
+        $hasAdminRole = $usrRoles->where('name', UserRoles::ADMINISTRATOR->value)->isNotEmpty() ? true:false;
 
         $hasCompany = $usr->companies->count() != 0 ? true:false;
 

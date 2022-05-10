@@ -2,12 +2,6 @@
 
 return [
     'DEFAULT' => [
-        'ROLE' => [
-            'DEV' => 'dev',
-            'ADMIN' => 'administrator',
-            'USER' => 'user'
-        ],
-
         'API_TOKEN_NAME' => 'api',
 
         'PAGINATION_LIMIT' => 10,
