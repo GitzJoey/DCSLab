@@ -86,7 +86,7 @@ class CompanyServiceImpl implements CompanyService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$search.'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) return $cacheResult;
