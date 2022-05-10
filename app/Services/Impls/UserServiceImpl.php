@@ -159,11 +159,11 @@ class UserServiceImpl implements UserService
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -176,10 +176,10 @@ class UserServiceImpl implements UserService
 
             return Cache::get($key);
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Read Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Read Key'.$key);
         }
     }
 
@@ -190,9 +190,9 @@ class UserServiceImpl implements UserService
 
             Cache::tags([auth()->user()->id, __METHOD__])->add($key, $val, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.ENV'));
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Save Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Save Key'.$key);
         }
     }
 
@@ -201,9 +201,9 @@ class UserServiceImpl implements UserService
         try {
             Cache::tags([auth()->user()->id, __METHOD__])->flush();
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
         }
     }
 
@@ -221,11 +221,11 @@ class UserServiceImpl implements UserService
                     return null;
             }    
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -256,11 +256,11 @@ class UserServiceImpl implements UserService
             return $usr->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -283,11 +283,11 @@ class UserServiceImpl implements UserService
             return $retval;
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -320,11 +320,11 @@ class UserServiceImpl implements UserService
             return $retval;
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -341,11 +341,11 @@ class UserServiceImpl implements UserService
             return $updated_usr->refresh();
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -371,11 +371,11 @@ class UserServiceImpl implements UserService
             return $retval;
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 

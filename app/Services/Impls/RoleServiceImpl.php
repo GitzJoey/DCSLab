@@ -46,7 +46,7 @@ class RoleServiceImpl implements RoleService
             return $role->hId;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }
@@ -71,10 +71,10 @@ class RoleServiceImpl implements RoleService
 
             return Cache::get($key);
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Read Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Read Key'.$key);
         }
     }
 
@@ -85,9 +85,9 @@ class RoleServiceImpl implements RoleService
 
             Cache::tags([auth()->user()->id, __METHOD__])->add($key, $val, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.ENV'));
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Save Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Save Key'.$key);
         }
     }
 
@@ -96,9 +96,9 @@ class RoleServiceImpl implements RoleService
         try {
             Cache::tags([auth()->user()->id, __METHOD__])->flush();
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
         }
     }
 
@@ -145,7 +145,7 @@ class RoleServiceImpl implements RoleService
             return $role;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         }
     }

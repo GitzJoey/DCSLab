@@ -86,7 +86,7 @@ class SupplierServiceImpl implements SupplierService
             return $supplier;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -115,7 +115,7 @@ class SupplierServiceImpl implements SupplierService
             return $usr;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -144,11 +144,11 @@ class SupplierServiceImpl implements SupplierService
                 return $suppliers->get();
             }
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -161,10 +161,10 @@ class SupplierServiceImpl implements SupplierService
 
             return Cache::get($key);
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Read Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Read Key'.$key);
         }
     }
 
@@ -175,9 +175,9 @@ class SupplierServiceImpl implements SupplierService
 
             Cache::tags([auth()->user()->id, __METHOD__])->add($key, $val, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.ENV'));
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Save Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Save Key'.$key);
         }
     }
 
@@ -186,9 +186,9 @@ class SupplierServiceImpl implements SupplierService
         try {
             Cache::tags([auth()->user()->id, __METHOD__])->flush();
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
         }
     }
 
@@ -254,11 +254,11 @@ class SupplierServiceImpl implements SupplierService
             return $supplier->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -286,11 +286,11 @@ class SupplierServiceImpl implements SupplierService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -319,11 +319,11 @@ class SupplierServiceImpl implements SupplierService
             return $result->count() == 0 ? true:false;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 }

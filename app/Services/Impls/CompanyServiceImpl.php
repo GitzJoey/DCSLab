@@ -69,19 +69,29 @@ class CompanyServiceImpl implements CompanyService
             return $company;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function read(int $userId, string $search = '', bool $paginate = true, int $page, int $perPage = 10)
+    public function read(int $userId, string $search = '', bool $paginate = true, int $page, int $perPage = 10, bool $useCache = true)
     {
         $timer_start = microtime(true);
 
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.$search.'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) return $cacheResult;
+            }
+
+            $result = null;
+
             $usr = User::find($userId);
             if (!$usr) return null;
     
@@ -95,16 +105,20 @@ class CompanyServiceImpl implements CompanyService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $companies->paginate($perPage);
+                $result = $companies->paginate($perPage);
             } else {
-                return $companies->get();
+                $result = $companies->get();
             }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+            
+            return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -117,10 +131,10 @@ class CompanyServiceImpl implements CompanyService
 
             return Cache::get($key);
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Read Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Read Key'.$key);
         }
     }
 
@@ -131,9 +145,9 @@ class CompanyServiceImpl implements CompanyService
 
             Cache::tags([auth()->user()->id, __METHOD__])->add($key, $val, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.ENV'));
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Save Key'.$key);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Save Key'.$key);
         }
     }
 
@@ -142,9 +156,9 @@ class CompanyServiceImpl implements CompanyService
         try {
             Cache::tags([auth()->user()->id, __METHOD__])->flush();
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
         }
     }
 
@@ -162,7 +176,7 @@ class CompanyServiceImpl implements CompanyService
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -194,11 +208,11 @@ class CompanyServiceImpl implements CompanyService
             return $company->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -223,11 +237,11 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -274,11 +288,11 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->user()->id).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
