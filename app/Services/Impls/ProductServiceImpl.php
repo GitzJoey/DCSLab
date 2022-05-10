@@ -11,6 +11,7 @@ use App\Services\ProductService;
 
 use Exception;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -150,6 +151,46 @@ class ProductServiceImpl implements ProductService
             Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
         
+    }
+
+    private function readFromCache($key)
+    {
+        try {
+            if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED')) return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+
+            if (!Cache::has($key)) return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+
+            return Cache::get($key);
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Read Key'.$key);
+        }
+    }
+
+    private function saveToCache($key, $val)
+    {
+        try {
+            if (empty($key)) return;
+
+            Cache::tags([auth()->user()->id, __METHOD__])->add($key, $val, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.ENV'));
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+        } finally {
+            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Save Key'.$key);
+        }
+    }
+
+    private function flushCache()
+    {
+        try {
+            Cache::tags([auth()->user()->id, __METHOD__])->flush();
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+        } finally {
+            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
+        }
     }
 
     public function update(

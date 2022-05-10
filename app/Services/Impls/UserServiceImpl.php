@@ -21,6 +21,7 @@ use App\Models\Profile;
 use App\Models\Setting;
 
 use App\Services\UserService;
+use Illuminate\Support\Facades\Cache;
 
 class UserServiceImpl implements UserService
 {
@@ -120,10 +121,19 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function read(string $search = '', bool $paginate = true, int $page, int $perPage = 10)
+    public function read(string $search = '', bool $paginate = true, int $page, int $perPage = 10, bool $useCache = true)
     {
         $timer_start = microtime(true);
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.$search.'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) return $cacheResult;
+            }
+
+            $result = null;
             $relationship = ['roles', 'profile', 'settings'];
 
             if (empty($search)) {
@@ -140,16 +150,60 @@ class UserServiceImpl implements UserService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $usr->paginate(abs($perPage));
+                $result = $usr->paginate(abs($perPage));
             } else {
-                return $usr->get();
-            }    
+                $result = $usr->get();
+            }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+
+            return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
+    }
+
+    private function readFromCache($key)
+    {
+        try {
+            if (!Config::get('const.DEFAULT.DATA_CACHE.ENABLED')) return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+
+            if (!Cache::has($key)) return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+
+            return Cache::get($key);
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Read Key'.$key);
+        }
+    }
+
+    private function saveToCache($key, $val)
+    {
+        try {
+            if (empty($key)) return;
+
+            Cache::tags([auth()->user()->id, __METHOD__])->add($key, $val, Config::get('const.DEFAULT.DATA_CACHE.CACHE_TIME.ENV'));
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+        } finally {
+            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Save Key'.$key);
+        }
+    }
+
+    private function flushCache()
+    {
+        try {
+            Cache::tags([auth()->user()->id, __METHOD__])->flush();
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] '.__METHOD__.$e);
+        } finally {
+            Log::channel('cachehits')->info('['.session()->getId().'-'.is_null(auth()->user()) ? '':auth()->user()->id.'] Cache Flushed for tags '.auth()->user()->id.', '.__METHOD__);
         }
     }
 
@@ -196,6 +250,8 @@ class UserServiceImpl implements UserService
                 $this->updateSettings($usr, $settings, false);
 
             DB::commit();
+
+            $this->flushCache();
 
             return $usr->refresh();
         } catch (Exception $e) {
