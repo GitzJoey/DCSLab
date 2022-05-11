@@ -47,8 +47,6 @@ class UserController extends BaseController
     public function getAllRoles()
     {
         $excludeRole = [
-            //Config::get('const.DEFAULT.ROLE.ADMIN'),
-            //Config::get('const.DEFAULT.ROLE.DEV')
         ];
 
         $roles = $this->roleService->read(exclude: $excludeRole);

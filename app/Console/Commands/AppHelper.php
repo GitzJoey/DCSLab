@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
+use App\Enums\UserRoles;
 use App\Models\Permission;
 use App\Services\RoleService;
 use App\Services\UserService;
@@ -428,9 +429,9 @@ class AppHelper extends Command
 
         $rolesId = [];
         if ($is_dev) {
-            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.DEV'))->id);
+            array_push($rolesId, $roleService->readBy('NAME', UserRoles::DEVELOPER->value)->id);
         } else {
-            array_push($rolesId, $roleService->readBy('NAME', Config::get('const.DEFAULT.ROLE.ADMIN'))->id);
+            array_push($rolesId, $roleService->readBy('NAME', UserRoles::ADMINISTRATOR->value)->id);
         }
 
         $profile = [

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Actions\RandomGenerator;
-
+use App\Enums\UserRoles;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Profile;
@@ -43,7 +43,7 @@ class SupplierTableSeeder extends Seeder
 
         $instances = Container::getInstance();
         $setting = $instances->make(UserService::class)->createDefaultSetting();
-        $roles = $instances->make(RoleService::class)->readBy('NAME', Config::get('const.DEFAULT.ROLE.USER'));
+        $roles = $instances->make(RoleService::class)->readBy('NAME', UserRoles::USER->value);
 
         $faker = \Faker\Factory::create('id_ID');
 
