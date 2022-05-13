@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
+use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -18,15 +19,17 @@ class WarehouseRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
-
         if (!Auth::check()) return false;
-        if (empty(Auth::user()->roles)) return false;
 
-        if (Auth::user()->hasRole(UserRoles::DEVELOPER->value)) return true;
+        /** @var \App\User */
+        $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'store' && !Auth::user()->hasPermission('create-warehouse')) return false;
-        if ($this->route()->getActionMethod() == 'update' && !Auth::user()->hasPermission('update-warehouse')) return false;
+        if (empty($user->roles)) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($this->route()->getActionMethod() == 'store' && !$user->hasPermission('create-warehouse')) return false;
+        if ($this->route()->getActionMethod() == 'update' && !$user->hasPermission('update-warehouse')) return false;
 
         return false;
     }
@@ -38,8 +41,6 @@ class WarehouseRequest extends FormRequest
      */
     public function rules()
     {
-        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
-
         $nullableArr = [
             'address' => 'nullable',
             'city' => 'nullable',
@@ -51,7 +52,7 @@ class WarehouseRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
-                    'company_id' => ['required', 'bail'],
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
                     'branch_id' => ['required'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
@@ -60,7 +61,7 @@ class WarehouseRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'company_id' => ['required', 'bail'],
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
                     'branch_id' => ['required'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
@@ -91,6 +92,7 @@ class WarehouseRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
+            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
             'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }

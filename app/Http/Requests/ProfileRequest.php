@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +15,16 @@ class ProfileRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
+        if (!Auth::check()) return false;
+        
+        /** @var \App\User */
+        $user = Auth::user();
+        
+        if (empty($user->roles)) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        return false;
     }
 
     /**

@@ -4,18 +4,28 @@ namespace App\Services\Impls;
 
 use App\Enums\UserRoles;
 use App\Services\DashboardService;
+use App\Traits\CacheHelper;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 
 class DashboardServiceImpl implements DashboardService
 {
+    use CacheHelper;
+
     public function __construct()
     {
         
     }
     
-    public function createMenu(): array
+    public function createMenu(bool $useCache = true): array
     {
+        $cacheKey = '';
+        if ($useCache) {
+            $cacheKey = 'menu_'.Auth::id();
+            $cacheResult = $this->readFromCache($cacheKey);
+
+            if (!is_null($cacheResult)) return $cacheResult;
+        }
+
         $menu = [];
 
         $usr = Auth::user();
@@ -40,6 +50,8 @@ class DashboardServiceImpl implements DashboardService
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 
+        if ($useCache) $this->saveToCache($cacheKey, $menu);
+            
         return $menu;
     }
 

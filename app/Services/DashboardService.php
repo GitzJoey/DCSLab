@@ -4,5 +4,5 @@ namespace App\Services;
 
 interface DashboardService
 {
-    public function createMenu(): array;
+    public function createMenu(bool $useCache = true): array;
 }

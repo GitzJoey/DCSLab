@@ -25,7 +25,7 @@ class isValidCompany implements Rule
      */
     public function passes($attribute, $value)
     {
-        //
+        return auth()->user()->companies->pluck('id')->contains($value);
     }
 
     /**
