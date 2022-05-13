@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
 use App\Enums\PaymentTerm;
+use App\Enums\PaymentTermType;
 use App\Enums\UserRoles;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -19,15 +20,17 @@ class SupplierRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
-
         if (!Auth::check()) return false;
-        if (empty(Auth::user()->roles)) return false;
 
-        if (Auth::user()->hasRole(UserRoles::DEVELOPER->value)) return true;
+        /** @var \App\User */
+        $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'store' && !Auth::user()->hasPermission('create-supplier')) return false;
-        if ($this->route()->getActionMethod() == 'update' && !Auth::user()->hasPermission('update-supplier')) return false;
+        if (empty($user->roles)) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($this->route()->getActionMethod() == 'store' && !$user->hasPermission('create-supplier')) return false;
+        if ($this->route()->getActionMethod() == 'update' && !$user->hasPermission('update-supplier')) return false;
 
         return false;
     }
@@ -103,7 +106,7 @@ class SupplierRequest extends FormRequest
     {
         $this->merge([
             'taxable_enterprise' => $this->has('taxable_enterprise') ? filter_var($this->taxable_enterprise, FILTER_VALIDATE_BOOLEAN) : false,
-            'payment_term_type' => PaymentTerm::isValid($this->payment_term_type) ? PaymentTerm::fromName($this->payment_term_type)->value : '',
+            'payment_term_type' => PaymentTermType::isValid($this->payment_term_type) ? PaymentTermType::fromName($this->payment_term_type)->value : '',
             'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }
