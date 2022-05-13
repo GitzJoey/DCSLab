@@ -183,6 +183,8 @@ class BranchServiceImpl implements BranchService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
