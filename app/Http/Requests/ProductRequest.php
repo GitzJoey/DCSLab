@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\ActiveStatus;
 use App\Enums\ProductType;
 use App\Enums\UserRoles;
+use App\Rules\isValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -41,8 +42,6 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
-
         $nullableArr = [
             'remarks' => 'nullable',
             'unit_id.*' => 'nullable',
@@ -58,7 +57,7 @@ class ProductRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
-                    'company_id' => ['required', 'bail'],
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                     'brand_id' => 'required',
@@ -74,7 +73,7 @@ class ProductRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'company_id' => ['required', 'bail'],
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                     'brand_id' => 'required',
@@ -113,6 +112,7 @@ class ProductRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
+            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
             'taxable_supply' => $this->has('taxable_supply') ? filter_var($this->taxable_supply, FILTER_VALIDATE_BOOLEAN) : false,
             'use_serial_number' => $this->has('use_serial_number') ? filter_var($this->use_serial_number, FILTER_VALIDATE_BOOLEAN) : false,
             'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,

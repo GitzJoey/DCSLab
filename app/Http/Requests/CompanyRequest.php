@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
 use App\Rules\deactivateDefaultCompany;
+use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -42,8 +43,6 @@ class CompanyRequest extends FormRequest
      */
     public function rules()
     {
-        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
-
         $nullableArr = [
             'address' => 'nullable',
         ];
@@ -62,7 +61,7 @@ class CompanyRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'company_id' => ['required', 'bail'],
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'default' => 'required|boolean',
@@ -93,6 +92,7 @@ class CompanyRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
+            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
             'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
             'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);

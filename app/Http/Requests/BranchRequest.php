@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
+use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -40,8 +41,6 @@ class BranchRequest extends FormRequest
      */
     public function rules()
     {
-        $companyId = $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:null;
-
         $nullableArr = [
             'address' => 'nullable',
             'city' => 'nullable',
@@ -53,7 +52,7 @@ class BranchRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'store':
                 $rules_store = [
-                    'company_id' => ['required', 'bail'],
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(ActiveStatus::class)]
@@ -61,7 +60,7 @@ class BranchRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'company_id' => ['required', 'bail'],
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(ActiveStatus::class)]
@@ -91,6 +90,7 @@ class BranchRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
+            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
             'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }
