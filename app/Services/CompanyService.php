@@ -13,7 +13,7 @@ interface CompanyService
         bool $default,
         int $status,
         int $userId
-    ): Company;
+    ): ?Company;
 
     public function read(
         int $userId,
@@ -37,7 +37,7 @@ interface CompanyService
         ?string $address,
         bool $default,
         int $status
-    ): Company;
+    ): ?Company;
 
     public function delete(int $userId, int $id): bool;
 

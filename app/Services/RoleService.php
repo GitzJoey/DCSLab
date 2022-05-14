@@ -11,7 +11,7 @@ interface RoleService
         string $display_name,
         string $description,
         array $permissions
-    ): Role;
+    ): ?Role;
 
     public function read(array $relationship = [], array $exclude = []);
 
@@ -23,7 +23,7 @@ interface RoleService
         string $display_name,
         string $description,
         array $inputtedPermissions
-    ): Role;
+    ): ?Role;
 
     public function getAllPermissions();
 }

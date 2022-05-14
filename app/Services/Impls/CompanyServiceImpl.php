@@ -31,7 +31,7 @@ class CompanyServiceImpl implements CompanyService
         bool $default, 
         int $status, 
         int $userId
-    ): Company
+    ): ?Company
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -158,7 +158,7 @@ class CompanyServiceImpl implements CompanyService
         ?string $address, 
         bool $default, 
         int $status
-    ): Company
+    ): ?Company
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -280,6 +280,6 @@ class CompanyServiceImpl implements CompanyService
     public function getDefaultCompany(int $userId): Company
     {
         $usr = User::find($userId);
-        return $usr->companies()->where('default','=', 1)->first();
+        return $usr->companies()->where('default','=', true)->first();
     }
 }

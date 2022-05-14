@@ -28,7 +28,7 @@ class RoleServiceImpl implements RoleService
         string $display_name,
         string $description,
         array $permissions
-    ): Role
+    ): ?Role
     {
         DB::beginTransaction();
 
@@ -87,7 +87,7 @@ class RoleServiceImpl implements RoleService
         string $display_name,
         string $description,
         array $inputtedPermissions
-    ): Role
+    ): ?Role
     {
         DB::beginTransaction();
 
