@@ -194,22 +194,11 @@ class BrandServiceImpl implements BrandService
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $timer_start = microtime(true);
+        $result = Brand::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        try {
-            $result = Brand::whereCompanyId($companyId)->where('code', '=' , $code);
+        if($exceptId)
+            $result = $result->where('id', '<>', $exceptId);
 
-            if($exceptId)
-                $result = $result->where('id', '<>', $exceptId);
-    
-            return $result->count() == 0 ? true:false;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
+        return $result->count() == 0 ? true:false;
     }
 }

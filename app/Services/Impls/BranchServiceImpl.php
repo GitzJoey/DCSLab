@@ -198,13 +198,17 @@ class BranchServiceImpl implements BranchService
 
     public function generateUniqueCode(int $companyId): string
     {
-        $rand = new RandomGenerator();
-        $code = '';
+        // $rand = new RandomGenerator();
+        // $code = '';
         
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCode($code, $companyId));
+        // do {
+        //     $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        // } while (!$this->isUniqueCode($code, $companyId));
 
+        // return $code;
+
+        $rand = new RandomGenerator();
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 
