@@ -289,4 +289,5 @@ class SupplierServiceImpl implements SupplierService
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
+    
 }

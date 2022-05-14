@@ -274,4 +274,5 @@ class CompanyServiceImpl implements CompanyService
         $usr = User::find($userId);
         return $usr->companies()->where('default','=', 1)->first();
     }
+    
 }

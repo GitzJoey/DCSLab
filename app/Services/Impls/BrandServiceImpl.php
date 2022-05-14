@@ -184,4 +184,5 @@ class BrandServiceImpl implements BrandService
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
+    
 }
