@@ -46,16 +46,6 @@ class CompanyServiceImpl implements CompanyService
                 $status = 1;
             }
 
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $generatedCode = '';
-                do {
-                    $generatedCode = $this->generateUniqueCode();
-
-                } while (!$this->isUniqueCode($generatedCode, $userId));
-
-                $code = $generatedCode;
-            }
-
             $company = new Company();
             $company->code = $code;
             $company->name = $name;

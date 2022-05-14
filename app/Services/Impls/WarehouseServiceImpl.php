@@ -39,10 +39,6 @@ class WarehouseServiceImpl implements WarehouseService
         $timer_start = microtime(true);
 
         try {
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
-
             $warehouse = new Warehouse();
             $warehouse->company_id = $company_id;
             $warehouse->branch_id = $branch_id;
@@ -141,10 +137,6 @@ class WarehouseServiceImpl implements WarehouseService
 
         try {
             $warehouse = Warehouse::find($id);
-
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
     
             $warehouse->update([
                 'company_id' => $company_id,
