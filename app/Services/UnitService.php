@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Unit;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 interface UnitService
 {
@@ -18,10 +20,10 @@ interface UnitService
         int $category,
         string $search = '',
         bool $paginate = true,
-        int $page,
+        int $page = 1,
         ?int $perPage = 10, 
         bool $useCache = true
-    );
+    ): Paginator|Collection|null;
     
     public function readBy(string $key, string $value);
 

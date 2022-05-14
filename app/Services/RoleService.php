@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Role;
+use Illuminate\Support\Collection;
 
 interface RoleService
 {
@@ -11,9 +12,9 @@ interface RoleService
         string $display_name,
         string $description,
         array $permissions
-    ): Role;
+    ): ?Role;
 
-    public function read(array $relationship = [], array $exclude = []);
+    public function read(array $relationship = [], array $exclude = []): ?Collection;
 
     public function readBy(string $key, string $value);
 
@@ -23,7 +24,7 @@ interface RoleService
         string $display_name,
         string $description,
         array $inputtedPermissions
-    ): Role;
+    ): ?Role;
 
     public function getAllPermissions();
 }

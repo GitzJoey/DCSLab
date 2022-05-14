@@ -6,6 +6,8 @@ use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
 use Exception;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +19,6 @@ use App\Services\SupplierService;
 use App\Services\UserService;
 use App\Services\RoleService;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -132,10 +133,10 @@ class SupplierServiceImpl implements SupplierService
         int $companyId, 
         string $search = '', 
         bool $paginate = true, 
-        int $page, 
+        int $page = 1, 
         int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $cacheKey = '';
         if ($useCache) {
@@ -279,7 +280,7 @@ class SupplierServiceImpl implements SupplierService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return $retval;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

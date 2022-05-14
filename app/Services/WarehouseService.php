@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Warehouse;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 interface WarehouseService
 {
@@ -22,10 +24,10 @@ interface WarehouseService
         int $companyId,
         string $search = '',
         bool $paginate = true,
-        int $page,
+        int $page = 1,
         int $perPage = 10,
         bool $useCache = true
-    );
+    ): Paginator|Collection|null;
 
     public function update(
         int $id,

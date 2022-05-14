@@ -8,7 +8,8 @@ use App\Models\Branch;
 use Exception;
 use App\Actions\RandomGenerator;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -72,10 +73,10 @@ class BranchServiceImpl implements BranchService
         int $companyId,
         string $search = '',
         bool $paginate = true,
-        int $page,
+        int $page = 1,
         int $perPage = 10,
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $timer_start = microtime(true);
 
@@ -189,7 +190,7 @@ class BranchServiceImpl implements BranchService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            return $retval;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

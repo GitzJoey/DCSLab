@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Brand;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 interface BrandService
 {
@@ -16,10 +18,11 @@ interface BrandService
         int $companyId,
         string $search = '',
         bool $paginate = true,
-        int $page,
+        int $page = 1,
         int $perPage = 10, 
         bool $useCache = true
-    );
+    ): Paginator|Collection|null;
+    
     public function readBy(string $key, string $value);
 
     public function update(
