@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Company;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 interface CompanyService
 {
@@ -22,7 +24,7 @@ interface CompanyService
         int $page,
         int $perPage = 10,
         bool $useCache = true
-    );
+    ): Paginator|Collection|null;
 
     public function getAllActiveCompany(int $userId);
 

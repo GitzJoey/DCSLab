@@ -3,6 +3,8 @@
 namespace App\Services\Impls;
 
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +15,6 @@ use App\Services\CompanyService;
 use App\Models\User;
 use App\Models\Company;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class CompanyServiceImpl implements CompanyService
 {
@@ -88,7 +89,7 @@ class CompanyServiceImpl implements CompanyService
         int $page, 
         int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $timer_start = microtime(true);
 

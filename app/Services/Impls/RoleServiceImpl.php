@@ -3,6 +3,8 @@
 namespace App\Services\Impls;
 
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +14,6 @@ use App\Models\Permission;
 
 use App\Services\RoleService;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class RoleServiceImpl implements RoleService
 {
@@ -54,7 +55,7 @@ class RoleServiceImpl implements RoleService
         }
     }
 
-    public function read(array $relationship = [], array $exclude = [])
+    public function read(array $relationship = [], array $exclude = []): ?Collection
     {
         $role = Role::with($relationship)->latest();
 

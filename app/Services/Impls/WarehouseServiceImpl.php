@@ -8,7 +8,8 @@ use App\Models\Warehouse;
 use Exception;
 use App\Actions\RandomGenerator;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -77,7 +78,7 @@ class WarehouseServiceImpl implements WarehouseService
         int $page,
         int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $timer_start = microtime(true);
 

@@ -4,6 +4,8 @@ namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -12,7 +14,6 @@ use App\Services\BrandService;
 
 use App\Models\Brand;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class BrandServiceImpl implements BrandService
 {
@@ -62,7 +63,7 @@ class BrandServiceImpl implements BrandService
         int $page, 
         ?int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $cacheKey = '';
         if ($useCache) {

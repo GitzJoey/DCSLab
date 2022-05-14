@@ -4,7 +4,10 @@ namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
 use App\Enums\ProductGroupCategory;
+
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 use App\Services\ProductGroupService;
 use App\Models\ProductGroup;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class ProductGroupServiceImpl implements ProductGroupService
 {
@@ -89,7 +91,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         int $page, 
         ?int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $timer_start = microtime(true);
 

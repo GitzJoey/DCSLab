@@ -6,6 +6,8 @@ use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
 use Exception;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +19,6 @@ use App\Services\SupplierService;
 use App\Services\UserService;
 use App\Services\RoleService;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -135,7 +136,7 @@ class SupplierServiceImpl implements SupplierService
         int $page, 
         int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $cacheKey = '';
         if ($useCache) {

@@ -4,7 +4,10 @@ namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
 use App\Enums\UnitCategory;
+
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -69,7 +72,7 @@ class UnitServiceImpl implements UnitService
         int $page, 
         ?int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $timer_start = microtime(true);
 

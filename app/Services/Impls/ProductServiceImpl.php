@@ -10,6 +10,8 @@ use App\Enums\ProductType;
 use App\Services\ProductService;
 use App\Traits\CacheHelper;
 use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -115,7 +117,7 @@ class ProductServiceImpl implements ProductService
         int $page,
         ?int $perPage = 10, 
         bool $useCache = true
-    )
+    ): Paginator|Collection|null
     {
         $timer_start = microtime(true);
 

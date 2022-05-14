@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\ProductGroup;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 interface ProductGroupService
 {
@@ -21,7 +23,7 @@ interface ProductGroupService
         int $page,
         ?int $perPage = 10,
         bool $useCache = true
-    );
+    ): Paginator|Collection|null;
 
     public function readBy(string $key, string $value);
 

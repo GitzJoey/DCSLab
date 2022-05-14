@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Supplier;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 interface SupplierService
 {
@@ -30,7 +32,7 @@ interface SupplierService
         int $page,
         int $perPage = 10, 
         bool $useCache = true
-    );
+    ): Paginator|Collection|null;
 
     public function update(
         int $id,
