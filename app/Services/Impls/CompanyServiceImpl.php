@@ -81,14 +81,7 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function read(
-        int $userId, 
-        string $search = '', 
-        bool $paginate = true, 
-        int $page, 
-        int $perPage = 10, 
-        bool $useCache = true
-    )
+    public function read(int $userId, string $search = '', bool $paginate = true, int $page, int $perPage = 10, bool $useCache = true)
     {
         $timer_start = microtime(true);
 
@@ -195,7 +188,6 @@ class CompanyServiceImpl implements CompanyService
         $timer_start = microtime(true);
 
         $retval = false;
-        
         try {
             $company = Company::find($id);
 

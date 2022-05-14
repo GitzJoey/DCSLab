@@ -22,8 +22,7 @@ interface BranchService
         string $search = '',
         bool $paginate = true,
         int $page,
-        int $perPage = 10,
-        bool $useCache = true
+        int $perPage = 10
     );
 
     public function update(
@@ -40,7 +39,7 @@ interface BranchService
 
     public function delete(int $id): bool;
 
-    public function generateUniqueCode(): string;
+    public function generateUniqueCode(int $companyId): string;
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;
 }

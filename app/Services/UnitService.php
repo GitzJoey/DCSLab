@@ -33,7 +33,7 @@ interface UnitService
 
     public function delete(int $id): bool;
     
-    public function generateUniqueCode(): string;
+    public function generateUniqueCode(int $companyId): string;
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;
 }
