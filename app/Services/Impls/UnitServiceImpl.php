@@ -210,15 +210,10 @@ class UnitServiceImpl implements UnitService
         }
     }
 
-    public function generateUniqueCode(int $companyId): string
+    public function generateUniqueCode(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
-        
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCode($code, $companyId));
-
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 

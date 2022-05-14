@@ -310,27 +310,17 @@ class ProductServiceImpl implements ProductService
         }
     }
 
-    public function generateUniqueCodeForProduct(int $companyId): string
+    public function generateUniqueCodeForProduct(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
-
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCodeForProduct($code, $companyId));
-
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 
-    public function generateUniqueCodeForProductUnits(int $companyId): string
+    public function generateUniqueCodeForProductUnits(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
-        
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCodeForProductUnits($code, $companyId));
-
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 
