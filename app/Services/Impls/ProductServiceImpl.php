@@ -93,6 +93,8 @@ class ProductServiceImpl implements ProductService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $product;
         } catch (Exception $e) {
             DB::rollBack();
@@ -100,7 +102,7 @@ class ProductServiceImpl implements ProductService
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -111,12 +113,23 @@ class ProductServiceImpl implements ProductService
         string $search = '',
         bool $paginate = true,
         int $page,
-        ?int $perPage = 10
+        ?int $perPage = 10, 
+        bool $useCache = true
     )
     {
         $timer_start = microtime(true);
 
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) return $cacheResult;
+            }
+
+            $result = null;
+
             if (!$companyId) return null;
 
             $product = Product::with('productGroup', 'brand', 'productUnits.unit')
@@ -144,12 +157,16 @@ class ProductServiceImpl implements ProductService
             } else {
                 return $product->get();
             }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+            
+            return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
         
     }
@@ -249,7 +266,9 @@ class ProductServiceImpl implements ProductService
 
             DB::commit();
 
-            return $product;
+            $this->flushCache();
+
+            return $product->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
@@ -266,6 +285,7 @@ class ProductServiceImpl implements ProductService
         $timer_start = microtime(true);
 
         $retval = false;
+
         try {
             $product = Product::find($id);
 
@@ -276,6 +296,8 @@ class ProductServiceImpl implements ProductService
             }
 
             DB::commit();
+
+            $this->flushCache();
 
             return $retval; 
         } catch (Exception $e) {

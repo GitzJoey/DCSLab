@@ -86,6 +86,8 @@ class SupplierServiceImpl implements SupplierService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $supplier;
         } catch (Exception $e) {
             DB::rollBack();
@@ -93,7 +95,7 @@ class SupplierServiceImpl implements SupplierService
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -126,8 +128,24 @@ class SupplierServiceImpl implements SupplierService
         }        
     }
 
-    public function read(int $companyId, string $search = '', bool $paginate = true, int $page, int $perPage = 10)
+    public function read(
+        int $companyId, 
+        string $search = '', 
+        bool $paginate = true, 
+        int $page, int $perPage = 10, 
+        bool $useCache = true
+    )
     {
+        $cacheKey = '';
+        if ($useCache) {
+            $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheResult = $this->readFromCache($cacheKey);
+
+            if (!is_null($cacheResult)) return $cacheResult;
+        }
+
+        $result = null;
+
         $timer_start = microtime(true);
 
         try {
@@ -146,12 +164,16 @@ class SupplierServiceImpl implements SupplierService
             } else {
                 return $suppliers->get();
             }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+            
+            return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
     }
 
@@ -214,6 +236,8 @@ class SupplierServiceImpl implements SupplierService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $supplier->refresh();
         } catch (Exception $e) {
             DB::rollBack();
@@ -231,6 +255,7 @@ class SupplierServiceImpl implements SupplierService
         $timer_start = microtime(true);
 
         $retval = false;
+
         try {
             $supplier = Supplier::find($id);
 
@@ -244,7 +269,10 @@ class SupplierServiceImpl implements SupplierService
 
                 $retval = true;
             }
+            
             DB::commit();
+
+            $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {

@@ -195,6 +195,7 @@ class CompanyServiceImpl implements CompanyService
         $timer_start = microtime(true);
 
         $retval = false;
+        
         try {
             $company = Company::find($id);
 

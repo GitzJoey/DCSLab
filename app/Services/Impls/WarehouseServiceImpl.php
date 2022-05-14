@@ -57,6 +57,8 @@ class WarehouseServiceImpl implements WarehouseService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $warehouse;
         } catch (Exception $e) {
             DB::rollBack();
@@ -64,7 +66,7 @@ class WarehouseServiceImpl implements WarehouseService
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -73,12 +75,23 @@ class WarehouseServiceImpl implements WarehouseService
         string $search = '',
         bool $paginate = true,
         int $page,
-        int $perPage = 10
+        int $perPage = 10, 
+        bool $useCache = true
     )
     {
         $timer_start = microtime(true);
 
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) return $cacheResult;
+            }
+
+            $result = null;
+
             if (!$companyId) return null;
 
             $warehouse = Warehouse::with('company')
@@ -96,12 +109,16 @@ class WarehouseServiceImpl implements WarehouseService
             } else {
                 return $warehouse->get();
             }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+            
+            return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
     }
 
@@ -142,6 +159,8 @@ class WarehouseServiceImpl implements WarehouseService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $warehouse->refresh();
         } catch (Exception $e) {
             DB::rollBack();
@@ -159,6 +178,7 @@ class WarehouseServiceImpl implements WarehouseService
         $timer_start = microtime(true);
 
         $retval = false;
+
         try {
             $warehouse = Warehouse::find($id);
 
@@ -167,6 +187,8 @@ class WarehouseServiceImpl implements WarehouseService
             }
 
             DB::commit();
+
+            $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
