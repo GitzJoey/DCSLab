@@ -31,7 +31,8 @@ interface ProductService
         string $search = '',
         bool $paginate = true,
         int $page,
-        ?int $perPage = 10
+        ?int $perPage = 10, 
+        bool $useCache = true
     );
 
     public function update(
@@ -55,9 +56,9 @@ interface ProductService
 
     public function delete(int $id): bool;
 
-    public function generateUniqueCodeForProduct(int $companyId): string;
+    public function generateUniqueCodeForProduct(): string;
 
-    public function generateUniqueCodeForProductUnits(int $companyId): string;
+    public function generateUniqueCodeForProductUnits(): string;
 
     public function isUniqueCodeForProduct(string $code, int $companyId, ?int $exceptId = null): bool;
 
