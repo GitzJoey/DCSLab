@@ -48,10 +48,6 @@ class ProductServiceImpl implements ProductService
         $timer_start = microtime(true);
 
         try {
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCodeForProduct($company_id);
-            }
-
             $product = new Product();
             $product->company_id = $company_id;
             $product->code = $code;
@@ -71,16 +67,11 @@ class ProductServiceImpl implements ProductService
             $product->save();
 
             $pu = [];
-            foreach ($product_units as $product_unit) {
-                $code = $product_unit['code'];
-                if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                    $code = $this->generateUniqueCodeForProductUnits($company_id);
-                }
-    
+            foreach ($product_units as $product_unit) {   
                 array_push($pu, new ProductUnit(array (
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $product['id'],
-                    'code' => $code,
+                    'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
                     'conversion_value' => $product_unit['conv_value'],
                     'is_base' => $product_unit['is_base'],
@@ -198,10 +189,6 @@ class ProductServiceImpl implements ProductService
         try {
             $product = Product::find($id);
 
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCodeForProduct($company_id);
-            }
-
             $product->update([
                 'company_id' => $company_id,
                 'code' => $code,
@@ -221,16 +208,11 @@ class ProductServiceImpl implements ProductService
 
             $pu = [];
             foreach ($product_units as $product_unit) {
-                $code = $product_unit['code'];
-                if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                    $code = $this->generateUniqueCodeForProductUnits($company_id);
-                }
-
                 array_push($pu, array(
                     'id' => $product_unit['id'],
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $id,
-                    'code' => $code,
+                    'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
                     'conversion_value' => $product_unit['conv_value'],
                     'is_base' => $product_unit['is_base'],

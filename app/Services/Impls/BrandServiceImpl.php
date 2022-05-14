@@ -30,10 +30,6 @@ class BrandServiceImpl implements BrandService
         $timer_start = microtime(true);
 
         try {
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
-
             $productbrand = new Brand();
             $productbrand->company_id = $company_id;
             $productbrand->code = $code;

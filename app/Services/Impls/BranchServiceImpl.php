@@ -38,10 +38,6 @@ class BranchServiceImpl implements BranchService
         $timer_start = microtime(true);
 
         try {
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
-
             $branch = new Branch();
             $branch->company_id = $company_id;
             $branch->code = $code;
@@ -138,10 +134,6 @@ class BranchServiceImpl implements BranchService
 
         try {
             $branch = Branch::find($id);
-
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
     
             $branch->update([
                 'company_id' => $company_id,

@@ -37,10 +37,6 @@ class UnitServiceImpl implements UnitService
         $timer_start = microtime(true);
 
         try {
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
-
             $unit = new Unit();
             $unit->company_id = $company_id;
             $unit->code = $code;
@@ -157,11 +153,7 @@ class UnitServiceImpl implements UnitService
 
         try {
             $unit = Unit::find($id);
-
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
-
+            
             $unit->update([
                 'company_id' => $company_id,
                 'code' => $code,

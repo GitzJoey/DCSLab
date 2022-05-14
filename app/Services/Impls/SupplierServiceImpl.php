@@ -50,10 +50,6 @@ class SupplierServiceImpl implements SupplierService
         $timer_start = microtime(true);
 
         try {
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
-
             $usr = $this->createUserPOC($poc);
 
             $supplier = new Supplier();
