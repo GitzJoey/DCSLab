@@ -125,7 +125,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function read(string $search = '', bool $paginate = true, int $page, int $perPage = 10, bool $useCache = true): Paginator|Collection|null
+    public function read(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection|null
     {
         $timer_start = microtime(true);
         try {

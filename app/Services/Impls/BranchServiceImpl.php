@@ -73,7 +73,7 @@ class BranchServiceImpl implements BranchService
         int $companyId,
         string $search = '',
         bool $paginate = true,
-        int $page,
+        int $page = 1,
         int $perPage = 10,
         bool $useCache = true
     ): Paginator|Collection|null
