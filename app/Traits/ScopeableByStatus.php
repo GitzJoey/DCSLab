@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use App\Enums\ActiveStatus;
+
 trait ScopeableByStatus {
     public function scopeWhereStatus($query, $status = null)
     {
@@ -16,6 +18,11 @@ trait ScopeableByStatus {
 
     public function scopeWhereStatusActive($query)
     {
-        $query->where('status', '=', 1);
+        $query->where('status', '=', ActiveStatus::ACTIVE);
+    }
+
+    public function scopeWhhereStatusInactive($query)
+    {
+        $query->where('status', '=', ActiveStatus::INACTIVE);
     }
 }
