@@ -16,7 +16,7 @@ use App\Models\ProductGroup;
 use App\Models\Brand;
 use App\Models\ProductUnit;
 use App\Models\Supplier;
-
+use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -110,5 +110,33 @@ class Product extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $user = Auth::check();
+            if ($user) {
+                $model->created_by = Auth::id();
+                $model->updated_by = Auth::id();
+            }
+        });
+
+        static::updating(function ($model) {
+            $user = Auth::check();
+            if ($user) {
+                $model->updated_by = Auth::id();
+            }
+        });
+
+        static::deleting(function ($model) {
+            $user = Auth::check();
+            if ($user) {
+                $model->deleted_by = Auth::id();
+                $model->save();
+            }
+        });
     }
 }
