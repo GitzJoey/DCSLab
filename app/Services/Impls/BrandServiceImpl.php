@@ -42,6 +42,8 @@ class BrandServiceImpl implements BrandService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $productbrand;
         } catch (Exception $e) {
             DB::rollBack();
@@ -49,12 +51,29 @@ class BrandServiceImpl implements BrandService
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function read(int $companyId, string $search = '', bool $paginate = true, int $page, ?int $perPage = 10)
+    public function read(
+        int $companyId, 
+        string $search = '', 
+        bool $paginate = true, 
+        int $page, 
+        ?int $perPage = 10, 
+        bool $useCache = true
+    )
     {
+        $cacheKey = '';
+        if ($useCache) {
+            $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheResult = $this->readFromCache($cacheKey);
+
+            if (!is_null($cacheResult)) return $cacheResult;
+        }
+
+        $result = null;
+
         $timer_start = microtime(true);
 
         try {
@@ -70,12 +89,16 @@ class BrandServiceImpl implements BrandService
             } else {
                 return $pb->get();
             }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+            
+            return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
     }
 
@@ -116,6 +139,8 @@ class BrandServiceImpl implements BrandService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $productbrand->refresh();
         } catch (Exception $e) {
             DB::rollBack();
@@ -133,6 +158,7 @@ class BrandServiceImpl implements BrandService
         $timer_start = microtime(true);
 
         $retval = false;
+
         try {
             $productbrand = Brand::find($id);
             if ($productbrand) {
@@ -140,6 +166,8 @@ class BrandServiceImpl implements BrandService
             }
 
             DB::commit();
+
+            $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
@@ -152,36 +180,20 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function generateUniqueCode(int $companyId): string
+    public function generateUniqueCode(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
-        
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCode($code, $companyId));
-
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $timer_start = microtime(true);
+        $result = Brand::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        try {
-            $result = Brand::whereCompanyId($companyId)->where('code', '=' , $code);
+        if($exceptId)
+            $result = $result->where('id', '<>', $exceptId);
 
-            if($exceptId)
-                $result = $result->where('id', '<>', $exceptId);
-    
-            return $result->count() == 0 ? true:false;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
+        return $result->count() == 0 ? true:false;
     }
 }
