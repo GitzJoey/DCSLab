@@ -34,28 +34,33 @@ class ProductGroupServiceImpl implements ProductGroupService
         $timer_start = microtime(true);
 
         try {
-            $productgroup = new ProductGroup();
-            $productgroup->company_id = $company_id;
-            $productgroup->code = $code;
-            $productgroup->name = $name;
-            $productgroup->category = $category;
+            $productGroup = new ProductGroup();
+            $productGroup->company_id = $company_id;
+            $productGroup->code = $code;
+            $productGroup->name = $name;
+            $productGroup->category = $category;
 
-            $productgroup->save();
+            $productGroup->save();
 
             DB::commit();
 
-            return $productgroup->hId;
+            $this->flushCache();
+
+            return $productGroup->hId;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function readBy(string $key, string $value)
+    public function readBy(
+        string $key, 
+        string $value
+    )
     {
         $timer_start = microtime(true);
 
@@ -76,11 +81,29 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
-    public function read(int $companyId, ?string $category = null, string $search = '', bool $paginate = true, int $page, ?int $perPage = 10)
+    public function read(
+        int $companyId, 
+        ?string $category = null, 
+        string $search = '', 
+        bool $paginate = true, 
+        int $page, 
+        ?int $perPage = 10, 
+        bool $useCache = true
+    )
     {
         $timer_start = microtime(true);
 
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) return $cacheResult;
+            }
+
+            $result = null;
+
             $productGroup = ProductGroup::whereCompanyId($companyId);
 
             if (!empty($category)) {
@@ -99,13 +122,17 @@ class ProductGroupServiceImpl implements ProductGroupService
             } else {
                 return $productGroup->get();
             }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+            
+            return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        } 
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
+        }
     }
 
     public function update(
@@ -131,6 +158,8 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $productgroup->refresh();
         } catch (Exception $e) {
             DB::rollBack();
@@ -148,14 +177,17 @@ class ProductGroupServiceImpl implements ProductGroupService
         $timer_start = microtime(true);
 
         $retval = false;
+        
         try {
-            $productgroup = ProductGroup::find($id);
+            $productGroup = ProductGroup::find($id);
             
-            if ($productgroup) {
-                $retval = $productgroup->delete();
+            if ($productGroup) {
+                $retval = $productGroup->delete();
             }
 
             DB::commit();
+
+            $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
@@ -168,36 +200,20 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
-    public function generateUniqueCode(int $companyId): string
+    public function generateUniqueCode(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
-        
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCode($code, $companyId));
-
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $timer_start = microtime(true);
+        $result = ProductGroup::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        try {
-            $result = ProductGroup::whereCompanyId($companyId)->where('code', '=' , $code);
+        if($exceptId)
+            $result = $result->where('id', '<>', $exceptId);
 
-            if($exceptId)
-                $result = $result->where('id', '<>', $exceptId);
-    
-            return $result->count() == 0 ? true:false;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
+        return $result->count() == 0 ? true:false;
     }
 }

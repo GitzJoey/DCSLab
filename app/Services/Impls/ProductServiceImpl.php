@@ -93,6 +93,8 @@ class ProductServiceImpl implements ProductService
 
             DB::commit();
 
+            $this->flushCache();
+
             return $product;
         } catch (Exception $e) {
             DB::rollBack();
@@ -100,7 +102,7 @@ class ProductServiceImpl implements ProductService
             return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -111,12 +113,23 @@ class ProductServiceImpl implements ProductService
         string $search = '',
         bool $paginate = true,
         int $page,
-        ?int $perPage = 10
+        ?int $perPage = 10, 
+        bool $useCache = true
     )
     {
         $timer_start = microtime(true);
 
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) return $cacheResult;
+            }
+
+            $result = null;
+
             if (!$companyId) return null;
 
             $product = Product::with('productGroup', 'brand', 'productUnits.unit')
@@ -144,12 +157,16 @@ class ProductServiceImpl implements ProductService
             } else {
                 return $product->get();
             }
+
+            if ($useCache) $this->saveToCache($cacheKey, $result);
+            
+            return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
         
     }
@@ -249,7 +266,9 @@ class ProductServiceImpl implements ProductService
 
             DB::commit();
 
-            return $product;
+            $this->flushCache();
+
+            return $product->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
@@ -266,6 +285,7 @@ class ProductServiceImpl implements ProductService
         $timer_start = microtime(true);
 
         $retval = false;
+
         try {
             $product = Product::find($id);
 
@@ -276,6 +296,8 @@ class ProductServiceImpl implements ProductService
             }
 
             DB::commit();
+
+            $this->flushCache();
 
             return $retval; 
         } catch (Exception $e) {
@@ -288,87 +310,44 @@ class ProductServiceImpl implements ProductService
         }
     }
 
-    public function generateUniqueCodeForProduct(int $companyId): string
+    public function generateUniqueCodeForProduct(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
-
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCodeForProduct($code, $companyId));
-
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 
-    public function generateUniqueCodeForProductUnits(int $companyId): string
+    public function generateUniqueCodeForProductUnits(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
-        
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCodeForProductUnits($code, $companyId));
-
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         return $code;
     }
 
     public function isUniqueCodeForProduct(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $timer_start = microtime(true);
+        $result = Product::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        try {
-            $result = Product::whereCompanyId($companyId)->where('code', '=' , $code);
+        if($exceptId)
+            $result = $result->where('id', '<>', $exceptId);
 
-            if($exceptId)
-                $result = $result->where('id', '<>', $exceptId);
-    
-            return $result->count() == 0 ? true:false;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
+        return $result->count() == 0 ? true:false;
     }
 
     public function isUniqueCodeForProductUnits(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $timer_start = microtime(true);
+        $result = ProductUnit::whereCompanyId($companyId)->where('code', '=' , $code);
 
-        try {
-            $result = ProductUnit::whereCompanyId($companyId)->where('code', '=' , $code);
+        if($exceptId)
+            $result = $result->where('id', '<>', $exceptId);
 
-            if($exceptId)
-                $result = $result->where('id', '<>', $exceptId);
-    
-            return $result->count() == 0 ? true:false;
-        }  catch (Exception $e) {
-            DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
+        return $result->count() == 0 ? true:false;
     }
 
     private function checkUniqueCodeInArray(array $productUnits): bool
     {
-        $timer_start = microtime(true);
+        $allCodes = Arr::pluck($productUnits, 'code');
 
-        try {
-            $allCodes = Arr::pluck($productUnits, 'code');
-
-            return (count($allCodes) == count(array_unique($allCodes)));
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
+        return (count($allCodes) == count(array_unique($allCodes)));
     }
 }
