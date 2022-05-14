@@ -7,6 +7,8 @@ use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +24,6 @@ use App\Models\Setting;
 
 use App\Services\UserService;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class UserServiceImpl implements UserService
 {
@@ -124,7 +125,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function read(string $search = '', bool $paginate = true, int $page, int $perPage = 10, bool $useCache = true)
+    public function read(string $search = '', bool $paginate = true, int $page, int $perPage = 10, bool $useCache = true): Paginator|Collection|null
     {
         $timer_start = microtime(true);
         try {
