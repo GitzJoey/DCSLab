@@ -36,5 +36,5 @@ interface ProductGroupService
 
     public function generateUniqueCode(int $companyId): string;
 
-    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;   
+    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;
 }
