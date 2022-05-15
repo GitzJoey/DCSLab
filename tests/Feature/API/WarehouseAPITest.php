@@ -35,13 +35,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_save_with_all_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
@@ -77,13 +77,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_save_with_minimal_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
@@ -119,13 +119,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_save_with_existing_code()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
@@ -167,15 +167,15 @@ class WarehouseAPITest extends APITestCase
             'status' => $status
         ]);
 
-        $api->assertStatus(500);       
+        $api->assertStatus(422);       
         $api->assertJsonStructure([
-            'code'
+            'errors'
         ]);
     }
 
     public function test_api_call_save_with_null_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $companyId = null;
         $branchId = null;
@@ -207,7 +207,7 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_save_with_empty_string_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $companyId = '';
         $branchId = '';
@@ -239,13 +239,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_edit_with_all_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $warehouse = Warehouse::create([
             'company_id' => $companyId,
@@ -295,13 +295,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_edit_with_minimal_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
@@ -353,13 +353,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_edit_with_existing_code()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         for ($i = 0; $i < 3; $i++) {
             $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -412,13 +412,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_edit_with_null_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
@@ -461,13 +461,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_delete()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
@@ -499,7 +499,7 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_delete_nonexistance_id()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $api = $this->json('POST', route('api.post.db.company.warehouse.delete', (new RandomGenerator())->generateAlphaNumeric(5)));
  
@@ -511,13 +511,13 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_read_with_empty_search()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
         $branchSeeder = new BranchTableSeeder();
         $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->user->companies->random(1)->first()->branches->random(1)->first()->id;
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
 
         $search = "";
         $paginate = 1;
@@ -547,9 +547,9 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_read_with_special_char_in_search()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = 1;
         $page = 1;
@@ -577,9 +577,9 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_read_with_negative_value_in_perpage_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
         $search = '';
         $paginate = 1;
         $page = 1;
@@ -607,9 +607,9 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_read_without_pagination()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
         $search = '';
         $page = 1;
         $perPage = 10;
@@ -635,7 +635,7 @@ class WarehouseAPITest extends APITestCase
 
     public function test_api_call_read_with_null_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
         
         $api = $this->getJson(route('api.get.db.company.warehouse.read', [
             'companyId' => null,
