@@ -30,8 +30,8 @@ class SupplierRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($this->route()->getActionMethod() == 'store' && !$user->hasPermission('create-supplier')) return false;
-        if ($this->route()->getActionMethod() == 'update' && !$user->hasPermission('update-supplier')) return false;
+        if ($this->route()->getActionMethod() == 'store' && !$user->hasPermission('supplier-create')) return false;
+        if ($this->route()->getActionMethod() == 'update' && !$user->hasPermission('supplier-update')) return false;
 
         return false;
     }
