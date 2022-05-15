@@ -42,6 +42,9 @@ if (mix.inProduction()) {
 } else {
     mix
         .webpackConfig({
+            stats: {
+                children: true
+            },
             devtool: 'source-map'
         })
         .sass('resources/sass/start/main.scss', 'public/css/start/main.css')
@@ -51,6 +54,9 @@ if (mix.inProduction()) {
 
     mix
         .webpackConfig({
+            stats: {
+                children: true
+            },
             devtool: 'source-map',
             resolve: {
                 alias: {
