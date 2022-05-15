@@ -13,9 +13,6 @@ if (mix.inProduction()) {
 
     mix
         .webpackConfig({
-            stats: {
-                children: true
-            },
             resolve: {
                 alias: {
                     "@": path.resolve(__dirname, "resources/js/midone")
