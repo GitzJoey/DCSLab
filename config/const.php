@@ -9,12 +9,12 @@ return [
         'DATA_CACHE' => [
             'ENABLED' => env('DCSLAB_DATACACHE', true),
             'CACHE_TIME' => [
-                'ENV' => env('DCSLAB_DATACACHE_TIME', 60),
-                '24_HOURS' => 1440,
-                '12_HOURS' => 720,
-                '6_HOURS' => 360,
-                '3_HOURS' => 180,
-                '1_HOUR' => 60
+                'ENV' => env('DCSLAB_DATACACHE_TIME', 3600),
+                '24_HOURS' => 86400,
+                '12_HOURS' => 43200,
+                '6_HOURS' => 21600,
+                '3_HOURS' => 10800,
+                '1_HOUR' => 3600
             ]
         ],
 

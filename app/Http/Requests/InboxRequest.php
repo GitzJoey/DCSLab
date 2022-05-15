@@ -24,6 +24,8 @@ class InboxRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
+        if ($user->hasPermission(['messaging-create', 'messaging-read', 'messaging-update', 'messaging-delete'])) return true;
+
         return false;
     }
 

@@ -71,8 +71,8 @@ class WarehouseController extends BaseController
         } else {
             if (!$this->warehouseService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
 
@@ -113,8 +113,8 @@ class WarehouseController extends BaseController
         } else {
             if (!$this->warehouseService->isUniqueCode($code, $company_id, $id)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
 

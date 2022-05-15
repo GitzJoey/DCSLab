@@ -30,8 +30,8 @@ class CompanyRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($this->route()->getActionMethod() == 'store' && !$user->hasPermission('create-company')) return false;
-        if ($this->route()->getActionMethod() == 'update' && !$user->hasPermission('update-company')) return false;
+        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('company-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('company-update')) return true;
 
         return false;
     }

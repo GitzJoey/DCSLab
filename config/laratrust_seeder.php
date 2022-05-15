@@ -36,6 +36,9 @@ return [
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
 
+            'company' => 'c,r,u,d',
+            'branch' => 'c,r,u,d',
+            'warehouse' => 'c,r,u,d',
             'supplier' => 'c,r,u,d',
             'product' => 'c,r,u,d',
         ],

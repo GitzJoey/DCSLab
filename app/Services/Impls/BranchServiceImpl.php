@@ -79,7 +79,7 @@ class BranchServiceImpl implements BranchService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) return $cacheResult;

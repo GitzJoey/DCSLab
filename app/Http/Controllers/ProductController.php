@@ -111,8 +111,8 @@ class ProductController extends BaseController
         } else {
             if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
         
@@ -186,8 +186,8 @@ class ProductController extends BaseController
         } else {
             if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $id)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
 

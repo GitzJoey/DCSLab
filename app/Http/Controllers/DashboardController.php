@@ -25,11 +25,13 @@ class DashboardController extends BaseController
         return view('dashboard.midone');
     }
 
-    public function userMenu()
+    public function userMenu(Request $request)
     {
         $menu = [];
 
-        $menu = $this->dashboardService->createMenu();
+        $refresh = $request->has('refresh') ? true:false;
+
+        $menu = $this->dashboardService->createMenu($refresh);
 
         return $menu;
     }

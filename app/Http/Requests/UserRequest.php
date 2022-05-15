@@ -17,6 +17,9 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
+        //Authorization Error
+        //return false;
+
         if (!Auth::check()) return false;
 
         /** @var \App\User */
@@ -25,8 +28,8 @@ class UserRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($this->route()->getActionMethod() == 'store' && !$user->hasPermission('create-user')) return false;
-        if ($this->route()->getActionMethod() == 'update' && !$user->hasPermission('update-user')) return false;
+        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('user-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('user-update')) return true;
 
         return false;
     }
@@ -53,6 +56,9 @@ class UserRequest extends FormRequest
 
         if ($this->route()->getActionMethod() == 'store') {
             $rules_store = [
+                //Testing Server Request Validation Error
+                //'name' => 'min:1000',
+                //'email' => 'min:1000',
                 'name' => 'required|alpha_num',
                 'email' => 'required|email|max:255|unique:users',
                 'roles' => 'required',
