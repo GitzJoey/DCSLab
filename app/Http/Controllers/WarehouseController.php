@@ -60,8 +60,8 @@ class WarehouseController extends BaseController
     {   
         $request = $warehouseRequest->validated();
         
-        $company_id = Hashids::decode($request['company_id'])[0];
-        $branch_id = Hashids::decode($request['branch_id'])[0];
+        $company_id = $request['company_id'];
+        $branch_id = $request['branch_id'];
 
         $code = $request['code'];
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
@@ -102,8 +102,8 @@ class WarehouseController extends BaseController
     {
         $request = $warehouseRequest->validated();
 
-        $company_id = Hashids::decode($request['company_id'])[0];
-        $branch_id = Hashids::decode($request['branch_id'])[0];
+        $company_id = $request['company_id'];
+        $branch_id = $request['branch_id'];
 
         $code = $request['code'];
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
