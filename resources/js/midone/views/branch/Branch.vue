@@ -295,8 +295,7 @@ const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#branchForm')[0]); 
-    formData.append('company_id', selectedUserCompany.value);
-
+    
     if (mode.value === 'create') {
         axios.post(route('api.post.db.company.branch.save'), formData).then(response => {
             backToList();
@@ -306,6 +305,8 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
+        formData.append('company_id', selectedUserCompany.value);
+
         axios.post(route('api.post.db.company.branch.edit', branch.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
@@ -371,8 +372,10 @@ const createNew = () => {
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
         branch.value = emptyBranch();
+
+        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+        if (c) branch.value.company.hId = c.hId;
     }
-    branch.value.company.hId = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
