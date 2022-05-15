@@ -23,6 +23,7 @@ class ProfileRequest extends FormRequest
         if (empty($user->roles)) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::USER->value)) return true;
 
         return false;
     }
