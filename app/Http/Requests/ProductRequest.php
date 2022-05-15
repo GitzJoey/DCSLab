@@ -29,8 +29,8 @@ class ProductRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($this->route()->getActionMethod() == 'store' && !$user->hasPermission('product-create')) return false;
-        if ($this->route()->getActionMethod() == 'update' && !$user->hasPermission('product-update')) return false;
+        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('product-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('product-update')) return true;
 
         return false;
     }
