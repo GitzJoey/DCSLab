@@ -35,14 +35,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_save_with_all_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.save'), [
             'code' => $code,
@@ -62,14 +62,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_save_with_minimal_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = null;
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.save'), [
             'code' => $code,
@@ -89,14 +89,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_save_with_existing_code()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $code = $this->user->companies->random(1)->first()->code;
+        $code = $this->developer->companies->random(1)->first()->code;
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 1;
         $status = 'ACTIVE';
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
 
         $api = $this->json('POST', route('api.post.db.company.company.save'), [
             'code' => $code,
@@ -115,7 +115,7 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_save_with_null_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = null;
         $name = null;
@@ -141,7 +141,7 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_save_with_empty_string_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = '';
         $name = '';
@@ -167,14 +167,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_edit_with_all_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
 
         $company = Company::create([
             'code' => $code,
@@ -185,6 +185,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
         $companyId = $company->id;
+        $this->developer->companies()->attach([$companyId]);
 
         $newCode = (new RandomGenerator())->generateNumber(1, 9999) . 'new';
         $newName = $this->faker->name;
@@ -211,14 +212,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_edit_with_minimal_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = null;
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
 
         $company = Company::create([
             'code' => $code,
@@ -229,6 +230,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
         $companyId = $company->id;
+        $this->developer->companies()->attach([$companyId]);
 
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
@@ -259,11 +261,11 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_edit_with_existing_code()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
 
-        $newCode = $this->user->companies->random(1)->whereNotIn('id', [$companyId])->first()->code;
+        $newCode = $this->developer->companies->random(1)->whereNotIn('id', [$companyId])->first()->code;
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
         $newDefault = 0;
@@ -286,9 +288,9 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_edit_with_null_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $companyId = $this->user->companies->first()->id;
+        $companyId = $this->developer->companies->first()->id;
 
         $api_edit = $this->json('POST', route('api.post.db.company.company.edit', Hashids::encode($companyId)), [
              'company_id' => null,
@@ -307,14 +309,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_delete()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 0;
         $status = 1;
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
 
         $company = Company::create([
             'code' => $code,
@@ -336,7 +338,7 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_delete_nonexistance_id()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', (new RandomGenerator())->generateAlphaNumeric(5)));
 
@@ -348,14 +350,14 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_delete_default_company()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $default = 1;
         $status = 1;
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
 
         $company = Company::create([
             'code' => $code,
@@ -365,22 +367,22 @@ class CompanyAPITest extends APITestCase
             'status' => $status,
             'userId' => $userId
         ]);
-        $this->user->companies()->attach([$company->id]);
+        $this->developer->companies()->attach([$company->id]);
 
-        $companyId = $this->user->companies->where('default', '=', 1)->first()->id;
+        $companyId = $this->developer->companies->where('default', '=', 1)->first()->id;
         $api = $this->json('POST', route('api.post.db.company.company.delete', Hashids::encode($companyId)));
 
         $api->assertStatus(500);
         $api->assertJsonStructure([
-            'errors'
+            'message'
         ]);
     }
 
     public function test_api_call_read_when_user_have_companies_read_with_empty_search()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
         $search = "";
         $paginate = 1;
         $page = 1;
@@ -409,9 +411,9 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_have_companies_with_special_char_in_search()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = 1;
         $page = 1;
@@ -439,11 +441,11 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_have_companies_with_negative_value_in_perpage_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
         $search = '';
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $page = 1;
         $perPage = -10;
 
@@ -470,9 +472,9 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_have_companies_without_pagination()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $userId = $this->user->id;
+        $userId = $this->developer->id;
         $search = '';
         $page = 1;
         $perPage = 10;
@@ -499,7 +501,7 @@ class CompanyAPITest extends APITestCase
 
     public function test_api_call_read_when_user_have_companies_with_null_param()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => null,
@@ -535,7 +537,8 @@ class CompanyAPITest extends APITestCase
 
         $userId = $user->id;
         $search = '';
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        // $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $page = 1;
         $perPage = 10;
 
@@ -573,7 +576,7 @@ class CompanyAPITest extends APITestCase
 
         $userId = $user->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $page = 1;
         $perPage = 10;
 
@@ -611,7 +614,7 @@ class CompanyAPITest extends APITestCase
 
         $userId = $user->id;
         $search = '';
-        $paginate = (new RandomGenerator())->generateNumber(0, 1);
+        $paginate = 1;
         $page = 1;
         $perPage = -10;
 
