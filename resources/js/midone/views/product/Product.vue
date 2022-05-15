@@ -384,9 +384,9 @@ onMounted(() => {
         
     }
 
-    setMode();
-
     getDDL();
+
+    setMode();
 
     loading.value = false;
 });
