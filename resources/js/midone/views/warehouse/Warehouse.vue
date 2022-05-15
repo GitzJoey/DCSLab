@@ -370,9 +370,10 @@ const createNew = () => {
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
         warehouse.value = emptyWarehouse();
-    }
 
-    warehouse.value.company = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+        if (c) warehouse.value.company.hId = c.hId;
+    }
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
