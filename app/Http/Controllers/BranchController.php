@@ -61,7 +61,7 @@ class BranchController extends BaseController
     {   
         $request = $branchRequest->validated();
         
-        $company_id = Hashids::decode($request['company_id'])[0];
+        $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
@@ -101,7 +101,7 @@ class BranchController extends BaseController
     {
         $request = $branchRequest->validated();
 
-        $company_id = Hashids::decode($request['company_id'])[0];
+        $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
