@@ -72,8 +72,8 @@ class SupplierController extends BaseController
         } else {
             if (!$this->supplierService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
 
@@ -130,8 +130,8 @@ class SupplierController extends BaseController
         } else {
             if (!$this->supplierService->isUniqueCode($code, $company_id, $id)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
 

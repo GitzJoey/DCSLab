@@ -98,8 +98,8 @@ class CompanyController extends BaseController
         } else {
             if (!$this->companyService->isUniqueCode($code, $userId)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
         
@@ -135,8 +135,8 @@ class CompanyController extends BaseController
         } else {
             if (!$this->companyService->isUniqueCode($code, $userId, $id)) {
                 return response()->error([
-                    'code' => trans('rules.unique_code')
-                ]);
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
             }
         }
 
