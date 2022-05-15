@@ -92,7 +92,8 @@ class WarehouseRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
+            'branch_id' => $this->has('branch_id') ? Hashids::decode($this['branch_id'])[0] : '',
             'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }
