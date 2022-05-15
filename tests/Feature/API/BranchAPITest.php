@@ -4,12 +4,11 @@ namespace Tests\Feature\API;
 
 use App\Models\Branch;
 use Tests\APITestCase;
-use App\Enums\ActiveStatus;
 use App\Actions\RandomGenerator;
-use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 
 class BranchAPITest extends APITestCase
 {
@@ -37,16 +36,16 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_save_with_all_field_filled()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $companyId = $this->developer->companies->random(1)->first()->id;
-        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $companyId = $this->user->companies->random(1)->first()->id;
+        $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
         $remarks = $this->faker->sentence();
-        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+        $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), [
             'company_id' => Hashids::encode($companyId),
@@ -62,27 +61,22 @@ class BranchAPITest extends APITestCase
         $api->assertSuccessful();
         $this->assertDatabaseHas('branches', [
             'company_id' => $companyId,
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => ActiveStatus::fromName($status)
+            'name' => $name
         ]);
     }
 
     public function test_api_call_save_with_minimal_field_filled()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $companyId = $this->developer->companies->random(1)->first()->id;
-        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $companyId = $this->user->companies->random(1)->first()->id;
+        $code = (new RandomGenerator())->generateNumber(1, 9999);
         $name = $this->faker->name;
-        $address = null;
-        $city = null;
-        $contact = null;
-        $remarks = null;
-        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+        $address = '';
+        $city = '';
+        $contact = '';
+        $remarks = '';
+        $status = (new RandomGenerator())->generateNumber(0, 1);
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), [
             'company_id' => Hashids::encode($companyId),
@@ -98,20 +92,15 @@ class BranchAPITest extends APITestCase
         $api->assertSuccessful();
         $this->assertDatabaseHas('branches', [
             'company_id' => $companyId,
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => ActiveStatus::fromName($status)
+            'name' => $name
         ]);
     }
 
     public function test_api_call_save_with_existing_code_in_same_company()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $companyId = $this->developer->companies->random(1)->first()->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
 
         $branch = Branch::whereCompanyId($companyId)->inRandomOrder()->first();
         
@@ -146,10 +135,10 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_save_with_existing_code_in_different_company()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $company_1 = $this->developer->companies[0];
-        $company_2 = $this->developer->companies[1];
+        $company_1 = $this->user->companies[0];
+        $company_2 = $this->user->companies[1];
 
         $theCode = (new RandomGenerator())->generateAlphaNumeric(5);
 
@@ -186,7 +175,7 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_save_with_null_param()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
         $companyId = null;
         $code = null;
@@ -217,7 +206,7 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_save_with_empty_string_param()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
         $companyId = '';
         $code = '';
@@ -248,9 +237,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_edit_with_all_field_filled()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $companyId = $this->developer->companies->random(1)->first()->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -292,9 +281,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_edit_with_minimal_field_filled()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $companyId = $this->developer->companies->random(1)->first()->id;
+        $companyId = $this->user->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateNumber(1,9999);
         $name = $this->faker->name;
         $address = $this->faker->address;
@@ -332,9 +321,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_edit_and_change_the_code_with_existing_code_in_the_same_company()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $company = $this->developer->companies()->whereHas('branches')->inRandomOrder()->first();
+        $company = $this->user->companies()->whereHas('branches')->inRandomOrder()->first();
         if (!$company)
             $this->markTestSkipped('No suitable company found');
 
@@ -371,9 +360,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_edit_with_null_param()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $company = $this->developer->companies()->whereHas('branches')->inRandomOrder()->first();
+        $company = $this->user->companies()->whereHas('branches')->inRandomOrder()->first();
 
         $branch = Branch::whereCompanyId($company->id)->inRandomOrder()->first();
         if (!$branch)
@@ -397,7 +386,7 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_delete()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
         $branch = Branch::inRandomOrder()->first();
         if (!$branch)
@@ -415,7 +404,7 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_delete_nonexistance_id()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
         $api = $this->json('POST', route('api.post.db.company.branch.delete', (new RandomGenerator())->generateAlphaNumeric(5)));
 
@@ -424,9 +413,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_read_with_empty_search()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $company = $this->developer->companies->random(1)->first();
+        $company = $this->user->companies->random(1)->first();
                 
         $companyId = $company->id;
         $search = '';
@@ -454,9 +443,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_read_with_special_char_in_search()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $company = $this->developer->companies->random(1)->first();
+        $company = $this->user->companies->random(1)->first();
 
         $companyId = $company->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
@@ -484,9 +473,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_read_with_negative_value_in_perpage_param()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $company = $this->developer->companies->random(1)->first();
+        $company = $this->user->companies->random(1)->first();
 
         $companyId = $company->id;
         $search = "";
@@ -514,9 +503,9 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_read_without_pagination()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
-        $company = $this->developer->companies->random(1)->first();
+        $company = $this->user->companies->random(1)->first();
 
         $companyId = $company->id;
         $search = "";
@@ -542,7 +531,7 @@ class BranchAPITest extends APITestCase
 
     public function test_api_call_read_with_null_param()
     {
-        $this->actingAs($this->developer);
+        $this->actingAs($this->user);
 
         $api = $this->getJson(route('api.get.db.company.branch.read', [
             'companyId' => null,
