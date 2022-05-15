@@ -102,7 +102,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.branch.fields.company_id') }}</label>
                         
-                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)" readonly>
+                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="branch.company.hId" :label="t('views.branch.fields.company_id')" rules="required" @blur="reValidate(errors)" :disabled="mode === 'edit'">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
                         </VeeField>
@@ -296,7 +296,7 @@ const onSubmit = (values, actions) => {
 
     var formData = new FormData(dom('#branchForm')[0]); 
     formData.append('company_id', selectedUserCompany.value);
-    
+
     if (mode.value === 'create') {
         axios.post(route('api.post.db.company.branch.save'), formData).then(response => {
             backToList();
