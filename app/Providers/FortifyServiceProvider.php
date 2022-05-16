@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use App\Models\User;
+use App\Rules\inactiveUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -53,7 +54,8 @@ class FortifyServiceProvider extends ServiceProvider
             
             if ($user && Hash::check($request->password, $user->password)) {
                 $request->validate([
-                    'password' => new mustResetPassword($user)
+                    'email' => [new inactiveUser($user)],
+                    'password' => [new mustResetPassword($user)] 
                 ]);
     
                 return $user;
