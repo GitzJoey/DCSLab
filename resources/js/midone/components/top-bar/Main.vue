@@ -3,14 +3,14 @@
     <nav class="-intro-x mr-auto hidden sm:flex">
         <template v-if="userCompanyLists.length !== 0">
           <Dropdown id="company-dropdown" class="intro-x mr-auto sm:mr-6" data-tw-placement="bottom-start">
-            <DropdownToggle tag="div" class="notification cursor-pointer" role="button">
+            <DropdownToggle tag="div" class="cursor-pointer" role="button">
               <div class="flex flex-row">
-                <UmbrellaIcon class="notification__icon dark:text-slate-300 mr-2" />
+                <UmbrellaIcon class="dark:text-slate-300 mr-2" />
                 <LoadingIcon icon="puff" v-if="selectedCompany === ''"/> <div class="text-gray-700 dark:text-slate-300" v-else><strong>{{ selectedCompany }}</strong></div>
               </div>
               </DropdownToggle>
               <DropdownMenu class="w-56">
-                <DropdownContent class="notification-content__box dark:bg-dark-6">
+                <DropdownContent class="dark:bg-dark-6">
                   <div class="p-2" v-for="(c, cIdx) in userCompanyLists">
                     <a href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
                       <span :class="{ 'underline': c.name === selectedCompany, 'font-medium': c.default === 1 }">{{ c.name }}</span>
@@ -23,17 +23,17 @@
     </nav>
 
     <div class="mr-auto sm:mr-6 hover:animate-pulse">
-      <a href="" class="notification cursor-pointer" @click.prevent="slideOverShow = true">
-        <ArchiveIcon class="notification__icon dark:text-slate-300" />
+      <a href="" class="cursor-pointer" @click.prevent="slideOverShow = true">
+        <ArchiveIcon class="dark:text-slate-300" />
       </a>
     </div>
 
     <Dropdown id="language-dropdown" class="intro-x mr-auto sm:mr-6">
-      <DropdownToggle tag="div" role="button" class="notification cursor-pointer">
-        <GlobeIcon class="notification__icon dark:text-slate-300" />
+      <DropdownToggle tag="div" role="button" class="cursor-pointer">
+        <GlobeIcon class="dark:text-slate-300" />
       </DropdownToggle>
       <DropdownMenu class="w-56">
-        <DropdownContent tag="div" class="notification-content__box">
+        <DropdownContent tag="div">
           <div class="p-2">
             <a href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
               <img alt="English" :src="assetPath('us.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'en' }">English</span>
