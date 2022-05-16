@@ -6,6 +6,7 @@ return [
     'valid_company' => 'Invalid company value',
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
+    'inactive_user' => 'Your profile status is inactive',
     'company' => [
         'deactivate_default_company' => 'Default company cannot be deactivated',
         'delete_default_company' => 'Default company cannot be deleted'
