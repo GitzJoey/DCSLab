@@ -38,7 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
-            \App\http\Middleware\XssSanitizer::class,
+            \App\Http\Middleware\XssSanitizer::class,
         ],
 
         'api' => [
@@ -46,7 +46,7 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
-            \App\http\Middleware\XssSanitizer::class,
+            \App\Http\Middleware\XssSanitizer::class,
         ],
     ];
 
