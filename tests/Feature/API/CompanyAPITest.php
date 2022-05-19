@@ -133,7 +133,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
 
-        $api->assertStatus(500);
+        $api->assertStatus(422);
         $api->assertJsonStructure([
             'message'
         ]);
@@ -159,7 +159,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
 
-        $api->assertStatus(500);
+        $api->assertStatus(422);
         $api->assertJsonStructure([
             'message'
         ]);
@@ -247,13 +247,12 @@ class CompanyAPITest extends APITestCase
             'status' => $newStatus
         ]);
 
-        
         $api_edit->assertSuccessful();
         $this->assertDatabaseHas('companies', [
             'id' => $companyId,
             'code' => $newCode,
             'name' => $newName,
-            'address' => $newAddress,
+            'address' => '',
             'default' => $newDefault,
             'status' => ActiveStatus::fromName($newStatus)
         ]);
