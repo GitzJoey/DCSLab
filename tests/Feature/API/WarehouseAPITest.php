@@ -173,38 +173,6 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_save_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = null;
-        $branchId = null;
-        $code = null;
-        $name = null;
-        $address = null;
-        $city = null;
-        $contact = null;
-        $remarks = null;
-        $status = null;
-
-        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [
-            'company_id' => $companyId,
-            'branch_id' => $branchId,
-            'code' => $code, 
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status
-        ]);
-
-        $api->assertStatus(500);
-        $api->assertJsonStructure([
-            'message'
-        ]);
-    }
-
     public function test_api_call_save_with_empty_string_param()
     {
         $this->actingAs($this->developer);
@@ -410,55 +378,6 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_edit_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = $this->developer->companies->random(1)->first()->id;
-
-        $branchSeeder = new BranchTableSeeder();
-        $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
-
-        $code = (new RandomGenerator())->generateAlphaNumeric(5);
-        $name = $this->faker->name;
-        $address = $this->faker->address;
-        $city = $this->faker->city;
-        $contact = $this->faker->e164PhoneNumber;
-        $remarks = $this->faker->sentence();
-        $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
-
-        $warehouse = Warehouse::create([
-            'company_id' => $companyId,
-            'branch_id' => $branchId,
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status
-        ]);
-        $warehouseId = $warehouse->id;
-
-        $api_edit = $this->json('POST', route('api.post.db.company.warehouse.edit', [ 'id' => Hashids::encode($warehouseId) ]), [
-            'company_id' => null,
-            'branch_id' => null,
-            'code' => null,
-            'name' => null,
-            'address' => null,
-            'city' => null,
-            'contact' => null,
-            'remarks' => null,
-            'status' => null
-        ]);
-
-        $api_edit->assertStatus(500);
-        $api_edit->assertJsonStructure([
-            'message'
-        ]);
-    }
-
     public function test_api_call_delete()
     {
         $this->actingAs($this->developer);
@@ -630,24 +549,6 @@ class WarehouseAPITest extends APITestCase
             'meta'=> [
                 'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
             ]
-        ]);
-    }
-
-    public function test_api_call_read_with_null_param()
-    {
-        $this->actingAs($this->developer);
-        
-        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
-            'companyId' => null,
-            'search' => null,
-            'paginate' => null,
-            'page' => null,
-            'perPage' => null
-        ]));
-
-        $api->assertStatus(500);
-        $api->assertJsonStructure([
-            'message'
         ]);
     }
 }

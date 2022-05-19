@@ -113,32 +113,6 @@ class CompanyAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_save_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $code = null;
-        $name = null;
-        $address = null;
-        $default = null;
-        $status = null;
-        $userId = null;
-
-        $api = $this->json('POST', route('api.post.db.company.company.save'), [
-            'code' => $code,
-            'name' => $name,
-            'address' => $address,
-            'default' => $default,
-            'status' => $status,
-            'userId' => $userId
-        ]);
-
-        $api->assertStatus(422);
-        $api->assertJsonStructure([
-            'message'
-        ]);
-    }
-
     public function test_api_call_save_with_empty_string_param()
     {
         $this->actingAs($this->developer);
@@ -282,27 +256,6 @@ class CompanyAPITest extends APITestCase
         $api_edit->assertStatus(422);
         $api_edit->assertJsonStructure([
             'errors'
-        ]);
-    }
-
-    public function test_api_call_edit_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = $this->developer->companies->first()->id;
-
-        $api_edit = $this->json('POST', route('api.post.db.company.company.edit', Hashids::encode($companyId)), [
-             'company_id' => null,
-             'code' => null,
-             'name' => null,
-             'address' => null,
-             'default' => null,
-             'status' => null
-        ]);
-
-        $api_edit->assertStatus(500);
-        $api_edit->assertJsonStructure([
-             'message'
         ]);
     }
 
@@ -498,31 +451,6 @@ class CompanyAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_read_when_user_have_companies_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $api = $this->getJson(route('api.get.db.company.company.read', [
-            'userId' => null,
-            'search' => null,
-            'paginate' => null,
-            'page' => null,
-            'perPage' => null,
-            
-        ]));
-
-        $api->assertStatus(200);       
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
     public function test_api_call_read_when_user_doesnt_have_companies_with_empty_search()
     {
         $user = new User();
@@ -663,38 +591,6 @@ class CompanyAPITest extends APITestCase
         ]));
 
         $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
-    public function test_api_call_read_when_user_doesnt_have_companies_with_null_param()
-    {
-        $user = new User();
-        $user->name = 'testing';
-        $user->email = $this->faker->email;
-        $user->password = Hash::make("abcde12345");
-        $user->password_changed_at = Carbon::now();
-        $user->save();
-
-        $this->actingAs($user);
-
-        $api = $this->getJson(route('api.get.db.company.company.read', [
-            'userId' => null,
-            'search' => null,
-            'paginate' => null,
-            'page' => null,
-            'perPage' => null,
-            
-        ]));
-
-        $api->assertStatus(200);       
         $api->assertJsonStructure([
             'data', 
             'links' => [

@@ -184,37 +184,6 @@ class BranchAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_save_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = null;
-        $code = null;
-        $name = null;
-        $name = null;
-        $address = null;
-        $city = null;
-        $contact = null;
-        $remarks = null;
-        $status = null;
-
-        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
-            'company_id' => $companyId,
-            'code' => $code, 
-            'name' => $name,
-            'address' => $address,
-            'city' => $city,
-            'contact' => $contact,
-            'remarks' => $remarks,
-            'status' => $status
-        ]);
-
-        $api->assertStatus(500);
-        $api->assertJsonStructure([
-            'message'
-        ]);
-    }
-
     public function test_api_call_save_with_empty_string_param()
     {
         $this->actingAs($this->developer);
@@ -400,32 +369,6 @@ class BranchAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_edit_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $company = $this->developer->companies()->whereHas('branches')->inRandomOrder()->first();
-
-        $branch = Branch::whereCompanyId($company->id)->inRandomOrder()->first();
-        if (!$branch)
-            $this->markTestSkipped('Branch not found');
-
-        $branchId = Hashids::encode($branch->id);
-
-        $api_edit = $this->json('POST', route('api.post.db.company.branch.edit', [ 'id' => $branchId ]), [
-            'company_id' => null,
-            'code' => null,
-            'name' => null,
-            'address' => null,
-            'city' => null,
-            'contact' => null,
-            'remarks' => null,
-            'status' => null,
-        ]);
-
-        $api_edit->assertStatus(500);
-    }
-
     public function test_api_call_delete()
     {
         $this->actingAs($this->developer);
@@ -568,23 +511,6 @@ class BranchAPITest extends APITestCase
             'meta'=> [
                 'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
             ]
-        ]);
-    }
-
-    public function test_api_call_read_with_null_param()
-    {
-        $this->actingAs($this->developer);
-
-        $api = $this->getJson(route('api.get.db.company.branch.read', [
-            'companyId' => null,
-            'search' => null,
-            'paginate' => null,
-            'perPage' => null
-        ]));
-
-        $api->assertStatus(500);
-        $api->assertJsonStructure([
-            'message'
         ]);
     }
 }
