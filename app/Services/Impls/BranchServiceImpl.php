@@ -117,7 +117,7 @@ class BranchServiceImpl implements BranchService
         }
     }
 
-    public function getAllActiveBranch(int $companyId)
+    public function getBranchByCompanyId(int $companyId)
     {
         $timer_start = microtime(true);
 
