@@ -226,6 +226,7 @@ const mode = ref('list');
 const loading = ref(false);
 const alertErrors = ref([]);
 const deleteId = ref('');
+const deleteModalShow = ref(false);
 const expandDetail = ref(null);
 //#endregion
 
@@ -333,6 +334,9 @@ const onSubmit = (values, actions) => {
         });
     } else if (mode.value === 'edit') {
         formData.append('company_id', selectedUserCompany.value);
+
+        var branchId = document.getElementById("branch_id");
+        formData.append('branch_id', branchId.value);
         
         axios.post(route('api.post.db.company.warehouse.edit', warehouse.value.hId), formData).then(response => {
             actions.resetForm();
