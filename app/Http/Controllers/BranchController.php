@@ -59,7 +59,7 @@ class BranchController extends BaseController
 
     public function getBranchByCompanyId(Request $request)
     {
-        if ($request->has('companyId') == true) {
+        if ($request->has('companyId')) {
             $result = $this->branchService->getBranchByCompanyId(Hashids::decode($request['companyId'])[0]);
         } else {
             return response()->error();
