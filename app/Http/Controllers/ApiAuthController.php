@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AuthRequest;
+use App\Rules\inactiveUser;
+use App\Rules\maxTokens;
+use App\Rules\mustResetPassword;
 use App\Services\UserService;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class ApiAuthController extends Controller
 {
@@ -16,23 +21,34 @@ class ApiAuthController extends Controller
         $this->userService = $userService;
     }
 
-    public function auth(AuthRequest $authRequest)
+    public function auth(Request $request)
     {
-        $request = $authRequest->validated();
-
         $user = $this->userService->readBy('EMAIL', $request['email']);
+            
+        if ($user && Hash::check($request->password, $user->password)) {
+            $request->validate([
+                'email' => [new inactiveUser($user), new maxTokens($user->email)],
+                'password' => [new mustResetPassword($user)] 
+            ]);
 
-        $token = $user->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'))->plainTextToken;
+            $token = $user->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'))->plainTextToken;
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+        } 
+
+        return response()->error();        
     }
 
-    public function signup(AuthRequest $authRequest)
+    public function signup(Request $request)
     {
-        $request = $authRequest->validated();
+        $request->validate([
+            'name' => ['required', 'string', 'alpha_num', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', new Password(8), 'confirmed']
+        ]);
 
         $user = $this->userService->register($request['name'], $request['email'], $request['password'], '');
 
