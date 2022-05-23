@@ -65,11 +65,11 @@ class CompanyServiceImpl implements CompanyService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
+        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     public function read(
@@ -173,11 +173,11 @@ class CompanyServiceImpl implements CompanyService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
+        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     public function delete(int $userId, int $id): bool
@@ -256,11 +256,11 @@ class CompanyServiceImpl implements CompanyService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
+        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     public function getCompanyById(int $companyId): Company
