@@ -6,7 +6,7 @@ use App\Rules\inactiveUser;
 use App\Rules\maxTokens;
 use App\Rules\mustResetPassword;
 use App\Services\UserService;
-
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
@@ -39,7 +39,7 @@ class ApiAuthController extends Controller
             ]);
         } 
 
-        return response()->error();        
+        return response()->error();
     }
 
     public function signup(Request $request)
@@ -50,13 +50,17 @@ class ApiAuthController extends Controller
             'password' => ['required', 'string', new Password(8), 'confirmed']
         ]);
 
-        $user = $this->userService->register($request['name'], $request['email'], $request['password'], '');
+        try {
+            $user = $this->userService->register($request['name'], $request['email'], $request['password'], '');
 
-        $token = $user->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'))->plainTextToken;
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+            $token = $user->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'))->plainTextToken;
+    
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);    
+        } catch (Exception $e) {
+            return response()->error();
+        }
     }
 }
