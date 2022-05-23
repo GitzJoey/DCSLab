@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Rules\inactiveUser;
 use App\Rules\maxTokens;
 use App\Rules\mustResetPassword;
@@ -33,10 +34,10 @@ class ApiAuthController extends Controller
 
             $token = $user->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'))->plainTextToken;
 
-            return response()->json([
+            return (new UserResource($user))->additional(['tokens' => [
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-            ]);
+            ]]);
         } 
 
         return response()->error();
@@ -54,11 +55,11 @@ class ApiAuthController extends Controller
             $user = $this->userService->register($request['name'], $request['email'], $request['password'], '');
 
             $token = $user->createToken(Config::get('const.DEFAULT.API_TOKEN_NAME'))->plainTextToken;
-    
-            return response()->json([
+
+            return (new UserResource($user))->additional(['tokens' => [
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-            ]);    
+            ]]);
         } catch (Exception $e) {
             return response()->error();
         }
