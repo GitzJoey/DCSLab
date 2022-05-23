@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\BranchService;
-
 use Illuminate\Http\Request;
+
+use App\Services\BranchService;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\BranchRequest;
 use App\Http\Resources\BranchResource;
@@ -48,6 +48,23 @@ class BranchController extends BaseController
             perPage: $perPage
         );
 
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = BranchResource::collection($result);
+
+            return $response;
+        }
+    }
+
+    public function getBranchByCompanyId(Request $request)
+    {
+        if ($request->has('companyId')) {
+            $result = $this->branchService->getBranchByCompanyId(Hashids::decode($request['companyId'])[0]);
+        } else {
+            return response()->error();
+        }
+    
         if (is_null($result)) {
             return response()->error();
         } else {
