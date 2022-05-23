@@ -117,6 +117,20 @@ class BranchServiceImpl implements BranchService
         }
     }
 
+    public function getBranchByCompanyId(int $companyId)
+    {
+        $timer_start = microtime(true);
+
+        try {
+            return Branch::where('company_id', '=', $companyId)->where('status', '=', 1)->get();
+        } catch (Exception $e) {
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
+    }
+
     public function update(
         int $id,
         int $company_id,

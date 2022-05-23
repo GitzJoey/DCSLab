@@ -41,6 +41,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
                 Route::get('read', [BranchController::class, 'read'])->name('.read');
+                Route::get('read/by/company', [BranchController::class, 'getBranchByCompanyId'])->name('.read.by.company');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
                 Route::get('read', [WarehouseController::class, 'read'])->name('.read');

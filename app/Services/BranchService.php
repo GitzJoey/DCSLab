@@ -28,6 +28,8 @@ interface BranchService
         bool $useCache = true
     ): Paginator|Collection|null;
 
+    public function getBranchByCompanyId(int $companyId);
+
     public function update(
         int $id,
         int $company_id,
