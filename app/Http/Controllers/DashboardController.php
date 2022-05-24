@@ -29,9 +29,9 @@ class DashboardController extends BaseController
     {
         $menu = [];
 
-        $refresh = $request->has('refresh') ? true:false;
+        $useCache = $request->has('refresh') ? false:true;
 
-        $menu = $this->dashboardService->createMenu($refresh);
+        $menu = $this->dashboardService->createMenu($useCache);
 
         return $menu;
     }
