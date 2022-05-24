@@ -39,7 +39,7 @@
 @import "toastify-js/src/toastify.css";
 
 @import "tom-select/dist/css/tom-select.css";
-
+@import "simplebar/src/simplebar.css";
 
 @import "./components/_global.css";
 @import "./components/_top-bar.css";
