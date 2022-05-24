@@ -24,6 +24,10 @@ class ApiAuthController extends Controller
 
     public function auth(Request $request)
     {
+        $request->validate([
+            'email' => ['required', 'string', 'email']
+        ]);
+
         $user = $this->userService->readBy('EMAIL', $request['email']);
             
         if ($user && Hash::check($request->password, $user->password)) {

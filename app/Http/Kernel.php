@@ -47,6 +47,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
             \App\Http\Middleware\XssSanitizer::class,
+            \App\Http\Middleware\ForceHeader::class,
         ],
     ];
 
