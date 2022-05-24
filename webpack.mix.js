@@ -43,7 +43,7 @@ if (mix.inProduction()) {
     mix
         .webpackConfig({
             stats: {
-                children: true
+                children: false
             },
             devtool: 'source-map'
         })
@@ -55,7 +55,7 @@ if (mix.inProduction()) {
     mix
         .webpackConfig({
             stats: {
-                children: true
+                children: false
             },
             devtool: 'source-map',
             resolve: {
