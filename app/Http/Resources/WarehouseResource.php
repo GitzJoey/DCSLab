@@ -16,8 +16,12 @@ class WarehouseResource extends JsonResource
     {
         return [
             'hId' => $this->hId,
-            'company' => new CompanyResource($this->whenLoaded('company')),
-            'branch' => new BranchResource($this->whenLoaded('branch')),
+            $this->mergeWhen($this->whenLoaded('company'), [
+                'company' => new CompanyResource($this->company)
+            ]),
+            $this->mergeWhen($this->whenLoaded('branch'), [
+                'branch' => new BranchResource($this->branch)
+            ]),
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,
