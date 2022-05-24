@@ -27,12 +27,12 @@ class SupplierResource extends JsonResource
             'tax_id' => $this->tax_id,
             'remarks' => $this->remarks,
             'status' => $this->status->name,
-            $this->mergeWhen($this->whenLoaded('supplier_products'), [
+            $this->mergeWhen($this->relationLoaded('supplier_products'), [
                 'supplier_products' => SupplierProductResource::collection($this->supplierProducts),
                 'selected_products' => $this->getSelectedProducts($this->supplierProducts),
                 'main_products' => $this->getMainProducts($this->supplierProducts)
             ]),
-            $this->mergeWhen($this->whenLoaded('user'), [
+            $this->mergeWhen($this->relationLoaded('user'), [
                 'supplier_poc' => new UserResource($this->user)
             ])
         ];

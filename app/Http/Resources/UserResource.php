@@ -22,18 +22,18 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'email_verified' => !is_null($this->email_verified_at),
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
-            $this->mergeWhen($this->whenLoaded('profile'), [
+            $this->mergeWhen($this->relationLoaded('profile'), [
                 'profile' => new ProfileResource($this->profile)
             ]),
-            $this->mergeWhen($this->whenLoaded('roles'), [
+            $this->mergeWhen($this->relationLoaded('roles'), [
                 'roles' => RoleResource::collection($this->roles),
                 'roles_description' => $this->flattenRoles($this->roles),
                 'selected_roles' => $this->selectedRolesInArray($this->roles)
             ]),
-            $this->mergeWhen($this->whenLoaded('companies'), [
+            $this->mergeWhen($this->relationLoaded('companies'), [
                 'companies' => CompanyResource::collection($this->companies)
             ]),
-            $this->mergeWhen($this->whenLoaded('settings'), [
+            $this->mergeWhen($this->relationLoaded('settings'), [
                 'settings' => SettingResource::collection($this->settings),
                 'selected_settings' => $this->selectedSettingsInArray($this->settings)
             ])
