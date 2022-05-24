@@ -16,7 +16,7 @@ class BranchResource extends JsonResource
     {
         return [
             'hId' => $this->hId,
-            'company' => new CompanyResource($this->company),
+            'company' => new CompanyResource($this->whenLoaded('company')),
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,

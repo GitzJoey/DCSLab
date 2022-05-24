@@ -29,7 +29,7 @@ class ProductResource extends JsonResource
             'remarks' => $this->remarks,
             'brand' => '',
             'product_group' => '',
-            'product_units' => ProductUnitResource::collection($this->productUnits)
+            'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits'))
         ];
     }
 }
