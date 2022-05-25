@@ -17,7 +17,7 @@ class RoleResource extends JsonResource
         return [
             'hId' => $this->hId,
             'display_name' => $this->display_name,
-            $this->mergeWhen($this->whenLoaded('permissions'), [
+            $this->mergeWhen($this->relationLoaded('permissions'), [
                 'permissions' => PermissionResource::collection($this->permissions)
             ])
         ];

@@ -4,11 +4,13 @@ import axios from "@/axios";
 export const useUserContextStore = defineStore("userContext", {
     state: () => ({
         userContext: {},
-        selectedUserCompany: ''
+        selectedUserCompany: '',
+        selectedUserBranch: ''
     }),
     getter: {
         getUserContext: state => state.userContext,
-        getSelectedUserCompany: state => state.selectedUserCompany
+        getSelectedUserCompany: state => state.selectedUserCompany,
+        getSelectedUserBranch: state => state.selectedUserBranch
     },
     actions: {
         fetchUserContext() {
@@ -18,6 +20,9 @@ export const useUserContextStore = defineStore("userContext", {
         },
         setSelectedUserCompany(hId) {
             this.selectedUserCompany = hId;
+        },
+        setSelectedUserBranch(hId) {
+            this.selectedUserBranch = hId;
         }
     }
 });

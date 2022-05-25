@@ -178,7 +178,7 @@ class UserServiceImpl implements UserService
         try {
             switch(strtoupper($key)) {
                 case 'ID':
-                    return User::with('roles.permissions', 'profile', 'companies')->find($value);
+                    return User::with('roles.permissions', 'profile', 'companies.branches', 'settings')->find($value);
                 case 'EMAIL':
                     return User::where('email', '=', $value)->first();
                 default:

@@ -15,7 +15,9 @@ class SupplierProductResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'product' => new ProductResource($this->product),
+            $this->mergeWhen($this->relationLoaded('product'), [
+                'product' => new ProductResource($this->product)
+            ]),
             'main_product' => $this->main_product
         ];
     }

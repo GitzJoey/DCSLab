@@ -29,7 +29,9 @@ class ProductResource extends JsonResource
             'remarks' => $this->remarks,
             'brand' => '',
             'product_group' => '',
-            'product_units' => ProductUnitResource::collection($this->productUnits)
+            $this->mergeWhen($this->relationLoaded('productUnits'), [
+                'product_units' => ProductUnitResource::collection($this->productUnits)
+            ])
         ];
     }
 }
