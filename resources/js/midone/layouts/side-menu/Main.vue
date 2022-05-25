@@ -4,7 +4,7 @@
     <MainColorSwitcher :visible="showTheme" />
     <BackToTop :visible="showBackToTop" @easter-click="easterClick" />
     <MobileMenu />
-    <div class="flex overflow-hidden">
+    <div class="flex mt-[4.7rem] md:mt-0 overflow-hidden">
       <nav class="side-nav side-nav--simple" v-if="menuMode === 'simple'">
         <a href="" class="intro-x flex items-center pl-5 pt-4" @click.prevent="switchMenu">
           <img alt="" class="w-6" :src="assetPath('logo.svg')" />
