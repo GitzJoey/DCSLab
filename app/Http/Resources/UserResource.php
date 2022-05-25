@@ -23,30 +23,34 @@ class UserResource extends JsonResource
             'email_verified' => !is_null($this->email_verified_at),
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
             $this->mergeWhen($this->relationLoaded('profile'), [
-                'profile' => new ProfileResource($this->profile)
+                'profile' => new ProfileResource($this->whenLoaded('profile'))
             ]),
             $this->mergeWhen($this->relationLoaded('roles'), [
-                'roles' => RoleResource::collection($this->roles),
-                'roles_description' => $this->flattenRoles($this->roles),
-                'selected_roles' => $this->selectedRolesInArray($this->roles)
+                'roles' => RoleResource::collection($this->whenLoaded('roles')),
+                'roles_description' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
+                'selected_roles' => $this->selectedRolesInArray($this->whenLoaded('roles') ? $this->roles : null)
             ]),
             $this->mergeWhen($this->relationLoaded('companies'), [
-                'companies' => CompanyResource::collection($this->companies)
+                'companies' => CompanyResource::collection($this->whenLoaded('companies'))
             ]),
             $this->mergeWhen($this->relationLoaded('settings'), [
-                'settings' => SettingResource::collection($this->settings),
-                'selected_settings' => $this->selectedSettingsInArray($this->settings)
+                'settings' => SettingResource::collection($this->whenLoaded('settings')),
+                'selected_settings' => $this->selectedSettingsInArray($this->whenLoaded('settings') ? $this->settings : null)
             ])
         ];
     }
 
     private function flattenRoles($roles)
     {
+        if (is_null($roles)) return '';
+
         return $roles->pluck('display_name')->implode(',');
     }
 
     private function selectedRolesInArray($roles)
     {
+        if (is_null($roles)) return [];
+
         return $roles->pluck('hId');
     }
 
@@ -62,6 +66,8 @@ class UserResource extends JsonResource
 
     private function selectedSettingsInArray($settings)
     {
+        if (is_null($settings)) return [];
+
         $result = array();
         foreach ($settings as $s) {
             $skey = '';

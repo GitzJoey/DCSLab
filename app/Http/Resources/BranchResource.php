@@ -17,7 +17,7 @@ class BranchResource extends JsonResource
         return [
             'hId' => $this->hId,
             $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->company),
+                'company' => new CompanyResource($this->whenLoaded('company')),
             ]),
             'code' => $this->code,
             'name' => $this->name,
