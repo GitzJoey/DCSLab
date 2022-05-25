@@ -201,7 +201,8 @@ class BranchServiceImpl implements BranchService
         $timer_start = microtime(true);
 
         try {
-            $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => 0]);
+            $branchIds = Branch::where('company_id', '=', $companyId)->pluck('id');
+            $retval = Branch::whereIn('id', $branchIds)->update(['is_main' => 0]);
 
             DB::commit();
 
