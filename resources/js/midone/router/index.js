@@ -35,10 +35,16 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    if (to.matched.some(r => r.meta.skipBeforeEach) && to.meta.skipBeforeEach) next();
+    if (to.matched.some(r => r.meta.skipBeforeEach) && to.meta.skipBeforeEach) {
+        next();
+        return;
+    }
 
     const userContextStore = useUserContextStore();
-    if (userContextStore.userContext.name === undefined) next();
+    if (userContextStore.userContext.name === undefined) {
+        next();
+        return;
+    }
 
     multiguard([
         guards.canUserAccess(to, userContextStore.userContext, next),
