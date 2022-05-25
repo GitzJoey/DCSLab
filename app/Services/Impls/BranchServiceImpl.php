@@ -139,7 +139,7 @@ class BranchServiceImpl implements BranchService
         $timer_start = microtime(true);
 
         try {
-            $branch = Branch::where('company_id', '=', $companyId)->where('is_main', '=', 1)->get()[0];
+            $branch = Branch::where('company_id', '=', $companyId)->where('is_main', '=', 1)->first();
             return $branch;
         } catch (Exception $e) {
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
@@ -201,10 +201,7 @@ class BranchServiceImpl implements BranchService
         $timer_start = microtime(true);
 
         try {
-            $company = Company::find($companyId);
-            $branchIds = $company->branches()->pluck('id');
-
-            $retval = Branch::whereIn('id', $branchIds)->update(['is_main' => 0]);
+            $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => 0]);
 
             DB::commit();
 
