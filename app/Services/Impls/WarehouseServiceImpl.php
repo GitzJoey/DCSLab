@@ -91,7 +91,7 @@ class WarehouseServiceImpl implements WarehouseService
 
             if (!$companyId) return null;
 
-            $warehouse = Warehouse::with('company')
+            $warehouse = Warehouse::with('company', 'branch')
                         ->whereCompanyId($companyId);
     
             if (empty($search)) {
