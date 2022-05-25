@@ -27,7 +27,7 @@ class SupplierResource extends JsonResource
             'tax_id' => $this->tax_id,
             'remarks' => $this->remarks,
             'status' => $this->status->name,
-            $this->mergeWhen($this->relationLoaded('supplier_products'), [
+            $this->mergeWhen($this->relationLoaded('supplierProducts'), [
                 'supplier_products' => SupplierProductResource::collection($this->whenLoaded('supplierProducts')),
                 'selected_products' => $this->getSelectedProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
                 'main_products' => $this->getMainProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null)
@@ -49,6 +49,8 @@ class SupplierResource extends JsonResource
     {
         if (is_null($supplierProducts)) return [];
         
-        return $supplierProducts->where('main_product', '=', 1)->pluck('product.hId');
+        $mainProducts = $supplierProducts->where('main_product', '=', 1);
+
+        return $mainProducts->count() != 0 ? $mainProducts->pluck('product.hId') : [];
     }
 }
