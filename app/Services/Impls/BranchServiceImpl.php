@@ -2,17 +2,18 @@
 
 namespace App\Services\Impls;
 
-use App\Services\BranchService;
+use Exception;
 use App\Models\Branch;
 
-use Exception;
-use App\Actions\RandomGenerator;
+use App\Models\Company;
 use App\Traits\CacheHelper;
-use Illuminate\Contracts\Pagination\Paginator;
+use App\Services\BranchService;
+use App\Actions\RandomGenerator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class BranchServiceImpl implements BranchService
 {
@@ -30,6 +31,7 @@ class BranchServiceImpl implements BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
+        bool $is_main, 
         ?string $remarks = null,
         int $status,
     ): ?Branch
@@ -45,6 +47,7 @@ class BranchServiceImpl implements BranchService
             $branch->address = $address;
             $branch->city = $city;
             $branch->contact = $contact;
+            $branch->is_main = $is_main;
             $branch->remarks = $remarks;
             $branch->status = $status;
 
@@ -131,6 +134,21 @@ class BranchServiceImpl implements BranchService
         }
     }
 
+    public function getMainBranchByCompanyId(int $companyId): Branch
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $branch = Branch::where('company_id', '=', $companyId)->where('is_main', '=', 1)->get()[0];
+            return $branch;
+        } catch (Exception $e) {
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
+    }
+
     public function update(
         int $id,
         int $company_id,
@@ -139,6 +157,7 @@ class BranchServiceImpl implements BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
+        bool $is_main,
         ?string $remarks = null,
         int $status,
     ): ?Branch
@@ -156,6 +175,7 @@ class BranchServiceImpl implements BranchService
                 'address' => $address,
                 'city' => $city,
                 'contact' => $contact,
+                'is_main' => $is_main,
                 'remarks' => $remarks,
                 'status' => $status,
             ]);
@@ -165,6 +185,30 @@ class BranchServiceImpl implements BranchService
             $this->flushCache();
 
             return $branch->refresh();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
+        return Config::get('const.ERROR_RETURN_VALUE');
+    }
+
+    public function resetMainBranch(int $companyId): bool
+    {
+        DB::beginTransaction();
+        $timer_start = microtime(true);
+
+        try {
+            $company = Company::find($companyId);
+            $branchIds = $company->branches()->pluck('id');
+
+            $retval = Branch::whereIn('id', $branchIds)->update(['is_main' => 0]);
+
+            DB::commit();
+
+            return $retval;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);

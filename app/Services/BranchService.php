@@ -15,6 +15,7 @@ interface BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
+        bool $is_main,
         ?string $remarks = null,
         int $status,
     ): ?Branch;
@@ -30,6 +31,8 @@ interface BranchService
 
     public function getBranchByCompanyId(int $companyId);
 
+    public function getMainBranchByCompanyId(int $companyId): Branch;
+
     public function update(
         int $id,
         int $company_id,
@@ -38,9 +41,12 @@ interface BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
+        bool $is_main,
         ?string $remarks = null,
         int $status,
     ): ?Branch;
+
+    public function resetMainBranch(int $companyId): bool;
 
     public function delete(int $id): bool;
 
