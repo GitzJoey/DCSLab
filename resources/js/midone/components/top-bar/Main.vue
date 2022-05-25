@@ -15,18 +15,14 @@
                     <DropdownHeader>{{ c.name }} </DropdownHeader>
                     <DropdownDivider />
                       <template v-if="!c.branches && c.branches.length == 0">
-                        <DropDownItem >
-                          <a href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                          <DropdownItem href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
                             <span :class="{ 'underline': c.name === selectedCompany, 'font-medium': c.default === 1 }">{{ c.name }}</span>
-                          </a>                          
-                        </DropDownItem>
+                          </DropdownItem>
                       </template>
                       <template v-else v-for="(br, brIdx) in c.branches">
-                      <DropDownItem >
-                        <a href="" @click.prevent="switchBranch(c.hId, br.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                        <DropdownItem href="" @click.prevent="switchBranch(c.hId, br.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
                           <span :class="{ 'underline': br.name === selectedBranch }">{{ br.name }}</span>
-                        </a>
-                      </DropDownItem>
+                        </DropdownItem>
                       </template>
                   </template>
                 </DropdownContent>
@@ -47,16 +43,12 @@
       </DropdownToggle>
       <DropdownMenu class="w-56">
         <DropdownContent tag="div">
-          <DropDownItem>
-            <a href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+            <DropdownItem href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
               <img alt="English" :src="assetPath('us.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'en' }">English</span>
-            </a>
-          </DropDownItem>
-          <DropDownItem>
-            <a href="" @click.prevent="switchLanguage('id')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+            </DropdownItem>
+            <DropdownItem href="" @click.prevent="switchLanguage('id')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
               <img alt="Bahasa Indonesia" :src="assetPath('id.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'id' }">Bahasa Indonesia</span>
-            </a>            
-          </DropDownItem>
+            </DropdownItem>
         </DropdownContent>
       </DropdownMenu>
     </Dropdown>
