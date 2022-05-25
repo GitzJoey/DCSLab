@@ -15,20 +15,28 @@ export async function canUserAccess(to, userContext, next) {
         });
         return (await response).data;
         */
-       next();
     } catch (err) {
         
     }
+
+    next();
+    return;
 }
 
 export function checkPasswordExpiry(userContext, next) {
     if (userContext.password_expiry_day <= 0) {
         
     }
+
+    next();
+    return;
 }
 
 export function checkUserStatus(userContext, next) {
     if (userContext.profile !== undefined && userContext.profile.status === 0) {
         
     }
+
+    next();
+    return;
 }
