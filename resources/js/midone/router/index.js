@@ -51,6 +51,8 @@ router.beforeEach(async (to, from, next) => {
         guards.checkPasswordExpiry(userContextStore.userContext, next), 
         guards.checkUserStatus(userContextStore.userContext, next)
     ]);
+
+    next();
 });
 
 router.afterEach((to, from) => {

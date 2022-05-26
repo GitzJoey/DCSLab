@@ -17,7 +17,7 @@ class ProductUnitResource extends JsonResource
         return [
             'code' => $this->code,
             $this->mergeWhen($this->relationLoaded('unit'), [
-                'unit' => new UnitResource($this->unit)
+                'unit' => new UnitResource($this->whenLoaded('unit'))
             ]),
             'is_base' => $this->is_base,
             'conversion_value' => $this->conversion_value,

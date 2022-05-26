@@ -30,7 +30,7 @@ class ProductResource extends JsonResource
             'brand' => '',
             'product_group' => '',
             $this->mergeWhen($this->relationLoaded('productUnits'), [
-                'product_units' => ProductUnitResource::collection($this->productUnits)
+                'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits'))
             ])
         ];
     }

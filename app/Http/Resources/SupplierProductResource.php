@@ -16,7 +16,7 @@ class SupplierProductResource extends JsonResource
     {
         return [
             $this->mergeWhen($this->relationLoaded('product'), [
-                'product' => new ProductResource($this->product)
+                'product' => new ProductResource($this->whenLoaded('product'))
             ]),
             'main_product' => $this->main_product
         ];
