@@ -55,6 +55,7 @@ class BranchRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
+                    'isMain' => ['required', 'boolean'],
                     'status' => [new Enum(ActiveStatus::class)]
                 ];
                 return array_merge($rules_store, $nullableArr);
@@ -63,6 +64,7 @@ class BranchRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
+                    'isMain' => ['required', 'boolean'],
                     'status' => [new Enum(ActiveStatus::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
@@ -90,7 +92,11 @@ class BranchRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
+            'address' => $this['address'] == '' ? null : $this['address'],
+            'city' => $this['city'] == '' ? null : $this['city'],
+            'contact' => $this['contact'] == '' ? null : $this['contact'],
+            'remarks' => $this['remarks'] == '' ? null : $this['remarks'],
             'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
         ]);
     }
