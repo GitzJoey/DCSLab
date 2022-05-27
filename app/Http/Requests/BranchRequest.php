@@ -55,7 +55,7 @@ class BranchRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'is_main' => ['required', 'boolean'],
+                    'is_main' => ['boolean'],
                     'status' => [new Enum(ActiveStatus::class)]
                 ];
                 return array_merge($rules_store, $nullableArr);
@@ -64,7 +64,7 @@ class BranchRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'is_main' => ['required', 'boolean'],
+                    'is_main' => ['boolean'],
                     'status' => [new Enum(ActiveStatus::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
