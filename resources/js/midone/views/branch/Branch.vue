@@ -9,6 +9,7 @@
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.company') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.name') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.is_main') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.remarks') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
@@ -20,6 +21,10 @@
                                 <td>{{ item.company.name }}</td>
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
+                                <td>
+                                    <CheckCircleIcon v-if="item.is_main === 1" />
+                                    <XIcon v-if="item.is_main === 0" />
+                                </td>
                                 <td>{{ item.remarks }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
@@ -52,6 +57,13 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
                                         <div class="flex-1">{{ item.name }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
+                                        <div class="flex-1">
+                                            <span v-if="item.is_main == 1">{{ t('components.dropdown.values.confirmationDDL.yes') }}</span>
+                                            <span v-if="item.is_main == 0">{{ t('components.dropdown.values.confirmationDDL.no') }}</span>
+                                        </div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.remarks') }}</div>
@@ -128,7 +140,7 @@
                     </div>
                     <!-- #endregion -->
 
-                    <!-- #region Addresss -->
+                    <!-- #region Address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address" rows="3"></textarea>
@@ -141,6 +153,17 @@
                         <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.branch.fields.city')" v-model="branch.city" />
                     </div>
                     <!--  #endregion -->
+
+                    <!-- #region Main -->
+                    <div class="mb-3">
+                        <label for="isMainDDL" class="form-label">{{ t('views.branch.fields.is_main') }}</label>
+                        <VeeField as="select" id="isMainDDL" name="is_main" :class="{'form-control form-select':true, 'border-danger': errors['is_main']}" v-model="branch.is_main" rules="required" @blur="reValidate(errors)">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in confirmationDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </VeeField>
+                        <ErrorMessage name="is_main" class="text-danger" />
+                    </div>
+                    <!-- #endregion -->
 
                     <!-- #region Contact -->
                     <div class="mb-3">
@@ -224,11 +247,13 @@ const branch = ref({
     address: '',
     city: '',
     contact: '',
+    is_main: 0,
     remarks: '',
     status: 'ACTIVE',
 });
-const statusDDL = ref([]);
 const companyDDL = ref([]);
+const statusDDL = ref([]);
+const confirmationDDL = ref([]);
 //#endregion
 
 //#region onMounted
@@ -278,6 +303,15 @@ const getDDL = () => {
         });    
     } else {
         statusDDL.value = getCachedDDL('statusDDL');
+    }
+    
+    if (getCachedDDL('confirmationDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.confirmationdialog')).then(response => {
+            confirmationDDL.value = response.data;
+            setCachedDDL('confirmationDDL', response.data);
+        });    
+    } else {
+        confirmationDDL.value = getCachedDDL('confirmationDDL');
     }
 }
 
@@ -354,6 +388,7 @@ const emptyBranch = () => {
         address: '',
         city: '',
         contact: '',
+        is_main: 0,
         remarks: '',
         status: 'ACTIVE',
     }
