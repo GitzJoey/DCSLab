@@ -31,7 +31,7 @@ class CommonController extends BaseController
         ];
     }
 
-    public function getMainStatus()
+    public function getConfirmationDialog()
     {
         return [
             ['name' => 'YES', 'code' => 1],
