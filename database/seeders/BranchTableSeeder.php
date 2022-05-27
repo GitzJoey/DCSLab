@@ -29,20 +29,31 @@ class BranchTableSeeder extends Seeder
             $companies = Company::get()->pluck('id');
         }
 
+        $randomGenerator = new randomGenerator();
+
         foreach($companies as $c) {
+            $rand = $randomGenerator->generateOne($branchPerCompanies - 1);
+
             for($i = 0; $i < $branchPerCompanies; $i++)
             {
                 $makeItActiveStatus = (new RandomGenerator())->randomTrueOrFalse();
 
                 if($makeItActiveStatus) {
-                    Branch::factory()->setStatusActive()->create([
+                    $branch = Branch::factory()->setStatusActive()->make([
                         'company_id' => $c
                     ]);
                 } else {
-                    Branch::factory()->setStatusInactive()->create([
+                    $branch = Branch::factory()->setStatusInactive()->make([
                         'company_id' => $c
                     ]);
                 }
+
+                if ($i == $rand) {
+                    $branch->is_main = 1;
+                    $branch->status = 1;
+                }
+
+                $branch->save();
             }
         }
     }

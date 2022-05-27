@@ -29,6 +29,7 @@ class Branch extends Model
         'city',
         'contact',
         'status',
+        'is_main',
         'remarks'
     ];
 
@@ -40,6 +41,7 @@ class Branch extends Model
         'city',
         'contact',
         'status',
+        'is_main',
         'remarks'
     ];
 
