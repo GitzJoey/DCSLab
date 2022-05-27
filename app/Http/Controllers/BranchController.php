@@ -74,6 +74,23 @@ class BranchController extends BaseController
         }
     }
 
+    public function getMainBranchByCompanyId(Request $request)
+    {
+        if ($request->has('companyId')) {
+            $result = $this->branchService->getMainBranchByCompanyId(Hashids::decode($request['companyId'])[0]);
+        } else {
+            return response()->error();
+        }
+    
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = BranchResource::collection($result);
+
+            return $response;
+        }
+    }
+
     public function store(BranchRequest $branchRequest)
     {   
         $request = $branchRequest->validated();
@@ -94,10 +111,18 @@ class BranchController extends BaseController
         }
 
         $name = $request['name'];
-        $address = $request['address'];
-        $city = $request['city'];
-        $contact = $request['contact'];
-        $remarks = $request['remarks'];
+        $address = $request['address'] == '' ? null : $request['address'];
+        $city = $request['city'] == '' ? null : $request['city'];
+        $contact = $request['contact'] == '' ? null : $request['contact'];
+
+        if (array_key_exists('is_main', $request) && $request['is_main']) {
+            $this->branchService->resetMainBranch($company_id);
+            $is_main = true;
+        } else {
+            $is_main = false;
+        };
+
+        $remarks = $request['remarks'] == '' ? null : $request['remarks'];
         $status = $request['status'];
 
         $result = $this->branchService->create(
@@ -107,6 +132,7 @@ class BranchController extends BaseController
             $address,
             $city,
             $contact,
+            $is_main,
             $remarks,
             $status,
         );
@@ -134,10 +160,18 @@ class BranchController extends BaseController
         }
 
         $name = $request['name'];
-        $address = $request['address'];
-        $city = $request['city'];
-        $contact = $request['contact'];
-        $remarks = $request['remarks'];
+        $address = $request['address'] == '' ? null : $request['address'];
+        $city = $request['city'] == '' ? null : $request['city'];
+        $contact = $request['contact'] == '' ? null : $request['contact'];
+
+        if ($request['is_main'] == true) {
+            $this->branchService->resetMainBranch($company_id);
+            $is_main = true;
+        } else {
+            $is_main = false;
+        };
+
+        $remarks = $request['remarks'] == '' ? null : $request['remarks'];
         $status = $request['status'];
 
         $branch = $this->branchService->update(
@@ -148,11 +182,29 @@ class BranchController extends BaseController
             $address,
             $city,
             $contact,
+            $is_main,
             $remarks,
-            $status,
+            $status
         );
 
         return is_null($branch) ? response()->error() : response()->success();
+    }
+
+    public function resetMainBranch(Request $request)
+    {
+        if ($request->has('companyId')) {
+            $result = $this->branchService->resetMainBranch(Hashids::decode($request['companyId'])[0]);
+        } else {
+            return response()->error();
+        }
+    
+        if (is_null($result)) {
+            return response()->error();
+        } else {
+            $response = BranchResource::collection($result);
+
+            return $response;
+        }
     }
 
     public function delete($id)
