@@ -31,7 +31,7 @@ class BranchServiceImpl implements BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
-        bool $isMain, 
+        ?bool $is_main,
         ?string $remarks = null,
         int $status,
     ): ?Branch
@@ -47,7 +47,7 @@ class BranchServiceImpl implements BranchService
             $branch->address = $address;
             $branch->city = $city;
             $branch->contact = $contact;
-            $branch->is_main = $isMain;
+            $branch->is_main = $is_main;
             $branch->remarks = $remarks;
             $branch->status = $status;
 
@@ -157,7 +157,7 @@ class BranchServiceImpl implements BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
-        bool $isMain,
+        ?bool $is_main,
         ?string $remarks = null,
         int $status,
     ): ?Branch
@@ -175,7 +175,7 @@ class BranchServiceImpl implements BranchService
                 'address' => $address,
                 'city' => $city,
                 'contact' => $contact,
-                'is_main' => $isMain,
+                'is_main' => $is_main,
                 'remarks' => $remarks,
                 'status' => $status,
             ]);

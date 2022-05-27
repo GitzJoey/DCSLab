@@ -32,7 +32,7 @@ class BranchServiceTest extends ServiceTestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
-        $isMain = (new RandomGenerator())->generateNumber(0, 1);
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = $this->faker->sentence;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
@@ -43,7 +43,7 @@ class BranchServiceTest extends ServiceTestCase
             address: $address,
             city: $city,
             contact: $contact,
-            isMain : $isMain,
+            is_main : $is_main,
             remarks: $remarks,
             status: $status
         );
@@ -63,7 +63,7 @@ class BranchServiceTest extends ServiceTestCase
         $address = null;
         $city = null;
         $contact = null;
-        $isMain = (new RandomGenerator())->generateNumber(0, 1);
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
@@ -74,7 +74,7 @@ class BranchServiceTest extends ServiceTestCase
             address: $address,
             city: $city,
             contact: $contact,
-            isMain : $isMain,
+            is_main : $is_main,
             remarks: $remarks,
             status: $status
         );
@@ -94,7 +94,7 @@ class BranchServiceTest extends ServiceTestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
-        $isMain = (new RandomGenerator())->generateNumber(0, 1);
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = $this->faker->sentence;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
@@ -105,7 +105,7 @@ class BranchServiceTest extends ServiceTestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
-            'is_main' => $isMain,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -128,7 +128,7 @@ class BranchServiceTest extends ServiceTestCase
             address: $newAddress,
             city: $newCity,
             contact: $newContact,
-            isMain: $newIsMain,
+            is_main: $newIsMain,
             remarks: $newRemarks,
             status: $newStatus
         );
@@ -149,7 +149,7 @@ class BranchServiceTest extends ServiceTestCase
         $address = null;
         $city = null;
         $contact = null;
-        $isMain = (new RandomGenerator())->generateNumber(0, 1);
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = null;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
@@ -160,7 +160,7 @@ class BranchServiceTest extends ServiceTestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
-            'is_main' => $isMain,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -183,7 +183,7 @@ class BranchServiceTest extends ServiceTestCase
             address: $newAddress,
             city: $newCity,
             contact: $newContact,
-            isMain: $newIsMain,
+            is_main: $newIsMain,
             remarks: $newRemarks,
             status: $newStatus
         );
@@ -204,7 +204,7 @@ class BranchServiceTest extends ServiceTestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
-        $isMain = (new RandomGenerator())->generateNumber(0, 1);
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = $this->faker->sentence;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
@@ -215,7 +215,7 @@ class BranchServiceTest extends ServiceTestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
-            'is_main' => $isMain,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);

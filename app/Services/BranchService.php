@@ -15,7 +15,7 @@ interface BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
-        bool $isMain,
+        ?bool $is_main,
         ?string $remarks = null,
         int $status,
     ): ?Branch;
@@ -41,7 +41,7 @@ interface BranchService
         ?string $address = null,
         ?string $city = null,
         ?string $contact = null,
-        bool $isMain,
+        ?bool $is_main,
         ?string $remarks = null,
         int $status,
     ): ?Branch;
