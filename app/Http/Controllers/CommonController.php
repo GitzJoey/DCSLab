@@ -31,6 +31,13 @@ class CommonController extends BaseController
         ];
     }
 
+    public function getMainStatus()
+    {
+        return [
+            ['name' => 'YES', 'code' => 1],
+            ['name' => 'NO', 'code' => 0],
+        ];
+    }
 
     public function getRandGenerator(Request $request)
     {
