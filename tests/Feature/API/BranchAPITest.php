@@ -45,6 +45,7 @@ class BranchAPITest extends APITestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = $this->faker->sentence();
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
 
@@ -55,6 +56,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -67,6 +69,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => ActiveStatus::fromName($status)
         ]);
@@ -82,6 +85,7 @@ class BranchAPITest extends APITestCase
         $address = null;
         $city = null;
         $contact = null;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = null;
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
 
@@ -92,6 +96,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -104,6 +109,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => ActiveStatus::fromName($status)
         ]);
@@ -126,6 +132,7 @@ class BranchAPITest extends APITestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = $this->faker->sentence();
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
 
@@ -136,6 +143,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -162,6 +170,7 @@ class BranchAPITest extends APITestCase
             'address' => null,
             'city' => null,
             'contact' => null,
+            'is_main' => 0,
             'remarks' => null,
             'status' => 1
         ]);
@@ -173,6 +182,7 @@ class BranchAPITest extends APITestCase
             'address' => null,
             'city' => null,
             'contact' => null,
+            'is_main' => 1,
             'remarks' => null,
             'status' => $this->faker->randomElement(ActiveStatus::toArrayName())
         ]);
@@ -195,6 +205,7 @@ class BranchAPITest extends APITestCase
         $address = '';
         $city = '';
         $contact = '';
+        $is_main = '';
         $remarks = '';
         $status = '';
 
@@ -205,6 +216,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -225,6 +237,7 @@ class BranchAPITest extends APITestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = $this->faker->sentence();
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
@@ -235,6 +248,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -245,6 +259,7 @@ class BranchAPITest extends APITestCase
         $newAddress = $this->faker->address;
         $newCity = $this->faker->city;
         $newContact = $this->faker->e164PhoneNumber;
+        $NewIsMain = (new RandomGenerator())->generateNumber(0, 1);
         $newRemarks = $this->faker->sentence();
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
@@ -255,6 +270,7 @@ class BranchAPITest extends APITestCase
             'address' => $newAddress,
             'city' => $newCity,
             'contact' => $newContact,
+            'is_main' => $NewIsMain,
             'remarks' => $newRemarks,
             'status' => $newStatus,
         ]);
@@ -268,6 +284,7 @@ class BranchAPITest extends APITestCase
             'address' => $newAddress,
             'city' => $newCity,
             'contact' => $newContact,
+            'is_main' => $NewIsMain,
             'remarks' => $newRemarks,
             'status' => ActiveStatus::fromName($newStatus)
         ]);
@@ -283,6 +300,7 @@ class BranchAPITest extends APITestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = $this->faker->sentence;
         $status = (new RandomGenerator())->generateNumber(0, 1);
 
@@ -293,6 +311,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status
         ]);
@@ -303,6 +322,7 @@ class BranchAPITest extends APITestCase
         $newAddress = null;
         $newCity = null;
         $newContact = null;
+        $NewIsMain = (new RandomGenerator())->generateNumber(0, 1);
         $newRemarks = null;
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
@@ -313,6 +333,7 @@ class BranchAPITest extends APITestCase
             'address' => $newAddress,
             'city' => $newCity,
             'contact' => $newContact,
+            'is_main' => $NewIsMain,
             'remarks' => $newRemarks,
             'status' => $newStatus,
         ]);
@@ -326,6 +347,7 @@ class BranchAPITest extends APITestCase
             'address' => $newAddress,
             'city' => $newCity,
             'contact' => $newContact,
+            'is_main' => $NewIsMain,
             'remarks' => $newRemarks,
             'status' => ActiveStatus::fromName($newStatus)
         ]);
@@ -349,6 +371,7 @@ class BranchAPITest extends APITestCase
         $address = $this->faker->address;
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
         $remarks = null;
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
 
@@ -359,6 +382,7 @@ class BranchAPITest extends APITestCase
             'address' => $address,
             'city' => $city,
             'contact' => $contact,
+            'is_main' => $is_main,
             'remarks' => $remarks,
             'status' => $status,
         ]);
