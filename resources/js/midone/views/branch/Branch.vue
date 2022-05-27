@@ -61,8 +61,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.is_main == 1">{{ t('components.dropdown.values.mainDDL.yes') }}</span>
-                                            <span v-if="item.is_main == 0">{{ t('components.dropdown.values.mainDDL.no') }}</span>
+                                            <span v-if="item.is_main == 1">{{ t('components.dropdown.values.confirmationDDL.yes') }}</span>
+                                            <span v-if="item.is_main == 0">{{ t('components.dropdown.values.confirmationDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -140,7 +140,7 @@
                     </div>
                     <!-- #endregion -->
 
-                    <!-- #region Addresss -->
+                    <!-- #region Address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.branch.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.branch.fields.address')" v-model="branch.address" rows="3"></textarea>
@@ -156,10 +156,10 @@
 
                     <!-- #region Main -->
                     <div class="mb-3">
-                        <label for="is_main" class="form-label">{{ t('views.branch.fields.is_main') }}</label>
-                        <VeeField as="select" id="is_main" name="is_main" :class="{'form-control form-select':true, 'border-danger': errors['is_main']}" v-model="branch.is_main" rules="required" @blur="reValidate(errors)">
+                        <label for="isMainDDL" class="form-label">{{ t('views.branch.fields.is_main') }}</label>
+                        <VeeField as="select" id="isMainDDL" name="is_main" :class="{'form-control form-select':true, 'border-danger': errors['is_main']}" v-model="branch.is_main" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in isMainDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in confirmationDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
                         <ErrorMessage name="is_main" class="text-danger" />
                     </div>
@@ -253,7 +253,7 @@ const branch = ref({
 });
 const companyDDL = ref([]);
 const statusDDL = ref([]);
-const isMainDDL = ref([]);
+const confirmationDDL = ref([]);
 //#endregion
 
 //#region onMounted
@@ -305,13 +305,13 @@ const getDDL = () => {
         statusDDL.value = getCachedDDL('statusDDL');
     }
     
-    if (getCachedDDL('isMainDDL') == null) {
+    if (getCachedDDL('confirmationDDL') == null) {
         axios.get(route('api.get.db.common.ddl.list.confirmationdialog')).then(response => {
-            isMainDDL.value = response.data;
-            setCachedDDL('isMainDDL', response.data);
+            confirmationDDL.value = response.data;
+            setCachedDDL('confirmationDDL', response.data);
         });    
     } else {
-        isMainDDL.value = getCachedDDL('isMainDDL');
+        confirmationDDL.value = getCachedDDL('confirmationDDL');
     }
 }
 

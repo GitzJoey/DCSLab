@@ -52,7 +52,7 @@
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
                 },
-                "mainDDL": {
+                "confirmationDDL": {
                     "yes": "Ya",
                     "no": "Tidak"
                 },
