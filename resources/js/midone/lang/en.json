@@ -53,10 +53,6 @@
                     "active": "Active",
                     "inactive": "Inactive"
                 },
-                "confirmationDDL": {
-                    "yes": "Yes",
-                    "no": "No"
-                },
                 "productOrServiceCategoryDDL": {
                     "product": "Product",
                     "service": "Service",
