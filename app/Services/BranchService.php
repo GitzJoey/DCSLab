@@ -33,6 +33,8 @@ interface BranchService
 
     public function getMainBranchByCompanyId(int $companyId): Branch;
 
+    public function isMainBranch(int $id): bool;
+
     public function update(
         int $id,
         int $company_id,
