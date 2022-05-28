@@ -2,41 +2,43 @@
 
 namespace App\Providers;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\ServiceProvider;
-
-use App\Services\DashboardService;
-use App\Services\UserService;
 use App\Services\RoleService;
-use App\Services\InboxService;
-use App\Services\SystemService;
-use App\Services\ActivityLogService;
-#region Extensions 
-use App\Services\CompanyService;
-use App\Services\BrandService;
-use App\Services\SupplierService;
-use App\Services\ProductService;
-use App\Services\ProductGroupService;
 use App\Services\UnitService;
+
+use App\Services\UserService;
+use App\Services\BrandService;
+use App\Services\InboxService;
 use App\Services\BranchService;
+use App\Services\SystemService;
+use App\Services\CompanyService;
+#region Extensions 
+use App\Services\ProductService;
+use App\Services\EmployeeService;
+use App\Services\SupplierService;
+use App\Services\DashboardService;
 use App\Services\WarehouseService;
+use App\Services\ActivityLogService;
+use App\Services\ProductGroupService;
+use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\UnitServiceImpl;
 #endregion
 
-use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\UserServiceImpl;
-use App\Services\Impls\RoleServiceImpl;
+use Illuminate\Support\ServiceProvider;
+use App\Services\Impls\BrandServiceImpl;
 use App\Services\Impls\InboxServiceImpl;
+use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\SystemServiceImpl;
-use App\Services\Impls\ActivityLogServiceImpl;
 #region Extensions
 use App\Services\Impls\CompanyServiceImpl;
-use App\Services\Impls\BrandServiceImpl;
-use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
-use App\Services\Impls\ProductGroupServiceImpl;
-use App\Services\Impls\UnitServiceImpl;
-use App\Services\Impls\BranchServiceImpl;
+use App\Services\Impls\EmployeeServiceImpl;
+use App\Services\Impls\SupplierServiceImpl;
+use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
+use App\Services\Impls\ActivityLogServiceImpl;
+use App\Services\Impls\ProductGroupServiceImpl;
+use Illuminate\Http\Resources\Json\JsonResource;
 #endregion
 
 class AppServiceProvider extends ServiceProvider
@@ -103,6 +105,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(WarehouseService::class, function (){
             return new WarehouseServiceImpl();
+        });
+
+        $this->app->singleton(EmployeeService::class, function (){
+            return new EmployeeServiceImpl();
         });
         
         #endregion
