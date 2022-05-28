@@ -34,8 +34,8 @@ class CommonController extends BaseController
     public function getConfirmationDialog()
     {
         return [
-            ['name' => 'YES', 'code' => 1],
-            ['name' => 'NO', 'code' => 0],
+            ['name' => 'components.dropdown.values.yesNoDDL.yes', 'code' => 1],
+            ['name' => 'components.dropdown.values.yesNoDDL.no', 'code' => 0],
         ];
     }
 

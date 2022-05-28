@@ -52,10 +52,6 @@
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
                 },
-                "confirmationDDL": {
-                    "yes": "Ya",
-                    "no": "Tidak"
-                },
                 "productOrServiceCategoryDDL": {
                     "product": "Produk",
                     "service": "Jasa",
