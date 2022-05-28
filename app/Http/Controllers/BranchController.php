@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\BranchService;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\BranchRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BranchResource;
 
 class BranchController extends BaseController
@@ -209,6 +210,9 @@ class BranchController extends BaseController
 
     public function delete($id)
     {
+        if ($this->branchService->isMainBranch($id)) 
+        return response()->error(trans('rules.branch.delete_main_branch'));
+
         $result = $this->branchService->delete($id);
 
         return !$result ? response()->error() : response()->success();

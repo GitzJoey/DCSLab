@@ -10,5 +10,8 @@ return [
     'company' => [
         'deactivate_default_company' => 'Default company cannot be deactivated',
         'delete_default_company' => 'Default company cannot be deleted'
+    ],
+    'branch' => [
+        'delete_main_branch' => 'Main branch cannot be deleted'
     ]
 ];
