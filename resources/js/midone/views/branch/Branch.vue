@@ -159,7 +159,7 @@
                         <label for="isMainDDL" class="form-label">{{ t('views.branch.fields.is_main') }}</label>
                         <VeeField as="select" id="isMainDDL" name="is_main" :class="{'form-control form-select':true, 'border-danger': errors['is_main']}" v-model="branch.is_main" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in YesNoDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in yesNoDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
                         <ErrorMessage name="is_main" class="text-danger" />
                     </div>
@@ -253,7 +253,7 @@ const branch = ref({
 });
 const companyDDL = ref([]);
 const statusDDL = ref([]);
-const YesNoDDL = ref([]);
+const yesNoDDL = ref([]);
 //#endregion
 
 //#region onMounted
@@ -305,13 +305,13 @@ const getDDL = () => {
         statusDDL.value = getCachedDDL('statusDDL');
     }
     
-    if (getCachedDDL('YesNoDDL') == null) {
+    if (getCachedDDL('yesNoDDL') == null) {
         axios.get(route('api.get.db.common.ddl.list.confirmationdialog')).then(response => {
-            YesNoDDL.value = response.data;
-            setCachedDDL('YesNoDDL', response.data);
+            yesNoDDL.value = response.data;
+            setCachedDDL('yesNoDDL', response.data);
         });    
     } else {
-        YesNoDDL.value = getCachedDDL('YesNoDDL');
+        yesNoDDL.value = getCachedDDL('yesNoDDL');
     }
 }
 

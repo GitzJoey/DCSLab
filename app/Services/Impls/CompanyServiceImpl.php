@@ -16,6 +16,8 @@ use App\Models\User;
 use App\Models\Company;
 use App\Traits\CacheHelper;
 
+use function PHPUnit\Framework\isNull;
+
 class CompanyServiceImpl implements CompanyService
 {
     use CacheHelper;
@@ -235,7 +237,8 @@ class CompanyServiceImpl implements CompanyService
 
     public function isDefaultCompany(int $companyId): bool
     {
-        return Company::where('id', '=', $companyId)->first()->default;
+        $result = Company::where('id', '=', $companyId)->first()->default;
+        return is_null($result) ? false : $result;
     }
 
     public function resetDefaultCompany(int $userId): bool

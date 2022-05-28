@@ -32,7 +32,6 @@ class WarehouseServiceTest extends ServiceTestCase
         if (Warehouse::count() < 2) {
             $this->artisan('db:seed', ['--class' => 'WarehouseTableSeeder']);
         }
-            
     }
 
     public function test_call_save_with_all_field_filled()

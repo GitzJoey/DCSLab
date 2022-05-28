@@ -10,5 +10,8 @@ return [
     'company' => [
         'deactivate_default_company' => 'Perusahaan utama tidak boleh dinonaktifkan',
         'delete_default_company' => 'Perusahaan utama tidak boleh dihapus',
+    ],
+    'branch' => [
+        'delete_main_branch' => 'Cabang utama tidak boleh dihapus'
     ]
 ];

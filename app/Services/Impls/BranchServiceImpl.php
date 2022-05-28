@@ -39,6 +39,12 @@ class BranchServiceImpl implements BranchService
         $timer_start = microtime(true);
 
         try {
+            $company = Company::find($company_id);
+            if ($company->branches()->count() == 0) {
+                $is_main = true;
+                $status = 1;
+            }
+
             $branch = new Branch();
             $branch->company_id = $company_id;
             $branch->code = $code;
@@ -135,17 +141,14 @@ class BranchServiceImpl implements BranchService
 
     public function getMainBranchByCompanyId(int $companyId): Branch
     {
-        $timer_start = microtime(true);
+        $branch = Branch::where('company_id', '=', $companyId)->where('is_main', '=', 1)->first();
+        return $branch;
+    }
 
-        try {
-            $branch = Branch::where('company_id', '=', $companyId)->where('is_main', '=', 1)->first();
-            return $branch;
-        } catch (Exception $e) {
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
+    public function isMainBranch(int $id): bool
+    {
+        $result = Branch::where('id', '=', $id)->first()->is_main;
+        return is_null($result) ? false : $result;
     }
 
     public function update(
