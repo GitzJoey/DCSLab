@@ -2,29 +2,18 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
-use App\Models\Role;
-use App\Models\User;
 use App\Models\Company;
-use App\Models\Profile;
-use App\Models\Setting;
-use App\Enums\UserRoles;
 use App\Models\Employee;
+use App\Services\RoleService;
 use Illuminate\Database\Seeder;
-use App\Actions\RandomGenerator;
-use Illuminate\Support\Facades\Hash;
-use Database\Seeders\CompanyTableSeeder;
+use App\Services\EmployeeService;
+use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
 
 class EmployeeTableSeeder extends Seeder
 {
     public function run($employeePerCompanies = 3, $onlyThisCompanyId = 0)
     {
-        if (Company::count() < 2) {
-            $seed_company = new CompanyTableSeeder();
-            $seed_company->callWith(CompanyTableSeeder::class, [2]);
-        }
-
         if ($onlyThisCompanyId != 0) {
             $c = Company::find($onlyThisCompanyId);
 
@@ -37,89 +26,71 @@ class EmployeeTableSeeder extends Seeder
             $companies = Company::get()->pluck('id');
         }
 
-        $faker = \Faker\Factory::create('id_ID');
-
         foreach($companies as $c) {
             for($i = 0; $i < $employeePerCompanies; $i++)
+
+            $employee = Employee::factory()->make([]);
+
             {
-                $name = $faker->name;
-                $email = $faker->email;
-
-                $user = new User();
-                $user->name = $name;
-                $user->email = $email;
-    
-                if (empty($password)) {
-                    $user->password = (new RandomGenerator())->generateAlphaNumeric(5);
-                    $user->password_changed_at = null;
-                } else {
-                    $user->password = Hash::make($password);
-                    $user->password_changed_at = Carbon::now();
-                }
-    
-                $user->save();
-
-                $first_name = '';
-                $last_name = '';
-                if ($name == trim($name) && strpos($name, ' ') !== false) {
-                    $pieces = explode(" ", $name);
-                    $first_name = $pieces[0];
-                    $last_name = $pieces[1];
-                } else {
-                    $first_name = $name;
-                }
-    
-                $profile = new Profile();
-    
-                $profile->first_name = $first_name;
-                $profile->last_name = $last_name;
-                $profile->address = $faker->address;
-                $profile->city = $faker->city;
-                $profile->postal_code = $faker->postcode;
-                $profile->country = $faker->country;
-                $profile->tax_id = (new RandomGenerator())->generateNumber(10000000, 999999999);
-                $profile->ic_num = (new RandomGenerator())->generateNumber(10000000, 999999999);
-                $profile->status = (new RandomGenerator())->generateNumber(0, 1);
-                $profile->img_path = null;
-                $profile->remarks = $faker->sentence;
-    
-                $user->profile()->save($profile);
-    
-                $settings = array (
-                    new Setting(array(
-                        'type' => 'KEY_VALUE',
-                        'key' => 'PREFS.THEME',
-                        'value' => 'side-menu-light-full',
-                    )),
-                    new Setting(array(
-                        'type' => 'KEY_VALUE',
-                        'key' => 'PREFS.DATE_FORMAT',
-                        'value' => 'yyyy_MM_dd',
-                    )),
-                    new Setting(array(
-                        'type' => 'KEY_VALUE',
-                        'key' => 'PREFS.TIME_FORMAT',
-                        'value' => 'hh_mm_ss',
-                    )),
-                );
-                $user->settings()->saveMany($settings);
-    
-                $rolesId = array(Role::where('name', UserRoles::USER->value)->first()->id);
-                $user->attachRoles($rolesId);
-    
-                if (env('AUTO_VERIFY_EMAIL', true))
-                    $user->markEmailAsVerified();
-    
                 $companyId = Company::inRandomOrder()->first()->id;
-                $user->companies()->attach([$companyId]);
-                $userId = $user->id;
-
-                $employee = Employee::factory()->make([
-                    'company_id' => $companyId,
-                    'user_id' => $userId,
-                ]);
-    
-                $employee->save();
+            
+                    $name = $employee->name;
+                    
+                    $first_name = '';
+                    $last_name = '';
+                    if ($name == trim($name) && strpos($name, ' ') !== false) {
+                        $pieces = explode(" ", $name);
+                        $first_name = $pieces[0];
+                        $last_name = $pieces[1];
+                    } else {
+                        $first_name = $name;
+                    }
+        
+                    $container = Container::getInstance();
+                    $roleService = $container->make(RoleService::class);
+                    $rolesId = [];
+                    array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
+        
+                    $address = $employee->address;
+                    $city = $employee->city;
+                    $postalCode = $employee->postcode;
+                    $country = $employee->country;
+                    $taxId = $employee->tax_id;
+                    $icNum = $employee->ic_num;
+                    $remarks = $employee->sentence;
+                    $status = $employee->status;
+                    $profile = array (
+                        'first_name' => $first_name,
+                        'last_name' => $last_name,
+                        'address' => $address,
+                        'city' => $city,
+                        'postal_code' => $postalCode,
+                        'country' => $country,
+                        'tax_id' => $taxId,
+                        'ic_num' => $icNum,
+                        'remarks' => $remarks,
+                        'status' => $status,
+                    );
+        
+                $email = $employee->email;
+                $user = [];
+                array_push($user, array (
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => '',
+                    'rolesId' => $rolesId,
+                    'profile' => $profile
+                ));
+        
+                $joinDate = $employee->join_date;
+        
+                $employeeService = $container->make(EmployeeService::class);
+                $employeeService->create(
+                    company_id: $companyId,
+                    user: $user,
+                    join_date: $joinDate,
+                    status: $status
+                );
             }
         }
     }
