@@ -27,15 +27,7 @@ class EmployeeFactory extends Factory
         
         return [
             'name' => $faker->name,
-            'email' => $faker->email,
-            'address' => $faker->address,
-            'city' => $faker->city,
-            'postal_code' => $faker->postcode,
-            'country' => $faker->country,
-            'tax_id' => (new RandomGenerator())->generateNumber(10000000, 999999999),
-            'ic_num' => (new RandomGenerator())->generateNumber(10000000, 999999999),
             'join_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-            'remarks' => $faker->sentence,
             'status' => $this->faker->randomElement(ActiveStatus::toArrayValue())
         ];
     }

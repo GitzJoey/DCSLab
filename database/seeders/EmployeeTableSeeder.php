@@ -2,11 +2,15 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Company;
+use App\Models\Profile;
+use App\Enums\UserRoles;
 use App\Models\Employee;
 use App\Services\RoleService;
+use App\Services\UserService;
 use Illuminate\Database\Seeder;
-use App\Services\EmployeeService;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -26,71 +30,45 @@ class EmployeeTableSeeder extends Seeder
             $companies = Company::get()->pluck('id');
         }
 
+        $container = Container::getInstance();
+        $setting = $container->make(UserService::class)->createDefaultSetting();
+        $roles = $container->make(RoleService::class)->readBy('NAME', UserRoles::USER->value);
+
         foreach($companies as $c) {
             for($i = 0; $i < $employeePerCompanies; $i++)
-
-            $employee = Employee::factory()->make([]);
-
             {
+                $employee = Employee::factory()->make([]);
+
+                $user = User::factory()->make();
+                $user->name = $employee->name;
+                $user->created_at = Carbon::now();
+                $user->updated_at = Carbon::now();
+                $user->save();
+
+                $name = $employee->name;
+                $first_name = '';
+                $last_name = '';
+                if ($name == trim($name) && strpos($name, ' ') !== false) {
+                    $pieces = explode(" ", $name);
+                    $first_name = $pieces[0];
+                    $last_name = $pieces[1];
+                } else {
+                    $first_name = $name;
+                }
+                $profile = Profile::factory()->make([]);
+                $profile->first_name = $first_name;
+                $profile->last_name = $last_name;
+                $user->profile()->save($profile);
+    
                 $companyId = Company::inRandomOrder()->first()->id;
-            
-                    $name = $employee->name;
-                    
-                    $first_name = '';
-                    $last_name = '';
-                    if ($name == trim($name) && strpos($name, ' ') !== false) {
-                        $pieces = explode(" ", $name);
-                        $first_name = $pieces[0];
-                        $last_name = $pieces[1];
-                    } else {
-                        $first_name = $name;
-                    }
-        
-                    $container = Container::getInstance();
-                    $roleService = $container->make(RoleService::class);
-                    $rolesId = [];
-                    array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
-        
-                    $address = $employee->address;
-                    $city = $employee->city;
-                    $postalCode = $employee->postcode;
-                    $country = $employee->country;
-                    $taxId = $employee->tax_id;
-                    $icNum = $employee->ic_num;
-                    $remarks = $employee->sentence;
-                    $status = $employee->status;
-                    $profile = array (
-                        'first_name' => $first_name,
-                        'last_name' => $last_name,
-                        'address' => $address,
-                        'city' => $city,
-                        'postal_code' => $postalCode,
-                        'country' => $country,
-                        'tax_id' => $taxId,
-                        'ic_num' => $icNum,
-                        'remarks' => $remarks,
-                        'status' => $status,
-                    );
-        
-                $email = $employee->email;
-                $user = [];
-                array_push($user, array (
-                    'name' => $name,
-                    'email' => $email,
-                    'password' => '',
-                    'rolesId' => $rolesId,
-                    'profile' => $profile
-                ));
-        
-                $joinDate = $employee->join_date;
-        
-                $employeeService = $container->make(EmployeeService::class);
-                $employeeService->create(
-                    company_id: $companyId,
-                    user: $user,
-                    join_date: $joinDate,
-                    status: $status
-                );
+                $user->companies()->attach($companyId);
+    
+                $user->attachRoles([$roles->id]);
+                $user->settings()->saveMany($setting);
+
+                $employee->company_id = $companyId;
+                $employee->user_id = $user->id;
+                $employee->save;
             }
         }
     }
