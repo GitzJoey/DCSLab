@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Profile;
 use App\Enums\UserRoles;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class EmployeeTableSeeder extends Seeder
 {
-    public function run($employeePerCompanies = 3, $onlyThisCompanyId = 0)
+    public function run($employeePerPart = 3, $onlyThisCompanyId = 0, $onlyThisBranchId = 0)
     {
         if ($onlyThisCompanyId != 0) {
             $c = Company::find($onlyThisCompanyId);
@@ -30,12 +31,24 @@ class EmployeeTableSeeder extends Seeder
             $companies = Company::get()->pluck('id');
         }
 
+        if ($onlyThisBranchId != 0) {
+            $c = Branch::find($onlyThisCompanyId);
+
+            if ($c) {
+                $branches = (new Collection())->push($c->id);
+            } else {
+                $branches = Company::get()->pluck('id');
+            }
+        } else {
+            $branches = Company::get()->pluck('id');
+        }
+
         $container = Container::getInstance();
         $setting = $container->make(UserService::class)->createDefaultSetting();
         $roles = $container->make(RoleService::class)->readBy('NAME', UserRoles::USER->value);
 
         foreach($companies as $c) {
-            for($i = 0; $i < $employeePerCompanies; $i++)
+            for($i = 0; $i < $employeePerPart; $i++)
             {
                 $employee = Employee::factory()->make([]);
 
