@@ -37,8 +37,7 @@ class EmployeeTableSeeder extends Seeder
             } else {
                 $branch = Branch::find($onlyThisBranchId);
             }
-            
-
+        
             if ($branch) {
                 $branches = (new Collection())->push($branch->id);
             } else {
