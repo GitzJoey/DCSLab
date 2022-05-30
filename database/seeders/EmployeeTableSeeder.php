@@ -50,38 +50,24 @@ class EmployeeTableSeeder extends Seeder
         foreach($companies as $c) {
             for($i = 0; $i < $employeePerPart; $i++)
             {
-                $employee = Employee::factory()->make();
-
                 $user = User::factory()->make();
-                $user->name = $employee->name;
                 $user->created_at = Carbon::now();
                 $user->updated_at = Carbon::now();
                 $user->save();
 
-                $name = $employee->name;
-                $first_name = '';
-                $last_name = '';
-                if ($name == trim($name) && strpos($name, ' ') !== false) {
-                    $pieces = explode(" ", $name);
-                    $first_name = $pieces[0];
-                    $last_name = $pieces[1];
-                } else {
-                    $first_name = $name;
-                }
-                $profile = Profile::factory()->make();
-                $profile->first_name = $first_name;
-                $profile->last_name = $last_name;
+                $profile = Profile::factory()->setFirstName($user->name);
+                $profile->created_at = Carbon::now();
+                $profile->updated_at = Carbon::now();
                 $user->profile()->save($profile);
-    
-                $companyId = Company::inRandomOrder()->first()->id;
-                $user->companies()->attach($companyId);
-    
+                
+                $user->companies()->attach($c);
                 $user->attachRoles([$roles->id]);
                 $user->settings()->saveMany($setting);
 
-                $employee->company_id = $companyId;
-                $employee->user_id = $user->id;
-                $employee->save;
+                Employee::factory()->create([
+                    'company_id' => $c,
+                    'user_id' => $user->id
+                ]);
             }
         }
     }

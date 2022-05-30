@@ -26,7 +26,6 @@ class EmployeeFactory extends Factory
         $faker = \Faker\Factory::create('id_ID');
         
         return [
-            'name' => $faker->name,
             'join_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
             'status' => $this->faker->randomElement(ActiveStatus::toArrayValue())
         ];
