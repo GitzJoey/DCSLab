@@ -33,7 +33,7 @@ class EmployeeTableSeeder extends Seeder
 
         if ($onlyThisBranchId != 0) {
             if ($onlyThisCompanyId !== 0) {
-                $branch = Branch::where('company_id', '=', 1)->get();
+                $branch = Branch::where('company_id', '=', $onlyThisCompanyId)->get();
             } else {
                 $branch = Branch::find($onlyThisBranchId);
             }
