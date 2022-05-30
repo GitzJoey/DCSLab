@@ -69,7 +69,7 @@ class EmployeeServiceTest extends ServiceTestCase
                 'status' => $status,
             );
 
-        $email = $this->faker->email();
+        $email = $this->faker->email;
         $user = [];
         array_push($user, array (
             'name' => $name,
