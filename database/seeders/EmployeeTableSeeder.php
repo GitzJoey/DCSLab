@@ -37,10 +37,10 @@ class EmployeeTableSeeder extends Seeder
             if ($c) {
                 $branches = (new Collection())->push($c->id);
             } else {
-                $branches = Company::get()->pluck('id');
+                $branches = Branch::get()->pluck('id');
             }
         } else {
-            $branches = Company::get()->pluck('id');
+            $branches = Branch::get()->pluck('id');
         }
 
         $container = Container::getInstance();
