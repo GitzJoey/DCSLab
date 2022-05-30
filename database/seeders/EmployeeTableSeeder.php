@@ -50,7 +50,7 @@ class EmployeeTableSeeder extends Seeder
         foreach($companies as $c) {
             for($i = 0; $i < $employeePerPart; $i++)
             {
-                $employee = Employee::factory()->make([]);
+                $employee = Employee::factory()->make();
 
                 $user = User::factory()->make();
                 $user->name = $employee->name;
@@ -68,7 +68,7 @@ class EmployeeTableSeeder extends Seeder
                 } else {
                     $first_name = $name;
                 }
-                $profile = Profile::factory()->make([]);
+                $profile = Profile::factory()->make();
                 $profile->first_name = $first_name;
                 $profile->last_name = $last_name;
                 $user->profile()->save($profile);
