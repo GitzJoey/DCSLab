@@ -32,23 +32,15 @@ class EmployeeTableSeeder extends Seeder
         }
 
         if ($onlyThisBranchId != 0) {
-            if ($onlyThisCompanyId != 0) {
-                $branch = Branch::where('company_id', '=', $onlyThisCompanyId)->get();
-            } else {
-                $branch = Branch::find($onlyThisBranchId);
-            }
+            $branch = Branch::find($onlyThisBranchId);
         
             if ($branch) {
                 $branches = (new Collection())->push($branch->id);
             } else {
-                if ($onlyThisCompanyId != 0) {
-                    $branches = Branch::where('company_id', '=', $onlyThisCompanyId)->get()->pluck('id');;
-                } else {
-                    $branches = Branch::get()->pluck('id');
-                }
+                Branch::whereIn('company_id', $companies)->pluck('id');
             }
         } else {
-            $branches = Branch::get()->pluck('id');
+            Branch::whereIn('company_id', $companies)->pluck('id');
         }
 
         $container = Container::getInstance();
