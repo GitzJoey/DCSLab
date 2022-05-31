@@ -2,21 +2,20 @@
 
 namespace App\Models;
 
-use App\Models\Employee;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+use Laratrust\Traits\LaratrustUserTrait;
+use Cmgmyr\Messenger\Traits\Messagable;
+use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Activitylog\LogOptions;
 use Vinkla\Hashids\Facades\Hashids;
 use Spatie\Activitylog\ActivityLogger;
-
-use Cmgmyr\Messenger\Traits\Messagable;
-use Illuminate\Notifications\Notifiable;
-use Laratrust\Traits\LaratrustUserTrait;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -80,11 +79,6 @@ class User extends Authenticatable implements MustVerifyEmail
     public function companies()
     {
         return $this->belongsToMany(Company::class);
-    }
-
-    public function employees()
-    {
-        return $this->hasMany(Employee::class);
     }
 
     public function suppliers()

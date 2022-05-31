@@ -2,20 +2,19 @@
 
 namespace Database\Factories;
 
+use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
-use App\Models\Branch;
 use App\Models\Company;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BranchFactory extends Factory
+class CompanyFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Branch::class;
+    protected $model = Company::class;
 
     /**
      * Define the model's default state.
@@ -25,15 +24,9 @@ class BranchFactory extends Factory
     public function definition()
     {
         $faker = \Faker\Factory::create('id_ID');
-        $branch_name = $faker->city();
-
         return [
-            'code' => $faker->numberBetween(01, 10),
-            'name' => 'Kantor Cabang '.$faker->randomElement(['Utama','Pembantu','Daerah']).' '.$branch_name,
-            'address' => $faker->address(),
-            'city' => $branch_name,
-            'contact' => $faker->e164PhoneNumber(),
-            'remarks' => $faker->sentence()
+            'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
+            'name' => $faker->company()
         ];
     }
 
