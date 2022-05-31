@@ -21,6 +21,13 @@ if (mix.inProduction()) {
                 }
             },
             plugins: [
+                new webpackShellPluginNext({
+                    onBuildStart: {
+                        scripts: ['php artisan ziggy:generate resources/js/midone/ziggy/ziggy.js'],
+                        blocking: true, 
+                        parallel: false,                        
+                    }
+                }),
                 new webpack.DefinePlugin({
                     __VUE_OPTIONS_API__: true,
                     __VUE_PROD_DEVTOOLS__: false,
