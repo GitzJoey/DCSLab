@@ -1,5 +1,5 @@
 .mobile-menu {
-  @apply w-full fixed bg-primary/90 z-[60] border-b border-white/[0.08] -mt-5 -mx-8 mb-6;
+  @apply w-full fixed bg-primary/90 z-[60] border-b border-white/[0.08] -mt-5 -mx-8 mb-6 dark:bg-darkmode-700;
   &:before {
     content: "";
     @apply absolute inset-0 z-[-1] w-full h-full bg-black/[0.15];
@@ -31,7 +31,7 @@
     }
   }
   .scrollable {
-    @apply h-screen z-20 fixed top-0 left-0 w-[270px] -ml-[100%] bg-primary transition-all duration-300 ease-in-out;
+    @apply h-screen z-20 fixed top-0 left-0 w-[270px] -ml-[100%] bg-primary transition-all duration-300 ease-in-out dark:bg-darkmode-800;
     .mobile-menu-toggler {
       @apply fixed top-0 right-0 mt-4 mr-4 invisible opacity-0 transition-opacity duration-200 ease-in-out;
     }

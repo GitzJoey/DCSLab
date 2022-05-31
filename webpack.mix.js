@@ -1,6 +1,8 @@
 const mix = require('laravel-mix');
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const webpackShellPluginNext = require('webpack-shell-plugin-next');
 
 mix.disableNotifications();
 
@@ -19,6 +21,13 @@ if (mix.inProduction()) {
                 }
             },
             plugins: [
+                new webpackShellPluginNext({
+                    onBuildStart: {
+                        scripts: ['php artisan ziggy:generate resources/js/midone/ziggy/ziggy.js'],
+                        blocking: true, 
+                        parallel: false,                        
+                    }
+                }),
                 new webpack.DefinePlugin({
                     __VUE_OPTIONS_API__: true,
                     __VUE_PROD_DEVTOOLS__: false,
@@ -55,6 +64,28 @@ if (mix.inProduction()) {
         .sourceMaps()
     ;
 
+    let pluginsArr = [
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: true,
+            __VUE_PROD_DEVTOOLS__: false,
+            __VUE_I18N_FULL_INSTALL__: true,
+            __VUE_I18N_LEGACY_API__ : true,
+            __INTLIFY_PROD_DEVTOOLS__ : false
+        })
+    ];
+
+    if (!fs.existsSync('resources/js/midone/ziggy/ziggy.js')) {
+        pluginsArr.unshift(
+            new webpackShellPluginNext({
+                onBuildStart: {
+                    scripts: ['php artisan ziggy:generate resources/js/midone/ziggy/ziggy.js'],
+                    blocking: true, 
+                    parallel: false,                        
+                }
+            })
+        ); 
+    }
+
     mix
         .webpackConfig({
             stats: {
@@ -66,15 +97,7 @@ if (mix.inProduction()) {
                     "@": path.resolve(__dirname, "resources/js/midone/")
                 }
             },
-            plugins: [
-                new webpack.DefinePlugin({
-                    __VUE_OPTIONS_API__: true,
-                    __VUE_PROD_DEVTOOLS__: false,
-                    __VUE_I18N_FULL_INSTALL__: true,
-                    __VUE_I18N_LEGACY_API__ : true,
-                    __INTLIFY_PROD_DEVTOOLS__ : false
-                })
-            ]
+            plugins: pluginsArr
         })
         .postCss('resources/css/midone/app.css', 'public/css/midone', [
             require('postcss-import'),

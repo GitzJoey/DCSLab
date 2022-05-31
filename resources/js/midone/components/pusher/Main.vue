@@ -25,7 +25,6 @@ provide('triggerPusherNotification', (message) => {
     pusherNotificationToast(message);
 });
 
-const triggerPopNotification = inject('triggerPopNotification');
 //#endregion
 
 //#region Data - Pinia
@@ -46,7 +45,8 @@ const pusherNotificationMessage = ref('');
 
 //#region onMounted
 onMounted(() => {
-    listenPusherPublic(); 
+    if (Echo !== undefined)
+        listenPusherPublic(); 
 });
 //#endregion
 

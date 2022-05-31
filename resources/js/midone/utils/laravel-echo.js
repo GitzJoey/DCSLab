@@ -1,7 +1,7 @@
 import Echo from 'laravel-echo';
 
 const install = app => {
-    if (process.env.MIX_BROADCAST_DRIVER === 'pusher') {
+    if (process.env.MIX_BROADCAST_DRIVER === 'pusher' && process.env.MIX_PUSHER_APP_KEY !== '') {
         window.Echo = new Echo({
             broadcaster: 'pusher',
             key: process.env.MIX_PUSHER_APP_KEY,
@@ -9,7 +9,7 @@ const install = app => {
             forceTLS: true,
             encryption: true
         });
-    } else {
+    } else if (process.env.MIX_BROADCAST_DRIVER === 'soketi' && process.env.MIX_SOKETI_APP_KEY !== '') {
         window.Echo = new Echo({
             broadcaster: 'pusher',
             key: process.env.MIX_SOKETI_APP_KEY,
@@ -21,6 +21,8 @@ const install = app => {
             disableStats: true,
             enabledTransports: ['ws'],
         }); 
+    } else { 
+        
     }
 }
 
