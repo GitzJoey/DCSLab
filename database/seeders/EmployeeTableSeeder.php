@@ -20,34 +20,34 @@ class EmployeeTableSeeder extends Seeder
     public function run($employeePerPart = 3, $onlyThisCompanyId = 0, $onlyThisBranchId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            $c = Company::find($onlyThisCompanyId);
+            $company = Company::find($onlyThisCompanyId);
 
-            if ($c) {
-                $companies = (new Collection())->push($c->id);
+            if ($company) {
+                $companyIds = $company->pluck('id');
             } else {
-                $companies = Company::get()->pluck('id');
+                $companyIds = Company::pluck('id');
             }
         } else {
-            $companies = Company::get()->pluck('id');
+            $companyIds = Company::pluck('id');
         }
 
         if ($onlyThisBranchId != 0) {
             $branch = Branch::find($onlyThisBranchId);
         
             if ($branch) {
-                $branches = (new Collection())->push($branch->id);
+                $branchIds = $branch->pluck('id');
             } else {
-                Branch::whereIn('company_id', $companies)->pluck('id');
+                $branchIds = Branch::whereIn('company_id', $companyIds)->pluck('id');
             }
         } else {
-            Branch::whereIn('company_id', $companies)->pluck('id');
+            $branchIds = Branch::whereIn('company_id', $companyIds)->pluck('id');
         }
 
         $container = Container::getInstance();
         $setting = $container->make(UserService::class)->createDefaultSetting();
         $roles = $container->make(RoleService::class)->readBy('NAME', UserRoles::USER->value);
 
-        foreach($companies as $c) {
+        foreach($companyIds as $c) {
             for($i = 0; $i < $employeePerPart; $i++)
             {
                 $user = User::factory()->make();
