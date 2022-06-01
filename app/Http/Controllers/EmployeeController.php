@@ -114,7 +114,7 @@ class EmployeeController extends BaseController
 
         $status = $request['status'];
         $result = $this->employeeService->create(
-            Hashids::decode($request['company_id'])[0],
+            $request['company_id'],
             $user,
             $request['join_date'],
             $status
@@ -175,7 +175,7 @@ class EmployeeController extends BaseController
 
         $result = $this->employeeService->update(
             $id,
-            Hashids::decode($request['company_id'])[0],
+            $request['company_id'],
             $user_id,
             $status
         );
