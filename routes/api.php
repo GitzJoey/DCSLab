@@ -17,6 +17,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WarehouseController;
@@ -43,6 +44,9 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [BranchController::class, 'read'])->name('.read');
                 Route::get('read/by/company', [BranchController::class, 'getBranchByCompanyId'])->name('.read.by.company');
                 Route::get('main', [BranchController::class, 'getMainBranchByCompanyId'])->name('.main');
+            });
+            Route::group(['prefix' => 'employee', 'as' => '.employee'], function() {
+                Route::get('read', [EmployeeController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
                 Route::get('read', [WarehouseController::class, 'read'])->name('.read');
@@ -141,6 +145,11 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
                 Route::post('save', [BranchController::class, 'store'])->name('.save');
                 Route::post('edit/{id}', [BranchController::class, 'update'])->name('.edit');
                 Route::post('delete/{id}', [BranchController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'employee', 'as' => '.employee'], function() {
+                Route::post('save', [EmployeeController::class, 'store'])->name('.save');
+                Route::post('edit/{id}', [EmployeeController::class, 'update'])->name('.edit');
+                Route::post('delete/{id}', [EmployeeController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');

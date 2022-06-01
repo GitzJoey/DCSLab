@@ -2,20 +2,21 @@
 
 namespace App\Models;
 
-use App\Enums\ActiveStatus;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-use App\Models\Branch;
 use App\Models\User;
+use App\Models\Branch;
+use App\Models\Employee;
 use App\Models\Warehouse;
-
+use App\Enums\ActiveStatus;
 use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Company extends Model
 {
@@ -61,6 +62,11 @@ class Company extends Model
     public function warehouses()
     {
         return $this->hasMany(Warehouse::class);
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
     }
 
     public function getActivitylogOptions(): LogOptions
