@@ -3,7 +3,6 @@
 namespace App\Services\Impls;
 
 use Exception;
-use App\Models\User;
 
 use App\Models\Employee;
 use App\Traits\CacheHelper;
@@ -166,6 +165,7 @@ class EmployeeServiceImpl implements EmployeeService
         int $id,
         int $company_id,
         int $user_id,
+        ?string $join_date = null,
         int $status
     ): ?Employee
     {
@@ -174,14 +174,21 @@ class EmployeeServiceImpl implements EmployeeService
 
         try {
             $employee = Employee::find($id);
-    
-            $employee->update([
-                'company_id' => $company_id,
-                'user_id' => $user_id,
-                'status' => $status,
-            ]);
-
-            $user_id = new User;
+            
+            if (is_null($join_date) == true) {
+                $employee->update([
+                    'company_id' => $company_id,
+                    'user_id' => $user_id,
+                    'status' => $status,
+                ]);
+            } else {
+                $employee->update([
+                    'company_id' => $company_id,
+                    'user_id' => $user_id,
+                    'join_date' => $join_date,
+                    'status' => $status,
+                ]);
+            }
 
             DB::commit();
 
