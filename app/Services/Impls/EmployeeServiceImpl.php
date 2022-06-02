@@ -174,7 +174,7 @@ class EmployeeServiceImpl implements EmployeeService
 
         try {
             $employee = Employee::find($id);
-            
+
             $employee->update([
                 'company_id' => $company_id,
                 'user_id' => $user_id,
