@@ -126,8 +126,7 @@ class EmployeeController extends BaseController
     {
         $request = $employeeRequest->validated();
 
-        $userId = Employee::find($id);
-        $userId = $userId['user_id'];
+        $userId = Employee::find($id)->user_id;
 
         $rolesId = [];
         array_push($rolesId, $this->roleService->readBy('NAME', 'user')->id);
@@ -169,15 +168,15 @@ class EmployeeController extends BaseController
             $rolesId,
             $profile,
         );
-        $user_id = $user->id;
 
         $status = $request['status'];
 
         $result = $this->employeeService->update(
-            $id,
-            $request['company_id'],
-            $user_id,
-            $status
+            id: $id,
+            company_id: $request['company_id'],
+            user_id: $userId,
+            join_date: null,
+            status: $status
         );
         return is_null($result) ? response()->error():response()->success();
     }
@@ -186,8 +185,8 @@ class EmployeeController extends BaseController
     {
         $userId = Auth::id();
         
-        $result = $this->employeeService->delete($userId, $id);
+        $result = $this->employeeService->delete($id);
 
-        return $result ? response()->error():response()->success();
+        return !$result ? response()->error():response()->success();
     }
 }
