@@ -93,7 +93,7 @@ class EmployeeServiceImpl implements EmployeeService
 
             if (!$companyId) return null;
 
-            $employee = Employee::with('company')
+            $employee = Employee::with('company', 'user.profile')
                         ->whereCompanyId($companyId);
     
             if (empty($search)) {
@@ -175,20 +175,12 @@ class EmployeeServiceImpl implements EmployeeService
         try {
             $employee = Employee::find($id);
             
-            if (is_null($join_date) == true) {
-                $employee->update([
-                    'company_id' => $company_id,
-                    'user_id' => $user_id,
-                    'status' => $status,
-                ]);
-            } else {
-                $employee->update([
-                    'company_id' => $company_id,
-                    'user_id' => $user_id,
-                    'join_date' => $join_date,
-                    'status' => $status,
-                ]);
-            }
+            $employee->update([
+                'company_id' => $company_id,
+                'user_id' => $user_id,
+                'join_date' => is_null($join_date) ? $employee->join_date : $join_date,
+                'status' => $status,
+            ]);
 
             DB::commit();
 
