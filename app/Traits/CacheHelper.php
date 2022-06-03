@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 trait CacheHelper {
-    private function readFromCache($key)
+    private function readFromCache($key): mixed
     {
         $hit = false;
         try {
@@ -26,7 +26,7 @@ trait CacheHelper {
         }
     }
 
-    private function saveToCache($key, $val)
+    private function saveToCache($key, $val): void
     {
         try {
             if (empty($key)) return;
@@ -39,10 +39,16 @@ trait CacheHelper {
         }
     }
 
-    private function flushCache()
+    private function flushCache($tags = ''): void
     {
         try {
-            Cache::tags([auth()->user()->id, class_basename(__CLASS__)])->flush();
+            $tagsArr = [auth()->user()->id, class_basename(__CLASS__)];
+
+            if (!empty($tags)) {
+                $tagsArr = str_contains($tags, ',') ? explode(',', $tags) : [$tags];    
+            } 
+
+            Cache::tags($tagsArr)->flush();
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
         } finally {

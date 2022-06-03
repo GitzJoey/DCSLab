@@ -32,6 +32,8 @@ class LogoutEventListener
     public function handle($event)
     {
         $this->activityLogService->AuthActivity('Logout');
-        $this->dashboardService->clearUserCache();
+        
+        if (auth()->check())
+            $this->dashboardService->clearUserCache(auth()->id());
     }
 }

@@ -16,9 +16,9 @@ class DashboardServiceImpl implements DashboardService
         
     }
     
-    public function clearUserCache(): bool
+    public function clearUserCache($userId): bool
     {
-        $this->flushCache();
+        $this->flushCache($userId);
 
         return true;
     }
