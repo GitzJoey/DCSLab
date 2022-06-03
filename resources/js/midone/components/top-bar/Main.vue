@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, inject } from "vue";
 import { switchLang, getLang } from "@/lang";
 import { assetPath } from "@/mixins";
 import axios from "@/axios";
@@ -135,6 +135,8 @@ const userCompanyLists = computed(() => {
     return [];
   }
 });
+
+const callToggleScreenMask = inject('toggleScreenMask');
 
 const switchLanguage = (lang) => {
   switchLang(lang);
@@ -213,6 +215,7 @@ const goTo = (page) => {
 
 const logout = () => {
   tailwind.Dropdown.getOrCreateInstance(document.querySelector("#main-dropdown")).hide();
+  callToggleScreenMask();
   axios.post('/logout').then(response => {
     sessionStorage.clear();
     window.location.href = '/';
