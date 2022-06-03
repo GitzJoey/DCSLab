@@ -6,7 +6,6 @@ use App\Services\DashboardService;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends BaseController
 {
@@ -42,12 +41,5 @@ class DashboardController extends BaseController
         $user = Auth::user();
 
         return true;
-    }
-
-    public function clearUserData()
-    {
-        $id = Auth::id();
-
-        Cache::tags([$id])->flush();
     }
 }

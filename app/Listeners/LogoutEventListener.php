@@ -3,21 +3,24 @@
 namespace App\Listeners;
 
 use App\Services\ActivityLogService;
+use App\Services\DashboardService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 class LogoutEventListener
 {
     private $activityLogService;
+    private $dashboardService;
 
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(ActivityLogService $activityLogService)
+    public function __construct(ActivityLogService $activityLogService, DashboardService $dashboardService)
     {
         $this->activityLogService = $activityLogService;
+        $this->dashboardService = $dashboardService;
     }
 
     /**
@@ -29,5 +32,6 @@ class LogoutEventListener
     public function handle($event)
     {
         $this->activityLogService->AuthActivity('Logout');
+        $this->dashboardService->clearUserCache();
     }
 }
