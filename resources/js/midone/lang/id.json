@@ -348,7 +348,7 @@
                 "address": "Alamat",
                 "city": "Kota",
                 "contact": "Kontak",
-                "is_main": "Utama",
+                "is_main": "Cabang Utama",
                 "remarks": "Keterangan",
                 "status": "Status"
             }

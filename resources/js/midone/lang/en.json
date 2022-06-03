@@ -349,7 +349,7 @@
                 "address": "Address",
                 "city": "City",
                 "contact": "Contact",
-                "is_main" : "Is Main",
+                "is_main" : "Main Branch",
                 "remarks": "Remarks",
                 "status": "Status"
             }
