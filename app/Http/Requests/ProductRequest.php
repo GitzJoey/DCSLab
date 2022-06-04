@@ -125,7 +125,7 @@ class ProductRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'read':
                 $this->merge([
-
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
                 ]);
             case 'store':
             case 'update':
