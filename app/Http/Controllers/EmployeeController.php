@@ -29,24 +29,16 @@ class EmployeeController extends BaseController
         $this->roleService = $roleService;
     }
 
-    public function read(Request $request)
+    public function read(EmployeeRequest $employeeRequest)
     {
-        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        $search = !is_null($search) ? $search : '';
+        $request = $employeeRequest->validated();
 
-        $paginate = $request->has('paginate') ? $request['paginate']:true;
-        $paginate = !is_null($paginate) ? $paginate : true;
-        $paginate = is_numeric($paginate) ? abs($paginate) : true;
+        $search = $request['search'];
+        $paginate = $request['paginate'];
+        $page = abs($request['page']);
+        $perPage = abs($request['perPage']);
 
-        $page = $request->has('page') ? $request['page']:1;
-        $page = !is_null($page) ? $page : 1;
-        $page = is_numeric($page) ? abs($page) : 1; 
-
-        $perPage = $request->has('perPage') ? $request['perPage']:10;
-        $perPage = !is_null($perPage) ? $perPage : 10;
-        $perPage = is_numeric($perPage) ? abs($perPage) : 10;  
-
-        $companyId = Hashids::decode($request['companyId'])[0];
+        $companyId = $request['company_id'];
 
         $result = $this->employeeService->read(
             companyId: $companyId,

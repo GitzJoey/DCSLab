@@ -27,12 +27,14 @@ class UserController extends BaseController
         $this->roleService = $roleService;
     }
 
-    public function read(Request $request)
+    public function read(UserRequest $userRequest)
     {
-        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        $paginate = $request->has('paginate') ? $request['paginate']:true;
-        $page = $request->has('page') ? $request['page']:1;
-        $perPage = $request->has('perPage') ? $request['perPage']:10;
+        $request = $userRequest->validated();
+
+        $search = $request['search'];
+        $paginate = $request['paginate'];
+        $page = abs($request['page']);
+        $perPage = abs($request['perPage']);
 
         $result = $this->userService->read($search, $paginate, $page, $perPage);
         
