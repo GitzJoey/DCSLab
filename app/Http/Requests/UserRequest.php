@@ -55,6 +55,16 @@ class UserRequest extends FormRequest
         ];
 
         if ($this->route()->getActionMethod() == 'store') {
+            $rules_read = [
+                'search' => ['present', 'string'],
+                'paginate' => ['required', 'boolean'],
+                'page' => ['required_if:paginate,true', 'numeric'],
+                'perPage' => ['required_if:paginate,true', 'numeric'],
+                'refresh' => ['nullable', 'boolean']
+            ];
+            return $rules_read;
+        }
+        else if ($this->route()->getActionMethod() == 'store') {
             $rules_store = [
                 //Testing Server Request Validation Error
                 //'name' => 'min:1000',
@@ -111,8 +121,20 @@ class UserRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        $this->merge([
-            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
-        ]);
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                $this->merge([
+
+                ]);
+            case 'store':
+            case 'update':
+                $this->merge([
+                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                ]);
+            default:
+                $this->merge([]);
+        }
+
     }
 }

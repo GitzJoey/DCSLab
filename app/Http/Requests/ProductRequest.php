@@ -55,6 +55,16 @@ class ProductRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
+            case 'read':
+                $rules_read = [
+                    'company_id' => ['required', new isValidCompany(), 'bail'],
+                    'search' => ['present', 'string'],
+                    'paginate' => ['required', 'boolean'],
+                    'page' => ['required_if:paginate,true', 'numeric'],
+                    'perPage' => ['required_if:paginate,true', 'numeric'],
+                    'refresh' => ['nullable', 'boolean']
+                ];
+                return $rules_read;
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
@@ -111,14 +121,25 @@ class ProductRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        $this->merge([
-            'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
-            'taxable_supply' => $this->has('taxable_supply') ? filter_var($this->taxable_supply, FILTER_VALIDATE_BOOLEAN) : false,
-            'use_serial_number' => $this->has('use_serial_number') ? filter_var($this->use_serial_number, FILTER_VALIDATE_BOOLEAN) : false,
-            'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,
-            'has_expiry_date' => $this->has('has_expiry_date') ? filter_var($this->has_expiry_date, FILTER_VALIDATE_BOOLEAN) : false,
-            'product_type' => ProductType::isValid($this->product_type) ? ProductType::fromName($this->product_type)->value : -1,
-            'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
-        ]);
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                $this->merge([
+
+                ]);
+            case 'store':
+            case 'update':
+                $this->merge([
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+                    'taxable_supply' => $this->has('taxable_supply') ? filter_var($this->taxable_supply, FILTER_VALIDATE_BOOLEAN) : false,
+                    'use_serial_number' => $this->has('use_serial_number') ? filter_var($this->use_serial_number, FILTER_VALIDATE_BOOLEAN) : false,
+                    'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,
+                    'has_expiry_date' => $this->has('has_expiry_date') ? filter_var($this->has_expiry_date, FILTER_VALIDATE_BOOLEAN) : false,
+                    'product_type' => ProductType::isValid($this->product_type) ? ProductType::fromName($this->product_type)->value : -1,
+                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                ]);                
+            default:
+                $this->merge([]);
+        }
     }
 }
