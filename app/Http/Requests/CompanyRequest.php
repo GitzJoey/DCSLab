@@ -102,8 +102,9 @@ class CompanyRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'read':
                 $this->merge([
-
+                    'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
+                break;
             case 'store':
             case 'update':
                 $this->merge([
@@ -111,8 +112,10 @@ class CompanyRequest extends FormRequest
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
                 ]);
+                break;
             default:
                 $this->merge([]);
+                break;
         }
     }
 }

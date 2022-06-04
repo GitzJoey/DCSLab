@@ -125,7 +125,7 @@ class UserRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'read':
                 $this->merge([
-
+                    'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
             case 'store':
             case 'update':
