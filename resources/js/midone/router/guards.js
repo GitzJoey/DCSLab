@@ -1,30 +1,18 @@
 import axios from "@/axios";
 import _ from "lodash";
 
-export async function canUserAccess(to, userContext, next) {
+export async function userHasRoles(to, userContext, next) {
     try {
-        if (to.matched.some(r => r.meta.acl)) {
+        if (to.matched.some(r => r.meta.roles)) {
             let userRoles = userContext.roles_description.includes(',') ? userContext.roles_description.split(',') :  new Array(userContext.roles_description);
-            _.forEach(to.meta.acl, (val) => {
-                
-            });
+            let hasRoles = _.intersection(to.meta.roles, userRoles).length === 0 ? false:true;
+
+            if (!hasRoles) next({ name: 'side-menu-error-code', params: { code: '401' } });
         }
-        /*
-        const response = axios.post('/api/post/dashboard/core/user/access', {
-            to: to.path
-        });
-        return (await response).data;
-        */
     } catch (err) {
     }
 }
 
-export function checkPasswordExpiry(userContext, next) {
-    if (userContext.password_expiry_day <= 0) {
-    }
-}
+export async function userHasPermissions(to, userContext, next) {
 
-export function checkUserStatus(userContext, next) {
-    if (userContext.profile !== undefined && userContext.profile.status === 0) {
-    }
 }

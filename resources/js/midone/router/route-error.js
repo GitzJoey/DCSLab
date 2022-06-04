@@ -9,8 +9,8 @@ export default {
     component: SideMenu,
     children: [
         {
-            path: root + '/error' + '/error',
-            name: 'side-menu-error-error',
+            path: root + '/error' + '/:code',
+            name: 'side-menu-error-code',
             component: Error,
             meta: { 
                 remember: false,

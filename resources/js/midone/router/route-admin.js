@@ -20,7 +20,7 @@ function Admin() {
                 meta: { 
                     remember: true,
                     log_route: true,
-                    acl: [ 'Administrator', 'Dev' ]
+                    roles: ['Administrator', 'Dev']
                 }
             }
         ]    
