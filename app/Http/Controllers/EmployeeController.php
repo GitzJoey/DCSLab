@@ -30,8 +30,10 @@ class EmployeeController extends BaseController
         $this->roleService = $roleService;
     }
 
-    public function read(Request $request)
+    public function read(EmployeeRequest $employeeRequest)
     {
+        $request = $employeeRequest->validated();
+        
         $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
         $search = !is_null($search) ? $search : '';
 
