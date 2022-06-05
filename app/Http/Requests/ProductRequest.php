@@ -129,6 +129,7 @@ class ProductRequest extends FormRequest
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0]:'',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
+                break;
             case 'store':
             case 'update':
                 $this->merge([
@@ -139,9 +140,11 @@ class ProductRequest extends FormRequest
                     'has_expiry_date' => $this->has('has_expiry_date') ? filter_var($this->has_expiry_date, FILTER_VALIDATE_BOOLEAN) : false,
                     'product_type' => ProductType::isValid($this->product_type) ? ProductType::fromName($this->product_type)->value : -1,
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
-                ]);                
+                ]);
+                break;
             default:
                 $this->merge([]);
+                break;
         }
     }
 }

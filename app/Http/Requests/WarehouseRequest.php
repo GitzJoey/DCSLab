@@ -110,6 +110,7 @@ class WarehouseRequest extends FormRequest
                     'branch_id' => $this->has('branchId') ? Hashids::decode($this['branchId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
+                break;
             case 'store':
             case 'update':
                 $this->merge([
@@ -117,8 +118,10 @@ class WarehouseRequest extends FormRequest
                     'branch_id' => $this->has('branch_id') ? Hashids::decode($this['branch_id'])[0] : '',
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
                 ]);
+                break;
             default:
                 $this->merge([]);
+                break;
         }
     }
 }
