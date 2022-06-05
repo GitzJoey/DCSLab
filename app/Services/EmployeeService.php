@@ -38,7 +38,6 @@ interface EmployeeService
         int $id,
         string $code,
         string $name,
-        string $email,
         string $address,
         string $city,
         string $postal_code,

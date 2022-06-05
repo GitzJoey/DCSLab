@@ -140,7 +140,6 @@ class EmployeeAPITest extends APITestCase
 
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
-        $newEmail = $this->faker->unique()->email; // apakah perlu ditest juga?
         $newAddress = $this->faker->address;
         $newCity = $this->faker->city;
         $newPostalCode = $this->faker->postcode();
@@ -155,7 +154,6 @@ class EmployeeAPITest extends APITestCase
             'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
             'name' => $newName,
-            'email' => $newEmail,
             'address' => $newAddress,
             'city' => $newCity,
             'postal_code' => $newPostalCode,
@@ -163,7 +161,7 @@ class EmployeeAPITest extends APITestCase
             'tax_id' => $newTaxId,
             'ic_num' => $newIcNum,
             'img_path' => $newImgPath,
-            'join_date' => null,
+            'join_date' => '',
             'remarks' => $newRemarks,
             'status' => $newStatus
         ]);

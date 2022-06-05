@@ -129,7 +129,6 @@ class EmployeeController extends BaseController
         }
 
         $name = $request['name'];
-        $email = $request['email'];
         $address = $request['address'];
         $city = $request['city'];
         $postal_code = $request['postal_code'];
@@ -144,7 +143,6 @@ class EmployeeController extends BaseController
             id: $id,
             code: $code, 
             name: $name,
-            email: $email,
             address: $address,
             city: $city,
             postal_code: $postal_code,

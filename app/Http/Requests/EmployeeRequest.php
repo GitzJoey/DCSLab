@@ -81,11 +81,9 @@ class EmployeeRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'email' => 'required|email|max:255',
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
-                    'join_date' => 'required',
                     'status' => [new Enum(ActiveStatus::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
