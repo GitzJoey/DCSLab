@@ -10,8 +10,18 @@ interface EmployeeService
 {
     public function create(
         int $company_id,
-        array $user,
+        string $code,
+        string $name,
+        string $email,
+        string $address,
+        string $city,
+        string $postal_code,
+        string $country,
+        string $tax_id,
+        string $ic_num,
+        string $img_path = '',
         string $join_date,
+        string $remarks,
         int $status
     ): ?Employee;
 
@@ -26,8 +36,18 @@ interface EmployeeService
 
     public function update(
         int $id,
-        int $company_id,
-        int $user_id,
+        string $code,
+        string $name,
+        string $email,
+        string $address,
+        string $city,
+        string $postal_code,
+        string $country,
+        string $tax_id,
+        string $ic_num,
+        string $img_path = '',
+        ?string $join_date = null,
+        string $remarks,
         int $status
     ): ?Employee;
 
