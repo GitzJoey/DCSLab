@@ -124,7 +124,7 @@ class EmployeeRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
-                ]);          
+                ]);
             default:
                 $this->merge([]);
         }
