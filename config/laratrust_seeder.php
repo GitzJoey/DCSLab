@@ -42,6 +42,17 @@ return [
             'supplier' => 'c,r,u,d',
             'product' => 'c,r,u,d',
         ],
+        'POS-employee' => [
+            'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'settings' => 'r,u',
+            
+            'product' => 'c,u',
+            'service' => 'c,u',
+            'supplier' => 'c,u',
+            'purchaseorder' => 'c,u',
+            'salesorder' => 'c,u',
+        ],
         'POS-supplier' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
