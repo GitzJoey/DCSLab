@@ -53,6 +53,10 @@ onMounted(() => {
             title.value = 'Unauthorized';
             description.value = 'Insufficient Access Rights';
             break;
+        case '500':
+            title.value = 'Error';
+            description.value = 'Internal Server Error';
+            break;
         default:
             break;
     }
