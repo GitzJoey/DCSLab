@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\RandomGenerator;
 use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
-use App\Models\Permission;
 use App\Services\RoleService;
 use App\Services\UserService;
 
@@ -19,6 +17,7 @@ use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
+use Database\Seeders\EmployeeTableSeeder;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
@@ -158,6 +157,7 @@ class AppHelper extends Command
                     'BrandTableSeeder',
                     'SupplierTableSeeder',
                     'CustomerTableSeeder',
+                    'EmployeeTableSeeder',
                 ],
                 null, 3, true
             );
@@ -315,6 +315,19 @@ class AppHelper extends Command
 
             //$seeder = new CustomerTableSeeder();
             //$seeder->callWith(CustomerTableSeeder::class, [$count]);
+
+            $this->info('CustomerTableSeeder Finish.');
+        }
+
+        if (in_array('EmployeeTableSeeder', $seeders) || $unattended_mode)
+        {
+            $this->info('Starting EmployeeTableSeeder');
+            $count = $unattended_mode ? $unattended_count : $this->ask('How many employee for each branches in companies:', 5);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+            $onlyThisBranchId = $unattended_mode ? 0 : $this->ask('Only for this branchId (0 to all):', 0);
+
+            $seeder = new EmployeeTableSeeder();
+            $seeder->callWith(EmployeeTableSeeder::class, [$count, $onlyThisCompanyId, $onlyThisBranchId]);
 
             $this->info('CustomerTableSeeder Finish.');
         }
