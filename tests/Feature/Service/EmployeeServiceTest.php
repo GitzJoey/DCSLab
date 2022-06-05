@@ -2,12 +2,15 @@
 
 namespace Tests\Feature\Service;
 
+use App\Models\User;
 use App\Models\Company;
 use App\Models\Employee;
 use Tests\ServiceTestCase;
+use App\Enums\ActiveStatus;
 use App\Services\RoleService;
 use App\Actions\RandomGenerator;
 use App\Services\EmployeeService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Container\Container;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -29,67 +32,57 @@ class EmployeeServiceTest extends ServiceTestCase
 
     public function test_call_save()
     {
-        $companyId = Company::inRandomOrder()->first()->id;
-        
-            $name = $this->faker->name;
-            
-            $first_name = '';
-            $last_name = '';
-            if ($name == trim($name) && strpos($name, ' ') !== false) {
-                $pieces = explode(" ", $name);
-                $first_name = $pieces[0];
-                $last_name = $pieces[1];
-            } else {
-                $first_name = $name;
-            }
-
-            $container = Container::getInstance();
-            $roleService = $container->make(RoleService::class);
-            $rolesId = [];
-            array_push($rolesId, $roleService->readBy('NAME', 'user')->id);
-
-            $address = $this->faker->address;
-            $city = $this->faker->city;
-            $postalCode = $this->faker->postcode;
-            $country = $this->faker->country;
-            $taxId = (new RandomGenerator())->generateNumber(10000000, 999999999);
-            $icNum = (new RandomGenerator())->generateNumber(10000000, 999999999);
-            $remarks = $this->faker->sentence;
-            $status = (new RandomGenerator())->generateNumber(0, 1);
-            $profile = array (
-                'first_name' => $first_name,
-                'last_name' => $last_name,
-                'address' => $address,
-                'city' => $city,
-                'postal_code' => $postalCode,
-                'country' => $country,
-                'tax_id' => $taxId,
-                'ic_num' => $icNum,
-                'remarks' => $remarks,
-                'status' => $status,
-            );
-
+        $companyId = Company::inRandomOrder()->first()->id;      
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);  
+        $name = $this->faker->name;
         $email = $this->faker->email;
-        $user = [];
-        array_push($user, array (
-            'name' => $name,
-            'email' => $email,
-            'password' => '',
-            'rolesId' => $rolesId,
-            'profile' => $profile
-        ));
-
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $postalCode = $this->faker->postcode;
+        $country = $this->faker->country;
+        $taxId = (new RandomGenerator())->generateNumber(10000000, 999999999);
+        $icNum = (new RandomGenerator())->generateNumber(10000000, 999999999);
+        $imgPath = '';
         $joinDate = $this->faker->date($format = 'Y-m-d', $max = 'now');
+        $remarks = $this->faker->sentence;
+        $status = (new RandomGenerator())->generateNumber(0, 1);       
 
         $this->service->create(
             company_id: $companyId,
-            user: $user,
+            code: $code,
+            name: $name,
+            email: $email,
+            address: $address,
+            city: $city,
+            postal_code: $postalCode,
+            country: $country,
+            tax_id: $taxId,
+            ic_num: $icNum,
+            img_path: $imgPath,
             join_date: $joinDate,
+            remarks: $remarks,
             status: $status
         );
 
         $this->assertDatabaseHas('employees', [
-            'company_id' => $companyId
+            'company_id' => $companyId,
+            'code' => $code,
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => $name,
+            'email' => $email
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'address' => $address,
+            'city' => $city,
+            'postal_code' => $postalCode,
+            'country' => $country,
+            'tax_id' => $taxId,
+            'ic_num' => $icNum,
+            'status' => $status,
+            'remarks' => $remarks
         ]);
     }
 
@@ -113,23 +106,39 @@ class EmployeeServiceTest extends ServiceTestCase
     public function test_call_edit()
     {
         $employeeId = Employee::inRandomOrder()->first()->id;
-        $companyId = Employee::where('id', '=', $employeeId)->first()->company_id;
-        $userId = Employee::where('id', '=', $employeeId)->first()->user_id;
-        
-        $newStatus = Employee::where('id', '=', $employeeId)->first()->status;
-        $newStatus = $newStatus == 0 ? 1 : $newStatus;
+        $newCode = (new RandomGenerator())->generateAlphaNumeric(5);
+        $newName = $this->faker->name;
+        $newEmail = $this->faker->email;
+        $newAddress = $this->faker->address;
+        $newCity = $this->faker->city;
+        $newPostalCode = $this->faker->postcode;
+        $newCountry = $this->faker->country;
+        $newTaxId = (new RandomGenerator())->generateNumber(10000000, 999999999);
+        $newIcNum = (new RandomGenerator())->generateNumber(10000000, 999999999);
+        $newImgPath = '';
+        $newRemarks = $this->faker->sentence;
+        $newStatus = Employee::where('id', '=', $employeeId)->first()->status == 0 ? 1 : 0;
 
         $this->service->update(
             id: $employeeId,
-            company_id: $companyId,
-            user_id: $userId,
+            code: $newCode,
+            name: $newName,
+            email: $newEmail,
+            address: $newAddress,
+            city: $newCity,
+            postal_code: $newPostalCode,
+            country: $newCountry,
+            tax_id: $newTaxId,
+            ic_num: $newIcNum,
+            img_path: $newImgPath,
+            join_date: null,
+            remarks: $newRemarks,
             status: $newStatus
         );
 
         $this->assertDatabaseHas('employees', [
             'id' => $employeeId,
-            'company_id' => $companyId,
-            'user_id' => $userId,
+            'code' => $newCode,
             'status' => $newStatus
         ]);
     }
@@ -137,13 +146,10 @@ class EmployeeServiceTest extends ServiceTestCase
     public function test_call_delete()
     {
         $employeeId = Employee::inRandomOrder()->first()->id;
-
         $this->service->delete($employeeId);
 
         $this->assertSoftDeleted('employees', [
             'id' => $employeeId
         ]);
     }
-
-
 }
