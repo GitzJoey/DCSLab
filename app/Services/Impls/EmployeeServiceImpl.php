@@ -3,8 +3,9 @@
 namespace App\Services\Impls;
 
 use Exception;
-use App\Models\User;
 
+use App\Models\Role;
+use App\Models\User;
 use App\Models\Employee;
 use App\Traits\CacheHelper;
 use App\Services\UserService;
@@ -28,8 +29,18 @@ class EmployeeServiceImpl implements EmployeeService
     
     public function create(
         int $company_id,
-        array $user,
+        string $code,
+        string $name,
+        string $email,
+        string $address,
+        string $city,
+        string $postal_code,
+        string $country,
+        string $tax_id,
+        string $ic_num,
+        string $img_path = '',
         string $join_date,
+        string $remarks,
         int $status
     ): ?Employee
     {
@@ -37,19 +48,47 @@ class EmployeeServiceImpl implements EmployeeService
         $timer_start = microtime(true);
 
         try {
-            $userService = app(UserService::class);
-            $user_id = $userService->create(
-                $user[0]['name'],
-                $user[0]['email'],
-                $user[0]['password'],
-                $user[0]['rolesId'],
-                $user[0]['profile']
+            $first_name = '';
+            $last_name = '';
+            if ($name == trim($name) && strpos($name, ' ') !== false) {
+                $pieces = explode(" ", $name);
+                $first_name = $pieces[0];
+                $last_name = $pieces[1];
+            } else {
+                $first_name = $name;
+            }
+
+            $rolesId = [];
+            array_push($rolesId, Role::where('name', '=', 'user')->first()->id);
+
+            $profile = array (
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'address' => $address,
+                'city' => $city,
+                'postal_code' => $postal_code,
+                'country' => $country,
+                'tax_id' => $tax_id,
+                'ic_num' => $ic_num,
+                'img_path' => $img_path,
+                'remarks' => $remarks,
+                'status' => $status
             );
-            $user_id = $user_id->id;
+
+            $userService = app(UserService::class);
+            $user = $userService->create(
+                name: $name,
+                email: $email,
+                password: (new RandomGenerator())->generateNumber(10000000, 999999999),
+                rolesId: $rolesId,
+                profile: $profile
+            );
+            $user_id = $user->id;
             
             $employee = new Employee();
             $employee->company_id = $company_id;
             $employee->user_id = $user_id;
+            $employee->code = $code;
             $employee->join_date = $join_date;
             $employee->status = $status;
 
@@ -94,7 +133,7 @@ class EmployeeServiceImpl implements EmployeeService
 
             if (!$companyId) return null;
 
-            $employee = Employee::with('company')
+            $employee = Employee::with('company', 'user.profile')
                         ->whereCompanyId($companyId);
     
             if (empty($search)) {
@@ -164,8 +203,18 @@ class EmployeeServiceImpl implements EmployeeService
 
     public function update(
         int $id,
-        int $company_id,
-        int $user_id,
+        string $code,
+        string $name,
+        string $email,
+        string $address,
+        string $city,
+        string $postal_code,
+        string $country,
+        string $tax_id,
+        string $ic_num,
+        string $img_path = '',
+        ?string $join_date = null,
+        string $remarks,
         int $status
     ): ?Employee
     {
@@ -174,14 +223,50 @@ class EmployeeServiceImpl implements EmployeeService
 
         try {
             $employee = Employee::find($id);
-    
-            $employee->update([
-                'company_id' => $company_id,
-                'user_id' => $user_id,
-                'status' => $status,
-            ]);
+            $employee->code = $code;
+            $employee->join_date = is_null($join_date) ? $employee->join_date : $join_date;
+            $employee->status = $status;
+            $employee->save();
+            
+            $user_id = $employee->user_id;
+            $user = User::find($user_id);
 
-            $user_id = new User;
+            $rolesId = [];
+            array_push($rolesId, Role::where('name', '=', 'user')->first()->id);
+
+            $name = $user->name;
+            $first_name = '';
+            $last_name = '';
+            if ($name == trim($name) && strpos($name, ' ') !== false) {
+                $pieces = explode(" ", $name);
+                $first_name = $pieces[0];
+                $last_name = $pieces[1];
+            } else {
+                $first_name = $name;
+            }
+    
+            $profile = array (
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'address' => $address,
+                'city' => $city,
+                'postal_code' => $postal_code,
+                'country' => $country,
+                'tax_id' => $tax_id,
+                'ic_num' => $ic_num,
+                'img_path' => $img_path,
+                'remarks' => $remarks,
+                'status' => $status,
+            );
+
+            $userService = app(UserService::class);
+            $userService->update(
+                id: $user_id,
+                name: $name,
+                rolesId: $rolesId,
+                profile: $profile,
+                settings: null
+            );
 
             DB::commit();
 
@@ -190,12 +275,12 @@ class EmployeeServiceImpl implements EmployeeService
             return $employee->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);            
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
+        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     public function delete(int $id): bool
@@ -208,7 +293,10 @@ class EmployeeServiceImpl implements EmployeeService
             $employee = Employee::find($id);
 
             if ($employee) {
-                $retval = $employee->delete();
+                $user = User::find($employee->user_id);
+                $user->profile->status = 0;
+
+                $retval = $employee->delete();            
             }
 
             DB::commit();
@@ -219,11 +307,11 @@ class EmployeeServiceImpl implements EmployeeService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
+        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     public function generateUniqueCode(int $companyId): string
