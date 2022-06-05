@@ -28,6 +28,7 @@ class UserRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
+        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('user-read')) return true;
         if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('user-create')) return true;
         if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('user-update')) return true;
 

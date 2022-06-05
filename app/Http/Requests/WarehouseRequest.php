@@ -28,6 +28,7 @@ class WarehouseRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
+        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('warehouse-read')) return true;
         if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('warehouse-create')) return true;
         if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('warehouse-update')) return true;
 

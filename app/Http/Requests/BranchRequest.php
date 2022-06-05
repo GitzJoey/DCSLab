@@ -28,6 +28,7 @@ class BranchRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
+        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('branch-read')) return true;
         if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('branch-create')) return true;
         if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('branch-update')) return true;
 
