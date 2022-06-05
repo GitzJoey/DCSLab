@@ -16,6 +16,13 @@ class DashboardServiceImpl implements DashboardService
         
     }
     
+    public function clearUserCache($userId): bool
+    {
+        $this->flushCache($userId);
+
+        return true;
+    }
+
     public function createMenu(bool $useCache = true): array
     {
         $cacheKey = '';

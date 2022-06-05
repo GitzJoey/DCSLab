@@ -35,12 +35,4 @@ class DashboardController extends BaseController
 
         return $menu;
     }
-
-    public function canUserAccess()
-    {
-        $user = Auth::user();
-
-        return true;
-
-    }
 }

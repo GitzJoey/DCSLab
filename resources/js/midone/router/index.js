@@ -47,9 +47,8 @@ router.beforeEach(async (to, from, next) => {
     }
 
     multiguard([
-        guards.canUserAccess(to, userContextStore.userContext, next),
-        guards.checkPasswordExpiry(userContextStore.userContext, next), 
-        guards.checkUserStatus(userContextStore.userContext, next)
+        guards.userHasRoles(to, userContextStore.userContext, next),
+        guards.userHasPermissions(to, userContextStore.userContext, next)
     ]);
 
     next();

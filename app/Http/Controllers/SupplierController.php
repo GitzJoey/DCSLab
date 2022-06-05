@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PaymentTerm;
+use App\Enums\PaymentTermType;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
 use App\Services\SupplierService;
@@ -22,24 +23,16 @@ class SupplierController extends BaseController
         $this->supplierService = $supplierService;
     }
 
-    public function read(Request $request)
+    public function read(SupplierRequest $supplierRequest)
     {
-        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        $search = !is_null($search) ? $search : '';
+        $request = $supplierRequest->validated();
 
-        $paginate = $request->has('paginate') ? $request['paginate']:true;
-        $paginate = !is_null($paginate) ? $paginate : true;
-        $paginate = is_numeric($paginate) ? abs($paginate) : true;
+        $search = $request['search'];
+        $paginate = $request['paginate'];
+        $page = abs($request['page']);
+        $perPage = abs($request['perPage']);
 
-        $page = $request->has('page') ? $request['page']:1;
-        $page = !is_null($page) ? $page : 1;
-        $page = is_numeric($page) ? abs($page) : 1; 
-
-        $perPage = $request->has('perPage') ? $request['perPage']:10;
-        $perPage = !is_null($perPage) ? $perPage : 10;
-        $perPage = is_numeric($perPage) ? abs($perPage) : 10; 
-
-        $companyId = Hashids::decode($request['companyId'])[0];
+        $companyId = $request['company_id'];
 
         $result = $this->supplierService->read(
             companyId: $companyId,
@@ -176,11 +169,11 @@ class SupplierController extends BaseController
     public function getPaymentTermType()
     {
         return [
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTerm::PAYMENT_IN_ADVANCE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTerm::X_DAYS_AFTER_INVOICE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTerm::END_OF_MONTH->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTerm::CASH_ON_DELIVERY->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTerm::CASH_ON_NEXT_DELIVERY->name]
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTermType::PAYMENT_IN_ADVANCE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTermType::X_DAYS_AFTER_INVOICE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name]
         ];
     }
 }
