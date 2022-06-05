@@ -65,6 +65,7 @@ class EmployeeRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
                     'country' => 'required',
@@ -78,6 +79,7 @@ class EmployeeRequest extends FormRequest
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
+                    'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                     'email' => 'required|email|max:255',
                     'country' => 'required',
@@ -122,7 +124,7 @@ class EmployeeRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
-                ]);                
+                ]);
             default:
                 $this->merge([]);
         }
