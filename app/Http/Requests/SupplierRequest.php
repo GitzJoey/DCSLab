@@ -118,9 +118,10 @@ class SupplierRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'read':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+                    'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0]:'',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
+                break;
             case 'store':
             case 'update':
                 $this->merge([
@@ -129,8 +130,10 @@ class SupplierRequest extends FormRequest
                     'payment_term_type' => PaymentTermType::isValid($this->payment_term_type) ? PaymentTermType::fromName($this->payment_term_type)->value : '',
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
                 ]);
+                break;
             default:
                 $this->merge([]);
+                break;
         }
     }
 }

@@ -23,6 +23,9 @@ defaultAxiosInstance.interceptors.response.use(response => {
         case 403:
             router.push({ name: 'side-menu-error-code', params: { code: error.response.status } });
             break;
+        case 500:
+            router.push({ name: 'side-menu-error-code', params: { code: error.response.status } });
+            break;
         default:
             break;
     }

@@ -128,13 +128,16 @@ class UserRequest extends FormRequest
                 $this->merge([
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
+                break;
             case 'store':
             case 'update':
                 $this->merge([
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
                 ]);
+                break;
             default:
                 $this->merge([]);
+                break;
         }
 
     }

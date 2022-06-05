@@ -12,5 +12,8 @@ enum UserRoles: string
     case DEVELOPER = 'dev';
     case ADMINISTRATOR = 'administrator';
 
-    case BUSINESS_OWNER = 'business_owner';
+    #region Extensions
+    case POS_OWNER = 'POS-owner';
+    case POS_EMPLOYEE = 'POS-employee';
+    #endregion
 }
