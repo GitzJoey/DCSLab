@@ -186,14 +186,10 @@ class EmployeeServiceImpl implements EmployeeService
             $employee->join_date = is_null($join_date) ? $employee->join_date : $join_date;
             $employee->status = $status;
             $employee->save();
-            
-            $user_id = $employee->user_id;
-            $user = User::find($user_id);
 
             $rolesId = [];
             array_push($rolesId, Role::where('name', '=', 'user')->first()->id);
 
-            $name = $user->name;
             $first_name = '';
             $last_name = '';
             if ($name == trim($name) && strpos($name, ' ') !== false) {
@@ -220,7 +216,7 @@ class EmployeeServiceImpl implements EmployeeService
 
             $userService = app(UserService::class);
             $userService->update(
-                id: $user_id,
+                id: $employee->user_id,
                 name: $name,
                 rolesId: $rolesId,
                 profile: $profile,
