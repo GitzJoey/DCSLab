@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Services\RoleService;
@@ -29,16 +30,24 @@ class EmployeeController extends BaseController
         $this->roleService = $roleService;
     }
 
-    public function read(EmployeeRequest $employeeRequest)
+    public function read(Request $request)
     {
-        $request = $employeeRequest->validated();
+        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
+        $search = !is_null($search) ? $search : '';
 
-        $search = $request['search'];
-        $paginate = $request['paginate'];
-        $page = abs($request['page']);
-        $perPage = abs($request['perPage']);
+        $paginate = $request->has('paginate') ? $request['paginate']:true;
+        $paginate = !is_null($paginate) ? $paginate : true;
+        $paginate = is_numeric($paginate) ? abs($paginate) : true;
 
-        $companyId = $request['company_id'];
+        $page = $request->has('page') ? $request['page']:1;
+        $page = !is_null($page) ? $page : 1;
+        $page = is_numeric($page) ? abs($page) : 1; 
+
+        $perPage = $request->has('perPage') ? $request['perPage']:10;
+        $perPage = !is_null($perPage) ? $perPage : 10;
+        $perPage = is_numeric($perPage) ? abs($perPage) : 10;  
+
+        $companyId = Hashids::decode($request['companyId'])[0];
 
         $result = $this->employeeService->read(
             companyId: $companyId,
@@ -60,56 +69,58 @@ class EmployeeController extends BaseController
     public function store(EmployeeRequest $employeeRequest)
     {   
         $request = $employeeRequest->validated();
-        
-        $first_name = '';
-        $last_name = '';
-        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
-            $pieces = explode(" ", $request['name']);
-            $first_name = $pieces[0];
-            $last_name = $pieces[1];
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->employeeService->generateUniqueCode($company_id);
+            } while (!$this->employeeService->isUniqueCode($code, $company_id));
         } else {
-            $first_name = $request['name'];
+            if (!$this->employeeService->isUniqueCode($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
+            }
         }
 
-        $rolesId = [];
-        array_push($rolesId, $this->roleService->readBy('NAME', 'user')->id);
+        $name = $request['name'];
+        $email = $request['email'];
+        $address = $request['address'];
+        $city = $request['city'];
+        $postal_code = $request['postal_code'];
+        $country = $request['country'];
+        $tax_id = $request['tax_id'];
+        $ic_num = $request['ic_num'];
+        $img_path = $request['img_path'];
+        $join_date = $request['join_date'];
+        $remarks = $request['remarks'];
+        $status = $request['status'];
 
-        $profile = array (
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'address' => $request['address'],
-            'city' => $request['city'],
-            'postal_code' => $request['postal_code'],
-            'country' => $request['country'],
-            'tax_id' => $request['tax_id'],
-            'ic_num' => $request['ic_num'],
-            'remarks' => $request['remarks'],
-            'status' => $request['status'],
-        );
-
-        if (array_key_exists('img_path', $request)) {
+        if (!empty($img_path)) {
             $image = $request['img_path'];
             $filename = time().".".$image->getClientOriginalExtension();
             
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profile['img_path'] = $file;
         }
-        
-        $user = [];
-        array_push($user, array (
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => '',
-            'rolesId' => $rolesId,
-            'profile' => $profile
-        ));
 
-        $status = $request['status'];
         $result = $this->employeeService->create(
-            $request['company_id'],
-            $user,
-            $request['join_date'],
-            $status
+            company_id: $company_id,
+            code: $code, 
+            name: $name,
+            email: $email,
+            address: $address,
+            city: $city,
+            postal_code: $postal_code,
+            country: $country,
+            tax_id: $tax_id,
+            ic_num: $ic_num,
+            img_path: $img_path,
+            join_date: $join_date,
+            remarks: $remarks,
+            status: $status
         );
         return is_null($result) ? response()->error():response()->success();
     }
@@ -117,59 +128,48 @@ class EmployeeController extends BaseController
     public function update($id, EmployeeRequest $employeeRequest)
     {
         $request = $employeeRequest->validated();
-
-        $userId = Employee::find($id);
-        $userId = $userId['user_id'];
-
-        $rolesId = [];
-        array_push($rolesId, $this->roleService->readBy('NAME', 'user')->id);
         
-        $first_name = '';
-        $last_name = '';
-        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
-            $pieces = explode(" ", $request['name']);
-            $first_name = $pieces[0];
-            $last_name = $pieces[1];
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->employeeService->generateUniqueCode($company_id);
+            } while (!$this->employeeService->isUniqueCode($code, $company_id, $id));
         } else {
-            $first_name = $request['name'];
+            if (!$this->employeeService->isUniqueCode($code, $company_id, $id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
+            }
         }
-
-        $profile = array (
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'address' => $request['address'],
-            'city' => $request['city'],
-            'postal_code' => $request['postal_code'],
-            'country' => $request['country'],
-            'tax_id' => $request['tax_id'],
-            'ic_num' => $request['ic_num'],
-            'remarks' => $request['remarks'],
-            'status' => $request['status'],
-        );
-        
-        if (array_key_exists('img_path', $request)) {
-            $image = $request['img_path'];
-            $filename = time().".".$image->getClientOriginalExtension();
-
-            $file = $image->storePubliclyAs('usr', $filename, 'public');
-            $profile['img_path'] = $file;
-        }
-        
-        $user = $this->userService->update(
-            $userId,
-            $request['name'],
-            $rolesId,
-            $profile,
-        );
-        $user_id = $user->id;
-
+        $name = $request['name'];
+        $email = $request['email'];
+        $address = $request['address'];
+        $city = $request['city'];
+        $postal_code = $request['postal_code'];
+        $country = $request['country'];
+        $tax_id = $request['tax_id'];
+        $ic_num = $request['ic_num'];
+        $img_path = $request['img_path'];
+        $remarks = $request['remarks'];
         $status = $request['status'];
 
         $result = $this->employeeService->update(
-            $id,
-            $request['company_id'],
-            $user_id,
-            $status
+            id: $id,
+            code: $code, 
+            name: $name,
+            email: $email,
+            address: $address,
+            city: $city,
+            postal_code: $postal_code,
+            country: $country,
+            tax_id: $tax_id,
+            ic_num: $ic_num,
+            img_path: $img_path,
+            join_date: null,
+            remarks: $remarks,
+            status: $status
         );
         return is_null($result) ? response()->error():response()->success();
     }
@@ -178,8 +178,8 @@ class EmployeeController extends BaseController
     {
         $userId = Auth::id();
         
-        $result = $this->employeeService->delete($userId, $id);
+        $result = $this->employeeService->delete($id);
 
-        return $result ? response()->error():response()->success();
+        return !$result ? response()->error():response()->success();
     }
 }
