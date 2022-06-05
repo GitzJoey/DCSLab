@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "@/router";
 
 const defaultAxiosInstance = axios.create({
     headers: {
@@ -18,9 +19,14 @@ defaultAxiosInstance.interceptors.response.use(response => {
 }, error => {
     if (error.response == undefined || error.response.status == undefined) return Promise.reject(error);
     switch(error.response.status) {
+        case 401:
+        case 403:
+            router.push({ name: 'side-menu-error-code', params: { code: error.response.status } });
+            break;
         default:
-            return Promise.reject(error);
+            break;
     }
+    return Promise.reject(error);
 });
 
 const axiosInstance = axios.create();
