@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Event;
 
 use App\Listeners\LoginEventListener;
 use App\Listeners\LogoutEventListener;
+use App\Listeners\RouteMatchedEventListener;
+use Illuminate\Routing\Events\RouteMatched;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
         Logout::class => [
             LogoutEventListener::class,
         ],
+        RouteMatched::class => [
+            RouteMatchedEventListener::class,
+        ]
     ];
 
     /**

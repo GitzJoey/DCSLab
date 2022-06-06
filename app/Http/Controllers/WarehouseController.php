@@ -26,8 +26,8 @@ class WarehouseController extends BaseController
         
         $search = $request['search'];
         $paginate = $request['paginate'];
-        $page = abs($request['page']);
-        $perPage = abs($request['perPage']);
+        $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
+        $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
         $companyId = $request['company_id'];
 

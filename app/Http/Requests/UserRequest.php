@@ -55,7 +55,7 @@ class UserRequest extends FormRequest
             'timeFormat' => 'nullable',
         ];
 
-        if ($this->route()->getActionMethod() == 'store') {
+        if ($this->route()->getActionMethod() == 'read') {
             $rules_read = [
                 'search' => ['present', 'string'],
                 'paginate' => ['required', 'boolean'],
