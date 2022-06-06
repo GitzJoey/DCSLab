@@ -28,8 +28,8 @@ class CompanyController extends BaseController
 
         $search = $request['search'];
         $paginate = $request['paginate'];
-        $page = $request->has('page') ? abs($request['page']) : 1;
-        $perPage = $request->has('perPage') ? abs($request['perPage']) : 10;
+        $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
+        $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
         $result = $this->companyService->read(
             userId: $userId, 
