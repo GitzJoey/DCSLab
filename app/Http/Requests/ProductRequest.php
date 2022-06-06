@@ -56,7 +56,8 @@ class ProductRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
-            case 'read':
+            case 'readProducts':
+            case 'readServices':
                 $rules_read = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'search' => ['present', 'string'],
@@ -124,7 +125,8 @@ class ProductRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
-            case 'read':
+            case 'readProducts':
+            case 'readServices':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0]:'',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
