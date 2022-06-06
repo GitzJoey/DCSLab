@@ -391,7 +391,7 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.product.product.read', { "companyId": selectedUserCompany.value, "paginate": false })).then(response => {
+    axios.get(route('api.get.db.product.product.read', { "companyId": selectedUserCompany.value, "paginate": false, "search": '' })).then(response => {
         productLists.value = response.data;
     });
 }

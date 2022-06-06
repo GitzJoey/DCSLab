@@ -33,8 +33,8 @@ class UserController extends BaseController
 
         $search = $request['search'];
         $paginate = $request['paginate'];
-        $page = abs($request['page']);
-        $perPage = abs($request['perPage']);
+        $page = $request->has('page') ? abs($request['page']) : 1;
+        $perPage = $request->has('perPage') ? abs($request['perPage']) : 10;
 
         $result = $this->userService->read($search, $paginate, $page, $perPage);
         
