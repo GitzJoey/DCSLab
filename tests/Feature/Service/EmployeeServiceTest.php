@@ -108,7 +108,6 @@ class EmployeeServiceTest extends ServiceTestCase
         $employeeId = Employee::inRandomOrder()->first()->id;
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5);
         $newName = $this->faker->name;
-        $newEmail = $this->faker->email;
         $newAddress = $this->faker->address;
         $newCity = $this->faker->city;
         $newPostalCode = $this->faker->postcode;
@@ -123,7 +122,6 @@ class EmployeeServiceTest extends ServiceTestCase
             id: $employeeId,
             code: $newCode,
             name: $newName,
-            email: $newEmail,
             address: $newAddress,
             city: $newCity,
             postal_code: $newPostalCode,
