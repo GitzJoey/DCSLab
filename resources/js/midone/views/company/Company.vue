@@ -215,6 +215,7 @@ const setMode = () => {
 
 const getAllCompany = (args) => {
     companyList.value = {};
+    if (args.page === undefined) args.page = 1;    
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
