@@ -77,18 +77,21 @@ class EmployeeController extends BaseController
         $country = $request['country'];
         $tax_id = $request['tax_id'];
         $ic_num = $request['ic_num'];
-        $img_path = $request['img_path'];
-        $join_date = $request['join_date'];
-        $remarks = $request['remarks'];
-        $status = $request['status'];
 
-        if (!empty($img_path)) {
+        if (isset($request['img_path']) || !empty($request['img_path'])) {
+            $img_path = $request['img_path'];
             $image = $request['img_path'];
             $filename = time().".".$image->getClientOriginalExtension();
             
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profile['img_path'] = $file;
+        } else {
+            $img_path = null;
         }
+
+        $join_date = $request['join_date'];
+        $remarks = $request['remarks'];
+        $status = $request['status'];
 
         $result = $this->employeeService->create(
             company_id: $company_id,
@@ -135,7 +138,18 @@ class EmployeeController extends BaseController
         $country = $request['country'];
         $tax_id = $request['tax_id'];
         $ic_num = $request['ic_num'];
-        $img_path = $request['img_path'];
+        
+        if (isset($request['img_path']) || !empty($request['img_path'])) {
+            $img_path = $request['img_path'];
+            $image = $request['img_path'];
+            $filename = time().".".$image->getClientOriginalExtension();
+            
+            $file = $image->storePubliclyAs('usr', $filename, 'public');
+            $profile['img_path'] = $file;
+        } else {
+            $img_path = null;
+        }
+
         $remarks = $request['remarks'];
         $status = $request['status'];
 
