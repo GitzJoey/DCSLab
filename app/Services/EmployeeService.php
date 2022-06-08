@@ -19,7 +19,7 @@ interface EmployeeService
         string $country,
         string $tax_id,
         string $ic_num,
-        ?string $img_path = '',
+        ?string $img_path = null,
         string $join_date,
         string $remarks,
         int $status
@@ -44,7 +44,7 @@ interface EmployeeService
         string $country,
         string $tax_id,
         string $ic_num,
-        ?string $img_path = '',
+        ?string $img_path = null,
         ?string $join_date = null,
         string $remarks,
         int $status
