@@ -335,18 +335,19 @@ class CompanyAPITest extends APITestCase
         $this->actingAs($this->developer);
 
         $userId = $this->developer->id;
-        $search = "";
+        $search = '';
         $paginate = 1;
         $page = 1;
         $perPage = 10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
             'page' => $page,
-            'perPage' => $perPage
-            
+            'perPage' => $perPage,
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
@@ -370,13 +371,15 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = 10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
             'paginate' => $paginate,
             'page' => $page,
-            'perPage' => $perPage,          
+            'perPage' => $perPage,
+            'refresh' => $refresh         
         ]));
 
         $api->assertSuccessful();
@@ -400,6 +403,7 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = -10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -407,6 +411,7 @@ class CompanyAPITest extends APITestCase
             'paginate' => $paginate,
             'page' => $page,
             'perPage' => $perPage,
+            'refresh' => $refresh
             
         ]));
 
@@ -428,14 +433,18 @@ class CompanyAPITest extends APITestCase
 
         $userId = $this->developer->id;
         $search = '';
+        $paginate = null;
         $page = 1;
         $perPage = 10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
+            'paginate' => $paginate,
             'page' => $page,
             'perPage' => $perPage,
+            'refresh' => $refresh
             
         ]));
 
@@ -464,10 +473,10 @@ class CompanyAPITest extends APITestCase
 
         $userId = $user->id;
         $search = '';
-        // $paginate = (new RandomGenerator())->generateNumber(0, 1);
         $paginate = 1;
         $page = 1;
         $perPage = 10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -475,7 +484,7 @@ class CompanyAPITest extends APITestCase
             'paginate' => $paginate,
             'page' => $page,
             'perPage' => $perPage,
-            
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
@@ -506,6 +515,7 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = 10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -513,7 +523,7 @@ class CompanyAPITest extends APITestCase
             'paginate' => $paginate,
             'page' => $page,
             'perPage' => $perPage,
-            
+            'refresh' => $refresh            
         ]));
 
         $api->assertSuccessful();
@@ -544,6 +554,7 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = -10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -551,7 +562,7 @@ class CompanyAPITest extends APITestCase
             'paginate' => $paginate,
             'page' => $page,
             'perPage' => $perPage,
-            
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
@@ -579,15 +590,18 @@ class CompanyAPITest extends APITestCase
 
         $userId = $user->id;
         $search = '';
+        $paginate = null;
         $page = 1;
         $perPage = 10;
+        $refresh = null;
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
             'search' => $search,
+            'paginate' => $paginate,
             'page' => $page,
             'perPage' => $perPage,
-            
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
