@@ -2,7 +2,6 @@ import SideMenu from "@/layouts/side-menu/Main.vue";
 
 import Company from "@/views/company/Company.vue";
 import Branch from "@/views/branch/Branch.vue";
-import Employee from "@/views/employee/Employee.vue";
 import Warehouse from "@/views/warehouse/Warehouse.vue";
 
 const root = '/dashboard';
@@ -28,15 +27,6 @@ export default {
                 remember: true,
                 log_route: true 
             }
-        },
-        {
-            path: root + '/company' + '/employee',
-            name: 'side-menu-company-employee',
-            component: Employee,
-            meta: { 
-                remember: true,
-                log_route: true
-            },
         },
         {
             path: root + '/company' + '/warehouse',
