@@ -304,20 +304,18 @@ const employee = ref({
         hId: '',
         name: '',
         email: '',
-        profile: [
-            {
-                hId: '',
-                img_path: '',
-                address: '',
-                city: '',
-                postal_code: '',
-                country: '',
-                tax_id: '',
-                ic_num: '',
-                remarks: '',
-                status: 'ACTIVE',
-            }
-        ]
+        profile: {
+            hId: '',
+            img_path: '',
+            address: '',
+            city: '',
+            postal_code: '',
+            country: '',
+            tax_id: '',
+            ic_num: '',
+            remarks: '',
+            status: 'ACTIVE',
+        }
     },
     code: '',
     join_date: '',
@@ -395,11 +393,8 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.company.company.read.all_active', {
-            companyId: selectedUserCompany.value,
-            paginate: false
-        })).then(response => {
-            companyDDL.value = response.data;
+    axios.get(route('api.get.db.company.company.read.all_active')).then(response => {
+        companyDDL.value = response.data;
     });
 }
 
@@ -467,20 +462,18 @@ const emptyEmployee = () => {
             hId: '',
             name: '',
             email: '',
-            profile: [
-                {
-                    hId: '',
-                    img_path: '',
-                    address: '',
-                    city: '',
-                    postal_code: '',
-                    country: '',
-                    tax_id: '',
-                    ic_num: '',
-                    remarks: '',
-                    status: 'ACTIVE',
-                }
-            ]
+            profile: {
+                hId: '',
+                img_path: '',
+                address: '',
+                city: '',
+                postal_code: '',
+                country: '',
+                tax_id: '',
+                ic_num: '',
+                remarks: '',
+                status: 'ACTIVE',
+            }
         },
         code: '[AUTO]',
         join_date: '',
@@ -491,7 +484,7 @@ const emptyEmployee = () => {
 const resetAlertErrors = () => {
     alertErrors.value = [];
 }
-getAllEmployees
+
 const createNew = () => {
     mode.value = 'create';
     
