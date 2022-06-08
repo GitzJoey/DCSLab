@@ -1,4 +1,3 @@
-import axios from "@/axios";
 import _ from "lodash";
 
 export async function userHasRoles(to, userContext, next) {
