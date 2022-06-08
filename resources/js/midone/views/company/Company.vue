@@ -218,7 +218,11 @@ const getAllCompany = (args) => {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    axios.get(route('api.get.db.company.company.read', { "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.company.company.read', {
+        "search": args.search,
+        "page": args.page,
+        "perPage": args.pageSize
+    })).then(response => {
         companyList.value = response.data;
         loading.value = false;
     });
