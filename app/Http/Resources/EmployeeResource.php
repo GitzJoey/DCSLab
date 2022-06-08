@@ -24,7 +24,7 @@ class EmployeeResource extends JsonResource
             ]),
             'code' => $this->code,
             'join_date' => $this->join_date,
-            'status' => $this->status
+            'status' => $this->status->name
         ];
     }
 }

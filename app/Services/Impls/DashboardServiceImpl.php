@@ -110,6 +110,12 @@ class DashboardServiceImpl implements DashboardService
             'title' => 'components.menu.company-branch'
         );
 
+        $employees = array(
+            'icon' => '',
+            'pageName' => 'side-menu-company-employee',
+            'title' => 'components.menu.company-employee'
+        );
+
         $warehouses = array(
             'icon' => '',
             'pageName' => 'side-menu-company-warehouse',
@@ -125,7 +131,7 @@ class DashboardServiceImpl implements DashboardService
         );
 
         if ($hasCompany || $hasDevRole)
-            array_push($root_array['subMenu'], $company, $branches, $warehouses);
+            array_push($root_array['subMenu'], $company, $branches, $employees, $warehouses);
         else 
             array_push($root_array['subMenu'], $company);
 

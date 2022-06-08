@@ -7,6 +7,7 @@
             "company": "Perusahaan",
             "company-company": "Perusahaan",
             "company-branch": "Cabang",
+            "company-employee": "Karyawan",
             "company-warehouse": "Gudang",
             "supplier": "Pemasok",
             "supplier-supplier": "Pemasok",
@@ -352,8 +353,42 @@
                 "remarks": "Keterangan",
                 "status": "Status"
             }
-        }
-        ,
+        },
+        "employee": {
+            "table": {
+                "title": "Daftar Karyawan",
+                "cols": {
+                    "company": "Persusahaan",
+                    "code": "Kode",
+                    "name": "Nama",
+                    "email": "Email",
+                    "join_date": "Join Date",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Karyawan",
+                "edit": "Ubah Karyawan",
+                "show": "Tampilkan Karyawan",
+                "delete": "Hapus Karyawan"
+            },
+            "fields": {
+                "company_id": "Nama Perusahaan",
+                "code": "Kode",
+                "name": "Nama",
+                "email": "Email",
+                "img_path": "Gambar",
+                "address": "Alamat",
+                "city": "Kota",
+                "postal_code": "Kode Pos",
+                "country": "Negara",
+                "tax_id": "Nomor Pajak",
+                "ic_num": "Nomor KTP",
+                "status": "Status",
+                "join_date": "Tanggal Bergabung",
+                "remarks": "Keterangan"
+            }
+        },
         "warehouse": {
             "table": {
                 "title": " Daftar Gudang",
@@ -383,8 +418,7 @@
                 "remarks": "Keterangan",
                 "status": "Status"
             }
-        }
-        ,
+        },
         "purchase_order": {
             "tabs": {
                 "purchase_order": "Pembelian",

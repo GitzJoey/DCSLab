@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
+use App\Enums\ActiveStatus;
+use Spatie\Activitylog\LogOptions;
+use Vinkla\Hashids\Facades\Hashids;
+
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Company;
-
-use Spatie\Activitylog\LogOptions;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Employee extends Model
 {
@@ -39,11 +41,15 @@ class Employee extends Model
 
     ];
 
-    protected $appends = ['hId'];
+    protected $casts = [
+        'status' => ActiveStatus::class
+    ];
 
-    public function getHIdAttribute() : string
+    public function hId() : Attribute
     {
-        return HashIds::encode($this->attributes['id']);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['id'])
+        );
     }
 
     public function company()
