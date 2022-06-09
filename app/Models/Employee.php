@@ -37,9 +37,7 @@ class Employee extends Model
 
     protected static $logOnlyDirty = true;
 
-    protected $hidden = [
-
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'status' => ActiveStatus::class
