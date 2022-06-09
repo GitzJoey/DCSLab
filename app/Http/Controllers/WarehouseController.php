@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Services\WarehouseService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\WarehouseRequest;
 use App\Http\Resources\WarehouseResource;
 
