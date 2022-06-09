@@ -107,6 +107,12 @@ class CompanyRequest extends FormRequest
                 ]);
                 break;
             case 'store':
+                $this->merge([
+                    'address' => $this->has('address') ? $this['address'] : null,
+                    'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
+                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                ]);
+                break;
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
