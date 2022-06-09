@@ -197,7 +197,7 @@
                             <label for="inputCountry" class="form-label">{{ t('views.employee.fields.country') }}</label>
                             <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-danger': errors['country']}" v-model="employee.user.profile.country" rules="required" :placeholder="t('views.employee.fields.country')" :label="t('views.employee.fields.country')" @blur="reValidate(errors)">
                                 <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in countriesDDL" :key="c.name" :value="c.code">{{ c.name }}</option>
+                                <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
                             </VeeField>
                             <ErrorMessage name="country" class="text-danger" />
                         </div>
