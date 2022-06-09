@@ -107,9 +107,6 @@ class CompanyRequest extends FormRequest
                 ]);
                 break;
             case 'store':
-                $this->merge([
-                    'address' => $this->has('address') ? (!empty($this->address) ? $this->address : null) : null
-                ]);          
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',

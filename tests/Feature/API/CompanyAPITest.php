@@ -190,7 +190,7 @@ class CompanyAPITest extends APITestCase
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = null;
+        $address = '';
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
         $userId = $this->developer->id;
