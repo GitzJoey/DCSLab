@@ -104,18 +104,14 @@ class BranchController extends BaseController
         }
 
         $name = $request['name'];
-        $address = $request['address'] == '' ? null : $request['address'];
-        $city = $request['city'] == '' ? null : $request['city'];
-        $contact = $request['contact'] == '' ? null : $request['contact'];
+        $address = $request['address'];
+        $city = $request['city'];
+        $contact = $request['contact'];
 
-        if (array_key_exists('is_main', $request) && $request['is_main']) {
-            $this->branchService->resetMainBranch($company_id);
-            $is_main = true;
-        } else {
-            $is_main = false;
-        };
+        $is_main = $request['is_main'];
+        if ($is_main) $this->branchService->resetMainBranch($company_id);
 
-        $remarks = $request['remarks'] == '' ? null : $request['remarks'];
+        $remarks = $request['remarks'];
         $status = $request['status'];
 
         $result = $this->branchService->create(
@@ -153,18 +149,14 @@ class BranchController extends BaseController
         }
 
         $name = $request['name'];
-        $address = $request['address'] == '' ? null : $request['address'];
-        $city = $request['city'] == '' ? null : $request['city'];
-        $contact = $request['contact'] == '' ? null : $request['contact'];
+        $address = $request['address'];
+        $city = $request['city'];
+        $contact = $request['contact'];
 
-        if ($request['is_main'] == true) {
-            $this->branchService->resetMainBranch($company_id);
-            $is_main = true;
-        } else {
-            $is_main = false;
-        };
+        $is_main = $request['is_main'];
+        if ($is_main) $this->branchService->resetMainBranch($company_id);
 
-        $remarks = $request['remarks'] == '' ? null : $request['remarks'];
+        $remarks = $request['remarks'];
         $status = $request['status'];
 
         $branch = $this->branchService->update(

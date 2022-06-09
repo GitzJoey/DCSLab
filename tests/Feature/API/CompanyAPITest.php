@@ -66,7 +66,7 @@ class CompanyAPITest extends APITestCase
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = null;
+        $address = '';
         $default = 0;
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
         $userId = $this->developer->id;
@@ -107,7 +107,7 @@ class CompanyAPITest extends APITestCase
             'userId' => $userId
         ]);
 
-        $api->assertStatus(422);       
+        $api->assertStatus(422);  
         $api->assertJsonStructure([
             'errors'
         ]);
@@ -208,7 +208,7 @@ class CompanyAPITest extends APITestCase
 
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
-        $newAddress = null;
+        $newAddress = '';
         $newDefault = 0;
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
@@ -339,7 +339,7 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = 10;
-        $refresh = null;
+        $refresh = $this->faker->boolean();
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -371,7 +371,7 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = 10;
-        $refresh = null;
+        $refresh = $this->faker->boolean();
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -403,7 +403,7 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = -10;
-        $refresh = null;
+        $refresh = $this->faker->boolean();
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -436,7 +436,7 @@ class CompanyAPITest extends APITestCase
         $paginate = null;
         $page = 1;
         $perPage = 10;
-        $refresh = null;
+        $refresh = $this->faker->boolean();
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -460,7 +460,7 @@ class CompanyAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_read_when_user_doesnt_have_companies_with_empty_search()
+    public function test_api_call_read_when_user_doesnt_have_roles()
     {
         $user = new User();
         $user->name = 'testing';
@@ -476,7 +476,7 @@ class CompanyAPITest extends APITestCase
         $paginate = 1;
         $page = 1;
         $perPage = 10;
-        $refresh = null;
+        $refresh = $this->faker->boolean();
 
         $api = $this->getJson(route('api.get.db.company.company.read', [
             'userId' => $userId,
@@ -487,132 +487,6 @@ class CompanyAPITest extends APITestCase
             'refresh' => $refresh
         ]));
 
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
-    public function test_api_call_read_when_user_doesnt_have_companies_with_special_char_in_search()
-    {
-        $user = new User();
-        $user->name = 'testing';
-        $user->email = $this->faker->email;
-        $user->password = Hash::make("abcde12345");
-        $user->password_changed_at = Carbon::now();
-        $user->save();
-
-        $this->actingAs($user);
-
-        $userId = $user->id;
-        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-        $paginate = 1;
-        $page = 1;
-        $perPage = 10;
-        $refresh = null;
-
-        $api = $this->getJson(route('api.get.db.company.company.read', [
-            'userId' => $userId,
-            'search' => $search,
-            'paginate' => $paginate,
-            'page' => $page,
-            'perPage' => $perPage,
-            'refresh' => $refresh            
-        ]));
-
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
-    public function test_api_call_read_when_user_doesnt_have_companies_with_negative_value_in_perpage_param()
-    {
-        $user = new User();
-        $user->name = 'testing';
-        $user->email = $this->faker->email;
-        $user->password = Hash::make("abcde12345");
-        $user->password_changed_at = Carbon::now();
-        $user->save();
-
-        $this->actingAs($user);
-
-        $userId = $user->id;
-        $search = '';
-        $paginate = 1;
-        $page = 1;
-        $perPage = -10;
-        $refresh = null;
-
-        $api = $this->getJson(route('api.get.db.company.company.read', [
-            'userId' => $userId,
-            'search' => $search,
-            'paginate' => $paginate,
-            'page' => $page,
-            'perPage' => $perPage,
-            'refresh' => $refresh
-        ]));
-
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
-    public function test_api_call_read_when_user_doesnt_have_companies_without_pagination()
-    {
-        $user = new User();
-        $user->name = 'testing';
-        $user->email = $this->faker->email;
-        $user->password = Hash::make("abcde12345");
-        $user->password_changed_at = Carbon::now();
-        $user->save();
-
-        $this->actingAs($user);
-
-        $userId = $user->id;
-        $search = '';
-        $paginate = null;
-        $page = 1;
-        $perPage = 10;
-        $refresh = null;
-
-        $api = $this->getJson(route('api.get.db.company.company.read', [
-            'userId' => $userId,
-            'search' => $search,
-            'paginate' => $paginate,
-            'page' => $page,
-            'perPage' => $perPage,
-            'refresh' => $refresh
-        ]));
-
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
+        $api->assertStatus(403);
     }
 }

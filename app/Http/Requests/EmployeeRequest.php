@@ -24,7 +24,7 @@ class EmployeeRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if (empty($user->roles)) return false;
+        if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 

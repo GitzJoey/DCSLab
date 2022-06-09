@@ -26,7 +26,7 @@ class CompanyRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if (empty($user->roles)) return false;
+        if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
@@ -116,6 +116,7 @@ class CompanyRequest extends FormRequest
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+                    'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
                     'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
                 ]);
