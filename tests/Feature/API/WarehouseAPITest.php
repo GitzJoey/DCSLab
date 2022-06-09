@@ -87,10 +87,10 @@ class WarehouseAPITest extends APITestCase
 
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = null;
-        $city = null;
-        $contact = null;
-        $remarks = null;
+        $address = '';
+        $city = '';
+        $contact = '';
+        $remarks = '';
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api = $this->json('POST', route('api.post.db.company.warehouse.save'), [

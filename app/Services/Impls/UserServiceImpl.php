@@ -79,7 +79,7 @@ class UserServiceImpl implements UserService
             $usr->email = $email;
 
             if (empty($password)) {
-                $usr->password = (new RandomGenerator())->generateAlphaNumeric(5);
+                $usr->password = Hash::make((new RandomGenerator())->generateAlphaNumeric(5));
                 $usr->password_changed_at = null;
             } else {
                 $usr->password = Hash::make($password);

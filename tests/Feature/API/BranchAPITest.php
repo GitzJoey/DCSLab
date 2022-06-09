@@ -61,6 +61,13 @@ class BranchAPITest extends APITestCase
             'status' => $status
         ]);
 
+        $branch = Branch::where([
+            ['company_id', '=', $companyId],
+            ['code', '=', $code]
+        ])->first();
+        $is_main = $branch->is_main;
+        $status = $branch->status->name;
+
         $api->assertSuccessful();
         $this->assertDatabaseHas('branches', [
             'company_id' => $companyId,
@@ -71,7 +78,54 @@ class BranchAPITest extends APITestCase
             'contact' => $contact,
             'is_main' => $is_main,
             'remarks' => $remarks,
-            'status' => ActiveStatus::fromName($status)
+            'status' => ActiveStatus::fromName($status)->value
+        ]);
+    }
+
+    public function test_api_call_save_without_is_main()
+    {
+        $this->actingAs($this->developer);
+
+        $companyId = $this->developer->companies->random(1)->first()->id;
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
+        $remarks = $this->faker->sentence();
+        $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+
+        $api = $this->json('POST', route('api.post.db.company.branch.save'), [
+            'company_id' => Hashids::encode($companyId),
+            'code' => $code, 
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            // 'is_main' => $is_main,
+            'remarks' => $remarks,
+            'status' => $status
+        ]);
+
+        $branch = Branch::where([
+            ['company_id', '=', $companyId],
+            ['code', '=', $code]
+        ])->first();
+        $is_main = $branch->is_main;
+        $status = $branch->status->name;
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('branches', [
+            'company_id' => $companyId,
+            'code' => $code, 
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'is_main' => $is_main,
+            'remarks' => $remarks,
+            'status' => ActiveStatus::fromName($status)->value
         ]);
     }
 
@@ -82,11 +136,11 @@ class BranchAPITest extends APITestCase
         $companyId = $this->developer->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $address = null;
-        $city = null;
-        $contact = null;
+        $address = '';
+        $city = '';
+        $contact = '';
         $is_main = (new RandomGenerator())->generateNumber(0, 1);
-        $remarks = null;
+        $remarks = '';
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), [
@@ -101,6 +155,13 @@ class BranchAPITest extends APITestCase
             'status' => $status
         ]);
 
+        $branch = Branch::where([
+            ['company_id', '=', $companyId],
+            ['code', '=', $code]
+        ])->first();
+        $is_main = $branch->is_main;
+        $status = $branch->status->name;
+
         $api->assertSuccessful();
         $this->assertDatabaseHas('branches', [
             'company_id' => $companyId,
@@ -111,7 +172,7 @@ class BranchAPITest extends APITestCase
             'contact' => $contact,
             'is_main' => $is_main,
             'remarks' => $remarks,
-            'status' => ActiveStatus::fromName($status)
+            'status' => ActiveStatus::fromName($status)->value
         ]);
     }
 
@@ -119,10 +180,31 @@ class BranchAPITest extends APITestCase
     {
         $this->actingAs($this->developer);
 
-        $companyId = $this->developer->companies->random(1)->first()->id;
-
-        $branch = Branch::whereCompanyId($companyId)->inRandomOrder()->first();
+        $companyId = $this->developer->companies()->whereHas('branches')->inRandomOrder()->first()->id;
         
+        $branch = Branch::whereCompanyId($companyId)->inRandomOrder()->first();
+
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
+        $remarks = $this->faker->sentence();
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+
+        Branch::create([
+            'company_id' => $companyId,
+            'code' => $code, 
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'is_main' => $is_main,
+            'remarks' => $remarks,
+            'status' => $status
+        ]);
+
         $other_branch = Branch::whereCompanyId($companyId)->where('id', '!=', $branch->id)->first();
         if (!$other_branch)
             $this->markTestSkipped('There\'s no other branches');
@@ -319,11 +401,11 @@ class BranchAPITest extends APITestCase
         $branchId = $branch->id;
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
-        $newAddress = null;
-        $newCity = null;
-        $newContact = null;
+        $newAddress = '';
+        $newCity = '';
+        $newContact = '';
         $NewIsMain = (new RandomGenerator())->generateNumber(0, 1);
-        $newRemarks = null;
+        $newRemarks = '';
         $newStatus = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.branch.edit', [ 'id' => Hashids::encode($branchId) ]), [
@@ -361,9 +443,32 @@ class BranchAPITest extends APITestCase
         if (!$company)
             $this->markTestSkipped('No suitable company found');
 
+        $companyId = $company->id;
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $city = $this->faker->city;
+        $contact = $this->faker->e164PhoneNumber;
+        $is_main = (new RandomGenerator())->generateNumber(0, 1);
+        $remarks = $this->faker->sentence();
+        $status = (new RandomGenerator())->generateNumber(0, 1);
+
+        Branch::create([
+            'company_id' => $companyId,
+            'code' => $code, 
+            'name' => $name,
+            'address' => $address,
+            'city' => $city,
+            'contact' => $contact,
+            'is_main' => $is_main,
+            'remarks' => $remarks,
+            'status' => $status
+        ]);
+
         $twoBranches = Branch::whereCompanyId($company->id)->inRandomOrder()->take(2)->get();
-        if (count($twoBranches) != 2)
-            $this->markTestSkipped('Not enough Branch for testing');
+        if (count($twoBranches) != 2) {
+            $this->markTestSkipped('Not enough Branch for testing');  
+        }
 
         $companyId = Hashids::encode($company->id);
         $code = $twoBranches[1]->code;
@@ -372,7 +477,7 @@ class BranchAPITest extends APITestCase
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
         $is_main = (new RandomGenerator())->generateNumber(0, 1);
-        $remarks = null;
+        $remarks = '';
         $status = $this->faker->randomElement(ActiveStatus::toArrayName());
 
         $api_edit = $this->json('POST', route('api.post.db.company.branch.edit', [ 'id' => Hashids::encode($twoBranches[0]->id) ]), [
@@ -393,11 +498,12 @@ class BranchAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_delete()
+    public function test_api_call_delete_non_main_branch()
     {
         $this->actingAs($this->developer);
 
-        $branch = Branch::inRandomOrder()->first();
+        $companyIds = $this->developer->companies->pluck('id');
+        $branch = Branch::whereIn('company_id', $companyIds)->where('is_main', '=', 0)->inRandomOrder()->first();
         if (!$branch)
             $this->markTestSkipped('Branches with company not found');
 
@@ -409,6 +515,22 @@ class BranchAPITest extends APITestCase
         $this->assertSoftDeleted('branches', [
             'id' => $branch->id
         ]);
+    }
+
+    public function test_api_call_delete_main_branch()
+    {
+        $this->actingAs($this->developer);
+
+        $companyIds = $this->developer->companies->pluck('id');
+        $branch = Branch::whereIn('company_id', $companyIds)->where('is_main', '=', 1)->inRandomOrder()->first();
+        if (!$branch)
+            $this->markTestSkipped('Branches with company not found');
+
+        $hId = Hashids::encode($branch->id);
+
+        $api = $this->json('POST', route('api.post.db.company.branch.delete', $hId));
+
+        $api->assertStatus(500);
     }
 
     public function test_api_call_delete_nonexistance_id()
@@ -429,13 +551,17 @@ class BranchAPITest extends APITestCase
         $companyId = $company->id;
         $search = '';
         $paginate = 1;
+        $page = 1;
         $perPage = 10;
+        $refresh = '';
 
         $api = $this->getJson(route('api.get.db.company.branch.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
             'paginate' => $paginate,
-            'perPage' => $perPage
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
@@ -459,13 +585,17 @@ class BranchAPITest extends APITestCase
         $companyId = $company->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = 1;
+        $page = 1;
         $perPage = 10;
+        $refresh = '';
 
         $api = $this->getJson(route('api.get.db.company.branch.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
             'paginate' => $paginate,
-            'perPage' => $perPage
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
@@ -489,13 +619,17 @@ class BranchAPITest extends APITestCase
         $companyId = $company->id;
         $search = "";
         $paginate = 1;
+        $page = 1;
         $perPage = -10;
+        $refresh = '';
 
         $api = $this->getJson(route('api.get.db.company.branch.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
             'paginate' => $paginate,
-            'perPage' => $perPage
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
@@ -518,12 +652,16 @@ class BranchAPITest extends APITestCase
 
         $companyId = $company->id;
         $search = "";
+        $page = 1;
         $perPage = 10;
+        $refresh = '';
 
         $api = $this->getJson(route('api.get.db.company.branch.read', [
             'companyId' => Hashids::encode($companyId),
             'search' => $search,
-            'perPage' => $perPage
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();

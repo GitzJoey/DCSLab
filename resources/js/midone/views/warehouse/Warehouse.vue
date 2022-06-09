@@ -6,27 +6,23 @@
                 <table class="table table-report -mt-2">
                     <thead>
                         <tr>
-                            <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.company') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.branch') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.remarks') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.status') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.warehouse.table.cols.remarks') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
-                                <td>{{ item.company.name }}</td>
-                                <td>{{ item.branch.name }}</td>
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
-                                <td>{{ item.remarks }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
                                     <XIcon v-if="item.status === 'INACTIVE'" />
                                 </td>
+                                <td>{{ item.remarks }}</td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
                                         <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.view')" @click.prevent="showSelected(itemIdx)">
@@ -60,15 +56,15 @@
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.warehouse.fields.remarks') }}</div>
-                                        <div class="flex-1">{{ item.remarks }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.warehouse.fields.status') }}</div>
                                         <div class="flex-1">
                                             <span v-if="item.status === 'ACTIVE'">{{ t('components.dropdown.values.statusDDL.active') }}</span>
                                             <span v-if="item.status === 'INACTIVE'">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
                                         </div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.warehouse.fields.remarks') }}</div>
+                                        <div class="flex-1">{{ item.remarks }}</div>
                                     </div>
                                 </td>
                             </tr>
