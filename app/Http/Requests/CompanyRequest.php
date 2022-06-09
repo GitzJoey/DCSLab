@@ -103,10 +103,13 @@ class CompanyRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'read':
                 $this->merge([
-                    'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
+                    'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true
                 ]);
                 break;
             case 'store':
+                $this->merge([
+                    'address' => $this->has('address') ? (!empty($this->address) ? $this->address : null) : null
+                ]);          
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',

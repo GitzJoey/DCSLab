@@ -94,15 +94,11 @@ class CompanyController extends BaseController
                 ], 422);
             }
         }
-
-        if (array_key_exists('address', $request)) {
-            $address = $request['address'] == '' ? '' : null;
-        };
         
         $result = $this->companyService->create(
             $code,
             $request['name'],
-            $address,
+            $request['address'],
             $default,
             $request['status'],
             $userId
@@ -136,15 +132,11 @@ class CompanyController extends BaseController
             }
         }
 
-        if (array_key_exists('address', $request)) {
-            $address = $request['address'] == '' ? '' : null;
-        };
-
         $result = $this->companyService->update(
             $id,
             $code,
             $request['name'],
-            $address,
+            $request['address'],
             $default,
             $request['status']
         );
