@@ -15,6 +15,7 @@ class EmployeeAccessesTable extends Migration
     {
         Schema::create('employee_accesses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('employee_id')->references('id')->on('employees');
             $table->foreignId('branch_id')->references('id')->on('branches');
 
@@ -24,7 +25,7 @@ class EmployeeAccessesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['employee_id', 'branch_id', 'created_at']);
+            $table->index(['company_id', 'employee_id', 'branch_id', 'created_at']);
         });
     }
 
