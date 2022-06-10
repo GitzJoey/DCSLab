@@ -535,8 +535,8 @@ const backToList = () => {
     mode.value = 'list';
     getAllEmployees({
         paginate : 1,
-        page: employeeList.value.current_page,
-        pageSize: employeeList.value.per_page 
+        page: employeeList.value.meta.current_page,
+        pageSize: employeeList.value.meta.per_page 
     });
 }
 

@@ -459,7 +459,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllBranches({ page: branchList.value.current_page, pageSize: branchList.value.per_page });
+    getAllBranches({ page: branchList.value.meta.current_page, pageSize: branchList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {

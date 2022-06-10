@@ -440,7 +440,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllWarehouse({ page: warehouseList.value.current_page, pageSize: warehouseList.value.per_page });
+    getAllWarehouse({ page: warehouseList.value.meta.current_page, pageSize: warehouseList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {
