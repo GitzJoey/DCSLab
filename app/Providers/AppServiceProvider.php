@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Services\RoleService;
 use App\Services\UnitService;
-
 use App\Services\UserService;
 use App\Services\BrandService;
 use App\Services\InboxService;
@@ -19,12 +18,11 @@ use App\Services\DashboardService;
 use App\Services\WarehouseService;
 use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
-use App\Services\Impls\RoleServiceImpl;
-use App\Services\Impls\UnitServiceImpl;
 #endregion
 
 use App\Services\Impls\UserServiceImpl;
-use Illuminate\Support\ServiceProvider;
+use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\BrandServiceImpl;
 use App\Services\Impls\InboxServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
@@ -38,8 +36,11 @@ use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
 use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
-use Illuminate\Http\Resources\Json\JsonResource;
 #endregion
+
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Dusk\DuskServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -50,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        if ($this->app->environment('local', 'testing')) {
+            $this->app->register(DuskServiceProvider::class);
+        }
+
         $this->app->singleton(SystemService::class, function (){
             return new SystemServiceImpl();
         });

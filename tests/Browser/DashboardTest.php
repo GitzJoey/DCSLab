@@ -18,7 +18,7 @@ class DashboardTest extends DuskTestCase
         $loggedInUser = $this->developer;
 
         $this->browse(function (Browser $browser) use($loggedInUser) {
-            $browser->loginAs($loggedInUser, 'web')
+            $browser->loginAs($loggedInUser)
                     ->visit('/dashboard')
                     ->waitForLocation('/dashboard')
                     ->assertSee('Main Dashboard');
