@@ -2,14 +2,42 @@
 
 namespace Tests;
 
+use App\Enums\UserRoles;
+use App\Models\User;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\UserTableSeeder;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 use Laravel\Dusk\TestCase as BaseTestCase;
 
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
+
+    protected function setUp(): void
+    {
+        Parent::setUp();
+
+        Artisan::call('db:wipe');
+
+        if (!Schema::hasTable('users')) {
+            Artisan::call('db:wipe');
+            Artisan::call('migrate', ['--seed' => true]);
+            
+            $seed_user = new UserTableSeeder();
+            $seed_user->callWith(UserTableSeeder::class, [false, 1]);
+            $seed_user->callWith(UserTableSeeder::class, [false, 1, UserRoles::DEVELOPER]);
+
+            $seed_company = new CompanyTableSeeder();
+            $seed_company->callWith(CompanyTableSeeder::class, [2]);
+        }
+
+        $this->user = User::whereRelation('roles', 'name', '=', UserRoles::USER->value)->whereHas('companies')->inRandomOrder()->first();
+        $this->developer = User::whereRelation('roles', 'name', '=', UserRoles::DEVELOPER->value)->first();
+    }
 
     /**
      * Prepare for Dusk test execution.
