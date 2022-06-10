@@ -613,7 +613,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllProducts({ page: productList.value.current_page, pageSize: productList.value.per_page });
+    getAllProducts({ page: productList.value.meta.current_page, pageSize: productList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {

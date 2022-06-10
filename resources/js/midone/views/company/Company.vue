@@ -359,7 +359,7 @@ const backToList = () => {
         userContextStore.fetchUserContext();
     }
 
-    getAllCompany({ page: companyList.value.current_page, pageSize: companyList.value.per_page });
+    getAllCompany({ page: companyList.value.meta.current_page, pageSize: companyList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {

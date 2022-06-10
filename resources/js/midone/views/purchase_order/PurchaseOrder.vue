@@ -337,7 +337,7 @@ const resetAlertErrors = () => {
 const backToList = () => {
     resetAlertErrors();
     mode.value = 'list';
-    getAllPO({ page: poList.value.current_page, pageSize: poList.value.per_page });
+    getAllPO({ page: poList.value.meta.current_page, pageSize: poList.value.meta.per_page });
 }
 
 const getDDL = () => {
