@@ -17,13 +17,14 @@ class EmployeeAccessesTable extends Migration
             $table->id();
             $table->foreignId('employee_id')->references('id')->on('employees');
             $table->foreignId('branch_id')->references('id')->on('branches');
+
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['employee_id', 'branch_id']);
+            $table->index(['employee_id', 'branch_id', 'created_at']);
         });
     }
 
