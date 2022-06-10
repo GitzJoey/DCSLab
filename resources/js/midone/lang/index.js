@@ -1,6 +1,7 @@
 import { createI18n } from "vue-i18n"
 import * as en from "./en.json"
 import * as id from "./id.json"
+import { setLocale } from "@vee-validate/i18n";
 
 let language = document.documentElement.lang;
 
@@ -18,6 +19,8 @@ export function switchLang(lang) {
     i18n.global.locale.value = lang;
     document.documentElement.setAttribute('lang', lang);
     localStorage.setItem('DCSLAB_LANG', lang);
+
+    setLocale(lang);
 }
 
 export function getLang() {
