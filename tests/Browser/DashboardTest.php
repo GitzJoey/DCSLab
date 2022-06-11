@@ -4,6 +4,7 @@ namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
+use Tests\Browser\Pages\DashboardPage;
 use Tests\DuskTestCase;
 
 class DashboardTest extends DuskTestCase
@@ -19,8 +20,7 @@ class DashboardTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use($loggedInUser) {
             $browser->loginAs($loggedInUser)
-                    ->visit('/dashboard')
-                    ->waitForLocation('/dashboard')
+                    ->visit(new DashboardPage)
                     ->assertSee('Main Dashboard');
         });
     }
