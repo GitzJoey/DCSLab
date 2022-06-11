@@ -21,7 +21,11 @@ class DashboardTest extends DuskTestCase
         $this->browse(function (Browser $browser) use($loggedInUser) {
             $browser->loginAs($loggedInUser)
                     ->visit(new DashboardPage)
-                    ->assertSee('Main Dashboard');
+                    ->click('@side-menu-company')
+                    ->waitFor('@side-menu-company-company')
+                    ->click('@side-menu-company-company')
+                    ->screenshot('test')
+                    ->assertSee('Company Lists');
         });
     }
 }
