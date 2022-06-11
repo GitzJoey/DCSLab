@@ -60,6 +60,11 @@ class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function employeeAccesses()
+    {
+        return $this->hasMany(EmployeeAccess::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
