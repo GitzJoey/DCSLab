@@ -1,4 +1,8 @@
 # Change Logs
+  * **v0.4.0 (2022-06-12)**
+    * Framework is ready for production
+    * Include Laravel Dusk and ViTest
+
   * **v0.3 (2022-04-02)**
     * Upgrade the code to be compatible with PHP 8.1
     * Upgrade the code to be compatible with Laravel to 9

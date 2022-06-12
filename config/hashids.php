@@ -38,7 +38,7 @@ return [
     'connections' => [
 
         'main' => [
-            'salt' => '@PqgMPN$kX!7FPqxFbFA^*BExR#SospprRF@VQLJs*xJ99FeP#',
+            'salt' => env('APP_KEY'),
             'length' => '12',
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
