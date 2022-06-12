@@ -129,7 +129,21 @@
         </div>
         <div class="loader-container">
             <VeeForm id="employeeForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
-                <div class="p-5">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li id="tab-employee" class="nav-item flex-1" role="presentation">
+                        <button class="nav-link w-full py-2 active" data-tw-toggle="pill" data-tw-target="#tab-employee-content" type="button" role="tab" aria-controls="tab-employee-content" aria-selected="true">
+                            <span :class="{'text-danger':errors['code']||errors['name']|errors['email']|errors['country']|errors['tax_id']|errors['ic_num']}">{{ t('views.employee.tabs.employee') }}</span>
+                        </button>
+                    </li>
+                    <li id="tab-access" class="nav-item flex-1" role="presentation">
+                        <button class="nav-link w-full py-2" data-tw-toggle="pill" data-tw-target="#tab-access-content" type="button" role="tab" aria-controls="tab-access-content" aria-selected="false">
+                            {{ t('views.employee.tabs.access') }}
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content border-l border-r border-b">
+                    <div id="tab-employee-content" class="tab-pane leading-relaxed p-5 active" role="tabpanel" aria-labelledby="tab-employee">
                     <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.employee.fields.code') }}</label>
@@ -246,8 +260,39 @@
                             <ErrorMessage name="status" class="text-danger" />
                         </div>
                     <!-- #endregion -->
+                    </div>
+                    <div id="tab-access-content" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="tab-access">
+                        <div class="mb-3">
+                            <label for="inputAccessLists" class="form-label">{{ t('views.employee.fields.access.access_lists') }}</label>                            
+                            <table class="table table--sm">
+                                <thead>
+                                    <tr>
+                                        <th>{{ t('views.employee.fields.access.table.cols.selected') }}</th>
+                                        <th>{{ t('views.employee.fields.access.table.cols.company') }}</th>
+                                        <th>{{ t('views.employee.fields.access.table.cols.branch') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(p, pIdx) in accessLists">
+                                        <td class="border-b dark:border-dark-5">
+                                            <div class="form-switch">
+                                                <input :id="'inputAccess_' + p.hId" type="checkbox" name="accessIds[]" v-model="employee.selected_accesses" :value="p.hId" class="form-check-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{ p.company.name }}
+                                        </td>
+                                        <td>
+                                            {{ p.name }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
+
+                <div class="mt-8" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
@@ -317,6 +362,16 @@ const employee = ref({
             status: 'ACTIVE',
         }
     },
+    employeeAccesses: [
+        {
+            hId: '',
+            branch: {
+                hId: '',
+                name: ''
+            }
+        }
+    ],
+    selected_accesses: [],
     code: '',
     join_date: '',
     status: 'ACTIVE',
@@ -324,6 +379,7 @@ const employee = ref({
 const companyDDL = ref([]);
 const countriesDDL = ref([]);
 const statusDDL = ref([]);
+const accessLists = ref([]);
 //#endregion
 
 //#region onMounted
@@ -395,6 +451,14 @@ const getDDL = () => {
 const getDDLSync = () => {
     axios.get(route('api.get.db.company.company.read.all_active')).then(response => {
         companyDDL.value = response.data;
+    });
+
+    axios.get(route('api.get.db.company.branch.read', {
+        "companyId": selectedUserCompany.value, 
+        "paginate": false,
+        "search": ''
+    })).then(response => {
+        accessLists.value = response.data;
     });
 }
 
@@ -475,6 +539,16 @@ const emptyEmployee = () => {
                 status: 'ACTIVE',
             }
         },
+        employeeAccesses: [
+            {
+                hId: '',
+                branch: {
+                    hId: '',
+                    name: ''
+                }
+            }
+        ],
+        selected_accesses: [],
         code: '[AUTO]',
         join_date: '',
         status: 'ACTIVE'
@@ -586,6 +660,17 @@ watch(selectedUserCompany, () => {
         getAllEmployees({ page: 1 });
         getDDLSync();
     }
+});
+
+watch(computed(() => employee.value.employeeAccesses), () => {
+    // if (employee.value.employee.length != 0) {
+    //     _.forEach(employee.value.employeeAccesses, function(val) {
+    //         if (_.findIndex(employee.value.selected_accesses, (item) => { return item === val }) === -1) {
+    //             employee.value.selected_accesses.push(val);
+    //         }
+    //     });
+    // }
+    console.log(employee.value);
 });
 
 watch(employee, (newV) => {
