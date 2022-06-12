@@ -256,7 +256,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-5" v-if="mode === 'create' || mode === 'edit'">
+                <div class="mt-8" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
                     <button type="button" class="btn btn-secondary" @click="handleReset(); resetAlertErrors()">{{ t('components.buttons.reset') }}</button>
                 </div>
