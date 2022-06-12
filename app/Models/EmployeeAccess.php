@@ -39,20 +39,6 @@ class EmployeeAccess extends Model
             get: fn () => HashIds::encode($this->attributes['id'])
         );
     }
-    
-    public function employee_hId() : Attribute
-    {
-        return Attribute::make(
-            get: fn () => HashIds::encode($this->attributes['employee_id'])
-        );
-    }
-
-    public function branch_hId() : Attribute
-    {
-        return Attribute::make(
-            get: fn () => HashIds::encode($this->attributes['branch_id'])
-        );
-    }
 
     public function employee()
     {
