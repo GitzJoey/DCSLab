@@ -355,6 +355,10 @@
             }
         },
         "employee": {
+            "tabs": {
+                "employee": "Karyawan",
+                "access": "Akses"
+            },
             "table": {
                 "title": "Daftar Karyawan",
                 "cols": {
@@ -386,7 +390,17 @@
                 "ic_num": "Nomor KTP",
                 "status": "Status",
                 "join_date": "Tanggal Bergabung",
-                "remarks": "Keterangan"
+                "remarks": "Keterangan",
+                "access": {
+                    "access_lists": "Daftar Akses",
+                    "table": {
+                        "cols": {
+                            "selected": "Terpilih",
+                            "company": "Perusahaan",
+                            "branch": "Cabang"
+                        }
+                    }
+                }
             }
         },
         "warehouse": {

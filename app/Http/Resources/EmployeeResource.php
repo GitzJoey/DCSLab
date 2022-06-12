@@ -17,10 +17,13 @@ class EmployeeResource extends JsonResource
         return [
             'hId' => $this->hId,
             $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company')),
+                'company' => new CompanyResource($this->whenLoaded('company'))
             ]),
             $this->mergeWhen($this->relationLoaded('user'), [
-                'user' => new UserResource($this->whenLoaded('user')),
+                'user' => new UserResource($this->whenLoaded('user'))
+            ]),
+            $this->mergeWhen($this->relationLoaded('employeeAccesses'), [
+                'employeeAccesses' => EmployeeAccessResource::collection($this->whenLoaded('employeeAccesses'))
             ]),
             'code' => $this->code,
             'join_date' => $this->join_date,

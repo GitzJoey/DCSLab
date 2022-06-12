@@ -10,6 +10,7 @@ use App\Models\Employee;
 use App\Traits\CacheHelper;
 use App\Services\UserService;
 use App\Actions\RandomGenerator;
+use App\Models\EmployeeAccess;
 use App\Services\EmployeeService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +41,8 @@ class EmployeeServiceImpl implements EmployeeService
         ?string $img_path = null,
         string $join_date,
         string $remarks,
-        int $status
+        int $status,
+        array $accesses
     ): ?Employee
     {
         DB::beginTransaction();
@@ -93,6 +95,16 @@ class EmployeeServiceImpl implements EmployeeService
 
             $employee->save();
 
+            $newAccesses = [];
+            foreach($accesses as $access) {
+                $newAccess = new EmployeeAccess();
+                $newAccess->employee_id = $employee->id;
+                $newAccess->branch_id = $access['branch_id'];
+
+                array_push($newAccesses, $newAccess);
+            }
+            $employee->employeeAccesses()->saveMany($newAccesses);
+
             DB::commit();
 
             $this->flushCache();
@@ -132,7 +144,7 @@ class EmployeeServiceImpl implements EmployeeService
 
             if (!$companyId) return null;
 
-            $employee = Employee::with('company', 'user.profile')
+            $employee = Employee::with('company', 'user.profile', 'employeeAccesses.branch')
                         ->whereCompanyId($companyId);
     
             if (empty($search)) {
@@ -173,7 +185,8 @@ class EmployeeServiceImpl implements EmployeeService
         ?string $img_path = null,
         ?string $join_date = null,
         string $remarks,
-        int $status
+        int $status,
+        array $accesses
     ): ?Employee
     {
         DB::beginTransaction();
@@ -222,6 +235,21 @@ class EmployeeServiceImpl implements EmployeeService
                 settings: null
             );
 
+            $employee->employeeAccesses()->delete();
+            
+            $newAccesses = [];
+            if (!empty($accesses)) {
+                foreach($accesses as $access) {
+                    $newAccess = new EmployeeAccess();
+                    $newAccess->employee_id = $employee->id;
+                    $newAccess->branch_id = $access['branch_id'];
+    
+                    array_push($newAccesses, $newAccess);
+                }
+            }
+
+            $employee->employeeAccesses()->saveMany($newAccesses);
+
             DB::commit();
 
             $this->flushCache();
@@ -247,6 +275,8 @@ class EmployeeServiceImpl implements EmployeeService
             $employee = Employee::find($id);
 
             if ($employee) {
+                $employee->employeeAccesses()->delete();
+                
                 $user = User::find($employee->user_id);
                 $user->profile->status = 0;
 
