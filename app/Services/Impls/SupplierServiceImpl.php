@@ -217,19 +217,6 @@ class SupplierServiceImpl implements SupplierService
                 'status' => $status
             ]);
 
-            // $supplier->supplierProducts()->delete();
-
-            // $newSP = [];
-            // if (!empty($products)) {
-            //     $newSPE = new SupplierProduct();
-            //     $newSPE->company_id = $company_id;
-            //     $newSPE->supplier_id =$supplier->id;
-            //     $newSPE->product_id = $products['product_id'];
-            //     $newSPE->product_id = $products['main_product'];
-            
-            //     array_push($newSP, $newSPE); 
-            // }
-
             $supplier->supplierProducts()->delete();
 
             $newSP = [];
