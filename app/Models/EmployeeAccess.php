@@ -2,46 +2,36 @@
 
 namespace App\Models;
 
-use App\Models\Company;
-use App\Enums\ActiveStatus;
+use App\Models\Branch;
+use App\Models\Employee;
 use Spatie\Activitylog\LogOptions;
 use Vinkla\Hashids\Facades\Hashids;
-
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Employee extends Model
+class EmployeeAccess extends Model
 {
-    use HasFactory, LogsActivity;
+    use LogsActivity;
     use SoftDeletes;
 
+    protected $table = 'employee_accesses';
+
     protected $fillable = [
-        'company_id',
-        'code',
-        'join_date',
-        'status'
+        'employee_id',
+        'branch_id'
     ];
 
     protected static $logAttributes = [
-        'company_id',
-        'code',
-        'join_date',
-        'status'
+        'employee_id', 
+        'branch_id'
     ];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [];
-
-    protected $casts = [
-        'status' => ActiveStatus::class
-    ];
 
     public function hId() : Attribute
     {
@@ -50,19 +40,14 @@ class Employee extends Model
         );
     }
 
-    public function company()
+    public function employee()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Employee::class);
     }
 
-    public function user()
+    public function branch()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function employeeAccesses()
-    {
-        return $this->hasMany(EmployeeAccess::class);
+        return $this->belongsTo(Branch::class);
     }
 
     public function getActivitylogOptions(): LogOptions

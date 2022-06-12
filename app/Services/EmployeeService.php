@@ -22,7 +22,8 @@ interface EmployeeService
         ?string $img_path = null,
         string $join_date,
         string $remarks,
-        int $status
+        int $status,
+        array $accesses
     ): ?Employee;
 
     public function read(
@@ -47,7 +48,8 @@ interface EmployeeService
         ?string $img_path = null,
         ?string $join_date = null,
         string $remarks,
-        int $status
+        int $status,
+        array $accesses
     ): ?Employee;
 
     public function delete(int $id): bool;

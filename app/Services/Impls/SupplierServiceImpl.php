@@ -220,14 +220,14 @@ class SupplierServiceImpl implements SupplierService
             $supplier->supplierProducts()->delete();
 
             $newSP = [];
-            if (!empty($products)) {
+            foreach($products as $product) {
                 $newSPE = new SupplierProduct();
                 $newSPE->company_id = $company_id;
                 $newSPE->supplier_id =$supplier->id;
-                $newSPE->product_id = $products['product_id'];
-                $newSPE->product_id = $products['main_product'];
-            
-                array_push($newSP, $newSPE); 
+                $newSPE->product_id = $product['product_id'];
+                $newSPE->main_product = $product['main_product'];
+
+                array_push($newSP, $newSPE);
             }
 
             $supplier->supplierProducts()->saveMany($newSP);
