@@ -93,6 +93,15 @@ class EmployeeController extends BaseController
         $remarks = $request['remarks'];
         $status = $request['status'];
 
+        $accesses = [];
+        if (!empty($request['accessIds'])) {
+            for ($i = 0; $i < count($request['accessIds']); $i++) {
+                array_push($accesses, array(
+                    'branch_id' => Hashids::decode($request['accessIds'][$i])[0]
+                ));
+            }
+        }
+
         $result = $this->employeeService->create(
             company_id: $company_id,
             code: $code, 
@@ -107,7 +116,8 @@ class EmployeeController extends BaseController
             img_path: $img_path,
             join_date: $join_date,
             remarks: $remarks,
-            status: $status
+            status: $status,
+            accesses: $accesses
         );
         return is_null($result) ? response()->error():response()->success();
     }
@@ -153,6 +163,15 @@ class EmployeeController extends BaseController
         $remarks = $request['remarks'];
         $status = $request['status'];
 
+        $accesses = [];
+        if (!empty($request['accessIds'])) {
+            for ($i = 0; $i < count($request['accessIds']); $i++) {
+                array_push($accesses, array(
+                    'branch_id' => Hashids::decode($request['accessIds'][$i])[0]
+                ));
+            }
+        }
+
         $result = $this->employeeService->update(
             id: $id,
             code: $code, 
@@ -166,7 +185,8 @@ class EmployeeController extends BaseController
             img_path: $img_path,
             join_date: null,
             remarks: $remarks,
-            status: $status
+            status: $status,
+            accesses: $accesses
         );
         return is_null($result) ? response()->error():response()->success();
     }
