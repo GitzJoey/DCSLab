@@ -94,10 +94,10 @@ class EmployeeController extends BaseController
         $status = $request['status'];
 
         $accesses = [];
-        if (!empty($request['accessIds'])) {
-            for ($i = 0; $i < count($request['accessIds']); $i++) {
+        if (!empty($request['accessBranchId'])) {
+            for ($i = 0; $i < count($request['accessBranchId']); $i++) {
                 array_push($accesses, array(
-                    'branch_id' => Hashids::decode($request['accessIds'][$i])[0]
+                    'branch_id' => Hashids::decode($request['accessBranchId'][$i])[0]
                 ));
             }
         }
@@ -164,10 +164,10 @@ class EmployeeController extends BaseController
         $status = $request['status'];
 
         $accesses = [];
-        if (!empty($request['accessIds'])) {
-            for ($i = 0; $i < count($request['accessIds']); $i++) {
+        if (!empty($request['accessBranchId'])) {
+            for ($i = 0; $i < count($request['accessBranchId']); $i++) {
                 array_push($accesses, array(
-                    'branch_id' => Hashids::decode($request['accessIds'][$i])[0]
+                    'branch_id' => Hashids::decode($request['accessBranchId'][$i])[0]
                 ));
             }
         }
