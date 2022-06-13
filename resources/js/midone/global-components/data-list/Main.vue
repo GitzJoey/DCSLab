@@ -6,7 +6,7 @@
                 <LoadingIcon icon="puff" />
             </div>
         </div>
-        <div class="grid grid-cols-12 gap-6 mt-5" v-if="!loading">
+        <div class="grid grid-cols-12 gap-6 mt-5" v-if="!loading" :dusk="'data-list-' + title">
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
                 <button class="btn btn-primary shadow-md mr-2 w-20" v-if="enableCreate" @click="$emit('createNew')"><PlusIcon class="w-4 h-4" /></button>
                 <Dropdown v-if="canPrint || canExport">

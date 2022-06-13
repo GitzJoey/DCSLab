@@ -37,16 +37,16 @@
       </a>
     </div>
 
-    <Dropdown id="language-dropdown" class="intro-x mr-auto sm:mr-6">
+    <Dropdown id="language-dropdown" class="intro-x mr-auto sm:mr-6" dusk="language-dropdown-button">
       <DropdownToggle tag="div" role="button" class="cursor-pointer">
         <GlobeIcon class="dark:text-slate-300" />
       </DropdownToggle>
       <DropdownMenu class="w-56">
         <DropdownContent tag="div">
-            <DropdownItem href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+            <DropdownItem href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md" dusk="language-dropdown-item-english">
               <img alt="English" :src="assetPath('us.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'en' }">English</span>
             </DropdownItem>
-            <DropdownItem href="" @click.prevent="switchLanguage('id')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+            <DropdownItem href="" @click.prevent="switchLanguage('id')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md" dusk="language-dropdown-item-indonesia">
               <img alt="Bahasa Indonesia" :src="assetPath('id.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'id' }">Bahasa Indonesia</span>
             </DropdownItem>
         </DropdownContent>
@@ -55,7 +55,7 @@
 
     <LoadingIcon icon="puff" v-if="userContext.name === undefined"/>
 
-    <Dropdown id="main-dropdown" class="intro-x w-8 h-8" v-else>
+    <Dropdown id="main-dropdown" class="intro-x w-8 h-8" dusk="profile-dropdown-button" v-else>
       <DropdownToggle tag="div" role="button" class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in">
         <img alt="" :src="assetPath('profile.png')"/>
       </DropdownToggle>
@@ -66,20 +66,20 @@
             <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">{{ userContext.email }}</div>
           </DropdownHeader>
           <DropdownDivider class="border-white/[0.08]" />
-          <DropdownItem @click="goTo('profile')">
+          <DropdownItem @click="goTo('profile')" dusk="profile-dropdown-item-profile">
             <UserIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.profile') }}
           </DropdownItem>
-          <DropdownItem @click.prevent="goTo('inbox')">
+          <DropdownItem @click.prevent="goTo('inbox')" dusk="profile-dropdown-item-inbox">
             <MailIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.inbox') }}
           </DropdownItem>
-          <DropdownItem @click.prevent="goTo('activity')">
+          <DropdownItem @click.prevent="goTo('activity')" dusk="profile-dropdown-item-activity">
             <ActivityIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.activity') }}
           </DropdownItem>
           <DropdownDivider class="border-white/[0.08]" />
-          <DropdownItem @click.prevent="logout">
+          <DropdownItem @click.prevent="logout" dusk="profile-dropdown-item-logout">
             <ToggleRightIcon class="w-4 h-4 mr-2" />
             {{ t('components.top-bar.profile_ddl.logout') }}
           </DropdownItem>
