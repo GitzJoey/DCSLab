@@ -30,9 +30,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         Logout::class => [
             LogoutEventListener::class,
-        ],
-        RouteMatched::class => [
-            RouteMatchedEventListener::class,
         ]
     ];
 
