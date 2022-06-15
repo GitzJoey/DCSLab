@@ -18,6 +18,14 @@ class ActivityLogController extends BaseController
         $this->activityLogService = $activityLogService;
     }
 
+    public function logRouteActivity(Request $request)
+    {
+        $to = $request->get('to');
+        $params = $request->get('params');
+
+        $this->activityLogService->RoutingActivity($to, $params);
+    }
+
     public function getRouteActivity(Request $request)
     {
         $act = $this->activityLogService->getAuthUserActivities();

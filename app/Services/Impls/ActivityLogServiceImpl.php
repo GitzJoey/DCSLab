@@ -16,20 +16,45 @@ class ActivityLogServiceImpl implements ActivityLogService
 
     public function RoutingActivity(string $routeName, array $routeParameters): void
     {
-        $friendlyName = match ($routeName) {
-            'db' => 'Dashboard',
-            default => ''
-        };
+        switch ($routeName) {
+            case 'side-menu-dashboard-maindashboard':
+                $friendlyName = 'Dashboard';
+                break;
+            case 'side-menu-dashboard-profile':
+                $friendlyName = 'Profile';
+                break;
+            case 'side-menu-dashboard-activity':
+                $friendlyName = 'Activity';
+                break;
+            case 'side-menu-dashboard-inbox':
+                $friendlyName = 'Inbox';
+                break;
+            case 'side-menu-administrator-user':
+                $friendlyName = 'User';
+                break;
+            case 'side-menu-devtool-backup':
+                $friendlyName = 'DB Backup';
+                break;
+            case 'side-menu-devtool-example-ex1':
+                $friendlyName = 'Example 1';
+                break;
+            case 'side-menu-devtool-example-ex2':
+                $friendlyName = 'Example 2';
+                break;
+            default:
+                $friendlyName = $routeName;
+                break;
+        }
 
-        if (empty($friendlyName)) return;
-
-        if (!empty($routeParameters)) {
-            activity('RoutingActivity')
-                ->withProperty('parameters', $routeParameters)
-                ->log('Navigating to '.$friendlyName);
-        } else {
-            activity('RoutingActivity')
-                ->log('Navigating to '.$friendlyName);
+        if (strlen($friendlyName) != 0) {
+            if (!empty($routeParameters)) {
+                activity('RoutingActivity')
+                    ->withProperty('parameters', $routeParameters)
+                    ->log('Navigating to '.$friendlyName);
+            } else {
+                activity('RoutingActivity')
+                    ->log('Navigating to '.$friendlyName);
+            }
         }
     }
 

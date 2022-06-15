@@ -55,6 +55,13 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach((to, from) => {
+    if (to.matched.some(r => r.meta.log_route)) {
+        axios.post('/api/post/dashboard/core/activity/log/route', {
+            to: to.name,
+            params: to.params
+        }).catch(e => { });    
+    }
+
     if (to.matched.some(r => r.meta.remember))
         sessionStorage.setItem('DCSLAB_LAST_ROUTE', to.name);
 });
