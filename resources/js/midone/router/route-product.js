@@ -13,8 +13,7 @@ export default {
             name: 'side-menu-product-product',
             component: Product,
             meta: { 
-                remember: true,
-                log_route: true
+                remember: true
             }
         },
         {
@@ -22,8 +21,7 @@ export default {
             name: 'side-menu-product-service',
             component: Service,
             meta: { 
-                remember: true,
-                log_route: true 
+                remember: true
             }
         }
     ]

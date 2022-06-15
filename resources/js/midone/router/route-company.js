@@ -16,8 +16,7 @@ export default {
             name: 'side-menu-company-company',
             component: Company,
             meta: { 
-                remember: true,
-                log_route: true 
+                remember: true
             }
         },
         {
@@ -25,8 +24,7 @@ export default {
             name: 'side-menu-company-branch',
             component: Branch,
             meta: { 
-                remember: true,
-                log_route: true 
+                remember: true
             }
         },
         {
@@ -34,8 +32,7 @@ export default {
             name: 'side-menu-company-employee',
             component: Employee,
             meta: { 
-                remember: true,
-                log_route: true
+                remember: true
             },
         },
         {
@@ -43,8 +40,7 @@ export default {
             name: 'side-menu-company-warehouse',
             component: Warehouse,
             meta: { 
-                remember: true,
-                log_route: true
+                remember: true
             }
         }
     ]

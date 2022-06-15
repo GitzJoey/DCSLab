@@ -12,8 +12,7 @@ export default {
             name: 'side-menu-purchase_order-purchaseorder',
             component: PurchaseOrder,
             meta: { 
-                remember: true,
-                log_route: true 
+                remember: true
             }
         }
     ]

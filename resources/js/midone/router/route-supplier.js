@@ -12,8 +12,7 @@ export default {
             name: 'side-menu-supplier-supplier',
             component: Supplier,
             meta: { 
-                remember: true,
-                log_route: true
+                remember: true
             }
         }
     ]

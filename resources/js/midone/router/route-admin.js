@@ -19,7 +19,6 @@ function Admin() {
                 component: AdminUser,
                 meta: { 
                     remember: true,
-                    log_route: true,
                     roles: ['Administrator', 'Dev']
                 }
             }

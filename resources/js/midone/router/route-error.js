@@ -14,7 +14,6 @@ export default {
             component: Error,
             meta: { 
                 remember: false,
-                log_route: false,
                 skipBeforeEach: true
             }
         }
