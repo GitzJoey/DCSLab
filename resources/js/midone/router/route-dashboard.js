@@ -17,7 +17,8 @@ export default {
             name: 'side-menu-dashboard-maindashboard',
             component: MainDashboard,
             meta: {
-                remember: false
+                remember: false,
+                log_route: true 
             }
         },
         {
@@ -25,7 +26,8 @@ export default {
             name: 'side-menu-dashboard-demo',
             component: Demo,
             meta: {
-                remember: false
+                remember: false,
+                log_route: false 
             }
         },
         {
@@ -33,7 +35,8 @@ export default {
             name: 'side-menu-dashboard-profile',
             component: Profile,
             meta: { 
-                remember: true
+                remember: true,
+                log_route: true 
             }
         },
         {
@@ -41,7 +44,8 @@ export default {
             name: 'side-menu-dashboard-inbox',
             component: Inbox,
             meta: { 
-                remember: true
+                remember: true,
+                log_route: true 
             }
         },
         {
@@ -49,7 +53,8 @@ export default {
             name: 'side-menu-dashboard-activity',
             component: Activity,
             meta: { 
-                remember: true
+                remember: true,
+                log_route: true 
             }
         },
     ]
