@@ -199,10 +199,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
                 Route::post('save', [InboxController::class, 'store'])->name('.save');
                 Route::post('edit', [InboxController::class, 'update'])->name('.edit');
             });
-
-            Route::group(['prefix' => 'activity', 'as' => '.activity'], function() {
-                Route::post('log/route', [ActivityLogController::class, 'logRouteActivity'])->name('.log_route');
-            });
         });
     });
 });
