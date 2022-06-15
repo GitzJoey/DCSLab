@@ -10,10 +10,10 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\BranchController;
 use App\Http\Controllers\DevController;
 #region Extensions
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BrandController;
