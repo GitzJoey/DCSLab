@@ -31,7 +31,7 @@ class RouteMatchedEventListener
     {
         if (!array_key_exists('as', $event->route->action)) return;
         $routeName = $event->route->action['as'];
-        $routeParameters = $event->route->parameters;
+        $routeParameters = $event->route->action->parameters;
 
         $this->activityLogService->RoutingActivity($routeName, $routeParameters);
     }
