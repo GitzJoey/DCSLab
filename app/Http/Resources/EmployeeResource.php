@@ -23,11 +23,19 @@ class EmployeeResource extends JsonResource
                 'user' => new UserResource($this->whenLoaded('user'))
             ]),
             $this->mergeWhen($this->relationLoaded('employeeAccesses'), [
-                'employeeAccesses' => EmployeeAccessResource::collection($this->whenLoaded('employeeAccesses'))
+                'employeeAccesses' => EmployeeAccessResource::collection($this->whenLoaded('employeeAccesses')),
+                'selected_accesses' => $this->getSelectedAcsesses($this->whenLoaded('employeeAccesses') ? $this->employeeAccesses : null),
             ]),
             'code' => $this->code,
             'join_date' => $this->join_date,
             'status' => $this->status->name
         ];
+    }
+
+    private function getSelectedAcsesses($employeeAccesses)
+    {
+        if (is_null($employeeAccesses)) return [];
+
+        return $employeeAccesses->pluck('branch.hId');
     }
 }

@@ -276,7 +276,7 @@
                                     <tr v-for="(p, pIdx) in accessLists">
                                         <td class="border-b dark:border-dark-5">
                                             <div class="form-switch">
-                                                <input :id="'inputAccess_' + p.hId" type="checkbox" name="accessIds[]" v-model="employee.selected_accesses" :value="p.hId" class="form-check-input">
+                                                <input :id="'inputAccess_' + p.hId" type="checkbox" name="accessBranchIds[]" v-model="employee.selected_accesses" :value="p.hId" class="form-check-input">
                                             </div>
                                         </td>
                                         <td>
@@ -660,17 +660,6 @@ watch(selectedUserCompany, () => {
         getAllEmployees({ page: 1 });
         getDDLSync();
     }
-});
-
-watch(computed(() => employee.value.employeeAccesses), () => {
-    // if (employee.value.employee.length != 0) {
-    //     _.forEach(employee.value.employeeAccesses, function(val) {
-    //         if (_.findIndex(employee.value.selected_accesses, (item) => { return item === val }) === -1) {
-    //             employee.value.selected_accesses.push(val);
-    //         }
-    //     });
-    // }
-    console.log(employee.value);
 });
 
 watch(employee, (newV) => {
