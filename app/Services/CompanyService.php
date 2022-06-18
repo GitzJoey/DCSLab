@@ -26,7 +26,10 @@ interface CompanyService
         bool $useCache = true
     ): Paginator|Collection|null;
 
-    public function getAllActiveCompany(int $userId);
+    public function getAllActiveCompany(
+        int $userId, 
+        ?array $with = []
+    );
 
     public function getCompanyById(int $companyId): Company;
 

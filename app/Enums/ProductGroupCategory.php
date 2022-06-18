@@ -4,11 +4,11 @@ namespace App\Enums;
 
 use App\Traits\EnumHelper;
 
-enum ProductGroupCategory: string
+enum ProductGroupCategory: int
 {
     use EnumHelper;
     
-    case PRODUCTS = 'PRD';
-    case SERVICES = 'SVC';
-    case PRODUCTS_AND_SERVICES = 'PRDSVC';
+    case PRODUCTS = 1;
+    case SERVICES = 2;
+    case PRODUCTS_AND_SERVICES = 3;
 }

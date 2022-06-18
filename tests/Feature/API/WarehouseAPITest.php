@@ -133,7 +133,7 @@ class WarehouseAPITest extends APITestCase
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
         $remarks = $this->faker->sentence();
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         Warehouse::create([
             'company_id' => $companyId,

@@ -11,12 +11,16 @@ use App\Enums\UserRoles;
 use App\Models\Employee;
 use App\Services\RoleService;
 use App\Services\UserService;
+use App\Models\EmployeeAccess;
 use Illuminate\Database\Seeder;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class EmployeeTableSeeder extends Seeder
 {
+    use WithFaker;
+ 
     public function run($employeePerPart = 3, $onlyThisCompanyId = 0, $onlyThisBranchId = 0)
     {
         if ($onlyThisCompanyId != 0) {
@@ -64,10 +68,28 @@ class EmployeeTableSeeder extends Seeder
                 $user->attachRoles([$roles->id]);
                 $user->settings()->saveMany($setting);
 
-                Employee::factory()->create([
+                $employee = Employee::factory()->create([
                     'company_id' => $c,
                     'user_id' => $user->id
                 ]);
+                
+                $branchCount = Company::find($c)->branches->count();
+                if ($branchCount > 0) {
+                    $arrEmployeeAccess = [];
+
+                    $faker = \Faker\Factory::create('id_ID');
+                    $accessCount = $faker->numberBetween(1, $branchCount);
+                    $branchIds = Company::find($c)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
+                    for ($i = 0; $i < $accessCount ; $i++) {
+                        $employeeAccess = new EmployeeAccess;
+                        $employeeAccess->employee_id = $employee->id;
+                        $employeeAccess->branch_id = $branchIds[$i];
+                        $employeeAccess->save();
+                        array_push($arrEmployeeAccess, $employeeAccess);
+                    }
+
+                    $employee->employeeAccesses()->saveMany($arrEmployeeAccess);
+                }
             }
         }
     }
