@@ -75,7 +75,7 @@
                                 <input type="text" v-model="productSearch" class="form-control py-3 px-4 w-full box pr-10" placeholder="Search item..." @change="filterProducts">
                                 <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" /> 
                             </div>
-                            <table class="table table-report -mt-2">
+                            <table class="table table-report mt-2">
                                 <tbody>
                                     <tr class="intro-x">
                                         <td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
@@ -91,6 +91,17 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div>
+                            <div class="grid grid-cols-9 mb-3 bg-gray-700 dark:bg-dark-1 gap-2">
+                                <div class="text-white p-3 font-bold col-span-2">{{ t('views.purchase_order.table.item_table.cols.product_name') }}</div>
+                                <div class="text-white p-3 font-bold col-span-2">{{ t('views.purchase_order.table.item_table.cols.quantity') }}</div>
+                                <div class="text-white p-3 font-bold col-span-2 text-right">{{ t('views.purchase_order.table.item_table.cols.unit') }}</div>
+                                <div class="flex justify-center text-white p-3 font-bold">{{ t('views.purchase_order.table.item_table.cols.price_unit') }}</div>
+                                <div class="flex justify-center text-white p-3 font-bold">{{ t('views.purchase_order.table.item_table.cols.total_price') }}</div>
+                                <div class="text-white p-3 font-bold"></div>
+                            </div>
+
                         </div>
                     </div>
 

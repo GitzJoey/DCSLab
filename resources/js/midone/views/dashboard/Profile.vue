@@ -57,7 +57,7 @@
                                             <input type="text" class="form-control" :label="t('views.profile.fields.email')" id="email" name="email" readonly v-model="userContext.email" />
                                             <a class="tooltip px-2" href="javascript:;" :title="t('views.profile.tooltip.email_verified')" v-if="userContext.emailVerified"><ThumbsUpIcon /></a>
                                         </div>
-                                        <div class="mt-2" v-if="!userContext.emailVerified">
+                                        <div class="mt-2" v-if="!userContext.email_verified">
                                             <button type="button" class="btn btn-sm" @click.prevent="sendVerificationLink">{{ t('components.buttons.send_verification_email') }}</button>
                                         </div>
                                     </div>
