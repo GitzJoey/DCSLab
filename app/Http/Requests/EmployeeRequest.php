@@ -48,7 +48,7 @@ class EmployeeRequest extends FormRequest
             'postal_code' => 'nullable|max:10',
             'img_path' => 'nullable',
             'remarks' => 'nullable|max:255',
-            'accessBranchId.*' => 'nullable',
+            'accessBranchIds.*' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
