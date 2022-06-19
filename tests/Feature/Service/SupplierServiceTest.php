@@ -83,10 +83,10 @@ class SupplierServiceTest extends ServiceTestCase
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
-        $taxable_enterprise = (new RandomGenerator())->generateNumber(0, 1);
+        $taxable_enterprise = $this->faker->boolean();
         $tax_id = (new RandomGenerator())->generateNumber(0, 1999);
         $remarks = $this->faker->word;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $poc = [
             'name' => $this->faker->name,
@@ -141,10 +141,10 @@ class SupplierServiceTest extends ServiceTestCase
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
-        $taxable_enterprise = (new RandomGenerator())->generateNumber(0, 1);
+        $taxable_enterprise = $this->faker->boolean();
         $tax_id = $this->faker->name;
         $remarks = null;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $poc = [
             'name' => $this->faker->name,
@@ -181,10 +181,10 @@ class SupplierServiceTest extends ServiceTestCase
         $contact_new = $this->faker->e164PhoneNumber;
         $address_new = $this->faker->address;
         $city_new = $this->faker->city;
-        $taxable_enterprise_new = (new RandomGenerator())->generateNumber(0, 1);
+        $taxable_enterprise_new = $this->faker->boolean();
         $tax_id_new = $this->faker->name;
         $remarks_new = $this->faker->word;
-        $status_new = (new RandomGenerator())->generateNumber(0, 1);
+        $status_new = $this->faker->boolean();
 
         $poc_new = [];
         $products_new = [];
@@ -237,10 +237,10 @@ class SupplierServiceTest extends ServiceTestCase
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
         $city = $this->faker->city;
-        $taxable_enterprise = (new RandomGenerator())->generateNumber(0, 1);
+        $taxable_enterprise = $this->faker->boolean();
         $tax_id = $this->faker->name;
         $remarks = $this->faker->word;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $poc = [
             'name' => $this->faker->name,
