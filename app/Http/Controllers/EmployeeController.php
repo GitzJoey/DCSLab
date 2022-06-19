@@ -9,17 +9,20 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
+use App\Services\CompanyService;
 
 class EmployeeController extends BaseController
 {
     private $employeeService;
+    private $companyService;
     
-    public function __construct(EmployeeService $employeeService)
+    public function __construct(EmployeeService $employeeService, CompanyService $companyService)
     {
         parent::__construct();
 
         $this->middleware('auth');
         $this->employeeService = $employeeService;
+        $this->companyService = $companyService;
     }
 
     public function read(EmployeeRequest $employeeRequest)
