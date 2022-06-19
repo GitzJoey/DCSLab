@@ -126,7 +126,10 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function getAllActiveCompany(int $userId)
+    public function getAllActiveCompany(
+        int $userId, 
+        ?array $with = []
+    )
     {
         $timer_start = microtime(true);
 
@@ -135,7 +138,10 @@ class CompanyServiceImpl implements CompanyService
             if (!$usr) return null;
     
             $compIds = $usr->companies()->pluck('company_id');
-            return Company::where('status', '=', 1)->whereIn('id',  $compIds)->get();    
+
+            $companies = Company::with($with)->where('status', '=', 1)->whereIn('id',  $compIds)->get();
+            
+            return $companies;
         } catch (Exception $e) {
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
