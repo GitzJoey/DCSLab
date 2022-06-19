@@ -2,16 +2,12 @@
 
 namespace Tests\Feature\Service;
 
-use App\Models\User;
 use App\Models\Company;
 use App\Models\Employee;
 use Tests\ServiceTestCase;
-use App\Enums\ActiveStatus;
-use App\Services\RoleService;
+use App\Models\EmployeeAccess;
 use App\Actions\RandomGenerator;
 use App\Services\EmployeeService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Container\Container;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 
@@ -32,7 +28,7 @@ class EmployeeServiceTest extends ServiceTestCase
 
     public function test_call_save()
     {
-        $companyId = Company::inRandomOrder()->first()->id;      
+        $companyId = Company::has('branches')->inRandomOrder()->first()->id;      
         $code = (new RandomGenerator())->generateAlphaNumeric(5);  
         $name = $this->faker->name;
         $email = $this->faker->email;
@@ -45,7 +41,17 @@ class EmployeeServiceTest extends ServiceTestCase
         $imgPath = '';
         $joinDate = $this->faker->date($format = 'Y-m-d', $max = 'now');
         $remarks = $this->faker->sentence;
-        $status = (new RandomGenerator())->generateNumber(0, 1);       
+        $status = $this->faker->boolean();
+
+        $branchCount = Company::find($companyId)->branches->count();
+        $accessCount = $this->faker->numberBetween(1, $branchCount);
+        $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
+        $accesses = [];
+        for ($i = 0; $i < $accessCount ; $i++) {
+            array_push($accesses, array(
+                'branch_id' => $branchIds[$i]
+            ));
+        }
 
         $this->service->create(
             company_id: $companyId,
@@ -61,10 +67,14 @@ class EmployeeServiceTest extends ServiceTestCase
             img_path: $imgPath,
             join_date: $joinDate,
             remarks: $remarks,
-            status: $status
+            status: $status,
+            accesses: $accesses
         );
 
+        $employeeId = Employee::where('code', '=', $code)->first()->id;
+
         $this->assertDatabaseHas('employees', [
+            'id' => $employeeId,
             'company_id' => $companyId,
             'code' => $code,
         ]);
@@ -84,6 +94,13 @@ class EmployeeServiceTest extends ServiceTestCase
             'status' => $status,
             'remarks' => $remarks
         ]);
+
+        for ($i = 0; $i < $accessCount ; $i++) {           
+            $this->assertDatabaseHas('employee_accesses', [
+                'employee_id' => $employeeId,
+                'branch_id' => $branchIds[$i]
+            ]);
+        }
     }
 
     public function test_call_read()
@@ -118,6 +135,17 @@ class EmployeeServiceTest extends ServiceTestCase
         $newRemarks = $this->faker->sentence;
         $newStatus = Employee::where('id', '=', $employeeId)->first()->status == 0 ? 1 : 0;
 
+        EmployeeAccess::where('employee_id', '=', $employeeId)->delete();
+        $branchCount = Company::find(Employee::find($employeeId)->company->id)->branches->count();
+        $accessCount = $this->faker->numberBetween(1, $branchCount);
+        $branchIds = Employee::find($employeeId)->company->branches()->inRandomOrder()->take($accessCount)->pluck('id');
+        $accesses = [];
+        for ($i = 0; $i < $accessCount ; $i++) {
+            array_push($accesses, array(
+                'branch_id' => $branchIds[$i]
+            ));
+        }
+        
         $this->service->update(
             id: $employeeId,
             code: $newCode,
@@ -131,7 +159,8 @@ class EmployeeServiceTest extends ServiceTestCase
             img_path: $newImgPath,
             join_date: null,
             remarks: $newRemarks,
-            status: $newStatus
+            status: $newStatus,
+            accesses: $accesses
         );
 
         $this->assertDatabaseHas('employees', [
@@ -139,6 +168,28 @@ class EmployeeServiceTest extends ServiceTestCase
             'code' => $newCode,
             'status' => $newStatus
         ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => $newName
+        ]);
+
+        $this->assertDatabaseHas('profiles', [
+            'address' => $newAddress,
+            'city' => $newCity,
+            'postal_code' => $newPostalCode,
+            'country' => $newCountry,
+            'tax_id' => $newTaxId,
+            'ic_num' => $newIcNum,
+            'status' => $newStatus,
+            'remarks' => $newRemarks
+        ]);
+
+        for ($i = 0; $i < $accessCount ; $i++) {
+            $this->assertDatabaseHas('employee_accesses', [
+                'employee_id' => $employeeId,
+                'branch_id' => $branchIds[$i]
+            ]);
+        }
     }
 
     public function test_call_delete()
