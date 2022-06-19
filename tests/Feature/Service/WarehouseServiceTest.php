@@ -44,7 +44,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
         $remarks = $this->faker->sentence;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $this->service->create(
             company_id: $company_id,
@@ -76,7 +76,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $city = null;
         $contact = null;
         $remarks = null;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $this->service->create(
             company_id: $company_id,
@@ -108,7 +108,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
         $remarks = $this->faker->sentence;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $warehouse = Warehouse::create([
             'company_id' => $company_id,
@@ -129,7 +129,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $newCity = $this->faker->city;
         $newContact = $this->faker->e164PhoneNumber;
         $newRemarks = $this->faker->sentence;
-        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = $this->faker->boolean();
 
         $this->service->update(
             id: $id,
@@ -163,7 +163,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $city = null;
         $contact = null;
         $remarks = null;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $warehouse = Warehouse::create([
             'company_id' => $company_id,
@@ -184,7 +184,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $newCity = null;
         $newContact = null;
         $newRemarks = null;
-        $newStatus = (new RandomGenerator())->generateNumber(0, 1);
+        $newStatus = $this->faker->boolean();
 
         $this->service->update(
             id: $id,
@@ -218,7 +218,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $city = $this->faker->city;
         $contact = $this->faker->e164PhoneNumber;
         $remarks = $this->faker->sentence;
-        $status = (new RandomGenerator())->generateNumber(0, 1);
+        $status = $this->faker->boolean();
 
         $warehouse = Warehouse::create([
             'company_id' => $company_id,
