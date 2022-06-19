@@ -48,10 +48,13 @@ class CompanyController extends BaseController
         }
     }
 
-    public function getAllActiveCompany()
+    public function getAllActiveCompany(Request $request)
     {
         $userId = Auth::id();
-        $result = $this->companyService->getAllActiveCompany($userId);
+
+        $with = $request->has('with') ? explode(',', $request['with']) : []; 
+
+        $result = $this->companyService->getAllActiveCompany($userId, $with);
     
         if (is_null($result)) {
             return response()->error();
