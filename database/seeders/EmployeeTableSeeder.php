@@ -75,6 +75,8 @@ class EmployeeTableSeeder extends Seeder
                 
                 $branchCount = Company::find($c)->branches->count();
                 if ($branchCount > 0) {
+                    $arrEmployeeAccess = [];
+
                     $faker = \Faker\Factory::create('id_ID');
                     $accessCount = $faker->numberBetween(1, $branchCount);
                     $branchIds = Company::find($c)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
@@ -83,9 +85,11 @@ class EmployeeTableSeeder extends Seeder
                         $employeeAccess->employee_id = $employee->id;
                         $employeeAccess->branch_id = $branchIds[$i];
                         $employeeAccess->save();
+                        array_push($arrEmployeeAccess, $employeeAccess);
                     }
+
+                    $employee->employeeAccesses()->saveMany($arrEmployeeAccess);
                 }
-               
             }
         }
     }
