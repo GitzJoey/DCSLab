@@ -157,7 +157,7 @@ class CompanyServiceImpl implements CompanyService
                 }]);
             }
         
-            return $companies;
+            return $companies->get();
         } catch (Exception $e) {
             return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
