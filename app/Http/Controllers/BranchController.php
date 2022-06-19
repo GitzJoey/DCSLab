@@ -85,7 +85,7 @@ class BranchController extends BaseController
     }
 
     public function store(BranchRequest $branchRequest)
-    {   
+    {
         $request = $branchRequest->validated();
         
         $company_id = $request['company_id'];
