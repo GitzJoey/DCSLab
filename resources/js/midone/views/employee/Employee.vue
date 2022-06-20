@@ -22,8 +22,8 @@
                                 <td>{{ item.user.email }}</td>
                                 <td>{{ item.join_date }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status === 1" />
-                                    <XIcon v-if="item.status === 0" />
+                                    <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
+                                    <XIcon v-if="item.status === 'INACTIVE'" />
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
