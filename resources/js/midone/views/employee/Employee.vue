@@ -8,7 +8,6 @@
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.employee.table.cols.email') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.join_date') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
@@ -19,7 +18,6 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.user.name }}</a></td>
-                                <td>{{ item.user.email }}</td>
                                 <td>{{ item.join_date }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
