@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Unit;
 use App\Models\User;
 use App\Models\Branch;
 use App\Models\Employee;
 use App\Models\Warehouse;
 use App\Enums\ActiveStatus;
-use Spatie\Activitylog\LogOptions;
 
+use Spatie\Activitylog\LogOptions;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -67,6 +68,21 @@ class Company extends Model
     public function employees()
     {
         return $this->hasMany(Employee::class);
+    }
+
+    public function brands()
+    {
+        return $this->hasMany(Brand::class);
+    }
+
+    public function productGroups()
+    {
+        return $this->hasMany(ProductGroup::class);
+    }
+
+    public function units()
+    {
+        return $this->hasMany(Unit::class);
     }
 
     public function getActivitylogOptions(): LogOptions

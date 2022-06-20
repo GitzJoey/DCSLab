@@ -30,6 +30,7 @@ class UnitServiceImpl implements UnitService
         int $company_id,
         string $code,
         string $name,
+        string $description,
         int $category
     ): ?Unit
     {
@@ -41,6 +42,7 @@ class UnitServiceImpl implements UnitService
             $unit->company_id = $company_id;
             $unit->code = $code;
             $unit->name = $name;
+            $unit->description = $description;
             $unit->category = $category;
 
             $unit->save();
@@ -145,6 +147,7 @@ class UnitServiceImpl implements UnitService
         int $company_id,
         string $code,
         string $name,
+        string $description,
         int $category
     ): ?Unit
     {
@@ -158,7 +161,8 @@ class UnitServiceImpl implements UnitService
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
-                'category' => $category,
+                'description' => $description,
+                'category' => $category
             ]);
     
             DB::commit();

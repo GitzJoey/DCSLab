@@ -12,12 +12,12 @@ interface ProductGroupService
         int $company_id,
         string $code,
         string $name,
-        string $category,
+        int $category,
     ): ?ProductGroup;
 
     public function read(
         int $companyId,
-        string $category,
+        ?string $category = null, 
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -32,7 +32,7 @@ interface ProductGroupService
         int $company_id,
         string $code,
         string $name,
-        string $category
+        int $category
     ): ?ProductGroup;
 
     public function delete(int $id): bool;
