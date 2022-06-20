@@ -24,7 +24,7 @@ class ProfileRequest extends FormRequest
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
         
-        if ($user->hasPermission('profile-update')) return true;
+        if ($user->can('profile-update')) return true;
 
         return false;
     }

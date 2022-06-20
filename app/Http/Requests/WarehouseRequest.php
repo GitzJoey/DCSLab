@@ -24,13 +24,10 @@ class WarehouseRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($user->roles->isEmpty()) return false;
-
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('warehouse-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('warehouse-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('warehouse-update')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('warehouse-read')) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('warehouse-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('warehouse-update')) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('warehouse-delete')) return true;
 
         return false;
     }

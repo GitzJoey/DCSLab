@@ -24,13 +24,10 @@ class EmployeeRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($user->roles->isEmpty()) return false;
-
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('employee-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('employee-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('employee-update')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('employee-read')) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('employee-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('employee-update')) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('employee-delete')) return true;
 
         return false;
     }

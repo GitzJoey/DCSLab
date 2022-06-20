@@ -2,39 +2,43 @@
 
 namespace App\Providers;
 
-use App\Services\RoleService;
-use App\Services\UnitService;
-use App\Services\UserService;
-use App\Services\BrandService;
-use App\Services\InboxService;
-use App\Services\BranchService;
-use App\Services\SystemService;
-use App\Services\CompanyService;
+use App\Services\{
+    RoleService,
+    UnitService,
+    UserService,
+    InboxService,
+    SystemService,
+    DashboardService,
+    ActivityLogService
+};
 #region Extensions 
+use App\Services\BrandService;
+use App\Services\BranchService;
+use App\Services\CompanyService;
 use App\Services\ProductService;
 use App\Services\EmployeeService;
 use App\Services\SupplierService;
-use App\Services\DashboardService;
 use App\Services\WarehouseService;
-use App\Services\ActivityLogService;
 use App\Services\ProductGroupService;
 #endregion
 
-use App\Services\Impls\UserServiceImpl;
-use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\{
+    UserServiceImpl,
+    RoleServiceImpl,
+    InboxServiceImpl,
+    SystemServiceImpl,
+    DashboardServiceImpl,
+    ActivityLogServiceImpl
+};
+#region Extensions
 use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\BrandServiceImpl;
-use App\Services\Impls\InboxServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
-use App\Services\Impls\SystemServiceImpl;
-#region Extensions
 use App\Services\Impls\CompanyServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
 use App\Services\Impls\EmployeeServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
-use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
-use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 #endregion
 

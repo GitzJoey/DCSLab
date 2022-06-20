@@ -25,13 +25,10 @@ class ProductRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($user->roles->isEmpty()) return false;
-
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('product-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('product-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('product-update')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('product-read')) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('product-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('product-update')) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('product-delete')) return true;
 
         return false;
     }
