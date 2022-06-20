@@ -24,13 +24,10 @@ class BranchRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($user->roles->isEmpty()) return false;
-
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('branch-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('branch-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('branch-update')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('branch-read')) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('branch-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('branch-update')) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('branch-delete')) return true;
 
         return false;
     }

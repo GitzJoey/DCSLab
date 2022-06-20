@@ -26,13 +26,10 @@ class CompanyRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($user->roles->isEmpty()) return false;
-
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('company-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('company-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('company-update')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('company-read')) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('company-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('company-update')) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('company-delete')) return true;
 
         return false;
     }

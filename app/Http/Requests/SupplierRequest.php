@@ -26,13 +26,10 @@ class SupplierRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($user->roles->isEmpty()) return false;
-
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('supplier-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('supplier-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('supplier-update')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('supplier-read')) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('supplier-create')) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('supplier-update')) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('supplier-delete')) return true;
 
         return false;
     }
