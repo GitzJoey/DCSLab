@@ -25,12 +25,20 @@ class ProductRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('product-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('product-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('product-update')) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('product-delete')) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'readProducts':
+            case 'readServices':
+                return $user->can('product-read') ? true : false;
+            case 'store':
+                return $user->can('product-create') ? true : false;
+            case 'update':
+                return $user->can('product-update') ? true : false;
+            case 'delete':
+                return $user->can('product-delete') ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**
