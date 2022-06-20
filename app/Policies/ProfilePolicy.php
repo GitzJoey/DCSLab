@@ -34,6 +34,8 @@ class ProfilePolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('profile-read')) return true;
     }
 
     /**
@@ -59,6 +61,8 @@ class ProfilePolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('profile-update')) return true;
     }
 
     /**

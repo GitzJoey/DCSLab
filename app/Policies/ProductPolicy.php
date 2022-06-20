@@ -22,6 +22,8 @@ class ProductPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('product-read')) return true;
     }
 
     /**
@@ -47,6 +49,8 @@ class ProductPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('product-create')) return true;
     }
 
     /**
@@ -61,6 +65,8 @@ class ProductPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('product-update')) return true;
     }
 
     /**
@@ -75,6 +81,8 @@ class ProductPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('product-delete')) return true;
     }
 
     /**

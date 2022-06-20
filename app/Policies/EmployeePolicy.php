@@ -22,6 +22,8 @@ class EmployeePolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('employee-read')) return true;
     }
 
     /**
@@ -47,6 +49,8 @@ class EmployeePolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('employee-create')) return true;
     }
 
     /**
@@ -61,6 +65,8 @@ class EmployeePolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('employee-update')) return true;
     }
 
     /**
@@ -75,6 +81,8 @@ class EmployeePolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('employee-delete')) return true;
     }
 
     /**

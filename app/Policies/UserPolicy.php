@@ -21,6 +21,8 @@ class UserPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('user-read')) return true;
     }
 
     /**
@@ -46,6 +48,8 @@ class UserPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('user-create')) return true;
     }
 
     /**
@@ -60,6 +64,8 @@ class UserPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('user-update')) return true;
     }
 
     /**

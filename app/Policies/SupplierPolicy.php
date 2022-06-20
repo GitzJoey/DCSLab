@@ -22,6 +22,8 @@ class SupplierPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('supplier-read')) return true;
     }
 
     /**
@@ -47,6 +49,8 @@ class SupplierPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('supplier-create')) return true;
     }
 
     /**
@@ -61,6 +65,8 @@ class SupplierPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+    
+        if ($user->hasPermission('supplier-update')) return true;
     }
 
     /**
@@ -75,6 +81,8 @@ class SupplierPolicy
         if ($user->roles->isEmpty()) return false;
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+    
+        if ($user->hasPermission('supplier-delete')) return true;
     }
 
     /**
