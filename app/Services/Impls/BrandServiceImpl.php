@@ -24,24 +24,28 @@ class BrandServiceImpl implements BrandService
         
     }
 
-    public function create(int $company_id, string $code, string $name): Brand
+    public function create(
+        int $company_id,
+        string $code,
+        string $name
+    ): ?Brand
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $productbrand = new Brand();
-            $productbrand->company_id = $company_id;
-            $productbrand->code = $code;
-            $productbrand->name = $name;
+            $brand = new Brand();
+            $brand->company_id = $company_id;
+            $brand->code = $code;
+            $brand->name = $name;
 
-            $productbrand->save();
+            $brand->save();
 
             DB::commit();
 
             $this->flushCache();
 
-            return $productbrand;
+            return $brand;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
@@ -120,15 +124,20 @@ class BrandServiceImpl implements BrandService
         }
     }
 
-    public function update(int $id, int $company_id, string $code, string $name): Brand
+    public function update(
+        int $id,
+        int $company_id,
+        string $code,
+        string $name
+    ): ?Brand
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $productbrand = Brand::find($id);
+            $brand = Brand::find($id);
 
-            $productbrand->update([
+            $brand->update([
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
@@ -138,7 +147,7 @@ class BrandServiceImpl implements BrandService
 
             $this->flushCache();
 
-            return $productbrand->refresh();
+            return $brand->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
@@ -157,9 +166,9 @@ class BrandServiceImpl implements BrandService
         $retval = false;
 
         try {
-            $productbrand = Brand::find($id);
-            if ($productbrand) {
-                $retval = $productbrand->delete();
+            $brand = Brand::find($id);
+            if ($brand) {
+                $retval = $brand->delete();
             }
 
             DB::commit();
