@@ -65,7 +65,7 @@ class Branch extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function employeeAccesses()
+    public function employeeAccess()
     {
         return $this->hasMany(EmployeeAccess::class);
     }
