@@ -23,8 +23,8 @@ class EmployeeResource extends JsonResource
                 'user' => new UserResource($this->whenLoaded('user'))
             ]),
             $this->mergeWhen($this->relationLoaded('employeeAccesses'), [
-                'employeeAccesses' => EmployeeAccessResource::collection($this->whenLoaded('employeeAccesses')),
-                'selected_accesses' => $this->getSelectedAcsesses($this->whenLoaded('employeeAccesses') ? $this->employeeAccesses : null),
+                'employee_accesses' => EmployeeAccessResource::collection($this->whenLoaded('employeeAccesses')),
+                'selected_accesses' => $this->getSelectedAcsesses($this->whenLoaded('employeeAccesses') ? $this->employeeAccesses : null)
             ]),
             'code' => $this->code,
             'join_date' => $this->join_date,
