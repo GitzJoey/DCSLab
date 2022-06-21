@@ -21,7 +21,7 @@ function Admin() {
                     remember: true,
                     log_route: true,
                     roles: ['Administrator', 'Dev'],
-                    permissions: ['Create Users']
+                    permissions: ['Create Users', 'Read Users', 'Update Users']
                 }
             }
         ]    
