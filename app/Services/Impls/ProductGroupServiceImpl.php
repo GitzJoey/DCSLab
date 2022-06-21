@@ -29,7 +29,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         int $company_id,
         string $code,
         string $name,
-        string $category
+        int $category
     ): ?ProductGroup
     {
         DB::beginTransaction();
@@ -48,7 +48,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $this->flushCache();
 
-            return $productGroup->hId;
+            return $productGroup;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
@@ -84,7 +84,7 @@ class ProductGroupServiceImpl implements ProductGroupService
     }
 
     public function read(
-        int $companyId, 
+        int $companyId,
         ?string $category = null, 
         string $search = '', 
         bool $paginate = true, 
@@ -142,7 +142,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         int $company_id,
         string $code,
         string $name,
-        string $category
+        int $category
     ): ?ProductGroup
     {
         DB::beginTransaction();
@@ -155,7 +155,7 @@ class ProductGroupServiceImpl implements ProductGroupService
                 'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
-                'category' => $category,
+                'category' => $category
             ]);
 
             DB::commit();
