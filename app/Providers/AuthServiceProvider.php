@@ -12,6 +12,16 @@ use App\Policies\{
     UserPolicy,
     WarehousePolicy,
 };
+use App\Models\{
+    Company,
+    Branch,
+    Employee,
+    Profile,
+    Product,
+    Supplier,
+    User,
+    Warehouse,
+};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -23,14 +33,14 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        'App\Models\Company' => 'App\Policies\Company',
-        'App\Models\Branch' => 'App\Policies\Branch',
-        'App\Models\Employee' => 'App\Policies\Employee',
-        'App\Models\Product' => 'App\Policies\Product',
-        'App\Models\Profle' => 'App\Policies\Profile',
-        'App\Models\Supplier' => 'App\Policies\Supplier',
-        'App\Models\User' => 'App\Policies\User',
-        'App\Models\Warehouse' => 'App\Policies\Warehouse',
+        Company::class => CompanyPolicy::class,
+        Branch::class => BranchPolicy::class,
+        Employee::class => EmployeePolicy::class,
+        Product::class => ProductPolicy::class,
+        Profle::class => ProfilePolicy::class,
+        Supplier::class => SupplierPolicy::class,
+        User::class => UserPolicy::class,
+        Warehouse::class => WarehousePolicy::class,
     ];
 
     /**
