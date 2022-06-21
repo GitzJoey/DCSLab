@@ -60,7 +60,7 @@ class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function employeeAccess()
+    public function employeeAccesses()
     {
         return $this->hasMany(EmployeeAccess::class);
     }
