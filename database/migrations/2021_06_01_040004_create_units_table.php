@@ -19,7 +19,7 @@ class CreateUnitsTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->string('description');
-            $table->integer('category')->default(0);;
+            $table->integer('category')->default(0);
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
