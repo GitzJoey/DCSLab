@@ -16,12 +16,7 @@ class UnitServiceTest extends ServiceTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
 
-        $this->service = app(UnitService::class);
-
-        if (Unit::count() < 2)
-            $this->artisan('db:seed', ['--class' => 'UnitTableSeeder']);
     }
 
     public function test_call_save()

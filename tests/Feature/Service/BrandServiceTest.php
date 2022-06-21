@@ -16,12 +16,7 @@ class BrandServiceTest extends ServiceTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->service = app(BrandService::class);
-
-        if (Brand::count() < 2)
-            $this->artisan('db:seed', ['--class' => 'BrandTableSeeder']);
+        
     }
 
     public function test_call_save()

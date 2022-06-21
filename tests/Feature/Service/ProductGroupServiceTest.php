@@ -16,12 +16,7 @@ class ProductGroupServiceTest extends ServiceTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
 
-        $this->service = app(ProductGroupService::class);
-
-        if (ProductGroup::count() < 2)
-            $this->artisan('db:seed', ['--class' => 'ProductGroupTableSeeder']);
     }
 
     public function test_call_save()
