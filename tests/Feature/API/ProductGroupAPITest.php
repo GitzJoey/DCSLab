@@ -29,19 +29,21 @@ class ProductGroupAPITest extends APITestCase
         $api = $this->getJson('/api/post/dashboard/product/product_group/save');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/product/product_group/edit');
+        $api = $this->getJson('/api/post/dashboard/product/product_group/edit/1');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/product/product_group/delete');
+        $api = $this->getJson('/api/post/dashboard/product/product_group/delete/1');
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
     public function test_api_call_save_all()
     {
+        $this->actingAs($this->developer);
+
         $companyId = Company::inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $category = $this->faker->randomElement(ProductGroupCategory::toArrayValue());
+        $category = $this->faker->randomElement(ProductGroupCategory::toArrayName());
 
         $api = $this->json('POST', route('api.post.db.product.product_group.save'), [
             'company_id' => $companyId,
@@ -50,14 +52,14 @@ class ProductGroupAPITest extends APITestCase
             'category' => $category
         ]);
 
+        $api->assertSuccessful();
+
         $this->assertDatabaseHas('product_groups', [
             'company_id' => $companyId,
             'code' => $code,
             'name' => $name,
             'category' => $category
         ]);
-        
-        $api->assertSuccessful();
     }
 
     // public function test_api_call_save_with_existing_code_in_same_company()

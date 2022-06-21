@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Enums\UserRoles;
-use App\Enums\ActiveStatus;
 use App\Rules\isValidCompany;
 use App\Enums\ProductGroupCategory;
 use Vinkla\Hashids\Facades\Hashids;

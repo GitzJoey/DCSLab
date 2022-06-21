@@ -16,7 +16,9 @@ class UnitServiceTest extends ServiceTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
 
+        $this->service = app(UnitService::class);
     }
 
     public function test_call_save()
@@ -63,7 +65,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5);
         $newName = $this->faker->name;
-        $newDescription = $this->faker->description;
+        $newDescription = $this->faker->sentence;
         $newCategory = (new RandomGenerator())->generateNumber(1, 3);
 
         $this->service->update(
