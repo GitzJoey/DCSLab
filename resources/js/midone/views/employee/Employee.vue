@@ -360,7 +360,7 @@ const employee = ref({
             status: 'ACTIVE',
         }
     },
-    employeeAccesses: [
+    employee_accesses: [
         {
             hId: '',
             branch: {
@@ -537,7 +537,7 @@ const emptyEmployee = () => {
                 status: 'ACTIVE',
             }
         },
-        employeeAccesses: [
+        employee_accesses: [
             {
                 hId: '',
                 branch: {
