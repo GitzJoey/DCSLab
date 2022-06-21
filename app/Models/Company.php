@@ -70,14 +70,14 @@ class Company extends Model
         return $this->hasMany(Employee::class);
     }
 
-    public function brands()
-    {
-        return $this->hasMany(Brand::class);
-    }
-
     public function productGroups()
     {
         return $this->hasMany(ProductGroup::class);
+    }
+
+    public function brands()
+    {
+        return $this->hasMany(Brand::class);
     }
 
     public function units()

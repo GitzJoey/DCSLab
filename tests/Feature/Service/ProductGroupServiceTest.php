@@ -16,7 +16,9 @@ class ProductGroupServiceTest extends ServiceTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
 
+        $this->service = app(ProductGroupService::class);
     }
 
     public function test_call_save()
