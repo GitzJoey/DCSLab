@@ -60,7 +60,7 @@ class SupplierPolicy
      * @param  \App\Models\Supplier  $supplier
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Supplier $supplier)
+    public function update(User $user, Supplier $supplier = null)
     {
         if ($user->roles->isEmpty()) return false;
 
@@ -76,7 +76,7 @@ class SupplierPolicy
      * @param  \App\Models\Supplier  $supplier
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Supplier $supplier)
+    public function delete(User $user, Supplier $supplier = null)
     {
         if ($user->roles->isEmpty()) return false;
 

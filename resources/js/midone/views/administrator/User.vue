@@ -461,7 +461,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getUser({ page: userList.value.current_page, pageSize: userList.value.per_page });
+    getUser({ page: userList.value.meta.current_page, pageSize: userList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {

@@ -70,6 +70,12 @@ const updateValue = (
     }
   }
 
+  // Update border style
+  dom(clonedEl.TomSelect.wrapper).css(
+    "border-color",
+    dom(originalEl).css("border-color")
+  );
+
   // Add new options
   dom(clonedEl)
     .prev()

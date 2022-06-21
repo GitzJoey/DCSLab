@@ -3,6 +3,7 @@ import {
   ref,
   inject,
   onMounted,
+  onUnmounted,
   defineComponent,
   resolveDirective,
   withDirectives,
@@ -71,6 +72,8 @@ const Dropdown = defineComponent({
   },
   setup(props, { slots, attrs, emit }) {
     const dropdownRef = ref();
+    const dropdownRefTemp = ref();
+
     const bindInstance = () => {
       if (props.refKey) {
         const bind = inject(`bind[${props.refKey}]`);
@@ -81,7 +84,13 @@ const Dropdown = defineComponent({
     };
 
     onMounted(() => {
+      dropdownRefTemp.value = dropdownRef.value;
       bindInstance();
+    });
+
+    // Hide dropdown when route is changed
+    onUnmounted(() => {
+      tailwind.Dropdown.getOrCreateInstance(dropdownRefTemp.value).hide();
     });
 
     const dropdownDirective = resolveDirective("dropdown");
