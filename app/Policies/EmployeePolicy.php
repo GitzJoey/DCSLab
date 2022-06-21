@@ -60,7 +60,7 @@ class EmployeePolicy
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Employee $employee)
+    public function update(User $user, Employee $employee = null)
     {
         if ($user->roles->isEmpty()) return false;
 
@@ -76,7 +76,7 @@ class EmployeePolicy
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Employee $employee)
+    public function delete(User $user, Employee $employee = null)
     {
         if ($user->roles->isEmpty()) return false;
 

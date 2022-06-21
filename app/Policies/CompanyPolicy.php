@@ -60,7 +60,7 @@ class CompanyPolicy
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Company $company)
+    public function update(User $user, Company $company = null)
     {
         if ($user->roles->isEmpty()) return false;
 
@@ -76,7 +76,7 @@ class CompanyPolicy
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Company $company)
+    public function delete(User $user, Company $company = null)
     {
         if ($user->roles->isEmpty()) return false;
 

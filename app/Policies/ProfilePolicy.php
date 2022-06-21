@@ -29,7 +29,7 @@ class ProfilePolicy
      * @param  \App\Models\Profile  $profile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Profile $profile)
+    public function view(User $user, Profile $profile = null)
     {
         if ($user->roles->isEmpty()) return false;
 
@@ -56,7 +56,7 @@ class ProfilePolicy
      * @param  \App\Models\Profile  $profile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Profile $profile)
+    public function update(User $user, Profile $profile = null)
     {
         if ($user->roles->isEmpty()) return false;
 
