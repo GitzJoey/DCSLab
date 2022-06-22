@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Traits\ScopeableByCompany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
+use App\Traits\ScopeableByCompany;
 use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use App\Enums\ProductGroupCategory;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductGroup extends Model
 {
@@ -22,6 +23,7 @@ class ProductGroup extends Model
     use ScopeableByCompany;
 
     protected $fillable = [
+        'company_id',
         'code',
         'name',
         'category'
@@ -36,6 +38,10 @@ class ProductGroup extends Model
     protected static $logOnlyDirty = true;
 
     protected $hidden = [];
+
+    protected $casts = [
+        'category' => ProductGroupCategory::class
+    ];
 
     public function hId() : Attribute
     {

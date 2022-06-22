@@ -12,6 +12,7 @@ interface UnitService
         int $company_id,
         string $code,
         string $name,
+        string $description,
         int $category
     ): ?Unit;
 
@@ -32,6 +33,7 @@ interface UnitService
         int $company_id,
         string $code,
         string $name,
+        string $description,
         int $category
     ): ?Unit;
 

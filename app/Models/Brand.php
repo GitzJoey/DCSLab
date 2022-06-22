@@ -22,6 +22,7 @@ class Brand extends Model
     use ScopeableByCompany;
 
     protected $fillable = [
+        'company_id',
         'code',
         'name'
     ];
