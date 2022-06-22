@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
-use App\Enums\UserRoles;
 use App\Models\Warehouse;
 use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
