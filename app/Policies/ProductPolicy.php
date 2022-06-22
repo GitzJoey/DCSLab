@@ -33,7 +33,7 @@ class ProductPolicy
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Product $product)
+    public function view(User $user, Product $product = null)
     {
         return $this->viewAny($user);
     }
@@ -60,7 +60,7 @@ class ProductPolicy
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Product $product)
+    public function update(User $user, Product $product = null)
     {
         if ($user->roles->isEmpty()) return false;
 
@@ -76,7 +76,7 @@ class ProductPolicy
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Product $product)
+    public function delete(User $user, Product $product = null)
     {
         if ($user->roles->isEmpty()) return false;
 

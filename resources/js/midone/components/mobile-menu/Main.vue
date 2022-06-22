@@ -103,7 +103,9 @@ watch(
 });
 
 onMounted(() => {
-  new SimpleBar(dom(".mobile-menu .scrollable")[0]);
+  if (dom(".mobile-menu .scrollable").length) {
+    new SimpleBar(dom(".mobile-menu .scrollable")[0]);
+  }
   formattedMenu.value = $h.toRaw(mobileMenu.value);
 });
 </script>

@@ -360,14 +360,16 @@ const getDDL = () => {
 const getDDLSync = () => {
     axios.get(route('api.get.db.supplier.supplier.read', {
             companyId: selectedUserCompany.value,
-            paginate: false
+            paginate: false,
+            search: ''
         })).then(response => {
             supplierDDL.value = response.data;
     });
 
     axios.get(route('api.get.db.product.product.read', {
             companyId: selectedUserCompany.value,
-            paginate: false
+            paginate: false,
+            search: ''
         })).then(response => {
             productDDL.value = response.data;
     });

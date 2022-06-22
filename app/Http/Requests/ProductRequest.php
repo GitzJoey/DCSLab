@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
 use App\Enums\ProductType;
-use App\Enums\UserRoles;
+use App\Models\Product;
 use App\Rules\isValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -29,13 +29,13 @@ class ProductRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'readProducts':
             case 'readServices':
-                return $user->can('product-read') ? true : false;
+                return $user->can('view', Product::class) ? true : false;
             case 'store':
-                return $user->can('product-create') ? true : false;
+                return $user->can('create', Product::class) ? true : false;
             case 'update':
-                return $user->can('product-update') ? true : false;
+                return $user->can('update', Product::class) ? true : false;
             case 'delete':
-                return $user->can('product-delete') ? true : false;
+                return $user->can('delete', Product::class) ? true : false;
             default:
                 return false;
         }
