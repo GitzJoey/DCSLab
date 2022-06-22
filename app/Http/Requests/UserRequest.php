@@ -25,12 +25,19 @@ class UserRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, User::class)) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, User::class)) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, User::class)) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, User::class)) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', User::class) ? true : false;
+            case 'store':
+                return $user->can('create', User::class) ? true : false;
+            case 'update':
+                return $user->can('update', User::class) ? true : false;
+            case 'delete':
+                return false;
+            default:
+                return false;
+        }
     }
 
     /**

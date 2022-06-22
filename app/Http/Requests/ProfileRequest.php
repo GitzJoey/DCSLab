@@ -27,7 +27,7 @@ class ProfileRequest extends FormRequest
             case 'updateRoles':
             case 'updateSettings':
             case 'changePassword':
-                return $user->can('update', $user, Profile::class) ? true: false;
+                return $user->can('update', Profile::class) ? true: false;
             default:
                 return false;
         }

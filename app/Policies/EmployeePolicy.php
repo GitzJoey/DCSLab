@@ -33,7 +33,7 @@ class EmployeePolicy
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Employee $employee)
+    public function view(User $user, Employee $employee = null)
     {
         return $this->viewAny($user);
     }

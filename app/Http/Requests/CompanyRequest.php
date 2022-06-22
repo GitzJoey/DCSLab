@@ -26,12 +26,19 @@ class CompanyRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, Company::class)) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, Company::class)) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, Company::class)) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, Company::class)) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', Company::class) ? true : false;
+            case 'store':
+                return $user->can('create', Company::class) ? true : false;
+            case 'update':
+                return $user->can('update', Company::class) ? true : false;
+            case 'delete':
+                return $user->can('delete', Company::class) ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**

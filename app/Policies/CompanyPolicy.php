@@ -33,7 +33,7 @@ class CompanyPolicy
      * @param  \App\Models\Company  $company
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Company $company)
+    public function view(User $user, Company $company = null)
     {
         return $this->viewAny($user);
     }

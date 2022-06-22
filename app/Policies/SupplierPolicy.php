@@ -33,7 +33,7 @@ class SupplierPolicy
      * @param  \App\Models\Supplier  $supplier
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Supplier $supplier)
+    public function view(User $user, Supplier $supplier = null)
     {
         return $this->viewAny($user);
     }

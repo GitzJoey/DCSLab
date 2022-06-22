@@ -33,7 +33,7 @@ class WarehousePolicy
      * @param  \App\Models\Warehouse  $warehouse
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Warehouse $warehouse)
+    public function view(User $user, Warehouse $warehouse = null)
     {
         return $this->viewAny($user);
     }
