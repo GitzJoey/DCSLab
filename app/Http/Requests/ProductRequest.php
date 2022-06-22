@@ -29,13 +29,13 @@ class ProductRequest extends FormRequest
         switch($currentRouteMethod) {
             case 'readProducts':
             case 'readServices':
-                return $user->can('view', $user, Product::class) ? true : false;
+                return $user->can('view', Product::class) ? true : false;
             case 'store':
-                return $user->can('create', $user, Product::class) ? true : false;
+                return $user->can('create', Product::class) ? true : false;
             case 'update':
-                return $user->can('update', $user, Product::class) ? true : false;
+                return $user->can('update', Product::class) ? true : false;
             case 'delete':
-                return $user->can('delete', $user, Product::class) ? true : false;
+                return $user->can('delete', Product::class) ? true : false;
             default:
                 return false;
         }

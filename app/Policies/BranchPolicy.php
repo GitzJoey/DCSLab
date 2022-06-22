@@ -33,7 +33,7 @@ class BranchPolicy
      * @param  \App\Models\Branch  $branch
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Branch $branch)
+    public function view(User $user, Branch $branch = null)
     {
         return $this->viewAny($user);
     }

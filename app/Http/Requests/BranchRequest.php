@@ -24,12 +24,19 @@ class BranchRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, Branch::class)) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, Branch::class)) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, Branch::class)) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, Branch::class)) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', Branch::class) ? true : false;
+            case 'store':
+                return $user->can('create', Branch::class) ? true : false;
+            case 'update':
+                return $user->can('update', Branch::class) ? true : false;
+            case 'delete':
+                return $user->can('delete', Branch::class) ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**

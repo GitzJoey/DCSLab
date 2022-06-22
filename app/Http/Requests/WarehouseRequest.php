@@ -24,12 +24,19 @@ class WarehouseRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, Warehouse::class)) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, Warehouse::class)) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, Warehouse::class)) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, Warehouse::class)) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', Warehouse::class) ? true : false;
+            case 'store':
+                return $user->can('create', Warehouse::class) ? true : false;
+            case 'update':
+                return $user->can('update', Warehouse::class) ? true : false;
+            case 'delete':
+                return $user->can('delete', Warehouse::class) ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**

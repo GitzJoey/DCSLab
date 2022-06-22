@@ -26,12 +26,19 @@ class SupplierRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, Supplier::class)) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, Supplier::class)) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, Supplier::class)) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, Supplier::class)) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', Supplier::class) ? true : false;
+            case 'store':
+                return $user->can('create', Supplier::class) ? true : false;
+            case 'update':
+                return $user->can('update', Supplier::class) ? true : false;
+            case 'delete':
+                return $user->can('delete', Supplier::class) ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**
