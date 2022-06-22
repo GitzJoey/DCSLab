@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserRoles;
+use App\Models\Profile;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,11 +20,17 @@ class ProfileRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
         
-        if ($user->roles->isEmpty()) return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-        
-        if ($user->can('profile-update')) return true;
+        switch($currentRouteMethod) {
+            case 'updateProfile':
+            case 'updateRoles':
+            case 'updateSettings':
+            case 'changePassword':
+                return $user->can('update', $user, Profile::class) ? true: false;
+            default:
+                return false;
+        }
 
         return false;
     }
