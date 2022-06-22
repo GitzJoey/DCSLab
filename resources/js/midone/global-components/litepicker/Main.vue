@@ -1,8 +1,14 @@
 <template>
-  <input v-picker-directive="{ props, emit }" type="text" :value="modelValue" />
+  <input
+    ref="litepickerRef"
+    v-picker-directive="{ props, emit }"
+    type="text"
+    :value="modelValue"
+  />
 </template>
 
 <script setup>
+import { inject, onMounted, ref } from "vue";
 import { setValue, init, reInit } from "./index";
 
 const vPickerDirective = {
@@ -28,9 +34,27 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  refKey: {
+    type: String,
+    default: null,
+  },
 });
 
 const emit = defineEmits();
+
+const litepickerRef = ref();
+const bindInstance = () => {
+  if (props.refKey) {
+    const bind = inject(`bind[${props.refKey}]`);
+    if (bind) {
+      bind(litepickerRef.value);
+    }
+  }
+};
+
+onMounted(() => {
+  bindInstance();
+});
 </script>
 
 <style scoped>

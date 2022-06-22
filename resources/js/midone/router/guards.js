@@ -13,5 +13,19 @@ export async function userHasRoles(to, userContext, next) {
 }
 
 export async function userHasPermissions(to, userContext, next) {
+    try {
+        if (to.matched.some(r => r.meta.permissions)) {
+            let hasPermissions = false;
 
+            hasPermissions = _.map(userContext.roles, (role) => {
+                if (role.permissions_description.length !== 0) {
+                    let found = _.intersection(to.meta.permissions, role.permissions_description.split(',')).length === 0 ? false:true;
+                    if (found) return found;
+                }
+            });
+
+            if (!hasPermissions) next({ name: 'side-menu-error-code', params: { code: '401' } });
+        }
+    } catch (err) {
+    }
 }

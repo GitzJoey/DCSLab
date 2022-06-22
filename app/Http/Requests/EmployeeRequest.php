@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserRoles;
 use App\Enums\ActiveStatus;
+use App\Models\Employee;
 use App\Rules\isValidCompany;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
@@ -24,12 +24,19 @@ class EmployeeRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('employee-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('employee-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('employee-update')) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('employee-delete')) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', Employee::class) ? true : false;
+            case 'store':
+                return $user->can('create', Employee::class) ? true : false;
+            case 'update':
+                return $user->can('update', Employee::class) ? true : false;
+            case 'delete':
+                return $user->can('delete', Employee::class) ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**

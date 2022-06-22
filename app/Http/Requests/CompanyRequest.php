@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
-use App\Enums\UserRoles;
+use App\Models\Company;
 use App\Rules\deactivateDefaultCompany;
 use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
@@ -26,12 +26,19 @@ class CompanyRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('company-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('company-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('company-update')) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('company-delete')) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', Company::class) ? true : false;
+            case 'store':
+                return $user->can('create', Company::class) ? true : false;
+            case 'update':
+                return $user->can('update', Company::class) ? true : false;
+            case 'delete':
+                return $user->can('delete', Company::class) ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**
