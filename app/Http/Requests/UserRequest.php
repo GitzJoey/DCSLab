@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -24,14 +25,11 @@ class UserRequest extends FormRequest
 
         /** @var \App\User */
         $user = Auth::user();
-        if ($user->roles->isEmpty()) return false;
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->can('user-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('user-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('user-update')) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('user-delete')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, User::class)) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, User::class)) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, User::class)) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, User::class)) return true;
 
         return false;
     }

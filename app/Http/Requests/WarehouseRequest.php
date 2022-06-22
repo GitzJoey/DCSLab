@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
+use App\Models\Warehouse;
 use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,10 +25,10 @@ class WarehouseRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('warehouse-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('warehouse-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('warehouse-update')) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('warehouse-delete')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, Warehouse::class)) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, Warehouse::class)) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, Warehouse::class)) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, Warehouse::class)) return true;
 
         return false;
     }

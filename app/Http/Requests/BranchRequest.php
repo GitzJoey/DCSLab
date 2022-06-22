@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\ActiveStatus;
-use App\Enums\UserRoles;
+use App\Models\Branch;
 use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
@@ -24,10 +24,10 @@ class BranchRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('branch-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('branch-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('branch-update')) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('branch-delete')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, Branch::class)) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, Branch::class)) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, Branch::class)) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, Branch::class)) return true;
 
         return false;
     }

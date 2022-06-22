@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\ActiveStatus;
 use App\Enums\PaymentTerm;
 use App\Enums\PaymentTermType;
-use App\Enums\UserRoles;
+use App\Models\Supplier;
 use App\Rules\isValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -26,10 +26,10 @@ class SupplierRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($this->route()->getActionMethod() == 'read' && $user->can('supplier-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->can('supplier-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->can('supplier-update')) return true;
-        if ($this->route()->getActionMethod() == 'delete' && $user->can('supplier-delete')) return true;
+        if ($this->route()->getActionMethod() == 'read' && $user->can('view', $user, Supplier::class)) return true;
+        if ($this->route()->getActionMethod() == 'store' && $user->can('create', $user, Supplier::class)) return true;
+        if ($this->route()->getActionMethod() == 'update' && $user->can('update', $user, Supplier::class)) return true;
+        if ($this->route()->getActionMethod() == 'delete' && $user->can('delete', $user, Supplier::class)) return true;
 
         return false;
     }
