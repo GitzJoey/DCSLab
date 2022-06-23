@@ -111,4 +111,11 @@ class ProductGroupController extends BaseController
 
         return is_null($result) ? response()->error() : response()->success();
     }
+    
+    public function delete($id)
+    {
+        $result = $this->productGroupService->delete($id);
+
+        return !$result ? response()->error() : response()->success();
+    }
 }

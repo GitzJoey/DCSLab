@@ -6,7 +6,6 @@
                 <table class="table table-report -mt-2">
                     <thead>
                         <tr>
-                            <th class="whitespace-nowrap">{{ t('views.branch.table.cols.company') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.name') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.branch.table.cols.is_main') }}</th>
@@ -18,7 +17,6 @@
                     <tbody>
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
                             <tr class="intro-x">
-                                <td>{{ item.company.name }}</td>
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>

@@ -4,13 +4,11 @@ namespace Tests\Feature\API;
 
 use Tests\APITestCase;
 use App\Models\Company;
-use App\Models\ProductGroup;
 use App\Actions\RandomGenerator;
-use Illuminate\Support\Facades\DB;
 use App\Enums\ProductGroupCategory;
+use App\Models\ProductGroup;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ProductGroupAPITest extends APITestCase
 {
@@ -36,344 +34,82 @@ class ProductGroupAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_save_all()
+    public function test_api_call_product_group_save_with_all_field_filled()
     {
         $this->actingAs($this->developer);
-
-        $companyId = Company::inRandomOrder()->first()->id;
+        
+        $companyId = $this->developer->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $category = $this->faker->randomElement(ProductGroupCategory::toArrayName());
 
         $api = $this->json('POST', route('api.post.db.product.product_group.save'), [
-            'company_id' => $companyId,
-            'code' => $code, 
+            'company_id' => Hashids::encode($companyId),
+            'code' => $code,
             'name' => $name,
             'category' => $category
         ]);
-
-        $api->assertSuccessful();
 
         $this->assertDatabaseHas('product_groups', [
             'company_id' => $companyId,
             'code' => $code,
             'name' => $name,
-            'category' => $category
+            'category' => ProductGroupCategory::fromName($category)->value
         ]);
+        
+        $api->assertSuccessful();
     }
 
-    // public function test_api_call_save_with_existing_code_in_same_company()
-    // {
-    //     $this->actingAs($this->developer);
+    public function test_api_call_product_group_edit_with_all_field_filled()
+    {
+        $this->actingAs($this->developer);
 
-    //     $companyId = $this->developer->companies()->whereHas('product_groups')->inRandomOrder()->first()->id;
-        
-    //     $product_group = ProductGroup::whereCompanyId($companyId)->inRandomOrder()->first();
+        $companyId = $this->developer->companies->random(1)->first()->id;
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $category = $this->faker->numberBetween(1, 3);
 
-    //     $code = (new RandomGenerator())->generateAlphaNumeric(5);
-    //     $name = $this->faker->name;
-    //     $category = $this->faker->boolean();
+        $productGroup = ProductGroup::create([
+            'company_id' => $companyId,
+            'code' => $code,
+            'name' => $name,
+            'category' => $category
+        ]);
 
-    //     ProductGroup::create([
-    //         'company_id' => $companyId,
-    //         'code' => $code, 
-    //         'name' => $name,
-    //         'category' => $category
-    //     ]);
+        $productGroupId = $productGroup->id;
+        $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
+        $newName = $this->faker->name;
+        $newCategory = $this->faker->randomElement(ProductGroupCategory::toArrayName());
 
-    //     $other_product_group = ProductGroup::whereCompanyId($companyId)->where('id', '!=', $product_group->id)->first();
-    //     if (!$other_product_group)
-    //         $this->markTestSkipped('There\'s no other product_groups');
+        $api_edit = $this->json('POST', route('api.post.db.product.product_group.edit', [ 'id' => Hashids::encode($productGroupId) ]), [
+            'company_id' => Hashids::encode($companyId),
+            'code' => $newCode,
+            'name' => $newName,
+            'category' => $newCategory
+        ]);
 
-    //     $code = $other_product_group->code;
-    //     $name = $this->faker->name;
-    //     $category = $this->faker->boolean();
+        $api_edit->assertSuccessful();
+        $this->assertDatabaseHas('product_groups', [
+            'company_id' => $companyId,
+            'code' => $newCode,
+            'name' => $newName,
+            'category' => ProductGroupCategory::fromName($newCategory)->value
+        ]);
+    }
+    
+    public function test_api_call_product_group_delete()
+    {
+        $this->actingAs($this->developer);
 
-    //     $api = $this->json('POST', route('api.post.db.product.product_group.save'), [
-    //         'company_id' => Hashids::encode($companyId),
-    //         'code' => $code, 
-    //         'name' => $name,
-    //         'category' => $category
-    //     ]);
+        $companyIds = $this->developer->companies->pluck('id');
+        $productGroupId = ProductGroup::whereIn('company_id', $companyIds)->inRandomOrder()->first()->id;
+        $hId = Hashids::encode($productGroupId);
 
-    //     $api->assertStatus(422);
-    //     $api->assertJsonStructure([
-    //         'errors'
-    //     ]);
-    // }
+        $api = $this->json('POST', route('api.post.db.product.product_group.delete', $hId));
 
-    // public function test_api_call_save_with_existing_code_in_different_company()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $company_1 = $this->developer->companies[0];
-    //     $company_2 = $this->developer->companies[1];
-
-    //     $code = (new RandomGenerator())->generateAlphaNumeric(5);
-
-    //     ProductGroup::create([
-    //         'company_id' => $company_1->id,
-    //         'code' => $code, 
-    //         'name' => $this->faker->name,
-    //         'category' => 1
-    //     ]);
-
-    //     $api = $this->json('POST', route('api.post.db.product.product_group.save'), [
-    //         'company_id' => Hashids::encode($company_2->id),
-    //         'code' => $code, 
-    //         'name' => $this->faker->name,
-    //         'category' => $this->faker->randomElement(ProductGroupCategory::toArrayName())
-    //     ]);
-
-    //     $api->assertSuccessful();
-    //     $this->assertDatabaseHas('product_groups', [
-    //         'company_id' => $company_2->id,
-    //         'code' => $code
-    //     ]);
-    // }
-
-    // public function test_api_call_save_with_empty_string_param()
-    // {
-    //     $companyId = '';
-    //     $code = '';
-    //     $name = '';
-    //     $name = '';
-    //     $category = '';
-
-    //     $api = $this->json('POST', route('api.post.db.product.product_group.save'), [
-    //         'company_id' => $companyId,
-    //         'code' => $code, 
-    //         'name' => $name,
-    //         'category' => $category
-    //     ]);
-
-    //     $api->assertStatus(500);
-    //     $api->assertJsonStructure([
-    //         'message'
-    //     ]);
-    // }
-
-    // public function test_api_call_edit_with_all()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $companyId = $this->developer->companies->random(1)->first()->id;
-    //     $code = (new RandomGenerator())->generateAlphaNumeric(5);
-    //     $name = $this->faker->name;
-    //     $category = $this->faker->boolean();
-
-    //     $product_group = ProductGroup::create([
-    //         'company_id' => $companyId,
-    //         'code' => $code, 
-    //         'name' => $name,
-    //         'category' => $category
-    //     ]);
-
-    //     $product_groupId = $product_group->id;
-    //     $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
-    //     $newName = $this->faker->name;
-    //     $NewCategory = $this->faker->boolean();
-
-    //     $api_edit = $this->json('POST', route('api.post.db.product.product_group.edit', [ 'id' => Hashids::encode($product_groupId) ]), [
-    //         'company_id' => Hashids::encode($companyId),
-    //         'code' => $newCode,
-    //         'name' => $newName,
-    //         'category' => $NewCategory
-    //     ]);
-
-    //     $api_edit->assertSuccessful();
-    //     $this->assertDatabaseHas('product_groups', [
-    //         'id' => $product_groupId,
-    //         'company_id' => $companyId,
-    //         'code' => $newCode, 
-    //         'name' => $newName,
-    //         'category' => $NewCategory
-    //     ]);
-    // }
-
-    // public function test_api_call_edit_and_change_the_code_with_existing_code_in_the_same_company()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $company = $this->developer->companies()->whereHas('product_groups')->inRandomOrder()->first();
-    //     if (!$company)
-    //         $this->markTestSkipped('No suitable company found');
-
-    //     $companyId = $company->id;
-    //     $code = (new RandomGenerator())->generateAlphaNumeric(5);
-    //     $name = $this->faker->name;
-    //     $category = $this->faker->boolean();
-
-    //     ProductGroup::create([
-    //         'company_id' => $companyId,
-    //         'code' => $code, 
-    //         'name' => $name,
-    //         'category' => $category
-    //     ]);
-
-    //     $twoProductGroupes = ProductGroup::whereCompanyId($company->id)->inRandomOrder()->take(2)->get();
-    //     if (count($twoProductGroupes) != 2) {
-    //         $this->markTestSkipped('Not enough ProductGroup for testing');  
-    //     }
-
-    //     $companyId = Hashids::encode($company->id);
-    //     $code = $twoProductGroupes[1]->code;
-    //     $name = $this->faker->name;
-    //     $category = $this->faker->boolean();
-
-    //     $api_edit = $this->json('POST', route('api.post.db.product.product_group.edit', [ 'id' => Hashids::encode($twoProductGroupes[0]->id) ]), [
-    //         'company_id' => $companyId,
-    //         'code' => $code,
-    //         'name' => $name,
-    //         'category' => $category
-    //     ]);
-
-    //     $api_edit->assertStatus(422);
-    //     $api_edit->assertJsonStructure([
-    //         'errors',
-    //     ]);
-    // }
-
-    // public function test_api_call_delete_nonexistance_id()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $api = $this->json('POST', route('api.post.db.product.product_group.delete', (new RandomGenerator())->generateAlphaNumeric(5)));
-
-    //     $api->assertStatus(500);
-    // }
-
-    // public function test_api_call_read_with_empty_search()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $company = $this->developer->companies->random(1)->first();
-                
-    //     $companyId = $company->id;
-    //     $search = '';
-    //     $paginate = 1;
-    //     $page = 1;
-    //     $perPage = 10;
-    //     $refresh = '';
-
-    //     $api = $this->getJson(route('api.get.db.product.product_group.read', [
-    //         'companyId' => Hashids::encode($companyId),
-    //         'search' => $search,
-    //         'paginate' => $paginate,
-    //         'page' => $page,
-    //         'perPage' => $perPage,
-    //         'refresh' => $refresh
-    //     ]));
-
-    //     $api->assertSuccessful();
-    //     $api->assertJsonStructure([
-    //         'data', 
-    //         'links' => [
-    //             'first', 'last', 'prev', 'next'
-    //         ], 
-    //         'meta'=> [
-    //             'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-    //         ]
-    //     ]);
-    // }
-
-    // public function test_api_call_read_with_special_char_in_search()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $company = $this->developer->companies->random(1)->first();
-
-    //     $companyId = $company->id;
-    //     $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-    //     $paginate = 1;
-    //     $page = 1;
-    //     $perPage = 10;
-    //     $refresh = '';
-
-    //     $api = $this->getJson(route('api.get.db.product.product_group.read', [
-    //         'companyId' => Hashids::encode($companyId),
-    //         'search' => $search,
-    //         'paginate' => $paginate,
-    //         'page' => $page,
-    //         'perPage' => $perPage,
-    //         'refresh' => $refresh
-    //     ]));
-
-    //     $api->assertSuccessful();
-    //     $api->assertJsonStructure([
-    //         'data', 
-    //         'links' => [
-    //             'first', 'last', 'prev', 'next'
-    //         ], 
-    //         'meta'=> [
-    //             'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-    //         ]
-    //     ]);
-    // }
-
-    // public function test_api_call_read_with_negative_value_in_perpage_param()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $company = $this->developer->companies->random(1)->first();
-
-    //     $companyId = $company->id;
-    //     $search = "";
-    //     $paginate = 1;
-    //     $page = 1;
-    //     $perPage = -10;
-    //     $refresh = '';
-
-    //     $api = $this->getJson(route('api.get.db.product.product_group.read', [
-    //         'companyId' => Hashids::encode($companyId),
-    //         'search' => $search,
-    //         'paginate' => $paginate,
-    //         'page' => $page,
-    //         'perPage' => $perPage,
-    //         'refresh' => $refresh
-    //     ]));
-
-    //     $api->assertSuccessful();
-    //     $api->assertJsonStructure([
-    //         'data', 
-    //         'links' => [
-    //             'first', 'last', 'prev', 'next'
-    //         ], 
-    //         'meta'=> [
-    //             'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-    //         ]
-    //     ]);
-    // }
-
-    // public function test_api_call_read_without_pagination()
-    // {
-    //     $this->actingAs($this->developer);
-
-    //     $company = $this->developer->companies->random(1)->first();
-
-    //     $companyId = $company->id;
-    //     $search = "";
-    //     $page = 1;
-    //     $perPage = 10;
-    //     $refresh = '';
-
-    //     $api = $this->getJson(route('api.get.db.product.product_group.read', [
-    //         'companyId' => Hashids::encode($companyId),
-    //         'search' => $search,
-    //         'page' => $page,
-    //         'perPage' => $perPage,
-    //         'refresh' => $refresh
-    //     ]));
-
-    //     $api->assertSuccessful();
-    //     $api->assertJsonStructure([
-    //         'data', 
-    //         'links' => [
-    //             'first', 'last', 'prev', 'next'
-    //         ], 
-    //         'meta'=> [
-    //             'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-    //         ]
-    //     ]);
-    // }
+        $api->assertSuccessful();
+        $this->assertSoftDeleted('product_groups', [
+            'id' => $productGroupId
+        ]);
+    }
 }
