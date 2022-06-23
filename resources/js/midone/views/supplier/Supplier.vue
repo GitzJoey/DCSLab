@@ -3,7 +3,7 @@
     <div class="intro-y" v-if="mode === 'list'">
         <DataList :title="t('views.supplier.table.title')" :data="supplierList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
             <template v-slot:table="tableProps">
-                <table class="table table-report -mt-2">
+                <table class="table table-report -mt-2" aria-describedby="">
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.code') }}</th>
@@ -227,7 +227,7 @@
                     <div id="tab-product-content" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="tab-product">
                         <div class="mb-3">
                             <label for="inputProductLists" class="form-label">{{ t('views.supplier.fields.products.product_lists') }}</label>                            
-                            <table class="table table--sm">
+                            <table class="table table--sm" aria-describedby="">
                                 <thead>
                                     <tr>
                                         <th>{{ t('views.supplier.fields.products.table.cols.selected') }}</th>

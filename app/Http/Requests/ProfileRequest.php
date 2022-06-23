@@ -31,8 +31,6 @@ class ProfileRequest extends FormRequest
             default:
                 return false;
         }
-
-        return false;
     }
 
     /**

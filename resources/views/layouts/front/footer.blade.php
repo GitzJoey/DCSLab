@@ -7,10 +7,10 @@
                         <div class="footer-logo d-flex align-items-end">
                             <a class="mt-30" href=""><img src="{{ asset('images/g_logo.png') }}" alt="Logo" width="35px" height="35px"></a>
                             <ul class="social mt-30">
-                                <li><a href=""><i class="icon icon-social-facebook"></i></a></li>
-                                <li><a href=""><i class="icon icon-social-twitter"></i></a></li>
-                                <li><a href=""><i class="icon icon-social-instagram"></i></a></li>
-                                <li><a href=""><i class="icon icon-social-linkedin"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-facebook" aria-hidden="true"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-twitter" aria-hidden="true"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-instagram" aria-hidden="true"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-linkedin" aria-hidden="true"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="newsletter">
                             <form action="#">
                                 <input type="text" placeholder="Your Email">
-                                <button type="submit"><i class="icon icon-arrow-right-circle"></i></button>
+                                <button type="submit"><i class="icon icon-arrow-right-circle" aria-hidden="true"></i></button>
                             </form>
                         </div>
                         <p class="text">{{ __('front.footer.subscribe.sub_news_desc') }}</p>
@@ -78,4 +78,4 @@
     </div>
 </footer>
 
-<a class="back-to-top hide" href=""><i class="icon icon-arrow-up"></i></a>
+<a class="back-to-top hide" href=""><i class="icon icon-arrow-up" aria-hidden="true"></i></a>
