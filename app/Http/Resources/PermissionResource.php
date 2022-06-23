@@ -19,4 +19,4 @@ class PermissionResource extends JsonResource
             'display_name' => $this->display_name
         ];
     }
-} 
+}
