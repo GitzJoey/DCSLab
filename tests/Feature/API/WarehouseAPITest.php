@@ -372,7 +372,7 @@ class WarehouseAPITest extends APITestCase
             'status' => ActiveStatus::fromName($newStatus)
         ]);
 
-        $api_edit->assertStatus(500);
+        $api_edit->assertStatus(422);
         $api_edit->assertJsonStructure([
             'message'
         ]);
