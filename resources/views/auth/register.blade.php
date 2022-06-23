@@ -54,7 +54,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="col-12">
-                                    <img class="img px-1" src="{{ captcha_src('flat') }}" /><a href="{{ route('register') }}"><button class="btn bg-white"><i class="icon icon-refresh" aria-hidden="true" /></button></a>
+                                    <img class="img px-1" src="{{ captcha_src('flat') }}" alt="" /><a href="{{ route('register') }}"><button class="btn bg-white"><i class="icon icon-refresh" aria-hidden="true" /></button></a>
                                     <input class="form-control @error('captcha') border-danger @enderror" type="text" name="captcha">
                                     @error('captcha')
                                         <div class="form-text text-danger">{{ $errors->first('captcha') }}</div>
