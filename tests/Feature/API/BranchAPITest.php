@@ -6,6 +6,7 @@ use App\Models\Branch;
 use Tests\APITestCase;
 use App\Enums\ActiveStatus;
 use App\Actions\RandomGenerator;
+use App\Http\Controllers\BranchController;
 use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,6 +19,8 @@ class BranchAPITest extends APITestCase
     protected function setUp(): void
     {
         Parent::setUp();
+
+        $this->api = app(BranchController::class);
     }
     
     public function test_api_call_require_authentication()
