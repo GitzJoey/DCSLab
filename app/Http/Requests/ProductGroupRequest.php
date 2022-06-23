@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserRoles;
 use App\Rules\isValidCompany;
 use App\Enums\ProductGroupCategory;
+use App\Models\ProductGroup;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -24,15 +24,19 @@ class ProductGroupRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        if ($user->roles->isEmpty()) return false;
-
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
-
-        if ($this->route()->getActionMethod() == 'read' && $user->hasPermission('product-read')) return true;
-        if ($this->route()->getActionMethod() == 'store' && $user->hasPermission('product-create')) return true;
-        if ($this->route()->getActionMethod() == 'update' && $user->hasPermission('product-update')) return true;
-
-        return false;
+        $currentRouteMethod = $this->route()->getActionMethod();
+        switch($currentRouteMethod) {
+            case 'read':
+                return $user->can('view', ProductGroup::class) ? true : false;
+            case 'store':
+                return $user->can('create', ProductGroup::class) ? true : false;
+            case 'update':
+                return $user->can('update', ProductGroup::class) ? true : false;
+            case 'delete':
+                return $user->can('delete', ProductGroup::class) ? true : false;
+            default:
+                return false;
+        }
     }
 
     /**
