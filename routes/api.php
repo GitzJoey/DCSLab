@@ -191,11 +191,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
                 Route::post('edit/{id}', [ProductController::class, 'update'])->name('.edit');
                 Route::post('delete/{id}', [ProductController::class, 'delete'])->name('.delete');
             });
-            Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function() {
-                Route::post('save', [ProductGroupController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [ProductGroupController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [ProductGroupController::class, 'delete'])->name('.delete');
-            });
         });
 
         #endregion

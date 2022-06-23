@@ -36,9 +36,9 @@ class ProductGroupAPITest extends APITestCase
 
     public function test_api_call_product_group_save_with_all_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
         
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
         $category = $this->faker->randomElement(ProductCategory::toArrayName());
