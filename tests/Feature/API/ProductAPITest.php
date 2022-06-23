@@ -8,33 +8,28 @@ use Tests\APITestCase;
 
 class ProductAPITest extends APITestCase
 {
-    public function test_api_call_require_authentication()
+    public function test_product_api_call_require_authentication()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_call_read()
+    public function test_product_api_call_save()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_call_read_getPaymentTermType()
+    public function test_product_api_call_read()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_call_save()
+    public function test_product_api_call_edit()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_call_edit()
+    public function test_product_api_call_delete()
     {
-        $this->assertTrue(true);
-    }
-
-    public function test_api_call_delete()
-    {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 }

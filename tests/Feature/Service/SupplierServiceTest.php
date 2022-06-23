@@ -3,6 +3,7 @@
 namespace Tests\Feature\Service;
 
 use App\Actions\RandomGenerator;
+use App\Enums\PaymentTermType;
 use App\Services\SupplierService;
 use App\Models\Company;
 use App\Models\Supplier;
@@ -45,40 +46,12 @@ class SupplierServiceTest extends ServiceTestCase
         $this->selectedCompanyId = Company::inRandomOrder()->get()[0]->id;
     }
 
-    public function test_call_read()
+    public function test_supplier_service_call_save()
     {
-        $response = $this->service->read($this->selectedCompanyId, '', true, 10);
-
-        $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertNotNull($response);
-    }
-
-
-    public function test_call_read_with_negative_value_in_perpage_param()
-    {
-        $response = $this->service->read($this->selectedCompanyId, '', true, -10);
-
-        $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertNotNull($response);
-    }
-
-    public function test_call_read_without_pagination()
-    {
-        $response = $this->service->read($this->selectedCompanyId, '', false, 10);
-
-        $this->assertInstanceOf(Collection::class, $response);
-    }
-
-    public function test_create()
-    {
-        $paymentTermType = ['PIA','NET30','EOM','COD','CND'];
-
-        shuffle($paymentTermType);
-
         $company_id = Company::inRandomOrder()->get()[0]->id;
-        $code = (new RandomGenerator())->generateNumber(1, 9999);
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $payment_term_type = $paymentTermType[0];
+        $payment_term_type = $this->faker->randomElement(PaymentTermType::toArrayValue());
         $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
@@ -127,16 +100,51 @@ class SupplierServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_update()
+    public function test_supplier_service_call_read()
     {
-        $paymentTermType = ['PIA','NET30','EOM','COD','CND'];
+        $response = $this->service->read(
+            $this->selectedCompanyId, 
+            '', 
+            true, 
+            10
+        );
 
-        shuffle($paymentTermType);
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
+    }
 
+
+    public function test_supplier_service_call_read_with_negative_value_in_perpage_param()
+    {
+        $response = $this->service->read(
+            $this->selectedCompanyId, 
+            '', 
+            true, 
+            -10
+        );
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
+    }
+
+    public function test_supplier_service_call_read_without_pagination()
+    {
+        $response = $this->service->read(
+            $this->selectedCompanyId, 
+            '', 
+            false, 
+            10
+        );
+
+        $this->assertInstanceOf(Collection::class, $response);
+    }
+
+    public function test_supplier_service_call_update()
+    {
         $company_id = Company::inRandomOrder()->get()[0]->id;
-        $code = (new RandomGenerator())->generateNumber(1, 9999);
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $payment_term_type = $paymentTermType[0];
+        $payment_term_type = $this->faker->randomElement(PaymentTermType::toArrayValue());
         $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
@@ -172,11 +180,9 @@ class SupplierServiceTest extends ServiceTestCase
 
         $rId = Hashids::decode($response->hId)[0];
 
-        shuffle($paymentTermType);
-
-        $code_new = (new RandomGenerator())->generateNumber(1, 9999);
+        $code_new = (new RandomGenerator())->generateAlphaNumeric(5);
         $name_new = $this->faker->name;
-        $payment_term_type_new = $paymentTermType[0];
+        $payment_term_type_new = $this->faker->randomElement(PaymentTermType::toArrayValue());
         $payment_term_new = 30;
         $contact_new = $this->faker->e164PhoneNumber;
         $address_new = $this->faker->address;
@@ -223,16 +229,12 @@ class SupplierServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_delete()
+    public function test_supplier_service_call_delete()
     {
-        $paymentTermType = ['PIA','NET30','EOM','COD','CND'];
-
-        shuffle($paymentTermType);
-
         $company_id = Company::inRandomOrder()->get()[0]->id;
-        $code = (new RandomGenerator())->generateNumber(1, 9999);
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $payment_term_type = $paymentTermType[0];
+        $payment_term_type = $this->faker->randomElement(PaymentTermType::toArrayValue());
         $payment_term = 0;
         $contact = $this->faker->e164PhoneNumber;
         $address = $this->faker->address;
@@ -275,7 +277,7 @@ class SupplierServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_delete_with_nonexistence_id()
+    public function test_supplier_service_call_delete_with_nonexistence_id()
     {
         $max_int = (2147483647);
         

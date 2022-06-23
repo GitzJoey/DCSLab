@@ -18,7 +18,7 @@ class UnitAPITest extends APITestCase
         Parent::setUp();
     }
     
-    public function test_api_call_require_authentication()
+    public function test_unit_api_call_require_authentication()
     {
         $api = $this->getJson('/api/get/dashboard/product/unit/read');
         $this->assertContains($api->getStatusCode(), array(401, 405));
@@ -33,7 +33,7 @@ class UnitAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_unit_save_with_all_field_filled()
+    public function test_unit_api_call_unit_save_with_all_field_filled()
     {
         $this->actingAs($this->developer);
         
@@ -62,7 +62,7 @@ class UnitAPITest extends APITestCase
         $api->assertSuccessful();
     }
 
-    public function test_api_call_unit_read_with_empty_search()
+    public function test_unit_api_call_unit_read_with_empty_search()
     {
         $this->actingAs($this->developer);
 
@@ -94,7 +94,7 @@ class UnitAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_unit_edit_with_all_field_filled()
+    public function test_unit_api_call_unit_edit_with_all_field_filled()
     {
         $this->actingAs($this->developer);
 
@@ -138,7 +138,7 @@ class UnitAPITest extends APITestCase
         ]);
     }
     
-    public function test_api_call_unit_delete()
+    public function test_unit_api_call_unit_delete()
     {
         $this->actingAs($this->developer);
 

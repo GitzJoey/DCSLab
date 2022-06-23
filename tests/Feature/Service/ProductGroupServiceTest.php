@@ -21,7 +21,7 @@ class ProductGroupServiceTest extends ServiceTestCase
         $this->service = app(ProductGroupService::class);
     }
 
-    public function test_call_save()
+    public function test_product_group_service_call_save()
     {
         $company_id = Company::inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -43,7 +43,7 @@ class ProductGroupServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_read_with_empty_search()
+    public function test_product_group_service_call_read_with_empty_search()
     {
         $companyId = Company::has('productGroups')->inRandomOrder()->first()->id;
         $category = (new RandomGenerator())->generateNumber(1, 3);
@@ -63,7 +63,7 @@ class ProductGroupServiceTest extends ServiceTestCase
     }
 
     
-    public function test_call_read_with_special_char_in_search()
+    public function test_product_group_service_call_read_with_special_char_in_search()
     {
         $companyId = Company::has('productGroups')->inRandomOrder()->first()->id;
         $category = (new RandomGenerator())->generateNumber(1, 3);
@@ -87,7 +87,7 @@ class ProductGroupServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
     }
 
-    public function test_call_edit()
+    public function test_product_group_service_call_edit()
     {
         $company_id = Company::inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -123,7 +123,7 @@ class ProductGroupServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_delete()
+    public function test_product_group_service_call_delete()
     {
         $company_id = Company::inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);

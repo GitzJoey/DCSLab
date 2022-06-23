@@ -18,7 +18,7 @@ class RoleServiceTest extends ServiceTestCase
         $this->service = app(RoleService::class);
     }
 
-    public function test_call_read_with_empty_param()
+    public function test_role_service_call_read_with_empty_param()
     {
         $response = $this->service->read();
 
@@ -26,7 +26,7 @@ class RoleServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
     }
 
-    public function test_call_read_with_default_role_param()
+    public function test_role_service_call_read_with_default_role_param()
     {
         $response = $this->service->read(exclude: ['dev', 'administraotr']);
 
@@ -34,14 +34,14 @@ class RoleServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
     }
 
-    public function test_call_read_with_random_param_expect_empty()
+    public function test_role_service_call_read_with_random_param_expect_empty()
     {
         $response = $this->service->read(exclude: ['random']);
 
         $this->assertNotNull($response);
     }
 
-    public function test_call_read_with_null_param()
+    public function test_role_service_call_read_with_null_param()
     {
         $this->expectException(TypeError::class);
         $this->service->read(null);
