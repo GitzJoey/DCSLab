@@ -1,3 +1,5 @@
+![Tests](https://github.com/GitzJoey/DCSLab/actions/workflows/laravel.yml/badge.svg)
+
 # DCSLab
 
 Doctor Computer SG Lab
