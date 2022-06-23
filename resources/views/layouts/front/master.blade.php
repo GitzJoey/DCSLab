@@ -65,10 +65,10 @@
 
                                 <div class="navbar-social d-none d-sm-flex align-items-center">
                                     <ul>
-                                        <li class="mx-1"><a href=""><i class="icon icon-social-facebook" /></a></li>
-                                        <li class="mx-1"><a href=""><i class="icon icon-social-twitter" /></a></li>
-                                        <li class="mx-1"><a href=""><i class="icon icon-social-instagram" /></a></li>
-                                        <li class="mx-1"><a href=""><i class="icon icon-social-linkedin" /></a></li>
+                                        <li class="mx-1"><a href=""><i class="icon icon-social-facebook" aria-hidden="true" /></a></li>
+                                        <li class="mx-1"><a href=""><i class="icon icon-social-twitter" aria-hidden="true" /></a></li>
+                                        <li class="mx-1"><a href=""><i class="icon icon-social-instagram" aria-hidden="true" /></a></li>
+                                        <li class="mx-1"><a href=""><i class="icon icon-social-linkedin" aria-hidden="true" /></a></li>
                                     </ul>
                                 </div>
                             </nav>
