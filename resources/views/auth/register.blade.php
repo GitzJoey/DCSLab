@@ -54,7 +54,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="col-12">
-                                    <img class="img px-1" src="{{ captcha_src('flat') }}" /><a href="{{ route('register') }}"><button class="btn bg-white"><i class="icon icon-refresh"></i></button></a>
+                                    <img class="img px-1" src="{{ captcha_src('flat') }}" /><a href="{{ route('register') }}"><button class="btn bg-white"><i class="icon icon-refresh" aria-hidden="true" /></button></a>
                                     <input class="form-control @error('captcha') border-danger @enderror" type="text" name="captcha">
                                     @error('captcha')
                                         <div class="form-text text-danger">{{ $errors->first('captcha') }}</div>
@@ -68,10 +68,10 @@
                             </div>
                             <div class="d-flex justify-content-end">
                                 <a class="mx-2" href="#" data-bs-toggle="modal" data-bs-target="#modal-terms">
-                                    <i class="icon icon-book-open"></i> {{ __('auth.buttons.read_term') }}
+                                    <i class="icon icon-book-open" aria-hidden="true" /> {{ __('auth.buttons.read_term') }}
                                 </a>
                                 <a class="" href="{{ route('login') }}">
-                                    <i class="icon icon-login"></i> {{ __('auth.buttons.login') }}
+                                    <i class="icon icon-login" aria-hidden="true" /> {{ __('auth.buttons.login') }}
                                 </a>
                             </div>
                         </form>
@@ -98,7 +98,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{{ __('auth.buttons.close') }}</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="icon icon-check"></i> {{ __('auth.buttons.accept') }}
+                    <i class="icon icon-check" aria-hidden="true" /> {{ __('auth.buttons.accept') }}
                 </button>
             </div>
         </div>

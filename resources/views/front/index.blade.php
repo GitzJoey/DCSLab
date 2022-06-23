@@ -42,7 +42,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-check" />
+                                    <i class="icon icon-check" aria-hidden="true" />
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_1_header') }}</h4>
@@ -53,7 +53,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-anchor" />
+                                    <i class="icon icon-anchor" aria-hidden="true" />
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_2_header') }}</h4>
@@ -64,7 +64,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-briefcase" />
+                                    <i class="icon icon-briefcase" aria-hidden="true" />
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_3_header') }}</h4>
@@ -75,7 +75,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-bulb" />
+                                    <i class="icon icon-bulb" aria-hidden="true" />
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_4_header') }}</h4>
@@ -114,10 +114,10 @@
                         </div>
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="lni-check-mark-circle" /> Carefully crafted components</li>
-                                <li><i class="lni-check-mark-circle" /> Amazing page examples</li>
-                                <li><i class="lni-check-mark-circle" /> Super friendly support team</li>
-                                <li><i class="lni-check-mark-circle" /> Awesome Support</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Carefully crafted components</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Amazing page examples</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Super friendly support team</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Awesome Support</li>
                             </ul>
                         </div>
                         <div class="pricing-btn text-center">
@@ -141,10 +141,10 @@
                         </div>
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="lni-check-mark-circle" /> Carefully crafted components</li>
-                                <li><i class="lni-check-mark-circle" /> Amazing page examples</li>
-                                <li><i class="lni-check-mark-circle" /> Super friendly support team</li>
-                                <li><i class="lni-check-mark-circle" /> Awesome Support</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Carefully crafted components</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Amazing page examples</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Super friendly support team</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Awesome Support</li>
                             </ul>
                         </div>
                         <div class="pricing-btn text-center">
@@ -168,10 +168,10 @@
                         </div>
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="lni-check-mark-circle" /> Carefully crafted components</li>
-                                <li><i class="lni-check-mark-circle" /> Amazing page examples</li>
-                                <li><i class="lni-check-mark-circle" /> Super friendly support team</li>
-                                <li><i class="lni-check-mark-circle" /> Awesome Support</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Carefully crafted components</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Amazing page examples</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Super friendly support team</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true" /> Awesome Support</li>
                             </ul>
                         </div>
                         <div class="pricing-btn text-center">
