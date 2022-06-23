@@ -81,7 +81,7 @@ class EmployeeController extends BaseController
         $tax_id = $request['tax_id'];
         $ic_num = $request['ic_num'];
 
-        if (isset($request['img_path']) || !empty($request['img_path'])) {
+        if (isset($request['img_path']) && !empty($request['img_path'])) {
             $img_path = $request['img_path'];
             $image = $request['img_path'];
             $filename = time().".".$image->getClientOriginalExtension();
@@ -152,7 +152,7 @@ class EmployeeController extends BaseController
         $tax_id = $request['tax_id'];
         $ic_num = $request['ic_num'];
         
-        if (isset($request['img_path']) || !empty($request['img_path'])) {
+        if (isset($request['img_path']) && !empty($request['img_path'])) {
             $img_path = $request['img_path'];
             $image = $request['img_path'];
             $filename = time().".".$image->getClientOriginalExtension();

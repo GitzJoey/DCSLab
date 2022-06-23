@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\Service;
 
-use App\Models\User;
-use App\Services\CompanyService;
-use App\Services\UserService;
-use Database\Seeders\CompanyTableSeeder;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Collection;
-use Tests\ServiceTestCase;
 use TypeError;
+use App\Models\User;
+use App\Models\Company;
+use Tests\ServiceTestCase;
+use App\Services\UserService;
+use App\Actions\RandomGenerator;
+use App\Services\CompanyService;
+use Database\Seeders\CompanyTableSeeder;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class CompanyServiceTest extends ServiceTestCase
 {
@@ -34,30 +34,128 @@ class CompanyServiceTest extends ServiceTestCase
         }
     }
 
-    public function test_call_read_when_user_have_companies()
+    public function test_company_service_call_save_with_all_field_filled()
     {
-        $usr = User::has('companies')->get()->first();
+        $code = (new RandomGenerator())->generateAlphaNumeric(5);
+        $name = $this->faker->name;
+        $address = $this->faker->address;
+        $default = $this->faker->boolean();
+        $status = $this->faker->boolean();
+        $userId = User::get()->first()->id;
 
-        $response = $this->service->read($usr->id, '', true, 10);
+        $this->service->create(
+            code: $code,
+            name: $name,
+            address: $address,
+            default: $default,
+            status: $status,
+            userId : $userId
+        );
+
+        $companyId = Company::where('code', '=', $code)->first()->id;
+
+        $this->assertDatabaseHas('companies', [
+            'code' => $code,
+            'name' => $name,
+            'address' => $address,
+            'default' => $default,
+            'status' => $status
+        ]);
+
+        $this->assertDatabaseHas('company_user', [
+            'company_id' => $companyId,
+            'user_id' => $userId
+        ]);
+    }
+
+    public function test_company_service_call_read_when_user_have_companies()
+    {
+        $userId = User::has('companies')->get()->first()->id;
+
+        $response = $this->service->read(
+            userId: $userId, 
+            search: '', 
+            paginate: true, 
+            page: 1,
+            perPage: 10,
+            useCache: false
+        );
 
         $this->assertInstanceOf(Paginator::class, $response);
         $this->assertNotNull($response);
     }
 
-    public function test_call_read_when_user_doesnt_have_companies()
+    public function test_company_service_call_read_when_user_doesnt_have_companies()
     {
-        $usr = User::doesnthave('companies')->get();
+        $user = User::doesnthave('companies')->get();
 
-        if ($usr->count() == 0) {
+        if ($user->count() == 0) {
             $email = $this->faker->email;
-            $selectedUsr = $this->userService->register('testing', $email, 'password', 'on');
+            $selectedUser = $this->userService->register(
+                name: 'testing', 
+                email: $email, 
+                password: 'password', 
+                terms: 'on'
+            );
         } else {
-            $selectedUsr = $usr->shuffle()->first();
+            $selectedUser = $user->shuffle()->first();
         }
 
-        $response = $this->service->read($selectedUsr->id, '', true, 10);
+        $response = $this->service->read(
+            userId: $selectedUser->id, 
+            search: '', 
+            paginate: true, 
+            page: 1,
+            perPage: 10,
+            useCache: false
+        );
 
         $this->assertInstanceOf(Paginator::class, $response);
         $this->assertNotNull($response);
+    }
+
+    public function test_company_service_call_edit_with_all_field_filled()
+    {
+        $id = Company::inRandomOrder()->first()->id;
+
+        $newCode = (new RandomGenerator())->generateAlphaNumeric(5);
+        $newName = $this->faker->name;
+        $newAddress = $this->faker->address;
+        $newDefault = $this->faker->boolean();
+        $newStatus = $this->faker->boolean();
+
+        $this->service->update(
+            id: $id,
+            code: $newCode,
+            name: $newName,
+            address: $newAddress,
+            default: $newDefault,
+            status: $newStatus
+        );
+
+        $this->assertDatabaseHas('companies', [
+            'code' => $newCode,
+            'name' => $newName,
+            'address' => $newAddress,
+            'default' => $newDefault,
+            'status' => $newStatus
+        ]);
+    }
+
+    public function test_company_service_call_delete()
+    {
+        $user = User::has('companies')->InRandomOrder()->first();
+
+        $userId = $user->id;
+        $companyId = $user->companies()->where('default', '=', 0)->InRandomOrder()->first()->id;
+
+        $this->service->delete(
+            userId: $userId,
+            id: $companyId
+        );
+
+        $this->assertSoftDeleted('companies', [
+            'id' => $companyId
+        ]);
     }
 }

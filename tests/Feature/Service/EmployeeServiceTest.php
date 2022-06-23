@@ -26,7 +26,7 @@ class EmployeeServiceTest extends ServiceTestCase
         }
     }
 
-    public function test_call_save()
+    public function test_employee_service_call_save()
     {
         $companyId = Company::has('branches')->inRandomOrder()->first()->id;      
         $code = (new RandomGenerator())->generateAlphaNumeric(5);  
@@ -53,7 +53,7 @@ class EmployeeServiceTest extends ServiceTestCase
             ));
         }
 
-        $this->service->create(
+        $employee = $this->service->create(
             company_id: $companyId,
             code: $code,
             name: $name,
@@ -71,7 +71,7 @@ class EmployeeServiceTest extends ServiceTestCase
             accesses: $accesses
         );
 
-        $employeeId = Employee::where('code', '=', $code)->first()->id;
+        $employeeId = $employee->id;
 
         $this->assertDatabaseHas('employees', [
             'id' => $employeeId,
@@ -103,7 +103,7 @@ class EmployeeServiceTest extends ServiceTestCase
         }
     }
 
-    public function test_call_read()
+    public function test_employee_service_call_read()
     {
         $companyId = Company::has('employees')->inRandomOrder()->first()->id;
 
@@ -120,7 +120,7 @@ class EmployeeServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
     }
 
-    public function test_call_edit()
+    public function test_employee_service_call_edit()
     {
         $employeeId = Employee::inRandomOrder()->first()->id;
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -192,7 +192,7 @@ class EmployeeServiceTest extends ServiceTestCase
         }
     }
 
-    public function test_call_delete()
+    public function test_employee_service_call_delete()
     {
         $employeeId = Employee::inRandomOrder()->first()->id;
         $this->service->delete($employeeId);

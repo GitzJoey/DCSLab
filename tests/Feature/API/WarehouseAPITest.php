@@ -18,7 +18,7 @@ class WarehouseAPITest extends APITestCase
 {
     use WithFaker;
 
-    public function test_api_call_require_authentication()
+    public function test_warehouse_api_call_require_authentication()
     {
         $api = $this->getJson('/api/get/dashboard/company/warehouse/read');
         $this->assertContains($api->getStatusCode(), array(401, 405));
@@ -33,7 +33,7 @@ class WarehouseAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_save_with_all_field_filled()
+    public function test_warehouse_api_call_save_with_all_field_filled()
     {
         $this->actingAs($this->developer);
 
@@ -75,7 +75,7 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_save_with_minimal_field_filled()
+    public function test_warehouse_api_call_save_with_minimal_field_filled()
     {
         $this->actingAs($this->developer);
 
@@ -117,7 +117,7 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_save_with_existing_code()
+    public function test_warehouse_api_call_save_with_existing_code()
     {
         $this->actingAs($this->developer);
 
@@ -173,7 +173,7 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_save_with_empty_string_param()
+    public function test_warehouse_api_call_save_with_empty_string_param()
     {
         $this->actingAs($this->developer);
 
@@ -205,7 +205,131 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_edit_with_all_field_filled()
+    public function test_warehouse_api_call_read_with_empty_search()
+    {
+        $this->actingAs($this->developer);
+
+        $companyId = $this->developer->companies->random(1)->first()->id;
+
+        $branchSeeder = new BranchTableSeeder();
+        $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
+        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
+
+        $search = "";
+        $paginate = 1;
+        $page = 1;
+        $perPage = 10;
+
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
+            'companyId' => Hashids::encode($companyId),
+            'branchId' => Hashids::encode($branchId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_warehouse_api_call_read_with_special_char_in_search()
+    {
+        $this->actingAs($this->developer);
+
+        $companyId = $this->developer->companies->random(1)->first()->id;
+        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
+        $paginate = 1;
+        $page = 1;
+        $perPage = 10;
+
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_warehouse_api_call_read_with_negative_value_in_perpage_param()
+    {
+        $this->actingAs($this->developer);
+
+        $companyId = $this->developer->companies->random(1)->first()->id;
+        $search = '';
+        $paginate = 1;
+        $page = 1;
+        $perPage = -10;
+        
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_warehouse_api_call_read_without_pagination()
+    {
+        $this->actingAs($this->developer);
+
+        $companyId = $this->developer->companies->random(1)->first()->id;
+        $search = '';
+        $page = 1;
+        $perPage = 10;
+        
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'page' => $page,
+            'perPage' => $perPage
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_warehouse_api_call_edit_with_all_field_filled()
     {
         $this->actingAs($this->developer);
 
@@ -224,7 +348,7 @@ class WarehouseAPITest extends APITestCase
             'city' => $this->faker->city,
             'contact' => $this->faker->e164PhoneNumber,
             'remarks' => $this->faker->sentence,
-            'status' => $this->faker->randomElement(ActiveStatus::toArrayValue())
+            'status' => $this->faker->boolean()
         ]);
         $warehouseId = $warehouse->id;
         
@@ -261,7 +385,7 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_edit_with_minimal_field_filled()
+    public function test_warehouse_api_call_edit_with_minimal_field_filled()
     {
         $this->actingAs($this->developer);
 
@@ -277,7 +401,7 @@ class WarehouseAPITest extends APITestCase
         $city = null;
         $contact = null;
         $remarks = null;
-        $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
+        $status = $this->faker->boolean();
 
         $warehouse = Warehouse::create([
             'company_id' => $companyId,
@@ -319,7 +443,7 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_edit_with_existing_code()
+    public function test_warehouse_api_call_edit_with_existing_code_in_same_company()
     {
         $this->actingAs($this->developer);
 
@@ -336,7 +460,7 @@ class WarehouseAPITest extends APITestCase
             $city = $this->faker->city;
             $contact = $this->faker->e164PhoneNumber;
             $remarks = $this->faker->sentence();
-            $status = $this->faker->randomElement(ActiveStatus::toArrayValue());
+            $status = $this->faker->boolean();
     
             Warehouse::create([
                 'company_id' => $companyId,
@@ -351,8 +475,8 @@ class WarehouseAPITest extends APITestCase
             ]);
         }
 
-        $warehouseId = Warehouse::where('company_id', $companyId)->inRandomOrder()->first()->id;
-        $newCode = Warehouse::where('company_id', $companyId)->whereNotIn('id', [$warehouseId])->inRandomOrder()->first()->id;
+        $warehouseId = Warehouse::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
+        $newCode = Warehouse::where([['company_id', '=', $companyId], ['id', '<>', $warehouseId]])->inRandomOrder()->first()->code;
         $newName = $this->faker->name;
         $newAddress = $this->faker->address;
         $newCity = $this->faker->city;
@@ -369,16 +493,16 @@ class WarehouseAPITest extends APITestCase
             'city' => $newCity,
             'contact' => $newContact,
             'remarks' => $newRemarks,
-            'status' => ActiveStatus::fromName($newStatus)
+            'status' => $newStatus
         ]);
 
-        $api_edit->assertStatus(500);
+        $api_edit->assertStatus(422);
         $api_edit->assertJsonStructure([
-            'message'
+            'errors'
         ]);
     }
 
-    public function test_api_call_delete()
+    public function test_warehouse_api_call_delete()
     {
         $this->actingAs($this->developer);
 
@@ -416,7 +540,7 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_delete_nonexistance_id()
+    public function test_warehouse_api_call_delete_nonexistance_id()
     {
         $this->actingAs($this->developer);
 
@@ -425,130 +549,6 @@ class WarehouseAPITest extends APITestCase
         $api->assertStatus(500);
         $api->assertJsonStructure([
             'message'
-        ]);
-    }
-
-    public function test_api_call_read_with_empty_search()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = $this->developer->companies->random(1)->first()->id;
-
-        $branchSeeder = new BranchTableSeeder();
-        $branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $branchId = $this->developer->companies->where('id', '=', $companyId)->first()->branches->random(1)->first()->id;
-
-        $search = "";
-        $paginate = 1;
-        $page = 1;
-        $perPage = 10;
-
-        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
-            'companyId' => Hashids::encode($companyId),
-            'branchId' => Hashids::encode($branchId),
-            'search' => $search,
-            'paginate' => $paginate,
-            'page' => $page,
-            'perPage' => $perPage
-        ]));
-
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
-    public function test_api_call_read_with_special_char_in_search()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = $this->developer->companies->random(1)->first()->id;
-        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-        $paginate = 1;
-        $page = 1;
-        $perPage = 10;
-
-        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
-            'companyId' => Hashids::encode($companyId),
-            'search' => $search,
-            'paginate' => $paginate,
-            'page' => $page,
-            'perPage' => $perPage
-        ]));
-
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
-    public function test_api_call_read_with_negative_value_in_perpage_param()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = $this->developer->companies->random(1)->first()->id;
-        $search = '';
-        $paginate = 1;
-        $page = 1;
-        $perPage = -10;
-        
-        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
-            'companyId' => Hashids::encode($companyId),
-            'search' => $search,
-            'paginate' => $paginate,
-            'page' => $page,
-            'perPage' => $perPage
-        ]));
-
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);
-    }
-
-    public function test_api_call_read_without_pagination()
-    {
-        $this->actingAs($this->developer);
-
-        $companyId = $this->developer->companies->random(1)->first()->id;
-        $search = '';
-        $page = 1;
-        $perPage = 10;
-        
-        $api = $this->getJson(route('api.get.db.company.warehouse.read', [
-            'companyId' => Hashids::encode($companyId),
-            'search' => $search,
-            'page' => $page,
-            'perPage' => $perPage
-        ]));
-
-        $api->assertSuccessful();
-        $api->assertJsonStructure([
-            'data', 
-            'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
-            'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
         ]);
     }
 }

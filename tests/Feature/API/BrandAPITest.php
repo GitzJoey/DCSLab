@@ -17,7 +17,7 @@ class BrandAPITest extends APITestCase
         Parent::setUp();
     }
     
-    public function test_api_call_require_authentication()
+    public function test_brand_api_call_require_authentication()
     {
         $api = $this->getJson('/api/get/dashboard/product/brand/read');
         $this->assertContains($api->getStatusCode(), array(401, 405));
@@ -32,7 +32,7 @@ class BrandAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_brand_save_with_all_field_filled()
+    public function test_brand_api_call_brand_save_with_all_field_filled()
     {
         $this->actingAs($this->developer);
         
@@ -55,7 +55,7 @@ class BrandAPITest extends APITestCase
         $api->assertSuccessful();
     }
 
-    public function test_api_call_brand_read_with_empty_search()
+    public function test_brand_api_call_brand_read_with_empty_search()
     {
         $this->actingAs($this->developer);
 
@@ -87,7 +87,7 @@ class BrandAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_brand_edit_with_all_field_filled()
+    public function test_brand_api_call_brand_edit_with_all_field_filled()
     {
         $this->actingAs($this->developer);
 
@@ -119,7 +119,7 @@ class BrandAPITest extends APITestCase
         ]);
     }
     
-    public function test_api_call_brand_delete()
+    public function test_brand_api_call_brand_delete()
     {
         $this->actingAs($this->developer);
 

@@ -24,7 +24,7 @@ class BranchServiceTest extends ServiceTestCase
             $this->artisan('db:seed', ['--class' => 'BranchTableSeeder']);
     }
 
-    public function test_call_save_with_all_field_filled()
+    public function test_branch_service_call_save_with_all_field_filled()
     {
         $company_id = Company::has('branches')->inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -55,7 +55,7 @@ class BranchServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_save_with_minimal_field_filled()
+    public function test_branch_service_call_save_with_minimal_field_filled()
     {
         $company_id = Company::has('branches')->inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -86,7 +86,7 @@ class BranchServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_edit_with_all_field_filled()
+    public function test_branch_service_call_edit_with_all_field_filled()
     {
         $company_id = Company::has('branches')->inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -141,7 +141,7 @@ class BranchServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_edit_with_minimal_field_filled()
+    public function test_branch_service_call_edit_with_minimal_field_filled()
     {
         $company_id = Company::has('branches')->inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -196,7 +196,7 @@ class BranchServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_delete()
+    public function test_branch_service_call_delete()
     {
         $company_id = Company::has('branches')->inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
@@ -228,7 +228,7 @@ class BranchServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_read_when_user_have_branches_read_with_empty_search()
+    public function test_branch_service_call_read_when_user_have_branches_read_with_empty_search()
     {
         $companyId = Company::has('branches')->inRandomOrder()->first()->id;
 
@@ -245,7 +245,7 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
     }
 
-    public function test_call_read_when_user_have_branches_with_special_char_in_search()
+    public function test_branch_service_call_read_when_user_have_branches_with_special_char_in_search()
     {
         $companyId = Company::has('branches')->inRandomOrder()->first()->id;
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
