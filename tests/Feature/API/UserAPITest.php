@@ -25,9 +25,9 @@ class UserAPITest extends APITestCase
 
     public function test_user_api_call_read()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $api = $this->getJson('/api/get/dashboard/admin/users/read');
+        $api = $this->getJson('/api/get/dashboard/admin/users/read?search=&paginate=false');
         $api->assertStatus(200);
     }
 
