@@ -25,7 +25,7 @@ jobs:
             -Dsonar.organization=gitzjoey
 
   laravel-tests:
-
+    needs: SonarCloud-Analysis
     runs-on: ubuntu-latest
 
     steps:
