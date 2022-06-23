@@ -4,13 +4,13 @@ namespace App\Http\Requests;
 
 use App\Rules\isValidCompany;
 use App\Enums\ProductCategory;
-use App\Models\ProductGroup;
+use App\Models\Unit;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductGroupRequest extends FormRequest
+class UnitRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +27,13 @@ class ProductGroupRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
             case 'read':
-                return $user->can('view', ProductGroup::class) ? true : false;
+                return $user->can('view', Unit::class) ? true : false;
             case 'store':
-                return $user->can('create', ProductGroup::class) ? true : false;
+                return $user->can('create', Unit::class) ? true : false;
             case 'update':
-                return $user->can('update', ProductGroup::class) ? true : false;
+                return $user->can('update', Unit::class) ? true : false;
             case 'delete':
-                return $user->can('delete', ProductGroup::class) ? true : false;
+                return $user->can('delete', Unit::class) ? true : false;
             default:
                 return false;
         }
@@ -46,7 +46,9 @@ class ProductGroupRequest extends FormRequest
      */
     public function rules()
     {
-        $nullableArr = [];
+        $nullableArr = [
+            'description' => 'nullable'
+        ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {

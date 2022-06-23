@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UnitCategory;
-use App\Http\Resources\UnitResource;
 use App\Services\UnitService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Requests\UnitRequest;
+use App\Http\Resources\UnitResource;
 
 class UnitController extends BaseController
 {
@@ -22,28 +18,108 @@ class UnitController extends BaseController
         $this->unitService = $unitService;
     }
 
-    public function read(Request $request)
+    public function read(UnitRequest $unitRequest)
     {
-        $search = $request->has('search') && !is_null($request['search']) ? $request['search']:'';
-        $paginate = $request->has('paginate') ? boolVal($request['paginate']):true;
-        $perPage = $request->has('perPage') ? $request['perPage']:10;
+        $request = $unitRequest->validated();
 
-        $companyId = Hashids::decode($request['companyId'])[0];
-        $category = $request->has('category') ? intVal($request['category']):UnitCategory::PRODUCTS;
- 
-        $result = $this->unitService->read($companyId, $category, $search, $paginate, $perPage);
-        
+        $companyId = $request['company_id'];
+        $category = array_key_exists('category', $request) ? $request['category'] : null;
+        $search = $request['search'];
+        $paginate = $request['paginate'];
+        $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
+        $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
+
+        $result = $this->unitService->read(
+            companyId: $companyId, 
+            category: $category, 
+            search: $search, 
+            paginate: $paginate, 
+            page: $page,
+            perPage: $perPage
+        );
+
         if (is_null($result)) {
             return response()->error();
         } else {
             $response = UnitResource::collection($result);
 
             return $response;
-        } 
+        }
     }
 
-    public function getUnitCategory(Request $request)
+    public function store(UnitRequest $unitRequest)
     {
+        $request = $unitRequest->validated();
 
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->unitService->generateUniqueCode($company_id);
+            } while (!$this->unitService->isUniqueCode($code, $company_id));
+        } else {
+            if (!$this->unitService->isUniqueCode($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
+            }
+        }
+
+        $name = $request['name'];
+        $description = $request['description'];
+        $category = $request['category'];
+
+        $result = $this->unitService->create(
+            $company_id,
+            $code, 
+            $name,
+            $description,
+            $category
+        );
+
+        return is_null($result) ? response()->error() : response()->success();
+    }
+
+    public function update($id, UnitRequest $unitRequest)
+    {
+        $request = $unitRequest->validated();
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->unitService->generateUniqueCode($company_id);
+            } while (!$this->unitService->isUniqueCode($code, $company_id, $id));
+        } else {
+            if (!$this->unitService->isUniqueCode($code, $company_id, $id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')]
+                ], 422);
+            }
+        }
+
+        $name = $request['name'];
+        $description = $request['description'];
+        $category = $request['category'];
+
+        $result = $this->unitService->update(
+            id: $id,
+            company_id: $company_id,
+            code: $code, 
+            name: $name,
+            description: $description,
+            category: $category
+        );
+
+        return is_null($result) ? response()->error() : response()->success();
+    }
+    
+    public function delete($id)
+    {
+        $result = $this->unitService->delete($id);
+
+        return !$result ? response()->error() : response()->success();
     }
 }

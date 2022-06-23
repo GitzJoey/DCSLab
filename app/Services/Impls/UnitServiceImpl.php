@@ -86,8 +86,8 @@ class UnitServiceImpl implements UnitService
     }
 
     public function read(
-        int $companyId,
-        ?int $category = null, 
+        int $companyId, 
+        ?string $category = null, 
         string $search = '', 
         bool $paginate = true, 
         int $page = 1, 
@@ -110,12 +110,14 @@ class UnitServiceImpl implements UnitService
 
             $unit = Unit::whereCompanyId($companyId);
          
-            if ($category == UnitCategory::PRODUCTS) {
-                $unit = $unit->where('category', '<>', UnitCategory::SERVICES->value);
-            } else if ($category == UnitCategory::SERVICES) {
-                $unit = $unit->where('category', '<>', UnitCategory::PRODUCTS->value);
-            } else {
-    
+            if (!empty($category)) {
+                if ($category == UnitCategory::PRODUCTS) {
+                    $unit = $unit->where('category', '=', UnitCategory::PRODUCTS->value);
+                } else if ($category == UnitCategory::SERVICES) {
+                    $unit = $unit->where('category', '=', UnitCategory::SERVICES->value);
+                } else if ($category == UnitCategory::PRODUCTS_AND_SERVICES) {
+                    $unit = $unit->where('category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value);
+                }
             }
             
             if (empty($search)) {

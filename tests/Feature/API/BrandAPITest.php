@@ -2,15 +2,13 @@
 
 namespace Tests\Feature\API;
 
+use App\Models\Brand;
 use Tests\APITestCase;
-use App\Models\Company;
 use App\Actions\RandomGenerator;
-use App\Enums\ProductCategory;
-use App\Models\ProductGroup;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
 
-class ProductGroupAPITest extends APITestCase
+class BrandAPITest extends APITestCase
 {
     use WithFaker;
 
@@ -21,46 +19,43 @@ class ProductGroupAPITest extends APITestCase
     
     public function test_api_call_require_authentication()
     {
-        $api = $this->getJson('/api/get/dashboard/product/product_group/read');
+        $api = $this->getJson('/api/get/dashboard/product/brand/read');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/product/product_group/save');
+        $api = $this->getJson('/api/post/dashboard/product/brand/save');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/product/product_group/edit/1');
+        $api = $this->getJson('/api/post/dashboard/product/brand/edit/1');
         $this->assertContains($api->getStatusCode(), array(401, 405));
 
-        $api = $this->getJson('/api/post/dashboard/product/product_group/delete/1');
+        $api = $this->getJson('/api/post/dashboard/product/brand/delete/1');
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_product_group_save_with_all_field_filled()
+    public function test_api_call_brand_save_with_all_field_filled()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
         
-        $companyId = $this->user->companies->random(1)->first()->id;
+        $companyId = $this->developer->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $category = $this->faker->randomElement(ProductCategory::toArrayName());
 
-        $api = $this->json('POST', route('api.post.db.product.product_group.save'), [
+        $api = $this->json('POST', route('api.post.db.product.brand.save'), [
             'company_id' => Hashids::encode($companyId),
             'code' => $code,
-            'name' => $name,
-            'category' => $category
+            'name' => $name
         ]);
 
-        $this->assertDatabaseHas('product_groups', [
+        $this->assertDatabaseHas('brands', [
             'company_id' => $companyId,
             'code' => $code,
-            'name' => $name,
-            'category' => ProductCategory::fromName($category)->value
+            'name' => $name
         ]);
         
         $api->assertSuccessful();
     }
 
-    public function test_api_call_product_group_read_with_empty_search()
+    public function test_api_call_brand_read_with_empty_search()
     {
         $this->actingAs($this->developer);
 
@@ -71,7 +66,7 @@ class ProductGroupAPITest extends APITestCase
         $page = 1;
         $perPage = 10;
 
-        $api = $this->getJson(route('api.get.db.product.product_group.read', [
+        $api = $this->getJson(route('api.get.db.product.brand.read', [
             'companyId' => Hashids::encode($companyId),
             'category' => $category,
             'search' => $search,
@@ -92,56 +87,51 @@ class ProductGroupAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_product_group_edit_with_all_field_filled()
+    public function test_api_call_brand_edit_with_all_field_filled()
     {
         $this->actingAs($this->developer);
 
         $companyId = $this->developer->companies->random(1)->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
-        $category = $this->faker->numberBetween(1, 3);
 
-        $productGroup = ProductGroup::create([
+        $brand = Brand::create([
             'company_id' => $companyId,
             'code' => $code,
-            'name' => $name,
-            'category' => $category
+            'name' => $name
         ]);
 
-        $productGroupId = $productGroup->id;
+        $brandId = $brand->id;
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5) . 'new';
         $newName = $this->faker->name;
-        $newCategory = $this->faker->randomElement(ProductCategory::toArrayName());
 
-        $api_edit = $this->json('POST', route('api.post.db.product.product_group.edit', [ 'id' => Hashids::encode($productGroupId) ]), [
+        $api_edit = $this->json('POST', route('api.post.db.product.brand.edit', [ 'id' => Hashids::encode($brandId) ]), [
             'company_id' => Hashids::encode($companyId),
             'code' => $newCode,
-            'name' => $newName,
-            'category' => $newCategory
+            'name' => $newName
         ]);
 
         $api_edit->assertSuccessful();
-        $this->assertDatabaseHas('product_groups', [
+        $this->assertDatabaseHas('brands', [
             'company_id' => $companyId,
             'code' => $newCode,
-            'name' => $newName,
-            'category' => ProductCategory::fromName($newCategory)->value
+            'name' => $newName
         ]);
     }
     
-    public function test_api_call_product_group_delete()
+    public function test_api_call_brand_delete()
     {
         $this->actingAs($this->developer);
 
         $companyIds = $this->developer->companies->pluck('id');
-        $productGroupId = ProductGroup::whereIn('company_id', $companyIds)->inRandomOrder()->first()->id;
-        $hId = Hashids::encode($productGroupId);
+        $brandId = Brand::whereIn('company_id', $companyIds)->inRandomOrder()->first()->id;
+        $hId = Hashids::encode($brandId);
 
-        $api = $this->json('POST', route('api.post.db.product.product_group.delete', $hId));
+        $api = $this->json('POST', route('api.post.db.product.brand.delete', $hId));
 
         $api->assertSuccessful();
-        $this->assertSoftDeleted('product_groups', [
-            'id' => $productGroupId
+        $this->assertSoftDeleted('brands', [
+            'id' => $brandId
         ]);
     }
 }

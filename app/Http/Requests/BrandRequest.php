@@ -4,13 +4,13 @@ namespace App\Http\Requests;
 
 use App\Rules\isValidCompany;
 use App\Enums\ProductCategory;
-use App\Models\ProductGroup;
+use App\Models\Brand;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductGroupRequest extends FormRequest
+class BrandRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +27,13 @@ class ProductGroupRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
             case 'read':
-                return $user->can('view', ProductGroup::class) ? true : false;
+                return $user->can('view', Brand::class) ? true : false;
             case 'store':
-                return $user->can('create', ProductGroup::class) ? true : false;
+                return $user->can('create', Brand::class) ? true : false;
             case 'update':
-                return $user->can('update', ProductGroup::class) ? true : false;
+                return $user->can('update', Brand::class) ? true : false;
             case 'delete':
-                return $user->can('delete', ProductGroup::class) ? true : false;
+                return $user->can('delete', Brand::class) ? true : false;
             default:
                 return false;
         }
@@ -64,16 +64,14 @@ class ProductGroupRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductCategory::class)]
+                    'name' => 'required|min:3|max:255'
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductCategory::class)]
+                    'name' => 'required|min:3|max:255'
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -110,8 +108,7 @@ class ProductGroupRequest extends FormRequest
             case 'store':
             case 'update':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
-                    'category' => ProductCategory::isValid($this->category) ? ProductCategory::fromName($this->category)->value : -1,
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : ''
                 ]);
                 break;
             default:

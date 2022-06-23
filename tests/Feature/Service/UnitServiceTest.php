@@ -19,6 +19,9 @@ class UnitServiceTest extends ServiceTestCase
         parent::setUp();
 
         $this->service = app(UnitService::class);
+
+        if (Unit::count() < 2)
+            $this->artisan('db:seed', ['--class' => 'UnitTableSeeder']);
     }
 
     public function test_call_save()
@@ -44,6 +47,49 @@ class UnitServiceTest extends ServiceTestCase
             'description' => $description,
             'category' => $category
         ]);
+    }
+
+    public function test_call_read_with_empty_search()
+    {
+        $companyId = Company::has('units')->inRandomOrder()->first()->id;
+        $category = (new RandomGenerator())->generateNumber(1, 3);
+
+        $response = $this->service->read(
+            companyId: $companyId,
+            category: $category,
+            search: '', 
+            paginate: true, 
+            page: 1,
+            perPage: 10,
+            useCache: false
+        );
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
+    }
+
+    public function test_call_read_with_special_char_in_search()
+    {
+        $companyId = Company::has('units')->inRandomOrder()->first()->id;
+        $category = (new RandomGenerator())->generateNumber(1, 3);
+        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
+        $paginate = true;
+        $page = 1;
+        $perPage = 10;
+        $useCache = false;
+
+        $response = $this->service->read(
+            companyId: $companyId, 
+            category: $category,
+            search: $search, 
+            paginate: $paginate, 
+            page: $page,
+            perPage: $perPage,
+            useCache: $useCache
+        );
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
     }
 
     public function test_call_edit()
@@ -109,44 +155,5 @@ class UnitServiceTest extends ServiceTestCase
         $this->assertSoftDeleted('units', [
             'id' => $id
         ]);
-    }
-
-    public function test_call_read_when_user_have_units_read_with_empty_search()
-    {
-        $companyId = Company::has('units')->inRandomOrder()->first()->id;
-
-        $response = $this->service->read(
-            companyId: $companyId, 
-            search: '', 
-            paginate: true, 
-            page: 1,
-            perPage: 10,
-            useCache: false
-        );
-
-        $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertNotNull($response);
-    }
-
-    public function test_call_read_when_user_have_units_with_special_char_in_search()
-    {
-        $companyId = Company::has('units')->inRandomOrder()->first()->id;
-        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-        $paginate = true;
-        $page = 1;
-        $perPage = 10;
-        $useCache = false;
-
-        $response = $this->service->read(
-            companyId: $companyId, 
-            search: $search, 
-            paginate: $paginate, 
-            page: $page,
-            perPage: $perPage,
-            useCache: $useCache
-        );
-
-        $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertNotNull($response);
     }
 }
