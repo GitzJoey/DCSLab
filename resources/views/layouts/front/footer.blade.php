@@ -7,10 +7,10 @@
                         <div class="footer-logo d-flex align-items-end">
                             <a class="mt-30" href=""><img src="{{ asset('images/g_logo.png') }}" alt="Logo" width="35px" height="35px"></a>
                             <ul class="social mt-30">
-                                <li><a href=""><i class="icon icon-social-facebook"></i></a></li>
-                                <li><a href=""><i class="icon icon-social-twitter"></i></a></li>
-                                <li><a href=""><i class="icon icon-social-instagram"></i></a></li>
-                                <li><a href=""><i class="icon icon-social-linkedin"></i></a></li>
+                                <li><a href=""><i class="icon icon-social-facebook" /></a></li>
+                                <li><a href=""><i class="icon icon-social-twitter" /></a></li>
+                                <li><a href=""><i class="icon icon-social-instagram" /></a></li>
+                                <li><a href=""><i class="icon icon-social-linkedin" /></a></li>
                             </ul>
                         </div>
                     </div>
