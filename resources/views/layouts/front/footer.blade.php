@@ -53,7 +53,7 @@
                         <div class="newsletter">
                             <form action="#">
                                 <input type="text" placeholder="Your Email">
-                                <button type="submit"><i class="icon icon-arrow-right-circle"></i></button>
+                                <button type="submit"><i class="icon icon-arrow-right-circle" aria-hidden="true" /></button>
                             </form>
                         </div>
                         <p class="text">{{ __('front.footer.subscribe.sub_news_desc') }}</p>
@@ -78,4 +78,4 @@
     </div>
 </footer>
 
-<a class="back-to-top hide" href=""><i class="icon icon-arrow-up"></i></a>
+<a class="back-to-top hide" href=""><i class="icon icon-arrow-up" aria-hidden="true" /></a>

@@ -198,7 +198,7 @@
                         <h2 class="call-title">{{ __('front.call-to-action.title') }}</h2>
                         <p class="text">{{ __('front.call-to-action.description') }}</p>
                         <div class="call-newsletter">
-                            <i class="lni-envelope" />
+                            <i class="lni-envelope" aria-hidden="true" />
                             <input type="text" placeholder="john@email.com">
                             <button type="submit">{{ __('front.buttons.subscribe') }}</button>
                         </div>
