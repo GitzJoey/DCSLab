@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\isValidCompany;
-use App\Enums\ProductGroupCategory;
+use App\Enums\ProductCategory;
 use App\Models\ProductGroup;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
@@ -65,7 +65,7 @@ class ProductGroupRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductGroupCategory::class)]
+                    'category' => [new Enum(ProductCategory::class)]
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -73,7 +73,7 @@ class ProductGroupRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductGroupCategory::class)]
+                    'category' => [new Enum(ProductCategory::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -111,7 +111,7 @@ class ProductGroupRequest extends FormRequest
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
-                    'category' => ProductGroupCategory::isValid($this->category) ? ProductGroupCategory::fromName($this->category)->value : -1,
+                    'category' => ProductCategory::isValid($this->category) ? ProductCategory::fromName($this->category)->value : -1,
                 ]);
                 break;
             default:

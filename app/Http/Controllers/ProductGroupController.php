@@ -30,8 +30,8 @@ class ProductGroupController extends BaseController
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
         $result = $this->productGroupService->read(
-            companyId: $companyId, 
-            category: $category, 
+            companyId: $companyId,
+            category: $category,
             search: $search, 
             paginate: $paginate, 
             page: $page,
