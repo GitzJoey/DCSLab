@@ -2,15 +2,15 @@
 
 namespace Tests\Feature\Service;
 
-use App\Models\Brand;
+use App\Models\Unit;
 use App\Models\Company;
 use Tests\ServiceTestCase;
-use App\Services\BrandService;
+use App\Services\UnitService;
 use App\Actions\RandomGenerator;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 
-class BrandServiceTest extends ServiceTestCase
+class UnitServiceTest extends ServiceTestCase
 {
     use WithFaker;
 
@@ -18,7 +18,10 @@ class BrandServiceTest extends ServiceTestCase
     {
         parent::setUp();
 
-        $this->service = app(BrandService::class);
+        $this->service = app(UnitService::class);
+
+        if (Unit::count() < 2)
+            $this->artisan('db:seed', ['--class' => 'UnitTableSeeder']);
     }
 
     public function test_call_save()
@@ -26,26 +29,34 @@ class BrandServiceTest extends ServiceTestCase
         $company_id = Company::inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
+        $description = $this->faker->sentence;
+        $category = (new RandomGenerator())->generateNumber(1, 3);
 
         $this->service->create(
             company_id: $company_id,
             code: $code,
             name: $name,
+            description: $description,
+            category: $category
         );
 
-        $this->assertDatabaseHas('brands', [
+        $this->assertDatabaseHas('units', [
             'company_id' => $company_id,
             'code' => $code,
-            'name' => $name
+            'name' => $name,
+            'description' => $description,
+            'category' => $category
         ]);
     }
 
     public function test_call_read_with_empty_search()
     {
-        $companyId = Company::inRandomOrder()->first()->id;
+        $companyId = Company::has('units')->inRandomOrder()->first()->id;
+        $category = (new RandomGenerator())->generateNumber(1, 3);
 
         $response = $this->service->read(
-            companyId: $companyId, 
+            companyId: $companyId,
+            category: $category,
             search: '', 
             paginate: true, 
             page: 1,
@@ -59,7 +70,8 @@ class BrandServiceTest extends ServiceTestCase
 
     public function test_call_read_with_special_char_in_search()
     {
-        $companyId = Company::inRandomOrder()->first()->id;
+        $companyId = Company::has('units')->inRandomOrder()->first()->id;
+        $category = (new RandomGenerator())->generateNumber(1, 3);
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = true;
         $page = 1;
@@ -68,6 +80,7 @@ class BrandServiceTest extends ServiceTestCase
 
         $response = $this->service->read(
             companyId: $companyId, 
+            category: $category,
             search: $search, 
             paginate: $paginate, 
             page: $page,
@@ -84,29 +97,39 @@ class BrandServiceTest extends ServiceTestCase
         $company_id = Company::inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
+        $description = $this->faker->sentence;
+        $category = (new RandomGenerator())->generateNumber(1, 3);
 
-        $brand = Brand::create([
+        $unit = Unit::create([
             'company_id' => $company_id,
             'code' => $code,
-            'name' => $name
+            'name' => $name,
+            'description' => $description,
+            'category' => $category
         ]);
-        $id = $brand->id;
+        $id = $unit->id;
 
         $newCode = (new RandomGenerator())->generateAlphaNumeric(5);
         $newName = $this->faker->name;
+        $newDescription = $this->faker->sentence;
+        $newCategory = (new RandomGenerator())->generateNumber(1, 3);
 
         $this->service->update(
             id: $id,
             company_id: $company_id,
             code: $newCode,
-            name: $newName
+            name: $newName,
+            description: $newDescription,
+            category: $newCategory
         );
 
-        $this->assertDatabaseHas('brands', [
+        $this->assertDatabaseHas('units', [
             'id' => $id,
             'company_id' => $company_id,
             'code' => $newCode,
-            'name' => $newName
+            'name' => $newName,
+            'description' => $newDescription,
+            'category' => $newCategory
         ]);
     }
 
@@ -115,17 +138,21 @@ class BrandServiceTest extends ServiceTestCase
         $company_id = Company::inRandomOrder()->first()->id;
         $code = (new RandomGenerator())->generateAlphaNumeric(5);
         $name = $this->faker->name;
+        $description = $this->faker->sentence;
+        $category = (new RandomGenerator())->generateNumber(1, 3);
 
-        $brand = Brand::create([
+        $unit = Unit::create([
             'company_id' => $company_id,
             'code' => $code,
-            'name' => $name
+            'name' => $name,
+            'description' => $description,
+            'category' => $category
         ]);
-        $id = $brand->id;
+        $id = $unit->id;
 
         $this->service->delete($id);
 
-        $this->assertSoftDeleted('brands', [
+        $this->assertSoftDeleted('units', [
             'id' => $id
         ]);
     }
