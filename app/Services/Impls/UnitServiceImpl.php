@@ -61,30 +61,6 @@ class UnitServiceImpl implements UnitService
         return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function readBy(
-        string $key, 
-        string $value
-    )
-    {
-        $timer_start = microtime(true);
-
-        try {
-            switch (strtoupper($key)) {
-                case 'ID':
-                    return Unit::find($value);
-                default:
-                    return null;
-                    break;
-            }
-        } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
-    }
-
     public function read(
         int $companyId, 
         ?string $category = null, 
@@ -142,6 +118,30 @@ class UnitServiceImpl implements UnitService
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
+        }
+    }
+    
+    public function readBy(
+        string $key, 
+        string $value
+    )
+    {
+        $timer_start = microtime(true);
+
+        try {
+            switch (strtoupper($key)) {
+                case 'ID':
+                    return Unit::find($value);
+                default:
+                    return null;
+                    break;
+            }
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 

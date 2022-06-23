@@ -106,7 +106,46 @@ class EmployeeAPITest extends APITestCase
 
     public function test_api_call_save_with_empty_string_param()
     {
-        $this->markTestSkipped('Under construction...');
+        {
+            $this->actingAs($this->developer);
+    
+            $companyId = $this->developer->companies->random(1)->first()->id;
+            $code = (new RandomGenerator())->generateAlphaNumeric(5);
+            $name = '';
+            $email = '';
+            $address = '';
+            $city = '';
+            $postalCode = $this->faker->postcode();
+            $country = $this->faker->randomElement(['Singapore', 'Indonesia']);
+            $taxId = (new RandomGenerator())->generateNumber(100000000000, 900000000000);
+            $icNum = (new RandomGenerator())->generateNumber(100000000000, 900000000000);
+            $imgPath = '';
+            $joinDate = $this->faker->date($format = 'Y-m-d', $max = 'now');
+            $remarks = '';
+            $status = $this->faker->randomElement(ActiveStatus::toArrayName());
+    
+            $api = $this->json('POST', route('api.post.db.company.employee.save'), [
+                'company_id' => Hashids::encode($companyId),
+                'code' => $code, 
+                'name' => $name,
+                'email' => $email,
+                'address' => $address,
+                'city' => $city,
+                'postal_code' => $postalCode,
+                'country' => $country,
+                'tax_id' => $taxId,
+                'ic_num' => $icNum,
+                'img_path' => $imgPath,
+                'join_date' => $joinDate,
+                'remarks' => $remarks,
+                'status' => $status
+            ]);
+    
+            $api->assertStatus(422);
+            $api->assertJsonStructure([
+                'message'
+            ]);
+        }
     }
 
     public function test_api_call_edit_with_all_field_filled()
@@ -210,7 +249,11 @@ class EmployeeAPITest extends APITestCase
 
     public function test_api_call_delete_nonexistance_id()
     {
-        $this->markTestSkipped('Under construction...');
+        $this->actingAs($this->developer);
+
+        $api = $this->json('POST', route('api.post.db.company.branch.delete', (new RandomGenerator())->generateAlphaNumeric(5)));
+
+        $api->assertStatus(500);
     }
 
     public function test_api_call_read_with_empty_search()
@@ -247,16 +290,100 @@ class EmployeeAPITest extends APITestCase
 
     public function test_api_call_read_with_special_char_in_search()
     {
-        $this->markTestSkipped('Under construction...');
+        $this->actingAs($this->developer);
+
+        $company = $this->developer->companies->random(1)->first();
+
+        $companyId = $company->id;
+        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
+        $paginate = 1;
+        $page = 1;
+        $perPage = 10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 
     public function test_api_call_read_with_negative_value_in_perpage_param()
     {
-        $this->markTestSkipped('Under construction...');
-    }
+        $this->actingAs($this->developer);
 
+        $company = $this->developer->companies->random(1)->first();
+
+        $companyId = $company->id;
+        $search = "";
+        $paginate = 1;
+        $page = 1;
+        $perPage = -10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.company.employee.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
     public function test_api_call_read_without_pagination()
     {
-        $this->markTestSkipped('Under construction...');
+        $this->actingAs($this->developer);
+
+        $company = $this->developer->companies->random(1)->first();
+
+        $companyId = $company->id;
+        $search = "";
+        $page = 1;
+        $perPage = 10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.company.employee.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
     }
 }
