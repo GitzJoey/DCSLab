@@ -128,7 +128,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 $properties = [
                     'relationName' => $relationName,
                     'pivot_id' => $pivotId,
-                    'pivotData' => empty($pivotIdsAttributes[$pivotId]) ? [] : $pivotIdsAttributes[$pivotId],
+                    'pivotData' => '',
                 ];
 
                 $logger->performedOn($model)->withProperties($properties);
@@ -150,7 +150,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 $properties = [
                     'relationName' => $relationName,
                     'pivot_id' => $pivotId,
-                    'pivotData' => empty($pivotIdsAttributes[$pivotId]) ? [] : $pivotIdsAttributes[$pivotId],
+                    'pivotData' => '',
                 ];
 
                 $logger->performedOn($model)->withProperties($properties);
