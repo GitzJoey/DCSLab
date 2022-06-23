@@ -18,7 +18,7 @@ interface UnitService
 
     public function read(
         int $companyId,
-        int $category,
+        ?string $category = null, 
         string $search = '',
         bool $paginate = true,
         int $page = 1,

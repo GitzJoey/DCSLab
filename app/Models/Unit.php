@@ -6,7 +6,7 @@ use App\Models\Company;
 use App\Models\ProductUnit;
 use App\Traits\ScopeableByCompany;
 use Spatie\Activitylog\LogOptions;
-use App\Enums\ProductGroupCategory;
+use App\Enums\ProductCategory;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -40,7 +40,7 @@ class Unit extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'category' => ProductGroupCategory::class
+        'category' => ProductCategory::class
     ];
 
     public function hId() : Attribute
