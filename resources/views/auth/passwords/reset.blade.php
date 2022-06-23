@@ -37,15 +37,15 @@
                             </div>
                             <div class="mb-2">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="icon icon-login" aria-hidden="true" /> {{ __('auth.buttons.submit') }}
+                                    <i class="icon icon-login" aria-hidden="true"></i> {{ __('auth.buttons.submit') }}
                                 </button>
                             </div>
                             <div class="d-flex justify-content-end">
                                 <a class="mx-2" href="{{ route('register') }}">
-                                    <i class="icon icon-plus" aria-hidden="true" /> {{ __('auth.buttons.register') }}
+                                    <i class="icon icon-plus" aria-hidden="true"></i> {{ __('auth.buttons.register') }}
                                 </a>
                                 <a class="" href="{{ route('login') }}">
-                                    <i class="icon icon-login" aria-hidden="true" /> {{ __('auth.buttons.login') }}
+                                    <i class="icon icon-login" aria-hidden="true"></i> {{ __('auth.buttons.login') }}
                                 </a>
                             </div>
                         </form>
