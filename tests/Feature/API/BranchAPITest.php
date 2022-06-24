@@ -19,8 +19,6 @@ class BranchAPITest extends APITestCase
     protected function setUp(): void
     {
         Parent::setUp();
-
-        $this->api = app(BranchController::class);
     }
     
     public function test_branch_api_call_require_authentication()
