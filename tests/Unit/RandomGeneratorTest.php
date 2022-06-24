@@ -13,7 +13,7 @@ class RandomGeneratorTest extends TestCase
         $this->instance = new RandomGenerator();
     }
 
-    public function test_call_seed()
+    public function test_random_generator_call_seed()
     {
         $this->assertIsNumeric($this->instance->seed(1));
         $this->assertIsNumeric($this->instance->seed(-1));
@@ -22,7 +22,7 @@ class RandomGeneratorTest extends TestCase
         $this->assertIsNumeric($this->instance->seed(0));
     }
 
-    public function test_call_generateNumber()
+    public function test_random_generator_call_generateNumber()
     {
         $this->assertIsNumeric($this->instance->generateNumber(0, 100));
         $this->assertIsNumeric($this->instance->generateNumber(-1, 100));
@@ -32,7 +32,7 @@ class RandomGeneratorTest extends TestCase
         $this->assertIsNumeric($this->instance->generateNumber(0, 0));
     }
 
-    public function test_call_generateFixedLengthNumber()
+    public function test_random_generator_call_generateFixedLengthNumber()
     {
         $val = $this->instance->generateFixedLengthNumber(0);
 
@@ -55,13 +55,13 @@ class RandomGeneratorTest extends TestCase
         $this->assertTrue(strlen((string)$val) == 10);
     }
 
-    public function test_call_generateOne()
+    public function test_random_generator_call_generateOne()
     {
         $this->assertIsNumeric($this->instance->generateOne(0));
         $this->assertIsNumeric($this->instance->generateOne(-2));
     }
 
-    public function test_call_generateAlphaNumeric()
+    public function test_random_generator_call_generateAlphaNumeric()
     {
         $this->assertEmpty($this->instance->generateAlphaNumeric(0));
         $this->assertEmpty($this->instance->generateAlphaNumeric(-1));
@@ -70,7 +70,7 @@ class RandomGeneratorTest extends TestCase
         $this->assertNotEmpty($this->instance->generateAlphaNumeric(100));
     }
 
-    public function test_call_randomTrueOrFalse()
+    public function test_random_generator_call_randomTrueOrFalse()
     {
         $this->assertIsBool($this->instance->randomTrueOrFalse());
         $this->assertIsBool($this->instance->randomTrueOrFalse(0));
@@ -80,13 +80,13 @@ class RandomGeneratorTest extends TestCase
         $this->assertIsArray($this->instance->randomTrueOrFalse(100));
     }
 
-    public function test_call_randomTrueOrFalse_sending_null_parameter()
+    public function test_random_generator_call_randomTrueOrFalse_sending_null_parameter()
     {
         $this->expectException(TypeError::class);
         $this->instance->randomTrueOrFalse(null);
     }
 
-    public function test_call_generateRandomOneZero()
+    public function test_random_generator_call_generateRandomOneZero()
     {
         $this->assertIsNumeric($this->instance->generateRandomOneZero(-1));
         $this->assertIsNumeric($this->instance->generateRandomOneZero(0));

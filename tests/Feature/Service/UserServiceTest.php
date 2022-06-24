@@ -26,7 +26,7 @@ class UserServiceTest extends ServiceTestCase
             $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
     }
 
-    public function test_call_read_with_empty_search()
+    public function test_user_service_call_read_with_empty_search()
     {
         $response = $this->service->read('', true, 10);
 
@@ -34,7 +34,7 @@ class UserServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
     }
 
-    public function test_call_read_with_special_char_in_search()
+    public function test_user_service_call_read_with_special_char_in_search()
     {
         $response = $this->service->read('&', true, 10);
 
@@ -42,7 +42,7 @@ class UserServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $response);
     }
 
-    public function test_call_read_with_negative_value_in_perpage_param()
+    public function test_user_service_call_read_with_negative_value_in_perpage_param()
     {
         $response = $this->service->read('', true, -10);
 
@@ -50,21 +50,21 @@ class UserServiceTest extends ServiceTestCase
         $this->assertNotNull($response);
     }
 
-    public function test_call_read_without_pagination()
+    public function test_user_service_call_read_without_pagination()
     {
         $response = $this->service->read('', false, 10);
 
         $this->assertInstanceOf(Collection::class, $response);
     }
 
-    public function test_call_read_with_null_param()
+    public function test_user_service_call_read_with_null_param()
     {
         $this->expectException(TypeError::class);
 
         $this->service->read(null, null, null);
     }
 
-    public function test_call_register()
+    public function test_user_service_call_register()
     {
         $email = $this->faker->email;
         $usr = $this->service->register('normaluser', $email, 'password', 'on');
@@ -87,7 +87,7 @@ class UserServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_register_with_existing_email()
+    public function test_user_service_call_register_with_existing_email()
     {
         $email = $this->faker->email;
         $usr = $this->service->register('normaluser', $email, 'password', 'on');
@@ -97,7 +97,7 @@ class UserServiceTest extends ServiceTestCase
         $this->assertNull($usr);
     }
 
-    public function test_call_create()
+    public function test_user_service_call_create()
     {
         $email = $this->faker->email;
         $roles = Role::get()->pluck('id')->toArray();
@@ -135,7 +135,7 @@ class UserServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_create_with_empty_profile_array()
+    public function test_user_service_call_create_with_empty_profile_array()
     {
         $email = $this->faker->email;
         $roles = Role::get()->pluck('id')->toArray();
@@ -170,7 +170,7 @@ class UserServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_create_with_empty_roles_array()
+    public function test_user_service_call_create_with_empty_roles_array()
     {
         $email = $this->faker->email;
         $roles = [];
@@ -185,7 +185,7 @@ class UserServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_update_users_table()
+    public function test_user_service_call_update_users_table()
     {
         $email = $this->faker->email;
         $roles = Role::get()->pluck('id')->toArray();;
@@ -205,7 +205,7 @@ class UserServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_update_profile_table()
+    public function test_user_service_call_update_profile_table()
     {
         $email = $this->faker->email;
         $roles = Role::get()->pluck('id')->toArray();
@@ -229,8 +229,10 @@ class UserServiceTest extends ServiceTestCase
         ]);        
     }
 
-    public function test_call_update_profile_table_update_one_field_others_must_remain()
+    public function test_user_service_call_update_profile_table_update_one_field_others_must_remain()
     {
+        $this->markTestSkipped('Under Construction');
+        
         $email = $this->faker->email;
         $roles = Role::get()->pluck('id')->toArray();
         $profile = [

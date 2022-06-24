@@ -42,7 +42,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-check"></i>
+                                    <i class="icon icon-check" aria-hidden="true"></i>
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_1_header') }}</h4>
@@ -53,7 +53,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-anchor"></i>
+                                    <i class="icon icon-anchor" aria-hidden="true"></i>
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_2_header') }}</h4>
@@ -64,7 +64,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-briefcase"></i>
+                                    <i class="icon icon-briefcase" aria-hidden="true"></i>
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_3_header') }}</h4>
@@ -75,7 +75,7 @@
                         <div class="col-md-6">
                             <div class="services-content mt-40 d-sm-flex">
                                 <div class="services-icon">
-                                    <i class="icon icon-bulb"></i>
+                                    <i class="icon icon-bulb" aria-hidden="true"></i>
                                 </div>
                                 <div class="services-content media-body">
                                     <h4 class="services-title">{{ __('front.services.service_4_header') }}</h4>
@@ -114,10 +114,10 @@
                         </div>
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="lni-check-mark-circle"></i> Carefully crafted components</li>
-                                <li><i class="lni-check-mark-circle"></i> Amazing page examples</li>
-                                <li><i class="lni-check-mark-circle"></i> Super friendly support team</li>
-                                <li><i class="lni-check-mark-circle"></i> Awesome Support</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Carefully crafted components</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Amazing page examples</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Super friendly support team</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Awesome Support</li>
                             </ul>
                         </div>
                         <div class="pricing-btn text-center">
@@ -141,10 +141,10 @@
                         </div>
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="lni-check-mark-circle"></i> Carefully crafted components</li>
-                                <li><i class="lni-check-mark-circle"></i> Amazing page examples</li>
-                                <li><i class="lni-check-mark-circle"></i> Super friendly support team</li>
-                                <li><i class="lni-check-mark-circle"></i> Awesome Support</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Carefully crafted components</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Amazing page examples</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Super friendly support team</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Awesome Support</li>
                             </ul>
                         </div>
                         <div class="pricing-btn text-center">
@@ -168,10 +168,10 @@
                         </div>
                         <div class="pricing-list">
                             <ul>
-                                <li><i class="lni-check-mark-circle"></i> Carefully crafted components</li>
-                                <li><i class="lni-check-mark-circle"></i> Amazing page examples</li>
-                                <li><i class="lni-check-mark-circle"></i> Super friendly support team</li>
-                                <li><i class="lni-check-mark-circle"></i> Awesome Support</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Carefully crafted components</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Amazing page examples</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Super friendly support team</li>
+                                <li><i class="lni-check-mark-circle" aria-hidden="true"></i> Awesome Support</li>
                             </ul>
                         </div>
                         <div class="pricing-btn text-center">
@@ -198,7 +198,7 @@
                         <h2 class="call-title">{{ __('front.call-to-action.title') }}</h2>
                         <p class="text">{{ __('front.call-to-action.description') }}</p>
                         <div class="call-newsletter">
-                            <i class="lni-envelope"></i>
+                            <i class="lni-envelope" aria-hidden="true"></i>
                             <input type="text" placeholder="john@email.com">
                             <button type="submit">{{ __('front.buttons.subscribe') }}</button>
                         </div>

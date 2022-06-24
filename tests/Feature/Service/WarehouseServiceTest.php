@@ -34,7 +34,7 @@ class WarehouseServiceTest extends ServiceTestCase
         }
     }
 
-    public function test_call_save_with_all_field_filled()
+    public function test_warehouse_service_call_save_with_all_field_filled()
     {
         $branch_id = Branch::inRandomOrder()->first()->id;
         $company_id = Branch::where('id', '=', $branch_id)->first()->company_id;
@@ -66,7 +66,7 @@ class WarehouseServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_save_with_minimal_field_filled()
+    public function test_warehouse_service_call_save_with_minimal_field_filled()
     {
         $branch_id = Branch::inRandomOrder()->first()->id;
         $company_id = Branch::where('id', '=', $branch_id)->first()->company_id;
@@ -98,7 +98,49 @@ class WarehouseServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_edit_with_all_field_filled()
+    public function test_warehouse_service_call_read_when_user_have_warehouses_read_with_empty_search()
+    {
+        $warehouseId = Warehouse::inRandomOrder()->first()->id;
+        $companyId = Warehouse::where('id', '=', $warehouseId)->first()->company_id;
+
+        $response = $this->service->read(
+            companyId: $companyId, 
+            search: '', 
+            paginate: true, 
+            page: 1,
+            perPage: 10,
+            useCache: false
+        );
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
+    }
+
+    public function test_warehouse_service_call_read_when_user_have_warehouses_with_special_char_in_search()
+    {
+        $warehouseId = Warehouse::inRandomOrder()->first()->id;
+        $companyId = Warehouse::where('id', '=', $warehouseId)->first()->company_id;
+
+        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
+        $paginate = true;
+        $page = 1;
+        $perPage = 10;
+        $useCache = false;
+
+        $response = $this->service->read(
+            companyId: $companyId, 
+            search: $search, 
+            paginate: $paginate, 
+            page: $page,
+            perPage: $perPage,
+            useCache: $useCache
+        );
+
+        $this->assertInstanceOf(Paginator::class, $response);
+        $this->assertNotNull($response);
+    }
+
+    public function test_warehouse_service_call_edit_with_all_field_filled()
     {
         $branch_id = Branch::inRandomOrder()->first()->id;
         $company_id = Branch::where('id', '=', $branch_id)->first()->company_id;
@@ -153,7 +195,7 @@ class WarehouseServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_edit_with_minimal_field_filled()
+    public function test_warehouse_service_call_edit_with_minimal_field_filled()
     {
         $branch_id = Branch::inRandomOrder()->first()->id;
         $company_id = Branch::where('id', '=', $branch_id)->first()->company_id;
@@ -208,7 +250,7 @@ class WarehouseServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_call_delete()
+    public function test_warehouse_service_call_delete()
     {
         $branch_id = Branch::inRandomOrder()->first()->id;
         $company_id = Branch::where('id', '=', $branch_id)->first()->company_id;
@@ -238,47 +280,5 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->assertSoftDeleted('warehouses', [
             'id' => $id
         ]);
-    }
-
-    public function test_call_read_when_user_have_warehouses_read_with_empty_search()
-    {
-        $warehouseId = Warehouse::inRandomOrder()->first()->id;
-        $companyId = Warehouse::where('id', '=', $warehouseId)->first()->company_id;
-
-        $response = $this->service->read(
-            companyId: $companyId, 
-            search: '', 
-            paginate: true, 
-            page: 1,
-            perPage: 10,
-            useCache: false
-        );
-
-        $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertNotNull($response);
-    }
-
-    public function test_call_read_when_user_have_warehouses_with_special_char_in_search()
-    {
-        $warehouseId = Warehouse::inRandomOrder()->first()->id;
-        $companyId = Warehouse::where('id', '=', $warehouseId)->first()->company_id;
-
-        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
-        $paginate = true;
-        $page = 1;
-        $perPage = 10;
-        $useCache = false;
-
-        $response = $this->service->read(
-            companyId: $companyId, 
-            search: $search, 
-            paginate: $paginate, 
-            page: $page,
-            perPage: $perPage,
-            useCache: $useCache
-        );
-
-        $this->assertInstanceOf(Paginator::class, $response);
-        $this->assertNotNull($response);
     }
 }

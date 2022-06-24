@@ -19,7 +19,7 @@ class ProductGroupAPITest extends APITestCase
         Parent::setUp();
     }
     
-    public function test_api_call_require_authentication()
+    public function test_product_group_api_call_require_authentication()
     {
         $api = $this->getJson('/api/get/dashboard/product/product_group/read');
         $this->assertContains($api->getStatusCode(), array(401, 405));
@@ -34,7 +34,7 @@ class ProductGroupAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_product_group_save_with_all_field_filled()
+    public function test_product_group_api_call_product_group_save_with_all_field_filled()
     {
         $this->actingAs($this->developer);
         
@@ -60,7 +60,7 @@ class ProductGroupAPITest extends APITestCase
         $api->assertSuccessful();
     }
 
-    public function test_api_call_product_group_read_with_empty_search()
+    public function test_product_group_api_call_product_group_read_with_empty_search()
     {
         $this->actingAs($this->developer);
 
@@ -92,7 +92,7 @@ class ProductGroupAPITest extends APITestCase
         ]);
     }
 
-    public function test_api_call_product_group_edit_with_all_field_filled()
+    public function test_product_group_api_call_product_group_edit_with_all_field_filled()
     {
         $this->actingAs($this->developer);
 
@@ -129,7 +129,7 @@ class ProductGroupAPITest extends APITestCase
         ]);
     }
     
-    public function test_api_call_product_group_delete()
+    public function test_product_group_api_call_product_group_delete()
     {
         $this->actingAs($this->developer);
 

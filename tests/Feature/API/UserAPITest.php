@@ -8,7 +8,7 @@ use Tests\APITestCase;
 
 class UserAPITest extends APITestCase
 {
-    public function test_api_call_require_authentication()
+    public function test_user_api_call_require_authentication()
     {
         $api = $this->getJson('/api/get/dashboard/admin/users/read');
         $this->assertContains($api->getStatusCode(), array(401, 405));
@@ -23,31 +23,31 @@ class UserAPITest extends APITestCase
         $this->assertContains($api->getStatusCode(), array(401, 405));
     }
 
-    public function test_api_call_read()
+    public function test_user_api_call_read()
     {
-        $this->actingAs($this->user);
+        $this->actingAs($this->developer);
 
-        $api = $this->getJson('/api/get/dashboard/admin/users/read');
+        $api = $this->getJson('/api/get/dashboard/admin/users/read?search=&paginate=false');
         $api->assertStatus(200);
     }
 
-    public function test_api_call_getAllRoles()
+    public function test_user_api_call_getAllRoles()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_call_store()
+    public function test_user_api_call_store()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_call_update()
+    public function test_user_api_call_update()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_call_resetPassword()
+    public function test_user_api_call_resetPassword()
     {
-        $this->assertTrue(true);
+        $this->markTestSkipped('Under Construction');
     }
 }

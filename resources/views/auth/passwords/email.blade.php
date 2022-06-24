@@ -23,10 +23,10 @@
                                 <br/>
                                 <div class="d-flex justify-content-end">
                                     <a class="mx-2" href="{{ route('register') }}">
-                                        <i class="icon icon-plus"></i> {{ __('auth.buttons.register') }}
+                                        <i class="icon icon-plus" aria-hidden="true"></i> {{ __('auth.buttons.register') }}
                                     </a>
                                     <a class="" href="{{ route('login') }}">
-                                        <i class="icon icon-login"></i> {{ __('auth.buttons.login') }}
+                                        <i class="icon icon-login" aria-hidden="true"></i> {{ __('auth.buttons.login') }}
                                     </a>
                                 </div>
                             </div>
@@ -47,10 +47,10 @@
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <a class="mx-2" href="{{ route('register') }}">
-                                        <i class="icon icon-plus"></i> {{ __('auth.buttons.register') }}
+                                        <i class="icon icon-plus" aria-hidden="true"></i> {{ __('auth.buttons.register') }}
                                     </a>
                                     <a class="" href="{{ route('login') }}">
-                                        <i class="icon icon-login"></i> {{ __('auth.buttons.login') }}
+                                        <i class="icon icon-login" aria-hidden="true"></i> {{ __('auth.buttons.login') }}
                                     </a>
                                 </div>
                             </form>
