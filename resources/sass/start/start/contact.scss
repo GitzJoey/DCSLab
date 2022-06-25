@@ -1,0 +1,90 @@
+.contact-area {
+    padding-top: 120px;
+    padding-bottom: 120px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .contact-area {
+        padding-top: 100px;
+        padding-bottom: 100px;
+    }
+}
+
+@media (max-width: 767px) {
+    .contact-area {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+}
+
+.contct-form.form-group {
+    margin: 0;
+}
+
+.contct-form p.form-message.success,
+.contct-form p.form-message.error {
+    font-size: 16px;
+    color: #121212;
+    background: #cbced1;
+    padding: 10px 15px;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
+.contct-form p.form-message.error {
+    color: #f00;
+}
+
+.contact-form .single-form {
+    margin-top: 30px;
+}
+.contact-form .single-form textarea,
+.contact-form .single-form input {
+    width: 100%;
+    height: 56px;
+    border: 1px solid #cbced1;
+    border-radius: 5px;
+    padding: 0 25px;
+    background-color: #fff;
+    font-size: 16px;
+}
+
+.contact-form .single-form textarea::placeholder,
+.contact-form .single-form input::placeholder {
+    opacity: 1;
+    color: #a4a4a4;
+}
+
+.contact-form .single-form textarea::-moz-placeholder,
+.contact-form .single-form input::-moz-placeholder {
+    opacity: 1;
+    color: #a4a4a4;
+}
+
+.contact-form .single-form textarea::-moz-placeholder,
+.contact-form .single-form input::-moz-placeholder {
+    opacity: 1;
+    color: #a4a4a4;
+}
+
+.contact-form .single-form textarea::-webkit-input-placeholder,
+.contact-form .single-form input::-webkit-input-placeholder {
+    opacity: 1;
+    color: #a4a4a4;
+}
+
+.contact-form .single-form textarea {
+    height: 160px;
+    padding-top: 15px;
+    resize: none;
+}
+
+.contact-form .single-form .main-btn {
+    border-radius: 50px;
+    background-color: #0067f4;
+    color: #fff;
+}
+
+.contact-form .single-form .main-btn:hover {
+    background-color: #005ad5;
+}

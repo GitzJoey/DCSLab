@@ -10,9 +10,44 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "autoprefixer": "^10.4.7",
         "axios": "^0.25",
+        "cssnano": "^5.1.12",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "postcss": "^8.1.14",
+        "postcss-advanced-variables": "^3.0.1",
+        "postcss-import": "^14.1.0",
+        "postcss-url": "^10.1.3",
+        "sass": "^1.53.0",
+        "sass-loader": "^13.0.1",
+        "vue-loader": "^17.0.0",
+        "webpack-shell-plugin-next": "^2.2.2"
+    },
+    "dependencies": {
+        "@left4code/tw-starter": "^3.1.35",
+        "@popperjs/core": "^2.11.5",
+        "@tailwindcss/forms": "^0.5.2",
+        "@vee-validate/i18n": "^4.5.11",
+        "@vee-validate/rules": "^4.5.11",
+        "bootstrap": "^5.1.3",
+        "bootstrap-icons": "^1.8.3",
+        "cash-dom": "^8.1.1",
+        "dayjs": "^1.11.3",
+        "laravel-echo": "^1.12.0",
+        "litepicker": "^2.0.12",
+        "lucide-vue-next": "^0.68.0",
+        "pusher-js": "^7.1.1-beta",
+        "simplebar": "^5.3.8",
+        "tailwindcss": "^3.1.4",
+        "tippy.js": "^6.3.7",
+        "toastify-js": "^1.11.2",
+        "tom-select": "^1.7.5",
+        "vee-validate": "^4.5.11",
+        "vue": "^3.2.37",
+        "vue-i18n": "^9.1.10",
+        "vue-router": "^4.0.16",
+        "vue-router-multiguard": "^1.0.3",
+        "ziggy-js": "^1.4.6"
     }
 }

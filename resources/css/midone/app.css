@@ -1,0 +1,77 @@
+@import "./_tailwind.css";
+
+@import "./_colors.css";
+
+@import "./fonts/_roboto_ttf.css";
+
+@import "@left4code/tw-starter/dist/css/mixins/_media.css";
+
+@import "@left4code/tw-starter/dist/css/_breadcrumb.css";
+@import "@left4code/tw-starter/dist/css/_accordion.css";
+@import "@left4code/tw-starter/dist/css/_alert.css";
+@import "@left4code/tw-starter/dist/css/_btn.css";
+@import "@left4code/tw-starter/dist/css/_dropdown.css";
+@import "@left4code/tw-starter/dist/css/_file.css";
+@import "@left4code/tw-starter/dist/css/_form-reset.css";
+@import "@left4code/tw-starter/dist/css/_form-check.css";
+@import "@left4code/tw-starter/dist/css/_form-control.css";
+@import "@left4code/tw-starter/dist/css/_form-help.css";
+@import "@left4code/tw-starter/dist/css/_form-inline.css";
+@import "@left4code/tw-starter/dist/css/_form-label.css";
+@import "@left4code/tw-starter/dist/css/_form-select.css";
+@import "@left4code/tw-starter/dist/css/_image-fit.css";
+@import "@left4code/tw-starter/dist/css/_input-group.css";
+@import "@left4code/tw-starter/dist/css/_intro.css";
+@import "@left4code/tw-starter/dist/css/_modal.css";
+@import "@left4code/tw-starter/dist/css/_pagination.css";
+@import "@left4code/tw-starter/dist/css/_progress.css";
+@import "@left4code/tw-starter/dist/css/_scrollbar.css";
+@import "@left4code/tw-starter/dist/css/_tab.css";
+@import "@left4code/tw-starter/dist/css/_table.css";
+@import "@left4code/tw-starter/dist/css/_typing-dots.css";
+@import "@left4code/tw-starter/dist/css/_zoom-in.css";
+@import "@left4code/tw-starter/dist/css/_box.css";
+
+@import "tippy.js/dist/tippy.css";
+@import "tippy.js/themes/light.css";
+@import "tippy.js/dist/svg-arrow.css";
+@import "tippy.js/animations/shift-away.css";
+@import "toastify-js/src/toastify.css";
+
+@import "tom-select/dist/css/tom-select.css";
+@import "simplebar/src/simplebar.css";
+
+@import "./components/_global.css";
+@import "./components/_top-bar.css";
+@import "./components/_table-report.css";
+@import "./components/_report-chart.css";
+@import "./components/_search.css";
+@import "./components/_notification.css";
+@import "./components/_report-box.css";
+@import "./components/_report-box-3.css";
+@import "./components/_content.css";
+@import "./components/_top-nav.css";
+@import "./components/_side-nav.css";
+@import "./components/_breadcrumb.css";
+@import "./components/_toastify.css";
+@import "./components/_toastify-content.css";
+@import "./components/_lucide-icon.css";
+@import "./components/_top-bar-boxed.css";
+@import "./components/_mobile-menu.css";
+@import "./components/_inbox-filter.css";
+@import "./components/_inbox.css";
+@import "./components/_chat.css";
+@import "./components/_chat-dropdown.css";
+@import "./components/_news.css";
+@import "./components/_error-page.css";
+@import "./components/_search-result.css";
+@import "./components/_notification-content.css";
+@import "./components/_pos-dropdown.css";
+@import "./components/_post.css";
+@import "./components/_litepicker.css";
+@import "./components/_tippy.css";
+@import "./components/_tom-select.css";
+@import "./components/_dark-mode-switcher.css";
+@import "./components/_pristine.css";
+
+@import 'customs/loading-overlay.css';

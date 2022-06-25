@@ -1,0 +1,222 @@
+.navigation {
+    padding: 10px 0;
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+
+.navigation.navigation-transparent {
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+}
+
+.navigation.sticky {
+    position: fixed;
+    background-color: #fff;
+    -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+    -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+
+.navigation .navbar {
+    position: relative;
+    padding: 0;
+}
+
+.navigation .navbar .navbar-toggler .toggler-icon {
+    width: 30px;
+    height: 2px;
+    background-color: #121212;
+    margin: 5px 0;
+    display: block;
+    position: relative;
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+
+.navigation .navbar .navbar-toggler.active .toggler-icon:nth-of-type(1) {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: 7px;
+}
+
+.navigation .navbar .navbar-toggler.active .toggler-icon:nth-of-type(2) {
+    opacity: 0;
+}
+
+.navigation .navbar .navbar-toggler.active .toggler-icon:nth-of-type(3) {
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    -o-transform: rotate(135deg);
+    transform: rotate(135deg);
+    top: -7px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .navigation .navbar .navbar-collapse {
+        position: absolute;
+        top: 116%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        z-index: 8;
+        padding: 10px 0;
+        -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+        -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+    }
+}
+
+@media (max-width: 767px) {
+    .navigation .navbar .navbar-collapse {
+        position: absolute;
+        top: 116%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        z-index: 8;
+        padding: 10px 0;
+        -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+        -moz-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+    }
+}
+
+.navigation .navbar .navbar-nav .nav-item {
+    margin: 0 16px;
+    position: relative;
+}
+
+.navigation .navbar .navbar-nav .nav-item a {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 700;
+    padding: 26px 0;
+    color: #121212;
+    text-transform: uppercase;
+    position: relative;
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .navigation .navbar .navbar-nav .nav-item a {
+        padding: 10px 0;
+        display: block;
+    }
+}
+
+@media (max-width: 767px) {
+    .navigation .navbar .navbar-nav .nav-item a {
+        padding: 10px 0;
+        display: block; }
+}
+
+.navigation .navbar .navbar-nav .nav-item a::before, .navigation .navbar .navbar-nav .nav-item a::after {
+    position: absolute;
+    content: '';
+    width: 8px;
+    height: 4px;
+    background-color: #0067f4;
+    left: 50%;
+    margin: 0 2px;
+    bottom: 14px;
+    opacity: 0;
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .navigation .navbar .navbar-nav .nav-item a::before, .navigation .navbar .navbar-nav .nav-item a::after {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .navigation .navbar .navbar-nav .nav-item a::before, .navigation .navbar .navbar-nav .nav-item a::after {
+        display: none;
+    }
+}
+
+.navigation .navbar .navbar-nav .nav-item a::after {
+    left: auto;
+    right: 50%;
+}
+
+.navigation .navbar .navbar-nav .nav-item.active > a, .navigation .navbar .navbar-nav .nav-item:hover > a {
+    color: #0067f4;
+}
+
+.navigation .navbar .navbar-nav .nav-item.active > a::before, .navigation .navbar .navbar-nav .nav-item.active > a::after, .navigation .navbar .navbar-nav .nav-item:hover > a::before, .navigation .navbar .navbar-nav .nav-item:hover > a::after {
+    opacity: 1;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .navigation .navbar .navbar-social {
+        position: absolute;
+        right: 70px;
+        top: 7px;
+    }
+}
+
+@media (max-width: 767px) {
+    .navigation .navbar .navbar-social {
+        position: absolute;
+        right: 60px;
+        top: 7px;
+    }
+}
+
+.navigation .navbar .navbar-social span {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6c6c6c;
+    line-height: 24px;
+    margin-right: 14px;
+}
+
+.navigation .navbar .navbar-social ul li {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.navigation .navbar .navbar-social ul li a {
+    font-size: 32px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #6c6c6c;
+    border-radius: 4px;
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+
+.navigation .navbar .navbar-social ul li a:hover {
+    color: #0067f4;
+}
