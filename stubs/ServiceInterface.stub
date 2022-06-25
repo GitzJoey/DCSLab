@@ -11,7 +11,7 @@ interface $INTERFACE_CLASS_NAME$Service
     ): mixed;
 
     public function read(
-    ): Paginator|Collection|null;
+    ): Paginator|Collection;
     
     public function readBy(string $key, string $value);
 

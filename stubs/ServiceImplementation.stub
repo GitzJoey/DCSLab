@@ -38,7 +38,7 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
     }
 
     public function read(
-    ): Paginator|Collection|null
+    ): Paginator|Collection
     {
         $timer_start = microtime(true);
 
