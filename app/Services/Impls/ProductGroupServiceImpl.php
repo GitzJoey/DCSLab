@@ -2,19 +2,19 @@
 
 namespace App\Services\Impls;
 
+use Exception;
+
+use App\Traits\CacheHelper;
+use App\Models\ProductGroup;
 use App\Actions\RandomGenerator;
 use App\Enums\ProductCategory;
-
-use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Log;
 use App\Services\ProductGroupService;
-use App\Models\ProductGroup;
-use App\Traits\CacheHelper;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class ProductGroupServiceImpl implements ProductGroupService
 {
@@ -106,23 +106,29 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $result = null;
 
-            $productGroup = ProductGroup::whereCompanyId($companyId);
-
+            $product_group = ProductGroup::whereCompanyId($companyId);
+         
             if (!empty($category)) {
-                $productGroup = $productGroup->where('category', '=', ProductCategory::PRODUCTS->value);
-            } 
-    
+                if ($category == ProductCategory::PRODUCTS) {
+                    $product_group = $product_group->where('category', '=', ProductCategory::PRODUCTS->value);
+                } else if ($category == ProductCategory::SERVICES) {
+                    $product_group = $product_group->where('category', '=', ProductCategory::SERVICES->value);
+                } else if ($category == ProductCategory::PRODUCTS_AND_SERVICES) {
+                    $product_group = $product_group->where('category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value);
+                }
+            }
+            
             if (empty($search)) {
-                $productGroup = $productGroup->latest();
+                $product_group = $product_group->latest();
             } else {
-                $productGroup = $productGroup->where('name', 'like', '%'.$search.'%')->latest();
+                $product_group = $product_group->where('name', 'like', '%'.$search.'%')->latest();
             }
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                $result = $productGroup->paginate($perPage);
+                return $product_group->paginate($perPage);
             } else {
-                $result = $productGroup->get();
+                return $product_group->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);
