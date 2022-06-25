@@ -34,8 +34,13 @@ class UserServiceImpl implements UserService
         
     }
     
-    public function register(string $name, string $email, string $password, string $terms): ?User
+    public function register(array $input): User
     {
+        $name = $input['name'];
+        $email = $input['email'];
+        $password = $input['password'];
+        $terms =  $input['terms'];
+
         if ($name == trim($name) && strpos($name, ' ') !== false) {
             $pieces = explode(" ", $name);
             $first_name = $pieces[0];
@@ -66,7 +71,7 @@ class UserServiceImpl implements UserService
         return $usr;
     }
 
-    public function create(string $name, string $email, string $password, array $rolesId, array $profile): ?User
+    public function create(array $user, array $roles, array $profile): User
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -75,8 +80,8 @@ class UserServiceImpl implements UserService
             //throw New \Exception('Test Exception From Services');
 
             $usr = new User();
-            $usr->name = $name;
-            $usr->email = $email;
+            $usr->name = $user['name'];
+            $usr->email = $user['email'];
 
             if (empty($password)) {
                 $usr->password = Hash::make((new RandomGenerator())->generateAlphaNumeric(5));
@@ -107,7 +112,7 @@ class UserServiceImpl implements UserService
             $settings = $this->createDefaultSetting();
             $usr->settings()->saveMany($settings);
 
-            $usr->attachRoles($rolesId);
+            $usr->attachRoles($roles);
 
             if (env('AUTO_VERIFY_EMAIL', true))
                 $usr->markEmailAsVerified();
@@ -118,14 +123,13 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.' '.'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function read(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection|null
+    public function read(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection
     {
         $timer_start = microtime(true);
         try {
@@ -164,7 +168,6 @@ class UserServiceImpl implements UserService
             return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
@@ -186,49 +189,45 @@ class UserServiceImpl implements UserService
             }    
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function update(int $id, ?string $name = null, ?array $rolesId = null, ?array $profile = null, ?array $settings = null): ?User
+    public function update(User $user, ?array $userArr = null, ?array $roles = null, ?array $profile = null, ?array $settings = null): User
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $usr = User::find($id);
-
-            if (!is_null($name))
-                $this->updateUser($usr, $name, false);
+            if (!is_null($userArr))
+                $this->updateUser($user, $userArr, false);
 
             if (!is_null($profile))
-                $this->updateProfile($usr, $profile, false);
+                $this->updateProfile($user, $profile, false);
             
-            if (!is_null($rolesId))
-                $this->updateRoles($usr, $rolesId, false);
+            if (!is_null($roles))
+                $this->updateRoles($user, $roles, false);
             
             if (!is_null($settings))
-                $this->updateSettings($usr, $settings, false);
+                $this->updateSettings($user, $settings, false);
 
             DB::commit();
 
             $this->flushCache();
 
-            return $usr->refresh();
+            return $user->refresh();
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function updateUser(User $user, string $name, bool $useTransactions = true): ?bool
+    public function updateUser(User $user, array $userArr, bool $useTransactions = true): bool
     {
         !$useTransactions ? : DB::beginTransaction();
         $timer_start = microtime(true);
@@ -237,7 +236,7 @@ class UserServiceImpl implements UserService
             //DB::enableQueryLog();
 
             $retval = $user->update([
-                'name' => $name,
+                'name' => $userArr['name'],
             ]);
 
             //$queryLog = DB::getQueryLog();
@@ -248,14 +247,13 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function updateProfile(User $user, array $profile, bool $useTransactions = true): ?bool
+    public function updateProfile(User $user, array $profile, bool $useTransactions = true): bool
     {
         !$useTransactions ? : DB::beginTransaction();
         $timer_start = microtime(true);
@@ -285,14 +283,13 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?User
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): User
     {
         !$useTransactions ? : DB::beginTransaction();
         $timer_start = microtime(true);
@@ -306,14 +303,13 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function updateSettings(User $user, array $settings, bool $useTransactions = true): ?bool
+    public function updateSettings(User $user, array $settings, bool $useTransactions = true): bool
     {
         !$useTransactions ? : DB::beginTransaction();
         $timer_start = microtime(true);
@@ -336,7 +332,6 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

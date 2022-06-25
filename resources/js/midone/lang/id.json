@@ -1,0 +1,481 @@
+{
+    "components": {
+        "menu": {
+            "dashboard": "Dashboard",
+            "main-dashboard": "Dashboard Utama",
+            "main-demo": "Demonstrasi",
+            "company": "Perusahaan",
+            "company-company": "Perusahaan",
+            "company-branch": "Cabang",
+            "company-employee": "Karyawan",
+            "company-warehouse": "Gudang",
+            "supplier": "Pemasok",
+            "supplier-supplier": "Pemasok",
+            "product": "Produk",
+            "product-product": "Produk",
+            "product-service": "Layanan",
+            "administrator": "Administrator",
+            "administrator-user": "Pengguna",
+            "purchase_order": "Pembelian",
+            "purchase_order-purchaseorder": "Pembelian",
+            "devtool": "Dev Tool",
+            "devtool-dbbackup": "DB Backup",
+            "devtool-playground": "Playground",
+            "devtool-playground-ex1": "Playground 1",
+            "devtool-playground-ex2": "Playground 2"
+        },
+        "alert-placeholder": {
+            "success_alert": {
+                "password_changed_successfully": "Password Berhasil Dirubah!",
+                "profile_changed_successfully": "Profil Berhasil Dirubah!",
+                "settings_changed_successfully": "Pengaturan Berhasil Dirubah!",
+                "verification_link_sent_successfully": "Email Verifikasi Terkirim!"
+            }
+        },
+        "buttons": {
+            "save": "Simpan",
+            "cancel": "Batal",
+            "delete": "Hapus",
+            "back": "Kembali",
+            "reset": "Reset",
+            "compose": "Pesan Baru",
+            "revoke": "Revoke",
+            "activate": "Aktifkan",
+            "submit": "Kirim",
+            "send_verification_email": "Kirim Email Verifikasi",
+            "auto": "Auto",
+            "new_order": "Order Baru"
+        },
+        "dropdown": {
+            "placeholder": "Silahkan Pilih",
+            "values": {
+                "statusDDL": {
+                    "active": "Aktif",
+                    "inactive": "Tidak Aktif"
+                },
+                "productOrServiceCategoryDDL": {
+                    "product": "Produk",
+                    "service": "Jasa",
+                    "product_and_service": "Produk Dan Jasa"
+                },
+                "paymentTermTypeDDL": {
+                    "pia": "Pembayaran Dimuka",
+                    "net": "Pembayaran Beberapa Hari Setelah Tgl Invoice",
+                    "eom": "Akhir Bulan",
+                    "cod": "Cash On Delivery",
+                    "cnd": "Cash Di Pengiriman Selanjutnya",
+                    "cbs": "Cash Sebelum Pengiriman"
+                },
+                "yesNoDDL": {
+                    "yes": "Ya",
+                    "no": "Tidak"
+                },
+                "productTypeDDL": {
+                    "raw": "Bahan Baku",
+                    "wip": "Barang Setengah Jadi",
+                    "fg": "Barang Jadi",
+                    "svc": "Jasa"
+                }
+            }
+        },
+        "top-bar": {
+            "profile_ddl": {
+                "profile": "Profile",
+                "inbox": "Inbox",
+                "activity": "Activity",
+                "logout": "Logout"
+            }
+        },
+        "data-list": {
+            "print": "Cetak",
+            "exportToExcel": "Export ke Excel",
+            "exportToPDF": "Export ke PDF",
+            "placeholderSearch": "Cari...",
+            "columnActions": "ACTIONS",
+            "deleteConfirmTitle": "Konfirmasi hapus?",
+            "deleteConfirmText": "Apakah anda yakin untuk menghapus data ini?",
+            "deleteConfirmCancel": "Cancel",
+            "deleteConfirmDelete": "Delete",
+            "showing": "Menampilkan",
+            "to": "sampai",
+            "of": "dari",
+            "entries": "masukan data",
+            "search": "Cari...",
+            "view": "Tampilkan",
+            "edit": "Ubah",
+            "delete": "Hapus",
+            "delete_confirmation": {
+                "title": "Konfirmasi",
+                "desc_1": "Apakah Anda benar-benar ingin menghapus data ini?",
+                "desc_2": "Proses ini tidak dapat dibatalkan.",
+                "delete": "Hapus",
+                "cancel": "Batal"
+            },
+            "data_not_found": "Data Tidak Ditemukan"
+        }
+    },
+    "views": {
+        "inbox": {
+            "title": "Kotak Masuk",
+            "fields": {
+                "to": "Kepada",
+                "subject": "Subjek",
+                "message": "Pesan"
+            }
+        },
+        "profile": {
+            "title": "Profil",
+            "menu": {
+                "personal_information": "Informasi Pribadi",
+                "account_settings": "Pengaturan Akun",
+                "roles": "Peran",
+                "change_password": "Ubah Password"
+            },
+            "fields": {
+                "name": "Nama",
+                "first_name": "Nama Depan",
+                "last_name": "Nama Keluarga",
+                "address": "Alamat",
+                "city": "Kota",
+                "postal_code": "Kode Pos",
+                "country": "Negara",
+                "tax_id": "NPWP",
+                "remarks": "Keterangan",
+                "email": "Email",
+                "ic_num": "KTP",
+                "settings": {
+                    "theme": "Tema",
+                    "dateFormat": "Format Tanggal",
+                    "timeFormat": "Format Waktu",
+                    "api_token": "API Token"
+                },
+                "change_password": {
+                    "current_password": "Password Sekarang",
+                    "new_password": "Password Baru",
+                    "confirm_password": "Konfirmasi Password Baru"
+                }
+            },
+            "tooltip": {
+                "email_verified": "Email terverifikasi"
+            }
+        },
+        "user": {
+            "page_title": "Pengguna",
+            "table": {
+                "title": "Daftar Pengguna",
+                "cols": {
+                    "name": "Nama",
+                    "email": "Email",
+                    "roles": "Peran",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Pengguna",
+                "edit": "Ubah Pengguna",
+                "show": "Tampilkan Pengguna"
+            },
+            "fields": {
+                "name": "Nama",
+                "email": "Email",
+                "roles": "Peran",
+                "picture": "Foto",
+                "first_name": "Nama Depan",
+                "last_name": "Nama Belakang",
+                "address": "Alamat",
+                "ic_num": "Nomor KTP",
+                "country": "Negara",
+                "remarks": "Deskripsi",
+                "status": "Status",
+                "tax_id": "No NPWP",
+                "postal_code": "Kode Pos",
+                "city": "Kota",
+                "settings": {
+                    "settings": "Pengaturan",
+                    "theme": "Tema",
+                    "dateFormat": "Format Tanggal",
+                    "timeFormat": "Format Waktu",
+                    "apiToken": "API Token"
+                },
+                "reset_password": "Reset Password",
+                "email_reset_password": "Kirim Email"
+            }
+        },
+        "activity": {
+            "title": "Catatan Aktifitas"
+        },
+        "product": {
+            "table": {
+                "title": "Daftar Produk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "brand": "Merk",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Produk",
+                "edit": "Ubah Produk",
+                "show": "Tampilkan Produk",
+                "delete": "Hapus Produk"
+            },
+            "fields": {
+                "code": "Kode",
+                "product_group_id": "Nama Group",
+                "brand_id": "Nama Merk",
+                "name": "Nama",
+                "taxable_supply": "Produk Kena Pajak",
+                "standard_rated_supply": "PPN",
+                "price_include_vat": "Harga Termasuk Pajak",
+                "remarks": "Remarks",
+                "point": "Poin",
+                "use_serial_number": "Memakai Nomor Serial",
+                "has_expiry_date": "Tanggal Kadaluarsa",
+                "product_type": "Tipe Produk",
+                "status": "Status",
+                "units": {
+                    "title": "Satuan",
+                    "table": {
+                        "cols": {
+                            "code": "Kode",
+                            "unit": "Satuan",
+                            "conversion_value": "Nilai Tukar",
+                            "is_base": "Satuan Dasar",
+                            "is_primary": "Satuan Utama"    
+                        }
+                    }
+                }
+            }
+        },
+        "supplier": {
+            "tabs": {
+                "supplier": "Supplier",
+                "poc": "Penanggung Jawab",
+                "products": "Produk"
+            },
+            "table": {
+                "title": "Daftar Supplier",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "poc": "Penanggung Jawab",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Supplier",
+                "edit": "Ubah Supplier",
+                "show": "Tampilkan Supplier",
+                "delete": "Hapus Supplier"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "contact": "",
+                "address": "Alamat",
+                "city": "Kota",
+                "taxable_enterprise": "Pengusaha Kena Pajak",
+                "payment_term_type": "Ketentuan Pembayaran",
+                "payment_term": "Tempo",
+                "tax_id": "NPWP",
+                "remarks": "Remarks",
+                "status": "Status",
+                "poc": {
+                    "label": "Penanggung Jawab",
+                    "name": "Nama",
+                    "email": "Email",
+                    "ic_num": "No KTP",
+                    "tax_id": "NPWP"
+                },
+                "products": {
+                    "product_lists": "Daftar Produk",
+                    "table": {
+                        "cols": {
+                            "selected": "",
+                            "main_product": "Produk Utama",
+                            "product_name": "Nama Produk"
+                        }
+                    }
+                }
+            }
+        },
+        "company": {
+            "table": {
+                "title": "Daftar Perusahaan",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "default": "Default",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Perusahaan",
+                "edit": "Ubah Perusahaan",
+                "show": "Tampilkan Perusahaan",
+                "delete": "Hapus Perusahaan"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "address": "Alamat",
+                "default": "Default",
+                "status": "Status"
+            }
+        },
+        "branch": {
+            "table": {
+                "title": " Daftar Cabang",
+                "cols": {
+                    "company": "Perusahaan",
+                    "code": "Kode",
+                    "name": "Nama",
+                    "is_main": "Cabang Utama",
+                    "remarks": "Keterangan",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Cabang",
+                "edit": "Ubah Cabang",
+                "show": "Tampilkan Cabang",
+                "delete": "Hapus Cabang"
+            },
+            "fields": {
+                "company_id": "Perusahaan",
+                "code": "Kode",
+                "name": "Nama",
+                "address": "Alamat",
+                "city": "Kota",
+                "contact": "Kontak",
+                "is_main": "Cabang Utama",
+                "remarks": "Keterangan",
+                "status": "Status"
+            }
+        },
+        "employee": {
+            "tabs": {
+                "employee": "Karyawan",
+                "access": "Akses"
+            },
+            "table": {
+                "title": "Daftar Karyawan",
+                "cols": {
+                    "company": "Persusahaan",
+                    "code": "Kode",
+                    "name": "Nama",
+                    "email": "Email",
+                    "join_date": "Join Date",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Karyawan",
+                "edit": "Ubah Karyawan",
+                "show": "Tampilkan Karyawan",
+                "delete": "Hapus Karyawan"
+            },
+            "fields": {
+                "company_id": "Nama Perusahaan",
+                "code": "Kode",
+                "name": "Nama",
+                "email": "Email",
+                "img_path": "Gambar",
+                "address": "Alamat",
+                "city": "Kota",
+                "postal_code": "Kode Pos",
+                "country": "Negara",
+                "tax_id": "Nomor Pajak",
+                "ic_num": "Nomor KTP",
+                "status": "Status",
+                "join_date": "Tanggal Bergabung",
+                "remarks": "Keterangan",
+                "access": {
+                    "access_lists": "Daftar Akses",
+                    "table": {
+                        "cols": {
+                            "selected": "Terpilih",
+                            "company": "Perusahaan",
+                            "branch": "Cabang"
+                        }
+                    }
+                }
+            }
+        },
+        "warehouse": {
+            "table": {
+                "title": " Daftar Gudang",
+                "cols": {
+                    "company": "Perusahaan",
+                    "branch": "Cabang",
+                    "code": "Kode",
+                    "name": "Nama",
+                    "remarks": "Keterangan",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Gudang",
+                "edit": "Ubah Gudang",
+                "show": "Tampilkan Gudang",
+                "delete": "Hapus Gudang"
+            },
+            "fields": {
+                "company_id": "Perusahaan",
+                "branch_id": "Cabang",
+                "code": "Kode",
+                "name": "Nama",
+                "address": "Alamat",
+                "city": "Kota",
+                "contact": "Kontak",
+                "remarks": "Keterangan",
+                "status": "Status"
+            }
+        },
+        "purchase_order": {
+            "tabs": {
+                "purchase_order": "Pembelian",
+                "supplier": "Pemasok",
+                "warehouse": "Gudang"
+            },
+            "table": {
+                "list_table": {
+                    "title": "Daftar Pembelian",
+                    "cols": {
+                        "code": "Kode",
+                        "po_date": "Tanggal",
+                        "supplier": "Supplier",
+                        "shipping_date": "Tanggal Kirim",
+                        "status": "Status"
+                    }
+                },
+                "item_table": {
+                    "cols": {
+                        "product_name": "Produk",
+                        "quantity": "Quantity",
+                        "unit": "Satuan",
+                        "price_unit": "Harga",
+                        "total_price": "Total Harga",
+                        "discount": "Diskon"
+                    }
+                }
+            },
+            "actions": {
+                "create": "Tambah Pembelian",
+                "edit": "Ubah Pembelian",
+                "show": "Tampilkan Pembelian",
+                "delete": "Hapus Pembelian"
+            },
+            "fields": {                
+                "supplier": "Supplier",
+                "invoice_no": "Nomor Faktur",
+                "po_type": "Tipe",
+                "invoice_date": "Tanggal Faktur",
+                "shipping_date": "Tgl Pengiriman",
+                "warehouse": "Gudang",
+                "po_status": "Status"
+            }
+        }
+    }
+}

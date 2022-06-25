@@ -8,40 +8,33 @@ use Illuminate\Support\Collection;
 
 interface UserService
 {
-    public function register(
-        string $name,
-        string $email,
-        string $password,
-        string $terms
-    ): ?User;
+    public function register(array $input): User;
 
     public function create(
-        string $name,
-        string $email,
-        string $password,
-        array $rolesId,
+        array $user,
+        array $roles,
         array $profile
-    ): ?User;
+    ): User;
 
-    public function read(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection|null;
+    public function read(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection;
 
     public function readBy(string $key, string $value);
 
     public function update(
-        int $id,
-        ?string $name = null,
-        ?array $rolesId = null,
+        User $user,
+        ?array $userArr = null,
+        ?array $roles = null,
         ?array $profile = null,
         ?array $settings = null
-    ): ?User;
+    ): User;
 
-    public function updateUser(User $user, string $name, bool $useTransactions = true): ?bool;
+    public function updateUser(User $user, array $userArr, bool $useTransactions = true): bool;
 
-    public function updateProfile(User $user, array $profile, bool $useTransactions = true): ?bool;
+    public function updateProfile(User $user, array $profile, bool $useTransactions = true): bool;
 
-    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): ?User;
+    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): User;
 
-    public function updateSettings(User $user, array $settings, bool $useTransactions = true): ?bool;
+    public function updateSettings(User $user, array $settings, bool $useTransactions = true): bool;
 
     public function resetPassword(string $email): void;
 
