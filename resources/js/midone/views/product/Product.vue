@@ -3,7 +3,7 @@
     <div class="intro-y" v-if="mode === 'list'">
         <DataList :title="t('views.product.table.title')" :data="productList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
            <template v-slot:table="tableProps">
-                <table class="table table-report -mt-2">
+                <table class="table table-report -mt-2" aria-describedby="">
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.product.table.cols.code') }}</th>

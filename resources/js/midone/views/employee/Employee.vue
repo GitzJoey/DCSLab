@@ -3,7 +3,7 @@
     <div class="intro-y" v-if="mode === 'list'">
         <DataList :title="t('views.employee.table.title')" :data="employeeList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
            <template v-slot:table="tableProps">
-                <table class="table table-report -mt-2">
+                <table class="table table-report -mt-2" aria-describedby="">
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.employee.table.cols.code') }}</th>
@@ -262,7 +262,7 @@
                     <div id="tab-access-content" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="tab-access">
                         <div class="mb-3">
                             <label for="inputAccessLists" class="form-label">{{ t('views.employee.fields.access.access_lists') }}</label>                            
-                            <table class="table table--sm">
+                            <table class="table table--sm" aria-describedby="">
                                 <thead>
                                     <tr>
                                         <th>{{ t('views.employee.fields.access.table.cols.selected') }}</th>
