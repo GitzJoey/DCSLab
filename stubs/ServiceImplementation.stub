@@ -51,7 +51,7 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
-        return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        return Config::get('dcslab.ERROR_RETURN_VALUE');
     }
 
     public function readBy(string $key, string $value)
@@ -67,7 +67,7 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        return Config::get('dcslab.ERROR_RETURN_VALUE');
     }
 
     public function update(

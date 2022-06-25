@@ -2,6 +2,7 @@
 
 namespace App\Services\Impls;
 
+use App\Enums\UserRoles;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -60,7 +61,7 @@ class RoleServiceImpl implements RoleService
         if (empty($exclude)) {
             return $role->get();
         } else {
-            return $role->whereNotIn('name', ['dev','administrator'])->get();
+            return $role->whereNotIn('name', [UserRoles::DEVELOPER->value, UserRoles::ADMINISTRATOR->value])->get();
         }
     }
 

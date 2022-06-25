@@ -29,7 +29,7 @@ class mustResetPassword implements Rule
     public function passes($attribute, $value)
     {
         if (is_null($this->user->password_changed_at)) return false;
-        if (Carbon::now()->diffInDays(Carbon::parse($this->user->password_changed_at)->addDays(Config::get('const.DEFAULT.PASSWORD_EXPIRY_DAYS')), false) <= 0 ) return false;
+        if (Carbon::now()->diffInDays(Carbon::parse($this->user->password_changed_at)->addDays(Config::get('dcslab.PASSWORD_EXPIRY_DAYS')), false) <= 0 ) return false;
 
         return true;
     }

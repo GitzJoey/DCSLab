@@ -59,7 +59,7 @@ class UserResource extends JsonResource
         if (is_null($password_changed_at))
             return 0;
 
-        $diff = Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(Config::get('const.DEFAULT.PASSWORD_EXPIRY_DAYS')), false);
+        $diff = Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(Config::get('dcslab.PASSWORD_EXPIRY_DAYS')), false);
 
         return $diff <= 0 ? 0 : $diff;
     }
