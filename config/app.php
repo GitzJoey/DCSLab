@@ -195,6 +195,14 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        \App\Providers\FortifyServiceProvider::class,
+
+        Intervention\Image\ImageServiceProvider::class,
+        Cmgmyr\Messenger\MessengerServiceProvider::class,
+        Mews\Captcha\CaptchaServiceProvider::class,
+
+        App\Providers\ResponseMacroServiceProvider::class,
     ],
 
     /*
@@ -209,7 +217,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
     ])->toArray(),
 
 ];
