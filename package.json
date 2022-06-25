@@ -38,6 +38,7 @@
         "laravel-echo": "^1.12.0",
         "litepicker": "^2.0.12",
         "lucide-vue-next": "^0.68.0",
+        "pinia": "^2.0.14",
         "pusher-js": "^7.1.1-beta",
         "simple-line-icons": "^2.5.5",
         "simplebar": "^5.3.8",

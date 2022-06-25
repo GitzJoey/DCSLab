@@ -63,7 +63,7 @@ if (mix.inProduction()) {
         .js('resources/js/start/main.js', 'public/js/start/main.js')
         .sourceMaps()
     ;
-/*
+
     let pluginsArr = [
         new webpack.DefinePlugin({
             __VUE_OPTIONS_API__: true,
@@ -111,5 +111,5 @@ if (mix.inProduction()) {
         .sourceMaps()
         .vue({ version: 3 })
     ;
-*/    
+
 }
