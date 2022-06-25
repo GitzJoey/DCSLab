@@ -13,18 +13,18 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
+    'failed'   => 'Identitas tersebut tidak cocok dengan data kami.',
     'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'throttle' => 'Terlalu banyak upaya masuk. Silahkan coba lagi dalam :seconds detik.',
 
     'register' => [
-        'title' => 'Register',
+        'title' => 'Daftar Baru',
         'name' => 'Full name',
         'email' => 'Email',
         'password' => 'Password',
         'password_confirmation' => 'Confirm password',
-        'agree_1' => 'I agree to terms ',
-        'agree_2' => '& conditions',
+        'agree_1' => 'I agree to the ',
+        'agree_2' => 'terms',
         'already_member' => 'I already have a membership',
         'terms_and_cond' => 'Terms & Condition',
     ],
@@ -33,34 +33,34 @@ return [
         'title' => 'Login',
         'email' => 'Email',
         'password' => 'Password',
-        'remember_me' => 'Remember Me',
-        'forgot_pass' => 'Forgot Password',
+        'remember_me' => 'Ingat Aku',
+        'forgot_pass' => 'Lupa Password',
     ],
 
     'reset_password' => [
         'email' => [
             'title' => 'Reset Password',
             'page_title' => 'Reset Password',
-            'page_title_desc' => 'Please enter your email',
+            'page_title_desc' => 'Silahkan masukan Email',
             'email' => 'Email',
         ],
         'reset' => [
             'title' => 'Reset Password',
             'page_title' => 'Reset Password',
-            'page_title_desc' => 'Please enter your new password',
+            'page_title_desc' => 'Silahkan masukan password baru',
             'email' => 'Email',
             'password' => 'Password',
             'password_confirmation' => 'Confirm password',
-        ],
+        ]
     ],
     'buttons' => [
         'login' => 'Login',
-        'register' => 'Register',
+        'register' => 'Daftar',
         'reset_password' => 'Reset Password',
-        'submit' => 'Submit',
-        'read_term' => 'Read Terms',
-        'close' => 'Close',
-        'accept' => 'Accept',
+        'submit' => 'Daftar',
+        'read_term' => 'Baca Syarat',
+        'close' => 'Tutup',
+        'accept' => 'Terima',
 
     ]
 ];
