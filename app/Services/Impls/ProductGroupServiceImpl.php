@@ -120,9 +120,9 @@ class ProductGroupServiceImpl implements ProductGroupService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $productGroup->paginate($perPage);
+                $result = $productGroup->paginate($perPage);
             } else {
-                return $productGroup->get();
+                $result = $productGroup->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);
