@@ -104,9 +104,9 @@ class UnitServiceImpl implements UnitService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $unit->paginate($perPage);
+                $result = $unit->paginate($perPage);
             } else {
-                return $unit->get();
+                $result = $unit->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);
