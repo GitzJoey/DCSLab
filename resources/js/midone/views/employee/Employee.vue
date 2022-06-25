@@ -370,7 +370,6 @@ const employee = ref({
         }
     ],
     selected_accesses: [],
-    code: '',
     join_date: '',
     status: 'ACTIVE',
 });
