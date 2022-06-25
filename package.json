@@ -39,6 +39,7 @@
         "litepicker": "^2.0.12",
         "lucide-vue-next": "^0.68.0",
         "pusher-js": "^7.1.1-beta",
+        "simple-line-icons": "^2.5.5",
         "simplebar": "^5.3.8",
         "tailwindcss": "^3.1.4",
         "tippy.js": "^6.3.7",
