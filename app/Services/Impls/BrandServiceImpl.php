@@ -86,7 +86,7 @@ class BrandServiceImpl implements BrandService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $pb->paginate($perPage);
+                return $pb->paginate(abs($perPage));
             } else {
                 return $pb->get();
             }
