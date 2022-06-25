@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Models\Employee;
 use App\Rules\isValidCompany;
 use Vinkla\Hashids\Facades\Hashids;
@@ -77,7 +77,7 @@ class EmployeeRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'status' => [new Enum(ActiveStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)]
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -89,7 +89,7 @@ class EmployeeRequest extends FormRequest
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
-                    'status' => [new Enum(ActiveStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -127,7 +127,7 @@ class EmployeeRequest extends FormRequest
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             default:

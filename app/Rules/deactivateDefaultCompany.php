@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use Illuminate\Contracts\Validation\Rule;
 
 class deactivateDefaultCompany implements Rule
@@ -29,7 +29,7 @@ class deactivateDefaultCompany implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->isDefault == true && $this->status == ActiveStatus::INACTIVE->value) return false;
+        if ($this->isDefault == true && $this->status == RecordStatus::INACTIVE->value) return false;
         else return true;
     }
 

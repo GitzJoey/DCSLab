@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
 use App\Services\RoleService;
 use App\Services\UserService;
@@ -450,7 +450,7 @@ class AppHelper extends Command
         $profile = [
             'first_name' => $userName,
             'country' => 'Singapore',
-            'status' => ActiveStatus::ACTIVE
+            'status' => RecordStatus::ACTIVE
         ];
 
         $userService->create(

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Models\Company;
 use App\Rules\deactivateDefaultCompany;
 use App\Rules\isValidCompany;
@@ -68,7 +68,7 @@ class CompanyRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'default' => 'required|boolean',
-                    'status' => [new Enum(ActiveStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
+                    'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -77,7 +77,7 @@ class CompanyRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'default' => 'required|boolean',
-                    'status' => [new Enum(ActiveStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
+                    'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -114,7 +114,7 @@ class CompanyRequest extends FormRequest
                 $this->merge([
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             case 'update':
@@ -122,7 +122,7 @@ class CompanyRequest extends FormRequest
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             default:

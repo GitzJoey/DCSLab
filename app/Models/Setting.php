@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use Spatie\Activitylog\LogOptions;
@@ -11,6 +12,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class Setting extends Model
 {
+    use HasFactory;
     use LogsActivity;
 
     protected $table="settings";

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -80,7 +80,7 @@ class UserRequest extends FormRequest
                 'roles' => 'required',
                 'tax_id' => 'required',
                 'ic_num' => 'required',
-                'status' => [new Enum(ActiveStatus::class)],
+                'status' => [new Enum(RecordStatus::class)],
                 'country' => 'required',
             ];
 
@@ -93,7 +93,7 @@ class UserRequest extends FormRequest
                 'roles' => 'required',
                 'tax_id' => 'required',
                 'ic_num' => 'required',
-                'status' => [new Enum(ActiveStatus::class)],
+                'status' => [new Enum(RecordStatus::class)],
                 'country' => 'required'
             ];
 
@@ -137,7 +137,7 @@ class UserRequest extends FormRequest
             case 'store':
             case 'update':
                 $this->merge([
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             default:

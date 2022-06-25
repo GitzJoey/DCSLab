@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Models\Branch;
 use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +71,7 @@ class BranchRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'is_main' => ['boolean'],
-                    'status' => [new Enum(ActiveStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)]
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -80,7 +80,7 @@ class BranchRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'is_main' => ['boolean'],
-                    'status' => [new Enum(ActiveStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -119,7 +119,7 @@ class BranchRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'is_main' => $this->has('is_main') ? filter_var($this->is_main, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             default:

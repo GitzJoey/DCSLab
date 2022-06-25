@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Models\Warehouse;
 use App\Rules\isValidCompany;
 use Illuminate\Support\Facades\Auth;
@@ -71,7 +71,7 @@ class WarehouseRequest extends FormRequest
                     'branch_id' => ['required'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => [new Enum(ActiveStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)]
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -80,7 +80,7 @@ class WarehouseRequest extends FormRequest
                     'branch_id' => ['required'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => [new Enum(ActiveStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)]
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:
@@ -120,7 +120,7 @@ class WarehouseRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'branch_id' => $this->has('branch_id') ? Hashids::decode($this['branch_id'])[0] : '',
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             default:

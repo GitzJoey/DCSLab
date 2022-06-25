@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Enums\PaymentTerm;
 use App\Enums\PaymentTermType;
 use App\Models\Supplier;
@@ -76,7 +76,7 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => [new Enum(ActiveStatus::class)],
+                    'status' => [new Enum(RecordStatus::class)],
                     'payment_term_type' => [new Enum(PaymentTerm::class)],
                     'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required|boolean',
@@ -88,7 +88,7 @@ class SupplierRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => [new Enum(ActiveStatus::class)],
+                    'status' => [new Enum(RecordStatus::class)],
                     'payment_term_type' => [new Enum(PaymentTerm::class)],
                     'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required|boolean',
@@ -132,7 +132,7 @@ class SupplierRequest extends FormRequest
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
                     'taxable_enterprise' => $this->has('taxable_enterprise') ? filter_var($this->taxable_enterprise, FILTER_VALIDATE_BOOLEAN) : false,
                     'payment_term_type' => PaymentTermType::isValid($this->payment_term_type) ? PaymentTermType::fromName($this->payment_term_type)->value : '',
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             default:

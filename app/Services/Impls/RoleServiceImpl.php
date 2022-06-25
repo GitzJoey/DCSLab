@@ -24,20 +24,16 @@ class RoleServiceImpl implements RoleService
         
     }
     
-    public function create(
-        string $name,
-        string $display_name,
-        string $description,
-        array $permissions
-    ): ?Role
+    public function create(array $role, array $permissions): Role
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
             $role = new Role();
-            $role->name = $name;
-            $role->display_name = $display_name;
-            $role->description = $description;
+            $role->name = $role['name'];
+            $role->display_name = $role['display_name'];
+            $role->description = $role['description'];
 
             $role->save();
 
@@ -47,15 +43,17 @@ class RoleServiceImpl implements RoleService
 
             DB::commit();
 
-            return $role->hId;
+            return $role;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function read(array $relationship = [], array $exclude = []): ?Collection
+    public function read(array $relationship = [], array $exclude = []): Collection
     {
         $role = Role::with($relationship)->latest();
 
@@ -83,25 +81,23 @@ class RoleServiceImpl implements RoleService
     }
 
     public function update(
-        int $id,
-        string $name,
-        string $display_name,
-        string $description,
+        Role $role,
+        array $roleArr,
         array $inputtedPermissions
-    ): ?Role
+    ): Role
     {
         DB::beginTransaction();
+        $timer_start = microtime(true);
 
         try {
-            $role = Role::with('permissions')->where('id', '=', $id)->first();
             $pl = Permission::whereIn('id', $inputtedPermissions)->get();
 
             $role->syncPermissions($pl);
 
             $role->update([
-                'name' => $name,
-                'display_name' => $display_name,
-                'description' => $description,
+                'name' => $roleArr['name'],
+                'display_name' => $roleArr['display_name'],
+                'description' => $roleArr['description'],
             ]);
 
             DB::commit();
@@ -110,11 +106,13 @@ class RoleServiceImpl implements RoleService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
-    public function getAllPermissions()
+    public function getAllPermissions(): Collection
     {
         return Permission::get();
     }

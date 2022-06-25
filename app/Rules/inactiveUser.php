@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use Illuminate\Contracts\Validation\Rule;
 
 class inactiveUser implements Rule
@@ -28,7 +28,7 @@ class inactiveUser implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->user->profile->status == ActiveStatus::INACTIVE) return false;
+        if ($this->user->profile->status == RecordStatus::INACTIVE) return false;
 
         return true;
     }

@@ -3,7 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
 use Exception;
 use Carbon\Carbon;
@@ -55,7 +55,7 @@ class UserServiceImpl implements UserService
         $profile = array (
             'first_name' => $first_name,
             'last_name' => $last_name,
-            'status' => ActiveStatus::ACTIVE,
+            'status' => RecordStatus::ACTIVE,
         );
 
         $rolesId = array(Role::where('name', UserRoles::USER->value)->first()->id);
@@ -354,24 +354,6 @@ class UserServiceImpl implements UserService
 
     public function createDefaultSetting(): array
     {
-        $list = array (
-            new Setting(array(
-                'type' => 'KEY_VALUE',
-                'key' => 'PREFS.THEME',
-                'value' => 'side-menu-light-full',
-            )),
-            new Setting(array(
-                'type' => 'KEY_VALUE',
-                'key' => 'PREFS.DATE_FORMAT',
-                'value' => 'yyyy_MM_dd',
-            )),
-            new Setting(array(
-                'type' => 'KEY_VALUE',
-                'key' => 'PREFS.TIME_FORMAT',
-                'value' => 'hh_mm_ss',
-            )),
-        );
-
-        return $list;
+        return Setting::factory()->createDefaultSetting();
     }
 }

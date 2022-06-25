@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Enums\ProductType;
 use App\Models\Product;
 use App\Rules\isValidCompany;
@@ -83,7 +83,7 @@ class ProductRequest extends FormRequest
                     'price_include_vat' => 'required|boolean',
                     'has_expiry_date' => 'required|boolean',
                     'point' => 'required|numeric|min:0',
-                    'status' => [new Enum(ActiveStatus::class)],
+                    'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
                     'conv_value.*' => 'numeric|min:1',
                 ];
@@ -99,7 +99,7 @@ class ProductRequest extends FormRequest
                     'price_include_vat' => 'required|boolean',
                     'has_expiry_date' => 'required|boolean',
                     'point' => 'required|numeric|min:0',
-                    'status' => [new Enum(ActiveStatus::class)],
+                    'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
                     'conv_value.*' => 'numeric|min:1',
                 ];
@@ -146,7 +146,7 @@ class ProductRequest extends FormRequest
                     'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,
                     'has_expiry_date' => $this->has('has_expiry_date') ? filter_var($this->has_expiry_date, FILTER_VALIDATE_BOOLEAN) : false,
                     'product_type' => ProductType::isValid($this->product_type) ? ProductType::fromName($this->product_type)->value : -1,
-                    'status' => ActiveStatus::isValid($this->status) ? ActiveStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
                 ]);
                 break;
             default:
