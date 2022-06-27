@@ -93,7 +93,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
             Route::group(['prefix' => 'users', 'as' => '.users'], function() {
-                Route::get('read', [UserController::class, 'read'])->name('.read');
+                Route::get('read', [UserController::class, 'list'])->name('.list');
+                Route::get('read/{user:uuid}', [UserController::class, 'read'])->name('.read');
 
                 Route::get('roles/read', [UserController::class, 'getAllRoles'])->name('.roles.read');
             });
@@ -105,7 +106,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'core', 'as' => '.core'], function() {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function() {
-                Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');
+                Route::get('read', [ProfileController::class, 'readAuth'])->name('.read');
             });
 
             Route::group(['prefix' => 'inbox', 'as' => '.inbox'], function() {
@@ -125,11 +126,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function() {
                 Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
                 Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
-                Route::get('list/confirmationdialog', [CommonController::class, 'getConfirmationDialog'])->name('.list.confirmationdialog');
-            });
-
-            Route::group(['prefix' => 'tools', 'as' => '.tools'], function() {
-                Route::get('random/generator', [CommonController::class, 'getRandGenerator'])->name('.random.generator');
+                Route::get('list/confirmation', [CommonController::class, 'getConfirmationDialog'])->name('.list.confirmationdialog');
             });
         });
     });

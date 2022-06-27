@@ -23,7 +23,7 @@ class ProfileController extends BaseController
         $this->roleService = $roleService;
     }
 
-    public function readProfile()
+    public function readAuth()
     {
         $result = $this->userService->readBy('ID', Auth::id());
         

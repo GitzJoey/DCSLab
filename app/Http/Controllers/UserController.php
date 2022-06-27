@@ -28,7 +28,7 @@ class UserController extends BaseController
         $this->roleService = $roleService;
     }
 
-    public function read(UserRequest $userRequest)
+    public function list(UserRequest $userRequest)
     {
         $request = $userRequest->validated();
 
@@ -52,6 +52,13 @@ class UserController extends BaseController
             $response = UserResource::collection($result);
             return $response;    
         }
+    }
+
+    public function read(User $user, UserRequest $userRequest)
+    {
+        $request = $userRequest->validated();
+
+        
     }
 
     public function getAllRoles()
