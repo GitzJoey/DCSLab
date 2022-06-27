@@ -5,7 +5,6 @@ namespace App\Services\Impls;
 use App\Actions\RandomGenerator;
 use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
-use App\Exceptions\ServiceException;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\Paginator;

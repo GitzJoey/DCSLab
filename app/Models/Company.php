@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Branch;
 use App\Models\Employee;
 use App\Models\Warehouse;
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 
 use Spatie\Activitylog\LogOptions;
 use Vinkla\Hashids\Facades\Hashids;
@@ -41,7 +41,7 @@ class Company extends Model
 
     protected $casts = [
         'default' => 'boolean',
-        'status' => ActiveStatus::class
+        'status' => RecordStatus::class
     ];
 
     public function hId() : Attribute

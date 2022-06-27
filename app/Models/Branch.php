@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Company;
 use App\Models\Warehouse;
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use Spatie\Activitylog\LogOptions;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -51,7 +51,7 @@ class Branch extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => ActiveStatus::class
+        'status' => RecordStatus::class
     ];
 
     public function hId() : Attribute

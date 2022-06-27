@@ -8,6 +8,7 @@ use App\Traits\ScopeableByCompany;
 use Spatie\Activitylog\LogOptions;
 use App\Enums\ProductCategory;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -70,6 +71,8 @@ class ProductGroup extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

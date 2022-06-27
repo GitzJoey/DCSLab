@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Enums\PaymentTermType;
 use App\Traits\ScopeableByCompany;
 
@@ -61,7 +61,7 @@ class Supplier extends Model
     protected $casts = [
         'taxable_enterprise' => 'boolean',
         'payment_term_type' => PaymentTermType::class,
-        'status' => ActiveStatus::class
+        'status' => RecordStatus::class
     ];
     
     public function hId() : Attribute

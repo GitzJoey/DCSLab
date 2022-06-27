@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use App\Enums\ProductType;
 use App\Traits\ScopeableByCompany;
 
@@ -72,7 +72,7 @@ class Product extends Model
         'price_include_vat' => 'boolean',
         'use_serial_number' => 'boolean',
         'has_expiry_date' => 'boolean',
-        'status' => ActiveStatus::class,
+        'status' => RecordStatus::class,
         'product_type' => ProductType::class
     ];
     
