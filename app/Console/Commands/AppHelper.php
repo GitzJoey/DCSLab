@@ -453,10 +453,14 @@ class AppHelper extends Command
             'status' => RecordStatus::ACTIVE
         ];
 
+        $user = [
+            'name' => $userName,
+            'email' => $userEmail,
+            'password' => $userPassword
+        ];
+
         $userService->create(
-            $userName,
-            $userEmail,
-            $userPassword,
+            $user,
             $rolesId,
             $profile
         );

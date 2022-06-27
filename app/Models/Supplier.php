@@ -2,47 +2,56 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
+use App\Enums\ActiveStatus;
+use App\Enums\PaymentTermType;
+use App\Traits\ScopeableByCompany;
+
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Models\Company;
+use App\Models\SupplierProduct;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class Profile extends Model
+class Supplier extends Model
 {
     use HasFactory, LogsActivity;
+    use SoftDeletes;
 
-    protected $table="profiles";
+    use ScopeableByCompany;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'code',
+        'name',
+        'contact',
         'address',
         'city',
-        'postal_code',
-        'country',
-        'status',
+        'payment_term_type',
+        'payment_term',
+        'taxable_enterprise',
         'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'status',
+        'remarks'
     ];
 
     protected static $logAttributes = [
-        'first_name',
-        'last_name',
+        'code',
+        'name',
+        'contact',
         'address',
         'city',
-        'postal_code',
-        'country',
-        'status',
+        'payment_term_type',
+        'payment_term',
+        'taxable_enterprise',
         'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'status',
+        'remarks'
     ];
 
     protected static $logOnlyDirty = true;
@@ -50,9 +59,11 @@ class Profile extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'taxable_enterprise' => 'boolean',
+        'payment_term_type' => PaymentTermType::class,
+        'status' => ActiveStatus::class
     ];
-
+    
     public function hId() : Attribute
     {
         return Attribute::make(
@@ -65,6 +76,16 @@ class Profile extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function supplierProducts()
+    {
+        return $this->hasMany(SupplierProduct::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
@@ -75,6 +96,8 @@ class Profile extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+            
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();
@@ -97,4 +120,5 @@ class Profile extends Model
             }
         });
     }
+
 }

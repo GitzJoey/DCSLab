@@ -37,9 +37,6 @@ class UserServiceImpl implements UserService
     public function register(array $input): User
     {
         $name = $input['name'];
-        $email = $input['email'];
-        $password = $input['password'];
-        $terms =  $input['terms'];
 
         if ($name == trim($name) && strpos($name, ' ') !== false) {
             $pieces = explode(" ", $name);
@@ -58,13 +55,11 @@ class UserServiceImpl implements UserService
             'status' => RecordStatus::ACTIVE,
         );
 
-        $rolesId = array(Role::where('name', UserRoles::USER->value)->first()->id);
+        $roles = array(Role::where('name', UserRoles::USER->value)->first()->id);
 
         $usr = $this->create(
-            $name,
-            $email,
-            $password,
-            $rolesId,
+            $input,
+            $roles,
             $profile
         );
 
@@ -82,6 +77,8 @@ class UserServiceImpl implements UserService
             $usr = new User();
             $usr->name = $user['name'];
             $usr->email = $user['email'];
+
+            $password = $user['password'];
 
             if (empty($password)) {
                 $usr->password = Hash::make((new RandomGenerator())->generateAlphaNumeric(5));

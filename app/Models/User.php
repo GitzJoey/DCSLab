@@ -73,6 +73,21 @@ class User extends Authenticatable
         return $this->hasMany(Setting::class);
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class);
+    }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
+
+    public function suppliers()
+    {
+        return $this->hasMany(Supplier::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
@@ -81,12 +96,9 @@ class User extends Authenticatable
     public static function boot()
     {
         parent::boot();
-        /*
+
         static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = Str::uuid()->toString();
-            }
+            $model->uuid = Str::uuid();
         });
-        */
     }
 }

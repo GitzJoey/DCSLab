@@ -2,56 +2,36 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Branch;
+use App\Models\Employee;
 use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class Profile extends Model
+class EmployeeAccess extends Model
 {
-    use HasFactory, LogsActivity;
+    use LogsActivity;
+    use SoftDeletes;
 
-    protected $table="profiles";
+    protected $table = 'employee_accesses';
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'employee_id',
+        'branch_id'
     ];
 
     protected static $logAttributes = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'employee_id', 
+        'branch_id'
     ];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [];
-
-    protected $casts = [
-        'status' => RecordStatus::class
-    ];
 
     public function hId() : Attribute
     {
@@ -60,9 +40,14 @@ class Profile extends Model
         );
     }
 
-    public function user()
+    public function employee()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Employee::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function getActivitylogOptions(): LogOptions

@@ -2,47 +2,38 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Company;
+use App\Enums\ActiveStatus;
 use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class Profile extends Model
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Employee extends Model
 {
     use HasFactory, LogsActivity;
-
-    protected $table="profiles";
+    use SoftDeletes;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'company_id',
+        'code',
+        'join_date',
+        'status'
     ];
 
     protected static $logAttributes = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'company_id',
+        'code',
+        'join_date',
+        'status'
     ];
 
     protected static $logOnlyDirty = true;
@@ -50,7 +41,7 @@ class Profile extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'status' => ActiveStatus::class
     ];
 
     public function hId() : Attribute
@@ -60,9 +51,19 @@ class Profile extends Model
         );
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function employeeAccesses()
+    {
+        return $this->hasMany(EmployeeAccess::class);
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -75,6 +76,8 @@ class Profile extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+            
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

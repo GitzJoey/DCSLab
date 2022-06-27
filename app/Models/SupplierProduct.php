@@ -2,55 +2,36 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
+use App\Models\Product;
+use App\Models\Supplier;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class Profile extends Model
+class SupplierProduct extends Model
 {
-    use HasFactory, LogsActivity;
+    use LogsActivity;
+    use SoftDeletes;
 
-    protected $table="profiles";
+    protected $table = 'supplier_products';
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'main_product',
     ];
 
-    protected static $logAttributes = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
-    ];
+    protected static $logAttributes = ['company_id', 'supplier_id', 'product_id', 'main_product'];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'main_product' => 'boolean',
     ];
 
     public function hId() : Attribute
@@ -59,10 +40,34 @@ class Profile extends Model
             get: fn () => HashIds::encode($this->attributes['id'])
         );
     }
-
-    public function user()
+    
+    public function supplier_hId() : Attribute
     {
-        return $this->belongsTo(User::class);
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['supplier_id'])
+        );
+    }
+
+    public function product_hId() : Attribute
+    {
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['product_id'])
+        );
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     public function getActivitylogOptions(): LogOptions

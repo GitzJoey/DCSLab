@@ -2,56 +2,37 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
+use App\Models\Product;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class Profile extends Model
+class Brand extends Model
 {
     use HasFactory, LogsActivity;
+    use SoftDeletes;
 
-    protected $table="profiles";
+    use ScopeableByCompany;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'company_id',
+        'code',
+        'name'
     ];
 
-    protected static $logAttributes = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
-    ];
+    protected static $logAttributes = ['code', 'name'];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [];
-
-    protected $casts = [
-        'status' => RecordStatus::class
-    ];
 
     public function hId() : Attribute
     {
@@ -60,21 +41,28 @@ class Profile extends Model
         );
     }
 
-    public function user()
+    public function company()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Company::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults();
     }
-
+    
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+            
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

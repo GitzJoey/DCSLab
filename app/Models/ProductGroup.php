@@ -2,47 +2,37 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
+use App\Models\Company;
+use App\Models\Product;
+use App\Traits\ScopeableByCompany;
+use Spatie\Activitylog\LogOptions;
+use App\Enums\ProductCategory;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Vinkla\Hashids\Facades\Hashids;
 
-class Profile extends Model
+class ProductGroup extends Model
 {
     use HasFactory, LogsActivity;
+    use SoftDeletes;
 
-    protected $table="profiles";
+    use ScopeableByCompany;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'company_id',
+        'code',
+        'name',
+        'category'
     ];
 
     protected static $logAttributes = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'code',
+        'name',
+        'category'
     ];
 
     protected static $logOnlyDirty = true;
@@ -50,7 +40,7 @@ class Profile extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'category' => ProductCategory::class
     ];
 
     public function hId() : Attribute
@@ -60,9 +50,14 @@ class Profile extends Model
         );
     }
 
-    public function user()
+    public function company()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Company::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 
     public function getActivitylogOptions(): LogOptions
@@ -97,4 +92,5 @@ class Profile extends Model
             }
         });
     }
+
 }

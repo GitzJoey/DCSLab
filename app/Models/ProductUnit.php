@@ -2,55 +2,44 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
+use App\Models\Product;
+use App\Models\Unit;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-class Profile extends Model
+class ProductUnit extends Model
 {
-    use HasFactory, LogsActivity;
+    use LogsActivity;
+    use SoftDeletes;
 
-    protected $table="profiles";
+    protected $table = 'product_units';
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
+        'company_id',
+        'product_id',
+        'unit_id',
+        'code',
+        'is_base',
+        'conversion_value',
+        'is_primary_unit',
+        'remarks'
     ];
 
-    protected static $logAttributes = [
-        'first_name',
-        'last_name',
-        'address',
-        'city',
-        'postal_code',
-        'country',
-        'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
-        'remarks',
-    ];
+    protected static $logAttributes = ['company_id', 'product_id', 'unit_id', 'code', 'is_base', 'conversion_value', 'is_primary_unit', 'remarks'];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'is_base' => 'boolean',
+        'is_primary_unit' => 'boolean',
     ];
 
     public function hId() : Attribute
@@ -60,9 +49,19 @@ class Profile extends Model
         );
     }
 
-    public function user()
+    public function company()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Company::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 
     public function getActivitylogOptions(): LogOptions
