@@ -23,7 +23,7 @@ class SupplierPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('supplier-read')) return true;
+        if ($user->hasPermission('suppliers-readAny')) return true;
     }
 
     /**
@@ -35,7 +35,11 @@ class SupplierPolicy
      */
     public function view(User $user, Supplier $supplier = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('suppliers-read')) return true;
     }
 
     /**
@@ -50,7 +54,7 @@ class SupplierPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('supplier-create')) return true;
+        if ($user->hasPermission('suppliers-create')) return true;
     }
 
     /**
@@ -66,7 +70,7 @@ class SupplierPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('supplier-update')) return true;
+        if ($user->hasPermission('suppliers-update')) return true;
     }
 
     /**
@@ -82,7 +86,7 @@ class SupplierPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('supplier-delete')) return true;
+        if ($user->hasPermission('suppliers-delete')) return true;
     }
 
     /**

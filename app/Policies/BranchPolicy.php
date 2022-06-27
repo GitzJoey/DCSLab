@@ -23,7 +23,7 @@ class BranchPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('branch-read')) return true;
+        if ($user->hasPermission('branches-readAny')) return true;
     }
 
     /**
@@ -35,7 +35,11 @@ class BranchPolicy
      */
     public function view(User $user, Branch $branch = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('branches-read')) return true;
     }
 
     /**
@@ -50,7 +54,7 @@ class BranchPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('branch-create')) return true;
+        if ($user->hasPermission('branches-create')) return true;
     }
 
     /**
@@ -66,7 +70,7 @@ class BranchPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('branch-update')) return true;
+        if ($user->hasPermission('branches-update')) return true;
     }
 
     /**
@@ -82,7 +86,7 @@ class BranchPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('branch-delete')) return true;
+        if ($user->hasPermission('branches-delete')) return true;
     }
 
     /**

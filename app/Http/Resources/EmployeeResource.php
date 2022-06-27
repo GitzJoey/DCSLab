@@ -16,6 +16,7 @@ class EmployeeResource extends JsonResource
     {
         return [
             'hId' => $this->hId,
+            'uuid' => $this->uuid,
             $this->mergeWhen($this->relationLoaded('company'), [
                 'company' => new CompanyResource($this->whenLoaded('company'))
             ]),

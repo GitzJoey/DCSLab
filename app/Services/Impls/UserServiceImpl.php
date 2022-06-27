@@ -5,6 +5,7 @@ namespace App\Services\Impls;
 use App\Actions\RandomGenerator;
 use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
+use App\Exceptions\ServiceException;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -218,6 +219,7 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -244,6 +246,7 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -280,6 +283,7 @@ class UserServiceImpl implements UserService
         } catch (Exception $e) {
             !$useTransactions ? : DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -342,11 +346,9 @@ class UserServiceImpl implements UserService
         });
     }
 
-    public function resetTokens(int $id): void
+    public function resetTokens(User $user): void
     {
-        $usr = User::find($id);
-
-        $usr->tokens()->delete();
+        $user->tokens()->delete();
     }
 
     public function createDefaultSetting(): array

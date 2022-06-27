@@ -22,7 +22,7 @@ class UserPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('user-read')) return true;
+        if ($user->hasPermission('users-readAny')) return true;
     }
 
     /**
@@ -34,7 +34,11 @@ class UserPolicy
      */
     public function view(User $user, User $model = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('users-read')) return true;
     }
 
     /**
@@ -49,7 +53,7 @@ class UserPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('user-create')) return true;
+        if ($user->hasPermission('users-create')) return true;
     }
 
     /**
@@ -65,7 +69,7 @@ class UserPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('user-update')) return true;
+        if ($user->hasPermission('users-update')) return true;
     }
 
     /**

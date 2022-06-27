@@ -23,7 +23,7 @@ class CompanyPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('company-read')) return true;
+        if ($user->hasPermission('companies-readAny')) return true;
     }
 
     /**
@@ -35,7 +35,11 @@ class CompanyPolicy
      */
     public function view(User $user, Company $company = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('companies-read')) return true;
     }
 
     /**

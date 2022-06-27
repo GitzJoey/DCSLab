@@ -23,7 +23,7 @@ class WarehousePolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('warehouse-read')) return true;
+        if ($user->hasPermission('warehouses-readAny')) return true;
     }
 
     /**
@@ -35,7 +35,11 @@ class WarehousePolicy
      */
     public function view(User $user, Warehouse $warehouse = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('warehouses-read')) return true;
     }
 
     /**
@@ -50,7 +54,7 @@ class WarehousePolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('warehouse-create')) return true;
+        if ($user->hasPermission('warehouses-create')) return true;
     }
 
     /**
@@ -66,7 +70,7 @@ class WarehousePolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('warehouse-update')) return true;
+        if ($user->hasPermission('warehouses-update')) return true;
     }
 
     /**
@@ -82,7 +86,7 @@ class WarehousePolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('warehouse-delete')) return true;
+        if ($user->hasPermission('warehouses-delete')) return true;
     }
 
     /**

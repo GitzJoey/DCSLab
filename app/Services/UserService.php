@@ -38,7 +38,7 @@ interface UserService
 
     public function resetPassword(string $email): void;
 
-    public function resetTokens(int $id): void;
+    public function resetTokens(User $user): void;
 
     public function createDefaultSetting(): array;
 }

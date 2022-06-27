@@ -17,12 +17,16 @@ class UnitPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('unit-read')) return true;
+        if ($user->hasPermission('units-readAny')) return true;
     }
 
     public function view(User $user, Unit $unit = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('units-read')) return true;
     }
 
     public function create(User $user)
@@ -31,7 +35,7 @@ class UnitPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('unit-create')) return true;
+        if ($user->hasPermission('units-create')) return true;
     }
 
     public function update(User $user, Unit $unit = null)
@@ -40,7 +44,7 @@ class UnitPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('unit-update')) return true;
+        if ($user->hasPermission('units-update')) return true;
     }
 
     public function delete(User $user, Unit $unit = null)
@@ -49,7 +53,7 @@ class UnitPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('unit-delete')) return true;
+        if ($user->hasPermission('units-delete')) return true;
     }
 
     public function restore(User $user, Unit $unit)

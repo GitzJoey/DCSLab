@@ -27,6 +27,9 @@ class CreateProfilesTable extends Migration
             $table->string('img_path')->nullable();
             $table->integer('status')->nullable();
             $table->string('remarks')->nullable();
+            $table->unsignedBigInteger('created_by')->default(0);
+            $table->unsignedBigInteger('updated_by')->default(0);
+            $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
         });
     }

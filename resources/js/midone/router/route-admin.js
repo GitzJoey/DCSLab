@@ -20,7 +20,7 @@ function Admin() {
                 meta: { 
                     remember: true,
                     log_route: true,
-                    roles: ['Administrator', 'Dev'],
+                    roles: ['Administrator', 'Developer'],
                     permissions: ['Create Users', 'Read Users', 'Update Users']
                 }
             }

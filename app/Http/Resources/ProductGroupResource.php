@@ -16,6 +16,7 @@ class ProductGroupResource extends JsonResource
     {
         return [
             'hId' => $this->hId,
+            'uuid' => $this->uuid,
             'company' => new CompanyResource($this->company),
             'code' => $this->code,
             'name' => $this->name,

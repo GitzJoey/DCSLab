@@ -360,7 +360,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.admin.users.edit', user.value.hId), formData, {
+        axios.post(route('api.post.db.admin.users.edit', user.value.uuid), formData, {
             headers: {
                 'content-type': 'multipart/form-data'
             }

@@ -17,12 +17,16 @@ class BrandPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('brand-read')) return true;
+        if ($user->hasPermission('brands-readAny')) return true;
     }
 
     public function view(User $user, Brand $brand = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('brands-read')) return true;
     }
 
     public function create(User $user)
@@ -31,7 +35,7 @@ class BrandPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('brand-create')) return true;
+        if ($user->hasPermission('brands-create')) return true;
     }
 
     public function update(User $user, Brand $brand = null)
@@ -40,7 +44,7 @@ class BrandPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('brand-update')) return true;
+        if ($user->hasPermission('brands-update')) return true;
     }
 
     public function delete(User $user, Brand $brand = null)
@@ -49,7 +53,7 @@ class BrandPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('brand-delete')) return true;
+        if ($user->hasPermission('brands-delete')) return true;
     }
 
     public function restore(User $user, Brand $brand)

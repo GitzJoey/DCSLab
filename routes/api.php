@@ -202,7 +202,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
             Route::group(['prefix' => 'users', 'as' => '.users'], function() {
                 Route::post('save', [UserController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [UserController::class, 'update'])->name('.edit');
+                Route::post('edit/{user:uuid}', [UserController::class, 'update'])->name('.edit');
             });
         });
 

@@ -18,6 +18,7 @@ class UserResource extends JsonResource
     {
         return [
             'hId' => $this->hId,
+            'uuid' => $this->uuid,
             'name' => $this->name,
             'email' => $this->email,
             'email_verified' => !is_null($this->email_verified_at),

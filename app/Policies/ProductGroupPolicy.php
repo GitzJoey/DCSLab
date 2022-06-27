@@ -17,12 +17,16 @@ class ProductGroupPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('productGroup-read')) return true;
+        if ($user->hasPermission('productgroups-readAny')) return true;
     }
 
     public function view(User $user, ProductGroup $productGroup = null)
     {
-        return $this->viewAny($user);
+        if ($user->roles->isEmpty()) return false;
+
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+
+        if ($user->hasPermission('productgroups-read')) return true;
     }
 
     public function create(User $user)
@@ -31,7 +35,7 @@ class ProductGroupPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
 
-        if ($user->hasPermission('productGroup-create')) return true;
+        if ($user->hasPermission('productgroups-create')) return true;
     }
 
     public function update(User $user, ProductGroup $productGroup = null)
@@ -40,7 +44,7 @@ class ProductGroupPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('productGroup-update')) return true;
+        if ($user->hasPermission('productgroups-update')) return true;
     }
 
     public function delete(User $user, ProductGroup $productGroup = null)
@@ -49,7 +53,7 @@ class ProductGroupPolicy
 
         if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
     
-        if ($user->hasPermission('productGroup-delete')) return true;
+        if ($user->hasPermission('productgroups-delete')) return true;
     }
 
     public function restore(User $user, ProductGroup $productGroup)

@@ -6,6 +6,7 @@ use App\Actions\RandomGenerator;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Services\UserService;
 use App\Services\RoleService;
 use Exception;
@@ -93,6 +94,12 @@ class UserController extends BaseController
 
         $request['password'] = (new RandomGenerator())->generateAlphaNumeric(10);
 
+        $user = [
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => $request['password']
+        ];
+
         $profile = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
@@ -114,25 +121,34 @@ class UserController extends BaseController
             $profile['img_path'] = $file;
         }
 
-        $rolesId = [];
+        $roles = [];
         foreach ($request['roles'] as $r) {
             array_push($rolesId, Hashids::decode($r)[0]);
         }
 
-        $result = $this->userService->create(
-            $request['name'],
-            $request['email'],
-            $request['password'],
-            $rolesId,
-            $profile
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->userService->create(
+                $user,
+                $roles,
+                $profile
+            );    
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function update($id, UserRequest $userRequest)
+    public function update(User $user, UserRequest $userRequest)
     {
         $request = $userRequest->validated();
+
+        $userArr = array (
+            'name' => $request['name']
+        );
 
         $profile = array (
             'first_name' => $request['first_name'],
@@ -147,9 +163,9 @@ class UserController extends BaseController
             'remarks' => $request['remarks'],
         );
 
-        $rolesId = [];
+        $roles = [];
         foreach ($request['roles'] as $r) {
-            array_push($rolesId, Hashids::decode($r)[0]);
+            array_push($roles, Hashids::decode($r)[0]);
         }
 
         $settings = [
@@ -166,18 +182,25 @@ class UserController extends BaseController
             $profile['img_path'] = $file;
         }
 
-        $result = $this->userService->update(
-            $id,
-            $request['name'],
-            $rolesId,
-            $profile,
-            $settings
-        );
+        $result = null;
+        $errorMsg = '';
 
-        if (array_key_exists('apiToken', $request))
-            $this->userService->resetTokens($id);
+        try {
+            $result = $this->userService->update(
+                $user,
+                $userArr,
+                $roles,
+                $profile,
+                $settings
+            );
 
-        return is_null($result) ? response()->error() : response()->success();
+            if (array_key_exists('apiToken', $request))
+                $this->userService->resetTokens($user);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function resetPassword($id)

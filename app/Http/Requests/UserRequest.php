@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
             case 'read':
-                return $user->can('view', User::class) ? true : false;
+                return $user->can('viewAny', User::class) ? true : false;
             case 'store':
                 return $user->can('create', User::class) ? true : false;
             case 'update':
@@ -86,7 +86,7 @@ class UserRequest extends FormRequest
 
             return array_merge($rules_store, $nullableArr);
         } else if ($this->route()->getActionMethod() == 'update') {
-            $id = $this->route()->parameter('id');
+            $id = $this->route('user')->id;
             $rules_update = [
                 'name' => 'required|alpha_num',
                 'email' => 'required|email|max:255|unique:users,email,'.$id,
