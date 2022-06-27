@@ -23,17 +23,20 @@ class BrandRequest extends FormRequest
 
         /** @var \App\User */
         $user = Auth::user();
+        $brand = $this->route('brand');
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
+            case 'list':
+                return $user->can('viewAny', Brand::class) ? true : false;
             case 'read':
-                return $user->can('view', Brand::class) ? true : false;
+                return $user->can('view', Brand::class, $brand) ? true : false;
             case 'store':
                 return $user->can('create', Brand::class) ? true : false;
             case 'update':
-                return $user->can('update', Brand::class) ? true : false;
+                return $user->can('update', Brand::class, $brand) ? true : false;
             case 'delete':
-                return $user->can('delete', Brand::class) ? true : false;
+                return $user->can('delete', Brand::class, $brand) ? true : false;
             default:
                 return false;
         }
@@ -50,14 +53,19 @@ class BrandRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
-            case 'read':
-                $rules_read = [
+            case 'list':
+                $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean']
+                ];
+                return $rules_list;
+            case 'read':
+                $rules_read = [
+
                 ];
                 return $rules_read;
             case 'store':
@@ -99,11 +107,14 @@ class BrandRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
-            case 'read':
+            case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
+                break;
+            case 'read':
+                $this->merge([]);
                 break;
             case 'store':
             case 'update':

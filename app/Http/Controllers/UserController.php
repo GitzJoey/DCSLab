@@ -41,9 +41,9 @@ class UserController extends BaseController
         $errorMsg = '';
 
         try {
-            $result = $this->userService->read($search, $paginate, $page, $perPage);
+            $result = $this->userService->list($search, $paginate, $page, $perPage);
         } catch(Exception $e) {
-            $errorMsg = $e->getMessage();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
         if (is_null($result)) {
@@ -58,7 +58,21 @@ class UserController extends BaseController
     {
         $request = $userRequest->validated();
 
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->userService->read($user);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
         
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = UserResource::collection($result);
+            return $response;    
+        }
     }
 
     public function getAllRoles()
@@ -72,7 +86,7 @@ class UserController extends BaseController
         try {
             $roles = $this->roleService->read(exclude: $excludeRole);
         } catch (Exception $e) {
-            $errorMsg = $e->getMessage();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
         if (is_null($roles)) {

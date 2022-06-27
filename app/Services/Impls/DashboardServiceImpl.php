@@ -48,12 +48,12 @@ class DashboardServiceImpl implements DashboardService
         $showDemoMenu = false;
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
-        //$menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasCompany, $hasDevRole);
-        //$menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
-        //$menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
-        //$menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
-        //$menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
-        //$menu = $this->createMenu_SalesOrder($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_SalesOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 

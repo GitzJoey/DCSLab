@@ -33,7 +33,7 @@ class UserRequest extends FormRequest
             case 'read':
                 return $authUser->can('view', User::class, $user) ? true : false;
             case 'store':
-                return $authUser->can('create', User::class, $user) ? true : false;
+                return $authUser->can('create', User::class) ? true : false;
             case 'update':
                 return $authUser->can('update', User::class, $user) ? true : false;
             case 'delete':
@@ -144,6 +144,7 @@ class UserRequest extends FormRequest
                 ]);
                 break;
             case 'read';
+                $this->merge([]);
                 break;
             case 'store':
             case 'update':

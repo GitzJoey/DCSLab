@@ -36,17 +36,17 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
 
         #region Extensions
-        /*
         Route::group(['prefix' => 'company', 'as' => '.company'], function() {
             Route::group(['prefix' => 'company', 'as' => '.company'], function() {
-                Route::get('read', [CompanyController::class, 'read'])->name('.read');
+                Route::get('read', [CompanyController::class, 'list'])->name('.list');
+                Route::get('read/{company:uuid}', [CompanyController::class, 'read'])->name('.read');
                 Route::get('default', [CompanyController::class, 'getDefaultCompany'])->name('.default');
                 Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('.read.all_active');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
-                Route::get('read', [BranchController::class, 'read'])->name('.read');
+                Route::get('read', [BranchController::class, 'list'])->name('.list');
+                Route::get('read/{branch:uuid}', [BranchController::class, 'read'])->name('.read');
                 Route::get('read/by/company', [BranchController::class, 'getBranchByCompanyId'])->name('.read.by.company');
-                Route::get('main', [BranchController::class, 'getMainBranchByCompanyId'])->name('.main');
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function() {
                 Route::get('read', [EmployeeController::class, 'read'])->name('.read');
@@ -71,7 +71,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [ProductGroupController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function() {
-                Route::get('read', [BrandController::class, 'read'])->name('.read');
+                Route::get('read', [BrandController::class, 'list'])->name('.list');
+                Route::get('read/{brand:uuid}', [BrandController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'unit', 'as' => '.unit'], function() {
                 Route::get('read', [UnitController::class, 'read'])->name('.read');
@@ -88,7 +89,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
             });
         });
-        */
         #endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
@@ -136,17 +136,16 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function() {
 
         #region Extensions
-        /*
         Route::group(['prefix' => 'company', 'as' => '.company'], function() {
             Route::group(['prefix' => 'company', 'as' => '.company'], function() {
                 Route::post('save', [CompanyController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [CompanyController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [CompanyController::class, 'delete'])->name('.delete');
+                Route::post('edit/{company:uuid}', [CompanyController::class, 'update'])->name('.edit');
+                Route::post('delete/{company:uuid}', [CompanyController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function() {
                 Route::post('save', [BranchController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [BranchController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [BranchController::class, 'delete'])->name('.delete');
+                Route::post('edit/{branch:uuid}', [BranchController::class, 'update'])->name('.edit');
+                Route::post('delete/{branch:uuid}', [BranchController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function() {
                 Route::post('save', [EmployeeController::class, 'store'])->name('.save');
@@ -177,8 +176,8 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
 
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function() {
                 Route::post('save', [BrandController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [BrandController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [BrandController::class, 'delete'])->name('.delete');
+                Route::post('edit/{brand:uuid}', [BrandController::class, 'update'])->name('.edit');
+                Route::post('delete/{brand:uuid}', [BrandController::class, 'delete'])->name('.delete');
             });
 
             Route::group(['prefix' => 'unit', 'as' => '.unit'], function() {
@@ -193,7 +192,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
                 Route::post('delete/{id}', [ProductController::class, 'delete'])->name('.delete');
             });
         });
-        */
         #endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function() {
