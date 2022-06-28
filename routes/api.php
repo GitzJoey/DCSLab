@@ -49,7 +49,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/by/company', [BranchController::class, 'getBranchByCompanyId'])->name('.read.by.company');
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function() {
-                Route::get('read', [EmployeeController::class, 'read'])->name('.read');
+                Route::get('read', [EmployeeController::class, 'list'])->name('.list');
+                Route::get('read/{employee:uuid}', [EmployeeController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
                 Route::get('read', [WarehouseController::class, 'read'])->name('.read');
@@ -149,8 +150,8 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function() {
                 Route::post('save', [EmployeeController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [EmployeeController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [EmployeeController::class, 'delete'])->name('.delete');
+                Route::post('edit/{employee:uuid}', [EmployeeController::class, 'update'])->name('.edit');
+                Route::post('delete/{employee:uuid}', [EmployeeController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');

@@ -23,32 +23,22 @@ class WarehouseServiceImpl implements WarehouseService
         
     }
     
-    public function create(
-        int $company_id,
-        int $branch_id,
-        string $code,
-        string $name,
-        ?string $address = null,
-        ?string $city = null,
-        ?string $contact = null,
-        ?string $remarks = null,
-        int $status,
-    ): ?Warehouse
+    public function create(array $warehouseArr): Warehouse
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $warehouse = new Warehouse();
-            $warehouse->company_id = $company_id;
-            $warehouse->branch_id = $branch_id;
-            $warehouse->code = $code;
-            $warehouse->name = $name;
-            $warehouse->address = $address;
-            $warehouse->city = $city;
-            $warehouse->contact = $contact;
-            $warehouse->remarks = $remarks;
-            $warehouse->status = $status;
+            $warehouse->company_id = $warehouseArr['company_id'];
+            $warehouse->branch_id = $warehouseArr['branch_id'];
+            $warehouse->code = $warehouseArr['code'];
+            $warehouse->name = $warehouseArr['name'];
+            $warehouse->address = $warehouseArr['address'];
+            $warehouse->city = $warehouseArr['city'];
+            $warehouse->contact = $warehouseArr['contact'];
+            $warehouse->remarks = $warehouseArr['remarks'];
+            $warehouse->status = $warehouseArr['status'];
 
             $warehouse->save();
 
@@ -60,21 +50,21 @@ class WarehouseServiceImpl implements WarehouseService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function read(
+    public function list(
         int $companyId,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
         int $perPage = 10, 
         bool $useCache = true
-    ): Paginator|Collection|null
+    ): Paginator|Collection
     {
         $timer_start = microtime(true);
 
@@ -112,7 +102,7 @@ class WarehouseServiceImpl implements WarehouseService
             return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
@@ -120,34 +110,24 @@ class WarehouseServiceImpl implements WarehouseService
     }
 
     public function update(
-        int $id,
-        int $company_id,
-        int $branch_id,
-        string $code,
-        string $name,
-        ?string $address = null,
-        ?string $city = null,
-        ?string $contact = null,
-        ?string $remarks = null,
-        int $status,
-    ): ?Warehouse
+        Warehouse $warehouse,
+        array $warehouseArr
+    ): Warehouse
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $warehouse = Warehouse::find($id);
-    
             $warehouse->update([
-                'company_id' => $company_id,
-                'branch_id' => $branch_id,
-                'code' => $code,
-                'name' => $name,
-                'address' => $address,
-                'city' => $city,
-                'contact' => $contact,
-                'remarks' => $remarks,
-                'status' => $status,
+                'company_id' => $warehouseArr['company_id'],
+                'branch_id' => $warehouseArr['branch_id'],
+                'code' => $warehouseArr['code'],
+                'name' => $warehouseArr['name'],
+                'address' => $warehouseArr['address'],
+                'city' => $warehouseArr['city'],
+                'contact' => $warehouseArr['contact'],
+                'remarks' => $warehouseArr['remarks'],
+                'status' => $warehouseArr['status'],
             ]);
 
             DB::commit();
@@ -158,14 +138,14 @@ class WarehouseServiceImpl implements WarehouseService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function delete(int $id): bool
+    public function delete(Warehouse $warehouse): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -173,11 +153,7 @@ class WarehouseServiceImpl implements WarehouseService
         $retval = false;
 
         try {
-            $warehouse = Warehouse::find($id);
-
-            if ($warehouse) {
-                $retval = $warehouse->delete();
-            }
+            $retval = $warehouse->delete();
 
             DB::commit();
 
@@ -187,7 +163,7 @@ class WarehouseServiceImpl implements WarehouseService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return $retval;
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

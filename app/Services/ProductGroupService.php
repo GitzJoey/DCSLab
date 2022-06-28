@@ -9,13 +9,10 @@ use Illuminate\Support\Collection;
 interface ProductGroupService
 {
     public function create(
-        int $company_id,
-        string $code,
-        string $name,
-        int $category,
-    ): ?ProductGroup;
+        array $productGroupArr
+    ): ProductGroup;
 
-    public function read(
+    public function list(
         int $companyId,
         ?string $category = null, 
         string $search = '',
@@ -23,19 +20,18 @@ interface ProductGroupService
         int $page = 1,
         ?int $perPage = 10,
         bool $useCache = true
-    ): Paginator|Collection|null;
+    ): Paginator|Collection;
+
+    public function read(ProductGroup $productgroup): ProductGroup;
 
     public function readBy(string $key, string $value);
 
     public function update(
-        int $id,
-        int $company_id,
-        string $code,
-        string $name,
-        int $category
-    ): ?ProductGroup;
+        ProductGroup $productgroup,
+        array $productGroupArr
+    ): ProductGroup;
 
-    public function delete(int $id): bool;
+    public function delete(ProductGroup $productgroup): bool;
 
     public function generateUniqueCode(): string;
 

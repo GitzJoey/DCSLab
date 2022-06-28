@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Company;
-use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 
@@ -38,7 +37,7 @@ interface CompanyService
         array $companyArr
     ): Company;
 
-    public function delete(Company $company, User $user): bool;
+    public function delete(Company $company): bool;
 
     public function generateUniqueCode(): string;
 
@@ -46,5 +45,5 @@ interface CompanyService
 
     public function resetDefaultCompany(int $userId): bool;
 
-    public function isDefaultCompany(int $companyId): bool;
+    public function isDefaultCompany(Company $company): bool;
 }

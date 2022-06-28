@@ -210,7 +210,7 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
-    public function delete(Company $company, User $user): bool
+    public function delete(Company $company): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -218,8 +218,6 @@ class CompanyServiceImpl implements CompanyService
         $retval = false;
         
         try {
-            $user->companies()->detach([$company->id]);
-    
             $retval = $company->delete();    
 
             DB::commit();
@@ -258,9 +256,9 @@ class CompanyServiceImpl implements CompanyService
         return $result->count() == 0 ? true:false;
     }
 
-    public function isDefaultCompany(int $companyId): bool
+    public function isDefaultCompany(Company $company): bool
     {
-        $result = Company::where('id', '=', $companyId)->first()->default;
+        $result = $company->default;
         return is_null($result) ? false : $result;
     }
 

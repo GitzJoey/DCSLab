@@ -9,14 +9,10 @@ use Illuminate\Support\Collection;
 interface UnitService
 {
     public function create(
-        int $company_id,
-        string $code,
-        string $name,
-        string $description,
-        int $category
-    ): ?Unit;
+        array $unitArr
+    ): Unit;
 
-    public function read(
+    public function list(
         int $companyId,
         ?string $category = null, 
         string $search = '',
@@ -24,20 +20,18 @@ interface UnitService
         int $page = 1,
         ?int $perPage = 10, 
         bool $useCache = true
-    ): Paginator|Collection|null;
+    ): Paginator|Collection;
     
+    public function read(Unit $unit): Unit;
+
     public function readBy(string $key, string $value);
 
     public function update(
-        int $id,
-        int $company_id,
-        string $code,
-        string $name,
-        string $description,
-        int $category
-    ): ?Unit;
+        Unit $unit,
+        array $unitArr
+    ): Unit;
 
-    public function delete(int $id): bool;
+    public function delete(Unit $unit): bool;
     
     public function generateUniqueCode(): string;
 

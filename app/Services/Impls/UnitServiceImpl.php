@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 use App\Services\UnitService;
 use App\Models\Unit;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class UnitServiceImpl implements UnitService
 {
@@ -27,23 +26,19 @@ class UnitServiceImpl implements UnitService
     }
     
     public function create(
-        int $company_id,
-        string $code,
-        string $name,
-        string $description,
-        int $category
-    ): ?Unit
+        array $unitArr
+    ): Unit
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $unit = new Unit();
-            $unit->company_id = $company_id;
-            $unit->code = $code;
-            $unit->name = $name;
-            $unit->description = $description;
-            $unit->category = $category;
+            $unit->company_id = $unitArr['company_id'];
+            $unit->code = $unitArr['code'];
+            $unit->name = $unitArr['name'];
+            $unit->description = $unitArr['description'];
+            $unit->category = $unitArr['category'];
 
             $unit->save();
 
@@ -55,14 +50,14 @@ class UnitServiceImpl implements UnitService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function read(
+    public function list(
         int $companyId, 
         ?string $category = null, 
         string $search = '', 
@@ -70,7 +65,7 @@ class UnitServiceImpl implements UnitService
         int $page = 1, 
         ?int $perPage = 10, 
         bool $useCache = true
-    ): Paginator|Collection|null
+    ): Paginator|Collection
     {
         $timer_start = microtime(true);
 
@@ -115,11 +110,16 @@ class UnitServiceImpl implements UnitService
             return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
+    }
+
+    public function read(Unit $unit): Unit
+    {
+        return $unit->first();
     }
 
     public function readBy(string $key, string $value)
@@ -137,7 +137,7 @@ class UnitServiceImpl implements UnitService
             }
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -145,26 +145,20 @@ class UnitServiceImpl implements UnitService
     }
 
     public function update(
-        int $id,
-        int $company_id,
-        string $code,
-        string $name,
-        string $description,
-        int $category
-    ): ?Unit
+        Unit $unit,
+        array $unitArr
+    ): Unit
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $unit = Unit::find($id);
-            
             $unit->update([
-                'company_id' => $company_id,
-                'code' => $code,
-                'name' => $name,
-                'description' => $description,
-                'category' => $category
+                'company_id' => $unitArr['company_id'],
+                'code' => $unitArr['code'],
+                'name' => $unitArr['name'],
+                'description' => $unitArr['description'],
+                'category' => $unitArr['category']
             ]);
     
             DB::commit();
@@ -175,14 +169,14 @@ class UnitServiceImpl implements UnitService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function delete(int $id): bool
+    public function delete(Unit $unit): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -190,11 +184,7 @@ class UnitServiceImpl implements UnitService
         $retval = false;
 
         try {
-            $unit = Unit::find($id);
-
-            if ($unit) {
-                $retval = $unit->delete();
-            }
+            $retval = $unit->delete();
 
             DB::commit();
 
@@ -204,7 +194,7 @@ class UnitServiceImpl implements UnitService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return $retval;
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

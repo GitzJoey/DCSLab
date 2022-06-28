@@ -9,40 +9,26 @@ use Illuminate\Support\Collection;
 interface WarehouseService
 {
     public function create(
-        int $company_id,
-        int $branch_id,
-        string $code,
-        string $name,
-        ?string $address = null,
-        ?string $city = null,
-        ?string $contact = null,
-        ?string $remarks = null,
-        int $status,
-    ): ?Warehouse;
+        array $warehouseArr
+    ): Warehouse;
 
-    public function read(
+    public function list(
         int $companyId,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
         int $perPage = 10,
         bool $useCache = true
-    ): Paginator|Collection|null;
+    ): Paginator|Collection;
+
+    public function read(Warehouse $warehouse): Warehouse;
 
     public function update(
-        int $id,
-        int $company_id,
-        int $branch_id,
-        string $code,
-        string $name,
-        ?string $address = null,
-        ?string $city = null,
-        ?string $contact = null,
-        ?string $remarks = null,
-        int $status,
-    ): ?Warehouse;
+        Warehouse $warehouse,
+        array $warehouseArr
+    ): Warehouse;
 
-    public function delete(int $id): bool;
+    public function delete(Warehouse $warehouse): bool;
 
     public function generateUniqueCode(): string;
 

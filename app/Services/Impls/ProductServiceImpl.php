@@ -27,47 +27,34 @@ class ProductServiceImpl implements ProductService
     }
     
     public function create(
-        int $company_id,
-        string $code,
-        int $product_group_id,
-        int $brand_id,
-        string $name,
-        bool $taxable_supply,
-        int $standard_rated_supply,
-        bool $price_include_vat,
-        ?string $remarks = null,
-        int $point,
-        bool $use_serial_number,
-        bool $has_expiry_date,
-        string $product_type,
-        int $status,
-        array $product_units
-    ): ?Product
+        array $productArr,
+        array $productUnitsArr
+    ): Product
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $product = new Product();
-            $product->company_id = $company_id;
-            $product->code = $code;
-            $product->product_group_id = $product_group_id;
-            $product->brand_id = $brand_id;
-            $product->name = $name;
-            $product->taxable_supply = $taxable_supply;
-            $product->standard_rated_supply = $standard_rated_supply;
-            $product->price_include_vat = $price_include_vat;
-            $product->remarks = $remarks;
-            $product->point = $point;
-            $product->use_serial_number = $use_serial_number;
-            $product->has_expiry_date = $has_expiry_date;
-            $product->product_type = $product_type;
-            $product->status = $status;
+            $product->company_id = $productArr['company_id'];
+            $product->code = $productArr['code'];
+            $product->product_group_id = $productArr['product_group_id'];
+            $product->brand_id = $productArr['brand_id'];
+            $product->name = $productArr['name'];
+            $product->taxable_supply = $productArr['taxable_supply'];
+            $product->standard_rated_supply = $productArr['standard_rated_supply'];
+            $product->price_include_vat = $productArr['price_include_vat'];
+            $product->remarks = $productArr['remarks'];
+            $product->point = $productArr['point'];
+            $product->use_serial_number = $productArr['use_serial_number'];
+            $product->has_expiry_date = $productArr['has_expiry_date'];
+            $product->product_type = $productArr['product_type'];
+            $product->status = $productArr['status'];
 
             $product->save();
 
             $pu = [];
-            foreach ($product_units as $product_unit) {   
+            foreach ($productUnitsArr as $product_unit) {   
                 array_push($pu, new ProductUnit(array (
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $product['id'],
@@ -92,14 +79,14 @@ class ProductServiceImpl implements ProductService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function read(
+    public function list(
         int $companyId,
         bool $isProduct = true, 
         bool $isService = true,
@@ -108,7 +95,7 @@ class ProductServiceImpl implements ProductService
         int $page = 1,
         ?int $perPage = 10, 
         bool $useCache = true
-    ): Paginator|Collection|null
+    ): Paginator|Collection
     {
         $timer_start = microtime(true);
 
@@ -156,7 +143,7 @@ class ProductServiceImpl implements ProductService
             return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
@@ -164,54 +151,44 @@ class ProductServiceImpl implements ProductService
         
     }
 
+    public function read(Product $product): Product
+    {
+        return $product->with('productGroup', 'brand', 'productUnits.unit')->first();
+    }
+
     public function update(
-        int $id,
-        int $company_id,
-        string $code,
-        int $product_group_id,
-        int $brand_id,
-        string $name,
-        bool $taxable_supply,
-        int $standard_rated_supply,
-        bool $price_include_vat,
-        ?string $remarks = null,
-        int $point,
-        bool $use_serial_number,
-        bool $has_expiry_date,
-        string $product_type,
-        int $status,
-        array $product_units
-    ): ?Product
+        Product $product,
+        array $productArr,
+        array $productUnitsArr
+    ): Product
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $product = Product::find($id);
-
             $product->update([
-                'company_id' => $company_id,
-                'code' => $code,
-                'product_group_id' => $product_group_id,
-                'brand_id' => $brand_id,
-                'name' => $name,
-                'taxable_supply' => $taxable_supply,
-                'standard_rated_supply' => $standard_rated_supply,
-                'price_include_vat' => $price_include_vat,
-                'remarks' => $remarks,
-                'point' => $point,
-                'use_serial_number' => $use_serial_number,
-                'has_expiry_date' => $has_expiry_date,
-                'product_type' => $product_type,
-                'status' => $status
+                'company_id' => $productArr['company_id'],
+                'code' => $productArr['code'],
+                'product_group_id' => $productArr['product_group_id'],
+                'brand_id' => $productArr['brand_id'],
+                'name' => $productArr['name'],
+                'taxable_supply' => $productArr['taxable_supply'],
+                'standard_rated_supply' => $productArr['standard_rated_supply'],
+                'price_include_vat' => $productArr['price_include_vat'],
+                'remarks' => $productArr['remarks'],
+                'point' => $productArr['point'],
+                'use_serial_number' => $productArr['use_serial_number'],
+                'has_expiry_date' => $productArr['has_expiry_date'],
+                'product_type' => $productArr['product_type'],
+                'status' => $productArr['status']
             ]);
 
             $pu = [];
-            foreach ($product_units as $product_unit) {
+            foreach ($productUnitsArr as $product_unit) {
                 array_push($pu, array(
                     'id' => $product_unit['id'],
                     'company_id' => $product_unit['company_id'],
-                    'product_id' => $id,
+                    'product_id' => $product->id,
                     'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
                     'conversion_value' => $product_unit['conv_value'],
@@ -256,14 +233,14 @@ class ProductServiceImpl implements ProductService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function delete(int $id): bool
+    public function delete(Product $product): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -271,13 +248,9 @@ class ProductServiceImpl implements ProductService
         $retval = false;
 
         try {
-            $product = Product::find($id);
+            $product->productUnits()->delete();
 
-            if ($product) {
-                $product->productUnits()->delete();
-
-                $retval = $product->delete();
-            }
+            $retval = $product->delete();
 
             DB::commit();
 
@@ -287,7 +260,7 @@ class ProductServiceImpl implements ProductService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return $retval;
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

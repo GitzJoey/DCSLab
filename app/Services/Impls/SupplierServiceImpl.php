@@ -3,7 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
-use App\Enums\ActiveStatus;
+use App\Enums\RecordStatus;
 use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -30,49 +30,38 @@ class SupplierServiceImpl implements SupplierService
     }
     
     public function create(
-        int $company_id,
-        string $code,
-        string $name,
-        string $payment_term_type,
-        ?int $payment_term = null,
-        ?string $contact = null,
-        ?string $address = null,
-        ?string $city = null,
-        bool $taxable_enterprise,
-        string $tax_id,
-        ?string $remarks = null,
-        int $status,
-        array $poc,
-        array $products
-    ): ?Supplier
+        array $supplierArr,
+        array $pocArr,
+        array $productsArr
+    ): Supplier
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $usr = $this->createUserPOC($poc);
+            $usr = $this->createUserPOC($pocArr);
 
             $supplier = new Supplier();
-            $supplier->company_id = $company_id;
-            $supplier->code = $code;
-            $supplier->name = $name;
-            $supplier->payment_term_type = $payment_term_type;
-            $supplier->payment_term = $payment_term;
-            $supplier->contact = $contact;
-            $supplier->address = $address;
-            $supplier->city = $city;
-            $supplier->taxable_enterprise = $taxable_enterprise;
-            $supplier->tax_id = $tax_id;
-            $supplier->remarks = $remarks;
-            $supplier->status = $status;
+            $supplier->company_id = $supplierArr['company_id'];
+            $supplier->code = $supplierArr['code'];
+            $supplier->name = $supplierArr['name'];
+            $supplier->payment_term_type = $supplierArr['payment_term_type'];
+            $supplier->payment_term = $supplierArr['payment_term'];
+            $supplier->contact = $pocArr['contact'];
+            $supplier->address = $pocArr['address'];
+            $supplier->city = $pocArr['city'];
+            $supplier->taxable_enterprise = $supplierArr['taxable_enterprise'];
+            $supplier->tax_id = $pocArr['tax_id'];
+            $supplier->remarks = $supplierArr['remarks'];
+            $supplier->status = $supplierArr['status'];
             $supplier->user_id = $usr->id;
 
             $supplier->save();
 
             $sp = [];
-            foreach($products as $p) {
+            foreach($productsArr as $p) {
                 $spe = new SupplierProduct();
-                $spe->company_id = $company_id;
+                $spe->company_id = $supplierArr['company_id'];
                 $spe->product_id = $p['product_id'];
                 $spe->main_product = $p['main_product'];
 
@@ -89,11 +78,11 @@ class SupplierServiceImpl implements SupplierService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     private function createUserPOC(array $poc): User
@@ -105,19 +94,25 @@ class SupplierServiceImpl implements SupplierService
             $userService = $container->make(UserService::class);
             $roleService = $container->make(RoleService::class);
     
-            $rolesId = $roleService->readBy('name', 'POS-supplier')->id;
+            $roles = $roleService->readBy('name', 'POS-supplier')->id;
     
             $profile = [
                 'first_name' => $poc['name'],
-                'status' => ActiveStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE
             ];
     
-            $usr = $userService->create($poc['name'], $poc['email'], '', [$rolesId], $profile);
+            $userArr = [
+                'name' => $poc['name'],
+                'email' => $poc['email']
+            ];
+
+            $usr = $userService->create($userArr, $roles, $profile);
     
             return $usr;
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -125,14 +120,14 @@ class SupplierServiceImpl implements SupplierService
         return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function read(
+    public function list(
         int $companyId, 
         string $search = '', 
         bool $paginate = true, 
         int $page = 1, 
         int $perPage = 10, 
         bool $useCache = true
-    ): Paginator|Collection|null
+    ): Paginator|Collection
     {
         $cacheKey = '';
         if ($useCache) {
@@ -168,61 +163,49 @@ class SupplierServiceImpl implements SupplierService
             return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
     }
 
+    public function read(Supplier $supplier): Supplier
+    {
+        return $supplier->with('user.profile', 'company', 'supplierProducts.product')->first();        
+    }
+
     public function update(
-        int $id,
-        int $company_id,
-        string $code,
-        string $name,
-        string $payment_term_type,
-        ?int $payment_term = null,
-        ?string $contact = null,
-        ?string $address = null,
-        ?string $city = null,
-        bool $taxable_enterprise,
-        string $tax_id,
-        ?string $remarks = null,
-        int $status,
-        array $poc,
-        array $products
-    ): ?Supplier
+        Supplier $supplier,
+        array $supplierArr,
+        array $pocArr,
+        array $productsArr
+    ): Supplier
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $supplier = Supplier::find($id);
-
-            if ($code == Config::get('const.DEFAULT.KEYWORDS.AUTO')) {
-                $code = $this->generateUniqueCode($company_id);
-            }
-
             $supplier->update([
-                'code' => $code,
-                'name' => $name,
-                'payment_term_type' => $payment_term_type,
-                'payment_term' => $payment_term,
-                'contact' => $contact,
-                'address' => $address,
-                'city' => $city,
-                'taxable_enterprise' => $taxable_enterprise,
-                'tax_id' => $tax_id,
-                'remarks' => $remarks,
-                'status' => $status
+                'code' => $supplierArr['code'],
+                'name' => $supplierArr['name'],
+                'payment_term_type' => $supplierArr['payment_term_type'],
+                'payment_term' => $supplierArr['payment_term'],
+                'contact' => $supplierArr['contact'],
+                'address' => $supplierArr['address'],
+                'city' => $supplierArr['city'],
+                'taxable_enterprise' => $supplierArr['taxable_enterprise'],
+                'tax_id' => $supplierArr['tax_id'],
+                'remarks' => $supplierArr['remarks'],
+                'status' => $supplierArr['status']
             ]);
 
             $supplier->supplierProducts()->delete();
 
             $newSP = [];
-            foreach($products as $product) {
+            foreach($productsArr as $product) {
                 $newSPE = new SupplierProduct();
-                $newSPE->company_id = $company_id;
+                $newSPE->company_id = $supplierArr['company_id'];
                 $newSPE->supplier_id =$supplier->id;
                 $newSPE->product_id = $product['product_id'];
                 $newSPE->main_product = $product['main_product'];
@@ -240,14 +223,14 @@ class SupplierServiceImpl implements SupplierService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function delete(int $id): bool
+    public function delete(Supplier $supplier): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -255,18 +238,14 @@ class SupplierServiceImpl implements SupplierService
         $retval = false;
 
         try {
-            $supplier = Supplier::find($id);
+            $supplier->supplierProducts()->delete();
+            $supplier->delete();
 
-            if ($supplier) {
-                $supplier->supplierProducts()->delete();
-                $supplier->delete();
-    
-                $supplier->user()->with('profile')->first()->profile()->update([
-                    'status' => 0
-                ]);
+            $supplier->user()->with('profile')->first()->profile()->update([
+                'status' => 0
+            ]);
 
-                $retval = true;
-            }
+            $retval = true;
             
             DB::commit();
 
@@ -276,7 +255,7 @@ class SupplierServiceImpl implements SupplierService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return $retval;
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

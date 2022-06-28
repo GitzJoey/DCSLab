@@ -9,24 +9,11 @@ use Illuminate\Support\Collection;
 interface ProductService
 {
     public function create(
-        int $company_id,
-        string $code,
-        int $product_group_id,
-        int $brand_id,
-        string $name,
-        bool $taxable_supply,
-        int $standard_rated_supply,
-        bool $price_include_vat,
-        ?string $remarks = null,
-        int $point,
-        bool $use_serial_number,
-        bool $has_expiry_date,
-        string $product_type,
-        int $status,
-        array $product_units
-    ): ?Product;
+        array $productArr,
+        array $productUnitsArr
+    ): Product;
 
-    public function read(
+    public function list(
         int $companyId,
         bool $isProduct = true, 
         bool $isService = true,
@@ -35,28 +22,17 @@ interface ProductService
         int $page = 1,
         ?int $perPage = 10, 
         bool $useCache = true
-    ): Paginator|Collection|null;
+    ): Paginator|Collection;
+
+    public function read(Product $product): Product;
 
     public function update(
-        int $id,
-        int $company_id,
-        string $code,
-        int $product_group_id,
-        int $brand_id,
-        string $name,
-        bool $taxable_supply,
-        int $standard_rated_supply,
-        bool $price_include_vat,
-        ?string $remarks = null,
-        int $point,
-        bool $use_serial_number,
-        bool $has_expiry_date,
-        string $product_type,
-        int $status,
-        array $product_units
-    ): ?Product;
+        Product $product,
+        array $productArr,
+        array $productUnitsArr
+    ): Product;
 
-    public function delete(int $id): bool;
+    public function delete(Product $product): bool;
 
     public function generateUniqueCodeForProduct(): string;
 

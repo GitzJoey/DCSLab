@@ -184,16 +184,14 @@ class CompanyController extends BaseController
 
     public function delete(Company $company)
     {
-        $user = Auth::user();
-
-        if ($this->companyService->isDefaultCompany($user->id)) 
-            return response()->error(trans('rules.company.delete_default_company'));
-
         $result = false;
         $errorMsg = '';
 
         try {
-            $result = $this->companyService->delete($company, $user);
+            if ($this->companyService->isDefaultCompany($company)) 
+                return response()->error(trans('rules.company.delete_default_company'));
+
+            $result = $this->companyService->delete($company);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

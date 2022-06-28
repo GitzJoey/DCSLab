@@ -28,27 +28,23 @@ class EmployeeServiceImpl implements EmployeeService
     }
     
     public function create(
-        int $company_id,
-        string $code,
-        string $name,
-        string $email,
-        string $address,
-        string $city,
-        string $postal_code,
-        string $country,
-        string $tax_id,
-        string $ic_num,
-        ?string $img_path = null,
-        string $join_date,
-        string $remarks,
-        int $status,
-        array $accesses
-    ): ?Employee
+        array $employeeArr,
+        array $userArr,
+        array $profileArr,
+        array $accessesArr
+    ): Employee
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
+            $company_id = $employeeArr['company_id'];
+            $code = $employeeArr['code'];
+            $join_date = $employeeArr['join_date'];
+            $status = $employeeArr['status'];
+
+            $name = $userArr['name'];
+                
             $first_name = '';
             $last_name = '';
             if ($name == trim($name) && strpos($name, ' ') !== false) {
@@ -59,36 +55,23 @@ class EmployeeServiceImpl implements EmployeeService
                 $first_name = $name;
             }
 
-            $rolesId = [];
+            $profileArr['first_name'] = $first_name;
+            $profileArr['last_name'] = $last_name;
+
+            $roles = [];
             array_push($rolesId, Role::where('name', '=', 'user')->first()->id);
 
-            $profile = array (
-                'first_name' => $first_name,
-                'last_name' => $last_name,
-                'address' => $address,
-                'city' => $city,
-                'postal_code' => $postal_code,
-                'country' => $country,
-                'tax_id' => $tax_id,
-                'ic_num' => $ic_num,
-                'img_path' => $img_path,
-                'remarks' => $remarks,
-                'status' => $status
-            );
-
             $userService = app(UserService::class);
+            
             $user = $userService->create(
-                name: $name,
-                email: $email,
-                password: (new RandomGenerator())->generateNumber(10000000, 999999999),
-                rolesId: $rolesId,
-                profile: $profile
+                $userArr,
+                $roles,
+                $profileArr
             );
-            $user_id = $user->id;
             
             $employee = new Employee();
             $employee->company_id = $company_id;
-            $employee->user_id = $user_id;
+            $employee->user_id = $user->id;
             $employee->code = $code;
             $employee->join_date = $join_date;
             $employee->status = $status;
@@ -96,7 +79,7 @@ class EmployeeServiceImpl implements EmployeeService
             $employee->save();
 
             $newAccesses = [];
-            foreach($accesses as $access) {
+            foreach($accessesArr as $access) {
                 $newAccess = new EmployeeAccess();
                 $newAccess->employee_id = $employee->id;
                 $newAccess->branch_id = $access['branch_id'];
@@ -113,21 +96,21 @@ class EmployeeServiceImpl implements EmployeeService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function read(
+    public function list(
         int $companyId,
         string $search = '',
         bool $paginate = true,
         int $page,
         int $perPage = 10,
         bool $useCache = true
-    ): Paginator|Collection|null
+    ): Paginator|Collection
     {
         $timer_start = microtime(true);
 
@@ -165,90 +148,57 @@ class EmployeeServiceImpl implements EmployeeService
             return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
+    public function read(Employee $employee): Employee
+    {
+        return $employee->with('company, user.profile, employeeAccesses')->first();
+    }
+
     public function update(
-        int $id,
-        string $code,
-        string $name,
-        string $address,
-        string $city,
-        string $postal_code,
-        string $country,
-        string $tax_id,
-        string $ic_num,
-        ?string $img_path = null,
-        ?string $join_date = null,
-        string $remarks,
-        int $status,
-        array $accesses
-    ): ?Employee
+        Employee $employee,
+        array $employeeArr,
+        array $userArr,
+        array $profileArr,
+        array $accessesArr
+    ): Employee
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $employee = Employee::find($id);
-            $employee->code = $code;
-            $employee->join_date = is_null($join_date) ? $employee->join_date : $join_date;
-            $employee->status = $status;
+            $employee->code = $employeeArr['code'];
+            $employee->join_date = $employeeArr['join_date'];
+            $employee->status = $employeeArr['status'];
             $employee->save();
-
-            $rolesId = [];
-            array_push($rolesId, Role::where('name', '=', 'user')->first()->id);
-
-            $first_name = '';
-            $last_name = '';
-            if ($name == trim($name) && strpos($name, ' ') !== false) {
-                $pieces = explode(" ", $name);
-                $first_name = $pieces[0];
-                $last_name = $pieces[1];
-            } else {
-                $first_name = $name;
-            }
-    
-            $profile = array (
-                'first_name' => $first_name,
-                'last_name' => $last_name,
-                'address' => $address,
-                'city' => $city,
-                'postal_code' => $postal_code,
-                'country' => $country,
-                'tax_id' => $tax_id,
-                'ic_num' => $ic_num,
-                'img_path' => $img_path,
-                'remarks' => $remarks,
-                'status' => $status,
-            );
 
             $userService = app(UserService::class);
             $userService->update(
-                id: $employee->user_id,
-                name: $name,
-                rolesId: $rolesId,
-                profile: $profile,
-                settings: null
+                user: $employee->user,
+                userArr: $userArr,
+                profile: $profileArr
             );
 
             $employee->employeeAccesses()->delete();
             
-            $newAccesses = [];
-            if (!empty($accesses)) {
-                foreach($accesses as $access) {
+            if (!empty($accessesArr)) {
+                $newAccesses = [];
+
+                foreach($accessesArr as $access) {
                     $newAccess = new EmployeeAccess();
                     $newAccess->employee_id = $employee->id;
                     $newAccess->branch_id = $access['branch_id'];
     
                     array_push($newAccesses, $newAccess);
                 }
-            }
 
-            $employee->employeeAccesses()->saveMany($newAccesses);
+                $employee->employeeAccesses()->saveMany($newAccesses);
+            }
 
             DB::commit();
 
@@ -257,31 +207,27 @@ class EmployeeServiceImpl implements EmployeeService
             return $employee->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);            
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;            
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function delete(int $id): bool
+    public function delete(Employee $employee): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
         try {
-            $employee = Employee::find($id);
+            $employee->employeeAccesses()->delete();
 
-            if ($employee) {
-                $employee->employeeAccesses()->delete();
-                
-                $user = User::find($employee->user_id);
-                $user->profile->status = 0;
+            $user = User::find($employee->user_id);
+            $user->profile->status = 0;
 
-                $retval = $employee->delete();            
-            }
+            $retval = $employee->delete();            
 
             DB::commit();
 
@@ -291,11 +237,11 @@ class EmployeeServiceImpl implements EmployeeService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     public function generateUniqueCode(int $companyId): string
