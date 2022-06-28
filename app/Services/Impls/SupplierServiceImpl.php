@@ -158,9 +158,9 @@ class SupplierServiceImpl implements SupplierService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $suppliers->paginate(abs($perPage));
+                $result = $suppliers->paginate(abs($perPage));
             } else {
-                return $suppliers->get();
+                $result = $suppliers->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);

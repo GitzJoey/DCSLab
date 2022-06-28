@@ -12,6 +12,7 @@
             "supplier": "Supplier",
             "supplier-supplier": "Supplier",
             "product": "Product",
+            "product-product_group": "Product Group",
             "product-product": "Product",
             "product-service": "Service",
             "administrator": "Administrator",
@@ -54,7 +55,7 @@
                     "active": "Active",
                     "inactive": "Inactive"
                 },
-                "productOrServiceCategoryDDL": {
+                "productCategoryDDL": {
                     "product": "Product",
                     "service": "Service",
                     "product_and_service": "Product And Service"
@@ -204,6 +205,27 @@
         },
         "activity": {
             "title": "Activity Log"
+        },
+        "product_group": {
+            "table": {
+                "title": "Product Group Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",    
+                    "category": "Category"
+                }
+            },
+            "actions": {
+                "create": "Create Product Group",
+                "edit": "Edit Product Group",
+                "show": "Show Product Group",
+                "delete": "Delete Product Group"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "category": "Category"
+            }
         },
         "product": {
             "table": {

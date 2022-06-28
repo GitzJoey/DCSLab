@@ -65,19 +65,19 @@ class BrandServiceImpl implements BrandService
         bool $useCache = true
     ): Paginator|Collection|null
     {
-        $cacheKey = '';
-        if ($useCache) {
-            $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
-            $cacheResult = $this->readFromCache($cacheKey);
-
-            if (!is_null($cacheResult)) return $cacheResult;
-        }
-
-        $result = null;
-
         $timer_start = microtime(true);
-
+        
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) return $cacheResult;
+            }
+
+            $result = null;
+
             if (empty($search)) {
                 $pb = Brand::whereCompanyId($companyId)->latest();
             } else {
@@ -86,9 +86,9 @@ class BrandServiceImpl implements BrandService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $pb->paginate($perPage);
+                $result = $pb->paginate(abs($perPage));
             } else {
-                return $pb->get();
+                $result = $pb->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);

@@ -102,9 +102,9 @@ class WarehouseServiceImpl implements WarehouseService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $warehouse->paginate($perPage);
+                $result = $warehouse->paginate($perPage);
             } else {
-                return $warehouse->get();
+                $result = $warehouse->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);

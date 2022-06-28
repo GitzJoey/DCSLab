@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 use App\Services\UnitService;
 use App\Models\Unit;
 use App\Traits\CacheHelper;
-use Illuminate\Support\Facades\Cache;
 
 class UnitServiceImpl implements UnitService
 {
@@ -105,9 +104,9 @@ class UnitServiceImpl implements UnitService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $unit->paginate($perPage);
+                $result = $unit->paginate($perPage);
             } else {
-                return $unit->get();
+                $result = $unit->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);
@@ -121,19 +120,21 @@ class UnitServiceImpl implements UnitService
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
     }
-
-    public function readBy(string $key, string $value)
+    
+    public function readBy(
+        string $key, 
+        string $value
+    )
     {
         $timer_start = microtime(true);
 
         try {
-            switch(strtoupper($key)) {
+            switch (strtoupper($key)) {
                 case 'ID':
                     return Unit::find($value);
-                case 'CATEGORY':
-                    return Unit::where('category', '=', $value)->get();
                 default:
                     return null;
+                    break;
             }
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
