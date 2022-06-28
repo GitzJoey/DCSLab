@@ -18,8 +18,9 @@
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
-                                    <XIcon v-if="item.status === 'INACTIVE'" />
+                                    <span v-if="item.category == 1">{{ t('components.dropdown.values.productCategoryDDL.product') }}</span>
+                                    <span v-if="item.category == 2">{{ t('components.dropdown.values.productCategoryDDL.service') }}</span>
+                                    <span v-if="item.category == 3">{{ t('components.dropdown.values.productCategoryDDL.product_service') }}</span>
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
@@ -38,45 +39,19 @@
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
                                 <td colspan="6">
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.company_id') }}</div>
-                                        <div class="flex-1">{{ item.company.name }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.code') }}</div>
                                         <div class="flex-1">{{ item.code }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.address') }}</div>
-                                        <div class="flex-1">{{ item.address }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.city') }}</div>
-                                        <div class="flex-1">{{ item.city }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.contact') }}</div>
-                                        <div class="flex-1">{{ item.contact }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.name') }}</div>
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.is_main') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.category') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.is_main == 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.is_main == 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.remarks') }}</div>
-                                        <div class="flex-1">{{ item.remarks }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.status') }}</div>
-                                        <div class="flex-1">
-                                            <span v-if="item.status === 'ACTIVE'">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.status === 'INACTIVE'">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.category == 1">{{ t('components.dropdown.values.productCategoryDDL.product') }}</span>
+                                            <span v-if="item.category == 2">{{ t('components.dropdown.values.productCategoryDDL.service') }}</span>
+                                            <span v-if="item.category == 3">{{ t('components.dropdown.values.productCategoryDDL.product_service') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -112,18 +87,7 @@
         </div>
         <div class="loader-container">
             <VeeForm id="product_groupForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
-                <div class="p-5">
-                    <!-- #region Company -->
-                    <div class="mb-3">
-                        <label class="form-label" for="inputCompany_id">{{ t('views.product_group.fields.company_id') }}</label>
-                        <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="product_group.company.hId" :label="t('views.product_group.fields.company_id')" rules="required" @blur="reValidate(errors)" :disabled="mode === 'edit'">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in companyDDL" :value="c.hId">{{ c.name }}</option>
-                        </VeeField>
-                        <ErrorMessage name="company_id" class="text-danger" />
-                    </div>
-                    <!-- #endregion -->
-                    
+                <div class="p-5">                    
                     <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product_group.fields.code') }}</label>
@@ -143,53 +107,14 @@
                     </div>
                     <!-- #endregion -->
 
-                    <!-- #region Address -->
+                    <!-- #region Category -->
                     <div class="mb-3">
-                        <label for="inputAddress" class="form-label">{{ t('views.product_group.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.product_group.fields.address')" v-model="product_group.address" rows="3"></textarea>
-                    </div>
-                    <!-- #endregion -->
-
-                    <!-- #region City -->
-                    <div class="mb-3">
-                        <label for="inputCity" class="form-label">{{ t('views.product_group.fields.city') }}</label>
-                        <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.product_group.fields.city')" v-model="product_group.city" />
-                    </div>
-                    <!--  #endregion -->
-
-                    <!-- #region Main -->
-                    <div class="mb-3">
-                        <label for="isMainDDL" class="form-label">{{ t('views.product_group.fields.is_main') }}</label>
-                        <VeeField as="select" id="isMainDDL" name="is_main" :class="{'form-control form-select':true, 'border-danger': errors['is_main']}" v-model="product_group.is_main" rules="required" @blur="reValidate(errors)">
+                        <label for="category" class="form-label">{{ t('views.product_group.fields.category') }}</label>
+                        <VeeField as="select" id="category" name="category" :class="{'form-control form-select':true, 'border-danger': errors['category']}" v-model="product_group.category" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in yesNoDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in productCategoryDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="is_main" class="text-danger" />
-                    </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Contact -->
-                    <div class="mb-3">
-                        <label for="inputContact" class="form-label">{{ t('views.product_group.fields.contact') }}</label>
-                        <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.product_group.fields.contact')" v-model="product_group.contact" />
-                    </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Remarks -->
-                    <div class="mb-3">
-                        <label for="inputRemarks" class="form-label">{{ t('views.product_group.fields.remarks') }}</label>
-                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.product_group.fields.remarks')" v-model="product_group.remarks" rows="3"></textarea>
-                    </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Status -->
-                    <div class="mb-3">
-                        <label for="status" class="form-label">{{ t('views.product_group.fields.status') }}</label>
-                        <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="product_group.status" rules="required" @blur="reValidate(errors)">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </VeeField>
-                        <ErrorMessage name="status" class="text-danger" />
+                        <ErrorMessage name="category" class="text-danger" />
                     </div>
                     <!-- #endregion -->
                 </div>
@@ -241,22 +166,12 @@ const expandDetail = ref(null);
 //#region Data - Views
 const product_groupList = ref({});
 const product_group = ref({
-    company: { 
-        hId: '',
-        name: '' 
-    },
     code: '',
     name: '',
-    address: '',
-    city: '',
-    contact: '',
-    is_main: 0,
-    remarks: '',
-    status: 'ACTIVE',
+    category: '',
 });
 const companyDDL = ref([]);
-const statusDDL = ref([]);
-const yesNoDDL = ref([]);
+const productCategoryDDL = ref([]);
 //#endregion
 
 //#region onMounted
@@ -293,29 +208,20 @@ const getAllProductGroups = (args) => {
     if (args.page === undefined) args.page = 1;
     if (args.pageSize === undefined) args.pageSize = 10;
 
-    axios.get(route('api.get.db.company.product_group.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.product.product_group.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         product_groupList.value = response.data;
         loading.value = false;
     });
 }
 
 const getDDL = () => {
-    if (getCachedDDL('statusDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-            statusDDL.value = response.data;
-            setCachedDDL('statusDDL', response.data);
+    if (getCachedDDL('productCategoryDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.category')).then(response => {
+            productCategoryDDL.value = response.data;
+            setCachedDDL('productCategoryDDL', response.data);
         });    
     } else {
-        statusDDL.value = getCachedDDL('statusDDL');
-    }
-    
-    if (getCachedDDL('yesNoDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.confirmationdialog')).then(response => {
-            yesNoDDL.value = response.data;
-            setCachedDDL('yesNoDDL', response.data);
-        });    
-    } else {
-        yesNoDDL.value = getCachedDDL('yesNoDDL');
+        productCategoryDDL.value = getCachedDDL('productCategoryDDL');
     }
 }
 
@@ -334,7 +240,7 @@ const onSubmit = (values, actions) => {
     var formData = new FormData(dom('#product_groupForm')[0]); 
     
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.company.product_group.save'), formData).then(response => {
+        axios.post(route('api.post.db.product.product_group.save'), formData).then(response => {
             backToList();
         }).catch(e => {
             handleError(e, actions);
@@ -344,7 +250,7 @@ const onSubmit = (values, actions) => {
     } else if (mode.value === 'edit') {
         formData.append('company_id', selectedUserCompany.value);
 
-        axios.post(route('api.post.db.company.product_group.edit', product_group.value.hId), formData).then(response => {
+        axios.post(route('api.post.db.product.product_group.edit', product_group.value.hId), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -383,18 +289,9 @@ const reValidate = (errors) => {
 
 const emptyProductGroup = () => {
     return {
-        company: {
-            hId: '',
-            name: ''
-        },
         code: '[AUTO]',
         name: '',
-        address: '',
-        city: '',
-        contact: '',
-        is_main: 0,
-        remarks: '',
-        status: 'ACTIVE',
+        category: '',
     }
 }
 
@@ -412,7 +309,7 @@ const createNew = () => {
         product_group.value = emptyProductGroup();
 
         let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
-        if (c) product_group.value.company.hId = c.hId;
+        // if (c) product_group.value.company.hId = c.hId;
     }
 }
 
@@ -432,7 +329,7 @@ const deleteSelected = (index) => {
 
 const confirmDelete = () => {
     deleteModalShow.value = false;
-    axios.post(route('api.post.db.company.product_group.delete', deleteId.value)).then(response => {
+    axios.post(route('api.post.db.product.product_group.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
         alertErrors.value = e.response.data;

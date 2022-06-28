@@ -109,10 +109,7 @@ class ProductGroupRequest extends FormRequest
                 break;
             case 'store':
             case 'update':
-                $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
-                    'category' => ProductCategory::isValid($this->category) ? ProductCategory::fromName($this->category)->value : -1,
-                ]);
+                $this->merge([]);
                 break;
             default:
                 $this->merge([]);

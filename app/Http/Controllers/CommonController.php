@@ -31,6 +31,15 @@ class CommonController extends BaseController
         ];
     }
 
+    public function getCategory()
+    {
+        return [
+            ['name' => 'components.dropdown.values.productCategoryDDL.product', 'code' => 1],
+            ['name' => 'components.dropdown.values.productCategoryDDL.service', 'code' => 2],
+            ['name' => 'components.dropdown.values.productCategoryDDL.product_service', 'code' => 3],
+        ];
+    }
+
     public function getConfirmationDialog()
     {
         return [

@@ -122,6 +122,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function() {
                 Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
                 Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
+                Route::get('list/category', [CommonController::class, 'getCategory'])->name('.list.category');
                 Route::get('list/confirmationdialog', [CommonController::class, 'getConfirmationDialog'])->name('.list.confirmationdialog');
             });
 

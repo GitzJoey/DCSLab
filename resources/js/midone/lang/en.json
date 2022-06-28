@@ -58,7 +58,7 @@
                 "productCategoryDDL": {
                     "product": "Product",
                     "service": "Service",
-                    "product_and_service": "Product And Service"
+                    "product_service": "Product And Service"
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Payment In Advance",
