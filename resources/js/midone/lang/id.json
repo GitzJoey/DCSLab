@@ -12,6 +12,7 @@
             "supplier": "Pemasok",
             "supplier-supplier": "Pemasok",
             "product": "Produk",
+            "product-product_group": "Kelompok Produk",
             "product-product": "Produk",
             "product-service": "Layanan",
             "administrator": "Administrator",
@@ -53,7 +54,7 @@
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
                 },
-                "productOrServiceCategoryDDL": {
+                "productCategoryDDL": {
                     "product": "Produk",
                     "service": "Jasa",
                     "product_and_service": "Produk Dan Jasa"
@@ -222,13 +223,13 @@
             },
             "fields": {
                 "code": "Kode",
-                "product_group_id": "Nama Group",
+                "product_group_id": "Nama Kelompok",
                 "brand_id": "Nama Merk",
                 "name": "Nama",
                 "taxable_supply": "Produk Kena Pajak",
                 "standard_rated_supply": "PPN",
                 "price_include_vat": "Harga Termasuk Pajak",
-                "remarks": "Remarks",
+                "remarks": "Keterangan",
                 "point": "Poin",
                 "use_serial_number": "Memakai Nomor Serial",
                 "has_expiry_date": "Tanggal Kadaluarsa",
@@ -242,7 +243,7 @@
                             "unit": "Satuan",
                             "conversion_value": "Nilai Tukar",
                             "is_base": "Satuan Dasar",
-                            "is_primary": "Satuan Utama"    
+                            "is_primary": "Satuan Utama"
                         }
                     }
                 }

@@ -146,9 +146,9 @@ class ProductServiceImpl implements ProductService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                return $product->paginate($perPage);
+                $result = $product->paginate($perPage);
             } else {
-                return $product->get();
+                $result = $product->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);

@@ -62,24 +62,126 @@ class UnitAPITest extends APITestCase
         $api->assertSuccessful();
     }
 
-    public function test_unit_api_call_unit_read_with_empty_search()
+    public function test_unit_api_call_read_with_empty_search()
     {
         $this->actingAs($this->developer);
 
-        $companyId = $this->developer->companies->random(1)->first()->id;
-        $category = (new RandomGenerator())->generateNumber(1, 3);
-        $search = "";
+        $company = $this->developer->companies->random(1)->first();
+                
+        $companyId = $company->id;
+        $search = '';
         $paginate = 1;
         $page = 1;
         $perPage = 10;
+        $refresh = '';
 
         $api = $this->getJson(route('api.get.db.product.unit.read', [
             'companyId' => Hashids::encode($companyId),
-            'category' => $category,
             'search' => $search,
             'paginate' => $paginate,
             'page' => $page,
-            'perPage' => $perPage
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_unit_api_call_read_with_special_char_in_search()
+    {
+        $this->actingAs($this->developer);
+
+        $company = $this->developer->companies->random(1)->first();
+
+        $companyId = $company->id;
+        $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
+        $paginate = 1;
+        $page = 1;
+        $perPage = 10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.product.unit.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_unit_api_call_read_with_negative_value_in_perpage_param()
+    {
+        $this->actingAs($this->developer);
+
+        $company = $this->developer->companies->random(1)->first();
+
+        $companyId = $company->id;
+        $search = "";
+        $paginate = 1;
+        $page = 1;
+        $perPage = -10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.product.unit.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_unit_api_call_read_without_pagination()
+    {
+        $this->actingAs($this->developer);
+
+        $company = $this->developer->companies->random(1)->first();
+
+        $companyId = $company->id;
+        $search = "";
+        $page = 1;
+        $perPage = 10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.product.unit.read', [
+            'companyId' => Hashids::encode($companyId),
+            'search' => $search,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
         ]));
 
         $api->assertSuccessful();
@@ -152,5 +254,14 @@ class UnitAPITest extends APITestCase
         $this->assertSoftDeleted('units', [
             'id' => $unitId
         ]);
+    }
+
+    public function test_unit_api_call_delete_nonexistance_id()
+    {
+        $this->actingAs($this->developer);
+
+        $api = $this->json('POST', route('api.post.db.product.unit.delete', (new RandomGenerator())->generateAlphaNumeric(5)));
+
+        $api->assertStatus(500);
     }
 }

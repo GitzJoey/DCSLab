@@ -92,5 +92,4 @@ class ProductGroup extends Model
             }
         });
     }
-
 }

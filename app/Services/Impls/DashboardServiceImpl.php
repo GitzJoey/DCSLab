@@ -214,6 +214,12 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_Product(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
+        $product_group = array(
+            'icon' => '',
+            'pageName' => 'side-menu-product-product_group',
+            'title' => 'components.menu.product-product_group'
+        );
+
         $product = array(
             'icon' => '',
             'pageName' => 'side-menu-product-product',
@@ -234,6 +240,7 @@ class DashboardServiceImpl implements DashboardService
             ]
         );
 
+        array_push($root_array['subMenu'], $product_group);
         array_push($root_array['subMenu'], $product);
         array_push($root_array['subMenu'], $service);
 
