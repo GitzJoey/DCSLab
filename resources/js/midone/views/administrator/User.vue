@@ -309,7 +309,7 @@ const getUser = (args) => {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    axios.get(route('api.get.db.admin.users.read', { "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.admin.users.list', { "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         userList.value = response.data;
     });
 }

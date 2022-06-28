@@ -414,7 +414,7 @@ const getAllEmployees = (args) => {
     if (args.page === undefined) args.page = 1;
     if (args.pageSize === undefined) args.pageSize = 10;
 
-    axios.get(route('api.get.db.company.employee.read', { 
+    axios.get(route('api.get.db.company.employee.list', { 
         "companyId": companyId,
         "search": args.search,
         "paginate" : 1,

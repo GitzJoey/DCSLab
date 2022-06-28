@@ -9,7 +9,9 @@ interface RoleService
 {
     public function create(array $role, array $permissions): Role;
 
-    public function read(array $relationship = [], array $exclude = []): Collection;
+    public function list(array $relationship = [], array $exclude = []): Collection;
+
+    public function read(Role $role): Role;
 
     public function readBy(string $key, string $value);
 

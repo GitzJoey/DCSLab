@@ -256,7 +256,7 @@ const getAllWarehouse = (args) => {
 
     let companyId = selectedUserCompany.value;
 
-    axios.get(route('api.get.db.company.warehouse.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.company.warehouse.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         warehouseList.value = response.data;
         loading.value = false;
     });

@@ -364,7 +364,7 @@ const getAllSupplier = (args) => {
 
     let companyId = selectedUserCompany.value;
 
-    axios.get(route('api.get.db.supplier.supplier.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.supplier.supplier.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         supplierList.value = response.data;
         loading.value = false;
     });

@@ -54,7 +54,7 @@ class RoleServiceImpl implements RoleService
         }
     }
 
-    public function read(array $relationship = [], array $exclude = []): Collection
+    public function list(array $relationship = [], array $exclude = []): Collection
     {
         $role = Role::with($relationship)->latest();
 
@@ -63,6 +63,11 @@ class RoleServiceImpl implements RoleService
         } else {
             return $role->whereNotIn('name', [UserRoles::DEVELOPER->value, UserRoles::ADMINISTRATOR->value])->get();
         }
+    }
+
+    public function read(Role $role): Role
+    {
+        return $role->with('permissions')->first();
     }
 
     public function readBy(string $key, string $value)

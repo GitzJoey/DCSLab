@@ -408,7 +408,7 @@ const getAllProducts = (args) => {
 
     let companyId = selectedUserCompany.value;
 
-    axios.get(route('api.get.db.product.product.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.product.product.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         productList.value = response.data;
         loading.value = false;
     });
@@ -435,21 +435,21 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.product.brand.read', {
+    axios.get(route('api.get.db.product.brand.list', {
             companyId: selectedUserCompany.value,
             paginate: false
         })).then(response => {
             brandDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.product.product_group.read', {
+    axios.get(route('api.get.db.product.product_group.list', {
             companyId: selectedUserCompany.value,
             paginate: false
         })).then(response => {
             productGroupDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.product.unit.read', {
+    axios.get(route('api.get.db.product.unit.list', {
             companyId: selectedUserCompany.value,
             category: 1,
             paginate: false

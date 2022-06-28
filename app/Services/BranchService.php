@@ -21,20 +21,20 @@ interface BranchService
 
     public function read(Branch $branch): Branch;
 
+    public function update(
+        Branch $branch,
+        array $branchArr
+    ): Branch;
+
+    public function delete(Branch $branch): bool;
+
     public function getBranchByCompanyId(int $companyId);
 
     public function getMainBranchByCompanyId(int $companyId): Branch;
 
     public function isMainBranch(int $id): bool;
 
-    public function update(
-        Branch $branch,
-        array $branchArr
-    ): Branch;
-
     public function resetMainBranch(int $companyId): bool;
-
-    public function delete(Branch $branch): bool;
 
     public function generateUniqueCode(): string;
 

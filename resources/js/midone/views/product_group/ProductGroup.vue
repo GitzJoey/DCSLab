@@ -200,7 +200,7 @@ const getAllProductGroups = (args) => {
     if (args.page === undefined) args.page = 1;
     if (args.pageSize === undefined) args.pageSize = 10;
 
-    axios.get(route('api.get.db.product.product_group.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.product.product_group.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         product_groupList.value = response.data;
         loading.value = false;
     });

@@ -11,7 +11,6 @@ use App\Services\{
     ActivityLogService
 };
 #region Extensions 
-/*
 use App\Services\UnitService;
 use App\Services\BrandService;
 use App\Services\BranchService;
@@ -21,7 +20,6 @@ use App\Services\EmployeeService;
 use App\Services\SupplierService;
 use App\Services\WarehouseService;
 use App\Services\ProductGroupService;
-*/
 #endregion
 
 use App\Services\Impls\{
@@ -33,7 +31,6 @@ use App\Services\Impls\{
     ActivityLogServiceImpl
 };
 #region Extensions
-/*
 use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\BrandServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
@@ -43,7 +40,6 @@ use App\Services\Impls\EmployeeServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
-*/
 #endregion
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -88,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         #region Extensions
-        /*
+
         $this->app->singleton(CompanyService::class, function (){
             return new CompanyServiceImpl();
         });
@@ -124,7 +120,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(EmployeeService::class, function (){
             return new EmployeeServiceImpl();
         });
-        */
+
         #endregion
     }
 
