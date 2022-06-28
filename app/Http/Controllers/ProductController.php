@@ -9,6 +9,8 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
+use Exception;
 
 class ProductController extends BaseController
 {
@@ -22,7 +24,7 @@ class ProductController extends BaseController
         $this->productService = $productService;
     }
 
-    public function readProducts(ProductRequest $productRequest)
+    public function listProducts(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
 
@@ -33,7 +35,7 @@ class ProductController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->productService->read(
+        $result = $this->productService->list(
             companyId: $companyId,
             isProduct: true,
             isService: false,
@@ -52,7 +54,7 @@ class ProductController extends BaseController
         }
     }
 
-    public function readServices(ProductRequest $productRequest)
+    public function listServices(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
 
@@ -63,7 +65,7 @@ class ProductController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->productService->read(
+        $result = $this->productService->list(
                     companyId: $companyId, 
                     isProduct: false, 
                     isService: true, 
@@ -85,6 +87,8 @@ class ProductController extends BaseController
     {   
         $request = $productRequest->validated();
         
+        $productArr = $request;
+
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
@@ -100,6 +104,8 @@ class ProductController extends BaseController
             }
         }
         
+        $productArr['code'] = $code;
+
         $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
         $brand_id = Hashids::decode($request['brand_id'])[0];
         $name = $request['name'];
@@ -117,14 +123,14 @@ class ProductController extends BaseController
         $standard_rated_supply = array_key_exists('standard_rated_supply', $request) ? intVal($request['standard_rated_supply']) : 0;
         $price_include_vat = array_key_exists('price_include_vat', $request) ? boolVal($request['price_include_vat']) : false;
 
-        $product_units = [];
+        $productUnitsArr = [];
         $count_unit = count($request['unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
             $is_base = $request['is_base'][$i] == '1' ? true : false;
 
             $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
 
-            array_push($product_units, array (
+            array_push($productUnitsArr, array (
                 'company_id' => $company_id,
                 'code' => $code,
                 'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
@@ -135,30 +141,26 @@ class ProductController extends BaseController
             ));
         }
 
-        $result = $this->productService->create(
-            $company_id,
-            $code, 
-            $product_group_id,
-            $brand_id,
-            $name,
-            $taxable_supply,
-            $standard_rated_supply,
-            $price_include_vat,
-            $remarks,
-            $point,
-            $use_serial_number,
-            $has_expiry_date,
-            $product_type,
-            $status,
-            $product_units
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->productService->create(
+                $productArr,
+                $productUnitsArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function update($id, ProductRequest $productRequest)
+    public function update(Product $product, ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
+
+        $productArr = $request;
 
         $company_id = Hashids::decode($request['company_id'])[0];
 
@@ -166,14 +168,16 @@ class ProductController extends BaseController
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productService->generateUniqueCodeForProduct($company_id);
-            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id, $id));
+            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id, $product->id));
         } else {
-            if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $id)) {
+            if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $product->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')]
                 ], 422);
             }
         }
+
+        $productArr['code'] = $code;
 
         $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
         $brand_id = Hashids::decode($request['brand_id'])[0];
@@ -188,7 +192,7 @@ class ProductController extends BaseController
         $product_type = $request['product_type'];
         $status = $request['status'];
 
-        $product_units = [];
+        $productUnitsArr = [];
         $count_unit = count($request['unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
             $product_unit_id = $request['product_units_hId'][$i] == 0 ? 0 : Hashids::decode($request['product_units_hId'][$i])[0];
@@ -206,7 +210,7 @@ class ProductController extends BaseController
             $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
             $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
 
-            array_push($product_units, array (
+            array_push($productUnitsArr, array (
                 'id' => $product_unit_id,
                 'company_id' => $company_id,
                 'product_id' => $id,             
@@ -219,33 +223,34 @@ class ProductController extends BaseController
             ));
         }
 
-        $product = $this->productService->update(
-            $id,
-            $company_id,
-            $code, 
-            $product_group_id,
-            $brand_id,
-            $name,
-            $taxable_supply,
-            $standard_rated_supply,
-            $price_include_vat,    
-            $remarks,
-            $point,
-            $use_serial_number,
-            $has_expiry_date,
-            $product_type,
-            $status,
-            $product_units
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($product) ? response()->error() : response()->success();
+        try {
+            $product = $this->productService->update(
+                $product,
+                $productArr,
+                $productUnitsArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($product) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete($id)
+    public function delete(Product $product)
     {
-        $result = $this->productService->delete($id);
+        $result = false;
+        $errorMsg = '';
 
-        return !$result ? response()->error() : response()->success();
+        try {
+            $result = $this->productService->delete($product);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return !$result ? response()->error($errorMsg) : response()->success();
     }
 
     public function getProductType(Request $request)

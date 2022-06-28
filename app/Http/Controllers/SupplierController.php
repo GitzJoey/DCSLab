@@ -6,7 +6,9 @@ use App\Enums\PaymentTerm;
 use App\Enums\PaymentTermType;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
+use App\Models\Supplier;
 use App\Services\SupplierService;
+use Exception;
 use Illuminate\Http\Request;
 
 use Vinkla\Hashids\Facades\Hashids;
@@ -23,7 +25,7 @@ class SupplierController extends BaseController
         $this->supplierService = $supplierService;
     }
 
-    public function read(SupplierRequest $supplierRequest)
+    public function list(SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
 
@@ -34,7 +36,7 @@ class SupplierController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->supplierService->read(
+        $result = $this->supplierService->list(
             companyId: $companyId,
             search: $search,
             paginate: $paginate,
@@ -54,7 +56,9 @@ class SupplierController extends BaseController
     public function store(SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
-        
+
+        $supplierArr = $request;
+
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
@@ -70,9 +74,11 @@ class SupplierController extends BaseController
             }
         }
 
+        $supplierArr['code'] = $code;
+
         $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
 
-        $poc = [
+        $pocArr = [
             'name' => $request['poc_name'],
             'email' => $request['email'], 
         ];
@@ -90,80 +96,85 @@ class SupplierController extends BaseController
 
         $contact = array_key_exists('contact', $request) ? $request['contact'] : '';
 
-        $result = $this->supplierService->create(
-            $company_id,
-            $code,
-            $request['name'],
-            $request['payment_term_type'],
-            $request['payment_term'],
-            $request['contact'],
-            $request['address'],
-            $request['city'],
-            $taxable_enterprise,
-            $request['tax_id'],
-            $request['remarks'],
-            $request['status'],
-            $poc,
-            $supplier_products
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->supplierService->create(
+                $supplierArr,
+                $pocArr,
+                $supplier_products
+            );
+    
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function update($id, SupplierRequest $supplierRequest)
+    public function update(Supplier $supplier, SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
         $company_id = Hashids::decode($request['company_id'])[0];
+
+        $supplierArr = $request;
 
         $code = $request['code'];
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->supplierService->generateUniqueCode($company_id);
-            } while (!$this->supplierService->isUniqueCode($code, $company_id, $id));
+            } while (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id));
         } else {
-            if (!$this->supplierService->isUniqueCode($code, $company_id, $id)) {
+            if (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')]
                 ], 422);
             }
         }
 
+        $supplierArr['code'] = $code;
+
         $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
 
-        $poc = [
+        $pocArr = [
 
         ];
 
-        $products = [
+        $productsArr = [
 
         ];
 
-        $result = $this->supplierService->update(
-            $id,
-            $company_id,
-            $request['code'],
-            $request['name'],
-            $request['payment_term_type'],
-            $request['payment_term'],
-            $request['contact'],
-            $request['address'],
-            $request['city'],
-            $taxable_enterprise,
-            $request['tax_id'],
-            $request['remarks'],
-            $request['status'],
-            $poc,
-            $products
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->supplierService->update(
+                $supplier,
+                $supplierArr,
+                $pocArr,
+                $productsArr
+            );
+    
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete($id)
+    public function delete(Supplier $supplier)
     {
-        $result = $this->supplierService->delete($id);
+        $result = false;
+        $errorMsg = '';
 
-        return !$result ? response()->error() : response()->success();
+        try {
+            $result = $this->supplierService->delete($supplier);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return !$result ? response()->error($errorMsg) : response()->success();
     }
 
     public function getPaymentTermType()

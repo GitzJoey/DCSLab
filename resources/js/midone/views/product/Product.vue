@@ -473,7 +473,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.product.product.edit', product.value.hId), formData).then(response => {
+        axios.post(route('api.post.db.product.product.edit', product.value.uuid), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -585,7 +585,7 @@ const editSelected = (index) => {
 }
 
 const deleteSelected = (index) => {
-    deleteId.value = productList.value.data[index].hId;
+    deleteId.value = productList.value.data[index].uuid;
     deleteModalShow.value = true;
 }
 

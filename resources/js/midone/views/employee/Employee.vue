@@ -477,7 +477,7 @@ const onSubmit = (values, actions) => {
     } else if (mode.value === 'edit') {
         formData.append('company_id', selectedUserCompany.value);
 
-        axios.post(route('api.post.db.company.employee.edit', employee.value.hId), formData).then(response => {
+        axios.post(route('api.post.db.company.employee.edit', employee.value.uuid), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -581,7 +581,7 @@ const editSelected = (index) => {
 }
 
 const deleteSelected = (index) => {
-    deleteId.value = employeeList.value.data[index].hId;
+    deleteId.value = employeeList.value.data[index].uuid;
     deleteModalShow.value = true;
 }
 

@@ -411,7 +411,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.supplier.supplier.edit', supplier.value.hId), formData).then(response => {
+        axios.post(route('api.post.db.supplier.supplier.edit', supplier.value.uuid), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -499,7 +499,7 @@ const editSelected = (index) => {
 }
 
 const deleteSelected = (index) => {
-    deleteId.value = supplierList.value.data[index].hId;
+    deleteId.value = supplierList.value.data[index].uuid;
     deleteModalShow.value = true;
 }
 

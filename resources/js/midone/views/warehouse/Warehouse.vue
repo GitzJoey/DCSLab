@@ -100,7 +100,6 @@
         <div class="loader-container">
             <VeeForm id="warehouseForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <!-- #region Company -->
                     <div class="mb-3">
                         <label class="form-label" for="inputCompany_id">{{ t('views.warehouse.fields.company_id') }}</label>
                         <VeeField as="select" id="company_id" name="company_id" :class="{'form-control form-select':true, 'border-danger': errors['company_id']}" v-model="warehouse.company.hId" :label="t('views.warehouse.fields.company_id')" rules="required" @blur="reValidate(errors)" :disabled="mode === 'edit'">
@@ -109,9 +108,6 @@
                         </VeeField>
                         <ErrorMessage name="company_id" class="text-danger" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Branch -->
                     <div class="mb-3">
                         <label class="form-label" for="inputBranch_id">{{ t('views.warehouse.fields.branch_id') }}</label>
                         <VeeField as="select" id="branch_id" name="branch_id" :class="{'form-control form-select':true, 'border-danger': errors['branch_id']}" v-model="warehouse.branch.hId" :label="t('views.warehouse.fields.branch_id')" rules="required" @blur="reValidate(errors)" :disabled="mode === 'edit'">
@@ -120,9 +116,6 @@
                         </VeeField>
                         <ErrorMessage name="branch_id" class="text-danger" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.warehouse.fields.code') }}</label>
                         <div class="flex items-center">
@@ -131,45 +124,27 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.warehouse.fields.name') }}</label>
                         <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.warehouse.fields.name')" :label="t('views.warehouse.fields.name')" rules="required" @blur="reValidate(errors)" v-model="warehouse.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Address -->
                     <div class="mb-3">
                         <label for="inputAddress" class="form-label">{{ t('views.warehouse.fields.address') }}</label>
                         <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.warehouse.fields.address')" v-model="warehouse.address" rows="3"></textarea>
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region City -->
                     <div class="mb-3">
                         <label for="inputCity" class="form-label">{{ t('views.warehouse.fields.city') }}</label>
                         <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.warehouse.fields.city')" v-model="warehouse.city" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Contact -->
                     <div class="mb-3">
                         <label for="inputContact" class="form-label">{{ t('views.warehouse.fields.contact') }}</label>
                         <input id="inputContact" name="contact" type="text" class="form-control" :placeholder="t('views.warehouse.fields.contact')" v-model="warehouse.contact" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Remarks -->
                     <div class="mb-3">
                         <label for="inputRemarks" class="form-label">{{ t('views.warehouse.fields.remarks') }}</label>
                         <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.warehouse.fields.remarks')" v-model="warehouse.remarks" rows="3"></textarea>
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.warehouse.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="warehouse.status" rules="required" @blur="reValidate(errors)">
@@ -178,8 +153,6 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
-                    <!-- #endregion -->
-                    
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -331,7 +304,7 @@ const onSubmit = (values, actions) => {
         var branchId = document.getElementById("branch_id");
         formData.append('branch_id', branchId.value);
         
-        axios.post(route('api.post.db.company.warehouse.edit', warehouse.value.hId), formData).then(response => {
+        axios.post(route('api.post.db.company.warehouse.edit', warehouse.value.uuid), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -416,7 +389,7 @@ const editSelected = (index) => {
 }
 
 const deleteSelected = (index) => {
-    deleteId.value = warehouseList.value.data[index].hId;
+    deleteId.value = warehouseList.value.data[index].uuid;
     deleteModalShow.value = true;
 }
 

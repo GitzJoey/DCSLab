@@ -24,18 +24,22 @@ class ProductRequest extends FormRequest
 
         /** @var \App\User */
         $user = Auth::user();
+        $product = $this->route('product');
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
+            case 'listProducts':
+            case 'listServices':
+                return $user->can('viewAny', Product::class) ? true : false;
             case 'readProducts':
             case 'readServices':
-                return $user->can('view', Product::class) ? true : false;
+                return $user->can('view', Product::class, $product) ? true : false;
             case 'store':
                 return $user->can('create', Product::class) ? true : false;
             case 'update':
-                return $user->can('update', Product::class) ? true : false;
+                return $user->can('update', Product::class, $product) ? true : false;
             case 'delete':
-                return $user->can('delete', Product::class) ? true : false;
+                return $user->can('delete', Product::class, $product) ? true : false;
             default:
                 return false;
         }
@@ -61,15 +65,20 @@ class ProductRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
-            case 'readProducts':
-            case 'readServices':
-                $rules_read = [
+            case 'listProducts':
+            case 'listServices':
+                $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean']
+                ];
+                return $rules_list;
+            case 'readProducts':
+            case 'readServices':
+                $rules_read = [
                 ];
                 return $rules_read;
             case 'store':
@@ -130,12 +139,16 @@ class ProductRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
-            case 'readProducts':
-            case 'readServices':
+            case 'listProducts':
+            case 'listServices':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0]:'',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
+                break;
+            case 'readProducts':
+            case 'readServices':
+                $this->merge([]);
                 break;
             case 'store':
             case 'update':

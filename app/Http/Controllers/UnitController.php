@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\UnitService;
 use App\Http\Requests\UnitRequest;
 use App\Http\Resources\UnitResource;
+use App\Models\Unit;
+use Exception;
 
 class UnitController extends BaseController
 {
@@ -18,7 +20,7 @@ class UnitController extends BaseController
         $this->unitService = $unitService;
     }
 
-    public function read(UnitRequest $unitRequest)
+    public function list(UnitRequest $unitRequest)
     {
         $request = $unitRequest->validated();
 
@@ -29,7 +31,7 @@ class UnitController extends BaseController
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
-        $result = $this->unitService->read(
+        $result = $this->unitService->list(
             companyId: $companyId, 
             category: $category, 
             search: $search, 
@@ -51,6 +53,8 @@ class UnitController extends BaseController
     {
         $request = $unitRequest->validated();
 
+        $unitArr = $request;
+
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -66,24 +70,27 @@ class UnitController extends BaseController
             }
         }
 
-        $name = $request['name'];
-        $description = $request['description'];
-        $category = $request['category'];
+        $unitArr['code'] = $code;
 
-        $result = $this->unitService->create(
-            $company_id,
-            $code, 
-            $name,
-            $description,
-            $category
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->unitService->create(
+                $unitArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function update($id, UnitRequest $unitRequest)
+    public function update(Unit $unit, UnitRequest $unitRequest)
     {
         $request = $unitRequest->validated();
+
+        $unitArr = $request;
 
         $company_id = $request['company_id'];
 
@@ -91,35 +98,43 @@ class UnitController extends BaseController
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->unitService->generateUniqueCode($company_id);
-            } while (!$this->unitService->isUniqueCode($code, $company_id, $id));
+            } while (!$this->unitService->isUniqueCode($code, $company_id, $unit->id));
         } else {
-            if (!$this->unitService->isUniqueCode($code, $company_id, $id)) {
+            if (!$this->unitService->isUniqueCode($code, $company_id, $unit->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')]
                 ], 422);
             }
         }
 
-        $name = $request['name'];
-        $description = $request['description'];
-        $category = $request['category'];
+        $unitArr['code'] = $code;
 
-        $result = $this->unitService->update(
-            id: $id,
-            company_id: $company_id,
-            code: $code, 
-            name: $name,
-            description: $description,
-            category: $category
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->unitService->update(
+                $unit,
+                $unitArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
     
-    public function delete($id)
+    public function delete(Unit $unit)
     {
-        $result = $this->unitService->delete($id);
+        $result = false;
+        $errorMsg = '';
 
-        return !$result ? response()->error() : response()->success();
+        try {
+            $result = $this->unitService->delete($unit);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return !$result ? response()->error($errorMsg) : response()->success();
     }
 }

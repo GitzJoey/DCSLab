@@ -12,7 +12,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DevController;
 #region Extensions
-/*
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\SupplierController;
@@ -22,7 +21,6 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\WarehouseController;
-*/
 #endregion
 
 Route::bind('id', function ($id) {
@@ -53,13 +51,15 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/{employee:uuid}', [EmployeeController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
-                Route::get('read', [WarehouseController::class, 'read'])->name('.read');
+                Route::get('read', [WarehouseController::class, 'list'])->name('.list');
+                Route::get('read/{warehouse:uuid}', [WarehouseController::class, 'read'])->name('.read');
             });
         });
 
         Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
             Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
-                Route::get('read', [SupplierController::class, 'read'])->name('.read');
+                Route::get('read', [SupplierController::class, 'list'])->name('.list');
+                Route::get('read/{supplier:uuid}', [SupplierController::class, 'read'])->name('.read');
             });
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function() {
@@ -69,23 +69,26 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
         Route::group(['prefix' => 'product', 'as' => '.product'], function() {
             Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function() {
-                Route::get('read', [ProductGroupController::class, 'read'])->name('.read');
+                Route::get('read', [ProductGroupController::class, 'list'])->name('.list');
+                Route::get('read/{productgroup:uuid}', [ProductGroupController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function() {
                 Route::get('read', [BrandController::class, 'list'])->name('.list');
                 Route::get('read/{brand:uuid}', [BrandController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'unit', 'as' => '.unit'], function() {
-                Route::get('read', [UnitController::class, 'read'])->name('.read');
+                Route::get('read', [UnitController::class, 'list'])->name('.list');
+                Route::get('read/{unit:uuid}', [UnitController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'product', 'as' => '.product'], function() {
-                Route::get('read', [ProductController::class, 'readProducts'])->name('.read');
+                Route::get('read', [ProductController::class, 'listProducts'])->name('.list');
+                Route::get('read/{product:uuid}', [ProductController::class, 'readProducts'])->name('.read');
             });
             Route::group(['prefix' => 'service', 'as' => '.service'], function() {
-                Route::get('read', [ProductController::class, 'readServices'])->name('.read');
+                Route::get('read', [ProductController::class, 'listServices'])->name('.list');
+                Route::get('read/{product:uuid}', [ProductController::class, 'readServices'])->name('.read');
             });
             
-
             Route::group(['prefix' => 'common', 'as' => '.common'], function() {
                 Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
             });
@@ -155,24 +158,24 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function() {
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [WarehouseController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [WarehouseController::class, 'delete'])->name('.delete');
+                Route::post('edit/{warehouse:uuid}', [WarehouseController::class, 'update'])->name('.edit');
+                Route::post('delete/{warehouse:uuid}', [WarehouseController::class, 'delete'])->name('.delete');
             });
         });
 
         Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
             Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function() {
                 Route::post('save', [SupplierController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [SupplierController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [SupplierController::class, 'delete'])->name('.delete');
+                Route::post('edit/{supplier:uuid}', [SupplierController::class, 'update'])->name('.edit');
+                Route::post('delete/{supplier:uuid}', [SupplierController::class, 'delete'])->name('.delete');
             });
         });
 
         Route::group(['prefix' => 'product', 'as' => '.product'], function() {
             Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function() {
                 Route::post('save', [ProductGroupController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [ProductGroupController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [ProductGroupController::class, 'delete'])->name('.delete');
+                Route::post('edit/{productgroup:uuid}', [ProductGroupController::class, 'update'])->name('.edit');
+                Route::post('delete/{productgroup:uuid}', [ProductGroupController::class, 'delete'])->name('.delete');
             });
 
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function() {
@@ -183,14 +186,14 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum','throttle:50,1
 
             Route::group(['prefix' => 'unit', 'as' => '.unit'], function() {
                 Route::post('save', [UnitController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [UnitController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [UnitController::class, 'delete'])->name('.delete');
+                Route::post('edit/{unit:uuid}', [UnitController::class, 'update'])->name('.edit');
+                Route::post('delete/{unit:uuid}', [UnitController::class, 'delete'])->name('.delete');
             });
             
             Route::group(['prefix' => 'product', 'as' => '.product'], function() {
                 Route::post('save', [ProductController::class, 'store'])->name('.save');
-                Route::post('edit/{id}', [ProductController::class, 'update'])->name('.edit');
-                Route::post('delete/{id}', [ProductController::class, 'delete'])->name('.delete');
+                Route::post('edit/{product:uuid}', [ProductController::class, 'update'])->name('.edit');
+                Route::post('delete/{product:uuid}', [ProductController::class, 'delete'])->name('.delete');
             });
         });
         #endregion

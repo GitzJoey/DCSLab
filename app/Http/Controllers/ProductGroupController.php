@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\ProductGroupService;
 use App\Http\Requests\ProductGroupRequest;
 use App\Http\Resources\ProductGroupResource;
+use App\Models\ProductGroup;
+use Exception;
 
 class ProductGroupController extends BaseController
 {
@@ -18,7 +20,7 @@ class ProductGroupController extends BaseController
         $this->productGroupService = $productGroupService;
     }
 
-    public function read(ProductGroupRequest $productGroupRequest)
+    public function list(ProductGroupRequest $productGroupRequest)
     {
         $request = $productGroupRequest->validated();
 
@@ -29,7 +31,7 @@ class ProductGroupController extends BaseController
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
-        $result = $this->productGroupService->read(
+        $result = $this->productGroupService->list(
             companyId: $companyId,
             category: $category,
             search: $search, 
@@ -51,6 +53,8 @@ class ProductGroupController extends BaseController
     {
         $request = $productGroupRequest->validated();
 
+        $productgroupArr = $request;
+
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -66,22 +70,25 @@ class ProductGroupController extends BaseController
             }
         }
 
-        $name = $request['name'];
-        $category = $request['category'];
+        $productgroupArr['code'] = $code;
 
-        $result = $this->productGroupService->create(
-            $company_id,
-            $code, 
-            $name,
-            $category
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->productGroupService->create($productgroupArr);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function update($id, ProductGroupRequest $productGroupRequest)
+    public function update(ProductGroup $productgroup, ProductGroupRequest $productGroupRequest)
     {
         $request = $productGroupRequest->validated();
+
+        $productgroupArr = $request;
 
         $company_id = $request['company_id'];
 
@@ -89,33 +96,43 @@ class ProductGroupController extends BaseController
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productGroupService->generateUniqueCode($company_id);
-            } while (!$this->productGroupService->isUniqueCode($code, $company_id, $id));
+            } while (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id));
         } else {
-            if (!$this->productGroupService->isUniqueCode($code, $company_id, $id)) {
+            if (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')]
                 ], 422);
             }
         }
 
-        $name = $request['name'];
-        $category = $request['category'];
+        $productgroupArr['code'] = $code;
 
-        $result = $this->productGroupService->update(
-            id: $id,
-            company_id: $company_id,
-            code: $code, 
-            name: $name,
-            category: $category
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->productGroupService->update(
+                $productgroup,
+                $productgroupArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
     
-    public function delete($id)
+    public function delete(ProductGroup $productgroup)
     {
-        $result = $this->productGroupService->delete($id);
+        $result = false;
+        $errorMsg = '';
 
-        return !$result ? response()->error() : response()->success();
+        try {
+            $result = $this->productGroupService->delete($productgroup);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return !$result ? response()->error($errorMsg) : response()->success();
     }
 }
