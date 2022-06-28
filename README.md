@@ -1,4 +1,4 @@
-![Tests](https://github.com/GitzJoey/DCSLab/actions/workflows/laravel.yml/badge.svg)
+[![CI/CD](https://github.com/GitzJoey/DCSLab/actions/workflows/dcslab.yml/badge.svg)](https://github.com/GitzJoey/DCSLab/actions/workflows/dcslab.yml)
 
 # DCSLab
 

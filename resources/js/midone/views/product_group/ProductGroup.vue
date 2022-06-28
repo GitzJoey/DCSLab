@@ -216,7 +216,7 @@ const getAllProductGroups = (args) => {
 
 const getDDL = () => {
     if (getCachedDDL('productCategoryDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.category')).then(response => {
+        axios.get(route('api.get.db.common.ddl.list.productcategory')).then(response => {
             productCategoryDDL.value = response.data;
             setCachedDDL('productCategoryDDL', response.data);
         });    

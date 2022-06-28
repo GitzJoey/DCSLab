@@ -54,7 +54,7 @@
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
                 },
-                "productOrServiceCategoryDDL": {
+                "productCategoryDDL": {
                     "product": "Produk",
                     "service": "Jasa",
                     "product_and_service": "Produk Dan Jasa"

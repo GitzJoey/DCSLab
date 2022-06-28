@@ -66,6 +66,7 @@ class BrandServiceImpl implements BrandService
     ): Paginator|Collection|null
     {
         $timer_start = microtime(true);
+        
         try {
             $cacheKey = '';
             if ($useCache) {

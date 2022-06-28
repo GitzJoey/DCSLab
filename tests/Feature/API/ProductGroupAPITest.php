@@ -3,7 +3,6 @@
 namespace Tests\Feature\API;
 
 use Tests\APITestCase;
-use App\Models\Company;
 use App\Actions\RandomGenerator;
 use App\Enums\ProductCategory;
 use App\Models\ProductGroup;

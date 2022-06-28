@@ -106,15 +106,15 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $result = null;
 
-            $product_group = ProductGroup::whereCompanyId($companyId);
+            $productGroup = ProductGroup::whereCompanyId($companyId);
          
             if (!empty($category)) {
                 if ($category == ProductCategory::PRODUCTS) {
-                    $product_group = $product_group->where('category', '=', ProductCategory::PRODUCTS->value);
+                    $productGroup = $productGroup->where('category', '=', ProductCategory::PRODUCTS->value);
                 } else if ($category == ProductCategory::SERVICES) {
-                    $product_group = $product_group->where('category', '=', ProductCategory::SERVICES->value);
+                    $productGroup = $productGroup->where('category', '=', ProductCategory::SERVICES->value);
                 } else if ($category == ProductCategory::PRODUCTS_AND_SERVICES) {
-                    $product_group = $product_group->where('category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value);
+                    $productGroup = $productGroup->where('category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value);
                 }
             }
             
@@ -126,9 +126,9 @@ class ProductGroupServiceImpl implements ProductGroupService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
-                $result = $product_group->paginate($perPage);
+                $result = $productGroup->paginate($perPage);
             } else {
-                $result = $product_group->get();
+                $result = $productGroup->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);
