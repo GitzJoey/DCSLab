@@ -10,13 +10,15 @@ interface $INTERFACE_CLASS_NAME$Service
     public function create(
     ): mixed;
 
-    public function read(
+    public function list(
     ): Paginator|Collection;
-    
+
+    public function read(): mixed;
+
     public function readBy(string $key, string $value);
 
     public function update(
     ): mixed;
 
-    public function delete(int $id): bool;
+    public function delete(): bool;
 }

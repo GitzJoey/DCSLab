@@ -30,14 +30,14 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function read(
+    public function list(
     ): Paginator|Collection
     {
         $timer_start = microtime(true);
@@ -47,11 +47,16 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
 
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
         }
-        return Config::get('dcslab.ERROR_RETURN_VALUE');
+    }
+
+    public function read(): mixed
+    {
+
     }
 
     public function readBy(string $key, string $value)
@@ -63,11 +68,11 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
 
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('dcslab.ERROR_RETURN_VALUE');
     }
 
     public function update(
@@ -82,14 +87,14 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function delete(int $id): bool
+    public function delete(): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -100,6 +105,7 @@ class $IMPLEMENTATION_CLASS_NAME$ServiceImpl implements $IMPLEMENTATION_CLASS_NA
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
