@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\WarehouseService;
 use App\Http\Requests\WarehouseRequest;
 use App\Http\Resources\WarehouseResource;
+use App\Models\Warehouse;
+use Exception;
 
 class WarehouseController extends BaseController
 {
@@ -18,7 +20,7 @@ class WarehouseController extends BaseController
         $this->warehouseService = $warehouseService;
     }
 
-    public function read(WarehouseRequest $warehouseRequest)
+    public function list(WarehouseRequest $warehouseRequest)
     {
         $request = $warehouseRequest->validated();
         
@@ -29,7 +31,7 @@ class WarehouseController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->warehouseService->read(
+        $result = $this->warehouseService->list(
             companyId: $companyId,
             search: $search,
             paginate: $paginate,
@@ -50,8 +52,9 @@ class WarehouseController extends BaseController
     {   
         $request = $warehouseRequest->validated();
         
+        $warehouseArr = $request;
+
         $company_id = $request['company_id'];
-        $branch_id = $request['branch_id'];
 
         $code = $request['code'];
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
@@ -66,31 +69,27 @@ class WarehouseController extends BaseController
             }
         }
 
-        $name = $request['name'];
-        $address = $request['address'];
-        $city = $request['city'];
-        $contact = $request['contact'];
-        $remarks = $request['remarks'];
-        $status = $request['status'];
+        $warehouseArr['code'] = $code;
 
-        $result = $this->warehouseService->create(
-            $company_id,
-            $branch_id,
-            $code, 
-            $name,
-            $address,
-            $city,
-            $contact,
-            $remarks,
-            $status,
-        );
+        $result = null;
+        $errorMsg = '';
 
-        return is_null($result) ? response()->error() : response()->success();
+        try {
+            $result = $this->warehouseService->create(
+                $warehouseArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function update($id, WarehouseRequest $warehouseRequest)
+    public function update(Warehouse $warehouse, WarehouseRequest $warehouseRequest)
     {
         $request = $warehouseRequest->validated();
+
+        $warehouseArr = $request;
 
         $company_id = $request['company_id'];
         $branch_id = $request['branch_id'];
@@ -99,42 +98,41 @@ class WarehouseController extends BaseController
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->warehouseService->generateUniqueCode($company_id);
-            } while (!$this->warehouseService->isUniqueCode($code, $company_id, $id));
+            } while (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id));
         } else {
-            if (!$this->warehouseService->isUniqueCode($code, $company_id, $id)) {
+            if (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')]
                 ], 422);
             }
         }
 
-        $name = $request['name'];
-        $address = $request['address'];
-        $city = $request['city'];
-        $contact = $request['contact'];
-        $remarks = $request['remarks'];
-        $status = $request['status'];
+        $result = null;
+        $errorMsg = '';
 
-        $warehouse = $this->warehouseService->update(
-            $id,
-            $company_id,
-            $branch_id,
-            $code, 
-            $name,
-            $address,
-            $city,
-            $contact,
-            $remarks,
-            $status,
-        );
+        try {
+            $result = $this->warehouseService->update(
+                $warehouse,
+                $warehouseArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
-        return is_null($warehouse) ? response()->error() : response()->success();
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete($id)
+    public function delete(Warehouse $warehouse)
     {
-        $result = $this->warehouseService->delete($id);
+        $result = false;
+        $errorMsg = '';
 
-        return !$result ? response()->error() : response()->success();
+        try {
+            $result = $this->warehouseService->delete($warehouse);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return !$result ? response()->error($errorMsg) : response()->success();
     }
 }
