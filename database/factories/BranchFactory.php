@@ -32,6 +32,7 @@ class BranchFactory extends Factory
             'address' => $faker->address(),
             'city' => $branch_name,
             'contact' => $faker->e164PhoneNumber(),
+            'is_main' => false,
             'remarks' => $faker->sentence()
         ];
     }

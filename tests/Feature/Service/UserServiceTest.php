@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Service;
 
+use App\Enums\ActiveStatus;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
+use Database\Seeders\UserTableSeeder;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,8 +24,10 @@ class UserServiceTest extends ServiceTestCase
 
         $this->service = app(UserService::class);
 
-        if (User::count() < 2)
-            $this->artisan('db:seed', ['--class' => 'UserTableSeeder']);
+        if (User::count() < 2) {
+            $seeder = new UserTableSeeder();
+            $seeder->callWith(UserTableSeeder::class, [false, 5]);
+        }
     }
 
     public function test_user_service_call_read_with_empty_search()
@@ -231,8 +235,6 @@ class UserServiceTest extends ServiceTestCase
 
     public function test_user_service_call_update_profile_table_update_one_field_others_must_remain()
     {
-        $this->markTestSkipped('Under Construction');
-        
         $email = $this->faker->email;
         $roles = Role::get()->pluck('id')->toArray();
         $profile = [
@@ -242,7 +244,7 @@ class UserServiceTest extends ServiceTestCase
             'city' => 'city',
             'postal_code' => 'postal_code',
             'country' => 'country',
-            'status' => 'status',
+            'status' => $this->faker->randomElement(ActiveStatus::toArrayValue()),
             'tax_id' => 'tax_id',
             'ic_num' => 'ic_num',
             'img_path' => 'img_path',
@@ -266,14 +268,6 @@ class UserServiceTest extends ServiceTestCase
             'first_name' => 'edited first name',
             'last_name' => 'last_name',
             'address' => 'address',
-            'city' => 'city',
-            'postal_code' => 'postal_code',
-            'country' => 'country',
-            'status' => 'status',
-            'tax_id' => 'tax_id',
-            'ic_num' => 'ic_num',
-            'img_path' => 'img_path',
-            'remarks' => 'remarks'
         ]);
 
         $profile_new = [
@@ -288,14 +282,6 @@ class UserServiceTest extends ServiceTestCase
             'first_name' => 'edited first name',
             'last_name' => 'edited last name',
             'address' => 'address',
-            'city' => 'city',
-            'postal_code' => 'postal_code',
-            'country' => 'country',
-            'status' => 'status',
-            'tax_id' => 'tax_id',
-            'ic_num' => 'ic_num',
-            'img_path' => 'img_path',
-            'remarks' => 'remarks'
         ]);
 
         $profile_new = [
@@ -311,14 +297,6 @@ class UserServiceTest extends ServiceTestCase
             'first_name' => 'edited first name',
             'last_name' => 'edited last name',
             'address' => 'edited address',
-            'city' => 'city',
-            'postal_code' => 'postal_code',
-            'country' => 'country',
-            'status' => 'status',
-            'tax_id' => 'tax_id',
-            'ic_num' => 'ic_num',
-            'img_path' => 'img_path',
-            'remarks' => 'remarks'
         ]);
     }
 }
