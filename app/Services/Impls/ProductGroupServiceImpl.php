@@ -83,7 +83,7 @@ class ProductGroupServiceImpl implements ProductGroupService
             $result = null;
 
             $productGroup = ProductGroup::whereCompanyId($companyId);
-
+         
             if (!empty($category)) {
                 if ($category == 1) {
                     $productGroup = $productGroup->where('category', '=', 1);
