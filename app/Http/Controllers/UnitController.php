@@ -49,6 +49,27 @@ class UnitController extends BaseController
         }
     }
 
+    public function read(Unit $unit, UnitRequest $unitRequest)
+    {
+        $request = $unitRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->unitService->read($unit);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+        
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = UnitResource::collection($result);
+            return $response;    
+        }
+    }
+
     public function store(UnitRequest $unitRequest)
     {
         $request = $unitRequest->validated();

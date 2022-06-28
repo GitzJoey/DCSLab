@@ -48,6 +48,27 @@ class WarehouseController extends BaseController
         }
     }
 
+    public function read(Warehouse $warehouse, WarehouseRequest $warehouseRequest)
+    {
+        $request = $warehouseRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->warehouseService->read($warehouse);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+        
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = WarehouseResource::collection($result);
+            return $response;    
+        }
+    }
+
     public function store(WarehouseRequest $warehouseRequest)
     {   
         $request = $warehouseRequest->validated();

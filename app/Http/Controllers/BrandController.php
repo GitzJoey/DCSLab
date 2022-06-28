@@ -113,9 +113,9 @@ class BrandController extends BaseController
         if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
             do {
                 $code = $this->brandService->generateUniqueCode($company_id);
-            } while (!$this->brandService->isUniqueCode($code, $company_id, $id));
+            } while (!$this->brandService->isUniqueCode($code, $company_id, $brand->id));
         } else {
-            if (!$this->brandService->isUniqueCode($code, $company_id, $id)) {
+            if (!$this->brandService->isUniqueCode($code, $company_id, $brand->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')]
                 ], 422);

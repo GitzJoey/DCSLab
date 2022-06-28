@@ -53,6 +53,27 @@ class SupplierController extends BaseController
         }
     }
 
+    public function read(Supplier $supplier, SupplierRequest $supplierRequest)
+    {
+        $request = $supplierRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->supplierService->read($supplier);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+        
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = SupplierResource::collection($result);
+            return $response;    
+        }
+    }
+
     public function store(SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();

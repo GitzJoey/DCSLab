@@ -83,6 +83,48 @@ class ProductController extends BaseController
         }
     }
 
+    public function readProducts(Product $product, ProductRequest $productRequest)
+    {
+        $request = $productRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productService->read($product);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+        
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = ProductResource::collection($result);
+            return $response;    
+        }
+    }
+
+    public function readServices(Product $product, ProductRequest $productRequest)
+    {
+        $request = $productRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productService->read($product);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+        
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = ProductResource::collection($result);
+            return $response;    
+        }
+    }
+
     public function store(ProductRequest $productRequest)
     {   
         $request = $productRequest->validated();
@@ -213,7 +255,7 @@ class ProductController extends BaseController
             array_push($productUnitsArr, array (
                 'id' => $product_unit_id,
                 'company_id' => $company_id,
-                'product_id' => $id,             
+                'product_id' => $product->id,             
                 'code' => $code,
                 'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                 'conv_value' => $request['conv_value'][$i],

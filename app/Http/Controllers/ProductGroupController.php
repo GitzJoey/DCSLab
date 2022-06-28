@@ -48,7 +48,28 @@ class ProductGroupController extends BaseController
             return $response;
         }
     }
-    
+ 
+    public function read(ProductGroup $productgroup, ProductGroupRequest $productgroupRequest)
+    {
+        $request = $productgroupRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productgroupService->read($productgroup);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+        
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = ProductGroupResource::collection($result);
+            return $response;    
+        }
+    }
+
     public function store(ProductGroupRequest $productGroupRequest)
     {
         $request = $productGroupRequest->validated();

@@ -50,6 +50,27 @@ class EmployeeController extends BaseController
         }
     }
 
+    public function read(Employee $employee, EmployeeRequest $employeeRequest)
+    {
+        $request = $employeeRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->employeeService->read($employee);
+        } catch(Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+        
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            $response = EmployeeResource::collection($result);
+            return $response;    
+        }
+    }
+
     public function store(EmployeeRequest $employeeRequest)
     {   
         $request = $employeeRequest->validated();
