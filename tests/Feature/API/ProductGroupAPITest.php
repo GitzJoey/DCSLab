@@ -75,6 +75,7 @@ class ProductGroupAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product_group.read', [
             'companyId' => Hashids::encode($companyId),
+            'category' => $category,
             'search' => $search,
             'paginate' => $paginate,
             'page' => $page,
