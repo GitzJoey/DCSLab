@@ -140,12 +140,6 @@ class BranchServiceImpl implements BranchService
         }
     }
 
-    public function getMainBranchByCompanyId(int $companyId): Branch
-    {
-        $branch = Branch::where('company_id', '=', $companyId)->where('is_main', '=', 1)->first();
-        return $branch;
-    }
-
     public function isMainBranch(int $id): bool
     {
         $result = Branch::where('id', '=', $id)->first()->is_main;
