@@ -28,7 +28,7 @@ class WarehouseFactory extends Factory
         $warehouse_name = $faker->city();
 
         return [
-            'code' => (new RandomGenerator())->generateAlphaNumeric(5),
+            'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => 'Gudang '.$warehouse_name,
             'address' => $faker->address(),
             'city' => $warehouse_name,

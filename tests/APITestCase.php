@@ -24,16 +24,6 @@ class APITestCase extends TestCase
                 '--env' => 'testing',
                 '--seed' => true
             ]);
-
-            $seed_user = new UserTableSeeder();
-            $seed_user->callWith(UserTableSeeder::class, [false, 1]);
-            $seed_user->callWith(UserTableSeeder::class, [false, 1, UserRoles::DEVELOPER->value]);
-
-            $seed_company = new CompanyTableSeeder();
-            $seed_company->callWith(CompanyTableSeeder::class, [2]);
         }
-
-        $this->user = User::whereRelation('roles', 'name', '=', UserRoles::USER->value)->whereHas('companies')->inRandomOrder()->first();
-        $this->developer = User::whereRelation('roles', 'name', '=', UserRoles::DEVELOPER->value)->first();
     }
 } 

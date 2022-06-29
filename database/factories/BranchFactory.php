@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Actions\RandomGenerator;
 use App\Enums\RecordStatus;
 use App\Models\Branch;
 
@@ -27,13 +28,14 @@ class BranchFactory extends Factory
         $branch_name = $faker->city();
 
         return [
-            'code' => $faker->numberBetween(01, 10),
+            'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => 'Kantor Cabang '.$faker->randomElement(['Utama','Pembantu','Daerah']).' '.$branch_name,
             'address' => $faker->address(),
             'city' => $branch_name,
             'contact' => $faker->e164PhoneNumber(),
             'is_main' => false,
-            'remarks' => $faker->sentence()
+            'remarks' => $faker->sentence(),
+            'status' => $faker->randomElement(RecordStatus::toArrayValue())
         ];
     }
 

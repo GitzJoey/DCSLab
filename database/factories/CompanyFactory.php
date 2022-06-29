@@ -25,8 +25,10 @@ class CompanyFactory extends Factory
     {
         $faker = \Faker\Factory::create('id_ID');
         return [
-            'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $faker->company()
+            'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
+            'name' => $faker->company(),
+            'default' => false,
+            'status' => RecordStatus::ACTIVE,
         ];
     }
 
@@ -44,6 +46,15 @@ class CompanyFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'status' => RecordStatus::INACTIVE
+            ];
+        });
+    }
+
+    public function setIsDefault()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'default' => true
             ];
         });
     }

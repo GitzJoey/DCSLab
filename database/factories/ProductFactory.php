@@ -37,7 +37,7 @@ class ProductFactory extends Factory
         ];
 
         return [
-            'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
+            'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->randomElement($productName['adjective']).' '.$faker->randomElement($productName['material']).' '.$faker->randomElement($productName['product']),
             'taxable_supply' => $faker->boolean(),
             'standard_rated_supply' => $faker->numberBetween(1, 10),

@@ -31,7 +31,7 @@ class SupplierFactory extends Factory
         $status = $faker->randomElement(RecordStatus::toArrayValue());
 
         return [
-            'code' => (new RandomGenerator())->generateFixedLengthNumber(5),
+            'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->company(),
             'payment_term_type' => $array_term,
             'payment_term' => $array_term == 'NET' ? (new RandomGenerator())->generateNumber(1, 30) : 0,
