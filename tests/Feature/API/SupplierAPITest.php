@@ -34,4 +34,8 @@ class SupplierAPITest extends APITestCase
     #region delete
 
     #endregion
+
+    #region others
+
+    #endregion
 }

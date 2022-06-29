@@ -42,4 +42,8 @@ class WarehouseAPITest extends APITestCase
     #region delete
 
     #endregion
+
+    #region others
+
+    #endregion
 }

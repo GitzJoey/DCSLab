@@ -37,4 +37,7 @@ class BrandAPITest extends APITestCase
 
     #endregion
 
+    #region others
+
+    #endregion
 }

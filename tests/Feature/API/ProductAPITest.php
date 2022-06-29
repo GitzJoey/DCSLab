@@ -34,4 +34,8 @@ class ProductAPITest extends APITestCase
     #region delete
 
     #endregion
+
+    #region others
+
+    #endregion
 }

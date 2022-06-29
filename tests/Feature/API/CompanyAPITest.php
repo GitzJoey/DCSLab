@@ -42,4 +42,8 @@ class CompanyAPITest extends APITestCase
     #region delete
 
     #endregion
+
+    #region others
+
+    #endregion
 }
