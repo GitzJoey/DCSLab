@@ -9,6 +9,7 @@ use App\Services\BranchService;
 use App\Actions\RandomGenerator;
 use App\Models\Role;
 use App\Models\User;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 
@@ -24,11 +25,9 @@ class BranchServiceTest extends ServiceTestCase
     }
 
     #region create
-    public function test_branch_service_call_create_expect_object()
+    public function test_branch_service_call_create_expect_db_has_record()
     {
-        $dev_role = Role::where('name', '=', 'developer')->first();
         $user = User::factory()
-                    ->hasAttached($dev_role)
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -38,12 +37,18 @@ class BranchServiceTest extends ServiceTestCase
 
         $result = $this->branchService->create($branchArr->toArray());
 
-        $this->assertDatabaseHas('branches', $branchArr->toArray());
+        $this->assertDatabaseHas('branches', [
+            'id' => $result->id,
+            'company_id' => $branchArr['company_id'],
+            'code' => $branchArr['code'],
+            'name' => $branchArr['name'],
+        ]);
     }
 
     public function test_branch_service_call_create_with_empty_array_parameters_expect_exception()
     {
-        $this->markTestSkipped('Under Constructions');
+        $this->expectException(Exception::class);
+        $this->branchService->create([]);
     }
 
     #endregion

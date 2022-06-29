@@ -25,7 +25,7 @@ class CompanyServiceTest extends ServiceTestCase
     }
 
     #region create
-    public function test_company_service_call_create_expect_object()
+    public function test_company_service_call_create_expect_db_has_record()
     {
         $this->markTestSkipped('Under Constructions');
     }
