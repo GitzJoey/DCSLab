@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Service;
 
+use App\Services\ProductService;
 use Tests\ServiceTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 
@@ -92,6 +93,12 @@ class ProductServiceTest extends ServiceTestCase
     {
         $this->markTestSkipped('Under Constructions');
     }
+
+    #endregion
+
+    #region others
+
+    
 
     #endregion
 }

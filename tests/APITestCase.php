@@ -27,7 +27,7 @@ class APITestCase extends TestCase
 
             $seed_user = new UserTableSeeder();
             $seed_user->callWith(UserTableSeeder::class, [false, 1]);
-            $seed_user->callWith(UserTableSeeder::class, [false, 1, UserRoles::DEVELOPER]);
+            $seed_user->callWith(UserTableSeeder::class, [false, 1, UserRoles::DEVELOPER->value]);
 
             $seed_company = new CompanyTableSeeder();
             $seed_company->callWith(CompanyTableSeeder::class, [2]);

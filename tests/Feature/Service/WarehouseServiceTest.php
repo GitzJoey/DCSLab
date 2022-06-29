@@ -100,4 +100,10 @@ class WarehouseServiceTest extends ServiceTestCase
     }
 
     #endregion
+
+    #region others
+
+    
+
+    #endregion
 }

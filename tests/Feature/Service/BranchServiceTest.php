@@ -36,12 +36,12 @@ class BranchServiceTest extends ServiceTestCase
 
     #region list
 
-    public function test_branch_service_call_list_with_paginate_true_expect_Paginator_object()
+    public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $this->markTestSkipped('Under Constructions');
     }
 
-    public function test_branch_service_call_list_with_paginate_false_expect_Collection_object()
+    public function test_branch_service_call_list_with_paginate_false_expect_collection_object()
     {
         $this->markTestSkipped('Under Constructions');
     }
@@ -97,6 +97,12 @@ class BranchServiceTest extends ServiceTestCase
     {
         $this->markTestSkipped('Under Constructions');
     }
+
+    #endregion
+
+    #region others
+
+    
 
     #endregion
 }
