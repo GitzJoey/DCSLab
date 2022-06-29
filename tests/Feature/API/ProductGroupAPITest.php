@@ -59,13 +59,14 @@ class ProductGroupAPITest extends APITestCase
         $api->assertSuccessful();
     }
 
-    public function test_product_group_api_call_read_with_empty_search()
+    public function test_product_group_api_call_read_product_category_with_empty_search()
     {
         $this->actingAs($this->developer);
 
         $company = $this->developer->companies->random(1)->first();
                 
         $companyId = $company->id;
+        $category = ProductCategory::PRODUCTS->name;
         $search = '';
         $paginate = 1;
         $page = 1;
@@ -74,6 +75,79 @@ class ProductGroupAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product_group.read', [
             'companyId' => Hashids::encode($companyId),
+            'category' => $category,
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_product_group_api_call_read_service_category_with_empty_search()
+    {
+        $this->actingAs($this->developer);
+
+        $company = $this->developer->companies->random(1)->first();
+
+        $companyId = $company->id;
+        $category = ProductCategory::SERVICES->name;
+        $search = '';
+        $paginate = 1;
+        $page = 1;
+        $perPage = 10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.product.product_group.read', [
+            'companyId' => Hashids::encode($companyId),
+            'category' => $category,
+            'search' => $search,
+            'paginate' => $paginate,
+            'page' => $page,
+            'perPage' => $perPage,
+            'refresh' => $refresh
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonStructure([
+            'data', 
+            'links' => [
+                'first', 'last', 'prev', 'next'
+            ], 
+            'meta'=> [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
+            ]
+        ]);
+    }
+
+    public function test_product_group_api_call_read_product_and_service_category_with_empty_search()
+    {
+        $this->actingAs($this->developer);
+
+        $company = $this->developer->companies->random(1)->first();
+                
+        $companyId = $company->id;
+        $category = ProductCategory::PRODUCTS_AND_SERVICES->name;
+        $search = '';
+        $paginate = 1;
+        $page = 1;
+        $perPage = 10;
+        $refresh = '';
+
+        $api = $this->getJson(route('api.get.db.product.product_group.read', [
+            'companyId' => Hashids::encode($companyId),
+            'category' => $category,
             'search' => $search,
             'paginate' => $paginate,
             'page' => $page,
@@ -100,6 +174,7 @@ class ProductGroupAPITest extends APITestCase
         $company = $this->developer->companies->random(1)->first();
 
         $companyId = $company->id;
+        $category = '';
         $search = " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~";
         $paginate = 1;
         $page = 1;
@@ -108,6 +183,7 @@ class ProductGroupAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product_group.read', [
             'companyId' => Hashids::encode($companyId),
+            'category' => $category,
             'search' => $search,
             'paginate' => $paginate,
             'page' => $page,
@@ -134,6 +210,7 @@ class ProductGroupAPITest extends APITestCase
         $company = $this->developer->companies->random(1)->first();
 
         $companyId = $company->id;
+        $category = '';
         $search = "";
         $paginate = 1;
         $page = 1;
@@ -142,6 +219,7 @@ class ProductGroupAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product_group.read', [
             'companyId' => Hashids::encode($companyId),
+            'category' => $category,
             'search' => $search,
             'paginate' => $paginate,
             'page' => $page,
@@ -168,6 +246,7 @@ class ProductGroupAPITest extends APITestCase
         $company = $this->developer->companies->random(1)->first();
 
         $companyId = $company->id;
+        $category = '';
         $search = "";
         $page = 1;
         $perPage = 10;
@@ -175,6 +254,7 @@ class ProductGroupAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product_group.read', [
             'companyId' => Hashids::encode($companyId),
+            'category' => $category,
             'search' => $search,
             'page' => $page,
             'perPage' => $perPage,
