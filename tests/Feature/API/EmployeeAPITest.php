@@ -64,10 +64,13 @@ class EmployeeAPITest extends APITestCase
         $branchCount = Company::find($companyId)->branches->count();
         $accessCount = $this->faker->numberBetween(1, $branchCount);
         $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
-        $accesses = [];
-        if ($accessCount == 0) {
+        
+        if ($accessCount == 0 || count($branchIds) == 0) {
             $this->markTestSkipped('Not Enough Branch To Run Test');
         }
+
+        $accesses = [];
+
         for ($i = 0; $i < $accessCount ; $i++) {
             array_push($accesses, Hashids::encode($branchIds[$i]));
         }
