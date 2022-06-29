@@ -28,7 +28,7 @@ class EmployeeFactory extends Factory
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'join_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-            'status' => $this->faker->randomElement(RecordStatus::toArrayValue())
+            'status' => $this->faker->randomElement(RecordStatus::toArrayName()
         ];
     }
 }

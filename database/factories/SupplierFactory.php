@@ -28,7 +28,7 @@ class SupplierFactory extends Factory
         $faker = \Faker\Factory::create('id_ID');
 
         $array_term = $faker->randomElement(PaymentTermType::toArrayValue());
-        $status = $faker->randomElement(RecordStatus::toArrayValue());
+        $status = $faker->randomElement(RecordStatus::toArrayName();
 
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),

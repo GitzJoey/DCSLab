@@ -35,7 +35,7 @@ class BranchFactory extends Factory
             'contact' => $faker->e164PhoneNumber(),
             'is_main' => false,
             'remarks' => $faker->sentence(),
-            'status' => $faker->randomElement(RecordStatus::toArrayValue())
+            'status' => $faker->randomElement(RecordStatus::toArrayName())
         ];
     }
 
@@ -62,15 +62,6 @@ class BranchFactory extends Factory
         return $this->state(function (array $attributes) use ($bool) {
             return [
                 'is_main' => $bool
-            ];
-        });
-    }
-
-    public function setName($name)
-    {
-        return $this->state(function (array $attributes) use ($name) {
-            return [
-                'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama','Pembantu','Daerah']).' '.$name,
             ];
         });
     }
