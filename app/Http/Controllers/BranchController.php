@@ -67,23 +67,6 @@ class BranchController extends BaseController
         }
     }
 
-    public function getMainBranchByCompanyId(Request $request)
-    {
-        if ($request->has('companyId')) {
-            $result = $this->branchService->getMainBranchByCompanyId(Hashids::decode($request['companyId'])[0]);
-        } else {
-            return response()->error();
-        }
-    
-        if (is_null($result)) {
-            return response()->error();
-        } else {
-            $response = BranchResource::collection($result);
-
-            return $response;
-        }
-    }
-
     public function store(BranchRequest $branchRequest)
     {
         $request = $branchRequest->validated();
