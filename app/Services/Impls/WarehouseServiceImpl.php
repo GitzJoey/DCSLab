@@ -109,6 +109,12 @@ class WarehouseServiceImpl implements WarehouseService
         }
     }
 
+    public function read(Warehouse $warehouse): Warehouse
+    {
+        return $warehouse->first();
+
+    }
+
     public function update(
         Warehouse $warehouse,
         array $warehouseArr

@@ -135,6 +135,11 @@ class ProductGroupServiceImpl implements ProductGroupService
         }
     }
 
+    public function read(ProductGroup $productgroup): ProductGroup
+    {
+        return $productgroup->first();
+    }
+
     public function update(
         ProductGroup $productgroup,
         array $productGroupArr
@@ -174,7 +179,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         $retval = false;
         
         try {
-            $retval = $productGroup->delete();
+            $retval = $productgroup->delete();
 
             DB::commit();
 

@@ -16,8 +16,13 @@ Class AlterUsersTable extends Migration
             });
         }
 
-        DB::statement('ALTER TABLE users CHANGE COLUMN uuid uuid CHAR(36) NULL DEFAULT NULL AFTER id');
-        DB::statement('ALTER TABLE users CHANGE COLUMN password_changed_at password_changed_at TIMESTAMP NULL DEFAULT NULL AFTER password');
+        $connection = config('database.default');
+        $driver = config("database.connections.{$connection}.driver");
+
+        if ($driver != 'sqlite') {
+            DB::statement('ALTER TABLE users CHANGE COLUMN uuid uuid CHAR(36) NULL DEFAULT NULL AFTER id');
+            DB::statement('ALTER TABLE users CHANGE COLUMN password_changed_at password_changed_at TIMESTAMP NULL DEFAULT NULL AFTER password');
+        }
     }
 
     public function down()

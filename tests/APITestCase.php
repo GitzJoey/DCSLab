@@ -22,7 +22,6 @@ class APITestCase extends TestCase
 
             $this->artisan('migrate', [
                 '--env' => 'testing',
-                '--path' => 'database/migrations/testdb',
                 '--seed' => true
             ]);
 
