@@ -73,7 +73,6 @@ class ProductGroupServiceImpl implements ProductGroupService
             }
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -117,7 +116,7 @@ class ProductGroupServiceImpl implements ProductGroupService
             }
     
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 return $productGroup->paginate($perPage);
             } else {
                 return $productGroup->get();

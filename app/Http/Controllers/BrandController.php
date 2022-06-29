@@ -77,7 +77,7 @@ class BrandController extends BaseController
         $company_id = $request['company_id'];
         $code = $request['code'];
 
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->brandService->generateUniqueCode($company_id);
             } while (!$this->brandService->isUniqueCode($code, $company_id));
@@ -110,7 +110,7 @@ class BrandController extends BaseController
         $company_id = $request['company_id'];
         $code = $request['code'];
 
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->brandService->generateUniqueCode($company_id);
             } while (!$this->brandService->isUniqueCode($code, $company_id, $brand->id));

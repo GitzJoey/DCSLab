@@ -56,7 +56,6 @@ class BrandServiceImpl implements BrandService
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
-        return Config::get('const.ERROR_RETURN_VALUE');
     }
 
     public function list(
@@ -88,7 +87,7 @@ class BrandServiceImpl implements BrandService
             }
     
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 return $pb->paginate($perPage);
             } else {
                 return $pb->get();

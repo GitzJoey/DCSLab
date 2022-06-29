@@ -99,7 +99,7 @@ class UnitServiceImpl implements UnitService
             }
     
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 return $unit->paginate($perPage);
             } else {
                 return $unit->get();

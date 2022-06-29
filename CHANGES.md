@@ -1,7 +1,17 @@
 # Change Logs
+  * **v0.5.0 (2022-08-12)**
+    * Adding uuid for parent tables
+    * Refreshing the laravel to the latest
+    * Utilizing model binding in parameters
+    * Streamlining the Services with the model binding
+    * Streamlining migrations (no more testdb migrations folder)
+    * Utilizing the laravel policies and prepare for authorization, restoration, etc
+    * Streamlining tests creations
+
   * **v0.4.0 (2022-06-12)**
     * Framework is ready for production
-    * Include Laravel Dusk and ViTest
+    * Include Laravel Dusk
+    * Adding CI/CD
 
   * **v0.3 (2022-04-02)**
     * Upgrade the code to be compatible with PHP 8.1

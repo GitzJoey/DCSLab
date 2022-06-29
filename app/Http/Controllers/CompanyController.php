@@ -103,7 +103,7 @@ class CompanyController extends BaseController
         $userId = Auth::id();
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
             } while (!$this->companyService->isUniqueCode($code, $userId));
@@ -147,7 +147,7 @@ class CompanyController extends BaseController
         $userId = Auth::id();
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
             } while (!$this->companyService->isUniqueCode($code, $userId, $company->id));

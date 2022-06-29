@@ -83,7 +83,7 @@ class SupplierController extends BaseController
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->supplierService->generateUniqueCode($company_id);
             } while (!$this->supplierService->isUniqueCode($code, $company_id));
@@ -142,7 +142,7 @@ class SupplierController extends BaseController
         $supplierArr = $request;
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->supplierService->generateUniqueCode($company_id);
             } while (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id));

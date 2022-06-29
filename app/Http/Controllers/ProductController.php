@@ -134,7 +134,7 @@ class ProductController extends BaseController
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productService->generateUniqueCodeForProduct($company_id);
             } while (!$this->productService->isUniqueCodeForProduct($code, $company_id));
@@ -207,7 +207,7 @@ class ProductController extends BaseController
         $company_id = Hashids::decode($request['company_id'])[0];
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productService->generateUniqueCodeForProduct($company_id);
             } while (!$this->productService->isUniqueCodeForProduct($code, $company_id, $product->id));

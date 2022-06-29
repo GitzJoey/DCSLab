@@ -110,7 +110,7 @@ class BranchServiceImpl implements BranchService
             }
     
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 $result = $branch->paginate($perPage);
             } else {
                 $result = $branch->get();

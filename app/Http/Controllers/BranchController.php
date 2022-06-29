@@ -116,7 +116,7 @@ class BranchController extends BaseController
         $company_id = $request['company_id'];
         $code = $request['code'];
 
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode($company_id);
             } while (!$this->branchService->isUniqueCode($code, $company_id));
@@ -155,7 +155,7 @@ class BranchController extends BaseController
         $company_id = $request['company_id'];
         $code = $request['code'];
 
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode($company_id);
             } while (!$this->branchService->isUniqueCode($code, $company_id, $branch->id));

@@ -91,7 +91,7 @@ class WarehouseServiceImpl implements WarehouseService
             }
     
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('const.DEFAULT.PAGINATION_LIMIT');
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 return $warehouse->paginate($perPage);
             } else {
                 return $warehouse->get();

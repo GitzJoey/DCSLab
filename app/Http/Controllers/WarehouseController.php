@@ -78,7 +78,7 @@ class WarehouseController extends BaseController
         $company_id = $request['company_id'];
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->warehouseService->generateUniqueCode($company_id);
             } while (!$this->warehouseService->isUniqueCode($code, $company_id));
@@ -116,7 +116,7 @@ class WarehouseController extends BaseController
         $branch_id = $request['branch_id'];
 
         $code = $request['code'];
-        if ($code == config('const.DEFAULT.KEYWORDS.AUTO')) {
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->warehouseService->generateUniqueCode($company_id);
             } while (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id));

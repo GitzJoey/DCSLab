@@ -13,7 +13,7 @@ return [
     'PASSWORD_EXPIRY_DAYS' => 365,
 
     'ERROR_RETURN_VALUE' => null,
-
+    
     'KEYWORDS' => [
         'AUTO' => '[AUTO]',
     ]    
