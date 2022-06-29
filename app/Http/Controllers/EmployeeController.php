@@ -75,14 +75,12 @@ class EmployeeController extends BaseController
     {   
         $request = $employeeRequest->validated();
 
-        $employeeArr = $request;
-
         $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->employeeService->generateUniqueCode($company_id);
+                $code = $this->employeeService->generateUniqueCode();
             } while (!$this->employeeService->isUniqueCode($code, $company_id));
         } else {
             if (!$this->employeeService->isUniqueCode($code, $company_id)) {
@@ -92,7 +90,11 @@ class EmployeeController extends BaseController
             }
         }
 
-        $employeeArr['code'] = $code;
+        $employeeArr =[
+            'code' => $code,
+            'join_date' => $request['join_date'],
+            'status' => $request['status']
+        ];
 
         $userArr = [
             'name' => $request['name'],
@@ -141,14 +143,12 @@ class EmployeeController extends BaseController
     {
         $request = $employeeRequest->validated();
 
-        $employeeArr = $request;
-
         $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->employeeService->generateUniqueCode($company_id);
+                $code = $this->employeeService->generateUniqueCode();
             } while (!$this->employeeService->isUniqueCode($code, $company_id, $employee->id));
         } else {
             if (!$this->employeeService->isUniqueCode($code, $company_id, $employee->id)) {
@@ -158,7 +158,11 @@ class EmployeeController extends BaseController
             }
         }
 
-        $employeeArr['code'] = $code;
+        $employeeArr = [
+            'code' => $code,
+            'join_date' => $request['join_date'],
+            'status' => $request['status']
+        ];
 
         $userArr = [
             'name' => $request['name'],

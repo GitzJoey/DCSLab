@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Branch;
+use App\Models\Company;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 
@@ -28,13 +29,11 @@ interface BranchService
 
     public function delete(Branch $branch): bool;
 
-    public function getBranchByCompanyId(int $companyId);
+    public function getBranchByCompany(int $companyId = 0, Company $company = null);
 
-    public function getMainBranchByCompanyId(int $companyId): Branch;
+    public function getMainBranchByCompany(int $companyId = 0, Company $company = null): Branch;
 
-    public function isMainBranch(int $id): bool;
-
-    public function resetMainBranch(int $companyId): bool;
+    public function resetMainBranch(int $companyId = 0, Company $company = null): bool;
 
     public function generateUniqueCode(): string;
 

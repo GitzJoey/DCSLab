@@ -10,6 +10,8 @@ use App\Models\Employee;
 use App\Traits\CacheHelper;
 use App\Services\UserService;
 use App\Actions\RandomGenerator;
+use App\Enums\RecordStatus;
+use App\Enums\UserRoles;
 use App\Models\EmployeeAccess;
 use App\Services\EmployeeService;
 use Illuminate\Support\Collection;
@@ -38,43 +40,23 @@ class EmployeeServiceImpl implements EmployeeService
         $timer_start = microtime(true);
 
         try {
-            $company_id = $employeeArr['company_id'];
-            $code = $employeeArr['code'];
-            $join_date = $employeeArr['join_date'];
-            $status = $employeeArr['status'];
-
-            $name = $userArr['name'];
-                
-            $first_name = '';
-            $last_name = '';
-            if ($name == trim($name) && strpos($name, ' ') !== false) {
-                $pieces = explode(" ", $name);
-                $first_name = $pieces[0];
-                $last_name = $pieces[1];
-            } else {
-                $first_name = $name;
-            }
-
-            $profileArr['first_name'] = $first_name;
-            $profileArr['last_name'] = $last_name;
-
-            $roles = [];
-            array_push($rolesId, Role::where('name', '=', 'user')->first()->id);
+            $rolesArr = [];
+            array_push($rolesId, Role::where('name', '=', UserRoles::POS_EMPLOYEE->value)->first()->id);
 
             $userService = app(UserService::class);
             
             $user = $userService->create(
                 $userArr,
-                $roles,
+                $rolesArr,
                 $profileArr
             );
             
             $employee = new Employee();
-            $employee->company_id = $company_id;
+            $employee->company_id = $employeeArr['company_id'];
             $employee->user_id = $user->id;
-            $employee->code = $code;
-            $employee->join_date = $join_date;
-            $employee->status = $status;
+            $employee->code = $employeeArr['code'];
+            $employee->join_date = $employeeArr['join_date'];
+            $employee->status = $employeeArr['status'];
 
             $employee->save();
 
@@ -172,17 +154,18 @@ class EmployeeServiceImpl implements EmployeeService
         $timer_start = microtime(true);
 
         try {
-            $employee->code = $employeeArr['code'];
-            $employee->join_date = $employeeArr['join_date'];
-            $employee->status = $employeeArr['status'];
-            $employee->save();
-
             $userService = app(UserService::class);
             $userService->update(
                 user: $employee->user,
                 userArr: $userArr,
                 profile: $profileArr
             );
+
+            $employee->update([
+                'code' => $employeeArr['code'],
+                'join_date' => $employeeArr['join_date'],
+                'status' => $employeeArr['status']
+            ]);
 
             $employee->employeeAccesses()->delete();
             
@@ -225,7 +208,7 @@ class EmployeeServiceImpl implements EmployeeService
             $employee->employeeAccesses()->delete();
 
             $user = User::find($employee->user_id);
-            $user->profile->status = 0;
+            $user->profile->status = RecordStatus::INACTIVE->value;
 
             $retval = $employee->delete();            
 

@@ -133,21 +133,26 @@ class BranchServiceImpl implements BranchService
         return $branch->with('warehouses')->first();
     }
 
-    public function getBranchByCompanyId(int $companyId): Collection
+    public function getBranchByCompany(int $companyId = 0, Company $company = null): Collection
     {
-        return Branch::where('company_id', '=', $companyId)->where('status', '=', 1)->get();
+        if (!is_null($company))
+            return $company->branches;
+
+        if ($companyId != 0)
+            return Branch::where('company_id', '=', $companyId)->where('status', '=', 1)->get();
+
+        return null;
     }
 
-    public function getMainBranchByCompanyId(int $companyId): Branch
+    public function getMainBranchByCompany(int $companyId = 0, Company $company = null): Branch
     {
-        $branch = Branch::where('company_id', '=', $companyId)->where('is_main', '=', 1)->first();
-        return $branch;
-    }
+        if (!is_null($company))
+            return $company->branches()->where('is_main', '=', true)->first();
 
-    public function isMainBranch(int $id): bool
-    {
-        $result = Branch::where('id', '=', $id)->first()->is_main;
-        return is_null($result) ? false : $result;
+        if ($companyId != 0)
+            return Branch::where('company_id', '=', $companyId)->where('is_main', '=', true)->first();
+        
+        return null;
     }
 
     public function update(
@@ -194,13 +199,19 @@ class BranchServiceImpl implements BranchService
         }
     }
 
-    public function resetMainBranch(int $companyId): bool
+    public function resetMainBranch(int $companyId = 0, Company $company = null): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => 0]);
+            if ($companyId != 0)
+                $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => false]);
+            else if (!is_null($company)) {
+                $retval = $company->branches()->update(['is_main' => false]);
+            } else {
+                $retval = 0;
+            }
 
             DB::commit();
 

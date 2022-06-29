@@ -81,7 +81,7 @@ class UnitController extends BaseController
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->unitService->generateUniqueCode($company_id);
+                $code = $this->unitService->generateUniqueCode();
             } while (!$this->unitService->isUniqueCode($code, $company_id));
         } else {
             if (!$this->unitService->isUniqueCode($code, $company_id)) {
@@ -118,7 +118,7 @@ class UnitController extends BaseController
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->unitService->generateUniqueCode($company_id);
+                $code = $this->unitService->generateUniqueCode();
             } while (!$this->unitService->isUniqueCode($code, $company_id, $unit->id));
         } else {
             if (!$this->unitService->isUniqueCode($code, $company_id, $unit->id)) {

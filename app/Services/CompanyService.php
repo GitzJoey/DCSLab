@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 
@@ -37,9 +38,9 @@ interface CompanyService
 
     public function getCompanyById(int $companyId): Company;
 
-    public function getDefaultCompany(int $userId): Company;
+    public function getDefaultCompany(User $user): Company;
 
-    public function resetDefaultCompany(int $userId): bool;
+    public function resetDefaultCompany(User $user): bool;
 
     public function isDefaultCompany(Company $company): bool;
 

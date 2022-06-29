@@ -10,6 +10,7 @@ use App\Http\Requests\BranchRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BranchResource;
 use App\Models\Branch;
+use App\Models\Company;
 use Exception;
 
 class BranchController extends BaseController
@@ -73,33 +74,19 @@ class BranchController extends BaseController
         }
     }
 
-    public function getBranchByCompanyId(Request $request)
+    public function getBranchByCompany(Company $company)
     {
-        if ($request->has('companyId')) {
-            $result = $this->branchService->getBranchByCompanyId(Hashids::decode($request['companyId'])[0]);
-        } else {
-            return response()->error();
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->branchService->getBranchByCompany(company: $company);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
     
         if (is_null($result)) {
-            return response()->error();
-        } else {
-            $response = BranchResource::collection($result);
-
-            return $response;
-        }
-    }
-
-    public function getMainBranchByCompanyId(Request $request)
-    {
-        if ($request->has('companyId')) {
-            $result = $this->branchService->getMainBranchByCompanyId(Hashids::decode($request['companyId'])[0]);
-        } else {
-            return response()->error();
-        }
-    
-        if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = BranchResource::collection($result);
 
@@ -118,7 +105,7 @@ class BranchController extends BaseController
 
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->branchService->generateUniqueCode($company_id);
+                $code = $this->branchService->generateUniqueCode();
             } while (!$this->branchService->isUniqueCode($code, $company_id));
         } else {
             if (!$this->branchService->isUniqueCode($code, $company_id)) {
@@ -129,16 +116,15 @@ class BranchController extends BaseController
         }
 
         $branchArr['code'] = $code;
-        $is_main = $request['is_main'];
 
         $result = null;
         $errorMsg = '';
 
         try {
-            if ($is_main) $this->branchService->resetMainBranch($company_id);
-            $result = $this->branchService->create(
-                $branchArr
-            );
+            if ($branchArr['is_main'])
+                $this->branchService->resetMainBranch(companyId: $company_id);
+            
+            $result = $this->branchService->create($branchArr);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -157,7 +143,7 @@ class BranchController extends BaseController
 
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->branchService->generateUniqueCode($company_id);
+                $code = $this->branchService->generateUniqueCode();
             } while (!$this->branchService->isUniqueCode($code, $company_id, $branch->id));
         } else {
             if (!$this->branchService->isUniqueCode($code, $company_id, $branch->id)) {
@@ -168,13 +154,14 @@ class BranchController extends BaseController
         }
 
         $branchArr['code'] = $code;
-        $is_main = $request['is_main'];
 
         $result = null;
         $errorMsg = '';
 
         try {
-            if ($is_main) $this->branchService->resetMainBranch($company_id);
+            if ($branchArr['is_main']) 
+                $this->branchService->resetMainBranch(companyId: $company_id);
+            
             $result = $this->branchService->update(
                 $branch,
                 $branchArr
@@ -184,21 +171,6 @@ class BranchController extends BaseController
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function resetMainBranch(Request $request)
-    {
-        if (!$request->has('companyId')) return response()->error();
-    
-        $result = $this->branchService->resetMainBranch(Hashids::decode($request['companyId'])[0]);
-    
-        if (is_null($result)) {
-            return response()->error();
-        } else {
-            $response = BranchResource::collection($result);
-
-            return $response;
-        }
     }
 
     public function delete(Branch $branch)

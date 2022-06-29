@@ -181,18 +181,12 @@ class CompanyServiceImpl implements CompanyService
         $timer_start = microtime(true);
 
         try {
-            $code = $companyArr['code']; 
-            $name = $companyArr['name'];
-            $address = $companyArr['address'];
-            $default = $companyArr['default'];
-            $status = $companyArr['status'];
-    
             $company->update([
-                'code' => $code,
-                'name' => $name,
-                'address' => $address,
-                'default' => $default,
-                'status' => $status
+                'code' => $companyArr['code'],
+                'name' => $companyArr['name'],
+                'address' => $companyArr['address'],
+                'default' => $companyArr['default'],
+                'status' => $companyArr['status']
             ]);
 
             DB::commit();
@@ -262,14 +256,13 @@ class CompanyServiceImpl implements CompanyService
         return is_null($result) ? false : $result;
     }
 
-    public function resetDefaultCompany(int $userId): bool
+    public function resetDefaultCompany(User $user): bool
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $usr = User::find($userId);
-            $compIds = $usr->companies()->pluck('company_id');
+            $compIds = $user->companies()->pluck('company_id');
 
             $retval = Company::whereIn('id', $compIds)
                       ->update(['default' => 0]);
@@ -292,9 +285,8 @@ class CompanyServiceImpl implements CompanyService
         return Company::find($companyId)->first();
     }
 
-    public function getDefaultCompany(int $userId): Company
+    public function getDefaultCompany(User $user): Company
     {
-        $usr = User::find($userId);
-        return $usr->companies()->where('default','=', true)->first();
+        return $user->companies()->where('default','=', true)->first();
     }
 }

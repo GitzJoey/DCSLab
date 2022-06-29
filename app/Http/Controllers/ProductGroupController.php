@@ -81,7 +81,7 @@ class ProductGroupController extends BaseController
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->productGroupService->generateUniqueCode($company_id);
+                $code = $this->productGroupService->generateUniqueCode();
             } while (!$this->productGroupService->isUniqueCode($code, $company_id));
         } else {
             if (!$this->productGroupService->isUniqueCode($code, $company_id)) {
@@ -116,7 +116,7 @@ class ProductGroupController extends BaseController
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->productGroupService->generateUniqueCode($company_id);
+                $code = $this->productGroupService->generateUniqueCode();
             } while (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id));
         } else {
             if (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
