@@ -43,7 +43,7 @@ class RoleServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    public function test_role_service_call_list_without_search_parameter_expect_results()
+    public function test_role_service_call_list_with_nonexistance_companyId_expect_empty_collection()
     {
         $this->markTestSkipped('Under Constructions');
     }

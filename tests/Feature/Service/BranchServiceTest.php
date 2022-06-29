@@ -6,12 +6,11 @@ use App\Models\Branch;
 use App\Models\Company;
 use Tests\ServiceTestCase;
 use App\Services\BranchService;
-use App\Actions\RandomGenerator;
-use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class BranchServiceTest extends ServiceTestCase
 {
@@ -57,21 +56,54 @@ class BranchServiceTest extends ServiceTestCase
 
     public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(20), 'branches'), 'companies')
+                    ->create();
+
+        $result = $this->branchService->list(
+            companyId: $user->companies->first()->id,
+            search: '',
+            paginate: true,
+            page: 1,
+            perPage: 10
+        );
+
+        $this->assertInstanceOf(Paginator::class, $result);
     }
 
     public function test_branch_service_call_list_with_paginate_false_expect_collection_object()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(20), 'branches'), 'companies')
+                    ->create();
+
+        $result = $this->branchService->list(
+            companyId: $user->companies->first()->id,
+            search: '',
+            paginate: false
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);
     }
 
-    public function test_branch_service_call_list_without_search_parameter_expect_results()
+    public function test_branch_service_call_list_with_nonexistance_companyId_expect_empty_collection()
     {
-        $this->markTestSkipped('Under Constructions');
+        $maxId = Company::max('id') + 1;
+        $result = $this->branchService->list(companyId: $maxId, search: '', paginate: false);
+
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertEmpty($result);
     }
 
     public function test_branch_service_call_list_with_search_parameter_expect_filtered_results()
     {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Branch::factory()->count(20), 'branches'), 'companies')
+                    ->create();
+
         $this->markTestSkipped('Under Constructions');
     }
 
