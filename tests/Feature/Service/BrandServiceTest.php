@@ -79,7 +79,7 @@ class BrandServiceTest extends ServiceTestCase
 
     #region update
 
-    public function test_brand_service_call_update_expect_object()
+    public function test_brand_service_call_update_expect_db_updated()
     {
         $this->markTestSkipped('Under Constructions');
     }

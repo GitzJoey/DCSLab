@@ -76,7 +76,7 @@ class RoleServiceTest extends ServiceTestCase
 
     #region update
 
-    public function test_role_service_call_update_expect_object()
+    public function test_role_service_call_update_expect_db_updated()
     {
         $this->markTestSkipped('Under Constructions');
     }
