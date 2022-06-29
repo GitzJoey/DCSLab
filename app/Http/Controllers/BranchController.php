@@ -158,23 +158,6 @@ class BranchController extends BaseController
         return is_null($branch) ? response()->error() : response()->success();
     }
 
-    public function resetMainBranch(Request $request)
-    {
-        if ($request->has('companyId')) {
-            $result = $this->branchService->resetMainBranch(Hashids::decode($request['companyId'])[0]);
-        } else {
-            return response()->error();
-        }
-    
-        if (is_null($result)) {
-            return response()->error();
-        } else {
-            $response = BranchResource::collection($result);
-
-            return $response;
-        }
-    }
-
     public function delete($id)
     {
         if ($this->branchService->isMainBranch($id)) 
