@@ -224,7 +224,7 @@ const getAllPO = (args) => {
 
     let companyId = selectedUserCompany.value;
 
-    axios.get(route('api.get.db.purchase_order.purchaseorder.read', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.purchase_order.purchaseorder.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         poList.value = response.data;
         loading.value = false;
     });
@@ -257,7 +257,7 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.supplier.supplier.read', {
+    axios.get(route('api.get.db.supplier.supplier.list', {
             companyId: selectedUserCompany.value,
             paginate: false,
             search: ''
@@ -265,7 +265,7 @@ const getDDLSync = () => {
             supplierDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.product.product.read', {
+    axios.get(route('api.get.db.product.product.list', {
             companyId: selectedUserCompany.value,
             paginate: false,
             search: ''

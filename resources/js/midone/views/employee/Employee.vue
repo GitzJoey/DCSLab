@@ -451,7 +451,7 @@ const getDDLSync = () => {
         companyDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.company.branch.read', {
+    axios.get(route('api.get.db.company.branch.list', {
         "companyId": selectedUserCompany.value, 
         "paginate": false,
         "search": ''
