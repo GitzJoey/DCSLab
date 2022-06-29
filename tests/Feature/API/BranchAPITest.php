@@ -6,7 +6,6 @@ use App\Models\Branch;
 use Tests\APITestCase;
 use App\Enums\ActiveStatus;
 use App\Actions\RandomGenerator;
-use App\Http\Controllers\BranchController;
 use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;

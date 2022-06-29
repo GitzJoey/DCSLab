@@ -95,9 +95,9 @@ class ProductGroupServiceImpl implements ProductGroupService
             }
             
             if (empty($search)) {
-                $product_group = $product_group->latest();
+                $productGroup = $productGroup->latest();
             } else {
-                $product_group = $product_group->where('name', 'like', '%'.$search.'%')->latest();
+                $productGroup = $productGroup->where('name', 'like', '%'.$search.'%')->latest();
             }
     
             if ($paginate) {
