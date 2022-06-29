@@ -6,6 +6,10 @@ use App\Models\Branch;
 use Tests\APITestCase;
 use App\Enums\ActiveStatus;
 use App\Actions\RandomGenerator;
+use App\Enums\UserRoles;
+use App\Models\Company;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,7 +28,31 @@ class BranchAPITest extends APITestCase
 
     public function test_branch_api_call_store_expect_successful()
     {
-        $this->markTestSkipped('Under Constructions');
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+        
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        
+        $this->actingAs($user);
+
+        $branchArr = array_merge([
+            'company_id' => Hashids::encode($companyId)
+        ], Branch::factory()->make()->toArray());
+
+        $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
+
+        dd($api);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('branches', [
+            'company_id' => $companyId,
+            'code' => $branchArr['code'], 
+            'name' => $branchArr['name'],
+        ]);
     }
 
     public function test_branch_api_call_store_with_existing_code_in_same_company_expect_failed()
