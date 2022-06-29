@@ -154,7 +154,6 @@ class UnitServiceImpl implements UnitService
 
         try {
             $unit->update([
-                'company_id' => $unitArr['company_id'],
                 'code' => $unitArr['code'],
                 'name' => $unitArr['name'],
                 'description' => $unitArr['description'],

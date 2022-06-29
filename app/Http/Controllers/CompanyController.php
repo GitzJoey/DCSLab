@@ -99,7 +99,6 @@ class CompanyController extends BaseController
     {
         $request = $companyRequest->validated();
 
-        $companyArr = $request;
         $user = Auth::user();
 
         $code = $request['code'];
@@ -115,8 +114,14 @@ class CompanyController extends BaseController
             }
         }
 
-        $companyArr['user_id'] = $user->id;
-        $companyArr['code'] = $code;
+        $companyArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'default' => $request['default'],
+            'status' => $request['status'],
+            'user_id' => $user->id
+        ];
 
         $result = null;
         $errorMsg = '';
@@ -138,7 +143,6 @@ class CompanyController extends BaseController
     {
         $request = $companyRequest->validated();
 
-        $companyArr = $request;
         $user = Auth::user();
 
         $code = $request['code'];
@@ -154,7 +158,14 @@ class CompanyController extends BaseController
             }
         }
 
-        $companyArr['code'] = $code;
+        $companyArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'default' => $request['default'],
+            'status' => $request['status'],
+            'user_id' => $user->id
+        ];
 
         $result = null;
         $errorMsg = '';

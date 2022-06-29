@@ -149,7 +149,6 @@ class ProductGroupServiceImpl implements ProductGroupService
 
         try {
             $productgroup->update([
-                'company_id' => $productGroupArr['company_id'],
                 'code' => $productGroupArr['code'],
                 'name' => $productGroupArr['name'],
                 'category' => $productGroupArr['category']

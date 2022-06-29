@@ -125,8 +125,6 @@ class WarehouseServiceImpl implements WarehouseService
 
         try {
             $warehouse->update([
-                'company_id' => $warehouseArr['company_id'],
-                'branch_id' => $warehouseArr['branch_id'],
                 'code' => $warehouseArr['code'],
                 'name' => $warehouseArr['name'],
                 'address' => $warehouseArr['address'],

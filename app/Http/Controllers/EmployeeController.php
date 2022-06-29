@@ -91,6 +91,7 @@ class EmployeeController extends BaseController
         }
 
         $employeeArr =[
+            'company_id' => $request['company_id'],
             'code' => $code,
             'join_date' => $request['join_date'],
             'status' => $request['status']

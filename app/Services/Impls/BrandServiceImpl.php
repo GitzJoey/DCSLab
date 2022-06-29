@@ -140,12 +140,10 @@ class BrandServiceImpl implements BrandService
         $timer_start = microtime(true);
 
         try {
-            $company_id = $brandArr['company_id'];
             $code = $brandArr['code'];
             $name = $brandArr['name'];
     
             $brand->update([
-                'company_id' => $company_id,
                 'code' => $code,
                 'name' => $name,
             ]);

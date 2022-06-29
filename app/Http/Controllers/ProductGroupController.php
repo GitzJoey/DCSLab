@@ -74,8 +74,6 @@ class ProductGroupController extends BaseController
     {
         $request = $productGroupRequest->validated();
 
-        $productgroupArr = $request;
-
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -91,7 +89,12 @@ class ProductGroupController extends BaseController
             }
         }
 
-        $productgroupArr['code'] = $code;
+        $productgroupArr = [
+            'company_id' => $request['company_id'],
+            'code' => $code,
+            'name' => $request['name'],
+            'category' => $request['category']
+        ];
 
         $result = null;
         $errorMsg = '';
@@ -109,8 +112,6 @@ class ProductGroupController extends BaseController
     {
         $request = $productGroupRequest->validated();
 
-        $productgroupArr = $request;
-
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -126,7 +127,11 @@ class ProductGroupController extends BaseController
             }
         }
 
-        $productgroupArr['code'] = $code;
+        $productgroupArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'category' => $request['category']
+        ];
 
         $result = null;
         $errorMsg = '';

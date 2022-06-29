@@ -72,11 +72,9 @@ class BrandController extends BaseController
     {
         $request = $brandRequest->validated();
 
-        $brandArr = $request;
-
         $company_id = $request['company_id'];
-        $code = $request['code'];
 
+        $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->brandService->generateUniqueCode();
@@ -89,7 +87,11 @@ class BrandController extends BaseController
             }
         }
 
-        $brandArr['code'] = $code;
+        $brandArr = [
+            'code' => $code,
+            'company_id' => $request['company_id'],
+            'name' => $request['name'],
+        ];
 
         $result = null;
         $errorMsg = '';
@@ -107,11 +109,9 @@ class BrandController extends BaseController
     {
         $request = $brandRequest->validated();
 
-        $brandArr = $request;
-
         $company_id = $request['company_id'];
-        $code = $request['code'];
 
+        $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->brandService->generateUniqueCode();
@@ -124,7 +124,10 @@ class BrandController extends BaseController
             }
         }
 
-        $brandArr['code'] = $code;
+        $brandArr = [
+            'code' => $code,
+            'name' => $request['name'],
+        ];
 
         $result = null;
         $errorMsg = '';

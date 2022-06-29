@@ -84,7 +84,7 @@ class UserController extends BaseController
         $errorMsg = '';
 
         try {
-            $roles = $this->roleService->read(exclude: $excludeRole);
+            $roles = $this->roleService->list(exclude: $excludeRole);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -115,13 +115,13 @@ class UserController extends BaseController
 
         $request['password'] = (new RandomGenerator())->generateAlphaNumeric(10);
 
-        $user = [
+        $userArr = [
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => $request['password']
         ];
 
-        $profile = array (
+        $profileArr = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -139,10 +139,10 @@ class UserController extends BaseController
             $filename = time().".".$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
-            $profile['img_path'] = $file;
+            $profileArr['img_path'] = $file;
         }
 
-        $roles = [];
+        $rolesArr = [];
         foreach ($request['roles'] as $r) {
             array_push($rolesId, Hashids::decode($r)[0]);
         }
@@ -152,9 +152,9 @@ class UserController extends BaseController
 
         try {
             $result = $this->userService->create(
-                $user,
-                $roles,
-                $profile
+                $userArr,
+                $rolesArr,
+                $profileArr
             );    
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -171,7 +171,7 @@ class UserController extends BaseController
             'name' => $request['name']
         );
 
-        $profile = array (
+        $profileArr = array (
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -184,12 +184,12 @@ class UserController extends BaseController
             'remarks' => $request['remarks'],
         );
 
-        $roles = [];
+        $rolesArr = [];
         foreach ($request['roles'] as $r) {
-            array_push($roles, Hashids::decode($r)[0]);
+            array_push($rolesArr, Hashids::decode($r)[0]);
         }
 
-        $settings = [
+        $settingsArr = [
             'PREFS.THEME' => $request['theme'],
             'PREFS.DATE_FORMAT' => $request['dateFormat'],
             'PREFS.TIME_FORMAT' => $request['timeFormat'],
@@ -200,7 +200,7 @@ class UserController extends BaseController
             $filename = time().".".$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
-            $profile['img_path'] = $file;
+            $profileArr['img_path'] = $file;
         }
 
         $result = null;
@@ -210,9 +210,9 @@ class UserController extends BaseController
             $result = $this->userService->update(
                 $user,
                 $userArr,
-                $roles,
-                $profile,
-                $settings
+                $rolesArr,
+                $profileArr,
+                $settingsArr
             );
 
             if (array_key_exists('apiToken', $request))

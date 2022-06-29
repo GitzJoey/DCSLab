@@ -78,9 +78,7 @@ class SupplierController extends BaseController
     {
         $request = $supplierRequest->validated();
 
-        $supplierArr = $request;
-
-        $company_id = Hashids::decode($request['company_id'])[0];
+        $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -95,27 +93,35 @@ class SupplierController extends BaseController
             }
         }
 
-        $supplierArr['code'] = $code;
-
-        $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
+        $supplierArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'payment_term_type' => $request['payment_term_type'],
+            'payment_term' => $request['payment_term'],
+            'contact' => $request['contact'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'taxable_enterprise' => $request['taxable_enterprise'],
+            'tax_id' => $request['tax_id'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status']
+        ];
 
         $pocArr = [
             'name' => $request['poc_name'],
             'email' => $request['email'], 
         ];
 
-        $supplier_products = [];
+        $productsArr = [];
         if (!empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
-                array_push($supplier_products, array (
+                array_push($productsArr, array (
                     'company_id' => $company_id,
                     'product_id' => Hashids::decode($request['productIds'][$i])[0],
                     'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0
                 ));
             }
         }
-
-        $contact = array_key_exists('contact', $request) ? $request['contact'] : '';
 
         $result = null;
         $errorMsg = '';
@@ -124,7 +130,7 @@ class SupplierController extends BaseController
             $result = $this->supplierService->create(
                 $supplierArr,
                 $pocArr,
-                $supplier_products
+                $productsArr
             );
     
         } catch (Exception $e) {
@@ -137,9 +143,8 @@ class SupplierController extends BaseController
     public function update(Supplier $supplier, SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
-        $company_id = Hashids::decode($request['company_id'])[0];
 
-        $supplierArr = $request;
+        $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -154,17 +159,35 @@ class SupplierController extends BaseController
             }
         }
 
-        $supplierArr['code'] = $code;
-
-        $taxable_enterprise = array_key_exists('taxable_enterprise', $request);
+        $supplierArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'payment_term_type' => $request['payment_term_type'],
+            'payment_term' => $request['payment_term'],
+            'contact' => $request['contact'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'taxable_enterprise' => $request['taxable_enterprise'],
+            'tax_id' => $request['tax_id'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status']
+        ];
 
         $pocArr = [
-
+            'name' => $request['poc_name'],
+            'email' => $request['email'], 
         ];
 
-        $productsArr = [
-
-        ];
+        $productsArr = [];
+        if (!empty($request['productIds'])) {
+            for ($i = 0; $i < count($request['productIds']); $i++) {
+                array_push($productsArr, array (
+                    'company_id' => $company_id,
+                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
+                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0
+                ));
+            }
+        }
 
         $result = null;
         $errorMsg = '';

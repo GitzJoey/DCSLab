@@ -98,11 +98,9 @@ class BranchController extends BaseController
     {
         $request = $branchRequest->validated();
         
-        $branchArr = $request;
-
         $company_id = $request['company_id'];
+ 
         $code = $request['code'];
-
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode();
@@ -115,7 +113,16 @@ class BranchController extends BaseController
             }
         }
 
-        $branchArr['code'] = $code;
+        $branchArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'contact' => $request['contact'],
+            'is_main' => $request['is_main'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status']
+        ];
 
         $result = null;
         $errorMsg = '';
@@ -136,11 +143,9 @@ class BranchController extends BaseController
     {
         $request = $branchRequest->validated();
 
-        $branchArr = $request;
-
         $company_id = $request['company_id'];
-        $code = $request['code'];
 
+        $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode();
@@ -153,7 +158,16 @@ class BranchController extends BaseController
             }
         }
 
-        $branchArr['code'] = $code;
+        $branchArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'contact' => $request['contact'],
+            'is_main' => $request['is_main'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status']
+        ];
 
         $result = null;
         $errorMsg = '';

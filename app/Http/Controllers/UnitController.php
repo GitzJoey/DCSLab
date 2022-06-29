@@ -74,8 +74,6 @@ class UnitController extends BaseController
     {
         $request = $unitRequest->validated();
 
-        $unitArr = $request;
-
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -91,15 +89,19 @@ class UnitController extends BaseController
             }
         }
 
-        $unitArr['code'] = $code;
+        $unitArr = [
+            'code' => $code,
+            'company_id' => $request['company_id'],
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'category' => $request['category']
+        ];
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->unitService->create(
-                $unitArr
-            );
+            $result = $this->unitService->create($unitArr);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -110,8 +112,6 @@ class UnitController extends BaseController
     public function update(Unit $unit, UnitRequest $unitRequest)
     {
         $request = $unitRequest->validated();
-
-        $unitArr = $request;
 
         $company_id = $request['company_id'];
 
@@ -128,7 +128,12 @@ class UnitController extends BaseController
             }
         }
 
-        $unitArr['code'] = $code;
+        $unitArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'category' => $request['category']
+        ];
 
         $result = null;
         $errorMsg = '';

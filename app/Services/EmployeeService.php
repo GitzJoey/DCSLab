@@ -36,7 +36,7 @@ interface EmployeeService
 
     public function delete(Employee $employee): bool;
 
-    public function generateUniqueCode(int $companyId): string;
+    public function generateUniqueCode(): string;
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;
 }

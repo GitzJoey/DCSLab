@@ -227,15 +227,11 @@ class EmployeeServiceImpl implements EmployeeService
         }
     }
 
-    public function generateUniqueCode(int $companyId): string
+    public function generateUniqueCode(): string
     {
         $rand = new RandomGenerator();
-        $code = '';
+        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
         
-        do {
-            $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
-        } while (!$this->isUniqueCode($code, $companyId));
-
         return $code;
     }
 

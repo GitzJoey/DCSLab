@@ -73,8 +73,6 @@ class WarehouseController extends BaseController
     {   
         $request = $warehouseRequest->validated();
         
-        $warehouseArr = $request;
-
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -90,15 +88,23 @@ class WarehouseController extends BaseController
             }
         }
 
-        $warehouseArr['code'] = $code;
+        $warehouseArr = [
+            'code' => $code,
+            'company_id' => $request['company_id'],
+            'branch_id' => $request['branch_id'],
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'contact' => $request['contact'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status'],
+        ];
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->warehouseService->create(
-                $warehouseArr
-            );
+            $result = $this->warehouseService->create($warehouseArr);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -110,10 +116,7 @@ class WarehouseController extends BaseController
     {
         $request = $warehouseRequest->validated();
 
-        $warehouseArr = $request;
-
         $company_id = $request['company_id'];
-        $branch_id = $request['branch_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -127,6 +130,16 @@ class WarehouseController extends BaseController
                 ], 422);
             }
         }
+
+        $warehouseArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'contact' => $request['contact'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status'],
+        ];
 
         $result = null;
         $errorMsg = '';

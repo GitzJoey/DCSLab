@@ -129,14 +129,12 @@ class ProductController extends BaseController
     {   
         $request = $productRequest->validated();
         
-        $productArr = $request;
-
-        $company_id = Hashids::decode($request['company_id'])[0];
+        $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
-                $code = $this->productService->generateUniqueCodeForProduct($company_id);
+                $code = $this->productService->generateUniqueCodeForProduct();
             } while (!$this->productService->isUniqueCodeForProduct($code, $company_id));
         } else {
             if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
@@ -146,24 +144,21 @@ class ProductController extends BaseController
             }
         }
         
-        $productArr['code'] = $code;
-
-        $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
-        $brand_id = Hashids::decode($request['brand_id'])[0];
-        $name = $request['name'];
-
-        $remarks = $request['remarks'];
-        $point = $request['point'];
-
-        $use_serial_number = array_key_exists('use_serial_number', $request) ? true : false;
-        $has_expiry_date = array_key_exists('has_expiry_date', $request) ? true : false;
-
-        $product_type = $request['product_type'];
-        $status = $request['status'];
-
-        $taxable_supply = array_key_exists('taxable_supply', $request) ? boolVal($request['taxable_supply']) : false;
-        $standard_rated_supply = array_key_exists('standard_rated_supply', $request) ? intVal($request['standard_rated_supply']) : 0;
-        $price_include_vat = array_key_exists('price_include_vat', $request) ? boolVal($request['price_include_vat']) : false;
+        $productArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'product_group_id' => Hashids::decode($request['product_group_id'])[0],
+            'brand_id' => Hashids::decode($request['brand_id'])[0],
+            'remarks' => $request['remarks'],
+            'point' => $request['point'],
+            'use_serial_number' => $request['use_serial_number'],
+            'has_expiry_date' => $request['has_expiry_date'],
+            'product_type' => $request['product_type'],
+            'status' => $request['status'],
+            'taxable_supply' => $request['taxable_supply'],
+            'standard_rated_supply' => $request['standard_rated_supply'],
+            'price_include_vat' => $request['price_include_vat']
+        ];
 
         $productUnitsArr = [];
         $count_unit = count($request['unit_id']);
@@ -202,9 +197,7 @@ class ProductController extends BaseController
     {
         $request = $productRequest->validated();
 
-        $productArr = $request;
-
-        $company_id = Hashids::decode($request['company_id'])[0];
+        $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -219,20 +212,24 @@ class ProductController extends BaseController
             }
         }
 
-        $productArr['code'] = $code;
+        $productArr = [
+            'code' => $code,
+            'name' => $request['name'],
+            'product_group_id' => Hashids::decode($request['product_group_id'])[0],
+            'brand_id' => Hashids::decode($request['brand_id'])[0],
+            'remarks' => $request['remarks'],
+            'point' => $request['point'],
+            'use_serial_number' => $request['use_serial_number'],
+            'has_expiry_date' => $request['has_expiry_date'],
+            'product_type' => $request['product_type'],
+            'status' => $request['status'],
+            'taxable_supply' => $request['taxable_supply'],
+            'standard_rated_supply' => $request['standard_rated_supply'],
+            'price_include_vat' => $request['price_include_vat']
+        ];
 
-        $product_group_id = array_key_exists('product_group_id', $request) ? Hashids::decode($request['product_group_id'])[0]:null;
-        $brand_id = Hashids::decode($request['brand_id'])[0];
-        $name = $request['name'];
-        $taxable_supply = array_key_exists('taxable_supply', $request) ? $request['taxable_supply']:0;
-        $standard_rated_supply = array_key_exists('standard_rated_supply', $request) ? $request['standard_rated_supply']:0;
-        $price_include_vat = array_key_exists('price_include_vat', $request) ? $request['price_include_vat']:0;
-        $remarks = $request['remarks'];
-        $point = $request['point'];
-        $use_serial_number = array_key_exists('use_serial_number', $request) ? $request['use_serial_number']:0;
+        $use_serial_number = $request['use_serial_number'];
         $has_expiry_date = $request['has_expiry_date'];
-        $product_type = $request['product_type'];
-        $status = $request['status'];
 
         $productUnitsArr = [];
         $count_unit = count($request['unit_id']);
@@ -269,7 +266,7 @@ class ProductController extends BaseController
         $errorMsg = '';
 
         try {
-            $product = $this->productService->update(
+            $result = $this->productService->update(
                 $product,
                 $productArr,
                 $productUnitsArr
@@ -278,7 +275,7 @@ class ProductController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return is_null($product) ? response()->error($errorMsg) : response()->success();
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function delete(Product $product)

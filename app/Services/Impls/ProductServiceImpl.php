@@ -167,7 +167,6 @@ class ProductServiceImpl implements ProductService
 
         try {
             $product->update([
-                'company_id' => $productArr['company_id'],
                 'code' => $productArr['code'],
                 'product_group_id' => $productArr['product_group_id'],
                 'brand_id' => $productArr['brand_id'],
