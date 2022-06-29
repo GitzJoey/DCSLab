@@ -65,4 +65,13 @@ class BranchFactory extends Factory
             ];
         });
     }
+
+    public function setName($name)
+    {
+        return $this->state(function (array $attributes) use ($name) {
+            return [
+                'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama','Pembantu','Daerah']).' '.$name,
+            ];
+        });
+    }
 }

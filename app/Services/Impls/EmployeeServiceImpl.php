@@ -120,7 +120,7 @@ class EmployeeServiceImpl implements EmployeeService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $employee->paginate($perPage);
+                $result = $employee->paginate(perPage: abs($perPage), page: abs($page));
             } else {
                 $result = $employee->get();
             }

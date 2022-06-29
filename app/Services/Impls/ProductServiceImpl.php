@@ -133,7 +133,7 @@ class ProductServiceImpl implements ProductService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                return $product->paginate($perPage);
+                return $product->paginate(perPage: abs($perPage), page: abs($page));
             } else {
                 return $product->get();
             }

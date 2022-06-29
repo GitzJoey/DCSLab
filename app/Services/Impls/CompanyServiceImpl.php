@@ -107,7 +107,7 @@ class CompanyServiceImpl implements CompanyService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $companies->paginate($perPage);
+                $result = $companies->paginate(perPage: abs($perPage), page: abs($page));
             } else {
                 $result = $companies->get();
             }

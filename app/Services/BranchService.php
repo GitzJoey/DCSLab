@@ -29,7 +29,7 @@ interface BranchService
 
     public function delete(Branch $branch): bool;
 
-    public function getBranchByCompany(int $companyId = 0, Company $company = null);
+    public function getBranchByCompany(int $companyId = 0, Company $company = null): Collection;
 
     public function getMainBranchByCompany(int $companyId = 0, Company $company = null): Branch;
 
