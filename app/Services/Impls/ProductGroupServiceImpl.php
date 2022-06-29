@@ -59,30 +59,6 @@ class ProductGroupServiceImpl implements ProductGroupService
         return Config::get('const.ERROR_RETURN_VALUE');
     }
 
-    public function readBy(
-        string $key, 
-        string $value
-    )
-    {
-        $timer_start = microtime(true);
-
-        try {
-            switch (strtoupper($key)) {
-                case 'ID':
-                    return ProductGroup::find($value);
-                default:
-                    return null;
-                    break;
-            }
-        } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
-            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
-    }
-
     public function read(
         int $companyId,
         ?string $category = null, 
@@ -109,12 +85,12 @@ class ProductGroupServiceImpl implements ProductGroupService
             $productGroup = ProductGroup::whereCompanyId($companyId);
          
             if (!empty($category)) {
-                if ($category == ProductCategory::PRODUCTS) {
-                    $productGroup = $productGroup->where('category', '=', ProductCategory::PRODUCTS->value);
-                } else if ($category == ProductCategory::SERVICES) {
-                    $productGroup = $productGroup->where('category', '=', ProductCategory::SERVICES->value);
-                } else if ($category == ProductCategory::PRODUCTS_AND_SERVICES) {
-                    $productGroup = $productGroup->where('category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value);
+                if ($category == 1) {
+                    $productGroup = $productGroup->where('category', '=', 1);
+                } else if ($category == 2) {
+                    $productGroup = $productGroup->where('category', '=', 2);
+                } else if ($category == 3) {
+                    $productGroup = $productGroup->where('category', '=', 3);
                 }
             }
             
@@ -140,6 +116,30 @@ class ProductGroupServiceImpl implements ProductGroupService
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
+        }
+    }
+
+    public function readBy(
+        string $key, 
+        string $value
+    )
+    {
+        $timer_start = microtime(true);
+
+        try {
+            switch (strtoupper($key)) {
+                case 'ID':
+                    return ProductGroup::find($value);
+                default:
+                    return null;
+                    break;
+            }
+        } catch (Exception $e) {
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            return Config::get('const.DEFAULT.ERROR_RETURN_VALUE');
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 

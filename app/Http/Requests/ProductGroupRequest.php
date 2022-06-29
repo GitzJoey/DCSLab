@@ -53,6 +53,7 @@ class ProductGroupRequest extends FormRequest
             case 'read':
                 $rules_read = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
+                    'category' => 'nullable',
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
@@ -104,6 +105,7 @@ class ProductGroupRequest extends FormRequest
             case 'read':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
+                    'category' => ProductCategory::isValid($this->category) ? ProductCategory::fromName($this->category)->value : -1,
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;
