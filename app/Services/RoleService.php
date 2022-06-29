@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 interface RoleService
 {
-    public function create(array $role, array $permissions): Role;
+    public function create(array $roleArr, array $inputtedPermissionsArr): Role;
 
     public function list(array $relationship = [], array $exclude = []): Collection;
 
@@ -18,7 +18,7 @@ interface RoleService
     public function update(
         Role $role,
         array $roleArr,
-        array $inputtedPermissions
+        array $inputtedPermissionsArr
     ): Role;
 
     public function getAllPermissions(): Collection;

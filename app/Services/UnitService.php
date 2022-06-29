@@ -8,9 +8,7 @@ use Illuminate\Support\Collection;
 
 interface UnitService
 {
-    public function create(
-        array $unitArr
-    ): Unit;
+    public function create(array $unitArr): Unit;
 
     public function list(
         int $companyId,

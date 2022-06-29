@@ -8,9 +8,7 @@ use Illuminate\Support\Collection;
 
 interface ProductGroupService
 {
-    public function create(
-        array $productGroupArr
-    ): ProductGroup;
+    public function create(array $productGroupArr): ProductGroup;
 
     public function list(
         int $companyId,

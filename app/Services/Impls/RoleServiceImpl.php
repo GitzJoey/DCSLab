@@ -25,7 +25,7 @@ class RoleServiceImpl implements RoleService
         
     }
     
-    public function create(array $role, array $permissions): Role
+    public function create(array $roleArr, array $inputtedPermissionsArr): Role
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -38,7 +38,7 @@ class RoleServiceImpl implements RoleService
 
             $role->save();
 
-            foreach ($permissions as $pl) {
+            foreach ($inputtedPermissionsArr as $pl) {
                 $role->permissions()->attach($pl);
             }
 
@@ -48,6 +48,7 @@ class RoleServiceImpl implements RoleService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
@@ -112,6 +113,7 @@ class RoleServiceImpl implements RoleService
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');

@@ -66,7 +66,7 @@ class UserServiceImpl implements UserService
         return $usr;
     }
 
-    public function create(array $user, array $roles, array $profile): User
+    public function create(array $userArr, array $rolesArr, array $profileArr): User
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -75,10 +75,10 @@ class UserServiceImpl implements UserService
             //throw New \Exception('Test Exception From Services');
 
             $usr = new User();
-            $usr->name = $user['name'];
-            $usr->email = $user['email'];
+            $usr->name = $userArr['name'];
+            $usr->email = $userArr['email'];
 
-            $password = $user['password'];
+            $password = $userArr['password'];
 
             if (empty($password)) {
                 $usr->password = Hash::make((new RandomGenerator())->generateAlphaNumeric(5));
@@ -92,24 +92,24 @@ class UserServiceImpl implements UserService
 
             $pa = new Profile();
 
-            $pa->first_name = array_key_exists('first_name', $profile) ? $profile['first_name']:'';
-            $pa->last_name = array_key_exists('last_name', $profile) ? $profile['last_name']:'';
-            $pa->address = array_key_exists('address', $profile) ? $profile['address']:null;
-            $pa->city = array_key_exists('city', $profile) ? $profile['city']:null;
-            $pa->postal_code = array_key_exists('postal_code', $profile) ? $profile['postal_code']:null;
-            $pa->country = array_key_exists('country', $profile) ? $profile['country']:null;
-            $pa->tax_id = array_key_exists('tax_id', $profile) ? $profile['tax_id']:'';
-            $pa->ic_num = array_key_exists('ic_num', $profile) ? $profile['ic_num']:'';
-            $pa->status = array_key_exists('status', $profile) ? $profile['status']:1;
-            $pa->img_path = array_key_exists('img_path', $profile) ? $profile['img_path']:null;
-            $pa->remarks = array_key_exists('remarks', $profile) ? $profile['remarks']:null;
+            $pa->first_name = array_key_exists('first_name', $profileArr) ? $profileArr['first_name']:'';
+            $pa->last_name = array_key_exists('last_name', $profileArr) ? $profileArr['last_name']:'';
+            $pa->address = array_key_exists('address', $profileArr) ? $profileArr['address']:null;
+            $pa->city = array_key_exists('city', $profileArr) ? $profileArr['city']:null;
+            $pa->postal_code = array_key_exists('postal_code', $profileArr) ? $profileArr['postal_code']:null;
+            $pa->country = array_key_exists('country', $profileArr) ? $profileArr['country']:null;
+            $pa->tax_id = array_key_exists('tax_id', $profileArr) ? $profileArr['tax_id']:'';
+            $pa->ic_num = array_key_exists('ic_num', $profileArr) ? $profileArr['ic_num']:'';
+            $pa->status = array_key_exists('status', $profileArr) ? $profileArr['status']:1;
+            $pa->img_path = array_key_exists('img_path', $profileArr) ? $profileArr['img_path']:null;
+            $pa->remarks = array_key_exists('remarks', $profileArr) ? $profileArr['remarks']:null;
 
             $usr->profile()->save($pa);
 
             $settings = $this->createDefaultSetting();
             $usr->settings()->saveMany($settings);
 
-            $usr->attachRoles($roles);
+            $usr->attachRoles($rolesArr);
 
             if (env('AUTO_VERIFY_EMAIL', true))
                 $usr->markEmailAsVerified();
@@ -200,7 +200,7 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function update(User $user, ?array $userArr = null, ?array $roles = null, ?array $profile = null, ?array $settings = null): User
+    public function update(User $user, ?array $userArr = null, ?array $rolesArr = null, ?array $profileArr = null, ?array $settingsArr = null): User
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -209,14 +209,14 @@ class UserServiceImpl implements UserService
             if (!is_null($userArr))
                 $this->updateUser($user, $userArr, false);
 
-            if (!is_null($profile))
-                $this->updateProfile($user, $profile, false);
+            if (!is_null($profileArr))
+                $this->updateProfile($user, $profileArr, false);
             
-            if (!is_null($roles))
-                $this->updateRoles($user, $roles, false);
+            if (!is_null($rolesArr))
+                $this->updateRoles($user, $rolesArr, false);
             
-            if (!is_null($settings))
-                $this->updateSettings($user, $settings, false);
+            if (!is_null($settingsArr))
+                $this->updateSettings($user, $settingsArr, false);
 
             DB::commit();
 
@@ -260,27 +260,27 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateProfile(User $user, array $profile, bool $useTransactions = true): bool
+    public function updateProfile(User $user, array $profileArr, bool $useTransactions = true): bool
     {
         !$useTransactions ? : DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            if ($profile != null) {
+            if ($profileArr != null) {
                 $pa = $user->profile()->first();
 
                 $retval = $pa->update([
-                    'first_name' => array_key_exists('first_name', $profile) ? $profile['first_name']:$pa->first_name,
-                    'last_name' => array_key_exists('last_name', $profile) ? $profile['last_name']:$pa->last_name,
-                    'address' => array_key_exists('address', $profile) ? $profile['address']:$pa->address,
-                    'city' => array_key_exists('city', $profile) ? $profile['city']:$pa->city,
-                    'postal_code' => array_key_exists('postal_code', $profile) ? $profile['postal_code']:$pa->postal_code,
-                    'country' => array_key_exists('country', $profile) ? $profile['country']:$pa->country,
-                    'status' => array_key_exists('status', $profile ) ? $profile['status']:$pa->status,
-                    'tax_id' => array_key_exists('tax_id', $profile) ? $profile['tax_id']:$pa->tax_id,
-                    'ic_num' => array_key_exists('ic_num', $profile) ? $profile['ic_num']:$pa->ic_num,
-                    'img_path' => array_key_exists('img_path', $profile ) ? $profile['img_path']:$pa->img_path,
-                    'remarks' => array_key_exists('remarks', $profile) ? $profile['remarks']:$pa->remarks
+                    'first_name' => array_key_exists('first_name', $profileArr) ? $profileArr['first_name']:$pa->first_name,
+                    'last_name' => array_key_exists('last_name', $profileArr) ? $profileArr['last_name']:$pa->last_name,
+                    'address' => array_key_exists('address', $profileArr) ? $profileArr['address']:$pa->address,
+                    'city' => array_key_exists('city', $profileArr) ? $profileArr['city']:$pa->city,
+                    'postal_code' => array_key_exists('postal_code', $profileArr) ? $profileArr['postal_code']:$pa->postal_code,
+                    'country' => array_key_exists('country', $profileArr) ? $profileArr['country']:$pa->country,
+                    'status' => array_key_exists('status', $profileArr) ? $profileArr['status']:$pa->status,
+                    'tax_id' => array_key_exists('tax_id', $profileArr) ? $profileArr['tax_id']:$pa->tax_id,
+                    'ic_num' => array_key_exists('ic_num', $profileArr) ? $profileArr['ic_num']:$pa->ic_num,
+                    'img_path' => array_key_exists('img_path', $profileArr) ? $profileArr['img_path']:$pa->img_path,
+                    'remarks' => array_key_exists('remarks', $profileArr) ? $profileArr['remarks']:$pa->remarks
                 ]);
             }
 
@@ -297,13 +297,13 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateRoles(User $user, array $rolesId, bool $useTransactions = true): User
+    public function updateRoles(User $user, array $rolesArr, bool $useTransactions = true): User
     {
         !$useTransactions ? : DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $updated_usr = $user->syncRoles($rolesId);
+            $updated_usr = $user->syncRoles($rolesArr);
 
             !$useTransactions ? : DB::commit();
 
@@ -318,14 +318,14 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function updateSettings(User $user, array $settings, bool $useTransactions = true): bool
+    public function updateSettings(User $user, array $settingsArr, bool $useTransactions = true): bool
     {
         !$useTransactions ? : DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $retval = 0;
-            foreach ($settings as $key => $value) {
+            foreach ($settingsArr as $key => $value) {
                 $setting = $user->settings()->where('key', $key)->first();
                 if (!$setting || $value == null) continue;
                 if ($setting->value != $value) {

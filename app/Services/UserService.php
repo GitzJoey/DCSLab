@@ -11,9 +11,9 @@ interface UserService
     public function register(array $input): User;
 
     public function create(
-        array $user,
-        array $roles,
-        array $profile
+        array $userArr,
+        array $rolesArr,
+        array $profileArr
     ): User;
 
     public function list(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection;
@@ -25,9 +25,9 @@ interface UserService
     public function update(
         User $user,
         ?array $userArr = null,
-        ?array $roles = null,
-        ?array $profile = null,
-        ?array $settings = null
+        ?array $rolesArr = null,
+        ?array $profileArr = null,
+        ?array $settingsArr = null
     ): User;
 
     public function updateUser(User $user, array $userArr, bool $useTransactions = true): bool;

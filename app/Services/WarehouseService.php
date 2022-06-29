@@ -8,9 +8,7 @@ use Illuminate\Support\Collection;
 
 interface WarehouseService
 {
-    public function create(
-        array $warehouseArr
-    ): Warehouse;
+    public function create(array $warehouseArr): Warehouse;
 
     public function list(
         int $companyId,
