@@ -114,6 +114,7 @@ class BranchController extends BaseController
         }
 
         $branchArr = [
+            'company_id' => $company_id,
             'code' => $code,
             'name' => $request['name'],
             'address' => $request['address'],

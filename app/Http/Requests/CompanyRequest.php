@@ -124,7 +124,7 @@ class CompanyRequest extends FormRequest
                 $this->merge([
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
                 ]);
                 break;
             case 'update':
@@ -132,7 +132,7 @@ class CompanyRequest extends FormRequest
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
                 ]);
                 break;
             default:

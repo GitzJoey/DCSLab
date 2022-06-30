@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Exception;
+
 trait EnumHelper {
     public static function isValidName(string $name): bool
     {
@@ -16,8 +18,14 @@ trait EnumHelper {
     public static function isValidValue($value): bool
     {
         $isValid = false;
-        foreach(self::cases() as $enum) {
-            if ($enum->value === $value) $isValid = true;
+
+        try {
+            foreach(self::cases() as $enum) {
+                if (gettype($enum->value) == 'integer' && $enum->value === (int)$value) $isValid = true;
+                if (gettype($enum->value) == 'string' && $enum->value === strval($value)) $isValid = true;
+            }    
+        } catch (Exception $e) {
+            $isValid = false;
         }
 
         return $isValid;
@@ -67,4 +75,22 @@ trait EnumHelper {
         }
         return $result;
     }
+
+    public static function toArrayEnum(): array
+    {
+        $result = [];
+        foreach(self::cases() as $enum) {
+            array_push($result, $enum);
+        }
+        return $result;
+    }
+
+    public static function resolveToEnum($val)
+    {
+        if (self::isValidName(strval($val))) return self::fromName(strval($val));
+
+        if (self::isValidValue($val)) return self::from($val);
+
+        return null;
+    } 
 }

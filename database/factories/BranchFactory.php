@@ -35,7 +35,7 @@ class BranchFactory extends Factory
             'contact' => $faker->e164PhoneNumber(),
             'is_main' => false,
             'remarks' => $faker->sentence(),
-            'status' => $faker->randomElement(RecordStatus::toArrayName())
+            'status' => $faker->randomElement(RecordStatus::toArrayEnum())
         ];
     }
 

@@ -149,7 +149,7 @@ class UserRequest extends FormRequest
             case 'store':
             case 'update':
                 $this->merge([
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
                 ]);
                 break;
             default:

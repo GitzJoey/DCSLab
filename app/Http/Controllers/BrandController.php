@@ -125,6 +125,7 @@ class BrandController extends BaseController
         }
 
         $brandArr = [
+            'company_id' => $company_id,
             'code' => $code,
             'name' => $request['name'],
         ];

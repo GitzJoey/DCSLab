@@ -37,4 +37,22 @@ class WarehouseFactory extends Factory
             'status' => RecordStatus::ACTIVE
         ];
     }
+
+    public function setStatusActive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => RecordStatus::ACTIVE
+            ];
+        });
+    }
+
+    public function setStatusInactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => RecordStatus::INACTIVE
+            ];
+        });
+    }
 }

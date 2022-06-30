@@ -115,12 +115,13 @@ class CompanyController extends BaseController
         }
 
         $companyArr = [
+            'user_id' => $user->id,
             'code' => $code,
             'name' => $request['name'],
             'address' => $request['address'],
             'default' => $request['default'],
-            'status' => $request['status'],
-            'user_id' => $user->id
+            'status' => $request['status']
+
         ];
 
         $result = null;

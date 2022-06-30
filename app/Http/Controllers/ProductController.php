@@ -213,6 +213,7 @@ class ProductController extends BaseController
         }
 
         $productArr = [
+            'company_id' => $company_id,
             'code' => $code,
             'name' => $request['name'],
             'product_group_id' => Hashids::decode($request['product_group_id'])[0],

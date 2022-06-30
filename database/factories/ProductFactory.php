@@ -28,7 +28,6 @@ class ProductFactory extends Factory
         $faker = \Faker\Factory::create('id_ID');
 
         $product_type = $faker->randomElement(ProductType::toArrayValue());
-        $status = $faker->randomElement(RecordStatus::toArrayName();
 
         $productName = [
             'adjective' => ['Small', 'Ergonomic', 'Rustic', 'Intelligent', 'Gorgeous', 'Incredible', 'Fantastic', 'Practical', 'Sleek', 'Awesome', 'Enormous', 'Mediocre', 'Synergistic', 'Heavy Duty', 'Lightweight', 'Aerodynamic', 'Durable'],
@@ -47,7 +46,7 @@ class ProductFactory extends Factory
             'product_type' => $product_type,
             'use_serial_number' => $faker->boolean(),
             'has_expiry_date' => $faker->boolean(),
-            'status' => $this->faker->randomElement(RecordStatus::toArrayName()
+            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum())
         ];
     }
 

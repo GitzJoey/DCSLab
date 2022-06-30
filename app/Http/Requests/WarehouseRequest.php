@@ -130,7 +130,7 @@ class WarehouseRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'branch_id' => $this->has('branch_id') ? Hashids::decode($this['branch_id'])[0] : '',
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
                 ]);
                 break;
             default:

@@ -94,6 +94,7 @@ class SupplierController extends BaseController
         }
 
         $supplierArr = [
+            'company_id' => $company_id,
             'code' => $code,
             'name' => $request['name'],
             'payment_term_type' => $request['payment_term_type'],

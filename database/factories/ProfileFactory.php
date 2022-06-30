@@ -36,7 +36,7 @@ class ProfileFactory extends Factory
             'tax_id' => $this->faker->randomDigit(),
             'ic_num' => $this->faker->randomDigit(),
             'img_path' => '',
-            'status' => 0,
+            'status' => RecordStatus::INACTIVE,
             'remarks' => $this->faker->catchPhrase(),
         ];
     }
@@ -57,7 +57,7 @@ class ProfileFactory extends Factory
         $profile->tax_id = $this->faker->randomDigit();
         $profile->ic_num = $this->faker->randomDigit();
         $profile->img_path = '';
-        $profile->status = 0;
+        $profile->status = RecordStatus::INACTIVE;
         $profile->remarks = $this->faker->catchPhrase();
 
         return $profile;

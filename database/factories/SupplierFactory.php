@@ -28,7 +28,7 @@ class SupplierFactory extends Factory
         $faker = \Faker\Factory::create('id_ID');
 
         $array_term = $faker->randomElement(PaymentTermType::toArrayValue());
-        $status = $faker->randomElement(RecordStatus::toArrayName();
+        $status = $faker->randomElement(RecordStatus::toArrayEnum());
 
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
@@ -43,5 +43,23 @@ class SupplierFactory extends Factory
             'remarks' => $faker->word(),
             'status' => $status
         ];
+    }
+
+    public function setStatusActive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => RecordStatus::ACTIVE
+            ];
+        });
+    }
+
+    public function setStatusInactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => RecordStatus::INACTIVE
+            ];
+        });
     }
 }

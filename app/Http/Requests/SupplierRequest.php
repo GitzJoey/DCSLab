@@ -143,7 +143,7 @@ class SupplierRequest extends FormRequest
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
                     'taxable_enterprise' => $this->has('taxable_enterprise') ? filter_var($this->taxable_enterprise, FILTER_VALIDATE_BOOLEAN) : false,
                     'payment_term_type' => PaymentTermType::isValid($this->payment_term_type) ? PaymentTermType::fromName($this->payment_term_type)->value : '',
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::fromName($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
                 ]);
                 break;
             default:
