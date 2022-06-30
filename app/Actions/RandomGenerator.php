@@ -78,6 +78,7 @@ class RandomGenerator
     public function generateRandomOneZero(int $maxZero = 1): int
     {
         if ($maxZero == 1) return 10;
+        if ($maxZero < 2) $maxZero = 2;
 
         $rand = random_int(2, $maxZero);
 
