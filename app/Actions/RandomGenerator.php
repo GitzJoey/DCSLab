@@ -19,7 +19,7 @@ class RandomGenerator
         if ($max == 0) return 0;
 
         if (self::$RSeed == 0)
-            $this->seed(mt_rand());
+            $this->seed(random_int(0, mt_getrandmax()));
 
         self::$RSeed = (self::$RSeed * 125) % 2796203;
 
@@ -28,7 +28,7 @@ class RandomGenerator
 
     public function generateRandomTimer(): string
     {
-        return mt_rand(0,23).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT);
+        return random_int(0,23).":".str_pad(random_int(0,59), 2, "0", STR_PAD_LEFT).":".str_pad(random_int(0,59), 2, "0", STR_PAD_LEFT);
     }
 
     public function generateFixedLengthNumber(int $length = 2): int
@@ -56,7 +56,7 @@ class RandomGenerator
         $max = sizeof($characters) - 1;
 
         for ($i = 0; $i < $length; $i++) {
-            $generatedString .= $characters[mt_rand(0, $max)];
+            $generatedString .= $characters[random_int(0, $max)];
         }
 
         return strtoupper($generatedString);
