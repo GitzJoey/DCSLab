@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -407,7 +408,20 @@ class BranchAPITest extends APITestCase
         
         $this->actingAs($user);
 
-        $this->markTestSkipped('Under Constructions');
+        $branch = $company->branches()->inRandomOrder()->first();
+        $branchArr = array_merge([
+            'company_id' => Hashids::encode($companyId)
+        ], Branch::factory()->make()->toArray());
+
+        $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch->uuid), $branchArr);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('branches', [
+            'id' => $branch->id,
+            'company_id' => $companyId,
+            'code' => $branchArr['code'], 
+            'name' => $branchArr['name']
+        ]);
     }
 
     public function test_branch_api_call_update_and_use_existing_code_in_same_company_expect_failed()
@@ -423,7 +437,23 @@ class BranchAPITest extends APITestCase
         $companyId = $company->id;
         
         $this->actingAs($user);
-        $this->markTestSkipped('Under Constructions');
+        
+        $branches = $company->branches()->inRandomOrder()->take(2)->get();
+        $branch_1 = $branches[0];
+        $branch_2 = $branches[1];
+
+        $branchArr = array_merge([
+            'company_id' => Hashids::encode($companyId)
+        ], Branch::factory()->make([
+            'code' => $branch_1->code
+        ])->toArray());
+
+        $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch_2->uuid), $branchArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
     }
 
     public function test_branch_api_call_update_and_use_existing_code_in_different_company_expect_successful()
@@ -431,15 +461,36 @@ class BranchAPITest extends APITestCase
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
+                    ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
                     ->create();
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
-        
+        $company_1 = $user->companies[0];
+        $companyId_1 = $company_1->id;
+
+        $company_2 = $user->companies[1];
+        $companyId_2 = $company_2->id;
+
+        Branch::factory()->create([
+            'company_id' => $companyId_1,
+            'code' => 'test1'
+        ]);
+
+        Branch::factory()->create([
+            'company_id' => $companyId_2,
+            'code' => 'test2'
+        ]);
+
         $this->actingAs($user);
-        $this->markTestSkipped('Under Constructions');
+
+        $branchArr = array_merge([
+            'company_id' => Hashids::encode($companyId_2)
+        ], Branch::factory()->make([
+            'code' => 'test1'
+        ])->toArray());
+
+        $api = $this->json('POST', route('api.post.db.company.branch.edit', $company_2->branches()->first()->uuid), $branchArr);
+
+        $api->assertSuccessful();
     }
 
     #endregion
@@ -457,41 +508,42 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
+
+        $branch = $company->branches()->inRandomOrder()->first();
         
         $this->actingAs($user);
-        $this->markTestSkipped('Under Constructions');
+        
+        $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->uuid));
+
+        $api->assertSuccessful();
+        $this->assertSoftDeleted('branches', [
+            'id' => $branch->id
+        ]);
     }
 
-    public function test_branch_api_call_delete_of_nonexistance_uuid_expect_failed()
+    public function test_branch_api_call_delete_of_nonexistance_uuid_expect_not_found()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+        $user = User::factory()->create();
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
-        
         $this->actingAs($user);
-        $this->markTestSkipped('Under Constructions');
+        $uuid = $this->faker->uuid();
+
+        $api = $this->json('POST', route('api.post.db.company.branch.delete', $uuid));
+        
+        $api->assertStatus(404);
     }
 
     public function test_branch_api_call_delete_without_parameters_expect_failed()
     {
+        $this->expectException(Exception::class);
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+        $user = User::factory()->create();
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
-        
         $this->actingAs($user);
-        $this->markTestSkipped('Under Constructions');
+        $api = $this->json('POST', route('api.post.db.company.branch.delete', null));
+
+        dd($api);
     }
 
     #endregion
