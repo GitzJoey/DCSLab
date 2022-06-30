@@ -63,7 +63,7 @@ class BrandController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = BrandResource::collection($result);
+            $response = new BrandResource($result);
             return $response;    
         }
     }

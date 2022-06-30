@@ -65,7 +65,7 @@ class CompanyController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = CompanyResource::collection($result);
+            $response = new CompanyResource($result);
             return $response;    
         }
     }

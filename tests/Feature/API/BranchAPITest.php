@@ -10,6 +10,7 @@ use App\Enums\UserRoles;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -345,14 +346,29 @@ class BranchAPITest extends APITestCase
 
         $uuid = $company->branches()->inRandomOrder()->first()->uuid;
 
-        //$api = $this->getJson(route('api.get.db.company.branch.read', $uuid));
+        $api = $this->getJson(route('api.get.db.company.branch.read', $uuid));
 
-        //$api->assertSuccessful();
-
-        $this->markTestSkipped('Under Constructions');
+        $api->assertSuccessful();
     }
 
-    public function test_branch_api_call_read_without_uuid_expect_failed()
+    public function test_branch_api_call_read_without_uuid_expect_exception()
+    {
+        $this->expectException(Exception::class);
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        
+        $this->actingAs($user);
+
+        $this->getJson(route('api.get.db.company.branch.read', null));
+    }
+
+    public function test_branch_api_call_read_with_nonexistance_uuid_expect_not_found()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
@@ -366,37 +382,11 @@ class BranchAPITest extends APITestCase
         
         $this->actingAs($user);
 
-        $uuid = $company->branches()->inRandomOrder()->first()->uuid;
+        $uuid = $this->faker->uuid();
 
-        //$api = $this->getJson(route('api.get.db.company.branch.read', $uuid));
+        $api = $this->getJson(route('api.get.db.company.branch.read', $uuid));
 
-        //$api->assertSuccessful();
-
-        $this->markTestSkipped('Under Constructions');
-
-    }
-
-    public function test_branch_api_call_read_with_nonexistance_uuid_expect_failed()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-
-        $company = $user->companies->first();
-        $companyId = $company->id;
-        
-        $this->actingAs($user);
-
-        $uuid = $company->branches()->inRandomOrder()->first()->uuid;
-
-        //$api = $this->getJson(route('api.get.db.company.branch.read', $uuid));
-
-        //$api->assertSuccessful();
-
-        $this->markTestSkipped('Under Constructions');
+        $api->assertStatus(404);
     }
 
     #endregion

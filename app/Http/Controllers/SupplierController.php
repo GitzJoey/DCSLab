@@ -69,7 +69,7 @@ class SupplierController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = SupplierResource::collection($result);
+            $response = new SupplierResource($result);
             return $response;    
         }
     }

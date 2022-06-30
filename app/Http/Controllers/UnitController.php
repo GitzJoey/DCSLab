@@ -65,7 +65,7 @@ class UnitController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = UnitResource::collection($result);
+            $response = new UnitResource($result);
             return $response;    
         }
     }

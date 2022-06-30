@@ -70,7 +70,7 @@ class UserController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = UserResource::collection($result);
+            $response = new UserResource($result);
             return $response;    
         }
     }

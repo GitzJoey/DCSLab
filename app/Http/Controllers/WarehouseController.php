@@ -64,7 +64,7 @@ class WarehouseController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = WarehouseResource::collection($result);
+            $response = new WarehouseResource($result);
             return $response;    
         }
     }

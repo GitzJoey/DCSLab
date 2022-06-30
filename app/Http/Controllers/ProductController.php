@@ -99,7 +99,7 @@ class ProductController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = ProductResource::collection($result);
+            $response = new ProductResource($result);
             return $response;    
         }
     }

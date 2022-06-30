@@ -66,7 +66,7 @@ class EmployeeController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = EmployeeResource::collection($result);
+            $response = new EmployeeResource($result);
             return $response;    
         }
     }

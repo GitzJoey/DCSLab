@@ -65,7 +65,7 @@ class ProductGroupController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = ProductGroupResource::collection($result);
+            $response = new ProductGroupResource($result);
             return $response;    
         }
     }
