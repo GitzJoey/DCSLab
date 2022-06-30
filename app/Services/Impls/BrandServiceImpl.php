@@ -88,9 +88,9 @@ class BrandServiceImpl implements BrandService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                return $pb->paginate(perPage: abs($perPage), page: abs($page));
+                $result = $pb->paginate(perPage: abs($perPage), page: abs($page));
             } else {
-                return $pb->get();
+                $result = $pb->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);

@@ -128,7 +128,7 @@ class SupplierRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch($currentRouteMethod) {
-            case 'read':
+            case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0]:'',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
