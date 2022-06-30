@@ -13,6 +13,7 @@
             "supplier-supplier": "Pemasok",
             "product": "Produk",
             "product-product_group": "Kelompok Produk",
+            "product-brand": "Merk",
             "product-product": "Produk",
             "product-service": "Layanan",
             "administrator": "Administrator",
@@ -204,6 +205,25 @@
         },
         "activity": {
             "title": "Catatan Aktifitas"
+        },
+        "brand": {
+            "table": {
+                "title": "Daftar Merk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama"
+                }
+            },
+            "actions": {
+                "create": "Tambah Merk",
+                "edit": "Ubah Merk",
+                "show": "Tampilkan Merk",
+                "delete": "Hapus Merk"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama"
+            }
         },
         "product": {
             "table": {
@@ -468,7 +488,7 @@
                 "show": "Tampilkan Pembelian",
                 "delete": "Hapus Pembelian"
             },
-            "fields": {                
+            "fields": {
                 "supplier": "Supplier",
                 "invoice_no": "Nomor Faktur",
                 "po_type": "Tipe",

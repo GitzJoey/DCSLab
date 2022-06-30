@@ -44,7 +44,7 @@ class CommonController extends BaseController
         return [
             ['name' => 'components.dropdown.values.productCategoryDDL.product', 'code' => 1],
             ['name' => 'components.dropdown.values.productCategoryDDL.service', 'code' => 2],
-            ['name' => 'components.dropdown.values.productCategoryDDL.product_service', 'code' => 3],
+            ['name' => 'components.dropdown.values.productCategoryDDL.product_and_service', 'code' => 3],
         ];
     }
 
