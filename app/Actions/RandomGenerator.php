@@ -35,7 +35,7 @@ class RandomGenerator
     {
         if ($length < 2) $length = 2;
 
-        return rand(intVal(pow(10, $length - 1)), intVal(pow(10, $length) - 1));
+        return random_int(intVal(pow(10, $length - 1)), intVal(pow(10, $length) - 1));
     }
 
     public function generateOne(int $max = 0): int
@@ -64,12 +64,12 @@ class RandomGenerator
 
     public function randomTrueOrFalse(int $howManyTimes = 1): bool | array
     {
-        if ($howManyTimes <= 1) return (bool)rand(0,1);
+        if ($howManyTimes <= 1) return (bool)random_int(0,1);
 
         $result = array();
         
         for($i = 0; $i < $howManyTimes; $i++) {
-            $result[$i] = (bool)rand(0,1);
+            $result[$i] = (bool)random_int(0,1);
         }
 
         return $result;
@@ -79,7 +79,7 @@ class RandomGenerator
     {
         if ($maxZero == 1) return 10;
 
-        $rand = rand(2, $maxZero);
+        $rand = random_int(2, $maxZero);
 
         return pow(10, $rand);
     }
