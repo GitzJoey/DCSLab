@@ -15,7 +15,7 @@ class CreateUnitsTable extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->uuid();
+            $table->uuid()->nullable();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->string('code');
             $table->string('name');

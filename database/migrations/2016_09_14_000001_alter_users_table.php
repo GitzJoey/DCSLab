@@ -11,7 +11,7 @@ Class AlterUsersTable extends Migration
     {
         if(Schema::hasTable('users')) {
             Schema::table('users', function (Blueprint $table) {
-                $table->uuid();
+                $table->uuid()->nullable();
                 $table->timestamp('password_changed_at')->nullable();
             });
         }
