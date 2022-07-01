@@ -2,7 +2,12 @@
     "name": "gitzjoey/dcslab",
     "type": "project",
     "description": "DCSLab - Laravel Always Updated ERP System",
-    "keywords": ["ERP", "framework", "laravel", "gitzjoey"],
+    "keywords": [
+        "ERP",
+        "framework",
+        "laravel",
+        "gitzjoey"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
@@ -12,7 +17,7 @@
         "intervention/image": "^2.7",
         "laravel/dusk": "^6.24",
         "laravel/fortify": "^1.13",
-        "laravel/framework": "^9.11",
+        "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^3.0",
