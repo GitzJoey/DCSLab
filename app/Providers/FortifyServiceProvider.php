@@ -86,6 +86,6 @@ class FortifyServiceProvider extends ServiceProvider
                 'token' => $request->token,
                 'email' => $request->get('email'),
             ]);
-        });        
+        });
     }
 }
