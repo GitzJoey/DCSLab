@@ -4,20 +4,21 @@ namespace App\Models;
 
 use App\Models\Company;
 use App\Models\ProductUnit;
+use Illuminate\Support\Str;
+use App\Enums\ProductCategory;
 use App\Traits\ScopeableByCompany;
 use Spatie\Activitylog\LogOptions;
-use App\Enums\ProductCategory;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Unit extends Model
 {
-    use LogsActivity;
+    use HasFactory, LogsActivity;
     use SoftDeletes;
 
     use ScopeableByCompany;

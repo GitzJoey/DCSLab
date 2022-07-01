@@ -83,11 +83,15 @@ class UnitServiceImpl implements UnitService
             $unit = Unit::whereCompanyId($companyId);
          
             if (!empty($category)) {
-                if ($category == UnitCategory::PRODUCTS) {
+                $anu1 = UnitCategory::PRODUCTS;
+                $anu2 = UnitCategory::SERVICES;
+                $anu3 = UnitCategory::PRODUCTS_AND_SERVICES;
+
+                if ($category == UnitCategory::PRODUCTS->value) {
                     $unit = $unit->where('category', '=', UnitCategory::PRODUCTS->value);
-                } else if ($category == UnitCategory::SERVICES) {
+                } else if ($category == UnitCategory::SERVICES->value) {
                     $unit = $unit->where('category', '=', UnitCategory::SERVICES->value);
-                } else if ($category == UnitCategory::PRODUCTS_AND_SERVICES) {
+                } else if ($category == UnitCategory::PRODUCTS_AND_SERVICES->value) {
                     $unit = $unit->where('category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value);
                 }
             }
