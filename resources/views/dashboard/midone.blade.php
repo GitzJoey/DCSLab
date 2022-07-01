@@ -14,10 +14,10 @@
 
         <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
 
-        <link rel="stylesheet" href="{{ mix('css/midone/app.css') }}">
+        @vite('resources/css/midone/app.css')
     </head>
     <body class="main">
         <div id="app"></div>
-        <script type="module" src="{{ mix('js/midone/main.js') }}"></script>
+        @vite('resources/js/midone/main.js')
     </body>
 </html>

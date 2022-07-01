@@ -12,7 +12,7 @@
         <meta name="author" content="GitzJoey" />
 
         <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
-        <link rel="stylesheet" href="{{ mix('/css/start/main.css') }}" />
+        @vite('resources/css/start/main.css')
     </head>
     <body>
         <header class="header-area">
@@ -86,6 +86,6 @@
 
         @include('layouts.front.footer')
 
-        <script src="{{ mix('/js/start/main.js') }}"></script>
+        @vite('resources/js/start/main.js')
     </body>
 </html>
