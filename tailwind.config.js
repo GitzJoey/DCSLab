@@ -2,7 +2,7 @@ const colors = require("tailwindcss/colors");
 const {
   toRGB,
   withOpacityValue,
-} = require("@left4code/tw-starter/dist/js/tailwind-config-helper");
+import } from "@left4code/tw-starter/dist/js/tailwind-config-helper";
 
 module.exports = {
   mode: "jit",
