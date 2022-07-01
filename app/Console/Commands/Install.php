@@ -119,7 +119,7 @@ class Install extends Command
         $this->info('Starting Mix');
         if (App::environment('prod', 'production')) {
             $this->info('Executing for production enviroment');
-            exec('npm run prod');
+            exec('npm run build');
         } else {
             exec('npm run dev');
         }

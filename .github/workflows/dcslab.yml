@@ -27,7 +27,7 @@ jobs:
     - name: NPM Install
       run: npm install
     - name: NPM Run
-      run: npm run prod
+      run: npm run build
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
     - name: Execute tests (Unit and Feature tests) via Artisan
