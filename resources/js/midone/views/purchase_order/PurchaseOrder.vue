@@ -147,8 +147,8 @@ import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
 import { useUserContextStore } from "@/stores/user-context";
 import dom from "@left4code/tw-starter/dist/js/dom";
-import DataList from "@/global-components/data-list/Main";
-import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import DataList from "@/global-components/data-list/Main.vue";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 //#endregion
 
 //#region Declarations

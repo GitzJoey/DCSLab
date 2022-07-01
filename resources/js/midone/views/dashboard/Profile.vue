@@ -253,7 +253,7 @@ import { route } from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import { useSideMenuStore } from "../../stores/side-menu";
-import AlertPlaceholder from '@/global-components/alert-placeholder/Main'
+import AlertPlaceholder from '@/global-components/alert-placeholder/Main.vue'
 //#endregion
 
 //#region Declarations
