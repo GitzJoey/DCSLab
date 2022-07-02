@@ -96,7 +96,7 @@ class BranchServiceImpl implements BranchService
 
             $result = null;
 
-            if (!$companyId) {
+            if (! $companyId) {
                 return null;
             }
 

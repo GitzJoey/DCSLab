@@ -81,9 +81,9 @@ class EmployeeController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->employeeService->generateUniqueCode();
-            } while (!$this->employeeService->isUniqueCode($code, $company_id));
+            } while (! $this->employeeService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->employeeService->isUniqueCode($code, $company_id)) {
+            if (! $this->employeeService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -150,9 +150,9 @@ class EmployeeController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->employeeService->generateUniqueCode();
-            } while (!$this->employeeService->isUniqueCode($code, $company_id, $employee->id));
+            } while (! $this->employeeService->isUniqueCode($code, $company_id, $employee->id));
         } else {
-            if (!$this->employeeService->isUniqueCode($code, $company_id, $employee->id)) {
+            if (! $this->employeeService->isUniqueCode($code, $company_id, $employee->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);

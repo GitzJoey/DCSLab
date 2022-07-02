@@ -101,9 +101,9 @@ class BranchController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode();
-            } while (!$this->branchService->isUniqueCode($code, $company_id));
+            } while (! $this->branchService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->branchService->isUniqueCode($code, $company_id)) {
+            if (! $this->branchService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -148,9 +148,9 @@ class BranchController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode();
-            } while (!$this->branchService->isUniqueCode($code, $company_id, $branch->id));
+            } while (! $this->branchService->isUniqueCode($code, $company_id, $branch->id));
         } else {
-            if (!$this->branchService->isUniqueCode($code, $company_id, $branch->id)) {
+            if (! $this->branchService->isUniqueCode($code, $company_id, $branch->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);

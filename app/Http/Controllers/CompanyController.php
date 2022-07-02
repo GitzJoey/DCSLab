@@ -106,9 +106,9 @@ class CompanyController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id));
+            } while (! $this->companyService->isUniqueCode($code, $user->id));
         } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id)) {
+            if (! $this->companyService->isUniqueCode($code, $user->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -151,9 +151,9 @@ class CompanyController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id, $company->id));
+            } while (! $this->companyService->isUniqueCode($code, $user->id, $company->id));
         } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id, $company->id)) {
+            if (! $this->companyService->isUniqueCode($code, $user->id, $company->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);

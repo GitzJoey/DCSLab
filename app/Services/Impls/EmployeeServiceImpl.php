@@ -105,7 +105,7 @@ class EmployeeServiceImpl implements EmployeeService
 
             $result = null;
 
-            if (!$companyId) {
+            if (! $companyId) {
                 return null;
             }
 
