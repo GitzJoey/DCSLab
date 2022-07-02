@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'email' => $this->email,
-            'email_verified' => !is_null($this->email_verified_at),
+            'email_verified' => ! is_null($this->email_verified_at),
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
             $this->mergeWhen($this->relationLoaded('profile'), [
                 'profile' => new ProfileResource($this->whenLoaded('profile')),
@@ -43,22 +43,27 @@ class UserResource extends JsonResource
 
     private function flattenRoles($roles)
     {
-        if (is_null($roles)) return '';
+        if (is_null($roles)) {
+            return '';
+        }
 
         return $roles->pluck('display_name')->implode(',');
     }
 
     private function selectedRolesInArray($roles)
     {
-        if (is_null($roles)) return [];
+        if (is_null($roles)) {
+            return [];
+        }
 
         return $roles->pluck('hId');
     }
 
     private function getPasswordExpiryDay($password_changed_at)
     {
-        if (is_null($password_changed_at))
+        if (is_null($password_changed_at)) {
             return 0;
+        }
 
         $diff = Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(Config::get('dcslab.PASSWORD_EXPIRY_DAYS')), false);
 
@@ -67,7 +72,9 @@ class UserResource extends JsonResource
 
     private function selectedSettingsInArray($settings)
     {
-        if (is_null($settings)) return [];
+        if (is_null($settings)) {
+            return [];
+        }
 
         $result = [];
         foreach ($settings as $s) {
@@ -87,6 +94,7 @@ class UserResource extends JsonResource
             }
             $result[$skey] = $s->value;
         }
+
         return $result;
     }
 }

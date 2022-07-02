@@ -41,12 +41,12 @@ class DashboardPage extends Page
 
         ];
 
-        return array_merge($elements, $navbar); 
+        return array_merge($elements, $navbar);
     }
 
     private function getNavBarElements()
     {
-        return [            
+        return [
             '@side-menu-dashboard' => '[dusk="side-menu-dashboard"]',
             '@side-menu-dashboard-maindashboard' => '[dusk="side-menu-dashboard-maindashboard"]',
             '@side-menu-dashboard-demo' => '[dusk="side-menu-dashboard-demo"]',
@@ -56,17 +56,17 @@ class DashboardPage extends Page
             '@side-menu-company-branch' => '[dusk="side-menu-company-branch"]',
             '@side-menu-company-employee' => '[dusk="side-menu-company-employee"]',
             '@side-menu-company-warehouse' => '[dusk="side-menu-company-warehouse"]',
-            
+
             '@side-menu-administrator' => '[dusk="side-menu-administrator"]',
             '@side-menu-administrator-user' => '[dusk="side-menu-administrator-user"]',
-            
+
             '@side-menu-product' => '[dusk="side-menu-product"]',
             '@side-menu-product-product' => '[dusk="side-menu-product-product"]',
             '@side-menu-product-service' => '[dusk="side-menu-product-service"]',
-            
+
             '@side-menu-supplier' => '[dusk="side-menu-supplier"]',
             '@side-menu-supplier-supplier' => '[dusk="side-menu-supplier-supplier"]',
-            
+
             '@side-menu-purchase_order' => '[dusk="side-menu-purchase_order"]',
             '@side-menu-purchase_order-purchaseorder' => '[dusk="side-menu-purchase_order-purchaseorder"]',
         ];

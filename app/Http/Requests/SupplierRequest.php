@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RecordStatus;
 use App\Enums\PaymentTerm;
 use App\Enums\PaymentTermType;
+use App\Enums\RecordStatus;
 use App\Models\Supplier;
 use App\Rules\isValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
@@ -21,7 +21,7 @@ class SupplierRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -75,11 +75,13 @@ class SupplierRequest extends FormRequest
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
 
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -92,6 +94,7 @@ class SupplierRequest extends FormRequest
                     'taxable_enterprise' => 'required|boolean',
                     'email' => ['required', 'email'],
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
@@ -104,6 +107,7 @@ class SupplierRequest extends FormRequest
                     'taxable_enterprise' => 'required|boolean',
                     'email' => ['required', 'email'],
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
@@ -132,7 +136,7 @@ class SupplierRequest extends FormRequest
         switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
-                    'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0]:'',
+                    'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;
@@ -142,7 +146,7 @@ class SupplierRequest extends FormRequest
             case 'store':
             case 'update':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'taxable_enterprise' => $this->has('taxable_enterprise') ? filter_var($this->taxable_enterprise, FILTER_VALIDATE_BOOLEAN) : false,
                     'payment_term_type' => PaymentTermType::isValid($this->payment_term_type) ? PaymentTermType::fromName($this->payment_term_type)->value : '',
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,

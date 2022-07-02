@@ -44,7 +44,7 @@ class ActivityLogController extends BaseController
                     'title' => 'Routing',
                     'description' => $a->description,
                     'timestamp' => $a->created_at->format('Y.m.d H.i.s'),
-                    'data' => []
+                    'data' => [],
                 ]);
             } elseif ($a->log_name == 'AuthActivity') {
                 $pos = $this->togglePos($pos);
@@ -56,9 +56,10 @@ class ActivityLogController extends BaseController
                     'title' => $a->description,
                     'description' => $a->description,
                     'timestamp' => $a->created_at->format('Y.m.d H.i.s'),
-                    'data' => []
+                    'data' => [],
                 ]);
-            } else { }
+            } else {
+            }
         }
 
         return $result;
@@ -72,7 +73,8 @@ class ActivityLogController extends BaseController
             $newpos = 'right';
         } elseif ($pos == 'right') {
             $newpos = 'left';
-        } else { }
+        } else {
+        }
 
         return $newpos;
     }

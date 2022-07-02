@@ -3,7 +3,6 @@
 namespace App\Services\Impls;
 
 use App\Services\ActivityLogService;
-
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 
@@ -11,7 +10,6 @@ class ActivityLogServiceImpl implements ActivityLogService
 {
     public function __construct()
     {
-        
     }
 
     public function RoutingActivity(string $routeName, array $routeParameters): void
@@ -47,7 +45,7 @@ class ActivityLogServiceImpl implements ActivityLogService
         }
 
         if (strlen($friendlyName) != 0) {
-            if (!empty($routeParameters)) {
+            if (! empty($routeParameters)) {
                 activity('RoutingActivity')
                     ->withProperty('parameters', $routeParameters)
                     ->log('Navigating to '.$friendlyName);

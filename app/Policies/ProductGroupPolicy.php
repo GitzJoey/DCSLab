@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Enums\UserRoles;
 use App\Models\ProductGroup;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProductGroupPolicy
@@ -65,7 +65,7 @@ class ProductGroupPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('productgroups-update')) {
             return true;
         }
@@ -80,7 +80,7 @@ class ProductGroupPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('productgroups-delete')) {
             return true;
         }

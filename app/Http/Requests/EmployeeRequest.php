@@ -5,10 +5,10 @@ namespace App\Http\Requests;
 use App\Enums\RecordStatus;
 use App\Models\Employee;
 use App\Rules\isValidCompany;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeRequest extends FormRequest
 {
@@ -19,7 +19,7 @@ class EmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -71,10 +71,12 @@ class EmployeeRequest extends FormRequest
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -100,6 +102,7 @@ class EmployeeRequest extends FormRequest
                     'ic_num' => 'required|min:12|max:255',
                     'status' => [new Enum(RecordStatus::class)],
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [

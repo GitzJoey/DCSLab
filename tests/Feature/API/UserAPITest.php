@@ -12,30 +12,30 @@ class UserAPITest extends APITestCase
 
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
     }
 
-    #region store
+    //region store
 
-    #endregion
+    //endregion
 
-    #region list
+    //region list
 
-    #endregion
+    //endregion
 
-    #region read
+    //region read
 
-    #endregion
+    //endregion
 
-    #region update
+    //region update
 
-    #endregion
+    //endregion
 
-    #region delete
+    //region delete
 
-    #endregion
+    //endregion
 
-    #region others
+    //region others
 
-    #endregion
+    //endregion
 }

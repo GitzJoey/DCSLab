@@ -11,6 +11,7 @@ class RandomGenerator
     public function seed(int $s = 0): int
     {
         self::$RSeed = abs(intval($s)) % 9999999 + 1;
+
         return $this->generateNumber();
     }
 
@@ -31,7 +32,7 @@ class RandomGenerator
 
     public function generateRandomTimer(): string
     {
-        return random_int(0, 23).":".str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT).':'.str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT);
+        return random_int(0, 23).':'.str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT).':'.str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT);
     }
 
     public function generateFixedLengthNumber(int $length = 2): int
@@ -70,13 +71,13 @@ class RandomGenerator
     public function randomTrueOrFalse(int $howManyTimes = 1): bool | array
     {
         if ($howManyTimes <= 1) {
-            return (bool)random_int(0,1);
+            return (bool) random_int(0, 1);
         }
 
         $result = [];
-        
-        for($i = 0; $i < $howManyTimes; $i++) {
-            $result[$i] = (bool)random_int(0,1);
+
+        for ($i = 0; $i < $howManyTimes; $i++) {
+            $result[$i] = (bool) random_int(0, 1);
         }
 
         return $result;

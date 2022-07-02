@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Employee;
-use App\Enums\RecordStatus;
 use App\Actions\RandomGenerator;
+use App\Enums\RecordStatus;
+use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmployeeFactory extends Factory
@@ -24,11 +24,11 @@ class EmployeeFactory extends Factory
     public function definition()
     {
         $faker = \Faker\Factory::create('id_ID');
-        
+
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'join_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
-            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum())
+            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -36,7 +36,7 @@ class EmployeeFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -45,7 +45,7 @@ class EmployeeFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }

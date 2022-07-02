@@ -26,7 +26,9 @@ class RoleResource extends JsonResource
 
     private function flattenPermissions($permissions)
     {
-        if (is_null($permissions)) return [];
+        if (is_null($permissions)) {
+            return [];
+        }
 
         return $permissions->pluck('display_name')->implode(',');
     }

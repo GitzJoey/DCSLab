@@ -4,6 +4,13 @@ namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
 use App\Enums\RecordStatus;
+use App\Models\Supplier;
+use App\Models\SupplierProduct;
+use App\Models\User;
+use App\Services\RoleService;
+use App\Services\SupplierService;
+use App\Services\UserService;
+use App\Traits\CacheHelper;
 use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -12,29 +19,19 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\User;
-use App\Models\Supplier;
-use App\Models\SupplierProduct;
-use App\Services\SupplierService;
-use App\Services\UserService;
-use App\Services\RoleService;
-use App\Traits\CacheHelper;
-
 class SupplierServiceImpl implements SupplierService
 {
     use CacheHelper;
 
     public function __construct()
     {
-        
     }
-    
+
     public function create(
         array $supplierArr,
         array $pocArr,
         array $productsArr
-    ): Supplier
-    {
+    ): Supplier {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
@@ -59,7 +56,7 @@ class SupplierServiceImpl implements SupplierService
             $supplier->save();
 
             $sp = [];
-            foreach($productsArr as $p) {
+            foreach ($productsArr as $p) {
                 $spe = new SupplierProduct();
                 $spe->company_id = $supplierArr['company_id'];
                 $spe->product_id = $p['product_id'];
@@ -77,11 +74,11 @@ class SupplierServiceImpl implements SupplierService
             return $supplier;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -93,25 +90,25 @@ class SupplierServiceImpl implements SupplierService
             $container = Container::getInstance();
             $userService = $container->make(UserService::class);
             $roleService = $container->make(RoleService::class);
-    
+
             $roles = $roleService->readBy('name', 'POS-supplier')->id;
-    
+
             $profile = [
                 'first_name' => $poc['name'],
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
-    
+
             $userArr = [
                 'name' => $poc['name'],
-                'email' => $poc['email']
+                'email' => $poc['email'],
             ];
 
             $usr = $userService->create($userArr, $roles, $profile);
-    
+
             return $usr;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -120,20 +117,21 @@ class SupplierServiceImpl implements SupplierService
     }
 
     public function list(
-        int $companyId, 
-        string $search = '', 
-        bool $paginate = true, 
-        int $page = 1, 
-        int $perPage = 10, 
+        int $companyId,
+        string $search = '',
+        bool $paginate = true,
+        int $page = 1,
+        int $perPage = 10,
         bool $useCache = true
-    ): Paginator|Collection
-    {
+    ): Paginator|Collection {
         $cacheKey = '';
         if ($useCache) {
-            $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             $cacheResult = $this->readFromCache($cacheKey);
 
-            if (!is_null($cacheResult)) return $cacheResult;
+            if (! is_null($cacheResult)) {
+                return $cacheResult;
+            }
         }
 
         $result = null;
@@ -141,7 +139,9 @@ class SupplierServiceImpl implements SupplierService
         $timer_start = microtime(true);
 
         try {
-            if (!$companyId) return null;
+            if (! $companyId) {
+                return null;
+            }
 
             if (empty($search)) {
                 $suppliers = Supplier::with('user.profile', 'company', 'supplierProducts.product')->whereCompanyId($companyId)->latest();
@@ -149,7 +149,7 @@ class SupplierServiceImpl implements SupplierService
                 $suppliers = Supplier::with('user.profile', 'company', 'supplierProducts.product')->whereCompanyId($companyId)
                     ->where('name', 'like', '%'.$search.'%')->latest();
             }
-    
+
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 $result = $suppliers->paginate(abs($perPage));
@@ -157,21 +157,23 @@ class SupplierServiceImpl implements SupplierService
                 $result = $suppliers->get();
             }
 
-            if ($useCache) $this->saveToCache($cacheKey, $result);
-            
+            if ($useCache) {
+                $this->saveToCache($cacheKey, $result);
+            }
+
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
         }
     }
 
     public function read(Supplier $supplier): Supplier
     {
-        return $supplier->with('user.profile', 'company', 'supplierProducts.product')->first();        
+        return $supplier->with('user.profile', 'company', 'supplierProducts.product')->first();
     }
 
     public function update(
@@ -179,8 +181,7 @@ class SupplierServiceImpl implements SupplierService
         array $supplierArr,
         array $pocArr,
         array $productsArr
-    ): Supplier
-    {
+    ): Supplier {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
@@ -196,16 +197,16 @@ class SupplierServiceImpl implements SupplierService
                 'taxable_enterprise' => $supplierArr['taxable_enterprise'],
                 'tax_id' => $supplierArr['tax_id'],
                 'remarks' => $supplierArr['remarks'],
-                'status' => $supplierArr['status']
+                'status' => $supplierArr['status'],
             ]);
 
             $supplier->supplierProducts()->delete();
 
             $newSP = [];
-            foreach($productsArr as $product) {
+            foreach ($productsArr as $product) {
                 $newSPE = new SupplierProduct();
                 $newSPE->company_id = $supplierArr['company_id'];
-                $newSPE->supplier_id =$supplier->id;
+                $newSPE->supplier_id = $supplier->id;
                 $newSPE->product_id = $product['product_id'];
                 $newSPE->main_product = $product['main_product'];
 
@@ -221,11 +222,11 @@ class SupplierServiceImpl implements SupplierService
             return $supplier->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -241,11 +242,11 @@ class SupplierServiceImpl implements SupplierService
             $supplier->delete();
 
             $supplier->user()->with('profile')->first()->profile()->update([
-                'status' => 0
+                'status' => 0,
             ]);
 
             $retval = true;
-            
+
             DB::commit();
 
             $this->flushCache();
@@ -253,11 +254,11 @@ class SupplierServiceImpl implements SupplierService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -265,16 +266,18 @@ class SupplierServiceImpl implements SupplierService
     {
         $rand = new RandomGenerator();
         $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+
         return $code;
     }
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $result = Supplier::whereCompanyId($companyId)->where('code', '=' , $code);
+        $result = Supplier::whereCompanyId($companyId)->where('code', '=', $code);
 
-        if($exceptId)
+        if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);
+        }
 
-        return $result->count() == 0 ? true:false;
+        return $result->count() == 0 ? true : false;
     }
 }

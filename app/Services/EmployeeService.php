@@ -17,8 +17,8 @@ interface EmployeeService
 
     public function list(
         int $companyId,
-        string $search = '',
-        bool $paginate = true,
+        string $search,
+        bool $paginate,
         int $page,
         int $perPage = 10,
         bool $useCache = true

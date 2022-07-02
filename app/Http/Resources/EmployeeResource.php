@@ -35,7 +35,9 @@ class EmployeeResource extends JsonResource
 
     private function getSelectedAcsesses($employeeAccesses)
     {
-        if (is_null($employeeAccesses)) return [];
+        if (is_null($employeeAccesses)) {
+            return [];
+        }
 
         return $employeeAccesses->pluck('branch.hId');
     }
