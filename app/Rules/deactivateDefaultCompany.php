@@ -8,7 +8,9 @@ use Illuminate\Contracts\Validation\Rule;
 class deactivateDefaultCompany implements Rule
 {
     private bool $isDefault;
+
     private int $status;
+
     /**
      * Create a new rule instance.
      *
@@ -29,8 +31,11 @@ class deactivateDefaultCompany implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->isDefault == true && $this->status == RecordStatus::INACTIVE->value) return false;
-        else return true;
+        if ($this->isDefault == true && $this->status == RecordStatus::INACTIVE->value) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

@@ -3,10 +3,9 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
-use App\Enums\RecordStatus;
 use App\Enums\PaymentTermType;
+use App\Enums\RecordStatus;
 use App\Models\Supplier;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SupplierFactory extends Factory
@@ -41,7 +40,7 @@ class SupplierFactory extends Factory
             'taxable_enterprise' => $faker->boolean(),
             'tax_id' => $faker->creditCardNumber(),
             'remarks' => $faker->word(),
-            'status' => $status
+            'status' => $status,
         ];
     }
 
@@ -49,7 +48,7 @@ class SupplierFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -58,7 +57,7 @@ class SupplierFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }

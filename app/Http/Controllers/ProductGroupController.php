@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ProductGroupService;
 use App\Http\Requests\ProductGroupRequest;
 use App\Http\Resources\ProductGroupResource;
 use App\Models\ProductGroup;
+use App\Services\ProductGroupService;
 use Exception;
 
 class ProductGroupController extends BaseController
@@ -48,7 +48,7 @@ class ProductGroupController extends BaseController
             return $response;
         }
     }
- 
+
     public function read(ProductGroup $productgroup, ProductGroupRequest $productgroupRequest)
     {
         $request = $productgroupRequest->validated();
@@ -61,13 +61,13 @@ class ProductGroupController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new ProductGroupResource($result);
 
-            return $response;    
+            return $response;
         }
     }
 
@@ -81,9 +81,9 @@ class ProductGroupController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productGroupService->generateUniqueCode();
-            } while (!$this->productGroupService->isUniqueCode($code, $company_id));
+            } while (! $this->productGroupService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->productGroupService->isUniqueCode($code, $company_id)) {
+            if (! $this->productGroupService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -94,7 +94,7 @@ class ProductGroupController extends BaseController
             'company_id' => $request['company_id'],
             'code' => $code,
             'name' => $request['name'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ];
 
         $result = null;
@@ -119,9 +119,9 @@ class ProductGroupController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productGroupService->generateUniqueCode();
-            } while (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id));
+            } while (! $this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id));
         } else {
-            if (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
+            if (! $this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -148,7 +148,7 @@ class ProductGroupController extends BaseController
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
-    
+
     public function delete(ProductGroup $productgroup)
     {
         $result = false;
@@ -160,6 +160,6 @@ class ProductGroupController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }

@@ -5,8 +5,8 @@ namespace App\Http\Requests;
 use App\Enums\RecordStatus;
 use App\Models\Warehouse;
 use App\Rules\isValidCompany;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -19,7 +19,7 @@ class WarehouseRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -69,10 +69,12 @@ class WarehouseRequest extends FormRequest
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -82,6 +84,7 @@ class WarehouseRequest extends FormRequest
                     'name' => 'required|max:255',
                     'status' => [new Enum(RecordStatus::class)],
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
@@ -91,6 +94,7 @@ class WarehouseRequest extends FormRequest
                     'name' => 'required|max:255',
                     'status' => [new Enum(RecordStatus::class)],
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [

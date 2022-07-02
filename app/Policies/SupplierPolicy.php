@@ -91,7 +91,7 @@ class SupplierPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('suppliers-update')) {
             return true;
         }
@@ -113,7 +113,7 @@ class SupplierPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('suppliers-delete')) {
             return true;
         }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RecordStatus;
 use App\Enums\ProductType;
+use App\Enums\RecordStatus;
 use App\Models\Product;
 use App\Rules\isValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,7 +20,7 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -77,11 +77,13 @@ class ProductRequest extends FormRequest
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'readProducts':
             case 'readServices':
                 $rules_read = [
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -98,6 +100,7 @@ class ProductRequest extends FormRequest
                     'product_type' => [new Enum(ProductType::class)],
                     'conv_value.*' => 'numeric|min:1',
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
@@ -114,6 +117,7 @@ class ProductRequest extends FormRequest
                     'product_type' => [new Enum(ProductType::class)],
                     'conv_value.*' => 'numeric|min:1',
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
@@ -144,7 +148,7 @@ class ProductRequest extends FormRequest
             case 'listProducts':
             case 'listServices':
                 $this->merge([
-                    'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0]:'',
+                    'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;
@@ -155,7 +159,7 @@ class ProductRequest extends FormRequest
             case 'store':
             case 'update':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'taxable_supply' => $this->has('taxable_supply') ? filter_var($this->taxable_supply, FILTER_VALIDATE_BOOLEAN) : false,
                     'use_serial_number' => $this->has('use_serial_number') ? filter_var($this->use_serial_number, FILTER_VALIDATE_BOOLEAN) : false,
                     'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,

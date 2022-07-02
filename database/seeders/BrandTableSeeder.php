@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
 use App\Models\Brand;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
@@ -28,10 +28,9 @@ class BrandTableSeeder extends Seeder
             $companies = Company::get()->pluck('id');
         }
 
-        foreach($companies as $c)
-        {
+        foreach ($companies as $c) {
             Brand::factory()->count($brandPerCompany)->create([
-                'company_id' => $c
+                'company_id' => $c,
             ]);
         }
     }

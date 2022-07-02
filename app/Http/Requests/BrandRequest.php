@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\isValidCompany;
 use App\Enums\ProductCategory;
 use App\Models\Brand;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Rules\isValidCompany;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BrandRequest extends FormRequest
 {
@@ -19,7 +19,7 @@ class BrandRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -64,11 +64,13 @@ class BrandRequest extends FormRequest
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
 
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -76,6 +78,7 @@ class BrandRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
@@ -83,6 +86,7 @@ class BrandRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
@@ -121,7 +125,7 @@ class BrandRequest extends FormRequest
             case 'store':
             case 'update':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : ''
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                 ]);
                 break;
             default:

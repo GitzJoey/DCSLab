@@ -3,17 +3,15 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
+use App\Models\Brand;
+use App\Services\BrandService;
+use App\Traits\CacheHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Config;
-
-use App\Services\BrandService;
-
-use App\Models\Brand;
-use App\Traits\CacheHelper;
 
 class BrandServiceImpl implements BrandService
 {
@@ -21,13 +19,11 @@ class BrandServiceImpl implements BrandService
 
     public function __construct()
     {
-        
     }
 
     public function create(
         array $brandArr
-    ): Brand
-    {
+    ): Brand {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
@@ -50,29 +46,30 @@ class BrandServiceImpl implements BrandService
             return $brand;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function list(
-        int $companyId, 
-        string $search = '', 
-        bool $paginate = true, 
-        int $page = 1, 
-        ?int $perPage = 10, 
+        int $companyId,
+        string $search = '',
+        bool $paginate = true,
+        int $page = 1,
+        ?int $perPage = 10,
         bool $useCache = true
-    ): Paginator|Collection
-    {
+    ): Paginator|Collection {
         $cacheKey = '';
         if ($useCache) {
-            $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             $cacheResult = $this->readFromCache($cacheKey);
 
-            if (!is_null($cacheResult)) return $cacheResult;
+            if (! is_null($cacheResult)) {
+                return $cacheResult;
+            }
         }
 
         $result = null;
@@ -85,7 +82,7 @@ class BrandServiceImpl implements BrandService
             } else {
                 $pb = Brand::whereCompanyId($companyId)->where('name', 'like', '%'.$search.'%')->latest();
             }
-    
+
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 $result = $pb->paginate(perPage: abs($perPage), page: abs($page));
@@ -93,15 +90,17 @@ class BrandServiceImpl implements BrandService
                 $result = $pb->get();
             }
 
-            if ($useCache) $this->saveToCache($cacheKey, $result);
-            
+            if ($useCache) {
+                $this->saveToCache($cacheKey, $result);
+            }
+
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
         }
     }
 
@@ -123,26 +122,25 @@ class BrandServiceImpl implements BrandService
                     break;
             }
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function update(
         Brand $brand,
         array $brandArr
-    ): Brand
-    {
+    ): Brand {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $code = $brandArr['code'];
             $name = $brandArr['name'];
-    
+
             $brand->update([
                 'code' => $code,
                 'name' => $name,
@@ -155,11 +153,11 @@ class BrandServiceImpl implements BrandService
             return $brand->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -180,11 +178,11 @@ class BrandServiceImpl implements BrandService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -192,16 +190,18 @@ class BrandServiceImpl implements BrandService
     {
         $rand = new RandomGenerator();
         $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+
         return $code;
     }
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $result = Brand::whereCompanyId($companyId)->where('code', '=' , $code);
+        $result = Brand::whereCompanyId($companyId)->where('code', '=', $code);
 
-        if($exceptId)
+        if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);
+        }
 
-        return $result->count() == 0 ? true:false;
+        return $result->count() == 0 ? true : false;
     }
 }

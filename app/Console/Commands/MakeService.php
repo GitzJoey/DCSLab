@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Pluralizer;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Pluralizer;
 
 class MakeService extends Command
 {
@@ -53,16 +53,16 @@ class MakeService extends Command
         $contents_interface = $this->getSourceFile('interface');
         $contents_implementation = $this->getSourceFile('implementation');
 
-        if (!$this->files->exists($path_interface)) {
+        if (! $this->files->exists($path_interface)) {
             $this->files->put($path_interface, $contents_interface);
-            $this->info("Service Interface created successfully");
+            $this->info('Service Interface created successfully');
         } else {
             $this->info("File {$path_interface} already exist");
         }
 
-        if (!$this->files->exists($path_implementation)) {
+        if (! $this->files->exists($path_implementation)) {
             $this->files->put($path_implementation, $contents_implementation);
-            $this->info("Service Implementation created successfully");
+            $this->info('Service Implementation created successfully');
         } else {
             $this->info("File {$path_implementation} already exist");
         }
@@ -71,30 +71,27 @@ class MakeService extends Command
     /**
      * Return the stub file path for Interface
      * @return string
-     *
      */
     public function getStubPathForInterface()
     {
-        return __DIR__ . '/../../../stubs/ServiceInterface.stub';
+        return __DIR__.'/../../../stubs/ServiceInterface.stub';
     }
 
     /**
      * Return the stub file path for Implementation
      * @return string
-     *
      */
     public function getStubPathForImplementation()
     {
-        return __DIR__ . '/../../../stubs/ServiceImplementation.stub';
+        return __DIR__.'/../../../stubs/ServiceImplementation.stub';
     }
 
     /**
-    **
-    * Map the stub variables present in stub to its value
-    *
-    * @return array
-    *
-    */
+     **
+     * Map the stub variables present in stub to its value
+     *
+     * @return array
+     */
     public function getStubVariables()
     {
         return [
@@ -109,14 +106,14 @@ class MakeService extends Command
      * Get the stub path and the stub variables
      *
      * @return bool|mixed|string
-     *
      */
     public function getSourceFile($mode)
     {
-        if ($mode == 'interface')
+        if ($mode == 'interface') {
             return $this->getStubContents($this->getStubPathForInterface(), $this->getStubVariables());
-        else 
+        } else {
             return $this->getStubContents($this->getStubPathForImplementation(), $this->getStubVariables());
+        }
     }
 
     /**
@@ -126,13 +123,12 @@ class MakeService extends Command
      * @param array $stubVariables
      * @return bool|mixed|string
      */
-    public function getStubContents($stub , $stubVariables = [])
+    public function getStubContents($stub, $stubVariables = [])
     {
         $contents = file_get_contents($stub);
 
-        foreach ($stubVariables as $search => $replace)
-        {
-            $contents = str_replace('$'.$search.'$' , $replace, $contents);
+        foreach ($stubVariables as $search => $replace) {
+            $contents = str_replace('$'.$search.'$', $replace, $contents);
         }
 
         return $contents;
@@ -146,10 +142,11 @@ class MakeService extends Command
      */
     public function getSourceFilePath($mode)
     {
-        if ($mode == 'interface')
-            return base_path('App\\Services') .'\\' .$this->getSingularClassName($this->argument('name')) . 'Service.php';
-        else 
-            return base_path('App\\Services\\Impls') .'\\' .$this->getSingularClassName($this->argument('name')) . 'ServiceImpl.php';
+        if ($mode == 'interface') {
+            return base_path('App\\Services').'\\'.$this->getSingularClassName($this->argument('name')).'Service.php';
+        } else {
+            return base_path('App\\Services\\Impls').'\\'.$this->getSingularClassName($this->argument('name')).'ServiceImpl.php';
+        }
     }
 
     /**
@@ -170,7 +167,7 @@ class MakeService extends Command
      */
     protected function makeDirectory($path)
     {
-        if (!$this->files->isDirectory($path)) {
+        if (! $this->files->isDirectory($path)) {
             $this->files->makeDirectory($path, 0777, true, true);
         }
 

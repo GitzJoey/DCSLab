@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRoles;
 use App\Models\Brand;
 use App\Models\User;
-use App\Enums\UserRoles;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BrandPolicy
@@ -65,7 +65,7 @@ class BrandPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('brands-update')) {
             return true;
         }
@@ -80,7 +80,7 @@ class BrandPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('brands-delete')) {
             return true;
         }
