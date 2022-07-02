@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Service;
 
+use Exception;
+use App\Models\User;
 use App\Models\Brand;
 use App\Models\Company;
 use Tests\ServiceTestCase;
 use App\Services\BrandService;
 use App\Actions\RandomGenerator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 
@@ -22,57 +25,209 @@ class BrandServiceTest extends ServiceTestCase
     }
 
     #region create
+    // ngetes brand service manggil create diharapkan ada di database
     public function test_brand_service_call_create_expect_db_has_record()
     {
-        $this->markTestSkipped('Under Constructions');
+        // ngegantiin acting as
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+        
+        // ngambil data dari Brand Factory trs di tambahin company id trus dimasukin ke array
+        $brandArr = Brand::factory()->make([
+            'company_id' => $user->companies->first()->id
+        ]);
+        
+        // hasilnya brand service bikin array buat brandArr
+        $result = $this->brandService->create($brandArr->toArray());
+
+        $this->assertDatabaseHas('brands', [
+            'id' => $result->id,
+            'company_id' => $brandArr['company_id'],
+            'code' => $brandArr['code'],
+            'name' => $brandArr['name'],
+        ]);
     }
 
+    // ngetest brand service create dengan parameter kosong harapannya kesalahan(error)
     public function test_brand_service_call_create_with_empty_array_parameters_expect_exception()
     {
-        $this->markTestSkipped('Under Constructions');
+        // fungsi expectException dengan kelas Exception
+        $this->expectException(Exception::class);
+        // bikin brand service dengan array kosong []
+        $this->brandService->create([]);
     }
 
     #endregion
 
     #region list
-
+    // ngetes brand service manggil list dengan paginate true yang di harapkan objek paginator
     public function test_brand_service_call_list_with_paginate_true_expect_Paginator_object()
     {
-        $this->markTestSkipped('Under Constructions');
+        // gantinya acting as
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Brand::factory()->count(20), 'brands'), 'companies')
+                    ->create();
+        // manggil list di brand service
+        $result = $this->brandService->list(
+            companyId: $user->companies->first()->id,
+            search: '',
+            paginate: true,
+            page: 1,
+            perPage: 10
+        );
+        // ngecek model brand punya method list dengan paginate instance dari paginator
+        $this->assertInstanceOf(Paginator::class, $result);
     }
 
+    // ngetes brand service manggil list dengan paginate false yang di harapkan objek Collection
     public function test_brand_service_call_list_with_paginate_false_expect_Collection_object()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Brand::factory()->count(20), 'brands'), 'companies')
+                    ->create();
+        // list dibikin false
+        $result = $this->brandService->list(
+            companyId: $user->companies->first()->id,
+            search: '',
+            paginate: false,
+            page: 1,
+            perPage: 10
+        );
+
+        // ngecek model brand punya method list dengan paginate instance dari Collection
+        $this->assertInstanceOf(Collection::class, $result);
     }
 
+    // ngetes brand service manggil list dengan company yang ga ada diharapkan Collection kosong
     public function test_brand_service_call_list_with_nonexistance_companyId_expect_empty_collection()
     {
-        $this->markTestSkipped('Under Constructions');
+        // max id = model company nyari max id dari company ditambah 1. Contohnya company id ada 1-19 trs di ambil yang 19 di tambah 1 jadi 20
+        $maxId = Company::max('id') + 1;
+        // list yang company id hasilnya ngambil dari maxId yang udah di tambah 1
+        $result = $this->brandService->list(companyId: $maxId, search: '', paginate: false);
+
+        $this->assertInstanceOf(Collection::class, $result);
+        // datanya kosong apa engga
+        $this->assertEmpty($result);
     }
 
+    //  ngetes brand service manggil list dengan mengharapkan hasil yang sudah terfilter
     public function test_brand_service_call_list_with_search_parameter_expect_filtered_results()
     {
-        $this->markTestSkipped('Under Constructions');
+        // ngegantiin acting as
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        // parameter 'companies' dari $user di ambil id nya trs dimasukin ke $companyId
+        $companyId = $user->companies->first()->id;
+        
+        $brands = [
+            'Apple','Samsung Group','Google','Microsoft','Verizon','General Electric','AT&T','Amazon','Walmart','IBM','Toyota','Coca Cola','China Mobile','T (Deutsche Telekom)','Wells Fargo','Vodafone','BMW','Shell','Volkswagen','HSBC','Bank of America','Mitsubishi Group','McDonalds','Citi','Home Depot','Mercedes-Benz','Walt Disney','Chase','Intel','ICBC','Honda','Nissan','American Express','Ford','Nike','Cisco','Oracle','Allianz','Siemens','Nestle','BNP Paribas','Santander','Orange','Mitsui Group','HP','Pepsi','UPS','Chevron','Axa','China Construction Bank','Hyundai Group','IKEA','CVS Caremark','Hitachi Group','Target','SoftBank','Agricultural Bank Of China','Tesco','MUFG','Bank of China','ExxonMobil','PWC','PetroChina','GDF Suez','China Unicom','NTT','Walgreens','Comcast','BT','Tata','Airbus','Total','Barclays','JP Morgan','China Telecom','Deloitte','Toshiba','ING (Group)','Sams Club','Deutsche Bank','Marlboro','FedEx','eBay','SAP','Fox','Generali Group','ALDI','Movistar','BP','Lowes','Sinopec','Sony','3M','China Life','LG Group','H&M','KPMG','DHL','Panasonic','RBC','Philips','Accenture','EY','Sberbank','Boeing','TD Bank','Woolworths Group','L\'Oreal','UBS','Bradesco','Renault','au','Costco','EDF','Goldman Sachs','Credit Suisse','Carrefour','Time Warner Cable','Starbucks','ItaÃº','UnitedHealth Group','Facebook','TimeWarner','E.ON','Ping An','Petronas','Bosch','China State Construction','Gazprom','Capital One','Visa','Honeywell','Sumitomo Group','Huawei','Subway','BBVA','NBC','Gillette','SK Group','Telstra','Dell','Macy\'s','TCS','DirecTV','Metlife','Canon','Sky','Morgan Stanley','TIM','Sainsbury','Kellogg\'s','ASDA','SMFG','Societe Generale','Adidas','Eni','Caterpillar','Johnson & Johnson','Scotiabank','Mizuho','Prudential (UK)','Danone','QQ','O2','Enel','Ericsson','Vinci','Nordea','Cartier','Zara','Centurylink','Swiss Re','Paypal','Standard Chartered','Peugeot','Bank of Montreal','Audi','Bell','Banco do Brasil','Bank of Communications','Zurich','Hermes','Rabobank','Sprint','BHP Billiton','UniCredit','Telenor','AIG','Xbox','Medtronic','Chevrolet','Morrison','Avon','BASF','Coles','Mastercard','Cadbury','Union Pacific','EMC','Gucci','Red Bull','Pantene','Warner Bros.','Jardines','Nivea','Kroger','Glencore Xstrata','Alibaba','CBS','Aetna','Statoil','Thomson Reuters','ANZ','Dove','Heinz','Nescafe','ESPN','Mclane Company','Louis Vuitton','Conocophillips','Groupe Casino','Munich Re','Iberdrola','Aeon','Purina','Prudential (US)','Pampers','Bridgestone','Petrobras','Nordstrom','Nomura','U.S. Bank','Emirates','Commonwealth Bank','Royal Mail','E.Leclerc','Shinhan Financial Group','Unilever','China Merchants Bank','MTN','Kia Motors','EE','Aegon','Suzuki','Polo Ralph Lauren','Yahoo!','WellPoint','ABB','Publix','Esso','CNOOC','Bayer','Fiat','Randstad','Mobil','Bud Light','Swisscom','Johnson Controls','Baidu','Daimler','Heineken','BBC','Rolex','CIBC','Marks & Spencer','Prada','National Australia Bank','STC','Johnnie Walker','DZ Bank','CNP Assurances','KT','Westpac','Fujitsu','Allstate','Sharp','Uniqlo','General Motors','Garnier','Dish Network','Arcelormittal','Caixa','Rogers','Delta','Virgin Media','MTV','Saint-Gobain','Michelin','British Gas','7-Eleven','Aviva','BNY Mellon','Estee Lauder','Playstation','Rio Tinto','Dai-Ichi Life','Metro','SK Telecom','SFR','Chow Tai Fook','RWE','Mazda','Chanel','Rolls-Royce','John Deere','Exxon','La Poste','Lukoil','Wrigley\'s','PNC','China Minsheng Bank','Safeway','Emerson Electric','Land Rover','Qualcomm','Alcatel-Lucent','GMC','Magnit','Antarchile','Telus','Citroen','3','Sprite','Budweiser','QVC','Burberry','MINI','Subaru','Coach','Auchan','Asahi','Lexus','Moutai','Lufthansa','Telcel','CPIC','Pfizer','Omega','Berkshire Hathaway','Schneider Electric','Continental','Kyocera','Lotte Group','LIC','Southern Company','Xerox','Enbridge','Bombardier','LancÃ´me','Olay','State Bank of India','Kohl\'s','Marubeni','Ferrari','Discovery','DBS','Express Script','Huggies','Whole Foods','Mountain Dew','Sherwin-Williams','Best Buy','TEPCO','TUI Travel','Winston','Holcim','Ergo','Harley-Davidson','Royal Bank of Scotland','Victoria\'s Secret','Lenovo','McKinsey','NatWest','Maersk','Lockheed Martin','PICC','National Grid','Lay\'s Potato Chips','SYSCO','Travelers','United','MAN','Airtel','Western Digital','Bank of America Merrill Lynch','Chunghwa','MCC','Activision Blizzard','Fluor','Nippon Steel','Duracell','Nec','Dollar General','AIA','Gas Natural','Capgemini','PTT','Lloyds','Claro','The Co-operative Group','AutoZone','Goodyear','Tiffany & Co.','KPN','Geico','Michael Kors','Endesa','MTS','Dongfeng','Commerzbank','J.C. Penney','Johnson\'s','KFC','Optus','Skol','Mapfre','Reliance','Volvo','Adobe','Media Markt & Saturn','KEPCO','Porsche','ZTE','Deutsche Post','KOGAS','Raytheon','Colgate','Beeline','Fujifilm Group','ADP','Ageas','Staples','BAE Systems','KBC','KB Financial Group','UPC','Roche','Etisalat','Otis','Isuzu','Natixis','Ecopetrol','Carmax','LAFARGE','Schlumberger','Mckesson','Novartis','Erste Bank','Rosneft','Arla','Christian Dior','SSE','Daiwa House Industry','Gatorade','ONGC','General Dynamics','21st Century Fox','Next','Industrial Bank','DNB','Halifax','BG','Wolseley','VTB','Singapore Airlines','Mercadona','Progressive','Veolia','United Technologies','Discover','Bed Bath & Beyond','ABN AMRO','Skanska','Toys R Us','NETFLIX','Megafon','Ace','Canadian National Railway','Svenska Handelsbanken','Indian Oil','State Street','EDP','Blackrock','Credit Agricole','Halliburton','CSX','Falabella','Safran','Procter & Gamble','Unicharm Corp','Fanta','Aflac','WeChat','GS Group','Eiffage','Sodexo','Kraft','Glaxosmithkline','China CITIC Bank','McCain'
+        ];
+        
+        // factory brand bikin 10 data
+        Brand::factory()->count(10)->create([
+            'company_id' => $companyId,
+            // name ngambil namanya acak dari $brands ditambah 'testing'
+            'name' => $this->faker->randomElement($brands).' '.'testing'
+        ]);
+
+        // bikin data lagi 10 yang namanya ga di ganti
+        Brand::factory()->count(10)->create([
+            'company_id' => $companyId,
+        ]);
+
+        $result = $this->brandService->list(
+            companyId: $companyId,
+            // search nya nyari kata testing dari data yang udah di bikin
+            search: 'testing',
+            paginate: true,
+            page: 1,
+            perPage: 10
+        );
+
+        $this->assertInstanceOf(Paginator::class, $result);
+        // data yang di harapkan true ada 10 data
+        $this->assertTrue($result->total() == 10);
     }
 
+    // ngetes brand service manggil list page negatif diharapkan hasilnya
     public function test_brand_service_call_list_with_page_parameter_negative_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $companyId = $user->companies->first()->id;
+        
+        // factory brand bikin 25 data
+        Brand::factory()->count(25)->create([
+            'company_id' => $companyId,
+        ]);
+
+        $result = $this->brandService->list(
+            companyId: $companyId, 
+            search: '',
+            paginate: true,
+            // page nya dibikin jadi -1
+            page: -1,
+            perPage: 10
+        );
+
+        $this->assertInstanceOf(Paginator::class, $result);
+        // data yang diharapkan bener harus nya lebih dari 1
+        $this->assertTrue($result->total() > 1);
     }
 
     public function test_brand_service_call_list_with_perpage_parameter_negative_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $companyId = $user->companies->first()->id;
+        
+        // factory brand bikin 25 data
+        Brand::factory()->count(25)->create([
+            'company_id' => $companyId,
+        ]);
+
+        $result = $this->brandService->list(
+            companyId: $companyId, 
+            search: '',
+            paginate: true,
+            page: 1,
+            // perPagenya dibikin jadi -10
+            perPage: -10
+        );
+
+        $this->assertInstanceOf(Paginator::class, $result);
+        // data yang diharapkan bener harusnya lebih dari 1
+        $this->assertTrue($result->total() > 1);
     }
 
     #endregion
 
     #region read
 
+    // test brand service manggil real diharapkan object
     public function test_brand_service_call_read_expect_object()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Brand::factory()->count(20), 'brands'), 'companies')
+                    ->create();
+        // ngambil brand dari company yang ada di $user
+        $brand = $user->companies->first()->brands()->inRandomOrder()->first();
+
+        // hasilnya brand service read dari $brand
+        $result = $this->brandService->read($brand);
+
+        $this->assertInstanceOf(Brand::class, $result);
     }
 
     #endregion
@@ -81,12 +236,45 @@ class BrandServiceTest extends ServiceTestCase
 
     public function test_brand_service_call_update_expect_db_updated()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Brand::factory(), 'brands'), 'companies')
+                    ->create();
+        // brands ngambil dari companies yang ada di $user
+        $brand = $user->companies->first()->brands->first();
+        // factory brand dimasukin ke $brandArr
+        $brandArr = Brand::factory()->make();
+
+        // hasilnya brand service update $brand sama $brandArr dijadiin array
+        $result = $this->brandService->update($brand, $brandArr->toArray());
+        
+        $this->assertInstanceOf(Brand::class, $result);
+        $this->assertDatabaseHas('brands', [
+            'id' => $brand->id,
+            'company_id' => $brand->company_id,
+            'code' => $brandArr['code'],
+            'name' => $brandArr['name'],
+        ]);
     }
 
+    // ngetes brand service manggil update dengan parameter kosong diharapkan kesalahan (error)
     public function test_brand_service_call_update_with_empty_array_parameters_expect_exception()
     {
-        $this->markTestSkipped('Under Constructions');
+        // fungsi expectException dengan kelas Exception
+        $this->expectException(Exception::class);
+
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Brand::factory(), 'brands'), 'companies')
+                    ->create();
+
+        // brands ngambil dari companies yang ada di $user
+        $brand = $user->companies->first()->brands->first();
+        // brandArr dibikin array kosong []
+        $brandArr = [];
+        
+        // brand service ngeupdate
+        $this->brandService->update($brand, $brandArr);
     }
 
     #endregion
@@ -95,7 +283,22 @@ class BrandServiceTest extends ServiceTestCase
 
     public function test_brand_service_call_delete_expect_bool()
     {
-        $this->markTestSkipped('Under Constructions');
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Brand::factory()->count(5), 'brands'), 'companies')
+                    ->create();
+
+        $brand = $user->companies->first()->brands->first();
+        
+        // hasilnya brand service ngedelet $brand
+        $result = $this->brandService->delete($brand);
+        
+        // hasil data dari $result itu boolean atau bukan
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
+        $this->assertSoftDeleted('brands', [
+            'id' => $brand->id
+        ]);
     }
 
     #endregion
