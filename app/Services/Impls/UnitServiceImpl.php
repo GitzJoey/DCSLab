@@ -70,7 +70,7 @@ class UnitServiceImpl implements UnitService
                 $cacheKey = 'read_'.$companyId.'-'.$category.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (! is_null($cacheResult)) {
+                if (!is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -79,7 +79,7 @@ class UnitServiceImpl implements UnitService
 
             $unit = Unit::whereCompanyId($companyId);
 
-            if (! empty($category)) {
+            if (!empty($category)) {
                 if ($category == UnitCategory::PRODUCTS) {
                     $unit = $unit->where('category', '=', UnitCategory::PRODUCTS->value);
                 } elseif ($category == UnitCategory::SERVICES) {

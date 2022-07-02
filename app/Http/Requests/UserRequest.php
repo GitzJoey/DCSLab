@@ -20,7 +20,7 @@ class UserRequest extends FormRequest
         //Authorization Error
         //return false;
 
-        if (! Auth::check()) {
+        if (!Auth::check()) {
             return false;
         }
 

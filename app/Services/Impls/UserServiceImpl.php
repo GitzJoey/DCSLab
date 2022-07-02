@@ -133,7 +133,7 @@ class UserServiceImpl implements UserService
                 $cacheKey = 'read_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (! is_null($cacheResult)) {
+                if (!is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -207,19 +207,19 @@ class UserServiceImpl implements UserService
         $timer_start = microtime(true);
 
         try {
-            if (! is_null($userArr)) {
+            if (!is_null($userArr)) {
                 $this->updateUser($user, $userArr, false);
             }
 
-            if (! is_null($profileArr)) {
+            if (!is_null($profileArr)) {
                 $this->updateProfile($user, $profileArr, false);
             }
 
-            if (! is_null($rolesArr)) {
+            if (!is_null($rolesArr)) {
                 $this->updateRoles($user, $rolesArr, false);
             }
 
-            if (! is_null($settingsArr)) {
+            if (!is_null($settingsArr)) {
                 $this->updateSettings($user, $settingsArr, false);
             }
 

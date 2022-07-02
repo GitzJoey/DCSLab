@@ -115,7 +115,7 @@ class EmployeeController extends BaseController
         ];
 
         $accessesArr = [];
-        if (! empty($request['accessBranchIds'])) {
+        if (!empty($request['accessBranchIds'])) {
             for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
                 array_push($accessesArr, [
                     'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
@@ -183,7 +183,7 @@ class EmployeeController extends BaseController
         ];
 
         $accessesArr = [];
-        if (! empty($request['accessBranchIds'])) {
+        if (!empty($request['accessBranchIds'])) {
             for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
                 array_push($accessesArr, [
                     'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],

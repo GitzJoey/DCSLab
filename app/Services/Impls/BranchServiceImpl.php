@@ -89,7 +89,7 @@ class BranchServiceImpl implements BranchService
                 $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (! is_null($cacheResult)) {
+                if (!is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -137,7 +137,7 @@ class BranchServiceImpl implements BranchService
 
     public function getBranchByCompany(int $companyId = 0, Company $company = null): Collection
     {
-        if (! is_null($company)) {
+        if (!is_null($company)) {
             return $company->branches;
         }
 
@@ -150,7 +150,7 @@ class BranchServiceImpl implements BranchService
 
     public function getMainBranchByCompany(int $companyId = 0, Company $company = null): Branch
     {
-        if (! is_null($company)) {
+        if (!is_null($company)) {
             return $company->branches()->where('is_main', '=', true)->first();
         }
 
@@ -212,7 +212,7 @@ class BranchServiceImpl implements BranchService
         try {
             if ($companyId != 0) {
                 $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => false]);
-            } elseif (! is_null($company)) {
+            } elseif (!is_null($company)) {
                 $retval = $company->branches()->update(['is_main' => false]);
             } else {
                 $retval = 0;

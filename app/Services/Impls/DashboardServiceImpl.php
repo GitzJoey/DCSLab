@@ -29,7 +29,7 @@ class DashboardServiceImpl implements DashboardService
             $cacheKey = 'menu_'.Auth::id();
             $cacheResult = $this->readFromCache($cacheKey);
 
-            if (! is_null($cacheResult)) {
+            if (!is_null($cacheResult)) {
                 return $cacheResult;
             }
         }

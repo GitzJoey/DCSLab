@@ -196,7 +196,7 @@ class Install extends Command
 
     private function passPreInstallCheck()
     {
-        if (! File::exists('.env')) {
+        if (!File::exists('.env')) {
             $this->error('File Not Found: .env');
             $this->error('Aborted');
 

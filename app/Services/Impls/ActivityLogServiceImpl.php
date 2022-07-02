@@ -45,7 +45,7 @@ class ActivityLogServiceImpl implements ActivityLogService
         }
 
         if (strlen($friendlyName) != 0) {
-            if (! empty($routeParameters)) {
+            if (!empty($routeParameters)) {
                 activity('RoutingActivity')
                     ->withProperty('parameters', $routeParameters)
                     ->log('Navigating to '.$friendlyName);

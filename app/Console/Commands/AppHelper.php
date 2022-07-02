@@ -60,7 +60,7 @@ class AppHelper extends Command
      */
     public function handle()
     {
-        if (! File::exists('.env')) {
+        if (!File::exists('.env')) {
             $this->error('File Not Found: .env');
             $this->error('Aborted');
 
@@ -120,7 +120,7 @@ class AppHelper extends Command
             }
             sleep(3);
 
-            if (! is_null($option)) {
+            if (!is_null($option)) {
                 $loop = false;
             }
         }
@@ -342,7 +342,7 @@ class AppHelper extends Command
 
     private function encodeDecodeInputValue()
     {
-        if (! is_null($this->argument('option'))) {
+        if (!is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
             $input = $args[0];
@@ -365,7 +365,7 @@ class AppHelper extends Command
 
     private function createAdminDevUser()
     {
-        if (! is_null($this->argument('option'))) {
+        if (!is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
             $userName = $args[0];

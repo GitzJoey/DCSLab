@@ -114,7 +114,7 @@ class SupplierController extends BaseController
         ];
 
         $productsArr = [];
-        if (! empty($request['productIds'])) {
+        if (!empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
                 array_push($productsArr, [
                     'company_id' => $company_id,
@@ -179,7 +179,7 @@ class SupplierController extends BaseController
         ];
 
         $productsArr = [];
-        if (! empty($request['productIds'])) {
+        if (!empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
                 array_push($productsArr, [
                     'company_id' => $company_id,

@@ -129,7 +129,7 @@ class SupplierServiceImpl implements SupplierService
             $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             $cacheResult = $this->readFromCache($cacheKey);
 
-            if (! is_null($cacheResult)) {
+            if (!is_null($cacheResult)) {
                 return $cacheResult;
             }
         }
