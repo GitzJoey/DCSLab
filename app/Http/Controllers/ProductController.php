@@ -34,6 +34,14 @@ class ProductController extends BaseController
 
         $companyId = $request['company_id'];
 
+        $result = null;
+        $errorMsg = '';
+
+        try {
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
         $result = $this->productService->list(
             companyId: $companyId,
             isProduct: true,
@@ -64,18 +72,25 @@ class ProductController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->productService->list(
-                    companyId: $companyId,
-                    isProduct: false,
-                    isService: true,
-                    search: $search,
-                    paginate: $paginate,
-                    page: $page,
-                    perPage: $perPage
-                );
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productService->list(
+                companyId: $companyId,
+                isProduct: false,
+                isService: true,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = ProductResource::collection($result);
 

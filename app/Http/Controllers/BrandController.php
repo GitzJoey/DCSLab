@@ -30,16 +30,23 @@ class BrandController extends BaseController
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
-        $result = $this->brandService->list(
-            companyId: $companyId,
-            search: $search,
-            paginate: $paginate,
-            page: $page,
-            perPage: $perPage
-        );
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->brandService->list(
+                companyId: $companyId,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );    
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = BrandResource::collection($result);
 

@@ -31,16 +31,23 @@ class WarehouseController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->warehouseService->list(
-            companyId: $companyId,
-            search: $search,
-            paginate: $paginate,
-            page: $page,
-            perPage: $perPage
-        );
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->warehouseService->list(
+                companyId: $companyId,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = WarehouseResource::collection($result);
 
