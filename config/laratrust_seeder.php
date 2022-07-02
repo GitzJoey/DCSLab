@@ -29,7 +29,7 @@ return [
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
         ],
-        //region Extensions
+        #region Extensions
         'POS-owner' => [
             'companies' => 'c,r,ra,u,d',
             'branches' => 'c,r,ra,u,d',
@@ -61,7 +61,7 @@ return [
         'POS-supplier' => [
             'suppliers' => 'r,u',
         ],
-        //endregion
+        #endregion
     ],
 
     'permissions_map' => [

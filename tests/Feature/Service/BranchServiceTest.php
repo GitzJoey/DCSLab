@@ -24,7 +24,7 @@ class BranchServiceTest extends ServiceTestCase
         $this->branchService = app(BranchService::class);
     }
 
-    //region create
+    #region create
     public function test_branch_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -51,9 +51,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->branchService->create([]);
     }
 
-    //endregion
+    #endregion
 
-    //region list
+    #region list
 
     public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
     {
@@ -175,9 +175,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertTrue($result->total() > 1);
     }
 
-    //endregion
+    #endregion
 
-    //region read
+    #region read
 
     public function test_branch_service_call_read_expect_object()
     {
@@ -193,9 +193,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Branch::class, $result);
     }
 
-    //endregion
+    #endregion
 
-    //region update
+    #region update
 
     public function test_branch_service_call_update_expect_db_updated()
     {
@@ -233,9 +233,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->branchService->update($branch, $branchArr);
     }
 
-    //endregion
+    #endregion
 
-    //region delete
+    #region delete
 
     public function test_branch_service_call_delete_expect_bool()
     {
@@ -255,9 +255,9 @@ class BranchServiceTest extends ServiceTestCase
         ]);
     }
 
-    //endregion
+    #endregion
 
-    //region others
+    #region others
 
     public function test_branch_service_call_function_getBranchByCompany_expect_collection_object()
     {
@@ -375,5 +375,5 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertTrue($this->branchService->isUniqueCode('test1', $companyId_2));
     }
 
-    //endregion
+    #endregion
 }

@@ -10,7 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DevController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InboxController;
-//region Extensions
+#region Extensions
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProfileController;
@@ -21,7 +21,7 @@ use App\Http\Controllers\WarehouseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-//endregion
+#endregion
 
 Route::bind('id', function ($id) {
     return ! is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
@@ -33,7 +33,7 @@ Route::post('signup', [ApiAuthController::class, 'signup', 'middleware ' => ['gu
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
 
-        //region Extensions
+        #region Extensions
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::get('read', [CompanyController::class, 'list'])->name('.list');
@@ -94,7 +94,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
             });
         });
-        //endregion
+        #endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
             Route::group(['prefix' => 'users', 'as' => '.users'], function () {
@@ -140,7 +140,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
 
-        //region Extensions
+        #region Extensions
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::post('save', [CompanyController::class, 'store'])->name('.save');
@@ -197,7 +197,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('delete/{product:uuid}', [ProductController::class, 'delete'])->name('.delete');
             });
         });
-        //endregion
+        #endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
             Route::group(['prefix' => 'users', 'as' => '.users'], function () {
