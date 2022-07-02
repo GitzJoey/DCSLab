@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateWarehousesTable extends Migration
 {
@@ -24,7 +24,7 @@ class CreateWarehousesTable extends Migration
             $table->string('city')->nullable();
             $table->string('contact')->nullable();
             $table->string('remarks')->nullable();
-			$table->integer('status')->nullable();
+            $table->integer('status')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

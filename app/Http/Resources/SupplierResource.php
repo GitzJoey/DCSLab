@@ -53,7 +53,7 @@ class SupplierResource extends JsonResource
         if (is_null($supplierProducts)) {
             return [];
         }
-        
+
         $mainProducts = $supplierProducts->where('main_product', '=', 1);
 
         return $mainProducts->count() != 0 ? $mainProducts->pluck('product.hId') : [];

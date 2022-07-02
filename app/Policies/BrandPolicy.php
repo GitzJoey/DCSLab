@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRoles;
 use App\Models\Brand;
 use App\Models\User;
-use App\Enums\UserRoles;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BrandPolicy

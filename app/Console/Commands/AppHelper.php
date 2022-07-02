@@ -6,18 +6,17 @@ use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
 use App\Services\RoleService;
 use App\Services\UserService;
-
+use Database\Seeders\BranchTableSeeder;
+use Database\Seeders\BrandTableSeeder;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\EmployeeTableSeeder;
+use Database\Seeders\ProductGroupTableSeeder;
+use Database\Seeders\ProductTableSeeder;
+use Database\Seeders\RoleTableSeeder;
+use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\UserTableSeeder;
-use Database\Seeders\RoleTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\SupplierTableSeeder;
-use Database\Seeders\ProductTableSeeder;
-use Database\Seeders\BrandTableSeeder;
-use Database\Seeders\ProductGroupTableSeeder;
-use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
-use Database\Seeders\EmployeeTableSeeder;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
@@ -61,17 +60,17 @@ class AppHelper extends Command
      */
     public function handle()
     {
-        if (!File::exists('.env')) {
+        if (! File::exists('.env')) {
             $this->error('File Not Found: .env');
             $this->error('Aborted');
+
             return false;
         }
 
         $option = $this->argument('option');
         $loop = true;
 
-        while($loop)
-        {
+        while ($loop) {
             if (is_null($option)) {
                 $this->info('Available Helper:');
                 $this->info('[1] Update Composer And NPM           [7] Id <-> hId');
@@ -83,7 +82,7 @@ class AppHelper extends Command
                 $this->info('[X] Exit');
             }
 
-            $choose = is_null($option) ? $this->ask('Choose Helper','X') : $option;
+            $choose = is_null($option) ? $this->ask('Choose Helper', 'X') : $option;
 
             switch (strtoupper($choose)) {
                 case 1:
@@ -120,8 +119,10 @@ class AppHelper extends Command
                     break;
             }
             sleep(3);
-            
-            if (!is_null($option)) $loop = false;
+
+            if (! is_null($option)) {
+                $loop = false;
+            }
         }
         $this->info('Bye!');
     }
@@ -132,10 +133,10 @@ class AppHelper extends Command
             $this->info('**************************************');
             $this->info('*     Application In Production!     *');
             $this->info('**************************************');
-        
+
             $runInProd = $this->confirm('Do you really wish to run this command?', false);
 
-            if (!$runInProd) {
+            if (! $runInProd) {
                 return;
             }
         }
@@ -143,10 +144,10 @@ class AppHelper extends Command
         $unattended_mode = $this->confirm('Unattended Mode?', true);
 
         $seeders = [];
-        if (!$unattended_mode) {
+        if (! $unattended_mode) {
             $seeders = $this->choice(
                 'Please select the seeders (comma separated for multiple choices):', [
-                    'UserTableSeeder', 
+                    'UserTableSeeder',
                     'RoleTableSeeder',
                     'CompanyTableSeeder',
                     'BranchTableSeeder',
@@ -165,11 +166,9 @@ class AppHelper extends Command
             $unattended_count = $this->ask('Override the seed count?', 5);
         }
 
-        
-        #region Seeders
+        //region Seeders
 
-        if (in_array('UserTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('UserTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting UserTableSeeder');
             $truncate = $unattended_mode ? false : $this->confirm('Do you want to truncate the users table first?', false);
             $count = $unattended_mode ? $unattended_count : $this->ask('How many data:', 5);
@@ -182,8 +181,7 @@ class AppHelper extends Command
             $this->info('UserTableSeeder Finish.');
         }
 
-        if (in_array('RoleTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('RoleTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting RoleTableSeeder');
             $randomPermission = true;
             $count = $unattended_mode ? $unattended_count : $this->ask('How many data:', 5);
@@ -192,12 +190,11 @@ class AppHelper extends Command
 
             $seeder = new RoleTableSeeder();
             $seeder->callWith(RoleTableSeeder::class, [$randomPermission, $count]);
-    
+
             $this->info('RoleTableSeeder Finish.');
         }
 
-        if (in_array('CompanyTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('CompanyTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting CompanyTableSeeder');
             $companiesPerUsers = $unattended_mode ? $unattended_count : $this->ask('How many companies for each users:', 3);
             $userId = $unattended_mode ? 0 : $this->ask('Only to this userId (0 to all):', 0);
@@ -210,8 +207,7 @@ class AppHelper extends Command
             $this->info('CompanyTableSeeder Finish.');
         }
 
-        if (in_array('BranchTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('BranchTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting BranchTableSeeder');
             $branchPerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many branches per company (0 to skip) :', 3);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
@@ -220,13 +216,11 @@ class AppHelper extends Command
 
             $seeder = new BranchTableSeeder();
             $seeder->callWith(BranchTableSeeder::class, [$branchPerCompanies, $onlyThisCompanyId]);
-    
 
-            $this->info('BranchTableSeeder Finish.');    
+            $this->info('BranchTableSeeder Finish.');
         }
 
-        if (in_array('WarehouseTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('WarehouseTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting WarehouseTableSeeder');
             $warehousePerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many warehouses per company (0 to skip) :', 3);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
@@ -239,8 +233,7 @@ class AppHelper extends Command
             $this->info('WarehouseTableSeeder Finish.');
         }
 
-        if (in_array('UnitTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('UnitTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting UnitTableSeeder');
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
@@ -252,8 +245,7 @@ class AppHelper extends Command
             $this->info('UnitTableSeeder Finish.');
         }
 
-        if (in_array('ProductGroupTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('ProductGroupTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting ProductGroupTableSeeder');
             $productGroupPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many product groups (0 to skip):', 3);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
@@ -266,8 +258,7 @@ class AppHelper extends Command
             $this->info('ProductGroupTableSeeder Finish.');
         }
 
-        if (in_array('BrandTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('BrandTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting BrandTableSeeder');
             $brandPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many brands (0 to skip):', 5);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
@@ -276,12 +267,11 @@ class AppHelper extends Command
 
             $seeder = new BrandTableSeeder();
             $seeder->callWith(BrandTableSeeder::class, [$brandPerCompany, $onlyThisCompanyId]);
-    
+
             $this->info('BrandTableSeeder Finish.');
         }
 
-        if (in_array('ProductTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('ProductTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting ProductTableSeeder');
             $productPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many products for each companies:', 5);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
@@ -290,12 +280,11 @@ class AppHelper extends Command
 
             $seeder = new ProductTableSeeder();
             $seeder->callWith(ProductTableSeeder::class, [$productPerCompany, $onlyThisCompanyId]);
-    
+
             $this->info('ProductTableSeeder Finish.');
         }
 
-        if (in_array('SupplierTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('SupplierTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting SupplierTableSeeder');
             $supplierPerCompany = $unattended_mode ? $unattended_count : $this->ask('How many supplier for each companies:', 5);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
@@ -304,12 +293,11 @@ class AppHelper extends Command
 
             $seeder = new SupplierTableSeeder();
             $seeder->callWith(SupplierTableSeeder::class, [$supplierPerCompany, $onlyThisCompanyId]);
-    
+
             $this->info('SupplierTableSeeder Finish.');
         }
 
-        if (in_array('CustomerTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('CustomerTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting CustomerTableSeeder');
             $count = $unattended_mode ? $unattended_count : $this->ask('How many customer for each companies:', 5);
 
@@ -319,8 +307,7 @@ class AppHelper extends Command
             $this->info('CustomerTableSeeder Finish.');
         }
 
-        if (in_array('EmployeeTableSeeder', $seeders) || $unattended_mode)
-        {
+        if (in_array('EmployeeTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting EmployeeTableSeeder');
             $count = $unattended_mode ? $unattended_count : $this->ask('How many employee for each branches in companies:', 5);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
@@ -332,7 +319,7 @@ class AppHelper extends Command
             $this->info('CustomerTableSeeder Finish.');
         }
 
-        #endregion
+        //endregion
     }
 
     private function wipeDatabase()
@@ -355,7 +342,7 @@ class AppHelper extends Command
 
     private function encodeDecodeInputValue()
     {
-        if (!is_null($this->argument('option'))) {
+        if (! is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
             $input = $args[0];
@@ -366,10 +353,10 @@ class AppHelper extends Command
         try {
             if (is_numeric($input)) {
                 $this->info('Assuming input value as Id.');
-                $this->info('hId: ' . Hashids::encode($input));
+                $this->info('hId: '.Hashids::encode($input));
             } else {
                 $this->info('Assuming input value as hId.');
-                $this->info('Id: ' . Hashids::decode($input)[0]);
+                $this->info('Id: '.Hashids::decode($input)[0]);
             }
         } catch (Exception $e) {
             $this->info('Input is invalid.');
@@ -378,7 +365,7 @@ class AppHelper extends Command
 
     private function createAdminDevUser()
     {
-        if (!is_null($this->argument('option'))) {
+        if (! is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
             $userName = $args[0];
@@ -390,36 +377,37 @@ class AppHelper extends Command
             $this->info('Name: '.$userName);
             $this->info('Email: '.$userEmail);
             $this->info('Password: '.'***********');
-            $this->info('Account Type: '. ($is_dev ? 'Developers':'Administrator'));
+            $this->info('Account Type: '.($is_dev ? 'Developers' : 'Administrator'));
         } else {
             $this->info('Creating Admin/Dev Account ...');
-            $is_dev = $this->confirm("Are you a developer?", false);
-    
-            if(!$is_dev)
+            $is_dev = $this->confirm('Are you a developer?', false);
+
+            if (! $is_dev) {
                 $this->info('Setting you account as administrator since you\'re not dev...');
-    
+            }
+
             $userName = 'GitzJoey';
             $userEmail = 'gitzjoey@yahoo.com';
             $userPassword = 'thepassword';
-    
+
             $valid = false;
-    
-            while (!$valid) {
+
+            while (! $valid) {
                 $userName = $this->ask('Name:', $userName);
                 $userEmail = $this->ask('Email:', $userEmail);
                 $userPassword = $this->secret('Password:', $userPassword);
-    
+
                 $validator = Validator::make([
                     'name' => $userName,
                     'email' => $userEmail,
-                    'password' => $userPassword
+                    'password' => $userPassword,
                 ], [
                     'name' => 'required|min:3|max:50',
                     'email' => 'required|max:255|email|unique:users,email',
-                    'password' => 'required|min:7'
+                    'password' => 'required|min:7',
                 ]);
-    
-                if (!$validator->fails()) {
+
+                if (! $validator->fails()) {
                     $valid = true;
                 } else {
                     foreach ($validator->errors()->all() as $errorMessage) {
@@ -427,13 +415,14 @@ class AppHelper extends Command
                     }
                 }
             }
-    
+
             $confirmed = $this->confirm("Everything's OK? Do you wish to continue?");
-    
-            if (!$confirmed) {
+
+            if (! $confirmed) {
                 $this->error('Aborted');
+
                 return false;
-            }    
+            }
         }
 
         $container = Container::getInstance();
@@ -450,13 +439,13 @@ class AppHelper extends Command
         $profile = [
             'first_name' => $userName,
             'country' => 'Singapore',
-            'status' => RecordStatus::ACTIVE
+            'status' => RecordStatus::ACTIVE,
         ];
 
         $user = [
             'name' => $userName,
             'email' => $userEmail,
-            'password' => $userPassword
+            'password' => $userPassword,
         ];
 
         $userService->create(
@@ -478,7 +467,7 @@ class AppHelper extends Command
 
         $email = '';
 
-        while (!$valid) {
+        while (! $valid) {
             $email = $this->ask('Email:', $email);
 
             $usr = $userService->readby('EMAIL', $email);
@@ -493,15 +482,17 @@ class AppHelper extends Command
 
                 $role = $roleService->readBy('DISPLAY_NAME', $roleDisplayName);
 
-                if (!$role) {
+                if (! $role) {
                     $this->error('Invalid Role');
+
                     return false;
                 }
 
                 $confirmed = $this->confirm("Proceed to $mode Role $role->display_name to $usr->name?", true);
 
-                if (!$confirmed) {
+                if (! $confirmed) {
                     $this->error('Aborted');
+
                     return false;
                 }
 
@@ -510,7 +501,6 @@ class AppHelper extends Command
                 } elseif ($mode == 'Remove') {
                     $usr->detachRole($role);
                 } else {
-
                 }
 
                 $this->info('Done');
@@ -518,10 +508,11 @@ class AppHelper extends Command
 
                 sleep(3);
 
-                $confirmedExit = $this->confirm("Do you want to attach/remove another role?", false);
+                $confirmedExit = $this->confirm('Do you want to attach/remove another role?', false);
 
-                if (!$confirmedExit) {
+                if (! $confirmedExit) {
                     $this->error('Exiting');
+
                     return false;
                 }
             }

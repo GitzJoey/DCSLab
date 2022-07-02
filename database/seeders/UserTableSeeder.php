@@ -44,7 +44,7 @@ class UserTableSeeder extends Seeder
 
             $roles = $instances->make(RoleService::class)->readBy('NAME', $role);
 
-            if (!$roles) {
+            if (! $roles) {
                 $roles = $instances->make(RoleService::class)->readBy('NAME', UserRoles::USER->value);
             }
 

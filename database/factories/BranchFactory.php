@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Actions\RandomGenerator;
 use App\Enums\RecordStatus;
 use App\Models\Branch;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BranchFactory extends Factory

@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductType;
-use App\Services\ProductService;
-
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\ProductService;
 use Exception;
+use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductController extends BaseController
 {
@@ -74,7 +73,7 @@ class ProductController extends BaseController
                     page: $page,
                     perPage: $perPage
                 );
-        
+
         if (is_null($result)) {
             return response()->error();
         } else {
@@ -96,13 +95,13 @@ class ProductController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new ProductResource($result);
 
-            return $response;    
+            return $response;
         }
     }
 
@@ -118,35 +117,35 @@ class ProductController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = ProductResource::collection($result);
 
-            return $response;    
+            return $response;
         }
     }
 
     public function store(ProductRequest $productRequest)
-    {   
+    {
         $request = $productRequest->validated();
-        
+
         $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productService->generateUniqueCodeForProduct();
-            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id));
+            } while (! $this->productService->isUniqueCodeForProduct($code, $company_id));
         } else {
-            if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
+            if (! $this->productService->isUniqueCodeForProduct($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
-        
+
         $productArr = [
             'code' => $code,
             'name' => $request['name'],
@@ -160,7 +159,7 @@ class ProductController extends BaseController
             'status' => $request['status'],
             'taxable_supply' => $request['taxable_supply'],
             'standard_rated_supply' => $request['standard_rated_supply'],
-            'price_include_vat' => $request['price_include_vat']
+            'price_include_vat' => $request['price_include_vat'],
         ];
 
         $productUnitsArr = [];
@@ -206,9 +205,9 @@ class ProductController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productService->generateUniqueCodeForProduct($company_id);
-            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id, $product->id));
+            } while (! $this->productService->isUniqueCodeForProduct($code, $company_id, $product->id));
         } else {
-            if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $product->id)) {
+            if (! $this->productService->isUniqueCodeForProduct($code, $company_id, $product->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -229,7 +228,7 @@ class ProductController extends BaseController
             'status' => $request['status'],
             'taxable_supply' => $request['taxable_supply'],
             'standard_rated_supply' => $request['standard_rated_supply'],
-            'price_include_vat' => $request['price_include_vat']
+            'price_include_vat' => $request['price_include_vat'],
         ];
 
         $use_serial_number = $request['use_serial_number'];
@@ -249,7 +248,7 @@ class ProductController extends BaseController
 
             $use_serial_number = is_null($use_serial_number) ? 0 : $use_serial_number;
             $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
-            
+
             $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
             $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
 
@@ -293,7 +292,7 @@ class ProductController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 
     public function getProductType(Request $request)

@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Service;
 
+use App\Actions\RandomGenerator;
 use App\Models\Company;
 use App\Models\Employee;
-use Tests\ServiceTestCase;
 use App\Models\EmployeeAccess;
-use App\Actions\RandomGenerator;
 use App\Services\EmployeeService;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class EmployeeServiceTest extends ServiceTestCase
 {
@@ -22,7 +22,7 @@ class EmployeeServiceTest extends ServiceTestCase
         $this->employeeService = app(EmployeeService::class);
     }
 
-    #region create
+    //region create
     public function test_employee_service_call_create_expect_db_has_record()
     {
         $this->markTestSkipped('Under Constructions');
@@ -33,9 +33,9 @@ class EmployeeServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region list
+    //region list
 
     public function test_employee_service_call_list_with_paginate_true_expect_Paginator_object()
     {
@@ -67,18 +67,18 @@ class EmployeeServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region read
+    //region read
 
     public function test_employee_service_call_read_expect_object()
     {
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region update
+    //region update
 
     public function test_employee_service_call_update_expect_db_updated()
     {
@@ -90,20 +90,18 @@ class EmployeeServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region delete
+    //region delete
 
     public function test_employee_service_call_delete_expect_bool()
     {
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region others
+    //region others
 
-    
-
-    #endregion
+    //endregion
 }

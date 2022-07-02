@@ -2,45 +2,41 @@
 
 namespace App\Providers;
 
-use App\Services\{
-    UserService,
-    RoleService,
-    InboxService,
-    SystemService,
-    DashboardService,
-    ActivityLogService
-};
-#region Extensions 
-use App\Services\UnitService;
-use App\Services\BrandService;
+use App\Services\ActivityLogService;
 use App\Services\BranchService;
+use App\Services\BrandService;
 use App\Services\CompanyService;
-use App\Services\ProductService;
+use App\Services\DashboardService;
 use App\Services\EmployeeService;
-use App\Services\SupplierService;
-use App\Services\WarehouseService;
-use App\Services\ProductGroupService;
-#endregion
-
-use App\Services\Impls\{
-    UserServiceImpl,
-    RoleServiceImpl,
-    InboxServiceImpl,
-    SystemServiceImpl,
-    DashboardServiceImpl,
-    ActivityLogServiceImpl
-};
-#region Extensions
-use App\Services\Impls\UnitServiceImpl;
-use App\Services\Impls\BrandServiceImpl;
+//region Extensions
+use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
+use App\Services\Impls\BrandServiceImpl;
 use App\Services\Impls\CompanyServiceImpl;
-use App\Services\Impls\ProductServiceImpl;
+use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\EmployeeServiceImpl;
-use App\Services\Impls\SupplierServiceImpl;
-use App\Services\Impls\WarehouseServiceImpl;
+use App\Services\Impls\InboxServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
-#endregion
+use App\Services\Impls\ProductServiceImpl;
+//endregion
+
+use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\SupplierServiceImpl;
+use App\Services\Impls\SystemServiceImpl;
+use App\Services\Impls\UnitServiceImpl;
+use App\Services\Impls\UserServiceImpl;
+use App\Services\Impls\WarehouseServiceImpl;
+//region Extensions
+use App\Services\InboxService;
+use App\Services\ProductGroupService;
+use App\Services\ProductService;
+use App\Services\RoleService;
+use App\Services\SupplierService;
+use App\Services\SystemService;
+use App\Services\UnitService;
+use App\Services\UserService;
+use App\Services\WarehouseService;
+//endregion
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
@@ -83,7 +79,7 @@ class AppServiceProvider extends ServiceProvider
             return new InboxServiceImpl();
         });
 
-        #region Extensions
+        //region Extensions
 
         $this->app->singleton(CompanyService::class, function () {
             return new CompanyServiceImpl();
@@ -121,7 +117,7 @@ class AppServiceProvider extends ServiceProvider
             return new EmployeeServiceImpl();
         });
 
-        #endregion
+        //endregion
     }
 
     /**

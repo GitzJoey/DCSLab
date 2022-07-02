@@ -2,24 +2,23 @@
 
 namespace App\Models;
 
+use App\Enums\ProductCategory;
 use App\Models\Company;
 use App\Models\ProductUnit;
 use App\Traits\ScopeableByCompany;
-use Spatie\Activitylog\LogOptions;
-use App\Enums\ProductCategory;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Unit extends Model
 {
     use LogsActivity;
     use SoftDeletes;
-
     use ScopeableByCompany;
 
     protected $fillable = [

@@ -9,10 +9,10 @@ use Tests\APITestCase;
 class DashboardAPITest extends APITestCase
 {
     use WithFaker;
-    
+
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
     }
 
     public function test_dashboard_api_get_usermenu_expect_array()
