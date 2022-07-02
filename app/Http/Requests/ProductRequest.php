@@ -75,7 +75,7 @@ class ProductRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
                 return $rules_list;
             case 'readProducts':

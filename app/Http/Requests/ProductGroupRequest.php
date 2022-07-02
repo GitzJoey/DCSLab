@@ -62,7 +62,7 @@ class ProductGroupRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
                 return $rules_list;
             case 'read':
@@ -74,7 +74,7 @@ class ProductGroupRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductCategory::class)]
+                    'category' => [new Enum(ProductCategory::class)],
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -82,7 +82,7 @@ class ProductGroupRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductCategory::class)]
+                    'category' => [new Enum(ProductCategory::class)],
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

@@ -30,7 +30,7 @@ class Company extends Model
         'name',
         'address',
         'default',
-        'status'
+        'status',
     ];
 
     protected static $logAttributes = ['code', 'name', 'address', 'default', 'status'];
@@ -41,7 +41,7 @@ class Company extends Model
 
     protected $casts = [
         'default' => 'boolean',
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute

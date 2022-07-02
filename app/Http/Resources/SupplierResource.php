@@ -31,11 +31,11 @@ class SupplierResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('supplierProducts'), [
                 'supplier_products' => SupplierProductResource::collection($this->whenLoaded('supplierProducts')),
                 'selected_products' => $this->getSelectedProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
-                'main_products' => $this->getMainProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null)
+                'main_products' => $this->getMainProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
             ]),
             $this->mergeWhen($this->relationLoaded('user'), [
-                'supplier_poc' => new UserResource($this->whenLoaded('user'))
-            ])
+                'supplier_poc' => new UserResource($this->whenLoaded('user')),
+            ]),
         ];
     }
 

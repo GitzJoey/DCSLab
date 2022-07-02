@@ -71,7 +71,7 @@ class UserRequest extends FormRequest
                 'paginate' => ['required', 'boolean'],
                 'page' => ['required_if:paginate,true', 'numeric'],
                 'perPage' => ['required_if:paginate,true', 'numeric'],
-                'refresh' => ['nullable', 'boolean']
+                'refresh' => ['nullable', 'boolean'],
             ];
             return $rules_list;
         }
@@ -105,7 +105,7 @@ class UserRequest extends FormRequest
                 'tax_id' => 'required',
                 'ic_num' => 'required',
                 'status' => [new Enum(RecordStatus::class)],
-                'country' => 'required'
+                'country' => 'required',
             ];
 
             return array_merge($rules_update, $nullableArr);
@@ -125,7 +125,7 @@ class UserRequest extends FormRequest
             'tax_id' => trans('validation_attributes.tax_id'),
             'ic_num' => trans('validation_attributes.ic_num'),
             'status' => trans('validation_attributes.status'),
-            'country' => trans('validation_attributes.country')
+            'country' => trans('validation_attributes.country'),
         ];
     }
 

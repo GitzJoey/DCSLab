@@ -71,7 +71,7 @@ class WarehouseController extends BaseController
     }
 
     public function store(WarehouseRequest $warehouseRequest)
-    {   
+    {
         $request = $warehouseRequest->validated();
 
         $company_id = $request['company_id'];

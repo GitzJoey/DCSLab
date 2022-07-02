@@ -20,7 +20,7 @@ class ProductGroupResource extends JsonResource
             'company' => new CompanyResource($this->company),
             'code' => $this->code,
             'name' => $this->name,
-            'category' => $this->category->name
+            'category' => $this->category->name,
         ];
     }
 }

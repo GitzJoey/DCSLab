@@ -67,7 +67,7 @@ class WarehouseRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
                 return $rules_list;
             case 'read':
@@ -80,7 +80,7 @@ class WarehouseRequest extends FormRequest
                     'branch_id' => ['required'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -89,7 +89,7 @@ class WarehouseRequest extends FormRequest
                     'branch_id' => ['required'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

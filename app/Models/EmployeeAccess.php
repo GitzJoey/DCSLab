@@ -21,12 +21,12 @@ class EmployeeAccess extends Model
 
     protected $fillable = [
         'employee_id',
-        'branch_id'
+        'branch_id',
     ];
 
     protected static $logAttributes = [
         'employee_id', 
-        'branch_id'
+        'branch_id',
     ];
 
     protected static $logOnlyDirty = true;

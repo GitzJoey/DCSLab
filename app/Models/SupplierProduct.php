@@ -40,7 +40,7 @@ class SupplierProduct extends Model
             get: fn () => HashIds::encode($this->attributes['id'])
         );
     }
-    
+
     public function supplier_hId() : Attribute
     {
         return Attribute::make(

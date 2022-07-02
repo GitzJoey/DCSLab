@@ -25,7 +25,7 @@ class Brand extends Model
     protected $fillable = [
         'company_id',
         'code',
-        'name'
+        'name',
     ];
 
     protected static $logAttributes = ['code', 'name'];
@@ -55,14 +55,14 @@ class Brand extends Model
     {
         return LogOptions::defaults();
     }
-    
+
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
             $model->uuid = Str::uuid();
-            
+
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

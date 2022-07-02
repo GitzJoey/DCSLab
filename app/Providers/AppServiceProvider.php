@@ -59,65 +59,65 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(DuskServiceProvider::class);
         }
 
-        $this->app->singleton(SystemService::class, function (){
+        $this->app->singleton(SystemService::class, function () {
             return new SystemServiceImpl();
         });
 
-        $this->app->singleton(DashboardService::class, function (){
+        $this->app->singleton(DashboardService::class, function () {
             return new DashboardServiceImpl();
         });
 
-        $this->app->singleton(RoleService::class, function (){
+        $this->app->singleton(RoleService::class, function () {
             return new RoleServiceImpl();
         });
 
-        $this->app->singleton(UserService::class, function (){
+        $this->app->singleton(UserService::class, function () {
             return new UserServiceImpl();
         });
 
-        $this->app->singleton(ActivityLogService::class, function (){
+        $this->app->singleton(ActivityLogService::class, function () {
             return new ActivityLogServiceImpl();
         });
 
-        $this->app->singleton(InboxService::class, function (){
+        $this->app->singleton(InboxService::class, function () {
             return new InboxServiceImpl();
         });
 
         #region Extensions
 
-        $this->app->singleton(CompanyService::class, function (){
+        $this->app->singleton(CompanyService::class, function () {
             return new CompanyServiceImpl();
         });
 
-        $this->app->singleton(BrandService::class, function (){
+        $this->app->singleton(BrandService::class, function () {
             return new BrandServiceImpl();
         });
 
-        $this->app->singleton(SupplierService::class, function (){
+        $this->app->singleton(SupplierService::class, function () {
             return new SupplierServiceImpl();
         });
 
-        $this->app->singleton(ProductService::class, function (){
+        $this->app->singleton(ProductService::class, function () {
             return new ProductServiceImpl();
         });
 
-        $this->app->singleton(ProductGroupService::class, function (){
+        $this->app->singleton(ProductGroupService::class, function () {
             return new ProductGroupServiceImpl();
         });
 
-        $this->app->singleton(UnitService::class, function (){
+        $this->app->singleton(UnitService::class, function () {
             return new UnitServiceImpl();
         });
 
-        $this->app->singleton(BranchService::class, function (){
+        $this->app->singleton(BranchService::class, function () {
             return new BranchServiceImpl();
         });
 
-        $this->app->singleton(WarehouseService::class, function (){
+        $this->app->singleton(WarehouseService::class, function () {
             return new WarehouseServiceImpl();
         });
 
-        $this->app->singleton(EmployeeService::class, function (){
+        $this->app->singleton(EmployeeService::class, function () {
             return new EmployeeServiceImpl();
         });
 

@@ -19,11 +19,17 @@ class SupplierPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('suppliers-readAny')) return true;
+        if ($user->hasPermission('suppliers-readAny')) {
+            return true;
+        }
     }
 
     /**
@@ -35,11 +41,17 @@ class SupplierPolicy
      */
     public function view(User $user, Supplier $supplier = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('suppliers-read')) return true;
+        if ($user->hasPermission('suppliers-read')) {
+            return true;
+        }
     }
 
     /**
@@ -50,11 +62,17 @@ class SupplierPolicy
      */
     public function create(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('suppliers-create')) return true;
+        if ($user->hasPermission('suppliers-create')) {
+            return true;
+        }
     }
 
     /**
@@ -66,11 +84,17 @@ class SupplierPolicy
      */
     public function update(User $user, Supplier $supplier = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
     
-        if ($user->hasPermission('suppliers-update')) return true;
+        if ($user->hasPermission('suppliers-update')) {
+            return true;
+        }
     }
 
     /**
@@ -82,11 +106,17 @@ class SupplierPolicy
      */
     public function delete(User $user, Supplier $supplier = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
     
-        if ($user->hasPermission('suppliers-delete')) return true;
+        if ($user->hasPermission('suppliers-delete')) {
+            return true;
+        }
     }
 
     /**

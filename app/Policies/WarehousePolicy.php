@@ -19,11 +19,17 @@ class WarehousePolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('warehouses-readAny')) return true;
+        if ($user->hasPermission('warehouses-readAny')) {
+            return true;
+        }
     }
 
     /**
@@ -35,11 +41,17 @@ class WarehousePolicy
      */
     public function view(User $user, Warehouse $warehouse = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('warehouses-read')) return true;
+        if ($user->hasPermission('warehouses-read')) {
+            return true;
+        }
     }
 
     /**
@@ -50,11 +62,17 @@ class WarehousePolicy
      */
     public function create(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('warehouses-create')) return true;
+        if ($user->hasPermission('warehouses-create')) {
+            return true;
+        }
     }
 
     /**
@@ -66,11 +84,17 @@ class WarehousePolicy
      */
     public function update(User $user, Warehouse $warehouse = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('warehouses-update')) return true;
+        if ($user->hasPermission('warehouses-update')) {
+            return true;
+        }
     }
 
     /**
@@ -82,11 +106,17 @@ class WarehousePolicy
      */
     public function delete(User $user, Warehouse $warehouse = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('warehouses-delete')) return true;
+        if ($user->hasPermission('warehouses-delete')) {
+            return true;
+        }
     }
 
     /**

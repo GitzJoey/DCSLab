@@ -21,7 +21,7 @@ class Warehouse extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-    
+
     protected $fillable = [
         'company_id',
         'branch_id',
@@ -31,7 +31,7 @@ class Warehouse extends Model
         'city',
         'contact',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -43,7 +43,7 @@ class Warehouse extends Model
         'city',
         'contact',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
@@ -51,7 +51,7 @@ class Warehouse extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute

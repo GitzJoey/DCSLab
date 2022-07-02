@@ -37,7 +37,7 @@ class Supplier extends Model
         'taxable_enterprise',
         'tax_id',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -51,7 +51,7 @@ class Supplier extends Model
         'taxable_enterprise',
         'tax_id',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
@@ -61,9 +61,9 @@ class Supplier extends Model
     protected $casts = [
         'taxable_enterprise' => 'boolean',
         'payment_term_type' => PaymentTermType::class,
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
-    
+
     public function hId() : Attribute
     {
         return Attribute::make(
@@ -97,7 +97,7 @@ class Supplier extends Model
 
         static::creating(function ($model) {
             $model->uuid = Str::uuid();
-            
+
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

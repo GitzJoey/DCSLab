@@ -25,7 +25,7 @@ class ProfileResource extends JsonResource
             'tax_id' => $this->tax_id,
             'ic_num' => $this->ic_num,
             'img_path' => $this->img_path,
-            'remarks' => $this->remarks
+            'remarks' => $this->remarks,
         ];
     }
 }

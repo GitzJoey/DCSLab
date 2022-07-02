@@ -31,7 +31,7 @@ class Branch extends Model
         'contact',
         'status',
         'is_main',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -43,7 +43,7 @@ class Branch extends Model
         'contact',
         'status',
         'is_main',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
@@ -51,7 +51,7 @@ class Branch extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute
@@ -87,7 +87,7 @@ class Branch extends Model
 
         static::creating(function ($model) {
             $model->uuid = Str::uuid();
-            
+
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

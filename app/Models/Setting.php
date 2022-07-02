@@ -15,7 +15,7 @@ class Setting extends Model
     use HasFactory;
     use LogsActivity;
 
-    protected $table="settings";
+    protected $table = "settings";
 
     protected $fillable = [
         'type',

@@ -27,14 +27,14 @@ class Unit extends Model
         'code',
         'name',
         'description',
-        'category'
+        'category',
     ];
 
     protected static $logAttributes = [
         'code',
         'name',
         'description',
-        'category'
+        'category',
     ];
 
     protected static $logOnlyDirty = true;
@@ -42,7 +42,7 @@ class Unit extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'category' => ProductCategory::class
+        'category' => ProductCategory::class,
     ];
 
     public function hId() : Attribute

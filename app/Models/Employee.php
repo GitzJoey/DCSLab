@@ -26,14 +26,14 @@ class Employee extends Model
         'company_id',
         'code',
         'join_date',
-        'status'
+        'status',
     ];
 
     protected static $logAttributes = [
         'company_id',
         'code',
         'join_date',
-        'status'
+        'status',
     ];
 
     protected static $logOnlyDirty = true;
@@ -41,7 +41,7 @@ class Employee extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute
@@ -77,7 +77,7 @@ class Employee extends Model
 
         static::creating(function ($model) {
             $model->uuid = Str::uuid();
-            
+
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

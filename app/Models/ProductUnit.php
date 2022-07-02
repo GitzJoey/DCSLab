@@ -28,7 +28,7 @@ class ProductUnit extends Model
         'is_base',
         'conversion_value',
         'is_primary_unit',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = ['company_id', 'product_id', 'unit_id', 'code', 'is_base', 'conversion_value', 'is_primary_unit', 'remarks'];

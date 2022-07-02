@@ -73,7 +73,7 @@ class SupplierRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
                 return $rules_list;
             case 'read':
@@ -90,7 +90,7 @@ class SupplierRequest extends FormRequest
                     'payment_term_type' => [new Enum(PaymentTerm::class)],
                     'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required|boolean',
-                    'email' => ['required', 'email']
+                    'email' => ['required', 'email'],
                 ];
                 return array_merge($rules_store, $nullableArr);
             case 'update':
@@ -102,7 +102,7 @@ class SupplierRequest extends FormRequest
                     'payment_term_type' => [new Enum(PaymentTerm::class)],
                     'payment_term' => 'required|numeric',
                     'taxable_enterprise' => 'required|boolean',
-                    'email' => ['required', 'email']
+                    'email' => ['required', 'email'],
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

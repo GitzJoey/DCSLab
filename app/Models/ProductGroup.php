@@ -27,13 +27,13 @@ class ProductGroup extends Model
         'company_id',
         'code',
         'name',
-        'category'
+        'category',
     ];
 
     protected static $logAttributes = [
         'code',
         'name',
-        'category'
+        'category',
     ];
 
     protected static $logOnlyDirty = true;
@@ -41,7 +41,7 @@ class ProductGroup extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'category' => ProductCategory::class
+        'category' => ProductCategory::class,
     ];
 
     public function hId() : Attribute

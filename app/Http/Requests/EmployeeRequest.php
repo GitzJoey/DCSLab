@@ -69,7 +69,7 @@ class EmployeeRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
                 return $rules_list;
             case 'read':
@@ -86,7 +86,7 @@ class EmployeeRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -98,7 +98,7 @@ class EmployeeRequest extends FormRequest
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
                 return array_merge($rules_update, $nullableArr);
             default:

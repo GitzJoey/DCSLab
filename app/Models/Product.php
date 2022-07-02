@@ -42,8 +42,8 @@ class Product extends Model
         'point',
         'use_serial_number',
         'has_expiry_date',
-        'status',       
-        'remarks'
+        'status',
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -59,8 +59,8 @@ class Product extends Model
         'point',
         'use_serial_number',
         'has_expiry_date',
-        'status',       
-        'remarks'
+        'status',
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
@@ -73,9 +73,9 @@ class Product extends Model
         'use_serial_number' => 'boolean',
         'has_expiry_date' => 'boolean',
         'status' => RecordStatus::class,
-        'product_type' => ProductType::class
+        'product_type' => ProductType::class,
     ];
-    
+
     public function hId() : Attribute
     {
         return Attribute::make(

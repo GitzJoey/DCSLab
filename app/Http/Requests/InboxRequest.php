@@ -44,7 +44,7 @@ class InboxRequest extends FormRequest
             case 'store':
                 return [
                     'to' => 'required',
-                    'subject' => 'required'
+                    'subject' => 'required',
                 ];
             default:
                 return [
