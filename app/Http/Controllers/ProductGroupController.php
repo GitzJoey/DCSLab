@@ -160,6 +160,6 @@ class ProductGroupController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return ! $result ? response()->error($errorMsg) : response()->success();
+        return !$result ? response()->error($errorMsg) : response()->success();
     }
 }

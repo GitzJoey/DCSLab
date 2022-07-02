@@ -117,7 +117,7 @@ class ProductServiceImpl implements ProductService
 
             if (!$isProduct && $isService) {
                 $product = $product->where('product_type', '=', ProductType::SERVICE->value);
-            } elseif ($isProduct && ! $isService) {
+            } elseif ($isProduct && !$isService) {
                 $product = $product->where('product_type', '<>', ProductType::SERVICE->value);
             } elseif ($isProduct && $isService) {
             } else {
