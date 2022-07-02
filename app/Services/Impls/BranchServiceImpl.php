@@ -207,7 +207,7 @@ class BranchServiceImpl implements BranchService
         try {
             if ($companyId != 0)
                 $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => false]);
-            else if (!is_null($company)) {
+            elseif (!is_null($company)) {
                 $retval = $company->branches()->update(['is_main' => false]);
             } else {
                 $retval = 0;

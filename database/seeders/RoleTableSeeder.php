@@ -34,7 +34,7 @@ class RoleTableSeeder extends Seeder
                         $role->attachPermission($permissions[$j]);
                     }
                 }
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 dd($e->getMessage());
                 $this->command->info($e->getMessage());
             }

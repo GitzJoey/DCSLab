@@ -42,7 +42,7 @@ class UserController extends BaseController
 
         try {
             $result = $this->userService->list($search, $paginate, $page, $perPage);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
@@ -63,7 +63,7 @@ class UserController extends BaseController
 
         try {
             $result = $this->userService->read($user);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
@@ -93,6 +93,7 @@ class UserController extends BaseController
             return response()->error($errorMsg);
         } else {
             $response = RoleResource::collection($roles);
+
             return $response;    
         }
     }
@@ -101,7 +102,7 @@ class UserController extends BaseController
     {
         //Throw Error
         //throw New \Exception('Test Exception From Controller');
-        
+
         //Throw Empty Response Error (HttpStatus 500)
         //return response()->error();
 
@@ -136,7 +137,7 @@ class UserController extends BaseController
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().".".$image->getClientOriginalExtension();
+            $filename = time().'.'.$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -155,7 +156,7 @@ class UserController extends BaseController
                 $userArr,
                 $rolesArr,
                 $profileArr
-            );    
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -197,7 +198,7 @@ class UserController extends BaseController
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().".".$image->getClientOriginalExtension();
+            $filename = time().'.'.$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -215,8 +216,9 @@ class UserController extends BaseController
                 $settingsArr
             );
 
-            if (array_key_exists('apiToken', $request))
+            if (array_key_exists('apiToken', $request)) {
                 $this->userService->resetTokens($user);
+            }
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

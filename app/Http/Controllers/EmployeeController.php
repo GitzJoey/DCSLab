@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\EmployeeService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
-use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use Exception;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeController extends BaseController
 {
@@ -59,10 +58,10 @@ class EmployeeController extends BaseController
 
         try {
             $result = $this->employeeService->read($employee);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
@@ -85,7 +84,7 @@ class EmployeeController extends BaseController
         } else {
             if (!$this->employeeService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -124,7 +123,7 @@ class EmployeeController extends BaseController
         }
 
         $result = null;
-        $errorMsg = ''; 
+        $errorMsg = '';
 
         try {
             $result = $this->employeeService->create(
@@ -132,12 +131,12 @@ class EmployeeController extends BaseController
                 $userArr,
                 $profileArr,
                 $accessesArr
-            );    
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return is_null($result) ? response()->error($errorMsg):response()->success();
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Employee $employee, EmployeeRequest $employeeRequest)
@@ -154,7 +153,7 @@ class EmployeeController extends BaseController
         } else {
             if (!$this->employeeService->isUniqueCode($code, $company_id, $employee->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -162,12 +161,12 @@ class EmployeeController extends BaseController
         $employeeArr = [
             'code' => $code,
             'join_date' => $request['join_date'],
-            'status' => $request['status']
+            'status' => $request['status'],
         ];
 
         $userArr = [
             'name' => $request['name'],
-            'email' => $request['email']
+            'email' => $request['email'],
         ];
 
         $profileArr = [
@@ -186,7 +185,7 @@ class EmployeeController extends BaseController
         if (!empty($request['accessBranchIds'])) {
             for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
                 array_push($accessesArr, [
-                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0]
+                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
                 ]);
             }
         }
@@ -201,7 +200,7 @@ class EmployeeController extends BaseController
                 $userArr,
                 $profileArr,
                 $accessesArr
-            );    
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

@@ -17,10 +17,10 @@ class XssSanitizer
     public function handle(Request $request, Closure $next)
     {
         $allowed_tags = ['<br>'];
-        
+
         $input = $request->all();
 
-        array_walk_recursive($input, function(&$input) use ($allowed_tags) {
+        array_walk_recursive($input, function (&$input) use ($allowed_tags) {
             $input = strip_tags($input, $allowed_tags);
         });
 

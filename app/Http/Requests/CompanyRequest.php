@@ -21,14 +21,16 @@ class CompanyRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
 
         /** @var \App\User */
         $user = Auth::user();
         $company = $this->route('company');
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 return $user->can('viewAny', Company::class) ? true : false;
             case 'read':
@@ -56,7 +58,7 @@ class CompanyRequest extends FormRequest
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $rules_list = [
                     'search' => ['present', 'string'],
@@ -89,7 +91,7 @@ class CompanyRequest extends FormRequest
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    '' => 'required'
+                    '' => 'required',
                 ];
         }
     }
@@ -111,7 +113,7 @@ class CompanyRequest extends FormRequest
     public function prepareForValidation()
     {
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true
@@ -124,7 +126,7 @@ class CompanyRequest extends FormRequest
                 $this->merge([
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             case 'update':
@@ -132,7 +134,7 @@ class CompanyRequest extends FormRequest
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             default:

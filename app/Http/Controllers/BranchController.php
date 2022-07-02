@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Services\BranchService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\BranchRequest;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BranchResource;
 use App\Models\Branch;
 use App\Models\Company;
+use App\Services\BranchService;
 use Exception;
 
 class BranchController extends BaseController
 {
     private $branchService;
-    
+
     public function __construct(BranchService $branchService)
     {
         parent::__construct();
@@ -62,7 +58,7 @@ class BranchController extends BaseController
 
         try {
             $result = $this->branchService->read($branch);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
@@ -70,7 +66,8 @@ class BranchController extends BaseController
             return response()->error($errorMsg);
         } else {
             $response = new BranchResource($result);
-            return $response;    
+            
+            return $response;
         }
     }
 
@@ -108,7 +105,7 @@ class BranchController extends BaseController
         } else {
             if (!$this->branchService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -129,8 +126,9 @@ class BranchController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($branchArr['is_main'])
+            if ($branchArr['is_main']) {
                 $this->branchService->resetMainBranch(companyId: $company_id);
+            }
             
             $result = $this->branchService->create($branchArr);
         } catch (Exception $e) {
@@ -154,7 +152,7 @@ class BranchController extends BaseController
         } else {
             if (!$this->branchService->isUniqueCode($code, $company_id, $branch->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -174,8 +172,9 @@ class BranchController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($branchArr['is_main']) 
+            if ($branchArr['is_main']) {
                 $this->branchService->resetMainBranch(companyId: $company_id);
+            }
             
             $result = $this->branchService->update(
                 $branch,

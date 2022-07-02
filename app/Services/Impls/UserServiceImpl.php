@@ -148,7 +148,7 @@ class UserServiceImpl implements UserService
                 $usr = User::with($relationship)
                         ->where('email', 'like', '%'.$search.'%')
                         ->orWhere('name', 'like', '%'.$search.'%')
-                        ->orWhereHas('profile', function ($query) use($search) {
+                        ->orWhereHas('profile', function ($query) use ($search) {
                             $query->where('first_name', 'like', '%'.$search.'%')
                                     ->orWhere('last_name', 'like', '%'.$search.'%');
                         })->latest();

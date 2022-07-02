@@ -19,14 +19,16 @@ class BrandRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
 
         /** @var \App\User */
         $user = Auth::user();
         $brand = $this->route('brand');
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 return $user->can('viewAny', Brand::class) ? true : false;
             case 'read':
@@ -52,7 +54,7 @@ class BrandRequest extends FormRequest
         $nullableArr = [];
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
@@ -84,7 +86,7 @@ class BrandRequest extends FormRequest
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    '' => 'required'
+                    '' => 'required',
                 ];
         }
     }
@@ -92,7 +94,7 @@ class BrandRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company')
+            'company_id' => trans('validation_attributes.company'),
         ];
     }
 
@@ -106,7 +108,7 @@ class BrandRequest extends FormRequest
     public function prepareForValidation()
     {
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',

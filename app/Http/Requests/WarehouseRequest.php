@@ -19,14 +19,16 @@ class WarehouseRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
 
         /** @var \App\User */
         $user = Auth::user();
         $warehouse = $this->route('warehouse');
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 return $user->can('viewAny', Warehouse::class) ? true : false;
             case 'read':
@@ -57,7 +59,7 @@ class WarehouseRequest extends FormRequest
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
@@ -92,7 +94,7 @@ class WarehouseRequest extends FormRequest
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    '' => 'required'
+                    '' => 'required',
                 ];
         }
     }
@@ -114,7 +116,7 @@ class WarehouseRequest extends FormRequest
     public function prepareForValidation()
     {
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
@@ -130,7 +132,7 @@ class WarehouseRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'branch_id' => $this->has('branch_id') ? Hashids::decode($this['branch_id'])[0] : '',
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             default:

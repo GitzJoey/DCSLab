@@ -18,7 +18,7 @@ class DashboardTest extends DuskTestCase
     {
         $loggedInUser = $this->developer;
 
-        $this->browse(function (Browser $browser) use($loggedInUser) {
+        $this->browse(function (Browser $browser) use ($loggedInUser) {
             $browser->loginAs($loggedInUser)
                     ->visit(new DashboardPage)
                     ->click('@side-menu-company')

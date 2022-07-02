@@ -371,7 +371,7 @@ class AppHelper extends Command
                 $this->info('Assuming input value as hId.');
                 $this->info('Id: ' . Hashids::decode($input)[0]);
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->info('Input is invalid.');
         }
     }
@@ -507,7 +507,7 @@ class AppHelper extends Command
 
                 if ($mode == 'Attach') {
                     $usr->attachRole($role);
-                } else if ($mode == 'Remove') {
+                } elseif ($mode == 'Remove') {
                     $usr->detachRole($role);
                 } else {
 

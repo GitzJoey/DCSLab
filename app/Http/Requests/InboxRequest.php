@@ -15,7 +15,9 @@ class InboxRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
         
         /** @var \App\User */
         $user = Auth::user();
@@ -38,7 +40,7 @@ class InboxRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
 
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'store':
                 return [
                     'to' => 'required',

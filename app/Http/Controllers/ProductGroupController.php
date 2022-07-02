@@ -34,8 +34,8 @@ class ProductGroupController extends BaseController
         $result = $this->productGroupService->list(
             companyId: $companyId,
             category: $category,
-            search: $search, 
-            paginate: $paginate, 
+            search: $search,
+            paginate: $paginate,
             page: $page,
             perPage: $perPage
         );
@@ -58,7 +58,7 @@ class ProductGroupController extends BaseController
 
         try {
             $result = $this->productgroupService->read($productgroup);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
@@ -66,6 +66,7 @@ class ProductGroupController extends BaseController
             return response()->error($errorMsg);
         } else {
             $response = new ProductGroupResource($result);
+
             return $response;    
         }
     }
@@ -84,7 +85,7 @@ class ProductGroupController extends BaseController
         } else {
             if (!$this->productGroupService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -122,7 +123,7 @@ class ProductGroupController extends BaseController
         } else {
             if (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -130,7 +131,7 @@ class ProductGroupController extends BaseController
         $productgroupArr = [
             'code' => $code,
             'name' => $request['name'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ];
 
         $result = null;

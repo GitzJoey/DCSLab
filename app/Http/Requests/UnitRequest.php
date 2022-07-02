@@ -19,14 +19,16 @@ class UnitRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
 
         /** @var \App\User */
         $user = Auth::user();
         $unit = $this->route('unit');
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 return $user->can('viewAny', Unit::class) ? true : false;
             case 'read':
@@ -54,7 +56,7 @@ class UnitRequest extends FormRequest
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
@@ -87,7 +89,7 @@ class UnitRequest extends FormRequest
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    '' => 'required'
+                    '' => 'required',
                 ];
         }
     }
@@ -95,7 +97,7 @@ class UnitRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company')
+            'company_id' => trans('validation_attributes.company'),
         ];
     }
 
@@ -109,7 +111,7 @@ class UnitRequest extends FormRequest
     public function prepareForValidation()
     {
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',

@@ -9,7 +9,7 @@ trait ScopeableByCompany {
             if (is_a($companyId, 'Illuminate\Support\Collection')) {
                 $query->whereIn('company_id', $companyId->toArray());
             }
-            else if (is_array($companyId)) {
+            elseif (is_array($companyId)) {
                 $query->whereIn('company_id', $companyId);
             } else {
                 $query->where('company_id', '=', $companyId);

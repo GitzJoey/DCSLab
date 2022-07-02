@@ -7,7 +7,7 @@ use App\Traits\EnumHelper;
 enum PaymentTermType: string
 {
     use EnumHelper;
-    
+
     case PAYMENT_IN_ADVANCE = 'PIA';
     case X_DAYS_AFTER_INVOICE = 'NET';
     case END_OF_MONTH = 'EOM';

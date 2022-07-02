@@ -32,10 +32,10 @@ class UnitController extends BaseController
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
         $result = $this->unitService->list(
-            companyId: $companyId, 
-            category: $category, 
-            search: $search, 
-            paginate: $paginate, 
+            companyId: $companyId,
+            category: $category,
+            search: $search,
+            paginate: $paginate,
             page: $page,
             perPage: $perPage
         );
@@ -58,14 +58,15 @@ class UnitController extends BaseController
 
         try {
             $result = $this->unitService->read($unit);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new UnitResource($result);
+
             return $response;    
         }
     }
@@ -84,7 +85,7 @@ class UnitController extends BaseController
         } else {
             if (!$this->unitService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -95,7 +96,7 @@ class UnitController extends BaseController
             'company_id' => $request['company_id'],
             'name' => $request['name'],
             'description' => $request['description'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ];
 
         $result = null;
@@ -124,7 +125,7 @@ class UnitController extends BaseController
         } else {
             if (!$this->unitService->isUniqueCode($code, $company_id, $unit->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }

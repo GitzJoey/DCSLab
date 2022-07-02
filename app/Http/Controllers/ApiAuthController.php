@@ -25,15 +25,15 @@ class ApiAuthController extends Controller
     public function auth(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'string', 'email']
+            'email' => ['required', 'string', 'email'],
         ]);
 
         $user = $this->userService->readBy('EMAIL', $request['email']);
-            
+
         if ($user && Hash::check($request->password, $user->password)) {
             $request->validate([
                 'email' => [new inactiveUser($user), new maxTokens($user->email)],
-                'password' => [new mustResetPassword($user)] 
+                'password' => [new mustResetPassword($user)],
             ]);
 
             $token = $user->createToken(Config::get('dcslab.API_TOKEN_NAME'))->plainTextToken;
@@ -42,7 +42,7 @@ class ApiAuthController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ]]);
-        } 
+        }
 
         return response()->error();
     }
@@ -52,7 +52,7 @@ class ApiAuthController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'alpha_num', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', new Password(8), 'confirmed']
+            'password' => ['required', 'string', new Password(8), 'confirmed'],
         ]);
 
         try {

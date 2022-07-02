@@ -52,7 +52,7 @@ class InboxController extends BaseController
             $result .= Hashids::encode($i).',';
         }
 
-        return rtrim($result, ",");
+        return rtrim($result, ',');
     }
 
     public function searchUsers(Request $request)
@@ -64,7 +64,7 @@ class InboxController extends BaseController
         $brief = $usr->map(function ($item, $key) {
             return [
                 'value' => $item->hId,
-                'name' => empty($item->profile->first_name) ? $item->name  : $item->profile->first_name . $item->profile->last_name,
+                'name' => empty($item->profile->first_name) ? $item->name : $item->profile->first_name.$item->profile->last_name,
             ];
         });
 
@@ -77,7 +77,7 @@ class InboxController extends BaseController
 
         $t = $this->inboxService->getThread($id);
 
-        $mm = $t->map(function ($item) use($usr) {
+        $mm = $t->map(function ($item) use ($usr) {
             return [
                 'thread_id' => Hashids::encode($item->thread_id),
                 'full_name' => $item->user->profile->first_name . $item->user->profile->last_name,
@@ -99,8 +99,7 @@ class InboxController extends BaseController
 
         $decryptedTo = [];
 
-        foreach (explode(',',$request['to']) as $s)
-        {
+        foreach (explode(',',$request['to']) as $s) {
             array_push($decryptedTo, Hashids::decode($s)[0]);
         }
 
@@ -114,7 +113,7 @@ class InboxController extends BaseController
         $request->validate([
             'hId' => 'required',
             'to' => 'required',
-            'subject' => 'required'
+            'subject' => 'required',
         ]);
 
         $usrId = Auth::user()->id;
@@ -129,14 +128,6 @@ class InboxController extends BaseController
         $threadId = Hashids::decode($request['hId'])[0];
         $result = $this->inboxService->update($threadId, $usrId, $decryptedTo, $request['subject'], $request['message']);
 
-        if ($result == 0) {
-            return response()->json([
-                'message' => ''
-            ],500);
-        } else {
-            return response()->json([
-                'message' => ''
-            ],200);
-        }
+        return ($result == 0) ? response()->error() : response()->success();
     }
 }

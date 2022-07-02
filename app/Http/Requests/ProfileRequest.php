@@ -15,14 +15,16 @@ class ProfileRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
         
         /** @var \App\User */
         $user = Auth::user();
         
         $currentRouteMethod = $this->route()->getActionMethod();
 
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'updateProfile':
             case 'updateRoles':
             case 'updateSettings':
@@ -42,7 +44,7 @@ class ProfileRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
 
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'updateProfile':
                 return [
                     'name' => 'nullable',

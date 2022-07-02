@@ -11,7 +11,7 @@ use Exception;
 class WarehouseController extends BaseController
 {
     private $warehouseService;
-    
+
     public function __construct(WarehouseService $warehouseService)
     {
         parent::__construct();
@@ -57,7 +57,7 @@ class WarehouseController extends BaseController
 
         try {
             $result = $this->warehouseService->read($warehouse);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
@@ -65,6 +65,7 @@ class WarehouseController extends BaseController
             return response()->error($errorMsg);
         } else {
             $response = new WarehouseResource($result);
+
             return $response;    
         }
     }
@@ -72,7 +73,7 @@ class WarehouseController extends BaseController
     public function store(WarehouseRequest $warehouseRequest)
     {   
         $request = $warehouseRequest->validated();
-        
+
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -83,7 +84,7 @@ class WarehouseController extends BaseController
         } else {
             if (!$this->warehouseService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -127,7 +128,7 @@ class WarehouseController extends BaseController
         } else {
             if (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }

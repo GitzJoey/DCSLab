@@ -56,7 +56,7 @@ class BrandController extends BaseController
 
         try {
             $result = $this->brandService->read($brand);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
@@ -82,7 +82,7 @@ class BrandController extends BaseController
         } else {
             if (!$this->brandService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -119,7 +119,7 @@ class BrandController extends BaseController
         } else {
             if (!$this->brandService->isUniqueCode($code, $company_id, $brand->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -138,7 +138,7 @@ class BrandController extends BaseController
                 $brand,
                 $brandArr
             );
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

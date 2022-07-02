@@ -33,13 +33,13 @@ class CompanyController extends BaseController
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
         $result = $this->companyService->list(
-            userId: $userId, 
+            userId: $userId,
             search: $search,
             paginate: $paginate,
             page: $page,
             perPage: $perPage
         );
-        
+
         if (is_null($result)) {
             return response()->error();
         } else {
@@ -58,7 +58,7 @@ class CompanyController extends BaseController
 
         try {
             $result = $this->companyService->read($company);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
         
@@ -74,7 +74,7 @@ class CompanyController extends BaseController
     {
         $userId = $request->user()->id;
 
-        $with = $request->has('with') ? explode(',', $request['with']) : []; 
+        $with = $request->has('with') ? explode(',', $request['with']) : [];
 
         $result = $this->companyService->getAllActiveCompany($userId, $with);
     
@@ -109,7 +109,7 @@ class CompanyController extends BaseController
         } else {
             if (!$this->companyService->isUniqueCode($code, $user->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -130,7 +130,7 @@ class CompanyController extends BaseController
         try {
             if ($companyArr['default']) {
                 $this->companyService->resetDefaultCompany($user);
-            };
+            }
 
             $result = $this->companyService->create($companyArr);
         } catch (Exception $e) {
@@ -154,7 +154,7 @@ class CompanyController extends BaseController
         } else {
             if (!$this->companyService->isUniqueCode($code, $user->id, $company->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -165,7 +165,7 @@ class CompanyController extends BaseController
             'address' => $request['address'],
             'default' => $request['default'],
             'status' => $request['status'],
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ];
 
         $result = null;
@@ -174,7 +174,7 @@ class CompanyController extends BaseController
         try {
             if ($companyArr['default']) {
                 $this->companyService->resetDefaultCompany($user);
-            };
+            }
     
             $result = $this->companyService->update(
                 $company,
