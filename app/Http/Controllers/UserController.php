@@ -121,7 +121,7 @@ class UserController extends BaseController
             'password' => $request['password']
         ];
 
-        $profileArr = array (
+        $profileArr = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -132,7 +132,7 @@ class UserController extends BaseController
             'ic_num' => $request['ic_num'],
             'status' => $request['status'],
             'remarks' => $request['remarks'],
-        );
+        ];
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
@@ -167,11 +167,11 @@ class UserController extends BaseController
     {
         $request = $userRequest->validated();
 
-        $userArr = array (
+        $userArr = [
             'name' => $request['name']
-        );
+        ];
 
-        $profileArr = array (
+        $profileArr = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -182,7 +182,7 @@ class UserController extends BaseController
             'ic_num' => $request['ic_num'],
             'status' => $request['status'],
             'remarks' => $request['remarks'],
-        );
+        ];
 
         $rolesArr = [];
         foreach ($request['roles'] as $r) {

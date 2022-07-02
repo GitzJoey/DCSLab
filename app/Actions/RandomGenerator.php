@@ -66,7 +66,7 @@ class RandomGenerator
     {
         if ($howManyTimes <= 1) return (bool)random_int(0,1);
 
-        $result = array();
+        $result = [];
         
         for($i = 0; $i < $howManyTimes; $i++) {
             $result[$i] = (bool)random_int(0,1);

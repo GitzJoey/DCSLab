@@ -49,13 +49,13 @@ class UserServiceImpl implements UserService
             $last_name = '';
         }
 
-        $profile = array (
+        $profile = [
             'first_name' => $first_name,
             'last_name' => $last_name,
             'status' => RecordStatus::ACTIVE,
-        );
+        ];
 
-        $roles = array(Role::where('name', UserRoles::USER->value)->first()->id);
+        $roles = [Role::where('name', UserRoles::USER->value)->first()->id];
 
         $usr = $this->create(
             $input,

@@ -167,7 +167,7 @@ class ProductController extends BaseController
 
             $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
 
-            array_push($productUnitsArr, array (
+            array_push($productUnitsArr, [
                 'company_id' => $company_id,
                 'code' => $code,
                 'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
@@ -175,7 +175,7 @@ class ProductController extends BaseController
                 'is_base' => $is_base,
                 'is_primary_unit' => $is_primary_unit,
                 'remarks' => ''
-            ));
+            ]);
         }
 
         $result = null;
@@ -250,7 +250,7 @@ class ProductController extends BaseController
             $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
             $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
 
-            array_push($productUnitsArr, array (
+            array_push($productUnitsArr, [
                 'id' => $product_unit_id,
                 'company_id' => $company_id,
                 'product_id' => $product->id,             
@@ -260,7 +260,7 @@ class ProductController extends BaseController
                 'is_base' => $is_base,
                 'is_primary_unit' => $is_primary_unit,
                 'remarks' => $request['remarks']
-            ));
+            ]);
         }
 
         $result = null;

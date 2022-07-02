@@ -34,23 +34,23 @@ class SettingFactory extends Factory
 
     public function createDefaultSetting(): array
     {
-        $list = array (
-            new Setting(array(
+        $list = [
+            new Setting([
                 'type' => 'KEY_VALUE',
                 'key' => 'PREFS.THEME',
                 'value' => 'side-menu-light-full',
-            )),
-            new Setting(array(
+            ]),
+            new Setting([
                 'type' => 'KEY_VALUE',
                 'key' => 'PREFS.DATE_FORMAT',
                 'value' => 'yyyy_MM_dd',
-            )),
-            new Setting(array(
+            ]),
+            new Setting([
                 'type' => 'KEY_VALUE',
                 'key' => 'PREFS.TIME_FORMAT',
                 'value' => 'hh_mm_ss',
-            )),
-        );
+            ]),
+        ];
 
         return $list;
     }

@@ -72,7 +72,7 @@ class CompanyController extends BaseController
 
     public function getAllActiveCompany(Request $request)
     {
-        $userId = Auth::id();
+        $userId = $request->user()->id;
 
         $with = $request->has('with') ? explode(',', $request['with']) : []; 
 

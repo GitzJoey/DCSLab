@@ -55,7 +55,7 @@ class ProductServiceImpl implements ProductService
 
             $pu = [];
             foreach ($productUnitsArr as $product_unit) {   
-                array_push($pu, new ProductUnit(array (
+                array_push($pu, new ProductUnit([
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $product['id'],
                     'code' => $product_unit['code'],
@@ -64,7 +64,7 @@ class ProductServiceImpl implements ProductService
                     'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks']
-                )));
+                ]));
             }
 
             if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
@@ -184,7 +184,7 @@ class ProductServiceImpl implements ProductService
 
             $pu = [];
             foreach ($productUnitsArr as $product_unit) {
-                array_push($pu, array(
+                array_push($pu, [
                     'id' => $product_unit['id'],
                     'company_id' => $product_unit['company_id'],
                     'product_id' => $product->id,
@@ -194,7 +194,7 @@ class ProductServiceImpl implements ProductService
                     'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks']
-                ));
+                ]);
             }
 
             $puIds = [];

@@ -41,7 +41,7 @@ class ProfileController extends BaseController
         $request = $profileRequest->validated();
         $user = Auth::user();
 
-        $profile = array (
+        $profile = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -51,7 +51,7 @@ class ProfileController extends BaseController
             'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
             'remarks' => $request['remarks'],
-        );
+        ];
 
         $result = $this->userService->updateProfile($user, $profile, true);
 

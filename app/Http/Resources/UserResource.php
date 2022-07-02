@@ -69,7 +69,7 @@ class UserResource extends JsonResource
     {
         if (is_null($settings)) return [];
 
-        $result = array();
+        $result = [];
         foreach ($settings as $s) {
             $skey = '';
             switch ($s->key) {

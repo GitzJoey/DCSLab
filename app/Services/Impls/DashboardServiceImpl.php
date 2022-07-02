@@ -64,25 +64,25 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_Dashboard(array $menu, bool $showDemo): array
     {
-        $maindashboard = array(
+        $maindashboard = [
             'icon' => '',
             'pageName' => 'side-menu-dashboard-maindashboard',
             'title' => 'components.menu.main-dashboard'
-        );
+        ];
 
-        $demo = array(
+        $demo = [
             'icon' => '',
             'pageName' => 'side-menu-dashboard-demo',
             'title' => 'components.menu.main-demo'
-        );
+        ];
 
-        $root_array = array(
+        $root_array = [
             'icon' => 'HomeIcon',
             'pageName' => 'side-menu-dashboard',
             'title' => 'components.menu.dashboard',
             'subMenu' => [
             ]
-        );
+        ];
 
         if ($showDemo) 
             array_push($root_array['subMenu'], $maindashboard, $demo);
@@ -98,37 +98,37 @@ class DashboardServiceImpl implements DashboardService
     {
         if ($hasOnlyUserRole) return $menu;
 
-        $company = array(
+        $company = [
             'icon' => '',
             'pageName' => 'side-menu-company-company',
             'title' => 'components.menu.company-company'
-        );
+        ];
 
-        $branches = array(
+        $branches = [
             'icon' => '',
             'pageName' => 'side-menu-company-branch',
             'title' => 'components.menu.company-branch'
-        );
+        ];
 
-        $employees = array(
+        $employees = [
             'icon' => '',
             'pageName' => 'side-menu-company-employee',
             'title' => 'components.menu.company-employee'
-        );
+        ];
 
-        $warehouses = array(
+        $warehouses = [
             'icon' => '',
             'pageName' => 'side-menu-company-warehouse',
             'title' => 'components.menu.company-warehouse'
-        );
+        ];
 
-        $root_array = array(
+        $root_array = [
             'icon' => 'UmbrellaIcon',
             'pageName' => 'side-menu-company',
             'title' => 'components.menu.company',
             'subMenu' => [
             ]
-        );
+        ];
 
         if ($hasCompany || $hasDevRole)
             array_push($root_array['subMenu'], $company, $branches, $employees, $warehouses);
@@ -142,19 +142,19 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_Administrator(array $menu, bool $hasAdminRole, bool $hasDevRole): array
     {
-        $user = array(
+        $user = [
             'icon' => '',
             'pageName' => 'side-menu-administrator-user',
             'title' => 'components.menu.administrator-user'
-        );
+        ];
 
-        $root_array = array(
+        $root_array = [
             'icon' => 'CpuIcon',
             'pageName' => 'side-menu-administrator',
             'title' => 'components.menu.administrator',
             'subMenu' => [
             ]
-        );
+        ];
 
         array_push($root_array['subMenu'], $user);
 
@@ -166,42 +166,42 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_DevTool(array $menu, bool $hasDevRole): array
     {
-        $dbbackup = array(
+        $dbbackup = [
             'icon' => '',
             'pageName' => 'side-menu-devtool-backup',
             'title' => 'components.menu.devtool-dbbackup'
-        );
+        ];
 
-        $playground = array(
+        $playground = [
             'icon' => '',
             'pageName' => 'side-menu-devtool-example',
             'title' => 'components.menu.devtool-playground',
             'subMenu' => [
             ]
-        );
+        ];
 
-        $playground_ex1 = array(
+        $playground_ex1 = [
             'icon' => '',
             'pageName' => 'side-menu-devtool-example-ex1',
             'title' => 'components.menu.devtool-playground-ex1'
-        );
+        ];
 
-        $playground_ex2 = array(
+        $playground_ex2 = [
             'icon' => '',
             'pageName' => 'side-menu-devtool-example-ex2',
             'title' => 'components.menu.devtool-playground-ex2'
-        );
+        ];
 
         array_push($playground['subMenu'], $playground_ex1);
         array_push($playground['subMenu'], $playground_ex2);
 
-        $root_array = array(
+        $root_array = [
             'icon' => 'GithubIcon',
             'pageName' => 'side-menu-devtool',
             'title' => 'components.menu.devtool',
             'subMenu' => [
             ]
-        );
+        ];
 
         array_push($root_array['subMenu'], $dbbackup);
         array_push($root_array['subMenu'], $playground);
@@ -214,31 +214,31 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_Product(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
-        $product_group = array(
+        $product_group = [
             'icon' => '',
             'pageName' => 'side-menu-product-product_group',
             'title' => 'components.menu.product-product_group'
-        );
+        ];
 
-        $product = array(
+        $product = [
             'icon' => '',
             'pageName' => 'side-menu-product-product',
             'title' => 'components.menu.product-product'
-        );
+        ];
 
-        $service = array(
+        $service = [
             'icon' => '',
             'pageName' => 'side-menu-product-service',
             'title' => 'components.menu.product-service'
-        );
+        ];
 
-        $root_array = array(
+        $root_array = [
             'icon' => 'PackageIcon',
             'pageName' => 'side-menu-product',
             'title' => 'components.menu.product',
             'subMenu' => [
             ]
-        );
+        ];
 
         array_push($root_array['subMenu'], $product_group);
         array_push($root_array['subMenu'], $product);
@@ -252,19 +252,19 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_Supplier(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
-        $supplier = array(
+        $supplier = [
             'icon' => '',
             'pageName' => 'side-menu-supplier-supplier',
             'title' => 'components.menu.supplier-supplier'
-        );
+        ];
 
-        $root_array = array(
+        $root_array = [
             'icon' => 'TruckIcon',
             'pageName' => 'side-menu-supplier',
             'title' => 'components.menu.supplier',
             'subMenu' => [
             ]
-        );
+        ];
 
         array_push($root_array['subMenu'], $supplier);
 
@@ -281,19 +281,19 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_PurchaseOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
-        $po = array(
+        $po = [
             'icon' => '',
             'pageName' => 'side-menu-purchase_order-purchaseorder',
             'title' => 'components.menu.purchase_order-purchaseorder'
-        );
+        ];
 
-        $root_array = array(
+        $root_array = [
             'icon' => 'FilePlusIcon',
             'pageName' => 'side-menu-purchase_order',
             'title' => 'components.menu.purchase_order',
             'subMenu' => [
             ]
-        );
+        ];
 
         array_push($root_array['subMenu'], $po);
 

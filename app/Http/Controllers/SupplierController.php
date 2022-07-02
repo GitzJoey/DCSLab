@@ -116,11 +116,11 @@ class SupplierController extends BaseController
         $productsArr = [];
         if (!empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
-                array_push($productsArr, array (
+                array_push($productsArr, [
                     'company_id' => $company_id,
                     'product_id' => Hashids::decode($request['productIds'][$i])[0],
                     'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0
-                ));
+                ]);
             }
         }
 
@@ -182,11 +182,11 @@ class SupplierController extends BaseController
         $productsArr = [];
         if (!empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
-                array_push($productsArr, array (
+                array_push($productsArr, [
                     'company_id' => $company_id,
                     'product_id' => Hashids::decode($request['productIds'][$i])[0],
                     'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0
-                ));
+                ]);
             }
         }
 

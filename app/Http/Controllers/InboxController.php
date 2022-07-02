@@ -23,9 +23,9 @@ class InboxController extends BaseController
         $this->inboxService = $inboxService;
     }
 
-    public function read()
+    public function read(Request $request)
     {
-        $usrId = Auth::id();
+        $usrId = $request->user()->id;
 
         $ts = $this->inboxService->getThreads($usrId);
 
@@ -57,7 +57,7 @@ class InboxController extends BaseController
 
     public function searchUsers(Request $request)
     {
-        $email = Auth::user()->email;
+        $email = $request->user()->email;
 
         $usr = $this->userService->read($request->has('search') ? $request['search']:'', false);
 
@@ -71,9 +71,9 @@ class InboxController extends BaseController
         return $brief;
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $usr = Auth::id();
+        $usr = $request->user()->id;
 
         $t = $this->inboxService->getThread($id);
 
