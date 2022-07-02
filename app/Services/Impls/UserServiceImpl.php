@@ -332,7 +332,7 @@ class UserServiceImpl implements UserService
             $retval = 0;
             foreach ($settingsArr as $key => $value) {
                 $setting = $user->settings()->where('key', $key)->first();
-                if (! $setting || $value == null) {
+                if (!$setting || $value == null) {
                     continue;
                 }
                 if ($setting->value != $value) {

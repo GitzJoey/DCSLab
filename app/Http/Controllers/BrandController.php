@@ -79,9 +79,9 @@ class BrandController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->brandService->generateUniqueCode();
-            } while (! $this->brandService->isUniqueCode($code, $company_id));
+            } while (!$this->brandService->isUniqueCode($code, $company_id));
         } else {
-            if (! $this->brandService->isUniqueCode($code, $company_id)) {
+            if (!$this->brandService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -116,9 +116,9 @@ class BrandController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->brandService->generateUniqueCode();
-            } while (! $this->brandService->isUniqueCode($code, $company_id, $brand->id));
+            } while (!$this->brandService->isUniqueCode($code, $company_id, $brand->id));
         } else {
-            if (! $this->brandService->isUniqueCode($code, $company_id, $brand->id)) {
+            if (!$this->brandService->isUniqueCode($code, $company_id, $brand->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);

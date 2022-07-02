@@ -78,7 +78,7 @@ class WarehouseServiceImpl implements WarehouseService
 
             $result = null;
 
-            if (! $companyId) {
+            if (!$companyId) {
                 return null;
             }
 

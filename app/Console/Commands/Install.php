@@ -52,7 +52,7 @@ class Install extends Command
 
         $passPreInstallCheck = $this->passPreInstallCheck();
 
-        if (! $passPreInstallCheck) {
+        if (!$passPreInstallCheck) {
             return;
         }
 
@@ -60,7 +60,7 @@ class Install extends Command
 
         $systemService = $container->make(SystemService::class);
 
-        if (! $systemService->checkDBConnection()) {
+        if (!$systemService->checkDBConnection()) {
             $this->error('Database Connection Fail. Message: '.$systemService->getDBConnectionError());
             $this->error('Aborted');
 
@@ -130,7 +130,7 @@ class Install extends Command
         $this->info('Creating Admin/Dev Account ...');
         $is_dev = $this->confirm('Are you a developer?', false);
 
-        if (! $is_dev) {
+        if (!$is_dev) {
             $this->info('Setting you account as administrator since you\'re not dev...');
         }
 
@@ -140,7 +140,7 @@ class Install extends Command
 
         $valid = false;
 
-        while (! $valid) {
+        while (!$valid) {
             $userName = $this->ask('Name:', $userName);
             $userEmail = $this->ask('Email:', $userEmail);
             $userPassword = $this->secret('Password:', $userPassword);
@@ -155,7 +155,7 @@ class Install extends Command
                 'password' => 'required|min:7',
             ]);
 
-            if (! $validator->fails()) {
+            if (!$validator->fails()) {
                 $valid = true;
             } else {
                 foreach ($validator->errors()->all() as $errorMessage) {
@@ -166,7 +166,7 @@ class Install extends Command
 
         $confirmed = $this->confirm("Everything's OK? Do you wish to continue?");
 
-        if (! $confirmed) {
+        if (!$confirmed) {
             $this->error('Aborted');
 
             return false;
@@ -211,7 +211,7 @@ class Install extends Command
         }
 
         if (env('DCSLAB_DATACACHE', true)) {
-            if (! $this->checkRedisConnection()) {
+            if (!$this->checkRedisConnection()) {
                 $this->error('Data cache is enabled but Redis not configured properly');
                 $this->error('Aborted');
 

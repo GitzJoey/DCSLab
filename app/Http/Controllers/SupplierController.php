@@ -84,9 +84,9 @@ class SupplierController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->supplierService->generateUniqueCode();
-            } while (! $this->supplierService->isUniqueCode($code, $company_id));
+            } while (!$this->supplierService->isUniqueCode($code, $company_id));
         } else {
-            if (! $this->supplierService->isUniqueCode($code, $company_id)) {
+            if (!$this->supplierService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -150,9 +150,9 @@ class SupplierController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->supplierService->generateUniqueCode();
-            } while (! $this->supplierService->isUniqueCode($code, $company_id, $supplier->id));
+            } while (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id));
         } else {
-            if (! $this->supplierService->isUniqueCode($code, $company_id, $supplier->id)) {
+            if (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);

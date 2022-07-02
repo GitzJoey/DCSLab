@@ -108,14 +108,14 @@ class ProductServiceImpl implements ProductService
 
             $result = null;
 
-            if (! $companyId) {
+            if (!$companyId) {
                 return null;
             }
 
             $product = Product::with('productGroup', 'brand', 'productUnits.unit')
                         ->whereCompanyId($companyId);
 
-            if (! $isProduct && $isService) {
+            if (!$isProduct && $isService) {
                 $product = $product->where('product_type', '=', ProductType::SERVICE->value);
             } elseif ($isProduct && ! $isService) {
                 $product = $product->where('product_type', '<>', ProductType::SERVICE->value);

@@ -36,7 +36,7 @@ class CompanyServiceImpl implements CompanyService
             $userId = $companyArr['user_id'];
 
             $usr = User::find($userId);
-            if (! $usr) {
+            if (!$usr) {
                 return null;
             }
 
@@ -95,7 +95,7 @@ class CompanyServiceImpl implements CompanyService
             $result = null;
 
             $usr = User::find($userId);
-            if (! $usr) {
+            if (!$usr) {
                 return null;
             }
 
@@ -141,7 +141,7 @@ class CompanyServiceImpl implements CompanyService
 
         try {
             $usr = User::find($userId);
-            if (! $usr) {
+            if (!$usr) {
                 return null;
             }
 

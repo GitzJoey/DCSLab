@@ -53,14 +53,14 @@ class MakeService extends Command
         $contents_interface = $this->getSourceFile('interface');
         $contents_implementation = $this->getSourceFile('implementation');
 
-        if (! $this->files->exists($path_interface)) {
+        if (!$this->files->exists($path_interface)) {
             $this->files->put($path_interface, $contents_interface);
             $this->info('Service Interface created successfully');
         } else {
             $this->info("File {$path_interface} already exist");
         }
 
-        if (! $this->files->exists($path_implementation)) {
+        if (!$this->files->exists($path_implementation)) {
             $this->files->put($path_implementation, $contents_implementation);
             $this->info('Service Implementation created successfully');
         } else {
@@ -167,7 +167,7 @@ class MakeService extends Command
      */
     protected function makeDirectory($path)
     {
-        if (! $this->files->isDirectory($path)) {
+        if (!$this->files->isDirectory($path)) {
             $this->files->makeDirectory($path, 0777, true, true);
         }
 

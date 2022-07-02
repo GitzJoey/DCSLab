@@ -139,7 +139,7 @@ class SupplierServiceImpl implements SupplierService
         $timer_start = microtime(true);
 
         try {
-            if (! $companyId) {
+            if (!$companyId) {
                 return null;
             }
 
