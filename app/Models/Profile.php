@@ -15,7 +15,7 @@ class Profile extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $table = "profiles";
+    protected $table = 'profiles';
 
     protected $fillable = [
         'first_name',

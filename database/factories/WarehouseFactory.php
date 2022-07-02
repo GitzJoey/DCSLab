@@ -34,7 +34,7 @@ class WarehouseFactory extends Factory
             'city' => $warehouse_name,
             'contact' => $faker->e164PhoneNumber(),
             'remarks' => $faker->word(),
-            'status' => RecordStatus::ACTIVE
+            'status' => RecordStatus::ACTIVE,
         ];
     }
 
@@ -42,7 +42,7 @@ class WarehouseFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -51,7 +51,7 @@ class WarehouseFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }

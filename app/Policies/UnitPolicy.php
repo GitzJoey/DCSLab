@@ -65,7 +65,7 @@ class UnitPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('units-update')) {
             return true;
         }
@@ -80,7 +80,7 @@ class UnitPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('units-delete')) {
             return true;
         }

@@ -29,13 +29,13 @@ class BranchFactory extends Factory
 
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => 'Kantor Cabang '.$faker->randomElement(['Utama','Pembantu','Daerah']).' '.$branch_name,
+            'name' => 'Kantor Cabang '.$faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.$branch_name,
             'address' => $faker->address(),
             'city' => $branch_name,
             'contact' => $faker->e164PhoneNumber(),
             'is_main' => false,
             'remarks' => $faker->sentence(),
-            'status' => $faker->randomElement(RecordStatus::toArrayEnum())
+            'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -43,7 +43,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -52,7 +52,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }
@@ -61,7 +61,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($bool) {
             return [
-                'is_main' => $bool
+                'is_main' => $bool,
             ];
         });
     }

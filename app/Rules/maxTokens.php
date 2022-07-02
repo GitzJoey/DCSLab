@@ -35,7 +35,9 @@ class maxTokens implements Rule
     {
         $usr = $this->userService->readBy('EMAIL', $this->email);
 
-        if (!$usr) return false;
+        if (!$usr) {
+            return false;
+        }
 
         return !($usr->tokens()->count() > $this->maxCount);
     }

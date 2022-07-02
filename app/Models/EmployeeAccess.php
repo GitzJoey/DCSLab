@@ -25,7 +25,7 @@ class EmployeeAccess extends Model
     ];
 
     protected static $logAttributes = [
-        'employee_id', 
+        'employee_id',
         'branch_id',
     ];
 

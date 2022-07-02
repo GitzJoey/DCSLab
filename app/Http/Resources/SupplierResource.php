@@ -41,14 +41,18 @@ class SupplierResource extends JsonResource
 
     private function getSelectedProducts($supplierProducts)
     {
-        if (is_null($supplierProducts)) return [];
+        if (is_null($supplierProducts)) {
+            return [];
+        }
 
         return $supplierProducts->pluck('product.hId');
     }
 
     private function getMainProducts($supplierProducts)
     {
-        if (is_null($supplierProducts)) return [];
+        if (is_null($supplierProducts)) {
+            return [];
+        }
         
         $mainProducts = $supplierProducts->where('main_product', '=', 1);
 

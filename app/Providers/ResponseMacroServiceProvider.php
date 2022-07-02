@@ -21,10 +21,10 @@ class ResponseMacroServiceProvider extends ServiceProvider
                     if (is_array($message)) {
                         return Response::json([
                             'message' => implode(' ', $message)
-                        ], $status);                        
+                        ], $status);
                     } else {
                         return Response::json([
-                            'message' => $message
+                            'message' => $message,
                         ], $status);
                     }
                     break;
@@ -32,7 +32,7 @@ class ResponseMacroServiceProvider extends ServiceProvider
                     if (is_array($message)) {
                         if (array_key_first($message) != 'errors') {
                             return Response::json([
-                                'errors' => $message
+                                'errors' => $message,
                             ], $status);
                         } else {
                             return Response::json($message, $status);
@@ -40,10 +40,10 @@ class ResponseMacroServiceProvider extends ServiceProvider
                     } else {
                         return Response::json([
                             'errors' => [
-                                '' => $message
+                                '' => $message,
                             ]
                         ], $status);
-                    }        
+                    }
                     break;
                 default:
                     break;

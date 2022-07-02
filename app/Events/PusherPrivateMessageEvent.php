@@ -32,10 +32,10 @@ class PusherPrivateMessageEvent implements ShouldBroadcastNow
     {
         $this->fromName = $fromName;
 
-        $toUser = User::where('email', '=', $toEmail)->firstOr(function () { 
-            return ''; 
+        $toUser = User::where('email', '=', $toEmail)->firstOr(function () {
+            return '';
         });
-        $this->toId= empty($toUser) ? '' : $toUser->id;
+        $this->toId = empty($toUser) ? '' : $toUser->id;
         $this->toEmail = empty($toUser) ? '' : $toUser->email;
         $this->toName = empty($toUser) ? '' : $toUser->name;
 

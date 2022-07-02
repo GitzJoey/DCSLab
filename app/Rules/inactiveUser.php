@@ -28,7 +28,9 @@ class inactiveUser implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->user->profile->status == RecordStatus::INACTIVE) return false;
+        if ($this->user->profile->status == RecordStatus::INACTIVE) {
+            return false;
+        }
 
         return true;
     }

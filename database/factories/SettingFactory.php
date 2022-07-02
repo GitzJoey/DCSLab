@@ -28,7 +28,7 @@ class SettingFactory extends Factory
         return [
             'type' => 'KEY_VALUE',
             'key' => $type,
-            'value' => $val
+            'value' => $val,
         ];
     }
 

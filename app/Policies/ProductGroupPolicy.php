@@ -65,7 +65,7 @@ class ProductGroupPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('productgroups-update')) {
             return true;
         }
@@ -80,7 +80,7 @@ class ProductGroupPolicy
         if ($user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
-    
+
         if ($user->hasPermission('productgroups-delete')) {
             return true;
         }

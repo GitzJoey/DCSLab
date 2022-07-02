@@ -46,7 +46,7 @@ class ProductFactory extends Factory
             'product_type' => $product_type,
             'use_serial_number' => $faker->boolean(),
             'has_expiry_date' => $faker->boolean(),
-            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum())
+            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -54,7 +54,7 @@ class ProductFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -63,7 +63,7 @@ class ProductFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }

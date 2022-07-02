@@ -41,7 +41,7 @@ class SupplierFactory extends Factory
             'taxable_enterprise' => $faker->boolean(),
             'tax_id' => $faker->creditCardNumber(),
             'remarks' => $faker->word(),
-            'status' => $status
+            'status' => $status,
         ];
     }
 
@@ -49,7 +49,7 @@ class SupplierFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -58,7 +58,7 @@ class SupplierFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }

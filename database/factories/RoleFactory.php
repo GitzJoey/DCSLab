@@ -25,7 +25,7 @@ class RoleFactory extends Factory
         return [
             'name' => strtolower($text),
             'display_name' => $text,
-            'description' => $this->faker->catchPhrase()
+            'description' => $this->faker->catchPhrase(),
         ];
     }
 }

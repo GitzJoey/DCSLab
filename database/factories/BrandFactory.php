@@ -30,7 +30,7 @@ class BrandFactory extends Factory
 
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $this->faker->randomElement($brands)
+            'name' => $this->faker->randomElement($brands),
         ];
     }
 }

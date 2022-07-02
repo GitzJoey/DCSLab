@@ -50,7 +50,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($date) {
             return [
-                'created_at' => is_null($date) ? Carbon::now() : $date
+                'created_at' => is_null($date) ? Carbon::now() : $date,
             ];
         });
     }
@@ -59,7 +59,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($date) {
             return [
-                'updated_at' => is_null($date) ? Carbon::now() : $date
+                'updated_at' => is_null($date) ? Carbon::now() : $date,
             ];
         });
     }

@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use App\Actions\RandomGenerator;
+use App\Models\Role;
 use App\Services\RoleService;
 use Exception;
-use App\Models\Role;
 use Illuminate\Container\Container;
 use Illuminate\Database\Seeder;
 
@@ -20,7 +20,7 @@ class RoleTableSeeder extends Seeder
     {
         $instances = Container::getInstance();
 
-        $permissions =  $instances->make(RoleService::class)->getAllPermissions()->pluck('id')->toArray();
+        $permissions = $instances->make(RoleService::class)->getAllPermissions()->pluck('id')->toArray();
 
         for ($i = 0; $i < $count; $i++) {
             try {
