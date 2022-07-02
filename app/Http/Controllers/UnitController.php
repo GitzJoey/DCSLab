@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\UnitService;
 use App\Http\Requests\UnitRequest;
 use App\Http\Resources\UnitResource;
 use App\Models\Unit;
+use App\Services\UnitService;
 use Exception;
 
 class UnitController extends BaseController
@@ -32,10 +32,10 @@ class UnitController extends BaseController
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
         $result = $this->unitService->list(
-            companyId: $companyId, 
-            category: $category, 
-            search: $search, 
-            paginate: $paginate, 
+            companyId: $companyId,
+            category: $category,
+            search: $search,
+            paginate: $paginate,
             page: $page,
             perPage: $perPage
         );
@@ -58,15 +58,16 @@ class UnitController extends BaseController
 
         try {
             $result = $this->unitService->read($unit);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new UnitResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -80,11 +81,11 @@ class UnitController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->unitService->generateUniqueCode();
-            } while (!$this->unitService->isUniqueCode($code, $company_id));
+            } while (! $this->unitService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->unitService->isUniqueCode($code, $company_id)) {
+            if (! $this->unitService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -95,7 +96,7 @@ class UnitController extends BaseController
             'company_id' => $request['company_id'],
             'name' => $request['name'],
             'description' => $request['description'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ];
 
         $result = null;
@@ -120,11 +121,11 @@ class UnitController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->unitService->generateUniqueCode();
-            } while (!$this->unitService->isUniqueCode($code, $company_id, $unit->id));
+            } while (! $this->unitService->isUniqueCode($code, $company_id, $unit->id));
         } else {
-            if (!$this->unitService->isUniqueCode($code, $company_id, $unit->id)) {
+            if (! $this->unitService->isUniqueCode($code, $company_id, $unit->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -133,7 +134,7 @@ class UnitController extends BaseController
             'code' => $code,
             'name' => $request['name'],
             'description' => $request['description'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ];
 
         $result = null;
@@ -150,7 +151,7 @@ class UnitController extends BaseController
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
-    
+
     public function delete(Unit $unit)
     {
         $result = false;
@@ -162,6 +163,6 @@ class UnitController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }

@@ -16,12 +16,12 @@ interface ProductService
 
     public function list(
         int $companyId,
-        bool $isProduct = true, 
+        bool $isProduct = true,
         bool $isService = true,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
-        ?int $perPage = 10, 
+        ?int $perPage = 10,
         bool $useCache = true
     ): Paginator|Collection;
 

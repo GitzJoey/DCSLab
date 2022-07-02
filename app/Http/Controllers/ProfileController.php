@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class ProfileController extends BaseController
 {
     private $userService;
+
     private $roleService;
 
     public function __construct(UserService $userService, RoleService $roleService)
@@ -26,7 +27,7 @@ class ProfileController extends BaseController
     public function readAuth()
     {
         $result = $this->userService->readBy('ID', Auth::id());
-        
+
         if (is_null($result)) {
             return response()->error();
         } else {
@@ -41,7 +42,7 @@ class ProfileController extends BaseController
         $request = $profileRequest->validated();
         $user = Auth::user();
 
-        $profile = array (
+        $profile = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -51,11 +52,11 @@ class ProfileController extends BaseController
             'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
             'remarks' => $request['remarks'],
-        );
+        ];
 
         $result = $this->userService->updateProfile($user, $profile, true);
 
-        return !$result ? response()->error() : response()->success();
+        return ! $result ? response()->error() : response()->success();
     }
 
     public function changePassword(ProfileRequest $profileRequest)
@@ -80,10 +81,11 @@ class ProfileController extends BaseController
 
         $result = $this->userService->updateSettings($usr, $settings, true);
 
-        if (array_key_exists('apiToken', $request))
+        if (array_key_exists('apiToken', $request)) {
             $this->userService->resetTokens($usr->id);
+        }
 
-        return !$result ? response()->error() : response()->success();
+        return ! $result ? response()->error() : response()->success();
     }
 
     public function updateRoles(ProfileRequest $profileRequest)
@@ -95,8 +97,9 @@ class ProfileController extends BaseController
         $roles = $request['roles'];
         $rolesId = $usr->roles->pluck('id');
 
-        if ($roles === 'pos')
+        if ($roles === 'pos') {
             $rolesId->push($this->roleService->readBy('NAME', 'POS-owner')->id);
+        }
 
         $result = $this->userService->updateRoles($usr, $rolesId->toArray(), true);
 

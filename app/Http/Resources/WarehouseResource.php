@@ -18,10 +18,10 @@ class WarehouseResource extends JsonResource
             'hId' => $this->hId,
             'uuid' => $this->uuid,
             $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company'))
+                'company' => new CompanyResource($this->whenLoaded('company')),
             ]),
             $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->whenLoaded('branch'))
+                'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
             'code' => $this->code,
             'name' => $this->name,
@@ -29,7 +29,7 @@ class WarehouseResource extends JsonResource
             'city' => $this->city,
             'contact' => $this->contact,
             'remarks' => $this->remarks,
-            'status' => $this->status->name
+            'status' => $this->status->name,
         ];
     }
 }

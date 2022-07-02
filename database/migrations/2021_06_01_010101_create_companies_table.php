@@ -20,7 +20,7 @@ class CreateCompaniesTable extends Migration
             $table->string('name')->nullable();
             $table->string('address')->nullable();
             $table->boolean('default')->default(false);
-			$table->integer('status')->nullable();
+            $table->integer('status')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

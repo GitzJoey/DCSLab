@@ -27,7 +27,7 @@ class BranchResource extends JsonResource
             'contact' => $this->contact,
             'status' => $this->status->name,
             'is_main' => $this->is_main,
-            'remarks' => $this->remarks
+            'remarks' => $this->remarks,
         ];
     }
 }

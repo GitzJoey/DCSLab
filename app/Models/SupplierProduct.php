@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
@@ -40,7 +40,7 @@ class SupplierProduct extends Model
             get: fn () => HashIds::encode($this->attributes['id'])
         );
     }
-    
+
     public function supplier_hId() : Attribute
     {
         return Attribute::make(

@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\isValidCompany;
 use App\Enums\ProductCategory;
 use App\Models\Brand;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Rules\isValidCompany;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BrandRequest extends FormRequest
 {
@@ -19,14 +19,16 @@ class BrandRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (! Auth::check()) {
+            return false;
+        }
 
         /** @var \App\User */
         $user = Auth::user();
         $brand = $this->route('brand');
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 return $user->can('viewAny', Brand::class) ? true : false;
             case 'read':
@@ -52,7 +54,7 @@ class BrandRequest extends FormRequest
         $nullableArr = [];
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
@@ -60,31 +62,35 @@ class BrandRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
 
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255'
+                    'name' => 'required|min:3|max:255',
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255'
+                    'name' => 'required|min:3|max:255',
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    '' => 'required'
+                    '' => 'required',
                 ];
         }
     }
@@ -92,7 +98,7 @@ class BrandRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company')
+            'company_id' => trans('validation_attributes.company'),
         ];
     }
 
@@ -106,7 +112,7 @@ class BrandRequest extends FormRequest
     public function prepareForValidation()
     {
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
@@ -119,7 +125,7 @@ class BrandRequest extends FormRequest
             case 'store':
             case 'update':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : ''
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                 ]);
                 break;
             default:

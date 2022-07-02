@@ -12,14 +12,14 @@ interface UnitService
 
     public function list(
         int $companyId,
-        ?string $category = null, 
+        ?string $category = null,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
-        ?int $perPage = 10, 
+        ?int $perPage = 10,
         bool $useCache = true
     ): Paginator|Collection;
-    
+
     public function read(Unit $unit): Unit;
 
     public function readBy(string $key, string $value);
@@ -30,7 +30,7 @@ interface UnitService
     ): Unit;
 
     public function delete(Unit $unit): bool;
-    
+
     public function generateUniqueCode(): string;
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool;

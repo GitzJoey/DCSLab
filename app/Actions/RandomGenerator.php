@@ -8,18 +8,22 @@ class RandomGenerator
 {
     private static $RSeed = 0;
 
-    public function seed(int $s = 0): int 
+    public function seed(int $s = 0): int
     {
         self::$RSeed = abs(intval($s)) % 9999999 + 1;
+
         return $this->generateNumber();
     }
 
     public function generateNumber(int $min = 0, int $max = 9999999): int
     {
-        if ($max == 0) return 0;
+        if ($max == 0) {
+            return 0;
+        }
 
-        if (self::$RSeed == 0)
+        if (self::$RSeed == 0) {
             $this->seed(random_int(0, mt_getrandmax()));
+        }
 
         self::$RSeed = (self::$RSeed * 125) % 2796203;
 
@@ -28,14 +32,16 @@ class RandomGenerator
 
     public function generateRandomTimer(): string
     {
-        return random_int(0,23).":".str_pad(random_int(0,59), 2, "0", STR_PAD_LEFT).":".str_pad(random_int(0,59), 2, "0", STR_PAD_LEFT);
+        return random_int(0, 23).':'.str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT).':'.str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT);
     }
 
     public function generateFixedLengthNumber(int $length = 2): int
     {
-        if ($length < 2) $length = 2;
+        if ($length < 2) {
+            $length = 2;
+        }
 
-        return random_int(intVal(pow(10, $length - 1)), intVal(pow(10, $length) - 1));
+        return random_int(intval(pow(10, $length - 1)), intval(pow(10, $length) - 1));
     }
 
     public function generateOne(int $max = 0): int
@@ -43,7 +49,7 @@ class RandomGenerator
         if ($max == 0) {
             return $this->generateNumber(0, 9999999);
         } else {
-            return $this->generateNumber(0, intVal($max));
+            return $this->generateNumber(0, intval($max));
         }
     }
 
@@ -53,7 +59,7 @@ class RandomGenerator
         $characters = array_merge(
             ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
             [3, 4, 7, 9]);
-        $max = sizeof($characters) - 1;
+        $max = count($characters) - 1;
 
         for ($i = 0; $i < $length; $i++) {
             $generatedString .= $characters[random_int(0, $max)];
@@ -64,12 +70,14 @@ class RandomGenerator
 
     public function randomTrueOrFalse(int $howManyTimes = 1): bool | array
     {
-        if ($howManyTimes <= 1) return (bool)random_int(0,1);
+        if ($howManyTimes <= 1) {
+            return (bool) random_int(0, 1);
+        }
 
-        $result = array();
-        
-        for($i = 0; $i < $howManyTimes; $i++) {
-            $result[$i] = (bool)random_int(0,1);
+        $result = [];
+
+        for ($i = 0; $i < $howManyTimes; $i++) {
+            $result[$i] = (bool) random_int(0, 1);
         }
 
         return $result;
@@ -77,8 +85,12 @@ class RandomGenerator
 
     public function generateRandomOneZero(int $maxZero = 1): int
     {
-        if ($maxZero == 1) return 10;
-        if ($maxZero < 2) $maxZero = 2;
+        if ($maxZero == 1) {
+            return 10;
+        }
+        if ($maxZero < 2) {
+            $maxZero = 2;
+        }
 
         $rand = random_int(2, $maxZero);
 

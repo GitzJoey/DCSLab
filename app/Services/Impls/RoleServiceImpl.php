@@ -3,6 +3,10 @@
 namespace App\Services\Impls;
 
 use App\Enums\UserRoles;
+use App\Models\Permission;
+use App\Models\Role;
+use App\Services\RoleService;
+use App\Traits\CacheHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -10,21 +14,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\Role;
-use App\Models\Permission;
-
-use App\Services\RoleService;
-use App\Traits\CacheHelper;
-
 class RoleServiceImpl implements RoleService
 {
     use CacheHelper;
 
     public function __construct()
     {
-        
     }
-    
+
     public function create(array $roleArr, array $inputtedPermissionsArr): Role
     {
         DB::beginTransaction();
@@ -47,7 +44,7 @@ class RoleServiceImpl implements RoleService
             return $role;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -73,7 +70,7 @@ class RoleServiceImpl implements RoleService
 
     public function readBy(string $key, string $value)
     {
-        switch(strtoupper($key)) {
+        switch (strtoupper($key)) {
             case 'ID':
                 return Role::find($value);
             case 'NAME':
@@ -91,8 +88,7 @@ class RoleServiceImpl implements RoleService
         Role $role,
         array $roleArr,
         array $inputtedPermissions
-    ): Role
-    {
+    ): Role {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
@@ -112,7 +108,7 @@ class RoleServiceImpl implements RoleService
             return $role;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;

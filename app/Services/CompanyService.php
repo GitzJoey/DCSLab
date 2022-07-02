@@ -32,7 +32,7 @@ interface CompanyService
     public function delete(Company $company): bool;
 
     public function getAllActiveCompany(
-        int $userId, 
+        int $userId,
         ?array $with = []
     );
 

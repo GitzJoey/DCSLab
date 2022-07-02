@@ -12,6 +12,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class InboxController extends BaseController
 {
     private $userService;
+
     private $inboxService;
 
     public function __construct(InboxService $inboxService, UserService $userService)
@@ -47,24 +48,23 @@ class InboxController extends BaseController
     private function encodeTheIds($arrayUserIds)
     {
         $result = '';
-        foreach($arrayUserIds as $i)
-        {
+        foreach ($arrayUserIds as $i) {
             $result .= Hashids::encode($i).',';
         }
 
-        return rtrim($result, ",");
+        return rtrim($result, ',');
     }
 
     public function searchUsers(Request $request)
     {
         $email = Auth::user()->email;
 
-        $usr = $this->userService->read($request->has('search') ? $request['search']:'', false);
+        $usr = $this->userService->read($request->has('search') ? $request['search'] : '', false);
 
         $brief = $usr->map(function ($item, $key) {
             return [
                 'value' => $item->hId,
-                'name' => empty($item->profile->first_name) ? $item->name  : $item->profile->first_name . $item->profile->last_name,
+                'name' => empty($item->profile->first_name) ? $item->name : $item->profile->first_name.$item->profile->last_name,
             ];
         });
 
@@ -77,13 +77,13 @@ class InboxController extends BaseController
 
         $t = $this->inboxService->getThread($id);
 
-        $mm = $t->map(function ($item) use($usr) {
+        $mm = $t->map(function ($item) use ($usr) {
             return [
                 'thread_id' => Hashids::encode($item->thread_id),
-                'full_name' => $item->user->profile->first_name . $item->user->profile->last_name,
+                'full_name' => $item->user->profile->first_name.$item->user->profile->last_name,
                 'img_path' => $item->user->profile->img_path,
                 'message' => $item->body,
-                'reverse' => $item->user_id == $usr ? true:false,
+                'reverse' => $item->user_id == $usr ? true : false,
                 'updated_at' => $item->updated_at->diffForHumans(),
             ];
         });
@@ -99,8 +99,7 @@ class InboxController extends BaseController
 
         $decryptedTo = [];
 
-        foreach (explode(',',$request['to']) as $s)
-        {
+        foreach (explode(',', $request['to']) as $s) {
             array_push($decryptedTo, Hashids::decode($s)[0]);
         }
 
@@ -114,15 +113,14 @@ class InboxController extends BaseController
         $request->validate([
             'hId' => 'required',
             'to' => 'required',
-            'subject' => 'required'
+            'subject' => 'required',
         ]);
 
         $usrId = Auth::user()->id;
 
         $decryptedTo = [];
 
-        foreach (explode(',',$request['to']) as $s)
-        {
+        foreach (explode(',', $request['to']) as $s) {
             array_push($decryptedTo, Hashids::decode($s)[0]);
         }
 
@@ -131,12 +129,12 @@ class InboxController extends BaseController
 
         if ($result == 0) {
             return response()->json([
-                'message' => ''
-            ],500);
+                'message' => '',
+            ], 500);
         } else {
             return response()->json([
-                'message' => ''
-            ],200);
+                'message' => '',
+            ], 200);
         }
     }
 }

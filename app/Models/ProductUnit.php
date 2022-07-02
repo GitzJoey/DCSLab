@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
@@ -28,7 +28,7 @@ class ProductUnit extends Model
         'is_base',
         'conversion_value',
         'is_primary_unit',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = ['company_id', 'product_id', 'unit_id', 'code', 'is_base', 'conversion_value', 'is_primary_unit', 'remarks'];

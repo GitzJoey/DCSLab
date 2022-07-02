@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\WarehouseService;
 use App\Http\Requests\WarehouseRequest;
 use App\Http\Resources\WarehouseResource;
 use App\Models\Warehouse;
+use App\Services\WarehouseService;
 use Exception;
 
 class WarehouseController extends BaseController
 {
     private $warehouseService;
-    
+
     public function __construct(WarehouseService $warehouseService)
     {
         parent::__construct();
@@ -23,7 +23,7 @@ class WarehouseController extends BaseController
     public function list(WarehouseRequest $warehouseRequest)
     {
         $request = $warehouseRequest->validated();
-        
+
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
@@ -57,33 +57,34 @@ class WarehouseController extends BaseController
 
         try {
             $result = $this->warehouseService->read($warehouse);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new WarehouseResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
     public function store(WarehouseRequest $warehouseRequest)
-    {   
+    {
         $request = $warehouseRequest->validated();
-        
+
         $company_id = $request['company_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->warehouseService->generateUniqueCode();
-            } while (!$this->warehouseService->isUniqueCode($code, $company_id));
+            } while (! $this->warehouseService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->warehouseService->isUniqueCode($code, $company_id)) {
+            if (! $this->warehouseService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -123,11 +124,11 @@ class WarehouseController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->warehouseService->generateUniqueCode();
-            } while (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id));
+            } while (! $this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id));
         } else {
-            if (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id)) {
+            if (! $this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -168,6 +169,6 @@ class WarehouseController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }

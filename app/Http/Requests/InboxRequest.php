@@ -15,16 +15,24 @@ class InboxRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
-        
+        if (! Auth::check()) {
+            return false;
+        }
+
         /** @var \App\User */
         $user = Auth::user();
-        
-        if ($user->roles->isEmpty()) return false;
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasPermission(['messaging-create', 'messaging-read', 'messaging-update', 'messaging-delete'])) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
+
+        if ($user->hasPermission(['messaging-create', 'messaging-read', 'messaging-update', 'messaging-delete'])) {
+            return true;
+        }
 
         return false;
     }
@@ -38,11 +46,11 @@ class InboxRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
 
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'store':
                 return [
                     'to' => 'required',
-                    'subject' => 'required'
+                    'subject' => 'required',
                 ];
             default:
                 return [
@@ -61,7 +69,7 @@ class InboxRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            
+
         ]);
     }
 }

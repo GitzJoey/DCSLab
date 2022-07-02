@@ -4,13 +4,13 @@ namespace App\Models;
 
 use App\Models\Branch;
 use App\Models\Employee;
-use Spatie\Activitylog\LogOptions;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeAccess extends Model
 {
@@ -21,12 +21,12 @@ class EmployeeAccess extends Model
 
     protected $fillable = [
         'employee_id',
-        'branch_id'
+        'branch_id',
     ];
 
     protected static $logAttributes = [
-        'employee_id', 
-        'branch_id'
+        'employee_id',
+        'branch_id',
     ];
 
     protected static $logOnlyDirty = true;

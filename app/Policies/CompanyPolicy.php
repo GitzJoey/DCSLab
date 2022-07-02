@@ -19,11 +19,17 @@ class CompanyPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('companies-readAny')) return true;
+        if ($user->hasPermission('companies-readAny')) {
+            return true;
+        }
     }
 
     /**
@@ -35,11 +41,17 @@ class CompanyPolicy
      */
     public function view(User $user, Company $company = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('companies-read')) return true;
+        if ($user->hasPermission('companies-read')) {
+            return true;
+        }
     }
 
     /**
@@ -50,11 +62,17 @@ class CompanyPolicy
      */
     public function create(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('company-create')) return true;
+        if ($user->hasPermission('company-create')) {
+            return true;
+        }
     }
 
     /**
@@ -66,11 +84,17 @@ class CompanyPolicy
      */
     public function update(User $user, Company $company = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('company-update')) return true;
+        if ($user->hasPermission('company-update')) {
+            return true;
+        }
     }
 
     /**
@@ -82,11 +106,17 @@ class CompanyPolicy
      */
     public function delete(User $user, Company $company = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('company-delete')) return true;
+        if ($user->hasPermission('company-delete')) {
+            return true;
+        }
     }
 
     /**

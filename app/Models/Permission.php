@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Vinkla\Hashids\Facades\Hashids;
 use Laratrust\Models\LaratrustPermission;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Permission extends LaratrustPermission
 {

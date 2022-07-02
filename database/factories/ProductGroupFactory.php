@@ -23,12 +23,12 @@ class ProductGroupFactory extends Factory
      */
     public function definition()
     {
-        $department = ["Books", "Movies", "Music", "Games", "Electronics", "Computers", "Home", "Garden", "Tools", "Grocery", "Health", "Beauty", "Toys", "Kids", "Baby", "Clothing", "Shoes", "Jewelry", "Sports", "Outdoors", "Automotive", "Industrial"];
-        
+        $department = ['Books', 'Movies', 'Music', 'Games', 'Electronics', 'Computers', 'Home', 'Garden', 'Tools', 'Grocery', 'Health', 'Beauty', 'Toys', 'Kids', 'Baby', 'Clothing', 'Shoes', 'Jewelry', 'Sports', 'Outdoors', 'Automotive', 'Industrial'];
+
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $this->faker->randomElement($department),
-            'category' => $this->faker->randomElement(ProductCategory::toArrayValue())
+            'category' => $this->faker->randomElement(ProductCategory::toArrayValue()),
         ];
     }
 }

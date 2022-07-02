@@ -15,7 +15,7 @@ class Profile extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $table="profiles";
+    protected $table = 'profiles';
 
     protected $fillable = [
         'first_name',
@@ -50,7 +50,7 @@ class Profile extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute

@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Services\BranchService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\BranchRequest;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\BranchResource;
 use App\Models\Branch;
 use App\Models\Company;
+use App\Services\BranchService;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BranchController extends BaseController
 {
     private $branchService;
-    
+
     public function __construct(BranchService $branchService)
     {
         parent::__construct();
@@ -28,7 +27,7 @@ class BranchController extends BaseController
     public function list(BranchRequest $branchRequest)
     {
         $request = $branchRequest->validated();
-        
+
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
@@ -62,15 +61,16 @@ class BranchController extends BaseController
 
         try {
             $result = $this->branchService->read($branch);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new BranchResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -84,7 +84,7 @@ class BranchController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-    
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
@@ -97,18 +97,18 @@ class BranchController extends BaseController
     public function store(BranchRequest $branchRequest)
     {
         $request = $branchRequest->validated();
-        
+
         $company_id = $request['company_id'];
- 
+
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode();
-            } while (!$this->branchService->isUniqueCode($code, $company_id));
+            } while (! $this->branchService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->branchService->isUniqueCode($code, $company_id)) {
+            if (! $this->branchService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -122,16 +122,17 @@ class BranchController extends BaseController
             'contact' => $request['contact'],
             'is_main' => $request['is_main'],
             'remarks' => $request['remarks'],
-            'status' => $request['status']
+            'status' => $request['status'],
         ];
 
         $result = null;
         $errorMsg = '';
 
         try {
-            if ($branchArr['is_main'])
+            if ($branchArr['is_main']) {
                 $this->branchService->resetMainBranch(companyId: $company_id);
-            
+            }
+
             $result = $this->branchService->create($branchArr);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -150,11 +151,11 @@ class BranchController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->branchService->generateUniqueCode();
-            } while (!$this->branchService->isUniqueCode($code, $company_id, $branch->id));
+            } while (! $this->branchService->isUniqueCode($code, $company_id, $branch->id));
         } else {
-            if (!$this->branchService->isUniqueCode($code, $company_id, $branch->id)) {
+            if (! $this->branchService->isUniqueCode($code, $company_id, $branch->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -167,16 +168,17 @@ class BranchController extends BaseController
             'contact' => $request['contact'],
             'is_main' => $request['is_main'],
             'remarks' => $request['remarks'],
-            'status' => $request['status']
+            'status' => $request['status'],
         ];
 
         $result = null;
         $errorMsg = '';
 
         try {
-            if ($branchArr['is_main']) 
+            if ($branchArr['is_main']) {
                 $this->branchService->resetMainBranch(companyId: $company_id);
-            
+            }
+
             $result = $this->branchService->update(
                 $branch,
                 $branchArr
@@ -190,8 +192,9 @@ class BranchController extends BaseController
 
     public function delete(Branch $branch)
     {
-        if ($branch->is_main) 
+        if ($branch->is_main) {
             return response()->error(trans('rules.branch.delete_main_branch'));
+        }
 
         $result = false;
         $errorMsg = '';
@@ -202,6 +205,6 @@ class BranchController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }

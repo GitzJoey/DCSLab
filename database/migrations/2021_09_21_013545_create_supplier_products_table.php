@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateSupplierProductsTable extends Migration
 {
@@ -13,7 +13,7 @@ class CreateSupplierProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('supplier_products', function (Blueprint $table){
+        Schema::create('supplier_products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('supplier_id')->references('id')->on('suppliers');

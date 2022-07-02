@@ -2,18 +2,17 @@
 
 namespace App\Services\Impls;
 
-use Exception;
-use App\Models\Branch;
-
-use App\Models\Company;
-use App\Traits\CacheHelper;
-use App\Services\BranchService;
 use App\Actions\RandomGenerator;
+use App\Models\Branch;
+use App\Models\Company;
+use App\Services\BranchService;
+use App\Traits\CacheHelper;
+use Exception;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Contracts\Pagination\Paginator;
 
 class BranchServiceImpl implements BranchService
 {
@@ -21,13 +20,11 @@ class BranchServiceImpl implements BranchService
 
     public function __construct()
     {
-        
     }
-    
+
     public function create(
         array $branchArr
-    ): Branch
-    {
+    ): Branch {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
@@ -41,7 +38,7 @@ class BranchServiceImpl implements BranchService
             $is_main = $branchArr['is_main'];
             $remarks = $branchArr['remarks'];
             $status = $branchArr['status'];
-    
+
             $company = Company::find($company_id);
             if ($company->branches()->count() == 0) {
                 $is_main = true;
@@ -68,11 +65,11 @@ class BranchServiceImpl implements BranchService
             return $branch;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -83,32 +80,35 @@ class BranchServiceImpl implements BranchService
         int $page = 1,
         int $perPage = 10,
         bool $useCache = true
-    ): Paginator|Collection
-    {
+    ): Paginator|Collection {
         $timer_start = microtime(true);
 
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) return $cacheResult;
+                if (! is_null($cacheResult)) {
+                    return $cacheResult;
+                }
             }
 
             $result = null;
 
-            if (!$companyId) return null;
+            if (! $companyId) {
+                return null;
+            }
 
             $branch = Branch::with('company')
                         ->whereCompanyId($companyId);
-    
+
             if (empty($search)) {
                 $branch = $branch->latest();
             } else {
                 $branch = $branch->where('name', 'like', '%'.$search.'%')->latest();
             }
-    
+
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 $result = $branch->paginate(perPage: abs($perPage), page: abs($page));
@@ -116,15 +116,17 @@ class BranchServiceImpl implements BranchService
                 $result = $branch->get();
             }
 
-            if ($useCache) $this->saveToCache($cacheKey, $result);
-            
+            if ($useCache) {
+                $this->saveToCache($cacheKey, $result);
+            }
+
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
         }
     }
 
@@ -135,31 +137,34 @@ class BranchServiceImpl implements BranchService
 
     public function getBranchByCompany(int $companyId = 0, Company $company = null): Collection
     {
-        if (!is_null($company))
+        if (! is_null($company)) {
             return $company->branches;
+        }
 
-        if ($companyId != 0)
+        if ($companyId != 0) {
             return Branch::where('company_id', '=', $companyId)->where('status', '=', 1)->get();
+        }
 
         return null;
     }
 
     public function getMainBranchByCompany(int $companyId = 0, Company $company = null): Branch
     {
-        if (!is_null($company))
+        if (! is_null($company)) {
             return $company->branches()->where('is_main', '=', true)->first();
+        }
 
-        if ($companyId != 0)
+        if ($companyId != 0) {
             return Branch::where('company_id', '=', $companyId)->where('is_main', '=', true)->first();
-        
+        }
+
         return null;
     }
 
     public function update(
         Branch $branch,
         array $branchArr,
-    ): Branch
-    {
+    ): Branch {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
@@ -191,11 +196,11 @@ class BranchServiceImpl implements BranchService
             return $branch->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -205,9 +210,9 @@ class BranchServiceImpl implements BranchService
         $timer_start = microtime(true);
 
         try {
-            if ($companyId != 0)
+            if ($companyId != 0) {
                 $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => false]);
-            else if (!is_null($company)) {
+            } elseif (! is_null($company)) {
                 $retval = $company->branches()->update(['is_main' => false]);
             } else {
                 $retval = 0;
@@ -218,11 +223,11 @@ class BranchServiceImpl implements BranchService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -238,15 +243,15 @@ class BranchServiceImpl implements BranchService
             DB::commit();
 
             $this->flushCache();
-            
+
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -254,16 +259,18 @@ class BranchServiceImpl implements BranchService
     {
         $rand = new RandomGenerator();
         $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+
         return $code;
     }
 
     public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
     {
-        $result = Branch::whereCompanyId($companyId)->where('code', '=' , $code);
+        $result = Branch::whereCompanyId($companyId)->where('code', '=', $code);
 
-        if($exceptId)
+        if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);
+        }
 
-        return $result->count() == 0 ? true:false;
+        return $result->count() == 0 ? true : false;
     }
 }

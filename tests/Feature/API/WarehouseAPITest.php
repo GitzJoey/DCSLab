@@ -2,17 +2,17 @@
 
 namespace Tests\Feature\API;
 
-use Tests\APITestCase;
+use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use App\Models\Company;
 use App\Models\Warehouse;
-use App\Enums\ActiveStatus;
-use App\Actions\RandomGenerator;
 use App\Services\WarehouseService;
-use Illuminate\Container\Container;
-use Vinkla\Hashids\Facades\Hashids;
 use Database\Seeders\BranchTableSeeder;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Container\Container;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseAPITest extends APITestCase
 {
@@ -20,30 +20,30 @@ class WarehouseAPITest extends APITestCase
 
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
     }
 
-    #region store
+    //region store
 
-    #endregion
+    //endregion
 
-    #region list
+    //region list
 
-    #endregion
+    //endregion
 
-    #region read
+    //region read
 
-    #endregion
+    //endregion
 
-    #region update
+    //region update
 
-    #endregion
+    //endregion
 
-    #region delete
+    //region delete
 
-    #endregion
+    //endregion
 
-    #region others
+    //region others
 
-    #endregion
+    //endregion
 }

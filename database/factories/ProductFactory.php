@@ -3,10 +3,9 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
-use App\Enums\RecordStatus;
 use App\Enums\ProductType;
+use App\Enums\RecordStatus;
 use App\Models\Product;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -46,7 +45,7 @@ class ProductFactory extends Factory
             'product_type' => $product_type,
             'use_serial_number' => $faker->boolean(),
             'has_expiry_date' => $faker->boolean(),
-            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum())
+            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -54,7 +53,7 @@ class ProductFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -63,7 +62,7 @@ class ProductFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }
