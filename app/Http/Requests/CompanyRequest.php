@@ -6,9 +6,8 @@ use App\Enums\RecordStatus;
 use App\Models\Company;
 use App\Rules\deactivateDefaultCompany;
 use App\Rules\isValidCompany;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -21,7 +20,7 @@ class CompanyRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -67,10 +66,12 @@ class CompanyRequest extends FormRequest
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -79,6 +80,7 @@ class CompanyRequest extends FormRequest
                     'default' => 'required|boolean',
                     'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))],
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
@@ -88,6 +90,7 @@ class CompanyRequest extends FormRequest
                     'default' => 'required|boolean',
                     'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))],
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
@@ -102,7 +105,7 @@ class CompanyRequest extends FormRequest
             'company_id' => trans('validation_attributes.company'),
         ];
     }
-    
+
     public function validationData()
     {
         $additionalArray = [];
@@ -116,7 +119,7 @@ class CompanyRequest extends FormRequest
         switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
-                    'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true
+                    'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;
             case 'read':
@@ -131,7 +134,7 @@ class CompanyRequest extends FormRequest
                 break;
             case 'update':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0]:'',
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Service;
 
-use App\Models\Unit;
-use App\Models\Company;
-use Tests\ServiceTestCase;
-use App\Services\UnitService;
 use App\Actions\RandomGenerator;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Company;
+use App\Models\Unit;
+use App\Services\UnitService;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class UnitServiceTest extends ServiceTestCase
 {
@@ -20,8 +20,8 @@ class UnitServiceTest extends ServiceTestCase
 
         $this->unitService = app(UnitService::class);
     }
-    
-    #region create
+
+    //region create
     public function test_unit_service_call_create_expect_db_has_record()
     {
         $this->markTestSkipped('Under Constructions');
@@ -32,9 +32,9 @@ class UnitServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region list
+    //region list
 
     public function test_unit_service_call_list_with_paginate_true_expect_Paginator_object()
     {
@@ -66,18 +66,18 @@ class UnitServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region read
+    //region read
 
     public function test_unit_service_call_read_expect_object()
     {
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region update
+    //region update
 
     public function test_unit_service_call_update_expect_db_updated()
     {
@@ -89,20 +89,18 @@ class UnitServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region delete
+    //region delete
 
     public function test_unit_service_call_delete_expect_bool()
     {
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region others
+    //region others
 
-    
-
-    #endregion
+    //endregion
 }

@@ -20,7 +20,7 @@ interface BrandService
         int $perPage = 10,
         bool $useCache = true
     ): Paginator|Collection;
-    
+
     public function read(Brand $brand): Brand;
 
     public function readBy(string $key, string $value);

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 class mustResetPassword implements Rule
 {
     private $user;
+
     /**
      * Create a new rule instance.
      *
@@ -32,7 +33,7 @@ class mustResetPassword implements Rule
             return false;
         }
 
-        if (Carbon::now()->diffInDays(Carbon::parse($this->user->password_changed_at)->addDays(Config::get('dcslab.PASSWORD_EXPIRY_DAYS')), false) <= 0 ) {
+        if (Carbon::now()->diffInDays(Carbon::parse($this->user->password_changed_at)->addDays(Config::get('dcslab.PASSWORD_EXPIRY_DAYS')), false) <= 0) {
             return false;
         }
 

@@ -2,6 +2,11 @@
 
 namespace App\Services\Impls;
 
+use App\Actions\RandomGenerator;
+use App\Models\Company;
+use App\Models\User;
+use App\Services\CompanyService;
+use App\Traits\CacheHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -9,22 +14,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-use App\Actions\RandomGenerator;
-use App\Services\CompanyService;
-
-use App\Models\User;
-use App\Models\Company;
-use App\Traits\CacheHelper;
-
 class CompanyServiceImpl implements CompanyService
 {
     use CacheHelper;
 
     public function __construct()
     {
-        
     }
-    
+
     public function create(array $companyArr): Company
     {
         DB::beginTransaction();
@@ -37,9 +34,11 @@ class CompanyServiceImpl implements CompanyService
             $default = $companyArr['default'];
             $status = $companyArr['status'];
             $userId = $companyArr['user_id'];
-    
+
             $usr = User::find($userId);
-            if (!$usr) return null;
+            if (! $usr) {
+                return null;
+            }
 
             if ($usr->companies()->count() == 0) {
                 $default = true;
@@ -64,47 +63,50 @@ class CompanyServiceImpl implements CompanyService
             return $company;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function list(
-        int $userId, 
-        string $search = '', 
-        bool $paginate = true, 
-        int $page = 1, 
-        int $perPage = 10, 
+        int $userId,
+        string $search = '',
+        bool $paginate = true,
+        int $page = 1,
+        int $perPage = 10,
         bool $useCache = true
-    ): Paginator|Collection
-    {
+    ): Paginator|Collection {
         $timer_start = microtime(true);
 
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$userId.'-'.(empty($search) ? '[empty]':$search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) return $cacheResult;
+                if (! is_null($cacheResult)) {
+                    return $cacheResult;
+                }
             }
 
             $result = null;
 
             $usr = User::find($userId);
-            if (!$usr) return null;
-    
+            if (! $usr) {
+                return null;
+            }
+
             $compIds = $usr->companies()->pluck('company_id');
-            
+
             if (empty($search)) {
                 $companies = Company::whereIn('id', $compIds)->latest();
             } else {
                 $companies = Company::whereIn('id', $compIds)->where('name', 'like', '%'.$search.'%')->latest();
             }
-    
+
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
                 $result = $companies->paginate(perPage: abs($perPage), page: abs($page));
@@ -112,15 +114,17 @@ class CompanyServiceImpl implements CompanyService
                 $result = $companies->get();
             }
 
-            if ($useCache) $this->saveToCache($cacheKey, $result);
-            
+            if ($useCache) {
+                $this->saveToCache($cacheKey, $result);
+            }
+
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)':' (DB)'));
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
         }
     }
 
@@ -130,53 +134,53 @@ class CompanyServiceImpl implements CompanyService
     }
 
     public function getAllActiveCompany(
-        int $userId, 
+        int $userId,
         ?array $with = []
-    )
-    {
+    ) {
         $timer_start = microtime(true);
 
         try {
             $usr = User::find($userId);
-            if (!$usr) return null;
-    
+            if (! $usr) {
+                return null;
+            }
+
             $compIds = $usr->companies()->pluck('company_id');
 
-            $companies = Company::where('status', '=', 1)->whereIn('id',  $compIds);
+            $companies = Company::where('status', '=', 1)->whereIn('id', $compIds);
 
             if (in_array('branches', $with)) {
-                $companies = $companies->with(['branches' => function ($query) { 
+                $companies = $companies->with(['branches' => function ($query) {
                     $query->where('status', '=', 1);
                 }]);
             }
 
             if (in_array('warehouses', $with)) {
-                $companies = $companies->with(['warehouses' => function ($query) { 
+                $companies = $companies->with(['warehouses' => function ($query) {
                     $query->where('status', '=', 1);
                 }]);
             }
 
             if (in_array('employees', $with)) {
-                $companies = $companies->with(['employees' => function ($query) { 
+                $companies = $companies->with(['employees' => function ($query) {
                     $query->where('status', '=', 1);
                 }]);
             }
-        
+
             return $companies->get();
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function update(
         Company $company,
         array $companyArr
-    ): Company
-    {
+    ): Company {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
@@ -186,7 +190,7 @@ class CompanyServiceImpl implements CompanyService
                 'name' => $companyArr['name'],
                 'address' => $companyArr['address'],
                 'default' => $companyArr['default'],
-                'status' => $companyArr['status']
+                'status' => $companyArr['status'],
             ]);
 
             DB::commit();
@@ -196,11 +200,11 @@ class CompanyServiceImpl implements CompanyService
             return $company->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -210,9 +214,9 @@ class CompanyServiceImpl implements CompanyService
         $timer_start = microtime(true);
 
         $retval = false;
-        
+
         try {
-            $retval = $company->delete();    
+            $retval = $company->delete();
 
             DB::commit();
 
@@ -221,11 +225,11 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -233,6 +237,7 @@ class CompanyServiceImpl implements CompanyService
     {
         $rand = new RandomGenerator();
         $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+
         return $code;
     }
 
@@ -240,19 +245,23 @@ class CompanyServiceImpl implements CompanyService
     {
         $user = User::find($userId);
 
-        if ($user->companies->count() == 0) return true;
+        if ($user->companies->count() == 0) {
+            return true;
+        }
 
-        $result = $user->companies()->where('code', '=' , $code);
+        $result = $user->companies()->where('code', '=', $code);
 
-        if($exceptId)
+        if ($exceptId) {
             $result = $result->get()->where('id', '<>', $exceptId);
+        }
 
-        return $result->count() == 0 ? true:false;
+        return $result->count() == 0 ? true : false;
     }
 
     public function isDefaultCompany(Company $company): bool
     {
         $result = $company->default;
+
         return is_null($result) ? false : $result;
     }
 
@@ -272,11 +281,11 @@ class CompanyServiceImpl implements CompanyService
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -287,6 +296,6 @@ class CompanyServiceImpl implements CompanyService
 
     public function getDefaultCompany(User $user): Company
     {
-        return $user->companies()->where('default','=', true)->first();
+        return $user->companies()->where('default', '=', true)->first();
     }
 }

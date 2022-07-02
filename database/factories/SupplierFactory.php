@@ -3,10 +3,9 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
-use App\Enums\RecordStatus;
 use App\Enums\PaymentTermType;
+use App\Enums\RecordStatus;
 use App\Models\Supplier;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SupplierFactory extends Factory

@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Warehouse;
-use App\Enums\RecordStatus;
-
 use App\Actions\RandomGenerator;
+use App\Enums\RecordStatus;
+use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class WarehouseFactory extends Factory

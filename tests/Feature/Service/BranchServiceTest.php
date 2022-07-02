@@ -4,14 +4,14 @@ namespace Tests\Feature\Service;
 
 use App\Models\Branch;
 use App\Models\Company;
-use Tests\ServiceTestCase;
-use App\Services\BranchService;
 use App\Models\User;
+use App\Services\BranchService;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class BranchServiceTest extends ServiceTestCase
 {
@@ -24,7 +24,7 @@ class BranchServiceTest extends ServiceTestCase
         $this->branchService = app(BranchService::class);
     }
 
-    #region create
+    //region create
     public function test_branch_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -32,7 +32,7 @@ class BranchServiceTest extends ServiceTestCase
                     ->create();
 
         $branchArr = Branch::factory()->make([
-            'company_id' => $user->companies->first()->id
+            'company_id' => $user->companies->first()->id,
         ]);
 
         $result = $this->branchService->create($branchArr->toArray());
@@ -51,9 +51,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->branchService->create([]);
     }
 
-    #endregion
+    //endregion
 
-    #region list
+    //region list
 
     public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
     {
@@ -105,10 +105,10 @@ class BranchServiceTest extends ServiceTestCase
                     ->create();
 
         $companyId = $user->companies->first()->id;
-        
+
         Branch::factory()->count(10)->create([
             'company_id' => $companyId,
-            'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama','Pembantu','Daerah']).' '.'testing'
+            'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.'testing',
         ]);
 
         Branch::factory()->count(10)->create([
@@ -116,7 +116,7 @@ class BranchServiceTest extends ServiceTestCase
         ]);
 
         $result = $this->branchService->list(
-            companyId: $companyId, 
+            companyId: $companyId,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -134,13 +134,13 @@ class BranchServiceTest extends ServiceTestCase
                     ->create();
 
         $companyId = $user->companies->first()->id;
-        
+
         Branch::factory()->count(25)->create([
             'company_id' => $companyId,
         ]);
 
         $result = $this->branchService->list(
-            companyId: $companyId, 
+            companyId: $companyId,
             search: '',
             paginate: true,
             page: -1,
@@ -158,13 +158,13 @@ class BranchServiceTest extends ServiceTestCase
                     ->create();
 
         $companyId = $user->companies->first()->id;
-        
+
         Branch::factory()->count(25)->create([
             'company_id' => $companyId,
         ]);
 
         $result = $this->branchService->list(
-            companyId: $companyId, 
+            companyId: $companyId,
             search: '',
             paginate: true,
             page: 1,
@@ -175,9 +175,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertTrue($result->total() > 1);
     }
 
-    #endregion
+    //endregion
 
-    #region read
+    //region read
 
     public function test_branch_service_call_read_expect_object()
     {
@@ -185,7 +185,7 @@ class BranchServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault()
                         ->has(Branch::factory()->count(20), 'branches'), 'companies')
                     ->create();
-        
+
         $branch = $user->companies->first()->branches()->inRandomOrder()->first();
 
         $result = $this->branchService->read($branch);
@@ -193,9 +193,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Branch::class, $result);
     }
 
-    #endregion
+    //endregion
 
-    #region update
+    //region update
 
     public function test_branch_service_call_update_expect_db_updated()
     {
@@ -208,7 +208,7 @@ class BranchServiceTest extends ServiceTestCase
         $branchArr = Branch::factory()->make();
 
         $result = $this->branchService->update($branch, $branchArr->toArray());
-        
+
         $this->assertInstanceOf(Branch::class, $result);
         $this->assertDatabaseHas('branches', [
             'id' => $branch->id,
@@ -229,13 +229,13 @@ class BranchServiceTest extends ServiceTestCase
 
         $branch = $user->companies->first()->branches->first();
         $branchArr = [];
-            
+
         $this->branchService->update($branch, $branchArr);
     }
 
-    #endregion
+    //endregion
 
-    #region delete
+    //region delete
 
     public function test_branch_service_call_delete_expect_bool()
     {
@@ -245,19 +245,19 @@ class BranchServiceTest extends ServiceTestCase
                     ->create();
 
         $branch = $user->companies->first()->branches->first();
-            
+
         $result = $this->branchService->delete($branch);
-        
+
         $this->assertIsBool($result);
         $this->assertTrue($result);
         $this->assertSoftDeleted('branches', [
-            'id' => $branch->id
+            'id' => $branch->id,
         ]);
     }
 
-    #endregion
+    //endregion
 
-    #region others
+    //region others
 
     public function test_branch_service_call_function_getBranchByCompany_expect_collection_object()
     {
@@ -268,7 +268,7 @@ class BranchServiceTest extends ServiceTestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $result = $this->branchService->getBranchByCompany(companyId: $companyId);
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -290,7 +290,7 @@ class BranchServiceTest extends ServiceTestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         Branch::factory()->setIsMainBranch()->create(['company_id' => $companyId]);
         Branch::factory()->count(5)->create(['company_id' => $companyId]);
 
@@ -318,12 +318,12 @@ class BranchServiceTest extends ServiceTestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         Branch::factory()->setIsMainBranch()->create(['company_id' => $companyId]);
         Branch::factory()->count(5)->create(['company_id' => $companyId]);
-     
+
         $result = $this->branchService->resetMainBranch(companyId: $companyId);
-        
+
         $this->assertTrue($result);
         $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
 
@@ -337,7 +337,7 @@ class BranchServiceTest extends ServiceTestCase
         Branch::whereCompanyId($companyId)->inRandomOrder()->first()->update(['is_main' => true]);
 
         $result = $this->branchService->resetMainBranch(companyId: $companyId, company: $company);
-        
+
         $this->assertTrue($result);
         $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
     }
@@ -361,12 +361,12 @@ class BranchServiceTest extends ServiceTestCase
 
         Branch::factory()->create([
             'company_id' => $companyId_1,
-            'code' => 'test1'
+            'code' => 'test1',
         ]);
 
         Branch::factory()->create([
             'company_id' => $companyId_2,
-            'code' => 'test2'
+            'code' => 'test2',
         ]);
 
         $this->assertFalse($this->branchService->isUniqueCode('test1', $companyId_1));
@@ -375,5 +375,5 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertTrue($this->branchService->isUniqueCode('test1', $companyId_2));
     }
 
-    #endregion
+    //endregion
 }

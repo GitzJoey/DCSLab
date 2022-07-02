@@ -61,12 +61,13 @@ class CompanyController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new CompanyResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -77,7 +78,7 @@ class CompanyController extends BaseController
         $with = $request->has('with') ? explode(',', $request['with']) : [];
 
         $result = $this->companyService->getAllActiveCompany($userId, $with);
-    
+
         if (is_null($result)) {
             return response()->error();
         } else {
@@ -105,9 +106,9 @@ class CompanyController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id));
+            } while (! $this->companyService->isUniqueCode($code, $user->id));
         } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id)) {
+            if (! $this->companyService->isUniqueCode($code, $user->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -120,7 +121,7 @@ class CompanyController extends BaseController
             'name' => $request['name'],
             'address' => $request['address'],
             'default' => $request['default'],
-            'status' => $request['status']
+            'status' => $request['status'],
 
         ];
 
@@ -150,9 +151,9 @@ class CompanyController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id, $company->id));
+            } while (! $this->companyService->isUniqueCode($code, $user->id, $company->id));
         } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id, $company->id)) {
+            if (! $this->companyService->isUniqueCode($code, $user->id, $company->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -175,7 +176,7 @@ class CompanyController extends BaseController
             if ($companyArr['default']) {
                 $this->companyService->resetDefaultCompany($user);
             }
-    
+
             $result = $this->companyService->update(
                 $company,
                 $companyArr
@@ -193,14 +194,15 @@ class CompanyController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($this->companyService->isDefaultCompany($company)) 
+            if ($this->companyService->isDefaultCompany($company)) {
                 return response()->error(trans('rules.company.delete_default_company'));
+            }
 
             $result = $this->companyService->delete($company);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }

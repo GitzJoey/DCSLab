@@ -37,22 +37,22 @@ class RandomGeneratorTest extends TestCase
         $val = $this->instance->generateFixedLengthNumber(0);
 
         $this->assertIsNumeric($val);
-        $this->assertTrue(strlen((string)$val) == 2);
+        $this->assertTrue(strlen((string) $val) == 2);
 
         $val = $this->instance->generateFixedLengthNumber(1);
 
         $this->assertIsNumeric($val);
-        $this->assertTrue(strlen((string)$val) == 2);
+        $this->assertTrue(strlen((string) $val) == 2);
 
         $val = $this->instance->generateFixedLengthNumber(3);
 
         $this->assertIsNumeric($val);
-        $this->assertTrue(strlen((string)$val) == 3);
+        $this->assertTrue(strlen((string) $val) == 3);
 
         $val = $this->instance->generateFixedLengthNumber(10);
 
         $this->assertIsNumeric($val);
-        $this->assertTrue(strlen((string)$val) == 10);
+        $this->assertTrue(strlen((string) $val) == 10);
     }
 
     public function test_random_generator_call_generateOne()

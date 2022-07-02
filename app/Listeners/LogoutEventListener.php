@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 class LogoutEventListener
 {
     private $activityLogService;
+
     private $dashboardService;
 
     /**

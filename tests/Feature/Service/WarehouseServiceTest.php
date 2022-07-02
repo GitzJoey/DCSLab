@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Service;
 
+use App\Actions\RandomGenerator;
 use App\Models\Company;
 use App\Models\Warehouse;
-use Tests\ServiceTestCase;
-use App\Actions\RandomGenerator;
 use App\Services\WarehouseService;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class WarehouseServiceTest extends ServiceTestCase
 {
@@ -21,7 +21,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->warehouseService = app(WarehouseService::class);
     }
 
-    #region create
+    //region create
     public function test_warehouse_service_call_create_expect_db_has_record()
     {
         $this->markTestSkipped('Under Constructions');
@@ -32,9 +32,9 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region list
+    //region list
 
     public function test_warehouse_service_call_list_with_paginate_true_expect_Paginator_object()
     {
@@ -66,18 +66,18 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region read
+    //region read
 
     public function test_warehouse_service_call_read_expect_object()
     {
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region update
+    //region update
 
     public function test_warehouse_service_call_update_expect_db_updated()
     {
@@ -89,20 +89,18 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region delete
+    //region delete
 
     public function test_warehouse_service_call_delete_expect_bool()
     {
         $this->markTestSkipped('Under Constructions');
     }
 
-    #endregion
+    //endregion
 
-    #region others
+    //region others
 
-    
-
-    #endregion
+    //endregion
 }

@@ -4,7 +4,8 @@ namespace App\Traits;
 
 use App\Enums\RecordStatus;
 
-trait ScopeableByStatus {
+trait ScopeableByStatus
+{
     public function scopeWhereStatus($query, $status = null)
     {
         if ($status != null) {

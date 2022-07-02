@@ -2,12 +2,12 @@
 
 namespace App\Services\Impls;
 
-use Exception;
-use Carbon\Carbon;
 use App\Services\InboxService;
+use Carbon\Carbon;
 use Cmgmyr\Messenger\Models\Message;
 use Cmgmyr\Messenger\Models\Participant;
 use Cmgmyr\Messenger\Models\Thread;
+use Exception;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,13 +16,12 @@ class InboxServiceImpl implements InboxService
 {
     public function __construct()
     {
-        
     }
-    
+
     public function getThreads(int $userId)
     {
         $t = Thread::with('participants')
-            ->whereHas('participants', function($p) use ($userId) {
+            ->whereHas('participants', function ($p) use ($userId) {
                 $p->where('user_id', '=', $userId);
             })->get();
 
@@ -69,7 +68,7 @@ class InboxServiceImpl implements InboxService
             return $r;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
         }
     }
 
@@ -90,7 +89,7 @@ class InboxServiceImpl implements InboxService
 
             $participant = Participant::firstOrCreate([
                 'thread_id' => $thread->id,
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
 
             $participant->last_read = new Carbon;
@@ -102,7 +101,7 @@ class InboxServiceImpl implements InboxService
 
             return 0;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '':auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
         }
     }
 }

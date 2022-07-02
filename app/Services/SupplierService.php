@@ -19,7 +19,7 @@ interface SupplierService
         string $search = '',
         bool $paginate = true,
         int $page = 1,
-        int $perPage = 10, 
+        int $perPage = 10,
         bool $useCache = true
     ): Paginator|Collection;
 

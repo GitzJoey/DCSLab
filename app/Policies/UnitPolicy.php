@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRoles;
 use App\Models\Unit;
 use App\Models\User;
-use App\Enums\UserRoles;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UnitPolicy

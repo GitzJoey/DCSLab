@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\isValidCompany;
 use App\Enums\ProductCategory;
 use App\Models\ProductGroup;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Rules\isValidCompany;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductGroupRequest extends FormRequest
 {
@@ -19,7 +19,7 @@ class ProductGroupRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -64,10 +64,12 @@ class ProductGroupRequest extends FormRequest
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -76,6 +78,7 @@ class ProductGroupRequest extends FormRequest
                     'name' => 'required|min:3|max:255',
                     'category' => [new Enum(ProductCategory::class)],
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
@@ -84,6 +87,7 @@ class ProductGroupRequest extends FormRequest
                     'name' => 'required|min:3|max:255',
                     'category' => [new Enum(ProductCategory::class)],
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [

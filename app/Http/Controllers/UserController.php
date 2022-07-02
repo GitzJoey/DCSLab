@@ -7,16 +7,16 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
-
 use Vinkla\Hashids\Facades\Hashids;
 
 class UserController extends BaseController
 {
     private $userService;
+
     private $roleService;
 
     public function __construct(UserService $userService, RoleService $roleService)
@@ -45,12 +45,13 @@ class UserController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = UserResource::collection($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -66,12 +67,13 @@ class UserController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new UserResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -88,13 +90,13 @@ class UserController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($roles)) {
             return response()->error($errorMsg);
         } else {
             $response = RoleResource::collection($roles);
 
-            return $response;    
+            return $response;
         }
     }
 
@@ -119,7 +121,7 @@ class UserController extends BaseController
         $userArr = [
             'name' => $request['name'],
             'email' => $request['email'],
-            'password' => $request['password']
+            'password' => $request['password'],
         ];
 
         $profileArr = [
@@ -169,7 +171,7 @@ class UserController extends BaseController
         $request = $userRequest->validated();
 
         $userArr = [
-            'name' => $request['name']
+            'name' => $request['name'],
         ];
 
         $profileArr = [

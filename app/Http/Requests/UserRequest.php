@@ -20,7 +20,7 @@ class UserRequest extends FormRequest
         //Authorization Error
         //return false;
 
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -73,15 +73,15 @@ class UserRequest extends FormRequest
                 'perPage' => ['required_if:paginate,true', 'numeric'],
                 'refresh' => ['nullable', 'boolean'],
             ];
+
             return $rules_list;
-        }
-        elseif ($this->route()->getActionMethod() == 'read') {
+        } elseif ($this->route()->getActionMethod() == 'read') {
             $rules_read = [
 
             ];
+
             return $rules_read;
-        }
-        elseif ($this->route()->getActionMethod() == 'store') {
+        } elseif ($this->route()->getActionMethod() == 'store') {
             $rules_store = [
                 //Testing Server Request Validation Error
                 //'name' => 'min:1000',
@@ -145,7 +145,7 @@ class UserRequest extends FormRequest
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;
-            case 'read';
+            case 'read':
                 $this->merge([]);
                 break;
             case 'store':
@@ -158,6 +158,5 @@ class UserRequest extends FormRequest
                 $this->merge([]);
                 break;
         }
-
     }
 }

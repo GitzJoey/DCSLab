@@ -24,8 +24,7 @@ class DashboardTest extends DuskTestCase
                     ->click('@side-menu-company')
                     ->waitFor('@side-menu-company-company')
                     ->click('@side-menu-company-company')
-                    ->assertSee('Company Lists')
-                    ;
+                    ->assertSee('Company Lists');
         });
     }
 }

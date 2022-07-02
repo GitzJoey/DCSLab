@@ -54,13 +54,13 @@ return [
         'cachehits' => [
             'driver' => 'single',
             'path' => storage_path('logs/cachehits.log'),
-            'level' => 'info' 
+            'level' => 'info',
         ],
 
         'perfs' => [
             'driver' => 'single',
             'path' => storage_path('logs/performances.log'),
-            'level' => 'info' 
+            'level' => 'info',
         ],
 
         'stack' => [

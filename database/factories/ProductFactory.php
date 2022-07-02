@@ -3,10 +3,9 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
-use App\Enums\RecordStatus;
 use App\Enums\ProductType;
+use App\Enums\RecordStatus;
 use App\Models\Product;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory

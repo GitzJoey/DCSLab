@@ -15,13 +15,13 @@ class ProfileRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
-        
+
         /** @var \App\User */
         $user = Auth::user();
-        
+
         $currentRouteMethod = $this->route()->getActionMethod();
 
         switch ($currentRouteMethod) {
@@ -29,7 +29,7 @@ class ProfileRequest extends FormRequest
             case 'updateRoles':
             case 'updateSettings':
             case 'changePassword':
-                return $user->can('update', Profile::class) ? true: false;
+                return $user->can('update', Profile::class) ? true : false;
             default:
                 return false;
         }
@@ -60,7 +60,7 @@ class ProfileRequest extends FormRequest
                 ];
             case 'updateRoles':
                 return [
-                    'roles' => 'required'
+                    'roles' => 'required',
                 ];
             case 'updateSettings':
                 return [
@@ -80,7 +80,6 @@ class ProfileRequest extends FormRequest
                     //
                 ];
         }
-
     }
 
     public function validationData()

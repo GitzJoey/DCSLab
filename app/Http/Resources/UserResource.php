@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'email' => $this->email,
-            'email_verified' => !is_null($this->email_verified_at),
+            'email_verified' => ! is_null($this->email_verified_at),
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
             $this->mergeWhen($this->relationLoaded('profile'), [
                 'profile' => new ProfileResource($this->whenLoaded('profile')),
@@ -94,6 +94,7 @@ class UserResource extends JsonResource
             }
             $result[$skey] = $s->value;
         }
+
         return $result;
     }
 }

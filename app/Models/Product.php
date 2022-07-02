@@ -2,22 +2,20 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
 use App\Enums\ProductType;
-use App\Traits\ScopeableByCompany;
-
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
-
+use App\Enums\RecordStatus;
+use App\Models\Brand;
 use App\Models\Company;
 use App\Models\ProductGroup;
-use App\Models\Brand;
 use App\Models\ProductUnit;
 use App\Models\Supplier;
-use Illuminate\Support\Str;
+use App\Traits\ScopeableByCompany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -26,7 +24,6 @@ class Product extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-
     use ScopeableByCompany;
 
     protected $fillable = [
