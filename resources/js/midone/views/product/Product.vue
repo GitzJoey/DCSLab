@@ -3,7 +3,7 @@
     <div class="intro-y" v-if="mode === 'list'">
         <DataList :title="t('views.product.table.title')" :data="productList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
            <template v-slot:table="tableProps">
-                <table class="table table-report -mt-2">
+                <table class="table table-report -mt-2" aria-describedby="">
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.product.table.cols.code') }}</th>
@@ -77,7 +77,7 @@
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.units.title') }}</div>
-                                        <table>
+                                        <table aria-describedby="">
                                             <tbody>
                                                 <tr v-for="(subItem, subItemIdx) in item.product_units">
                                                     <td>{{ subItem.code }}</td>

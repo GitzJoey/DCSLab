@@ -83,11 +83,15 @@ class UnitServiceImpl implements UnitService
             $unit = Unit::whereCompanyId($companyId);
          
             if (!empty($category)) {
-                if ($category == UnitCategory::PRODUCTS) {
+                $anu1 = UnitCategory::PRODUCTS;
+                $anu2 = UnitCategory::SERVICES;
+                $anu3 = UnitCategory::PRODUCTS_AND_SERVICES;
+
+                if ($category == UnitCategory::PRODUCTS->value) {
                     $unit = $unit->where('category', '=', UnitCategory::PRODUCTS->value);
-                } else if ($category == UnitCategory::SERVICES) {
+                } else if ($category == UnitCategory::SERVICES->value) {
                     $unit = $unit->where('category', '=', UnitCategory::SERVICES->value);
-                } else if ($category == UnitCategory::PRODUCTS_AND_SERVICES) {
+                } else if ($category == UnitCategory::PRODUCTS_AND_SERVICES->value) {
                     $unit = $unit->where('category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value);
                 }
             }
@@ -100,9 +104,9 @@ class UnitServiceImpl implements UnitService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                return $unit->paginate(perPage: abs($perPage), page: abs($page));
+                $result = $unit->paginate(perPage: abs($perPage), page: abs($page));
             } else {
-                return $unit->get();
+                $result = $unit->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);

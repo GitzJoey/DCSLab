@@ -19,7 +19,7 @@ class RandomGenerator
         if ($max == 0) return 0;
 
         if (self::$RSeed == 0)
-            $this->seed(mt_rand());
+            $this->seed(random_int(0, mt_getrandmax()));
 
         self::$RSeed = (self::$RSeed * 125) % 2796203;
 
@@ -28,14 +28,14 @@ class RandomGenerator
 
     public function generateRandomTimer(): string
     {
-        return mt_rand(0,23).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT).":".str_pad(mt_rand(0,59), 2, "0", STR_PAD_LEFT);
+        return random_int(0,23).":".str_pad(random_int(0,59), 2, "0", STR_PAD_LEFT).":".str_pad(random_int(0,59), 2, "0", STR_PAD_LEFT);
     }
 
     public function generateFixedLengthNumber(int $length = 2): int
     {
         if ($length < 2) $length = 2;
 
-        return rand(intVal(pow(10, $length - 1)), intVal(pow(10, $length) - 1));
+        return random_int(intVal(pow(10, $length - 1)), intVal(pow(10, $length) - 1));
     }
 
     public function generateOne(int $max = 0): int
@@ -56,7 +56,7 @@ class RandomGenerator
         $max = sizeof($characters) - 1;
 
         for ($i = 0; $i < $length; $i++) {
-            $generatedString .= $characters[mt_rand(0, $max)];
+            $generatedString .= $characters[random_int(0, $max)];
         }
 
         return strtoupper($generatedString);
@@ -64,12 +64,12 @@ class RandomGenerator
 
     public function randomTrueOrFalse(int $howManyTimes = 1): bool | array
     {
-        if ($howManyTimes <= 1) return (bool)rand(0,1);
+        if ($howManyTimes <= 1) return (bool)random_int(0,1);
 
         $result = array();
         
         for($i = 0; $i < $howManyTimes; $i++) {
-            $result[$i] = (bool)rand(0,1);
+            $result[$i] = (bool)random_int(0,1);
         }
 
         return $result;
@@ -78,8 +78,9 @@ class RandomGenerator
     public function generateRandomOneZero(int $maxZero = 1): int
     {
         if ($maxZero == 1) return 10;
+        if ($maxZero < 2) $maxZero = 2;
 
-        $rand = rand(2, $maxZero);
+        $rand = random_int(2, $maxZero);
 
         return pow(10, $rand);
     }

@@ -117,9 +117,9 @@ class ProductGroupServiceImpl implements ProductGroupService
     
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                return $productGroup->paginate(perPage: abs($perPage), page: abs($page));
+                $result = $productGroup->paginate(perPage: abs($perPage), page: abs($page));
             } else {
-                return $productGroup->get();
+                $result = $productGroup->get();
             }
 
             if ($useCache) $this->saveToCache($cacheKey, $result);
