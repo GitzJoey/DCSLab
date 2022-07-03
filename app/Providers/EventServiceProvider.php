@@ -27,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         Logout::class => [
             LogoutEventListener::class,
-        ]
+        ],
     ];
 
     /**

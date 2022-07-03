@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\Service;
 
-use TypeError;
-use App\Models\User;
-use App\Models\Company;
-use Tests\ServiceTestCase;
-use App\Services\UserService;
 use App\Actions\RandomGenerator;
+use App\Models\Company;
+use App\Models\User;
 use App\Services\CompanyService;
+use App\Services\UserService;
 use Database\Seeders\CompanyTableSeeder;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
+use TypeError;
 
 class CompanyServiceTest extends ServiceTestCase
 {
@@ -104,8 +104,6 @@ class CompanyServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

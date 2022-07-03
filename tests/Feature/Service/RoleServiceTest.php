@@ -99,7 +99,5 @@ class RoleServiceTest extends ServiceTestCase
 
     #region others
 
-    
-
     #endregion
 }

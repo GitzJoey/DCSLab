@@ -19,11 +19,17 @@ class EmployeePolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('employees-readAny')) return true;
+        if ($user->hasPermission('employees-readAny')) {
+            return true;
+        }
     }
 
     /**
@@ -35,11 +41,17 @@ class EmployeePolicy
      */
     public function view(User $user, Employee $employee = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('employees-read')) return true;
+        if ($user->hasPermission('employees-read')) {
+            return true;
+        }
     }
 
     /**
@@ -50,11 +62,17 @@ class EmployeePolicy
      */
     public function create(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('employees-create')) return true;
+        if ($user->hasPermission('employees-create')) {
+            return true;
+        }
     }
 
     /**
@@ -66,11 +84,17 @@ class EmployeePolicy
      */
     public function update(User $user, Employee $employee = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('employees-update')) return true;
+        if ($user->hasPermission('employees-update')) {
+            return true;
+        }
     }
 
     /**
@@ -82,11 +106,17 @@ class EmployeePolicy
      */
     public function delete(User $user, Employee $employee = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('employees-delete')) return true;
+        if ($user->hasPermission('employees-delete')) {
+            return true;
+        }
     }
 
     /**

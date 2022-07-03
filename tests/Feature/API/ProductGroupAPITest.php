@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\API;
 
-use Tests\APITestCase;
-use App\Models\Company;
 use App\Actions\RandomGenerator;
 use App\Enums\ProductCategory;
+use App\Models\Company;
 use App\Models\ProductGroup;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductGroupAPITest extends APITestCase
 {
@@ -16,7 +16,7 @@ class ProductGroupAPITest extends APITestCase
 
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
     }
 
     #region store

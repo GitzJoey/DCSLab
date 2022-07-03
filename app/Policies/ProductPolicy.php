@@ -19,11 +19,17 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('products-readAny')) return true;
+        if ($user->hasPermission('products-readAny')) {
+            return true;
+        }
     }
 
     /**
@@ -35,11 +41,17 @@ class ProductPolicy
      */
     public function view(User $user, Product $product = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('products-read')) return true;
+        if ($user->hasPermission('products-read')) {
+            return true;
+        }
     }
 
     /**
@@ -50,11 +62,17 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('products-create')) return true;
+        if ($user->hasPermission('products-create')) {
+            return true;
+        }
     }
 
     /**
@@ -66,11 +84,17 @@ class ProductPolicy
      */
     public function update(User $user, Product $product = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('products-update')) return true;
+        if ($user->hasPermission('products-update')) {
+            return true;
+        }
     }
 
     /**
@@ -82,11 +106,17 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('products-delete')) return true;
+        if ($user->hasPermission('products-delete')) {
+            return true;
+        }
     }
 
     /**

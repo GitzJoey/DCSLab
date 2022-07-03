@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductType;
-use App\Services\ProductService;
-
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\ProductService;
 use Exception;
+use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductController extends BaseController
 {
@@ -34,6 +33,14 @@ class ProductController extends BaseController
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
         $companyId = $request['company_id'];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
         $result = $this->productService->list(
             companyId: $companyId,
@@ -65,17 +72,25 @@ class ProductController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->productService->list(
-                    companyId: $companyId, 
-                    isProduct: false, 
-                    isService: true, 
-                    search: $search, 
-                    paginate: $paginate, 
-                    page: $page,
-                    perPage: $perPage);
-        
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productService->list(
+                companyId: $companyId,
+                isProduct: false,
+                isService: true,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = ProductResource::collection($result);
 
@@ -92,15 +107,16 @@ class ProductController extends BaseController
 
         try {
             $result = $this->productService->read($product);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new ProductResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -113,22 +129,23 @@ class ProductController extends BaseController
 
         try {
             $result = $this->productService->read($product);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = ProductResource::collection($result);
-            return $response;    
+
+            return $response;
         }
     }
 
     public function store(ProductRequest $productRequest)
-    {   
+    {
         $request = $productRequest->validated();
-        
+
         $company_id = $request['company_id'];
 
         $code = $request['code'];
@@ -139,11 +156,11 @@ class ProductController extends BaseController
         } else {
             if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
-        
+
         $productArr = [
             'code' => $code,
             'name' => $request['name'],
@@ -157,7 +174,7 @@ class ProductController extends BaseController
             'status' => $request['status'],
             'taxable_supply' => $request['taxable_supply'],
             'standard_rated_supply' => $request['standard_rated_supply'],
-            'price_include_vat' => $request['price_include_vat']
+            'price_include_vat' => $request['price_include_vat'],
         ];
 
         $productUnitsArr = [];
@@ -167,15 +184,15 @@ class ProductController extends BaseController
 
             $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
 
-            array_push($productUnitsArr, array (
+            array_push($productUnitsArr, [
                 'company_id' => $company_id,
                 'code' => $code,
                 'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                 'conv_value' => $request['conv_value'][$i],
                 'is_base' => $is_base,
                 'is_primary_unit' => $is_primary_unit,
-                'remarks' => ''
-            ));
+                'remarks' => '',
+            ]);
         }
 
         $result = null;
@@ -207,7 +224,7 @@ class ProductController extends BaseController
         } else {
             if (!$this->productService->isUniqueCodeForProduct($code, $company_id, $product->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -226,7 +243,7 @@ class ProductController extends BaseController
             'status' => $request['status'],
             'taxable_supply' => $request['taxable_supply'],
             'standard_rated_supply' => $request['standard_rated_supply'],
-            'price_include_vat' => $request['price_include_vat']
+            'price_include_vat' => $request['price_include_vat'],
         ];
 
         $use_serial_number = $request['use_serial_number'];
@@ -246,21 +263,21 @@ class ProductController extends BaseController
 
             $use_serial_number = is_null($use_serial_number) ? 0 : $use_serial_number;
             $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
-            
+
             $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
             $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
 
-            array_push($productUnitsArr, array (
+            array_push($productUnitsArr, [
                 'id' => $product_unit_id,
                 'company_id' => $company_id,
-                'product_id' => $product->id,             
+                'product_id' => $product->id,
                 'code' => $code,
                 'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
                 'conv_value' => $request['conv_value'][$i],
                 'is_base' => $is_base,
                 'is_primary_unit' => $is_primary_unit,
-                'remarks' => $request['remarks']
-            ));
+                'remarks' => $request['remarks'],
+            ]);
         }
 
         $result = null;
@@ -301,16 +318,16 @@ class ProductController extends BaseController
                 ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
                 ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
             ];
-        } else if ($request->has('type') && $request['type'] == 'service'){
+        } elseif ($request->has('type') && $request['type'] == 'service') {
             return [
-                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name]
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name],
             ];
         } else {
             return [
                 ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
                 ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
                 ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
-                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name]
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name],
             ];
         }
     }

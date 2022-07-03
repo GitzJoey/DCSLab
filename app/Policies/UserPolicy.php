@@ -18,11 +18,17 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('users-readAny')) return true;
+        if ($user->hasPermission('users-readAny')) {
+            return true;
+        }
     }
 
     /**
@@ -34,11 +40,17 @@ class UserPolicy
      */
     public function view(User $user, User $model = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('users-read')) return true;
+        if ($user->hasPermission('users-read')) {
+            return true;
+        }
     }
 
     /**
@@ -49,11 +61,17 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('users-create')) return true;
+        if ($user->hasPermission('users-create')) {
+            return true;
+        }
     }
 
     /**
@@ -65,11 +83,17 @@ class UserPolicy
      */
     public function update(User $user, User $model = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('users-update')) return true;
+        if ($user->hasPermission('users-update')) {
+            return true;
+        }
     }
 
     /**

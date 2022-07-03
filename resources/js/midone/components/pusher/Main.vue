@@ -45,8 +45,7 @@ const pusherNotificationMessage = ref('');
 
 //#region onMounted
 onMounted(() => {
-    if (Echo !== undefined)
-        listenPusherPublic(); 
+    if (typeof(Echo) !== 'undefined') listenPusherPublic(); 
 });
 //#endregion
 

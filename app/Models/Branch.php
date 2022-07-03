@@ -2,20 +2,18 @@
 
 namespace App\Models;
 
+use App\Enums\RecordStatus;
 use App\Models\Company;
 use App\Models\Warehouse;
-use App\Enums\RecordStatus;
-use Spatie\Activitylog\LogOptions;
-use Vinkla\Hashids\Facades\Hashids;
-
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Traits\LogsActivity;
-
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Branch extends Model
 {
@@ -31,7 +29,7 @@ class Branch extends Model
         'contact',
         'status',
         'is_main',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -43,7 +41,7 @@ class Branch extends Model
         'contact',
         'status',
         'is_main',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
@@ -51,7 +49,7 @@ class Branch extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute
@@ -87,7 +85,7 @@ class Branch extends Model
 
         static::creating(function ($model) {
             $model->uuid = Str::uuid();
-            
+
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

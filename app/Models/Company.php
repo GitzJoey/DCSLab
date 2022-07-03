@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
-use App\Models\Unit;
-use App\Models\User;
+use App\Enums\RecordStatus;
 use App\Models\Branch;
 use App\Models\Employee;
+use App\Models\Unit;
+use App\Models\User;
 use App\Models\Warehouse;
-use App\Enums\RecordStatus;
-
-use Spatie\Activitylog\LogOptions;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Company extends Model
 {
@@ -30,7 +28,7 @@ class Company extends Model
         'name',
         'address',
         'default',
-        'status'
+        'status',
     ];
 
     protected static $logAttributes = ['code', 'name', 'address', 'default', 'status'];
@@ -41,7 +39,7 @@ class Company extends Model
 
     protected $casts = [
         'default' => 'boolean',
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute

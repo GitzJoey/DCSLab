@@ -21,7 +21,7 @@ class EmployeeAccessResource extends JsonResource
             ]),
             $this->mergeWhen($this->relationLoaded('branch'), [
                 'branch' => new BranchResource($this->whenLoaded('branch')),
-            ])
+            ]),
         ];
     }
 }

@@ -31,25 +31,29 @@ class SupplierResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('supplierProducts'), [
                 'supplier_products' => SupplierProductResource::collection($this->whenLoaded('supplierProducts')),
                 'selected_products' => $this->getSelectedProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
-                'main_products' => $this->getMainProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null)
+                'main_products' => $this->getMainProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
             ]),
             $this->mergeWhen($this->relationLoaded('user'), [
-                'supplier_poc' => new UserResource($this->whenLoaded('user'))
-            ])
+                'supplier_poc' => new UserResource($this->whenLoaded('user')),
+            ]),
         ];
     }
 
     private function getSelectedProducts($supplierProducts)
     {
-        if (is_null($supplierProducts)) return [];
+        if (is_null($supplierProducts)) {
+            return [];
+        }
 
         return $supplierProducts->pluck('product.hId');
     }
 
     private function getMainProducts($supplierProducts)
     {
-        if (is_null($supplierProducts)) return [];
-        
+        if (is_null($supplierProducts)) {
+            return [];
+        }
+
         $mainProducts = $supplierProducts->where('main_product', '=', 1);
 
         return $mainProducts->count() != 0 ? $mainProducts->pluck('product.hId') : [];

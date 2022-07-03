@@ -28,10 +28,9 @@ class ProductGroupTableSeeder extends Seeder
             $companies = Company::get()->pluck('id');
         }
 
-        foreach($companies as $c)
-        {
+        foreach ($companies as $c) {
             ProductGroup::factory()->count($productGroupPerCompany)->create([
-                'company_id' => $c
+                'company_id' => $c,
             ]);
         }
     }

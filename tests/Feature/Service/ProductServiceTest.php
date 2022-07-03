@@ -3,8 +3,8 @@
 namespace Tests\Feature\Service;
 
 use App\Services\ProductService;
-use Tests\ServiceTestCase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class ProductServiceTest extends ServiceTestCase
 {
@@ -97,8 +97,6 @@ class ProductServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

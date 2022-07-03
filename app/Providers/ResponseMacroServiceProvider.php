@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\ServiceProvider;
 
 class ResponseMacroServiceProvider extends ServiceProvider
 {
@@ -11,7 +11,7 @@ class ResponseMacroServiceProvider extends ServiceProvider
     {
         Response::macro('success', function ($data = null) {
             return Response::json($data == null ? null : [
-                'data' => $data
+                'data' => $data,
             ]);
         });
 
@@ -20,11 +20,11 @@ class ResponseMacroServiceProvider extends ServiceProvider
                 case 500:
                     if (is_array($message)) {
                         return Response::json([
-                            'message' => implode(' ', $message)
-                        ], $status);                        
+                            'message' => implode(' ', $message),
+                        ], $status);
                     } else {
                         return Response::json([
-                            'message' => $message
+                            'message' => $message,
                         ], $status);
                     }
                     break;
@@ -32,7 +32,7 @@ class ResponseMacroServiceProvider extends ServiceProvider
                     if (is_array($message)) {
                         if (array_key_first($message) != 'errors') {
                             return Response::json([
-                                'errors' => $message
+                                'errors' => $message,
                             ], $status);
                         } else {
                             return Response::json($message, $status);
@@ -40,10 +40,10 @@ class ResponseMacroServiceProvider extends ServiceProvider
                     } else {
                         return Response::json([
                             'errors' => [
-                                '' => $message
-                            ]
+                                '' => $message,
+                            ],
                         ], $status);
-                    }        
+                    }
                     break;
                 default:
                     break;

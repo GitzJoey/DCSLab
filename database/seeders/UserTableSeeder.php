@@ -3,16 +3,14 @@
 namespace Database\Seeders;
 
 use App\Enums\UserRoles;
+use App\Models\Profile;
+use App\Models\Setting;
+use App\Models\User;
 use App\Services\RoleService;
-
 use Illuminate\Container\Container;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-
-use App\Models\User;
-use App\Models\Profile;
-use App\Models\Setting;
 
 class UserTableSeeder extends Seeder
 {
@@ -23,7 +21,9 @@ class UserTableSeeder extends Seeder
      */
     public function run($truncate = false, $count = 4, $role = 'user')
     {
-        if ($truncate) $this->truncateUsersTables();
+        if ($truncate) {
+            $this->truncateUsersTables();
+        }
 
         $instances = Container::getInstance();
 
@@ -47,7 +47,7 @@ class UserTableSeeder extends Seeder
             if (!$roles) {
                 $roles = $instances->make(RoleService::class)->readBy('NAME', UserRoles::USER->value);
             }
-                
+
             $usr->attachRoles([$roles->id]);
         }
     }

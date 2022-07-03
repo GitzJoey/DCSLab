@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 class LoginEventListener
 {
     private $activityLogService;
+
     /**
      * Create the event listener.
      *

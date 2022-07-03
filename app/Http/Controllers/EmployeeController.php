@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\EmployeeService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
-use App\Services\CompanyService;
+use App\Services\EmployeeService;
 use Exception;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeController extends BaseController
 {
     private $employeeService;
-    
+
     public function __construct(EmployeeService $employeeService)
     {
         parent::__construct();
@@ -33,16 +32,23 @@ class EmployeeController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->employeeService->list(
-            companyId: $companyId,
-            search: $search,
-            paginate: $paginate,
-            page: $page,
-            perPage: $perPage
-        );
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->employeeService->list(
+                companyId: $companyId,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = EmployeeResource::collection($result);
 
@@ -59,20 +65,21 @@ class EmployeeController extends BaseController
 
         try {
             $result = $this->employeeService->read($employee);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new EmployeeResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
     public function store(EmployeeRequest $employeeRequest)
-    {   
+    {
         $request = $employeeRequest->validated();
 
         $company_id = $request['company_id'];
@@ -85,21 +92,21 @@ class EmployeeController extends BaseController
         } else {
             if (!$this->employeeService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
 
-        $employeeArr =[
+        $employeeArr = [
             'company_id' => $company_id,
             'code' => $code,
             'join_date' => $request['join_date'],
-            'status' => $request['status']
+            'status' => $request['status'],
         ];
 
         $userArr = [
             'name' => $request['name'],
-            'email' => $request['email']
+            'email' => $request['email'],
         ];
 
         $profileArr = [
@@ -117,14 +124,14 @@ class EmployeeController extends BaseController
         $accessesArr = [];
         if (!empty($request['accessBranchIds'])) {
             for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
-                array_push($accessesArr, array(
-                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0]
-                ));
+                array_push($accessesArr, [
+                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
+                ]);
             }
         }
 
         $result = null;
-        $errorMsg = ''; 
+        $errorMsg = '';
 
         try {
             $result = $this->employeeService->create(
@@ -132,12 +139,12 @@ class EmployeeController extends BaseController
                 $userArr,
                 $profileArr,
                 $accessesArr
-            );    
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return is_null($result) ? response()->error($errorMsg):response()->success();
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Employee $employee, EmployeeRequest $employeeRequest)
@@ -154,7 +161,7 @@ class EmployeeController extends BaseController
         } else {
             if (!$this->employeeService->isUniqueCode($code, $company_id, $employee->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -162,12 +169,12 @@ class EmployeeController extends BaseController
         $employeeArr = [
             'code' => $code,
             'join_date' => $request['join_date'],
-            'status' => $request['status']
+            'status' => $request['status'],
         ];
 
         $userArr = [
             'name' => $request['name'],
-            'email' => $request['email']
+            'email' => $request['email'],
         ];
 
         $profileArr = [
@@ -185,9 +192,9 @@ class EmployeeController extends BaseController
         $accessesArr = [];
         if (!empty($request['accessBranchIds'])) {
             for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
-                array_push($accessesArr, array(
-                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0]
-                ));
+                array_push($accessesArr, [
+                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
+                ]);
             }
         }
 
@@ -201,7 +208,7 @@ class EmployeeController extends BaseController
                 $userArr,
                 $profileArr,
                 $accessesArr
-            );    
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

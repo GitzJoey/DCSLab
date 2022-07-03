@@ -10,7 +10,6 @@ use App\Models\Supplier;
 use App\Services\SupplierService;
 use Exception;
 use Illuminate\Http\Request;
-
 use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierController extends BaseController
@@ -36,16 +35,23 @@ class SupplierController extends BaseController
 
         $companyId = $request['company_id'];
 
-        $result = $this->supplierService->list(
-            companyId: $companyId,
-            search: $search,
-            paginate: $paginate,
-            page: $page,
-            perPage: $perPage
-        );
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->supplierService->list(
+                companyId: $companyId,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = SupplierResource::collection($result);
 
@@ -62,15 +68,16 @@ class SupplierController extends BaseController
 
         try {
             $result = $this->supplierService->read($supplier);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new SupplierResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -88,7 +95,7 @@ class SupplierController extends BaseController
         } else {
             if (!$this->supplierService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -105,22 +112,22 @@ class SupplierController extends BaseController
             'taxable_enterprise' => $request['taxable_enterprise'],
             'tax_id' => $request['tax_id'],
             'remarks' => $request['remarks'],
-            'status' => $request['status']
+            'status' => $request['status'],
         ];
 
         $pocArr = [
             'name' => $request['poc_name'],
-            'email' => $request['email'], 
+            'email' => $request['email'],
         ];
 
         $productsArr = [];
         if (!empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
-                array_push($productsArr, array (
+                array_push($productsArr, [
                     'company_id' => $company_id,
                     'product_id' => Hashids::decode($request['productIds'][$i])[0],
-                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0
-                ));
+                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0,
+                ]);
             }
         }
 
@@ -133,7 +140,6 @@ class SupplierController extends BaseController
                 $pocArr,
                 $productsArr
             );
-    
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -155,7 +161,7 @@ class SupplierController extends BaseController
         } else {
             if (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -171,22 +177,22 @@ class SupplierController extends BaseController
             'taxable_enterprise' => $request['taxable_enterprise'],
             'tax_id' => $request['tax_id'],
             'remarks' => $request['remarks'],
-            'status' => $request['status']
+            'status' => $request['status'],
         ];
 
         $pocArr = [
             'name' => $request['poc_name'],
-            'email' => $request['email'], 
+            'email' => $request['email'],
         ];
 
         $productsArr = [];
         if (!empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
-                array_push($productsArr, array (
+                array_push($productsArr, [
                     'company_id' => $company_id,
                     'product_id' => Hashids::decode($request['productIds'][$i])[0],
-                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0
-                ));
+                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0,
+                ]);
             }
         }
 
@@ -200,7 +206,6 @@ class SupplierController extends BaseController
                 $pocArr,
                 $productsArr
             );
-    
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -229,7 +234,7 @@ class SupplierController extends BaseController
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTermType::X_DAYS_AFTER_INVOICE->name],
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name]
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name],
         ];
     }
 }

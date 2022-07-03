@@ -13,6 +13,7 @@
             "supplier-supplier": "Supplier",
             "product": "Product",
             "product-product": "Product",
+            "product-product_group": "Product Group",
             "product-service": "Service",
             "administrator": "Administrator",
             "administrator-user": "User",
@@ -393,12 +394,11 @@
                 "join_date": "Join Date",
                 "remarks": "Remarks",
                 "access": {
-                    "access_lists": "Product Lists",
+                    "access_lists": "Access Lists",
                     "table": {
                         "cols": {
                             "selected": "Selected",
-                            "company": "Company",
-                            "branch": "Branch"
+                            "available_access": "Available Access"
                         }
                     }
                 }

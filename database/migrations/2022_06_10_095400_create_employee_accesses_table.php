@@ -36,4 +36,4 @@ class CreateEmployeeAccessesTable extends Migration
     {
         Schema::dropIfExists('employee_accesses');
     }
-};
+}

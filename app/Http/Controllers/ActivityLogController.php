@@ -33,32 +33,33 @@ class ActivityLogController extends BaseController
         $result = collect();
 
         $pos = '';
-        foreach($act as $a) {
+        foreach ($act as $a) {
             if ($a->log_name == 'RoutingActivity') {
                 $pos = $this->togglePos($pos);
 
-                $result->add(array(
+                $result->add([
                     'pos' => $pos,
                     'dot' => true,
                     'log_name' => $a->log_name,
                     'title' => 'Routing',
                     'description' => $a->description,
                     'timestamp' => $a->created_at->format('Y.m.d H.i.s'),
-                    'data' => []
-                ));
-            } else if ($a->log_name == 'AuthActivity') {
+                    'data' => [],
+                ]);
+            } elseif ($a->log_name == 'AuthActivity') {
                 $pos = $this->togglePos($pos);
 
-                $result->add(array(
+                $result->add([
                     'pos' => $pos,
                     'dot' => true,
                     'log_name' => $a->log_name,
                     'title' => $a->description,
                     'description' => $a->description,
                     'timestamp' => $a->created_at->format('Y.m.d H.i.s'),
-                    'data' => []
-                ));
-            } else { }
+                    'data' => [],
+                ]);
+            } else {
+            }
         }
 
         return $result;
@@ -68,11 +69,12 @@ class ActivityLogController extends BaseController
     {
         if ($pos == '') {
             $newpos = 'left';
-        } else if ($pos == 'left') {
+        } elseif ($pos == 'left') {
             $newpos = 'right';
-        } else if ($pos == 'right') {
+        } elseif ($pos == 'right') {
             $newpos = 'left';
-        } else { }
+        } else {
+        }
 
         return $newpos;
     }

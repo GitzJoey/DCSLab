@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Services\DashboardService;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +28,7 @@ class DashboardController extends BaseController
     {
         $menu = [];
 
-        $useCache = $request->has('refresh') ? false:true;
+        $useCache = $request->has('refresh') ? false : true;
 
         $menu = $this->dashboardService->createMenu($useCache);
 

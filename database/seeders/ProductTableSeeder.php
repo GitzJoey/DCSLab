@@ -3,14 +3,12 @@
 namespace Database\Seeders;
 
 use App\Actions\RandomGenerator;
+use App\Models\Brand;
 use App\Models\Company;
 use App\Models\Product;
-
-use App\Models\Brand;
 use App\Models\ProductGroup;
 use App\Models\ProductUnit;
 use App\Models\Unit;
-
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
@@ -34,9 +32,8 @@ class ProductTableSeeder extends Seeder
         } else {
             $companies = Company::get()->pluck('id');
         }
-        
-        foreach($companies as $c)
-        {
+
+        foreach ($companies as $c) {
             for ($i = 0; $i < $productPerCompany; $i++) {
                 $pbId = Brand::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
                 $gId = ProductGroup::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
@@ -57,7 +54,7 @@ class ProductTableSeeder extends Seeder
                 $isbaseIndex = (new RandomGenerator())->generateNumber(0, $howmanyUnitsPerProduct - 1);
                 $isPrimaryUnitIndex = (new RandomGenerator())->generateNumber(0, $howmanyUnitsPerProduct - 1);
 
-                for($j = 0; $j < $howmanyUnitsPerProduct; $j++) {
+                for ($j = 0; $j < $howmanyUnitsPerProduct; $j++) {
                     $rUnitId = $shuffled_units[$j]->id;
 
                     $pu = new ProductUnit();
@@ -66,9 +63,9 @@ class ProductTableSeeder extends Seeder
                     $pu->code = (new RandomGenerator())->generateFixedLengthNumber(5);
                     $pu->product_id = $prod->id;
                     $pu->unit_id = $rUnitId;
-                    $pu->is_base = $j == $isbaseIndex ? 1:0;
-                    $pu->conversion_value = $j == $isbaseIndex ? 1: (new RandomGenerator())->generateRandomOneZero(3);
-                    $pu->is_primary_unit = $j == $isPrimaryUnitIndex ? 1:0;
+                    $pu->is_base = $j == $isbaseIndex ? 1 : 0;
+                    $pu->conversion_value = $j == $isbaseIndex ? 1 : (new RandomGenerator())->generateRandomOneZero(3);
+                    $pu->is_primary_unit = $j == $isPrimaryUnitIndex ? 1 : 0;
                     $pu->remarks = '';
 
                     $prod->productUnits()->save($pu);

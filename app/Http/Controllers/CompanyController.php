@@ -32,16 +32,23 @@ class CompanyController extends BaseController
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
-        $result = $this->companyService->list(
-            userId: $userId, 
-            search: $search,
-            paginate: $paginate,
-            page: $page,
-            perPage: $perPage
-        );
-        
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->companyService->list(
+                userId: $userId,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = CompanyResource::collection($result);
 
@@ -58,26 +65,27 @@ class CompanyController extends BaseController
 
         try {
             $result = $this->companyService->read($company);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new CompanyResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
     public function getAllActiveCompany(Request $request)
     {
-        $userId = Auth::id();
+        $userId = $request->user()->id;
 
-        $with = $request->has('with') ? explode(',', $request['with']) : []; 
+        $with = $request->has('with') ? explode(',', $request['with']) : [];
 
         $result = $this->companyService->getAllActiveCompany($userId, $with);
-    
+
         if (is_null($result)) {
             return response()->error();
         } else {
@@ -109,7 +117,7 @@ class CompanyController extends BaseController
         } else {
             if (!$this->companyService->isUniqueCode($code, $user->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -120,7 +128,7 @@ class CompanyController extends BaseController
             'name' => $request['name'],
             'address' => $request['address'],
             'default' => $request['default'],
-            'status' => $request['status']
+            'status' => $request['status'],
 
         ];
 
@@ -130,7 +138,7 @@ class CompanyController extends BaseController
         try {
             if ($companyArr['default']) {
                 $this->companyService->resetDefaultCompany($user);
-            };
+            }
 
             $result = $this->companyService->create($companyArr);
         } catch (Exception $e) {
@@ -154,7 +162,7 @@ class CompanyController extends BaseController
         } else {
             if (!$this->companyService->isUniqueCode($code, $user->id, $company->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -165,7 +173,7 @@ class CompanyController extends BaseController
             'address' => $request['address'],
             'default' => $request['default'],
             'status' => $request['status'],
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ];
 
         $result = null;
@@ -174,8 +182,8 @@ class CompanyController extends BaseController
         try {
             if ($companyArr['default']) {
                 $this->companyService->resetDefaultCompany($user);
-            };
-    
+            }
+
             $result = $this->companyService->update(
                 $company,
                 $companyArr
@@ -193,8 +201,9 @@ class CompanyController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($this->companyService->isDefaultCompany($company)) 
+            if ($this->companyService->isDefaultCompany($company)) {
                 return response()->error(trans('rules.company.delete_default_company'));
+            }
 
             $result = $this->companyService->delete($company);
         } catch (Exception $e) {
