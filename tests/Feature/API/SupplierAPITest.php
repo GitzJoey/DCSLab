@@ -12,7 +12,7 @@ class SupplierAPITest extends APITestCase
 
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
     }
 
     #region store

@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 class LogoutEventListener
 {
     private $activityLogService;
+
     private $dashboardService;
 
     /**
@@ -32,8 +33,9 @@ class LogoutEventListener
     public function handle($event)
     {
         $this->activityLogService->AuthActivity('Logout');
-        
-        if (auth()->check())
+
+        if (auth()->check()) {
             $this->dashboardService->clearUserCache(auth()->id());
+        }
     }
 }

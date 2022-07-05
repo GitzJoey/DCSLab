@@ -5,8 +5,8 @@ namespace App\Http\Requests;
 use App\Enums\RecordStatus;
 use App\Models\Branch;
 use App\Rules\isValidCompany;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -19,14 +19,16 @@ class BranchRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
 
         /** @var \App\User */
         $user = Auth::user();
         $branch = $this->route('branch');
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 return $user->can('viewAny', Branch::class) ? true : false;
             case 'read':
@@ -57,7 +59,7 @@ class BranchRequest extends FormRequest
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
@@ -65,13 +67,15 @@ class BranchRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
 
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -79,8 +83,9 @@ class BranchRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'is_main' => ['boolean'],
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
+
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
@@ -88,12 +93,13 @@ class BranchRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'is_main' => ['boolean'],
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    '' => 'required'
+                    '' => 'required',
                 ];
         }
     }
@@ -115,7 +121,7 @@ class BranchRequest extends FormRequest
     public function prepareForValidation()
     {
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
@@ -130,7 +136,7 @@ class BranchRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'is_main' => $this->has('is_main') ? filter_var($this->is_main, FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             default:

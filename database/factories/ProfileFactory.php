@@ -67,7 +67,7 @@ class ProfileFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($date) {
             return [
-                'created_at' => is_null($date) ? Carbon::now() : $date
+                'created_at' => is_null($date) ? Carbon::now() : $date,
             ];
         });
     }
@@ -76,7 +76,7 @@ class ProfileFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($date) {
             return [
-                'updated_at' => is_null($date) ? Carbon::now() : $date
+                'updated_at' => is_null($date) ? Carbon::now() : $date,
             ];
         });
     }
@@ -85,7 +85,7 @@ class ProfileFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -94,7 +94,7 @@ class ProfileFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }

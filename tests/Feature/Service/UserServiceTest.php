@@ -24,7 +24,7 @@ class UserServiceTest extends ServiceTestCase
 
         $this->userService = app(UserService::class);
     }
-    
+
     #region create
     public function test_user_service_call_create_expect_db_has_record()
     {
@@ -105,8 +105,6 @@ class UserServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

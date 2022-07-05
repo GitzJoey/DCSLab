@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laratrust\Models\LaratrustRole;
 use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Role extends LaratrustRole
 {

@@ -265,25 +265,35 @@
                             <table class="table table--sm" aria-describedby="">
                                 <thead>
                                     <tr>
-                                        <th>{{ t('views.employee.fields.access.table.cols.selected') }}</th>
-                                        <th>{{ t('views.employee.fields.access.table.cols.company') }}</th>
-                                        <th>{{ t('views.employee.fields.access.table.cols.branch') }}</th>
+                                        <th colspan="2">{{ t('views.employee.fields.access.table.cols.selected') }}</th>
+                                        <th>{{ t('views.employee.fields.access.table.cols.available_access') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(p, pIdx) in accessLists">
-                                        <td class="border-b dark:border-dark-5">
-                                            <div class="form-switch">
-                                                <input :id="'inputAccess_' + p.hId" type="checkbox" name="accessBranchIds[]" v-model="employee.selected_accesses" :value="p.hId" class="form-check-input">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            {{ p.company.name }}
-                                        </td>
-                                        <td>
-                                            {{ p.name }}
-                                        </td>
-                                    </tr>
+                                    <template v-for="(a, aIdx) in accessLists">
+                                        <tr>
+                                            <td class="border-b dark:border-dark-5 w-10">
+                                                <div class="form-switch">
+                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="accessCompanyIds[]" class="form-check-input">
+                                                </div>
+                                            </td>
+                                            <td class="w-10"></td>
+                                            <td>
+                                                <strong>{{ a.name }}</strong>
+                                            </td>
+                                        </tr>
+                                        <tr v-for="(b, bIdx) in a.branches">
+                                            <td class="w-10"></td>
+                                            <td class="border-b dark:border-dark-5 w-10">
+                                                <div class="form-switch">
+                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="accessBranchIds[]" class="form-check-input">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="pl-5">{{ b.name }}</div>
+                                            </td>
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </table>
                         </div>
@@ -450,10 +460,8 @@ const getDDLSync = () => {
         companyDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.company.branch.list', {
-        "companyId": selectedUserCompany.value, 
-        "paginate": false,
-        "search": ''
+    axios.get(route('api.get.db.company.company.read.all_active', {
+        with: 'branches'
     })).then(response => {
         accessLists.value = response.data;
     });

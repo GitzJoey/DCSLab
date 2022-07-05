@@ -31,11 +31,17 @@ class ProfilePolicy
      */
     public function view(User $user, Profile $profile = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('profile-read')) return true;
+        if ($user->hasPermission('profile-read')) {
+            return true;
+        }
     }
 
     /**
@@ -58,11 +64,17 @@ class ProfilePolicy
      */
     public function update(User $user, Profile $profile = null)
     {
-        if ($user->roles->isEmpty()) return false;
+        if ($user->roles->isEmpty()) {
+            return false;
+        }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) return true;
+        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+            return true;
+        }
 
-        if ($user->hasPermission('profile-update')) return true;
+        if ($user->hasPermission('profile-update')) {
+            return true;
+        }
     }
 
     /**

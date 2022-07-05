@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\ProductGroupService;
 use App\Http\Requests\ProductGroupRequest;
 use App\Http\Resources\ProductGroupResource;
 use App\Models\ProductGroup;
+use App\Services\ProductGroupService;
 use Exception;
 
 class ProductGroupController extends BaseController
@@ -31,24 +31,31 @@ class ProductGroupController extends BaseController
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
 
-        $result = $this->productGroupService->list(
-            companyId: $companyId,
-            category: $category,
-            search: $search, 
-            paginate: $paginate, 
-            page: $page,
-            perPage: $perPage
-        );
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productGroupService->list(
+                companyId: $companyId,
+                category: $category,
+                search: $search,
+                paginate: $paginate,
+                page: $page,
+                perPage: $perPage
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
 
         if (is_null($result)) {
-            return response()->error();
+            return response()->error($errorMsg);
         } else {
             $response = ProductGroupResource::collection($result);
 
             return $response;
         }
     }
- 
+
     public function read(ProductGroup $productgroup, ProductGroupRequest $productgroupRequest)
     {
         $request = $productgroupRequest->validated();
@@ -58,15 +65,16 @@ class ProductGroupController extends BaseController
 
         try {
             $result = $this->productgroupService->read($productgroup);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new ProductGroupResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -84,7 +92,7 @@ class ProductGroupController extends BaseController
         } else {
             if (!$this->productGroupService->isUniqueCode($code, $company_id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -93,7 +101,7 @@ class ProductGroupController extends BaseController
             'company_id' => $request['company_id'],
             'code' => $code,
             'name' => $request['name'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ];
 
         $result = null;
@@ -122,7 +130,7 @@ class ProductGroupController extends BaseController
         } else {
             if (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
                 return response()->error([
-                    'code' => [trans('rules.unique_code')]
+                    'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
@@ -130,7 +138,7 @@ class ProductGroupController extends BaseController
         $productgroupArr = [
             'code' => $code,
             'name' => $request['name'],
-            'category' => $request['category']
+            'category' => $request['category'],
         ];
 
         $result = null;
@@ -147,7 +155,7 @@ class ProductGroupController extends BaseController
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
-    
+
     public function delete(ProductGroup $productgroup)
     {
         $result = false;

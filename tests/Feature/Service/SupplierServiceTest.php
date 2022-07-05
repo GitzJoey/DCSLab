@@ -4,10 +4,10 @@ namespace Tests\Feature\Service;
 
 use App\Actions\RandomGenerator;
 use App\Enums\PaymentTermType;
-use App\Services\SupplierService;
 use App\Models\Company;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Services\SupplierService;
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -20,7 +20,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class SupplierServiceTest extends ServiceTestCase
 {
     use WithFaker;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -108,8 +108,6 @@ class SupplierServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

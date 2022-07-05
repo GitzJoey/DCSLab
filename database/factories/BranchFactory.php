@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Actions\RandomGenerator;
 use App\Enums\RecordStatus;
 use App\Models\Branch;
-
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BranchFactory extends Factory
@@ -29,13 +28,13 @@ class BranchFactory extends Factory
 
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => 'Kantor Cabang '.$faker->randomElement(['Utama','Pembantu','Daerah']).' '.$branch_name,
+            'name' => 'Kantor Cabang '.$faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.$branch_name,
             'address' => $faker->address(),
             'city' => $branch_name,
             'contact' => $faker->e164PhoneNumber(),
             'is_main' => false,
             'remarks' => $faker->sentence(),
-            'status' => $faker->randomElement(RecordStatus::toArrayEnum())
+            'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -43,7 +42,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -52,7 +51,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }
@@ -61,8 +60,24 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($bool) {
             return [
-                'is_main' => $bool
+                'is_main' => $bool,
             ];
         });
+    }
+
+    public function insertStringInName(string $str)
+    {
+        return $this->state(function (array $attributes) use ($str) {
+            return [
+                'name' => $this->craftName($str),
+            ];
+        });
+    }
+
+    private function craftName(string $str)
+    {
+        $text = 'Kantor Cabang '.$this->faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.$this->faker->city();
+
+        return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
 }

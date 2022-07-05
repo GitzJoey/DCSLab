@@ -9,7 +9,6 @@ use App\Models\Company;
 use Tests\ServiceTestCase;
 use App\Services\UnitService;
 use App\Enums\ProductCategory;
-use App\Actions\RandomGenerator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -24,7 +23,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $this->unitService = app(UnitService::class);
     }
-    
+
     #region create
     public function test_unit_service_call_create_expect_db_has_record()
     {
@@ -294,8 +293,6 @@ class UnitServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

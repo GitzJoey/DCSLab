@@ -19,11 +19,11 @@ abstract class DuskTestCase extends BaseTestCase
 
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
 
         Artisan::call('db:wipe');
 
-        if (!Schema::hasTable('users')) {
+        if (! Schema::hasTable('users')) {
             Artisan::call('db:wipe');
             Artisan::call('migrate', ['--seed' => true]);
         }

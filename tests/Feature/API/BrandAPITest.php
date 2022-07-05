@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\API;
 
-use App\Models\Brand;
-use Tests\APITestCase;
 use App\Actions\RandomGenerator;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Models\Brand;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BrandAPITest extends APITestCase
 {
@@ -14,7 +14,7 @@ class BrandAPITest extends APITestCase
 
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
     }
 
     #region store

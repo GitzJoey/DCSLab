@@ -2,16 +2,13 @@
 
 namespace Tests\Feature\Service;
 
-use Exception;
-use App\Models\User;
+use App\Actions\RandomGenerator;
 use App\Models\Brand;
 use App\Models\Company;
-use Tests\ServiceTestCase;
 use App\Services\BrandService;
-use App\Actions\RandomGenerator;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class BrandServiceTest extends ServiceTestCase
 {
@@ -313,8 +310,6 @@ class BrandServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

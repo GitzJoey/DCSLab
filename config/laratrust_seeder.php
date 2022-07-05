@@ -15,14 +15,14 @@ return [
         'developer' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
-            'settings' => 'r,u'
+            'settings' => 'r,u',
         ],
         'administrator' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
             'settings' => 'r,u',
 
-            'users' => 'c,r,ra,u'
+            'users' => 'c,r,ra,u',
         ],
         'user' => [
             'profile' => 'r,u',
@@ -77,6 +77,6 @@ return [
         'au' => 'authorizeUpdate',
         'ad' => 'authorizeDelete',
 
-        'ars' => 'authorizeRestore'
-    ]
+        'ars' => 'authorizeRestore',
+    ],
 ];

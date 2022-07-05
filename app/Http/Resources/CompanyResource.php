@@ -23,11 +23,11 @@ class CompanyResource extends JsonResource
             'default' => $this->default,
             'status' => $this->status->name,
             $this->mergeWhen($this->relationLoaded('branches'), [
-                'branches' => BranchResource::collection($this->whenLoaded('branches'))
+                'branches' => BranchResource::collection($this->whenLoaded('branches')),
             ]),
             $this->mergeWhen($this->relationLoaded('warehouses'), [
-                'warehouses' => WarehouseResource::collection($this->whenLoaded('warehouses'))
-            ])
+                'warehouses' => WarehouseResource::collection($this->whenLoaded('warehouses')),
+            ]),
         ];
     }
 }

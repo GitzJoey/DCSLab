@@ -2,20 +2,20 @@
 
 namespace Tests\Feature\API;
 
-use App\Models\Branch;
-use Tests\APITestCase;
-use App\Enums\ActiveStatus;
 use App\Actions\RandomGenerator;
+use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Sequence;
-use Illuminate\Support\Facades\DB;
-use Vinkla\Hashids\Facades\Hashids;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BranchAPITest extends APITestCase
 {
@@ -23,7 +23,7 @@ class BranchAPITest extends APITestCase
 
     protected function setUp(): void
     {
-        Parent::setUp();
+        parent::setUp();
     }
 
     #region store
@@ -35,14 +35,14 @@ class BranchAPITest extends APITestCase
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
-        
+
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $branchArr = array_merge([
-            'company_id' => Hashids::encode($companyId)
+            'company_id' => Hashids::encode($companyId),
         ], Branch::factory()->make()->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
@@ -50,7 +50,7 @@ class BranchAPITest extends APITestCase
         $api->assertSuccessful();
         $this->assertDatabaseHas('branches', [
             'company_id' => $companyId,
-            'code' => $branchArr['code'], 
+            'code' => $branchArr['code'],
             'name' => $branchArr['name'],
         ]);
     }
@@ -65,25 +65,25 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-            
+
         Branch::factory()->create([
             'company_id' => $companyId,
-            'code' => 'test1'
+            'code' => 'test1',
         ]);
 
         $this->actingAs($user);
 
         $branchArr = array_merge([
-            'company_id' => Hashids::encode($companyId)
+            'company_id' => Hashids::encode($companyId),
         ], Branch::factory()->make([
-            'code' => 'test1'
+            'code' => 'test1',
         ])->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
 
         $api->assertStatus(422);
         $api->assertJsonStructure([
-            'errors'
+            'errors',
         ]);
     }
 
@@ -103,15 +103,15 @@ class BranchAPITest extends APITestCase
 
         Branch::factory()->create([
             'company_id' => $companyId_1,
-            'code' => 'test1'
+            'code' => 'test1',
         ]);
 
         $this->actingAs($user);
 
         $branchArr = array_merge([
-            'company_id' => Hashids::encode($companyId_2)
+            'company_id' => Hashids::encode($companyId_2),
         ], Branch::factory()->make([
-            'code' => 'test1'
+            'code' => 'test1',
         ])->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
@@ -119,7 +119,7 @@ class BranchAPITest extends APITestCase
         $api->assertSuccessful();
         $this->assertDatabaseHas('branches', [
             'company_id' => $companyId_2,
-            'code' => $branchArr['code']
+            'code' => $branchArr['code'],
         ]);
     }
 
@@ -135,7 +135,7 @@ class BranchAPITest extends APITestCase
 
         $branchArr = [];
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
-        
+
         $api->assertStatus(500);
     }
 
@@ -163,18 +163,18 @@ class BranchAPITest extends APITestCase
             'paginate' => true,
             'page' => 1,
             'perPage' => 10,
-            'refresh' => true
+            'refresh' => true,
         ]));
 
         $api->assertSuccessful();
         $api->assertJsonStructure([
-            'data', 
+            'data',
             'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
+                'first', 'last', 'prev', 'next',
+            ],
             'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
+            ],
         ]);
 
         $api = $this->getJson(route('api.get.db.company.branch.list', [
@@ -183,7 +183,7 @@ class BranchAPITest extends APITestCase
             'paginate' => false,
             'page' => 1,
             'perPage' => 10,
-            'refresh' => true
+            'refresh' => true,
         ]));
 
         $api->assertSuccessful();
@@ -202,7 +202,7 @@ class BranchAPITest extends APITestCase
 
         Branch::factory()->count(10)->create([
             'company_id' => $companyId,
-            'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama','Pembantu','Daerah']).' '.'testing'
+            'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.'testing',
         ]);
 
         Branch::factory()->count(10)->create([
@@ -217,22 +217,22 @@ class BranchAPITest extends APITestCase
             'paginate' => true,
             'page' => 1,
             'perPage' => 10,
-            'refresh' => true
+            'refresh' => true,
         ]));
 
         $api->assertSuccessful();
         $api->assertJsonStructure([
-            'data', 
+            'data',
             'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
+                'first', 'last', 'prev', 'next',
+            ],
             'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
+            ],
         ]);
 
         $api->assertJsonFragment([
-            'total' => 10
+            'total' => 10,
         ]);
     }
 
@@ -247,7 +247,7 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $api = $this->getJson(route('api.get.db.company.branch.list', [
@@ -268,7 +268,7 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $api = $this->getJson(route('api.get.db.company.branch.list', [
@@ -277,18 +277,18 @@ class BranchAPITest extends APITestCase
             'paginate' => true,
             'page' => 1,
             'perPage' => 10,
-            'refresh' => false
+            'refresh' => false,
         ]));
 
         $api->assertSuccessful();
         $api->assertJsonStructure([
-            'data', 
+            'data',
             'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
+                'first', 'last', 'prev', 'next',
+            ],
             'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
+            ],
         ]);
     }
 
@@ -303,7 +303,7 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $api = $this->getJson(route('api.get.db.company.branch.list', [
@@ -312,19 +312,19 @@ class BranchAPITest extends APITestCase
             'paginate' => true,
             'page' => -1,
             'perPage' => -10,
-            'refresh' => false
+            'refresh' => false,
         ]));
 
         $api->assertSuccessful();
         $api->assertJsonStructure([
-            'data', 
+            'data',
             'links' => [
-                'first', 'last', 'prev', 'next'
-            ], 
+                'first', 'last', 'prev', 'next',
+            ],
             'meta'=> [
-                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total'
-            ]
-        ]);        
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
+            ],
+        ]);
     }
 
     #endregion
@@ -342,7 +342,7 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $uuid = $company->branches()->inRandomOrder()->first()->uuid;
@@ -363,7 +363,7 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $this->getJson(route('api.get.db.company.branch.read', null));
@@ -380,7 +380,7 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $uuid = $this->faker->uuid();
@@ -405,12 +405,12 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
 
         $branch = $company->branches()->inRandomOrder()->first();
         $branchArr = array_merge([
-            'company_id' => Hashids::encode($companyId)
+            'company_id' => Hashids::encode($companyId),
         ], Branch::factory()->make()->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch->uuid), $branchArr);
@@ -419,8 +419,8 @@ class BranchAPITest extends APITestCase
         $this->assertDatabaseHas('branches', [
             'id' => $branch->id,
             'company_id' => $companyId,
-            'code' => $branchArr['code'], 
-            'name' => $branchArr['name']
+            'code' => $branchArr['code'],
+            'name' => $branchArr['name'],
         ]);
     }
 
@@ -435,17 +435,17 @@ class BranchAPITest extends APITestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
+
         $this->actingAs($user);
-        
+
         $branches = $company->branches()->inRandomOrder()->take(2)->get();
         $branch_1 = $branches[0];
         $branch_2 = $branches[1];
 
         $branchArr = array_merge([
-            'company_id' => Hashids::encode($companyId)
+            'company_id' => Hashids::encode($companyId),
         ], Branch::factory()->make([
-            'code' => $branch_1->code
+            'code' => $branch_1->code,
         ])->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch_2->uuid), $branchArr);
@@ -472,20 +472,20 @@ class BranchAPITest extends APITestCase
 
         Branch::factory()->create([
             'company_id' => $companyId_1,
-            'code' => 'test1'
+            'code' => 'test1',
         ]);
 
         Branch::factory()->create([
             'company_id' => $companyId_2,
-            'code' => 'test2'
+            'code' => 'test2',
         ]);
 
         $this->actingAs($user);
 
         $branchArr = array_merge([
-            'company_id' => Hashids::encode($companyId_2)
+            'company_id' => Hashids::encode($companyId_2),
         ], Branch::factory()->make([
-            'code' => 'test1'
+            'code' => 'test1',
         ])->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.branch.edit', $company_2->branches()->first()->uuid), $branchArr);
@@ -510,14 +510,14 @@ class BranchAPITest extends APITestCase
         $companyId = $company->id;
 
         $branch = $company->branches()->inRandomOrder()->first();
-        
+
         $this->actingAs($user);
-        
+
         $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->uuid));
 
         $api->assertSuccessful();
         $this->assertSoftDeleted('branches', [
-            'id' => $branch->id
+            'id' => $branch->id,
         ]);
     }
 
@@ -530,7 +530,7 @@ class BranchAPITest extends APITestCase
         $uuid = $this->faker->uuid();
 
         $api = $this->json('POST', route('api.post.db.company.branch.delete', $uuid));
-        
+
         $api->assertStatus(404);
     }
 

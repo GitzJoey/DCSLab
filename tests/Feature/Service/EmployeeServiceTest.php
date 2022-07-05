@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Service;
 
+use App\Actions\RandomGenerator;
 use App\Models\Company;
 use App\Models\Employee;
-use Tests\ServiceTestCase;
 use App\Models\EmployeeAccess;
-use App\Actions\RandomGenerator;
 use App\Services\EmployeeService;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class EmployeeServiceTest extends ServiceTestCase
 {
@@ -102,8 +102,6 @@ class EmployeeServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

@@ -13,6 +13,7 @@
             "supplier-supplier": "Pemasok",
             "product": "Produk",
             "product-product": "Produk",
+            "product-product_group": "Grup Produk",
             "product-service": "Layanan",
             "administrator": "Administrator",
             "administrator-user": "Pengguna",
@@ -396,8 +397,7 @@
                     "table": {
                         "cols": {
                             "selected": "Terpilih",
-                            "company": "Perusahaan",
-                            "branch": "Cabang"
+                            "available_access": "Akses Tersedia"
                         }
                     }
                 }

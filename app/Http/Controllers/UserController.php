@@ -7,16 +7,16 @@ use App\Http\Requests\UserRequest;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Services\UserService;
 use App\Services\RoleService;
+use App\Services\UserService;
 use Exception;
 use Illuminate\Http\Request;
-
 use Vinkla\Hashids\Facades\Hashids;
 
 class UserController extends BaseController
 {
     private $userService;
+
     private $roleService;
 
     public function __construct(UserService $userService, RoleService $roleService)
@@ -42,15 +42,16 @@ class UserController extends BaseController
 
         try {
             $result = $this->userService->list($search, $paginate, $page, $perPage);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = UserResource::collection($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -63,15 +64,16 @@ class UserController extends BaseController
 
         try {
             $result = $this->userService->read($user);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
             $response = new UserResource($result);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -88,12 +90,13 @@ class UserController extends BaseController
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
-        
+
         if (is_null($roles)) {
             return response()->error($errorMsg);
         } else {
             $response = RoleResource::collection($roles);
-            return $response;    
+
+            return $response;
         }
     }
 
@@ -101,7 +104,7 @@ class UserController extends BaseController
     {
         //Throw Error
         //throw New \Exception('Test Exception From Controller');
-        
+
         //Throw Empty Response Error (HttpStatus 500)
         //return response()->error();
 
@@ -118,10 +121,10 @@ class UserController extends BaseController
         $userArr = [
             'name' => $request['name'],
             'email' => $request['email'],
-            'password' => $request['password']
+            'password' => $request['password'],
         ];
 
-        $profileArr = array (
+        $profileArr = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -132,11 +135,11 @@ class UserController extends BaseController
             'ic_num' => $request['ic_num'],
             'status' => $request['status'],
             'remarks' => $request['remarks'],
-        );
+        ];
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().".".$image->getClientOriginalExtension();
+            $filename = time().'.'.$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -155,7 +158,7 @@ class UserController extends BaseController
                 $userArr,
                 $rolesArr,
                 $profileArr
-            );    
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -167,11 +170,11 @@ class UserController extends BaseController
     {
         $request = $userRequest->validated();
 
-        $userArr = array (
-            'name' => $request['name']
-        );
+        $userArr = [
+            'name' => $request['name'],
+        ];
 
-        $profileArr = array (
+        $profileArr = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -182,7 +185,7 @@ class UserController extends BaseController
             'ic_num' => $request['ic_num'],
             'status' => $request['status'],
             'remarks' => $request['remarks'],
-        );
+        ];
 
         $rolesArr = [];
         foreach ($request['roles'] as $r) {
@@ -197,7 +200,7 @@ class UserController extends BaseController
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().".".$image->getClientOriginalExtension();
+            $filename = time().'.'.$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -215,8 +218,9 @@ class UserController extends BaseController
                 $settingsArr
             );
 
-            if (array_key_exists('apiToken', $request))
+            if (array_key_exists('apiToken', $request)) {
                 $this->userService->resetTokens($user);
+            }
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

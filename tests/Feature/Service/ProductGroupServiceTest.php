@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Service;
 
-use App\Models\ProductGroup;
-use App\Models\Company;
-use Tests\ServiceTestCase;
-use App\Services\ProductGroupService;
 use App\Actions\RandomGenerator;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Company;
+use App\Models\ProductGroup;
+use App\Services\ProductGroupService;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\ServiceTestCase;
 
 class ProductGroupServiceTest extends ServiceTestCase
 {
@@ -101,8 +101,6 @@ class ProductGroupServiceTest extends ServiceTestCase
     #endregion
 
     #region others
-
-    
 
     #endregion
 }

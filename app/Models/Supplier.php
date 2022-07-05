@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
 use App\Enums\PaymentTermType;
+use App\Enums\RecordStatus;
+use App\Models\Company;
+use App\Models\SupplierProduct;
 use App\Traits\ScopeableByCompany;
-
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-use App\Models\Company;
-use App\Models\SupplierProduct;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -23,7 +21,6 @@ class Supplier extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-
     use ScopeableByCompany;
 
     protected $fillable = [
@@ -37,7 +34,7 @@ class Supplier extends Model
         'taxable_enterprise',
         'tax_id',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -51,7 +48,7 @@ class Supplier extends Model
         'taxable_enterprise',
         'tax_id',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
@@ -61,9 +58,9 @@ class Supplier extends Model
     protected $casts = [
         'taxable_enterprise' => 'boolean',
         'payment_term_type' => PaymentTermType::class,
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
-    
+
     public function hId() : Attribute
     {
         return Attribute::make(
@@ -97,7 +94,7 @@ class Supplier extends Model
 
         static::creating(function ($model) {
             $model->uuid = Str::uuid();
-            
+
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();
@@ -120,5 +117,4 @@ class Supplier extends Model
             }
         });
     }
-
 }

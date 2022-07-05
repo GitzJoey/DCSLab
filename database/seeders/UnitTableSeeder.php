@@ -23,7 +23,7 @@ class UnitTableSeeder extends Seeder
             ['name' => 'g', 'description' => 'gram (g)', 'category' => 1],
             ['name' => 'pcs', 'description' => 'Pieces (pcs)', 'category' => 1],
             ['name' => 'pk', 'description' => 'Pack (pk)', 'category' => 1],
-            ['name' => 'dz', 'description' => 'Dozen (dz)', 'category' => 1]            
+            ['name' => 'dz', 'description' => 'Dozen (dz)', 'category' => 1],
         ];
 
         if ($onlyThisCompanyId != 0) {
@@ -38,14 +38,14 @@ class UnitTableSeeder extends Seeder
             $companies = Company::get()->pluck('id');
         }
 
-        foreach($companies as $c) {
+        foreach ($companies as $c) {
             foreach ($units as $u) {
                 $newUnit = new Unit();
                 $newUnit->company_id = $c;
                 $newUnit->code = (new RandomGenerator())->generateFixedLengthNumber(5);
                 $newUnit->name = $u['name'];
                 $newUnit->description = $u['description'];
-                $newUnit->category = (new RandomGenerator())->generateNumber(1,3);
+                $newUnit->category = (new RandomGenerator())->generateNumber(1, 3);
 
                 $newUnit->save();
             }

@@ -19,14 +19,16 @@ class RoleResource extends JsonResource
             'display_name' => $this->display_name,
             $this->mergeWhen($this->relationLoaded('permissions'), [
                 'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
-                'permissions_description' => $this->flattenPermissions($this->whenLoaded('permissions') ? $this->permissions : null)
-            ])
+                'permissions_description' => $this->flattenPermissions($this->whenLoaded('permissions') ? $this->permissions : null),
+            ]),
         ];
     }
 
     private function flattenPermissions($permissions)
     {
-        if (is_null($permissions)) return [];
+        if (is_null($permissions)) {
+            return [];
+        }
 
         return $permissions->pluck('display_name')->implode(',');
     }

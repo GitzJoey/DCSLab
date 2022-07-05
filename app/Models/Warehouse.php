@@ -2,26 +2,24 @@
 
 namespace App\Models;
 
+use App\Enums\RecordStatus;
 use App\Models\Branch;
 use App\Models\Company;
-use App\Enums\RecordStatus;
-use Spatie\Activitylog\LogOptions;
-use Vinkla\Hashids\Facades\Hashids;
-
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Vinkla\Hashids\Facades\Hashids;
 
 class Warehouse extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
-    
+
     protected $fillable = [
         'company_id',
         'branch_id',
@@ -31,7 +29,7 @@ class Warehouse extends Model
         'city',
         'contact',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logAttributes = [
@@ -43,7 +41,7 @@ class Warehouse extends Model
         'city',
         'contact',
         'status',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
@@ -51,7 +49,7 @@ class Warehouse extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'status' => RecordStatus::class
+        'status' => RecordStatus::class,
     ];
 
     public function hId() : Attribute

@@ -5,10 +5,10 @@ namespace App\Http\Requests;
 use App\Enums\RecordStatus;
 use App\Models\Employee;
 use App\Rules\isValidCompany;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeRequest extends FormRequest
 {
@@ -19,14 +19,16 @@ class EmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) return false;
+        if (!Auth::check()) {
+            return false;
+        }
 
         /** @var \App\User */
         $user = Auth::user();
         $employee = $this->route('employee');
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 return $user->can('viewAny', Employee::class) ? true : false;
             case 'read':
@@ -59,7 +61,7 @@ class EmployeeRequest extends FormRequest
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
@@ -67,12 +69,14 @@ class EmployeeRequest extends FormRequest
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
-                    'refresh' => ['nullable', 'boolean']
+                    'refresh' => ['nullable', 'boolean'],
                 ];
+
                 return $rules_list;
             case 'read':
                 $rules_read = [
                 ];
+
                 return $rules_read;
             case 'store':
                 $rules_store = [
@@ -84,7 +88,7 @@ class EmployeeRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
                     'join_date' => 'required',
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -96,12 +100,13 @@ class EmployeeRequest extends FormRequest
                     'country' => 'required',
                     'tax_id' => 'required',
                     'ic_num' => 'required|min:12|max:255',
-                    'status' => [new Enum(RecordStatus::class)]
+                    'status' => [new Enum(RecordStatus::class)],
                 ];
+
                 return array_merge($rules_update, $nullableArr);
             default:
                 return [
-                    '' => 'required'
+                    '' => 'required',
                 ];
         }
     }
@@ -123,7 +128,7 @@ class EmployeeRequest extends FormRequest
     public function prepareForValidation()
     {
         $currentRouteMethod = $this->route()->getActionMethod();
-        switch($currentRouteMethod) {
+        switch ($currentRouteMethod) {
             case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
@@ -137,7 +142,7 @@ class EmployeeRequest extends FormRequest
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             default:
