@@ -115,35 +115,9 @@ class UnitServiceTest extends ServiceTestCase
                     ->create();
 
         $companyId = $user->companies->first()->id;
-        
-        $unit = [
-            "PCS",
-            "CC",
-            "STRIP",
-            "BOTOL",
-            "GR",
-            "PACK",
-            "BOX",
-            "ROLL",
-            "KG",
-            "LITER",
-            "KALENG",
-            "BUTIR",
-            "IKAT",
-            "SISIR",
-            "JERIGEN",
-            "BUAH",
-            "IKT",
-            "GALON",
-            "PASANG",
-            "M",
-            "SACHET",
-            "BKS"            
-        ];
 
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'name' => $this->faker->randomElement($unit).' '.'testing'
+        Unit::factory()->insertStringInName(' testing')->count(10)->create([
+            'company_id' => $companyId
         ]);
 
         Unit::factory()->count(10)->create([
