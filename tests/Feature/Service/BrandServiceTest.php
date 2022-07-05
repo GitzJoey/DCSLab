@@ -25,7 +25,7 @@ class BrandServiceTest extends ServiceTestCase
     }
 
     #region create
-    // ngetes brand service manggil create diharapkan ada di database
+    // ngetes brand service manggil create diharapkan terekam di database
     public function test_brand_service_call_create_expect_db_has_record()
     {
         // ngegantiin acting as
@@ -33,7 +33,7 @@ class BrandServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
         
-        // ngambil data dari Brand Factory trs di tambahin company id trus dimasukin ke array
+        // ngambil data dari Brand Factory trs di tambahin company id trus dimasukin ke brandArr
         $brandArr = Brand::factory()->make([
             'company_id' => $user->companies->first()->id
         ]);
@@ -52,9 +52,9 @@ class BrandServiceTest extends ServiceTestCase
     // ngetest brand service create dengan parameter kosong harapannya kesalahan(error)
     public function test_brand_service_call_create_with_empty_array_parameters_expect_exception()
     {
-        // fungsi expectException dengan kelas Exception
+        // mengharapkan pengecualian
         $this->expectException(Exception::class);
-        // bikin brand service dengan array kosong []
+        // bikin brand service dengan array kosong [] nanti nge thrown exception
         $this->brandService->create([]);
     }
 
@@ -77,7 +77,7 @@ class BrandServiceTest extends ServiceTestCase
             page: 1,
             perPage: 10
         );
-        // ngecek model brand punya method list dengan paginate instance dari paginator
+        // memastikan resultnya itu berbentuk paginator
         $this->assertInstanceOf(Paginator::class, $result);
     }
 
@@ -88,7 +88,7 @@ class BrandServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(20), 'brands'), 'companies')
                     ->create();
-        // list dibikin false
+        // hasil paginate dibikin false
         $result = $this->brandService->list(
             companyId: $user->companies->first()->id,
             search: '',
@@ -97,7 +97,7 @@ class BrandServiceTest extends ServiceTestCase
             perPage: 10
         );
 
-        // ngecek model brand punya method list dengan paginate instance dari Collection
+        // memastikan resultnya itu berbentuk Collection
         $this->assertInstanceOf(Collection::class, $result);
     }
 
@@ -106,11 +106,12 @@ class BrandServiceTest extends ServiceTestCase
     {
         // max id = model company nyari max id dari company ditambah 1. Contohnya company id ada 1-19 trs di ambil yang 19 di tambah 1 jadi 20
         $maxId = Company::max('id') + 1;
-        // list yang company id hasilnya ngambil dari maxId yang udah di tambah 1
+        // list yang company id hasilnya ngambil dari maxId yang udah di tambah 1 search kosong, paginate false
         $result = $this->brandService->list(companyId: $maxId, search: '', paginate: false);
 
+        // memastikan resultnya itu berbentuk Collection
         $this->assertInstanceOf(Collection::class, $result);
-        // datanya kosong apa engga
+        // memastikan resultnya kosong
         $this->assertEmpty($result);
     }
 
@@ -122,7 +123,7 @@ class BrandServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        // parameter 'companies' dari $user di ambil id nya trs dimasukin ke $companyId
+        // companyId = ambil id company pertama dari user yg lagi kita test
         $companyId = $user->companies->first()->id;
         
         $brands = [
@@ -150,12 +151,13 @@ class BrandServiceTest extends ServiceTestCase
             perPage: 10
         );
 
+        // memastikan resultnya itu berbentuk paginator
         $this->assertInstanceOf(Paginator::class, $result);
-        // data yang di harapkan true ada 10 data
+        // benar ketika jumlah dari result 10   
         $this->assertTrue($result->total() == 10);
     }
 
-    // ngetes brand service manggil list page negatif diharapkan hasilnya
+    // ngetest brand service manggil list dengan parameter page negatif mengarapkan ada hasilnya
     public function test_brand_service_call_list_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
@@ -178,11 +180,13 @@ class BrandServiceTest extends ServiceTestCase
             perPage: 10
         );
 
+        // memastikan resultnya itu berbentuk paginator
         $this->assertInstanceOf(Paginator::class, $result);
-        // data yang diharapkan bener harus nya lebih dari 1
+        // menghasilkan benar apabila jumlah resultnya > 1  
         $this->assertTrue($result->total() > 1);
     }
 
+    // ngetest brand service manggil list dengan parameter perpage negatif mengarapkan ada hasilnya
     public function test_brand_service_call_list_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
@@ -205,8 +209,9 @@ class BrandServiceTest extends ServiceTestCase
             perPage: -10
         );
 
+        // memastikan resultnya itu berbentuk paginator
         $this->assertInstanceOf(Paginator::class, $result);
-        // data yang diharapkan bener harusnya lebih dari 1
+        // menghasilkan benar apabila jumlah resultnya > 1
         $this->assertTrue($result->total() > 1);
     }
 
@@ -214,19 +219,20 @@ class BrandServiceTest extends ServiceTestCase
 
     #region read
 
-    // test brand service manggil real diharapkan object
+    // test brand service manggil real diharapkan returnnya object
     public function test_brand_service_call_read_expect_object()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault()
                         ->has(Brand::factory()->count(20), 'brands'), 'companies')
                     ->create();
-        // ngambil brand dari company yang ada di $user
+        // ngambil satu random brand dari company milik user yg lagi ditest
         $brand = $user->companies->first()->brands()->inRandomOrder()->first();
 
-        // hasilnya brand service read dari $brand
+        // result = hasil dari read dengan nenggunakan brand yg tadi kita cari
         $result = $this->brandService->read($brand);
 
+        // memastikan resultnya itu berbentuk modelnya brand
         $this->assertInstanceOf(Brand::class, $result);
     }
 
@@ -234,6 +240,7 @@ class BrandServiceTest extends ServiceTestCase
 
     #region update
 
+    // test brand service manggil update mengaharapkan datanya ter update
     public function test_brand_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -257,10 +264,10 @@ class BrandServiceTest extends ServiceTestCase
         ]);
     }
 
-    // ngetes brand service manggil update dengan parameter kosong diharapkan kesalahan (error)
+    // ngetes brand service manggil update dengan array kosong diharapkan kesalahan (error)
     public function test_brand_service_call_update_with_empty_array_parameters_expect_exception()
     {
-        // fungsi expectException dengan kelas Exception
+        // this->mengharapkanException(Exception) / mengharpkan error
         $this->expectException(Exception::class);
 
         $user = User::factory()
@@ -268,7 +275,7 @@ class BrandServiceTest extends ServiceTestCase
                         ->has(Brand::factory(), 'brands'), 'companies')
                     ->create();
 
-        // brands ngambil dari companies yang ada di $user
+        // brand ngambil dari brand pertama di company yg ada di $user
         $brand = $user->companies->first()->brands->first();
         // brandArr dibikin array kosong []
         $brandArr = [];
@@ -290,12 +297,14 @@ class BrandServiceTest extends ServiceTestCase
 
         $brand = $user->companies->first()->brands->first();
         
-        // hasilnya brand service ngedelet $brand
+        // $result = hasil dari manggil delete dengan parameter $brand yg tadi kita bikin
         $result = $this->brandService->delete($brand);
         
-        // hasil data dari $result itu boolean atau bukan
+        // menghasilkan benar apabila hasilnya itu boolean
         $this->assertIsBool($result);
+        // menghasilkan benar apabila hasilnya itu true
         $this->assertTrue($result);
+        // pastikan brand yg tadi kita delete sudah ter soft delete
         $this->assertSoftDeleted('brands', [
             'id' => $brand->id
         ]);
