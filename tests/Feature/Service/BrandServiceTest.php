@@ -2,13 +2,14 @@
 
 namespace Tests\Feature\Service;
 
-use App\Actions\RandomGenerator;
+use App\Models\User;
 use App\Models\Brand;
 use App\Models\Company;
-use App\Services\BrandService;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\ServiceTestCase;
+use App\Services\BrandService;
+use App\Actions\RandomGenerator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class BrandServiceTest extends ServiceTestCase
 {
@@ -94,7 +95,7 @@ class BrandServiceTest extends ServiceTestCase
             perPage: 10
         );
 
-        // memastikan resultnya itu berbentuk Collection
+        // memastikan resultnya itu berbentuk collection
         $this->assertInstanceOf(Collection::class, $result);
     }
 
@@ -247,10 +248,10 @@ class BrandServiceTest extends ServiceTestCase
         // brands ngambil dari companies yang ada di $user
         $brand = $user->companies->first()->brands->first();
         // factory brand dimasukin ke $brandArr
-        $brandArr = Brand::factory()->make();
+        $brandArr = Brand::factory()->make()->toArray();
 
         // hasilnya brand service update $brand sama $brandArr dijadiin array
-        $result = $this->brandService->update($brand, $brandArr->toArray());
+        $result = $this->brandService->update($brand, $brandArr);
         
         $this->assertInstanceOf(Brand::class, $result);
         $this->assertDatabaseHas('brands', [
@@ -285,6 +286,7 @@ class BrandServiceTest extends ServiceTestCase
 
     #region delete
 
+    // test brand service manggil delete mengharapkan boolean
     public function test_brand_service_call_delete_expect_bool()
     {
         $user = User::factory()
