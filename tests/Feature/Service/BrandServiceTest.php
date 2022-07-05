@@ -25,7 +25,7 @@ class BrandServiceTest extends ServiceTestCase
     }
 
     #region create
-    // ngetes brand service manggil create diharapkan terekam di database
+    // ngetes brand service manggil create mengharapkan terekam di database
     public function test_brand_service_call_create_expect_db_has_record()
     {
         // ngegantiin acting as
@@ -36,10 +36,10 @@ class BrandServiceTest extends ServiceTestCase
         // ngambil data dari Brand Factory trs di tambahin company id trus dimasukin ke brandArr
         $brandArr = Brand::factory()->make([
             'company_id' => $user->companies->first()->id
-        ]);
+        ])->toArray();
         
-        // hasilnya brand service bikin array buat brandArr
-        $result = $this->brandService->create($brandArr->toArray());
+        // hasilnya brand service bikin brandArr
+        $result = $this->brandService->create($brandArr);
 
         $this->assertDatabaseHas('brands', [
             'id' => $result->id,
@@ -61,8 +61,8 @@ class BrandServiceTest extends ServiceTestCase
     #endregion
 
     #region list
-    // ngetes brand service manggil list dengan paginate true yang di harapkan objek paginator
-    public function test_brand_service_call_list_with_paginate_true_expect_Paginator_object()
+    // ngetes brand service manggil list dengan paginate true mengharapkan hasilnya adalah objek paginator
+    public function test_brand_service_call_list_with_paginate_true_expect_paginator_object()
     {
         // gantinya acting as
         $user = User::factory()
@@ -81,17 +81,17 @@ class BrandServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
     }
 
-    // ngetes brand service manggil list dengan paginate false yang di harapkan objek Collection
-    public function test_brand_service_call_list_with_paginate_false_expect_Collection_object()
+    // ngetes brand service manggil list dengan paginate false yang mengharapkan objek collection
+    public function test_brand_service_call_list_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(20), 'brands'), 'companies')
                     ->create();
-        // hasil paginate dibikin false
         $result = $this->brandService->list(
             companyId: $user->companies->first()->id,
             search: '',
+            // hasil paginate dibikin false
             paginate: false,
             page: 1,
             perPage: 10
@@ -101,7 +101,7 @@ class BrandServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Collection::class, $result);
     }
 
-    // ngetes brand service manggil list dengan company yang ga ada diharapkan Collection kosong
+    // ngetes brand service manggil list dengan company yang ga ada mengharapkan collection kosong
     public function test_brand_service_call_list_with_nonexistance_companyId_expect_empty_collection()
     {
         // max id = model company nyari max id dari company ditambah 1. Contohnya company id ada 1-19 trs di ambil yang 19 di tambah 1 jadi 20
@@ -219,7 +219,7 @@ class BrandServiceTest extends ServiceTestCase
 
     #region read
 
-    // test brand service manggil real diharapkan returnnya object
+    // test brand service manggil real mengharapkan returnnya object
     public function test_brand_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -264,10 +264,10 @@ class BrandServiceTest extends ServiceTestCase
         ]);
     }
 
-    // ngetes brand service manggil update dengan array kosong diharapkan kesalahan (error)
+    // ngetes brand service manggil update dengan array kosong mengharapkan kesalahan (error)
     public function test_brand_service_call_update_with_empty_array_parameters_expect_exception()
     {
-        // this->mengharapkanException(Exception) / mengharpkan error
+        // this->mengharapkanException(Exception) / mengharapkan error
         $this->expectException(Exception::class);
 
         $user = User::factory()
