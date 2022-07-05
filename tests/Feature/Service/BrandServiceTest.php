@@ -2,13 +2,14 @@
 
 namespace Tests\Feature\Service;
 
-use App\Actions\RandomGenerator;
+use App\Models\User;
 use App\Models\Brand;
 use App\Models\Company;
-use App\Services\BrandService;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\ServiceTestCase;
+use App\Services\BrandService;
+use App\Actions\RandomGenerator;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class BrandServiceTest extends ServiceTestCase
 {
