@@ -55,7 +55,8 @@ class UnitServiceImpl implements UnitService
 
     public function list(
         int $companyId,
-        ?string $category = null,
+        bool $isProduct = true,
+        bool $isService = true,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -67,7 +68,7 @@ class UnitServiceImpl implements UnitService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$category.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.$isProduct.'-'.$isService.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) {
@@ -79,21 +80,22 @@ class UnitServiceImpl implements UnitService
 
             $unit = Unit::whereCompanyId($companyId);
 
-            if (!empty($category)) {
-                $anu1 = UnitCategory::PRODUCTS;
-                $anu2 = UnitCategory::SERVICES;
-                $anu3 = UnitCategory::PRODUCTS_AND_SERVICES;
-
-                if ($category == UnitCategory::PRODUCTS->value) {
-                    $unit = $unit->where('category', '=', UnitCategory::PRODUCTS->value);
-                } else if ($category == UnitCategory::SERVICES->value) {
-                    $unit = $unit->where('category', '=', UnitCategory::SERVICES->value);
-                } else if ($category == UnitCategory::PRODUCTS_AND_SERVICES->value) {
-                    $unit = $unit->where('category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value);
-                }
+            if ($isProduct && !$isService) {
+                $unit = $unit->where([
+                    ['category', '=', UnitCategory::PRODUCTS->value],
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                ]);
+            } elseif ($isService && !$isProduct) {
+                $unit = $unit->where([
+                    ['category', '=', UnitCategory::SERVICES->value],
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                ]);
+            } elseif ($isProduct && $isService) {
+            } else {
+                return null;
             }
 
-            if (empty($search)) {
+        if (empty($search)) {
                 $unit = $unit->latest();
             } else {
                 $unit = $unit->where('name', 'like', '%'.$search.'%')->latest();

@@ -62,11 +62,11 @@ class ProductGroupServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
-        $category = $this->faker->randomElement(ProductCategory::toArrayValue());
 
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            category: $category, 
+            isProduct: $this->faker->boolean(),
+            isService: $this->faker->boolean(),
             search: '',
             paginate: true,
             page: 1,
@@ -82,11 +82,11 @@ class ProductGroupServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
-        $category = $this->faker->randomElement(ProductCategory::toArrayValue());
 
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            category: $category, 
+            isProduct: $this->faker->boolean(),
+            isService: $this->faker->boolean(),
             search: '',
             paginate: false
         );

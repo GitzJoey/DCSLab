@@ -50,6 +50,6 @@ class BrandFactory extends Factory
 
         $text = $this->faker->randomElement($name);
 
-        return substr_replace($text, $str, strlen($text) - 1, 0);
+        return substr_replace($text, $str, strlen($text), 0);
     }
 }
