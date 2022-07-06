@@ -35,7 +35,7 @@ class WarehouseServiceTest extends ServiceTestCase
         
         $warehouseArr = Warehouse::factory()->make([
             'company_id' => $user->companies->first()->id,
-            'branch_id' => $user->companies()->has('branches')->first()->branches()->first()->id
+            'branch_id' => $user->companies()->has('branches')->first()->branches()->first()->id,
         ]);
 
         $result = $this->warehouseService->create($warehouseArr->toArray());
@@ -122,12 +122,12 @@ class WarehouseServiceTest extends ServiceTestCase
         Warehouse::factory()->count(10)->create([
             'company_id' => $companyId,
             'branch_id' => $branchId,
-            'name' => $this->faker->name().' '.'testing'
+            'name' => $this->faker->name().' '.'testing',
         ]);
 
         Warehouse::factory()->count(10)->create([
             'company_id' => $companyId,
-            'branch_id' => $branchId
+            'branch_id' => $branchId,
         ]);
 
         $result = $this->warehouseService->list(
@@ -154,7 +154,7 @@ class WarehouseServiceTest extends ServiceTestCase
 
         Warehouse::factory()->count(25)->create([
             'company_id' => $companyId,
-            'branch_id' => $branchId
+            'branch_id' => $branchId,
         ]);
 
         $result = $this->warehouseService->list(
@@ -181,7 +181,7 @@ class WarehouseServiceTest extends ServiceTestCase
 
         Warehouse::factory()->count(25)->create([
             'company_id' => $companyId,
-            'branch_id' => $branchId
+            'branch_id' => $branchId,
         ]);
 
         $result = $this->warehouseService->list(
@@ -211,7 +211,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $branchId = Branch::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
         Warehouse::factory()->count(25)->create([
             'company_id' => $companyId,
-            'branch_id' => $branchId
+            'branch_id' => $branchId,
         ]);
         
         $warehouse = $user->companies->first()->branches()->inRandomOrder()->first()->warehouses()->inRandomOrder()->first();
@@ -236,7 +236,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $branchId = Branch::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
         Warehouse::factory()->count(25)->create([
             'company_id' => $companyId,
-            'branch_id' => $branchId
+            'branch_id' => $branchId,
         ]);
         
         $warehouse = $user->companies->first()->branches()->inRandomOrder()->first()->warehouses()->inRandomOrder()->first();
@@ -270,7 +270,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $branchId = Branch::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
         Warehouse::factory()->count(25)->create([
             'company_id' => $companyId,
-            'branch_id' => $branchId
+            'branch_id' => $branchId,
         ]);
         
         $warehouse = $user->companies->first()->branches()->inRandomOrder()->first()->warehouses()->inRandomOrder()->first();
@@ -294,7 +294,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $branchId = Branch::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
         Warehouse::factory()->count(25)->create([
             'company_id' => $companyId,
-            'branch_id' => $branchId
+            'branch_id' => $branchId,
         ]);
         
         $warehouse = $user->companies->first()->branches()->inRandomOrder()->first()->warehouses()->inRandomOrder()->first();
@@ -304,7 +304,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->assertIsBool($result);
         $this->assertTrue($result);
         $this->assertSoftDeleted('warehouses', [
-            'id' => $warehouse->id
+            'id' => $warehouse->id,
         ]);
     }
 
