@@ -10,43 +10,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Unit>
  */
 class UnitFactory extends Factory
-{
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-
+{    
+    protected $name = [
+        "PCS", "CC", "STRIP", "BOTOL", "GR", "PACK", "BOX", "ROLL", "KG", "LITER", "KALENG", "BUTIR", "IKAT", "SISIR", "JERIGEN", "BUAH", "IKT", "GALON", "PASANG", "M", "SACHET", "BKS",
+    ];
+    
     public function definition()
     {
-        $name = [
-            "PCS",
-            "CC",
-            "STRIP",
-            "BOTOL",
-            "GR",
-            "PACK",
-            "BOX",
-            "ROLL",
-            "KG",
-            "LITER",
-            "KALENG",
-            "BUTIR",
-            "IKAT",
-            "SISIR",
-            "JERIGEN",
-            "BUAH",
-            "IKT",
-            "GALON",
-            "PASANG",
-            "M",
-            "SACHET",
-            "BKS"            
-        ];
-
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $this->faker->randomElement($name),
+            'name' => $this->faker->randomElement($this->name),
             'description' => $this->faker->sentence(),
             'category' => $this->faker->randomElement(ProductCategory::toArrayValue())
         ];
@@ -63,32 +36,7 @@ class UnitFactory extends Factory
 
     private function craftName(string $str)
     {
-        $name = [
-            "PCS",
-            "CC",
-            "STRIP",
-            "BOTOL",
-            "GR",
-            "PACK",
-            "BOX",
-            "ROLL",
-            "KG",
-            "LITER",
-            "KALENG",
-            "BUTIR",
-            "IKAT",
-            "SISIR",
-            "JERIGEN",
-            "BUAH",
-            "IKT",
-            "GALON",
-            "PASANG",
-            "M",
-            "SACHET",
-            "BKS"            
-        ];
-
-        $text = $this->faker->randomElement($name);
+        $text = $this->faker->randomElement($this->name);
 
         return substr_replace($text, $str, strlen($text), 0);
     }

@@ -63,11 +63,11 @@ class UnitServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault()
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
-        $category = $this->faker->randomElement(ProductCategory::toArrayValue());
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            category: $category, 
+            isProduct: $this->faker->boolean(),
+            isService: $this->faker->boolean(),
             search: '',
             paginate: true,
             page: 1,
@@ -83,11 +83,11 @@ class UnitServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault()
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
-        $category = $this->faker->randomElement(ProductCategory::toArrayValue());
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            category: $category, 
+            isProduct: $this->faker->boolean(),
+            isService: $this->faker->boolean(),
             search: '',
             paginate: false
         );
