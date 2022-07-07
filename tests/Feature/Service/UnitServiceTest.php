@@ -64,10 +64,15 @@ class UnitServiceTest extends ServiceTestCase
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
 
+        do {
+            $isProduct = $this->faker->boolean();
+            $isService = $this->faker->boolean();
+        } while ($isProduct == false && $isService == false);
+
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $this->faker->boolean(),
-            isService: $this->faker->boolean(),
+            isProduct: $isProduct,
+            isService: $isService,
             search: '',
             paginate: true,
             page: 1,
@@ -84,10 +89,15 @@ class UnitServiceTest extends ServiceTestCase
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
 
+        do {
+            $isProduct = $this->faker->boolean();
+            $isService = $this->faker->boolean();
+        } while ($isProduct == false && $isService == false);
+
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $this->faker->boolean(),
-            isService: $this->faker->boolean(),
+            isProduct: $isProduct,
+            isService: $isService,
             search: '',
             paginate: false
         );

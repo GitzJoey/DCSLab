@@ -2,17 +2,18 @@
 
 namespace App\Services\Impls;
 
-use App\Actions\RandomGenerator;
-use App\Enums\ProductCategory;
-use App\Models\ProductGroup;
-use App\Services\ProductGroupService;
-use App\Traits\CacheHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
+use App\Enums\UnitCategory;
+use App\Traits\CacheHelper;
+use App\Models\ProductGroup;
+use App\Enums\ProductCategory;
+use App\Actions\RandomGenerator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\ProductGroupService;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class ProductGroupServiceImpl implements ProductGroupService
 {
@@ -77,7 +78,8 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function list(
         int $companyId,
-        ?string $category = null,
+        bool $isProduct = true,
+        bool $isService = true,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -89,7 +91,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$category.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.$isProduct.'-'.$isService.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) {
@@ -101,8 +103,19 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $productGroup = ProductGroup::whereCompanyId($companyId);
 
-            if (!empty($category)) {
-                $productGroup = $productGroup->where('category', '=', ProductCategory::PRODUCTS->value);
+            if ($isProduct && !$isService) {
+                $productGroup = $productGroup->where([
+                    ['category', '=', UnitCategory::PRODUCTS->value],
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                ]);
+            } elseif ($isService && !$isProduct) {
+                $productGroup = $productGroup->where([
+                    ['category', '=', UnitCategory::SERVICES->value],
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                ]);
+            } elseif ($isProduct && $isService) {
+            } else {
+                return null;
             }
 
             if (empty($search)) {

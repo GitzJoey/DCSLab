@@ -8,7 +8,6 @@ use App\Models\Company;
 use App\Models\ProductGroup;
 use Tests\ServiceTestCase;
 use App\Services\ProductGroupService;
-use App\Enums\ProductCategory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -63,10 +62,15 @@ class ProductGroupServiceTest extends ServiceTestCase
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
 
+        do {
+            $isProduct = $this->faker->boolean();
+            $isService = $this->faker->boolean();
+        } while ($isProduct == false && $isService == false);
+
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $this->faker->boolean(),
-            isService: $this->faker->boolean(),
+            isProduct: $isProduct,
+            isService: $isService,
             search: '',
             paginate: true,
             page: 1,
@@ -83,10 +87,15 @@ class ProductGroupServiceTest extends ServiceTestCase
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
 
+        do {
+            $isProduct = $this->faker->boolean();
+            $isService = $this->faker->boolean();
+        } while ($isProduct == false && $isService == false);
+
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $this->faker->boolean(),
-            isService: $this->faker->boolean(),
+            isProduct: $isProduct,
+            isService: $isService,
             search: '',
             paginate: false
         );
