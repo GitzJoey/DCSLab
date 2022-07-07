@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class UnitFactory extends Factory
 {    
-    protected $name = [
+    protected $unit = [
         "PCS", "CC", "STRIP", "BOTOL", "GR", "PACK", "BOX", "ROLL", "KG", "LITER", "KALENG", "BUTIR", "IKAT", "SISIR", "JERIGEN", "BUAH", "IKT", "GALON", "PASANG", "M", "SACHET", "BKS",
     ];
     
@@ -19,7 +19,7 @@ class UnitFactory extends Factory
     {
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $this->faker->randomElement($this->name),
+            'name' => $this->faker->randomElement($this->unit),
             'description' => $this->faker->sentence(),
             'category' => $this->faker->randomElement(ProductCategory::toArrayValue())
         ];
@@ -36,7 +36,7 @@ class UnitFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->randomElement($this->name);
+        $text = $this->faker->randomElement($this->unit);
 
         return substr_replace($text, $str, strlen($text), 0);
     }
