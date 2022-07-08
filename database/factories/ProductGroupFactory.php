@@ -16,19 +16,30 @@ class ProductGroupFactory extends Factory
      */
     protected $model = ProductGroup::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
+    protected $productGroups = ['Books', 'Movies', 'Music', 'Games', 'Electronics', 'Computers', 'Home', 'Garden', 'Tools', 'Grocery', 'Health', 'Beauty', 'Toys', 'Kids', 'Baby', 'Clothing', 'Shoes', 'Jewelry', 'Sports', 'Outdoors', 'Automotive', 'Industrial',];
+
     public function definition()
     {
-        $department = ['Books', 'Movies', 'Music', 'Games', 'Electronics', 'Computers', 'Home', 'Garden', 'Tools', 'Grocery', 'Health', 'Beauty', 'Toys', 'Kids', 'Baby', 'Clothing', 'Shoes', 'Jewelry', 'Sports', 'Outdoors', 'Automotive', 'Industrial'];
-
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'name' => $this->faker->randomElement($department),
+            'name' => $this->faker->randomElement($this->productGroups),
             'category' => $this->faker->randomElement(ProductCategory::toArrayValue()),
         ];
+    }
+
+    public function insertStringInName(string $str)
+    {
+        return $this->state(function (array $attributes) use ($str) {
+            return [
+                'name' => $this->craftName($str),
+            ];
+        });
+    }
+
+    private function craftName(string $str)
+    {
+        $text = $this->faker->randomElement($this->productGroups);
+
+        return substr_replace($text, $str, strlen($text) - 1, 0);
     }
 }

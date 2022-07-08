@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\ProductUnit;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class Unit extends Model
 {
-    use LogsActivity;
+    use HasFactory, LogsActivity;
     use SoftDeletes;
     use ScopeableByCompany;
 

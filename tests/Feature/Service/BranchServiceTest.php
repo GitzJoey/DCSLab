@@ -148,7 +148,7 @@ class BranchServiceTest extends ServiceTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() > 1);
+        $this->assertTrue($result->total() == 25);
     }
 
     public function test_branch_service_call_list_with_perpage_parameter_negative_expect_results()
@@ -172,7 +172,7 @@ class BranchServiceTest extends ServiceTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() > 1);
+        $this->assertTrue($result->total() == 25);
     }
 
     #endregion
