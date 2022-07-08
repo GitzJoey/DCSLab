@@ -49,4 +49,20 @@ class EmployeeFactory extends Factory
             ];
         });
     }
+
+    public function insertStringInName(string $str)
+    {
+        return $this->state(function (array $attributes) use ($str) {
+            return [
+                'name' => $this->craftName($str),
+            ];
+        });
+    }
+
+    private function craftName(string $str)
+    {
+        $text = $this->faker->randomElement($this->name);
+
+        return substr_replace($text, $str, strlen($text), 0);
+    }
 }
