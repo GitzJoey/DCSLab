@@ -83,12 +83,12 @@ class UnitServiceImpl implements UnitService
             if ($isProduct && !$isService) {
                 $unit = $unit->where([
                     ['category', '=', UnitCategory::PRODUCTS->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
             } elseif ($isService && !$isProduct) {
                 $unit = $unit->where([
                     ['category', '=', UnitCategory::SERVICES->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
             } elseif ($isProduct && $isService) {
             } else {
