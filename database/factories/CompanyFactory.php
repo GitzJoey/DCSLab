@@ -37,7 +37,7 @@ class CompanyFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE
+                'status' => RecordStatus::ACTIVE,
             ];
         });
     }
@@ -46,7 +46,7 @@ class CompanyFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE
+                'status' => RecordStatus::INACTIVE,
             ];
         });
     }
@@ -55,7 +55,7 @@ class CompanyFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'default' => true
+                'default' => true,
             ];
         });
     }

@@ -31,7 +31,7 @@ class Company extends Model
         'status',
     ];
 
-    protected static $logAttributes = ['code', 'name', 'address', 'default', 'status'];
+    protected static $logAttributes = ['code', 'name', 'address', 'default', 'status',];
 
     protected static $logOnlyDirty = true;
 
