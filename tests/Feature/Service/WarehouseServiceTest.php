@@ -8,7 +8,6 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Warehouse;
 use Tests\ServiceTestCase;
-use App\Actions\RandomGenerator;
 use App\Services\WarehouseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
