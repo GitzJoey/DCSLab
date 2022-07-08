@@ -106,12 +106,12 @@ class ProductGroupServiceImpl implements ProductGroupService
             if ($isProduct && !$isService) {
                 $productGroup = $productGroup->where([
                     ['category', '=', UnitCategory::PRODUCTS->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
                 ]);
             } elseif ($isService && !$isProduct) {
                 $productGroup = $productGroup->where([
                     ['category', '=', UnitCategory::SERVICES->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
                 ]);
             } elseif ($isProduct && $isService) {
             } else {
