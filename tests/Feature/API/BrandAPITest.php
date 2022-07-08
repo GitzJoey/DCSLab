@@ -32,8 +32,7 @@ class BrandAPITest extends APITestCase
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $companyId = $user->companies->first()->id;
 
         $this->actingAs($user);
 
@@ -98,6 +97,10 @@ class BrandAPITest extends APITestCase
 
         $api->assertStatus(422);
     }
+
+    #endregion
+
+    #region list
 
     public function test_brand_api_call_list_with_or_without_pagination_expect_paginator_or_collection()
     {
@@ -281,6 +284,10 @@ class BrandAPITest extends APITestCase
             ],
         ]);
     }
+
+    #endregion
+
+    #region read
 
     public function test_brand_api_call_read_expect_successful()
     {

@@ -40,6 +40,6 @@ class ProductGroupFactory extends Factory
     {
         $text = $this->faker->randomElement($this->productGroups);
 
-        return substr_replace($text, $str, strlen($text) - 1, 0);
+        return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
 }

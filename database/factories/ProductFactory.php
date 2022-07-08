@@ -73,6 +73,6 @@ class ProductFactory extends Factory
 
         $text = $faker->randomElement($this->productName['adjective']).' '.$faker->randomElement($this->productName['material']).' '.$faker->randomElement($this->productName['product']);
 
-        return substr_replace($text, $str, strlen($text), 0);
+        return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
 }

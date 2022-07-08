@@ -63,6 +63,6 @@ class EmployeeFactory extends Factory
     {
         $text = $this->faker->randomElement($this->name);
 
-        return substr_replace($text, $str, strlen($text), 0);
+        return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
 }
