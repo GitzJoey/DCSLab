@@ -24,12 +24,7 @@ class SupplierProduct extends Model
         'main_product',
     ];
 
-    protected static $logAttributes = [
-        'company_id',
-        'supplier_id',
-        'product_id',
-        'main_product',
-    ];
+    protected static $logAttributes = ['company_id', 'supplier_id', 'product_id', 'main_product'];
 
     protected static $logOnlyDirty = true;
 

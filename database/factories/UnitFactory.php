@@ -21,7 +21,7 @@ class UnitFactory extends Factory
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $this->faker->randomElement($this->units),
             'description' => $this->faker->sentence(),
-            'category' => $this->faker->randomElement(ProductCategory::toArrayValue()),
+            'category' => $this->faker->randomElement(ProductCategory::toArrayValue())
         ];
     }
 

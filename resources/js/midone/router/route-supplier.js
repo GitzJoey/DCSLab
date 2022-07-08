@@ -15,6 +15,6 @@ export default {
                 remember: true,
                 log_route: true
             }
-        },
+        }
     ]
 };
