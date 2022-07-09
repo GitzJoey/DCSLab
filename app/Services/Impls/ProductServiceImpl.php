@@ -36,7 +36,7 @@ class ProductServiceImpl implements ProductService
             $product->company_id = $productArr['company_id'];
             $product->code = $productArr['code'];
             $product->product_group_id = $productArr['product_group_id'];
-            $product->brand_id = $productArr['brand_id'];
+            $product->brand_id = array_key_exists('brand_id', $productArr) ? $productArr['brand_id'] : null;
             $product->name = $productArr['name'];
             $product->taxable_supply = $productArr['taxable_supply'];
             $product->standard_rated_supply = $productArr['standard_rated_supply'];
@@ -53,8 +53,8 @@ class ProductServiceImpl implements ProductService
             $pu = [];
             foreach ($productUnitsArr as $product_unit) {
                 array_push($pu, new ProductUnit([
-                    'company_id' => $product_unit['company_id'],
-                    'product_id' => $product['id'],
+                    'company_id' => $product->company_id,
+                    'product_id' => $product->id,
                     'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
                     'conversion_value' => $product_unit['conv_value'],
@@ -185,7 +185,7 @@ class ProductServiceImpl implements ProductService
             foreach ($productUnitsArr as $product_unit) {
                 array_push($pu, [
                     'id' => $product_unit['id'],
-                    'company_id' => $product_unit['company_id'],
+                    'company_id' => $product->company_id,
                     'product_id' => $product->id,
                     'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],

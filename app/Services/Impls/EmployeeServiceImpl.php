@@ -38,7 +38,7 @@ class EmployeeServiceImpl implements EmployeeService
 
         try {
             $rolesArr = [];
-            array_push($rolesId, Role::where('name', '=', UserRoles::POS_EMPLOYEE->value)->first()->id);
+            array_push($rolesArr, Role::where('name', '=', UserRoles::POS_EMPLOYEE->value)->first()->id);
 
             $userService = app(UserService::class);
 
@@ -86,7 +86,7 @@ class EmployeeServiceImpl implements EmployeeService
         int $companyId,
         string $search,
         bool $paginate,
-        int $page,
+        int $page = 1,
         int $perPage = 10,
         bool $useCache = true
     ): Paginator|Collection {
@@ -109,13 +109,20 @@ class EmployeeServiceImpl implements EmployeeService
                 return null;
             }
 
-            $employee = Employee::with('company', 'user.profile', 'employeeAccesses.branch')
-                        ->whereCompanyId($companyId);
+            $relationship = ['company', 'user.profile', 'employeeAccesses.branch'];
+
+            $employee = Employee::with('company', 'employeeAccesses.branch')
+            ->whereCompanyId($companyId);
 
             if (empty($search)) {
                 $employee = $employee->latest();
             } else {
-                $employee = $employee->where('name', 'like', '%'.$search.'%')->latest();
+                $employee = Employee::with($relationship)
+                                ->whereHas('user', function ($query) use ($search) {
+                                    $query->where('name', 'like', '%'.$search.'%');
+                                })
+                                ->whereCompanyId($companyId)
+                                ->latest();
             }
 
             if ($paginate) {
@@ -141,7 +148,7 @@ class EmployeeServiceImpl implements EmployeeService
 
     public function read(Employee $employee): Employee
     {
-        return $employee->with('company, user.profile, employeeAccesses')->first();
+        return $employee->with('company', 'user.profile', 'employeeAccesses')->first();
     }
 
     public function update(
@@ -159,7 +166,7 @@ class EmployeeServiceImpl implements EmployeeService
             $userService->update(
                 user: $employee->user,
                 userArr: $userArr,
-                profile: $profileArr
+                profileArr: $profileArr
             );
 
             $employee->update([
