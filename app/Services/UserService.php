@@ -16,7 +16,13 @@ interface UserService
         array $profileArr
     ): User;
 
-    public function list(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection;
+    public function list(
+        string $search = '',
+        bool $paginate = true,
+        int $page = 1,
+        int $perPage = 10,
+        bool $useCache = true
+    ): Paginator|Collection;
 
     public function read(User $user): User;
 

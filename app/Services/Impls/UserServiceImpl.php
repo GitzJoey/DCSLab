@@ -176,7 +176,7 @@ class UserServiceImpl implements UserService
 
     public function read(User $user): User
     {
-        return $user->with('roles, profile, settings')->first();
+        return $user->with('roles', 'profile', 'settings')->first();
     }
 
     public function readBy(string $key, string $value)

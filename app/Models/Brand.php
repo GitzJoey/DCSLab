@@ -27,7 +27,10 @@ class Brand extends Model
         'name',
     ];
 
-    protected static $logAttributes = ['code', 'name'];
+    protected static $logAttributes = [
+        'code',
+        'name',
+    ];
 
     protected static $logOnlyDirty = true;
 
