@@ -109,9 +109,19 @@ class EmployeeController extends BaseController
             'email' => $request['email'],
         ];
 
+        $first_name = '';
+        $last_name = '';
+        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
+            $pieces = explode(" ", $request['name']);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+        } else {
+            $first_name = $request['name'];
+        }
+
         $profileArr = [
-            'first_name' => $request['first_name'],
-            'last_name' => $request['last_name'],
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'address' => $request['address'],
             'city' => $request['city'],
             'postal_code' => $request['postal_code'],
@@ -177,9 +187,19 @@ class EmployeeController extends BaseController
             'email' => $request['email'],
         ];
 
+        $first_name = '';
+        $last_name = '';
+        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
+            $pieces = explode(" ", $request['name']);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+        } else {
+            $first_name = $request['name'];
+        }
+
         $profileArr = [
-            'first_name' => $request['first_name'],
-            'last_name' => $request['last_name'],
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'address' => $request['address'],
             'city' => $request['city'],
             'postal_code' => $request['postal_code'],

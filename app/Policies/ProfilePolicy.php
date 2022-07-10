@@ -35,7 +35,7 @@ class ProfilePolicy
             return false;
         }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (!app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
 
@@ -68,7 +68,7 @@ class ProfilePolicy
             return false;
         }
 
-        if ($user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (!app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
 
