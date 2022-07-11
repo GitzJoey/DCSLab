@@ -4,7 +4,7 @@
     <div class="container sm:px-10">
       <div class="block xl:grid grid-cols-2 gap-4">
         <div class="hidden xl:flex flex-col min-h-screen">
-          <a href="" class="-intro-x flex items-center pt-5">
+          <a href="/" class="-intro-x flex items-center pt-5">
             <img alt="DCSLab" class="w-6" src="@/assets/images/logo.svg" />
             <span class="text-white text-lg ml-3"> {{ appName }} </span>
           </a>
@@ -25,20 +25,25 @@
             </div>
             <VeeForm id="registerForm" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
               <div class="intro-x mt-8">
-                <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Name" />
-                <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Email" />
-                <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password" />
-                <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password Confirmation" />
+                <VeeField id="name" type="text" name="name" class="intro-x login__input form-control py-3 px-4 block" rules="required|alpha_num|min:2" :label="t('views.register.fields.name')" :placeholder="t('views.register.fields.name')" />
+                <ErrorMessage name="name" class="text-danger" />
+                <VeeField id="email" type="text" name="email" class="intro-x login__input form-control py-3 px-4 block mt-4" rules="required|email" :label="t('views.register.fields.email')" :placeholder="t('views.register.fields.email')" />
+                <ErrorMessage name="email" class="text-danger" />
+                <VeeField id="password" type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" rules="required" :label="t('views.register.fields.password')" :placeholder="t('views.register.fields.password')" />
+                <ErrorMessage name="password" class="text-danger" />
+                <VeeField id="password_confirmation" type="password" name="password_confirmation" class="intro-x login__input form-control py-3 px-4 block mt-4" rules="required|confirmed:@password" :label="t('views.register.fields.password_confirmation')" :placeholder="t('views.register.fields.password_confirmation')" />
+                <ErrorMessage name="password_confirmation" class="text-danger" />
               </div>
               <div class="intro-x flex items-center text-slate-600 dark:text-slate-500 mt-4 text-xs sm:text-sm">
-                <input id="remember-me" type="checkbox" class="form-check-input border mr-2" />
+                <VeeField id="terms" type="checkbox" name="terms" class="form-check-input border mr-2" value="on" rules="required" :label="t('views.register.fields.terms')" />
                 <label class="cursor-pointer select-none" for="terms">{{ t('views.register.fields.agree_1') }} {{ t('views.register.fields.agree_2') }}</label>
               </div>
+              <ErrorMessage name="terms" class="text-danger" />
               <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
-                <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">
+                <button type="submit" class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">
                   {{ t('components.buttons.register') }}
                 </button>
-                <button class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top" @click="router.push({ name: 'login' })">
+                <button type="button" class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top" @click="router.push({ name: 'login' })">
                   {{ t('components.buttons.login') }}
                 </button>
               </div>
@@ -67,7 +72,21 @@ const { t } = useI18n();
 const appName = import.meta.env.VITE_APP_NAME;
 //#endregion
 
+//#region onMounted
 onMounted(() => {
   dom("body").removeClass("main").removeClass("error-page").addClass("login");
 });
+//#endregion
+
+//#region Methods
+const onSubmit = (values, actions) => {
+  console.log('a');
+}
+
+const invalidSubmit = (e) => {
+}
+
+const handleError = (e, actions) => {
+}
+//#endregion
 </script>

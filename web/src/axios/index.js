@@ -2,6 +2,7 @@ import axios from "axios";
 import router from "@/router";
 
 const defaultAxiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_BACKEND_URL,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Accept': 'application/json'

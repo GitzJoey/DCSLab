@@ -122,10 +122,11 @@
         "register": {
             "title": "Register",
             "fields": {
-                "name": "Full name",
+                "name": "Name",
                 "email": "Email",
                 "password": "Password",
-                "password_confirmation": "Confirm password",
+                "password_confirmation": "Password Confirmation",
+                "terms": "Terms",
                 "agree_1": "I agree to terms ",
                 "agree_2": "& conditions",
                 "already_member": "I already have a membership",

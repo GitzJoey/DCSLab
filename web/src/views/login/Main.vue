@@ -4,7 +4,7 @@
     <div class="container sm:px-10">
       <div class="block xl:grid grid-cols-2 gap-4">
         <div class="hidden xl:flex flex-col min-h-screen">
-          <a href="" class="-intro-x flex items-center pt-5">
+          <a href="/" class="-intro-x flex items-center pt-5">
             <img alt="DCSLab" class="w-6" src="@/assets/images/logo.svg" />
             <span class="text-white text-lg ml-3"> {{ appName }} </span>
           </a>
@@ -26,9 +26,9 @@
             </div>
             <VeeForm id="loginForm" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
               <div class="intro-x mt-8">
-                <VeeField id="email" type="text" name="email" class="intro-x login__input form-control py-3 px-4 block" rules="required|email|" placeholder="Email" />
+                <VeeField id="email" type="text" name="email" class="intro-x login__input form-control py-3 px-4 block" rules="required|email" :label="t('views.login.fields.email')" :placeholder="t('views.login.fields.email')" />
                 <ErrorMessage name="email" class="text-danger" />
-                <VeeField id="password" type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" rules="required" placeholder="Password"/>
+                <VeeField id="password" type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" rules="required" :label="t('views.login.fields.password')" :placeholder="t('views.login.fields.password')"/>
                 <ErrorMessage name="password" class="text-danger" />
               </div>
               <div class="intro-x flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
@@ -39,10 +39,10 @@
                 <a href="">{{ t('views.login.fields.forgot_pass') }}</a>
               </div>
               <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
-                <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">
+                <button type="submit" class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">
                   {{ t('components.buttons.login') }}
                 </button>
-                <button class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top" @click="router.push({ name: 'register' })">
+                <button type="button" class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top" @click="router.push({ name: 'register' })">
                   {{ t('components.buttons.register') }}
                 </button>
               </div>
@@ -64,7 +64,7 @@
 import { onMounted } from "vue";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main.vue";
 import dom from "@left4code/tw-starter/dist/js/dom";
-import axios from "@/axios";
+import { authAxiosInstance } from "@/axios";
 import { useI18n } from "vue-i18n";
 import router from "@/router";
 //#endregion
@@ -80,13 +80,19 @@ const appName = import.meta.env.VITE_APP_NAME;
 //#region onMounted
 onMounted( async () => {
   dom("body").removeClass("main").removeClass("error-page").addClass("login");
-
+  authAxiosInstance.get('/sanctum/csrf-cookie');
 });
 //#endregion
 
 //#region Methods
 const onSubmit = (values, actions) => {
+  var formData = new FormData(dom('#loginForm')[0]);
 
+  authAxiosInstance.post('login', formData).then(response => {
+    console.log(response);
+  }).catch(e => {
+    handleError(e);
+  });
 }
 
 const invalidSubmit = (e) => {
