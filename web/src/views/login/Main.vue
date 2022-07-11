@@ -26,7 +26,7 @@
             </div>
             <VeeForm id="loginForm" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
               <div class="intro-x mt-8">
-                <VeeField id="email" type="text" name="email" class="intro-x login__input form-control py-3 px-4 block" rules="required|email" :label="t('views.login.fields.email')" :placeholder="t('views.login.fields.email')" />
+                <VeeField id="email" type="text" name="email" class="intro-x login__input form-control py-3 px-4 block" rules="required|email" :label="t('views.login.fields.email')" :placeholder="t('views.login.fields.email')" autofocus />
                 <ErrorMessage name="email" class="text-danger" />
                 <VeeField id="password" type="password" name="password" class="intro-x login__input form-control py-3 px-4 block mt-4" rules="required" :label="t('views.login.fields.password')" :placeholder="t('views.login.fields.password')"/>
                 <ErrorMessage name="password" class="text-danger" />
@@ -90,6 +90,7 @@ const onSubmit = (values, actions) => {
 
   authAxiosInstance.post('login', formData).then(response => {
     console.log(response);
+    //router.push({ name: 'side-menu-dashboard-maindashboard' });
   }).catch(e => {
     handleError(e);
   });

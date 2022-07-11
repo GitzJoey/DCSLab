@@ -7,7 +7,7 @@ const defaultAxiosInstance = axios.create({
         'X-Requested-With': 'XMLHttpRequest',
         'Accept': 'application/json'
     }
-});    
+});
 
 defaultAxiosInstance.defaults.withCredentials = true;
 
@@ -15,8 +15,6 @@ defaultAxiosInstance.interceptors.request.use(function (config) {
     config.headers.common['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
     return config;
 });
-
-const authAxiosInstance = Object.assign({}, defaultAxiosInstance);
 
 defaultAxiosInstance.interceptors.response.use(response => {
     return response;
@@ -36,6 +34,21 @@ defaultAxiosInstance.interceptors.response.use(response => {
     return Promise.reject(error);
 });
 
+const authAxiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_BACKEND_URL,
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+    }
+});
+
+authAxiosInstance.defaults.withCredentials = true;
+
+authAxiosInstance.interceptors.request.use(function (config) {
+    config.headers.common['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
+    return config;
+});
+
 const axiosInstance = axios.create();
-    
+
 export { defaultAxiosInstance as default, authAxiosInstance, axiosInstance }
