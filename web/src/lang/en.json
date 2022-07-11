@@ -1,0 +1,528 @@
+{
+    "components": {
+        "menu": {
+            "dashboard": "Dashboard",
+            "main-dashboard": "Main Dashboard",
+            "main-demo": "Demo",
+            "company": "Company",
+            "company-company": "Company",
+            "company-branch": "Branch",
+            "company-employee": "Employee",
+            "company-warehouse": "Warehouse",
+            "supplier": "Supplier",
+            "supplier-supplier": "Supplier",
+            "product": "Product",
+            "product-product": "Product",
+            "product-product_group": "Product Group",
+            "product-service": "Service",
+            "administrator": "Administrator",
+            "administrator-user": "User",
+            "purchase_order": "Purchase Order",
+            "purchase_order-purchaseorder": "Purchase Order",
+            "devtool": "Dev Tool",
+            "devtool-dbbackup": "DB Backup",
+            "devtool-playground": "Playground",
+            "devtool-playground-ex1": "Playground 1",
+            "devtool-playground-ex2": "Playground 2"
+        },
+        "alert-placeholder": {
+            "success_alert": {
+                "password_changed_successfully": "Password Changed Successfully!",
+                "roles_changed_successfully": "Roles Changed Successfully!",
+                "profile_changed_successfully": "Profile Changed Successfully!",
+                "settings_changed_successfully": "Settings Changed Successfully!",
+                "verification_link_sent_successfully": "Verification Link Sent!"
+            }
+        },
+        "buttons": {
+            "save": "Save",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "back": "Back",
+            "reset": "Reset",
+            "compose": "Compose",
+            "revoke": "Revoke",
+            "activate": "Activate",
+            "submit": "Submit",
+            "send_verification_email": "Send Verification Email",
+            "auto": "Auto",
+            "new_order": "New Order",
+            "login": "Login",
+            "register": "Register"
+        },
+        "dropdown": {
+            "placeholder": "Please Select",
+            "values": {
+                "statusDDL": {
+                    "active": "Active",
+                    "inactive": "Inactive"
+                },
+                "productOrServiceCategoryDDL": {
+                    "product": "Product",
+                    "service": "Service",
+                    "product_and_service": "Product And Service"
+                },
+                "paymentTermTypeDDL": {
+                    "pia": "Payment In Advance",
+                    "net": "Payment In X Days After Invoice Date",
+                    "eom": "End Of Month",
+                    "cod": "Cash On Delivery",
+                    "cnd": "Cash Next Delivery",
+                    "cbs": "Cash Before Shipment"
+                },
+                "yesNoDDL": {
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "productTypeDDL": {
+                    "raw": "Raw Material",
+                    "wip": "Work In Progress",
+                    "fg": "Finished Good",
+                    "svc": "Service"
+                }
+            }
+        },
+        "top-bar": {
+            "profile_ddl": {
+                "profile": "Profile",
+                "inbox": "Inbox",
+                "activity": "Activity",
+                "logout": "Logout"
+            }
+        },
+        "data-list": {
+            "print": "Print",
+            "exportToExcel": "Export to Excel",
+            "exportToPDF": "Export to PDF",
+            "placeholderSearch": "Search...",
+            "columnActions": "ACTIONS",
+            "deleteConfirmTitle": "Are you sure",
+            "deleteConfirmText": "Do you really want to delete these records?",
+            "deleteConfirmCancel": "Cancel",
+            "deleteConfirmDelete": "Delete",
+            "showing": "Showing",
+            "to": "to",
+            "of": "of",
+            "entries": "entries",
+            "search": "Search...",
+            "view": "View",
+            "edit": "Edit",
+            "delete": "Delete",
+            "delete_confirmation": {
+                "title": "Confirmation",
+                "desc_1": "Do you really want to delete these records?",
+                "desc_2": "This process cannot be undone.",
+                "delete": "Delete",
+                "cancel": "Cancel"
+            },
+            "data_not_found": "Data Not Found"
+        }
+    },
+    "views": {
+        "register": {
+            "title": "Register",
+            "fields": {
+                "name": "Full name",
+                "email": "Email",
+                "password": "Password",
+                "password_confirmation": "Confirm password",
+                "agree_1": "I agree to terms ",
+                "agree_2": "& conditions",
+                "already_member": "I already have a membership",
+                "terms_and_cond": "Terms & Condition"
+            }
+        },
+        "login": {
+            "title": "Login",
+            "fields": {
+                "email": "Email",
+                "password": "Password",
+                "remember_me": "Remember Me",
+                "forgot_pass": "Forgot Password",
+                "terms_and_cond": "Terms & Condition",
+                "privacy_policy": "Privacy Policy"
+            }
+        },
+        "reset_password": {
+            "email": {
+                "title": "Reset Password",
+                "page_title": "Reset Password",
+                "page_title_desc": "Please enter your email",
+                "fields": {
+                    "email": "Email"
+                }
+            },
+            "reset": {
+                "title": "Reset Password",
+                "page_title": "Reset Password",
+                "page_title_desc": "Please enter your new password",
+                "fields": {
+                    "email": "Email",
+                    "password": "Password",
+                    "password_confirmation": "Confirm password"
+                }
+            }
+        },
+        "inbox": {
+            "title": "Inbox",
+            "fields": {
+                "to": "To",
+                "subject": "Subject",
+                "message": "Message"
+            }
+        },
+        "profile": {
+            "title": "Profile",
+            "menu": {
+                "personal_information": "Personal Information",
+                "account_settings": "Account Settings",
+                "roles": "Roles",
+                "change_password": "Change Password"
+            },
+            "fields": {
+                "name": "Name",
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "address": "Address",
+                "city": "City",
+                "postal_code": "Postal Code",
+                "country": "Country",
+                "tax_id": "Tax ID",
+                "remarks": "Remarks",
+                "email": "Email",
+                "ic_num": "IC No.",
+                "settings":  {
+                    "theme": "Themes",
+                    "dateFormat": "Date Format",
+                    "timeFormat": "Time Format",
+                    "api_token": "API Token"
+                },
+                "change_password": {
+                    "current_password": "Current Password",
+                    "new_password": "New Password",
+                    "confirm_password": "Confirm Password"
+                }
+            },
+            "tooltip": {
+                "email_verified": "Email Verified"
+            }
+        },
+        "user": {
+            "page_title": "Users",
+            "table": {
+                "title": "User Lists",
+                "cols": {
+                    "name": "Name",
+                    "email": "Email",
+                    "roles": "Roles",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create User",
+                "edit": "Edit User",
+                "show": "Show User"
+            },
+            "fields": {
+                "name": "Name",
+                "email": "Email",
+                "roles": "Roles",
+                "picture": "Picture",
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "address": "Address",
+                "ic_num": "IC Number",
+                "country": "Country",
+                "remarks": "Remarks",
+                "status": "Status",
+                "tax_id": "Tax ID",
+                "postal_code": "Postal Code",
+                "city": "City",
+                "settings": {
+                    "settings": "Settings",
+                    "theme": "Themes",
+                    "dateFormat": "Date Format",
+                    "timeFormat": "Time Format",
+                    "apiToken": "API Token"
+                },
+                "reset_password": "Reset Password",
+                "email_reset_password": "Send Email"
+            }
+        },
+        "activity": {
+            "title": "Activity Log"
+        },
+        "product": {
+            "table": {
+                "title": "Product Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",    
+                    "brand": "Brand",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Product",
+                "edit": "Edit Product",
+                "show": "Show Product",
+                "delete": "Delete Product"
+            },
+            "fields": {
+                "code": "Code",
+                "product_group_id": "Group Name",
+                "brand_id": "Brand Name",
+                "name": "Name",
+                "taxable_supply": "Taxable Supply",
+                "standard_rated_supply": "Standard-Rated Supply",
+                "price_include_vat": "Price Include VAT",
+                "remarks": "Remarks",
+                "point": "Point",
+                "use_serial_number": "Use Serial Number",
+                "has_expiry_date": "Has Expiry Date",
+                "product_type": "Product Type",
+                "status": "Status",
+                "units": {
+                    "title": "Units",
+                    "table": {
+                        "cols": {
+                            "code": "Code",
+                            "unit": "Unit",
+                            "conversion_value": "Conversion Value",
+                            "is_base": "Base Unit",
+                            "is_primary": "Primary Unit"    
+                        }
+                    }
+                }
+            }
+        },
+        "supplier": {
+            "tabs": {
+                "supplier": "Supplier",
+                "poc": "Person In Charge",
+                "products": "Products"
+            },
+            "table": {
+                "title": "Supplier Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "poc": "Person In Charge",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Supplier",
+                "edit": "Edit Supplier",
+                "show": "Show Supplier",
+                "delete": "Delete Supplier"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "contact": "Contact",
+                "address": "Address",
+                "city": "City",
+                "taxable_enterprise": "Taxable Enterprise",
+                "payment_term_type": "Term of Payment",
+                "payment_term": "Payment Term",
+                "tax_id": "Tax ID",
+                "remarks": "Remarks",
+                "status": "Status",
+                "poc": {
+                    "label": "Person In Charge",
+                    "name": "Name",
+                    "email": "Email",
+                    "ic_num": "IC Number",
+                    "tax_id": "Tax ID"
+                },
+                "products": {
+                    "product_lists": "Product Lists",
+                    "table": {
+                        "cols": {
+                            "selected": "Selected",
+                            "main_product": "Main Product",
+                            "product_name": "Product Name"
+                        }
+                    }
+                }
+            }
+        },
+        "company": {
+            "table": {
+                "title": "Company Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "default": "Default",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Company",
+                "edit": "Edit Company",
+                "show": "Show Company",
+                "delete": "Delete Company"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "address": "Address",
+                "default": "Default",
+                "status": "Status"
+            }
+        },
+        "branch": {
+            "table": {
+                "title": "Branch Lists",
+                "cols": {
+                    "company": "Company",
+                    "code": "Code",
+                    "name": "Name",
+                    "is_main": "Main Branch",
+                    "remarks": "Remarks",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Branch",
+                "edit": "Edit Branch",
+                "show": "Show Branch",
+                "delete": "Delete Branch"
+            },
+            "fields": {
+                "company_id": "Company",
+                "code": "Code",
+                "name": "Name",
+                "address": "Address",
+                "city": "City",
+                "contact": "Contact",
+                "is_main" : "Main Branch",
+                "remarks": "Remarks",
+                "status": "Status"
+            }
+        },
+        "employee": {
+            "tabs": {
+                "employee": "Employee",
+                "access": "Access"
+            },
+            "table": {
+                "title": "Employee Lists",
+                "cols": {
+                    "company": "Company",
+                    "code": "Code",
+                    "name": "Name",
+                    "email": "Email",
+                    "join_date": "Join Date",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Employee",
+                "edit": "Edit Employee",
+                "show": "Show Employee",
+                "delete": "Delete Employee"
+            },
+            "fields": {
+                "company_id": "Company Name",
+                "code": "Code",
+                "name": "Name",
+                "email": "Email",
+                "img_path": "Image Path",
+                "address": "Address",
+                "city": "City",
+                "postal_code": "Postal Code",
+                "country": "Country",
+                "tax_id": "Tax ID",
+                "ic_num": "Ic Num",
+                "status": "Status",
+                "join_date": "Join Date",
+                "remarks": "Remarks",
+                "access": {
+                    "access_lists": "Access Lists",
+                    "table": {
+                        "cols": {
+                            "selected": "Selected",
+                            "available_access": "Available Access"
+                        }
+                    }
+                }
+            }
+        },
+        "warehouse": {
+            "table": {
+                "title": "Warehouse Lists",
+                "cols": {
+                    "company": "Company",
+                    "branch": "Branch",
+                    "code": "Code",
+                    "name": "Name",
+                    "remarks": "Remarks",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Warehouse",
+                "edit": "Edit Warehouse",
+                "show": "Show Warehouse",
+                "delete": "Delete Warehouse"
+            },
+            "fields": {
+                "company_id": "Company",
+                "branch_id": "Branch",
+                "code": "Code",
+                "name": "Name",
+                "address": "Address",
+                "city": "City",
+                "contact": "Contact",
+                "remarks": "Remarks",
+                "status": "Status"
+            }
+        },
+        "purchase_order": {
+            "tabs": {
+                "purchase_order": "Purchase Order",
+                "supplier": "Supplier",
+                "warehouse": "Warehouse"
+            },
+            "table": {
+                "list_table": {
+                    "title": "Purchase Order Lists",
+                    "cols": {
+                        "code": "Code",
+                        "po_date": "Date",
+                        "supplier": "Supplier",
+                        "shipping_date": "Shipping Date",
+                        "status": "Status"
+                    }
+                },
+                "item_table": {
+                    "cols": {
+                        "product_name": "Product Name",
+                        "quantity": "Quantity",
+                        "unit": "Unit",
+                        "price_unit": "Price",
+                        "total_price": "Total Price",
+                        "discount": "Discount"
+                    }
+                }
+            },
+            "actions": {
+                "create": "Create Purchase Order",
+                "edit": "Edit Purchase Order",
+                "show": "Show Purchase Order",
+                "delete": "Delete Purchase Order"
+            },
+            "fields": {
+                "supplier": "Supplier",
+                "invoice_no": "Invoice No",
+                "po_type": "Type",
+                "invoice_date": "Invoice Date",
+                "shipping_date": "Shipping Date",
+                "warehouse": "Warehouse",
+                "po_status": "Status"
+            }
+        }
+    }
+}

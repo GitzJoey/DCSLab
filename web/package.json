@@ -1,0 +1,44 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@left4code/tw-starter": "^3.1.35",
+    "@vee-validate/i18n": "^4.5.11",
+    "@vee-validate/rules": "^4.5.11",
+    "dayjs": "^1.11.3",
+    "laravel-echo": "^1.12.0",
+    "litepicker": "^2.0.12",
+    "lucide-vue-next": "^0.73.0",
+    "pinia": "^2.0.14",
+    "pusher-js": "^7.1.1-beta",
+    "simplebar": "^5.3.8",
+    "tippy.js": "^6.3.7",
+    "toastify-js": "^1.11.2",
+    "tom-select": "^1.7.8",
+    "vee-validate": "^4.5.11",
+    "vue": "^3.2.25",
+    "vue-i18n": "^9.1.10",
+    "vue-router": "^4.1.2",
+    "vue-router-multiguard": "^1.0.3",
+    "ziggy-js": "^1.4.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.2",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "autoprefixer": "^10.4.7",
+    "axios": "^0.27.2",
+    "cssnano": "^5.1.12",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.14",
+    "postcss-advanced-variables": "^3.0.1",
+    "postcss-import": "^14.1.0",
+    "tailwindcss": "^3.1.5",
+    "vite": "^2.9.9"
+  }
+}
