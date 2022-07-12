@@ -44,10 +44,10 @@
       <DropdownMenu class="w-56">
         <DropdownContent tag="div">
             <DropdownItem href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md" dusk="language-dropdown-item-english">
-              <img alt="English" :src="assetPath('us.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'en' }">English</span>
+              <img alt="English" src="@/assets/images/us.png" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'en' }">English</span>
             </DropdownItem>
             <DropdownItem href="" @click.prevent="switchLanguage('id')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md" dusk="language-dropdown-item-indonesia">
-              <img alt="Bahasa Indonesia" :src="assetPath('id.png')" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'id' }">Bahasa Indonesia</span>
+              <img alt="Bahasa Indonesia" src="@/assets/images/id.png" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'id' }">Bahasa Indonesia</span>
             </DropdownItem>
         </DropdownContent>
       </DropdownMenu>
@@ -57,7 +57,7 @@
 
     <Dropdown id="main-dropdown" class="intro-x w-8 h-8" dusk="profile-dropdown-button" v-else>
       <DropdownToggle tag="div" role="button" class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in">
-        <img alt="" :src="assetPath('profile.png')"/>
+        <img alt="" src="@/assets/images/profile.png"/>
       </DropdownToggle>
       <DropdownMenu class="w-56">
         <DropdownContent class="bg-primary text-white">
@@ -109,7 +109,6 @@
 <script setup>
 import { ref, watch, computed, inject } from "vue";
 import { switchLang, getLang } from "@/lang";
-import { assetPath } from "@/mixins";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";

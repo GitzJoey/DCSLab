@@ -17,4 +17,8 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
+Route::get('/home', function () {
+    return ['Welcome' => auth()->user()->name];
+})->middleware('auth');
+
 require __DIR__.'/auth.php';

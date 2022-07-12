@@ -2,7 +2,7 @@
   <div class="mobile-menu md:hidden" :class="{'mobile-menu--active': activeMobileMenu,}">
     <div class="mobile-menu-bar">
       <a href="" class="flex mr-auto">
-        <img alt="" class="w-6" src="/images/logo.svg" />
+        <img alt="" class="w-6" src="@/assets/images/logo.svg" />
       </a>
       <a href="javascript:;" class="mobile-menu-toggler">
         <BarChart2Icon class="w-8 h-8 text-white transform -rotate-90" @click="toggleMobileMenu" />

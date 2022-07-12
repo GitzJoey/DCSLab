@@ -80,17 +80,18 @@ const appName = import.meta.env.VITE_APP_NAME;
 //#region onMounted
 onMounted( async () => {
   dom("body").removeClass("main").removeClass("error-page").addClass("login");
-  authAxiosInstance.get('/sanctum/csrf-cookie');
 });
 //#endregion
 
 //#region Methods
-const onSubmit = (values, actions) => {
+const onSubmit = async (values, actions) => {
   var formData = new FormData(dom('#loginForm')[0]);
 
+  router.push({ name: 'side-menu-dashboard-maindashboard' });
+  await authAxiosInstance.get('/sanctum/csrf-cookie');
+
   authAxiosInstance.post('login', formData).then(response => {
-    console.log(response);
-    //router.push({ name: 'side-menu-dashboard-maindashboard' });
+    router.push({ name: 'side-menu-dashboard-maindashboard' });
   }).catch(e => {
     handleError(e);
   });

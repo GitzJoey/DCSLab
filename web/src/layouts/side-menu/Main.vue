@@ -8,7 +8,7 @@
       <div class="flex mt-[4.7rem] md:mt-0 overflow-hidden">
         <nav class="side-nav side-nav--simple" v-if="menuMode === 'simple'">
           <a href="" class="intro-x flex items-center pl-5 pt-4" @click.prevent="switchMenu">
-            <img alt="" class="w-6" :src="assetPath('logo.svg')" />
+            <img alt="" class="w-6" src="@/assets/images/logo.svg" />
           </a>
           <div class="side-nav__devider my-6"></div>
           <ul>
@@ -60,7 +60,7 @@
 
         <nav class="side-nav" v-if="menuMode === 'side'">
           <router-link :to="{ name: 'side-menu-dashboard-maindashboard' }" tag="a" class="intro-x flex items-center pl-5 pt-4 mt-3" event="" @click.native.prevent="switchMenu">
-            <img alt="" class="w-6" :src="assetPath('logo.svg')" />
+            <img alt="" class="w-6" src="@/assets/images/logo.svg" />
             <span class="hidden xl:block text-white text-lg ml-3">DCS<span class="font-medium">Lab</span></span>
           </router-link>
           <div class="side-nav__devider my-6"></div>
@@ -142,7 +142,6 @@ import { useRoute, useRouter } from "vue-router";
 import { helper as $h } from "@/utils/helper";
 import { getLang, switchLang } from "@/lang";
 import { useI18n } from "vue-i18n";
-import { assetPath } from "@/mixins";
 import { useSideMenuStore } from "@/stores/side-menu";
 import { useUserContextStore } from "@/stores/user-context";
 import TopBar from "@/components/top-bar/Main.vue";

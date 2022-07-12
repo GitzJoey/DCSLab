@@ -1,7 +1,3 @@
-function assetPath(assetName) {
-    return '@/assets/images/' + assetName;
-}
-
 function getCachedDDL(ddlname) {
     let dcslabSystems = sessionStorage.getItem('DCSLAB_SYSTEM') == null ? new Object() : JSON.parse(sessionStorage.getItem('DCSLAB_SYSTEM'));
     
@@ -16,4 +12,4 @@ function setCachedDDL(ddlname, value) {
     sessionStorage.setItem('DCSLAB_SYSTEM', JSON.stringify(dcslabSystems));
 }
 
-export { assetPath, getCachedDDL, setCachedDDL }
+export { getCachedDDL, setCachedDDL }

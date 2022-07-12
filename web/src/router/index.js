@@ -5,6 +5,9 @@ import Login from "@/views/login/Main.vue";
 import Register from "@/views/register/Main.vue";
 import ErrorPage from "@/views/error-page/Main.vue";
 
+import SideMenu from "@/layouts/side-menu/Main.vue";
+import MainDashboard from "@/views/dashboard/MainDashboard.vue";
+
 import RouteDashboard from "./route-dashboard";
 import RouteError from "./route-error";
 
@@ -24,7 +27,21 @@ const routes = [
         name: "register",
         component: Register,
     },
-    RouteDashboard,
+    {
+        path: '/dashboard',
+        component: SideMenu,
+        children: [
+            {
+                path: '/dashboard',
+                name: 'side-menu-dashboard-maindashboard',
+                component: MainDashboard,
+                meta: {
+                    remember: false,
+                    log_route: true 
+                }
+            },
+        ]
+    },
     RouteError,
     {
         path: "/error-page",

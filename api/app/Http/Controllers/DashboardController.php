@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tightenco\Ziggy\Ziggy;
 
 class DashboardController extends BaseController
 {
@@ -33,5 +34,10 @@ class DashboardController extends BaseController
         $menu = $this->dashboardService->createMenu($useCache);
 
         return $menu;
+    }
+
+    public function userZiggy(Request $request)
+    {
+        return response()->json(new Ziggy());
     }
 }
