@@ -10,7 +10,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref, provide, inject, computed, watch } from "vue";
+import { onMounted, ref, provide, computed, watch } from "vue";
 import { useUserContextStore } from "../../stores/user-context";
 //#endregion
 
@@ -45,23 +45,17 @@ const pusherNotificationMessage = ref('');
 
 //#region onMounted
 onMounted(() => {
-    if (typeof(Echo) !== 'undefined') listenPusherPublic(); 
+    
 });
 //#endregion
 
 //#region Methods
 const listenPusherPublic = () => {
-    Echo.channel('public-channel').listen('.event-public-pusher', (e) => { 
-        pusherNotificationToast('Beep...Beep!', e.message);
-    });
+
 }
 
 const listenPusherPrivate = (hId) => {
-    if (Echo.connector.channels.hasOwnProperty('private-' + 'channel-' + hId)) return;
 
-    Echo.private('channel-' + hId).listen('.event-private-pusher', (e) => { 
-        pusherNotificationToast('Message from ' + e.fromName, e.message);
-    });
 }
 
 const pusherNotificationToast = (title, message) => {
