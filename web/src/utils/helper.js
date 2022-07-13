@@ -142,6 +142,7 @@ const helpers = {
 
 const install = (app) => {
   app.config.globalProperties.$h = helpers;
+  app.provide('$h', helpers);
 };
 
 export { install as default, helpers as helper };

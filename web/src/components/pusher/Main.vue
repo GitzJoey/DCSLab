@@ -11,7 +11,7 @@
 <script setup>
 //#region Imports
 import { onMounted, ref, provide, computed, watch } from "vue";
-import { useUserContextStore } from "../../stores/user-context";
+import { useUserContextStore } from "@/stores/user-context";
 //#endregion
 
 //#region Declarations
@@ -45,7 +45,7 @@ const pusherNotificationMessage = ref('');
 
 //#region onMounted
 onMounted(() => {
-    //listenPusherPublic();
+    listenPusherPublic();
 });
 //#endregion
 
@@ -77,7 +77,7 @@ const pusherNotificationToast = (title, message) => {
 //#region Watcher
 watch(
   userContext, (newV, oldV) => {
-    //if(oldV.hId != newV.hId) listenPusherPrivate(newV.hId); 
+    if(oldV.hId != newV.hId) listenPusherPrivate(newV.hId); 
 });
 //#endregion
 </script>
