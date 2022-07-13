@@ -45,17 +45,25 @@ const pusherNotificationMessage = ref('');
 
 //#region onMounted
 onMounted(() => {
-    
+    listenPusherPublic();
 });
 //#endregion
 
 //#region Methods
 const listenPusherPublic = () => {
+    var publicChannel = pusher.subscribe('public-channel');
 
+    publicChannel.bind('event-public-pusher', function(data) {
+        pusherNotificationToast('Beep...Beep!', data.message);
+    });
 }
 
 const listenPusherPrivate = (hId) => {
+    var privateChannel = pusher.subscribe('channel-' + hId);
 
+    privateChannel.bind('event-private-pusher', function(data) {
+        pusherNotificationToast('Message from ' + data.fromName, data.message);
+    });
 }
 
 const pusherNotificationToast = (title, message) => {
