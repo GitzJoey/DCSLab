@@ -45,7 +45,7 @@ const pusherNotificationMessage = ref('');
 
 //#region onMounted
 onMounted(() => {
-    listenPusherPublic();
+    //listenPusherPublic();
 });
 //#endregion
 
@@ -77,7 +77,7 @@ const pusherNotificationToast = (title, message) => {
 //#region Watcher
 watch(
   userContext, (newV, oldV) => {
-    if(oldV.hId != newV.hId) listenPusherPrivate(newV.hId); 
+    //if(oldV.hId != newV.hId) listenPusherPrivate(newV.hId); 
 });
 //#endregion
 </script>
