@@ -51,18 +51,16 @@ onMounted(() => {
 
 //#region Methods
 const listenPusherPublic = () => {
-    var publicChannel = pusher.subscribe('public-channel');
-
-    publicChannel.bind('event-public-pusher', function(data) {
-        pusherNotificationToast('Beep...Beep!', data.message);
+    Echo.channel('public-channel').listen('.event-public-pusher', (e) => { 
+        pusherNotificationToast('Beep...Beep!', e.message);
     });
 }
 
 const listenPusherPrivate = (hId) => {
-    var privateChannel = pusher.subscribe('channel-' + hId);
+    if (Echo.connector.channels.hasOwnProperty('private-' + 'channel-' + hId)) return;
 
-    privateChannel.bind('event-private-pusher', function(data) {
-        pusherNotificationToast('Message from ' + data.fromName, data.message);
+    Echo.private('channel-' + hId).listen('.event-private-pusher', (e) => { 
+        pusherNotificationToast('Message from ' + e.fromName, e.message);
     });
 }
 

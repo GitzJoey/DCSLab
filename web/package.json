@@ -12,6 +12,7 @@
     "@vee-validate/i18n": "^4.5.11",
     "@vee-validate/rules": "^4.5.11",
     "dayjs": "^1.11.3",
+    "laravel-echo": "^1.12.0",
     "litepicker": "^2.0.12",
     "lucide-vue-next": "^0.73.0",
     "pinia": "^2.0.14",
