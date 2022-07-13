@@ -1,10 +1,10 @@
 import SideMenu from "@/layouts/side-menu/Main.vue";
 
 import MainDashboard from "@/views/dashboard/MainDashboard.vue";
-//import Profile from "@/views/dashboard/Profile.vue";
-//import Inbox from "@/views/dashboard/Inbox.vue";
-//import Activity from "@/views/dashboard/Activity.vue";
-//import Demo from "@/views/dashboard/Demo.vue";
+import Profile from "@/views/dashboard/Profile.vue";
+import Inbox from "@/views/dashboard/Inbox.vue";
+import Activity from "@/views/dashboard/Activity.vue";
+import Demo from "@/views/dashboard/Demo.vue";
 
 const root = '/dashboard';
 
@@ -20,8 +20,7 @@ export default {
                 remember: false,
                 log_route: true 
             }
-        }
-/*        ,
+        },
         {
             path: root + '/demo',
             name: 'side-menu-dashboard-demo',
@@ -57,7 +56,6 @@ export default {
                 remember: true,
                 log_route: true 
             }
-        },
-*/        
+        }
     ]
 }

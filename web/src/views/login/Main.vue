@@ -87,7 +87,6 @@ onMounted( async () => {
 const onSubmit = async (values, actions) => {
   var formData = new FormData(dom('#loginForm')[0]);
 
-  router.push({ name: 'side-menu-dashboard-maindashboard' });
   await authAxiosInstance.get('/sanctum/csrf-cookie');
 
   authAxiosInstance.post('login', formData).then(response => {

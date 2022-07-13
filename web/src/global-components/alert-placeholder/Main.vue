@@ -27,13 +27,15 @@
 </template>
 
 <script setup>
-import { toRef } from "vue";
+import { toRef, inject } from "vue";
 
 const props = defineProps({
     alertType: { type: String, default: 'danger' },
     messages: { type: Object, default: {} },
     title: { type: String }
 });
+
+const _ = inject('$_');
 
 const isEmptyObject = (obj) => _.isEmpty(obj);
 
