@@ -55,8 +55,7 @@ class UnitServiceImpl implements UnitService
 
     public function list(
         int $companyId,
-        bool $isProduct = true,
-        bool $isService = true,
+        int $unitCategory,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -68,7 +67,7 @@ class UnitServiceImpl implements UnitService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$isProduct.'-'.$isService.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.$unitCategory.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) {
@@ -80,17 +79,18 @@ class UnitServiceImpl implements UnitService
 
             $unit = Unit::whereCompanyId($companyId);
 
-            if ($isProduct && !$isService) {
+            if ($unitCategory == UnitCategory::PRODUCTS->value) {
                 $unit = $unit->where([
                     ['category', '=', UnitCategory::PRODUCTS->value],
                     ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
-            } elseif ($isService && !$isProduct) {
+            } elseif ($unitCategory == UnitCategory::SERVICES->value) {
                 $unit = $unit->where([
                     ['category', '=', UnitCategory::SERVICES->value],
                     ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
-            } elseif ($isProduct && $isService) {
+            } elseif ($unitCategory == UnitCategory::PRODUCTS_AND_SERVICES->value) {
+                
             } else {
                 return null;
             }

@@ -7,8 +7,8 @@ use App\Models\Unit;
 use App\Models\User;
 use App\Models\Company;
 use Tests\ServiceTestCase;
+use App\Enums\UnitCategory;
 use App\Services\UnitService;
-use App\Enums\ProductCategory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -27,6 +27,8 @@ class UnitServiceTest extends ServiceTestCase
     #region create
     public function test_unit_service_call_create_expect_db_has_record()
     {
+        $anu = Unit::first()->toArray();
+        
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
@@ -64,15 +66,11 @@ class UnitServiceTest extends ServiceTestCase
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
 
-        do {
-            $isProduct = $this->faker->boolean();
-            $isService = $this->faker->boolean();
-        } while ($isProduct == false && $isService == false);
+        $unitCategory = $this->faker->randomElement(UnitCategory::toArrayValue());
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $isProduct,
-            isService: $isService,
+            unitCategory: $unitCategory,
             search: '',
             paginate: true,
             page: 1,
@@ -89,15 +87,11 @@ class UnitServiceTest extends ServiceTestCase
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
 
-        do {
-            $isProduct = $this->faker->boolean();
-            $isService = $this->faker->boolean();
-        } while ($isProduct == false && $isService == false);
+        $unitCategory = $this->faker->randomElement(UnitCategory::toArrayValue());
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $isProduct,
-            isService: $isService,
+            unitCategory: $unitCategory,
             search: '',
             paginate: false
         );
@@ -108,8 +102,12 @@ class UnitServiceTest extends ServiceTestCase
     public function test_unit_service_call_list_with_nonexistance_companyId_expect_empty_collection()
     {
         $maxId = Company::max('id') + 1;
+
+        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
+
         $result = $this->unitService->list(
             companyId: $maxId,
+            unitCategory: $unitCategory,
             search: '',
             paginate: false
         );
@@ -134,8 +132,11 @@ class UnitServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
 
+        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
+
         $result = $this->unitService->list(
-            companyId: $companyId, 
+            companyId: $companyId,
+            unitCategory: $unitCategory,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -158,8 +159,11 @@ class UnitServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
 
+        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
+        
         $result = $this->unitService->list(
             companyId: $companyId, 
+            unitCategory: $unitCategory,
             search: '',
             paginate: true,
             page: -1,
@@ -181,9 +185,12 @@ class UnitServiceTest extends ServiceTestCase
         Unit::factory()->count(25)->create([
             'company_id' => $companyId,
         ]);
+        
+        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->unitService->list(
             companyId: $companyId, 
+            unitCategory: $unitCategory,
             search: '',
             paginate: true,
             page: 1,
