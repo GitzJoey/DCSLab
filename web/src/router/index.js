@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
+import multiguard from "vue-router-multiguard";
+import * as guards from "@/router/guards";
+import axios from "@/axios";
+
+import { useUserContextStore } from "@/stores/user-context";
 
 import Root from "@/views/root/Main.vue";
-import Login from "@/views/login/Main.vue";
-import Register from "@/views/register/Main.vue";
-import ErrorPage from "@/views/error-page/Main.vue";
 
+import * as RouteAuth from "./route-auth";
 import RouteDashboard from "./route-dashboard";
-import RouteError from "./route-error";
+import RouteCompany from "./route-company";
+import * as RouteError from "./route-error";
 
 const routes = [
     {
@@ -14,29 +18,15 @@ const routes = [
         name: "root",
         component: Root,
     },
-    {
-        path: "/login",
-        name: "login",
-        component: Login    
-    },
-    {
-        path: "/register",
-        name: "register",
-        component: Register,
-    },
-    {
-        path: "/error-page",
-        name: "error-page",
-        component: ErrorPage,
-    },
-    {
-        path: "/:pathMatch(.*)*",
-        component: ErrorPage,
-    },
 ];
 
+routes.push(RouteAuth.login());
+routes.push(RouteAuth.register());
 routes.push(RouteDashboard);
-routes.push(RouteError);
+routes.push(RouteCompany);
+routes.push(RouteError.dashboardError());
+routes.push(RouteError.pageError());
+routes.push(RouteError.anyMatch());
 
 const router = createRouter({
     history: createWebHistory(), 
@@ -44,6 +34,38 @@ const router = createRouter({
     scrollBehavior(to, from, savedPosition) {
         return savedPosition || { left: 0, top: 0 };
     },
+});
+
+router.beforeEach(async (to, from, next) => {
+    if (to.matched.some(r => r.meta.skipBeforeEach) && to.meta.skipBeforeEach) {
+        next();
+        return;
+    }
+
+    const userContextStore = useUserContextStore();
+    if (userContextStore.userContext.name === undefined) {
+        next();
+        return;
+    }
+
+    multiguard([
+        guards.userHasRoles(to, userContextStore.userContext, next),
+        guards.userHasPermissions(to, userContextStore.userContext, next)
+    ]);
+
+    next();
+});
+
+router.afterEach((to, from) => {
+    if (to.matched.some(r => r.meta.log_route)) {
+        axios.post('/api/post/dashboard/core/activity/log/route', {
+            to: to.name,
+            params: to.params
+        }).catch(e => { });    
+    }
+
+    if (to.matched.some(r => r.meta.remember))
+        sessionStorage.setItem('DCSLAB_LAST_ROUTE', to.name);
 });
 
 export default router;
