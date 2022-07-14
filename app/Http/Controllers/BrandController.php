@@ -20,6 +20,43 @@ class BrandController extends BaseController
         $this->brandService = $brandService;
     }
 
+    public function store(BrandRequest $brandRequest)
+    {
+        $request = $brandRequest->validated();
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->brandService->generateUniqueCode();
+            } while (!$this->brandService->isUniqueCode($code, $company_id));
+        } else {
+            if (!$this->brandService->isUniqueCode($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $brandArr = [
+            'code' => $code,
+            'company_id' => $request['company_id'],
+            'name' => $request['name'],
+        ];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->brandService->create($brandArr);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
     public function list(BrandRequest $brandRequest)
     {
         $request = $brandRequest->validated();
@@ -74,43 +111,6 @@ class BrandController extends BaseController
 
             return $response;
         }
-    }
-
-    public function store(BrandRequest $brandRequest)
-    {
-        $request = $brandRequest->validated();
-
-        $company_id = $request['company_id'];
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->brandService->generateUniqueCode();
-            } while (!$this->brandService->isUniqueCode($code, $company_id));
-        } else {
-            if (!$this->brandService->isUniqueCode($code, $company_id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $brandArr = [
-            'code' => $code,
-            'company_id' => $request['company_id'],
-            'name' => $request['name'],
-        ];
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->brandService->create($brandArr);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Brand $brand, BrandRequest $brandRequest)

@@ -2,12 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ProductCategory;
 use App\Models\Brand;
 use App\Rules\isValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Enum;
 use Vinkla\Hashids\Facades\Hashids;
 
 class BrandRequest extends FormRequest
