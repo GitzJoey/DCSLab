@@ -1,10 +1,10 @@
 import SideMenu from "@/layouts/side-menu/Main.vue";
 
-import AdminUser from "@/views/administrator/User";
+import AdminUser from "@/views/administrator/User.vue";
 
-import DBBackup from "@/views/dev/DBBackup";
-import Ex1 from "@/views/dev/Ex1";
-import Ex2 from "@/views/dev/Ex2";
+import DBBackup from "@/views/dev/DBBackup.vue";
+import Ex1 from "@/views/dev/Ex1.vue";
+import Ex2 from "@/views/dev/Ex2.vue";
 
 const root = '/dashboard';
 

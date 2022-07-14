@@ -10,6 +10,9 @@ import Root from "@/views/root/Main.vue";
 import * as RouteAuth from "./route-auth";
 import RouteDashboard from "./route-dashboard";
 import RouteCompany from "./route-company";
+import RouteProduct from "./route-product";
+import RoutePurchaseOrder from "./route-purchaseorder";
+import RouteAdministrator from "./route-admin";
 import * as RouteError from "./route-error";
 
 const routes = [
@@ -24,6 +27,9 @@ routes.push(RouteAuth.login());
 routes.push(RouteAuth.register());
 routes.push(RouteDashboard);
 routes.push(RouteCompany);
+routes.push(RouteAdministrator.Admin())
+routes.push(RouteAdministrator.DevTool())
+routes.push(RouteAdministrator.Example())
 routes.push(RouteError.dashboardError());
 routes.push(RouteError.pageError());
 routes.push(RouteError.anyMatch());
