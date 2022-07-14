@@ -1,11 +1,20 @@
 import ZiggyJS from "ziggy-js";
+import axios from "@/axios";
+import _ from "lodash";
 
-//const response = await fetch('http://localhost:8000/api/get/dashboard/core/user/ziggy');
-//console.log(response);
-//const Ziggy = { } ;//await response.toJson();
+var Ziggy = {};
 
-function route(name, params) {
-    //return ZiggyJS(name, params, undefined, Ziggy);
+const loadZiggyRoute = async () => {
+    let response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/get/dashboard/core/user/ziggy');
+    
+    if (response.status === 200)
+        Ziggy = response.data;
 }
 
-export { route }
+const route = (name, params) => {
+    if (_.isEmpty(Ziggy)) return '';
+
+    return ZiggyJS(name, params, undefined, Ziggy);
+}
+
+export { route as default, loadZiggyRoute }

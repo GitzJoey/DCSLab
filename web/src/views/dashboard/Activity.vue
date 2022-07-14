@@ -67,7 +67,7 @@
 //#region Imports
 import { onMounted, ref } from "vue";
 import axios from "@/axios";
-import { route } from "@/ziggy";
+import route from "@/ziggy";
 import { useI18n } from "vue-i18n";
 //#endregion
 

@@ -65,7 +65,8 @@
                                         <label class="form-label" for="inputImg"></label>
                                         <div class="form-inline">                                            
                                             <div class="flex-1">
-                                                <img alt="" class="my-1" :src="retrieveImage">
+                                                <img alt="" class="my-1" src="@/assets/images/def-user.png" v-if="retrieveImage === ''" />
+                                                <img alt="" class="my-1" :src="retrieveImage" v-else />
                                                 <input type="file" class="h-full w-full" id="inputImg" name="img_path" data-toggle="custom-file-input" v-on:change="handleUpload" />
                                             </div>
                                         </div>
@@ -248,7 +249,7 @@ import { computed, inject, onMounted, ref } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { helper } from "@/utils/helper";
-import { route } from "@/ziggy";
+import route from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import { useSideMenuStore } from "@/stores/side-menu";
@@ -287,7 +288,7 @@ const retrieveImage = computed(() => {
             return '/storage/' + userContext.value.profile.img_path;
         }
     } else {
-        return './images/def-user.png';
+        return '';
     }
 });
 //#endregion

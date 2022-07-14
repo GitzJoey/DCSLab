@@ -153,6 +153,7 @@ import BackToTop from "@/components/back-to-top/Main.vue";
 import Pusher from "@/components/pusher/Main.vue";
 import { linkTo, nestedMenu, enter, leave } from "./index";
 import dom from "@left4code/tw-starter/dist/js/dom";
+import { loadZiggyRoute } from "@/ziggy";
 
 const { t } = useI18n();
 
@@ -199,11 +200,16 @@ window.addEventListener('scroll', handlescroll);
 onMounted(async () => {
   dom("body").removeClass("error-page").removeClass("login").addClass("main");
   
+  toggleScreenMask(true);
+
   await userContextStore.fetchUserContext();
-  sideMenuStore.fetchMenu();
-  
+  await sideMenuStore.fetchMenu();
+  await loadZiggy();
+
   localeSetup();
   goToLastRoute();
+
+  toggleScreenMask(false);
 });
 
 onUnmounted(() => {
@@ -254,6 +260,10 @@ const popNotificationToast = (message) => {
     popNotificationMessage.value = message;
     popNotification.value.showToast();
 } 
+
+const loadZiggy = async () => {
+    await loadZiggyRoute();
+}
 
 watch(
   computed(() => route.path),
