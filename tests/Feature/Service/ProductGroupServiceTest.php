@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Service;
 
+use App\Enums\ProductGroupCategory;
 use Exception;
 use App\Models\User;
 use App\Models\Company;
@@ -62,15 +63,11 @@ class ProductGroupServiceTest extends ServiceTestCase
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
 
-        do {
-            $isProduct = $this->faker->boolean();
-            $isService = $this->faker->boolean();
-        } while ($isProduct == false && $isService == false);
+        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $isProduct,
-            isService: $isService,
+            category: $category,
             search: '',
             paginate: true,
             page: 1,
@@ -87,15 +84,11 @@ class ProductGroupServiceTest extends ServiceTestCase
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
 
-        do {
-            $isProduct = $this->faker->boolean();
-            $isService = $this->faker->boolean();
-        } while ($isProduct == false && $isService == false);
+        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            isProduct: $isProduct,
-            isService: $isService,
+            category: $category,
             search: '',
             paginate: false
         );
@@ -106,8 +99,12 @@ class ProductGroupServiceTest extends ServiceTestCase
     public function test_productgroup_service_call_list_with_nonexistance_companyId_expect_empty_collection()
     {
         $maxId = Company::max('id') + 1;
+        
+        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
+
         $result = $this->productGroupService->list(
             companyId: $maxId,
+            category: $category,
             search: '',
             paginate: false
         );
@@ -131,9 +128,12 @@ class ProductGroupServiceTest extends ServiceTestCase
         ProductGroup::factory()->count(10)->create([
             'company_id' => $companyId,
         ]);
+        
+        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $companyId, 
+            category: $category,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -155,9 +155,12 @@ class ProductGroupServiceTest extends ServiceTestCase
         ProductGroup::factory()->count(25)->create([
             'company_id' => $companyId,
         ]);
+        
+        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $companyId, 
+            category: $category,
             search: '',
             paginate: true,
             page: -1,
@@ -179,9 +182,12 @@ class ProductGroupServiceTest extends ServiceTestCase
         ProductGroup::factory()->count(25)->create([
             'company_id' => $companyId,
         ]);
+        
+        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $companyId, 
+            category: $category,
             search: '',
             paginate: true,
             page: 1,
