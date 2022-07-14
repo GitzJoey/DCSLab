@@ -63,11 +63,11 @@ class ProductGroupServiceTest extends ServiceTestCase
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
 
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
+        $productGroupCategory = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            category: $category,
+            productGroupCategory: $productGroupCategory,
             search: '',
             paginate: true,
             page: 1,
@@ -84,11 +84,11 @@ class ProductGroupServiceTest extends ServiceTestCase
                             ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
                     ->create();
 
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
+        $productGroupCategory = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $user->companies->first()->id,
-            category: $category,
+            productGroupCategory: $productGroupCategory,
             search: '',
             paginate: false
         );
@@ -100,11 +100,11 @@ class ProductGroupServiceTest extends ServiceTestCase
     {
         $maxId = Company::max('id') + 1;
         
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
+        $productGroupCategory = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $maxId,
-            category: $category,
+            productGroupCategory: $productGroupCategory,
             search: '',
             paginate: false
         );
@@ -129,11 +129,11 @@ class ProductGroupServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
         
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
+        $productGroupCategory = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $companyId, 
-            category: $category,
+            productGroupCategory: $productGroupCategory,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -156,11 +156,11 @@ class ProductGroupServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
         
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
+        $productGroupCategory = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $companyId, 
-            category: $category,
+            productGroupCategory: $productGroupCategory,
             search: '',
             paginate: true,
             page: -1,
@@ -183,11 +183,11 @@ class ProductGroupServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
         
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
+        $productGroupCategory = ProductGroupCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->productGroupService->list(
             companyId: $companyId, 
-            category: $category,
+            productGroupCategory: $productGroupCategory,
             search: '',
             paginate: true,
             page: 1,
