@@ -1,5 +1,5 @@
 <template>
-    <Alert :show="!isEmptyObject(messages)" :class="{ 'alert-primary': alertType === 'primary', 'alert-secondary': alertType === 'secondary', 'alert-success': alertType === 'success', 'alert-warning': alertType === 'warning', 'alert-danger': alertType === 'danger' || alertType === '', 'alert-dark': alertType === 'dark', 'show mb-2':true }" dusk="alert-placeholder">
+    <Alert :show="!isEmptyObject(messages)" :class="{ 'alert-primary': alertType === 'primary', 'alert-secondary': alertType === 'secondary', 'alert-success': alertType === 'success', 'alert-warning': alertType === 'warning', 'alert-danger': alertType === 'danger' || alertType === '', 'alert-dark': alertType === 'dark', 'show mb-2':true }">
         <div class="flex flex-row">
             <div class="flex-none w-10">
                 <AlertCircleIcon class="w-6 h-6 mr-2" />
