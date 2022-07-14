@@ -114,6 +114,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useUserContextStore } from "@/stores/user-context";
 
+const _ = inject('$_');
 const { t } = useI18n();
 const router = useRouter();
 
