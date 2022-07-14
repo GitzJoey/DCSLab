@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\ProductCategory;
+use App\Enums\ProductGroupCategory;
 use App\Models\Company;
 use App\Models\Product;
 use App\Traits\ScopeableByCompany;
@@ -40,7 +40,7 @@ class ProductGroup extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'category' => ProductCategory::class,
+        'category' => ProductGroupCategory::class,
     ];
 
     public function hId() : Attribute

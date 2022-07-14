@@ -3,13 +3,12 @@
 namespace App\Services\Impls;
 
 use Exception;
-use App\Enums\UnitCategory;
 use App\Traits\CacheHelper;
 use App\Models\ProductGroup;
-use App\Enums\ProductCategory;
 use App\Actions\RandomGenerator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Enums\ProductGroupCategory;
 use Illuminate\Support\Facades\Log;
 use App\Services\ProductGroupService;
 use Illuminate\Support\Facades\Config;
@@ -78,8 +77,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function list(
         int $companyId,
-        bool $isProduct = true,
-        bool $isService = true,
+        ?int $category,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -91,7 +89,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$isProduct.'-'.$isService.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.$category.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) {
@@ -103,17 +101,18 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $productGroup = ProductGroup::whereCompanyId($companyId);
 
-            if ($isProduct && !$isService) {
+            if ($category == ProductGroupCategory::PRODUCTS->value) {
                 $productGroup = $productGroup->where([
-                    ['category', '=', UnitCategory::PRODUCTS->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', ProductGroupCategory::PRODUCTS->value],
+                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
-            } elseif ($isService && !$isProduct) {
+            } elseif ($category == ProductGroupCategory::SERVICES->value) {
                 $productGroup = $productGroup->where([
-                    ['category', '=', UnitCategory::SERVICES->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', ProductGroupCategory::SERVICES->value],
+                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
-            } elseif ($isProduct && $isService) {
+            } elseif ($category == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
+                
             } else {
                 return null;
             }
