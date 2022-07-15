@@ -9,8 +9,8 @@ import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
 import { useUserContextStore } from "@/stores/user-context";
-import DataList from "@/global-components/data-list/Main";
-import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import DataList from "@/global-components/data-list/Main.vue";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 

@@ -66,11 +66,11 @@ class UnitServiceTest extends ServiceTestCase
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
 
-        $unitCategory = $this->faker->randomElement(UnitCategory::toArrayValue());
+        $category = $this->faker->randomElement(UnitCategory::toArrayValue());
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            unitCategory: $unitCategory,
+            category: $category,
             search: '',
             paginate: true,
             page: 1,
@@ -87,11 +87,11 @@ class UnitServiceTest extends ServiceTestCase
                             ->has(Unit::factory()->count(20), 'units'), 'companies')
                     ->create();
 
-        $unitCategory = $this->faker->randomElement(UnitCategory::toArrayValue());
+        $category = $this->faker->randomElement(UnitCategory::toArrayValue());
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            unitCategory: $unitCategory,
+            category: $category,
             search: '',
             paginate: false
         );
@@ -103,11 +103,11 @@ class UnitServiceTest extends ServiceTestCase
     {
         $maxId = Company::max('id') + 1;
 
-        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
+        $category = UnitCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->unitService->list(
             companyId: $maxId,
-            unitCategory: $unitCategory,
+            category: $category,
             search: '',
             paginate: false
         );
@@ -132,11 +132,11 @@ class UnitServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
 
-        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
+        $category = UnitCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->unitService->list(
             companyId: $companyId,
-            unitCategory: $unitCategory,
+            category: $category,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -159,11 +159,11 @@ class UnitServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
 
-        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
+        $category = UnitCategory::PRODUCTS_AND_SERVICES->value;
         
         $result = $this->unitService->list(
             companyId: $companyId, 
-            unitCategory: $unitCategory,
+            category: $category,
             search: '',
             paginate: true,
             page: -1,
@@ -186,11 +186,11 @@ class UnitServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
         
-        $unitCategory = UnitCategory::PRODUCTS_AND_SERVICES->value;
+        $category = UnitCategory::PRODUCTS_AND_SERVICES->value;
 
         $result = $this->unitService->list(
             companyId: $companyId, 
-            unitCategory: $unitCategory,
+            category: $category,
             search: '',
             paginate: true,
             page: 1,

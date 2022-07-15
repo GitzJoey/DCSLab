@@ -1,15 +1,15 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.company.table.title')" :data="companyList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
-            <template v-slot:table="tableProps">
+        <DataList :title="t('views.unit.table.title')" :data="unitList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+           <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2" aria-describedby="">
                     <thead>
                         <tr>
-                            <th class="whitespace-nowrap">{{ t('views.company.table.cols.code') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.company.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.company.table.cols.default') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.company.table.cols.status') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.code') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.name') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.description') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.category') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
                     </thead>
@@ -18,13 +18,11 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
+                                <td>{{ item.description }}</td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.default" />
-                                    <XIcon v-else />
-                                </td>
-                                <td>
-                                    <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
-                                    <XIcon v-if="item.status === 'INACTIVE'" />
+                                    <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
+                                    <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
+                                    <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
@@ -41,31 +39,25 @@
                                 </td>
                             </tr>
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
-                                <td colspan="5">
+                                <td colspan="6">
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.code') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.code') }}</div>
                                         <div class="flex-1">{{ item.code }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.name') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.name') }}</div>
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.address') }}</div>
-                                        <div class="flex-1">{{ item.address }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.description') }}</div>
+                                        <div class="flex-1">{{ item.description }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.default') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.category') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.default">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.status') }}</div>
-                                        <div class="flex-1">
-                                            <span v-if="item.status === 'ACTIVE'">{{ t('components.dropdown.values.statusDDL.active') }}</span>
-                                            <span v-if="item.status === 'INACTIVE'">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
+                                            <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
+                                            <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -96,43 +88,48 @@
 
     <div class="intro-y box" v-if="mode !== 'list'">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.company.actions.create') }}</h2>
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.company.actions.edit') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.unit.actions.create') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.unit.actions.edit') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="companyForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
+            <VeeForm id="unitForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
+                    <!-- #region Code -->
                     <div class="mb-3">
-                        <label for="inputCode" class="form-label">{{ t('views.company.fields.code') }}</label>
-                        <div class="flex item-centers">
-                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.company.fields.code')" :label="t('views.company.fields.code')" rules="required" @blur="reValidate(errors)" v-model="company.code" :readonly="mode === 'create' && company.code === '[AUTO]'" />
+                        <label for="inputCode" class="form-label">{{ t('views.unit.fields.code') }}</label>
+                        <div class="flex items-center">
+                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.unit.fields.code')" :label="t('views.unit.fields.code')" rules="required" @blur="reValidate(errors)" v-model="unit.code" :readonly="unit.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Name -->
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.company.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.company.fields.name')" :label="t('views.company.fields.name')" rules="required" @blur="reValidate(errors)" v-model="company.name" />
+                        <label for="inputName" class="form-label">{{ t('views.unit.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.unit.fields.name')" :label="t('views.unit.fields.name')" rules="required" @blur="reValidate(errors)" v-model="unit.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Description -->
                     <div class="mb-3">
-                        <label for="inputAddress" class="form-label">{{ t('views.company.fields.address') }}</label>
-                        <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.company.fields.address')" v-model="company.address" rows="3"></textarea>
+                        <label for="inputDescription" class="form-label">{{ t('views.unit.fields.description') }}</label>
+                        <textarea id="inputDescription" name="description" type="text" class="form-control" :placeholder="t('views.unit.fields.description')" v-model="unit.description" rows="3"></textarea>
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region Unit Category -->
                     <div class="mb-3">
-                        <label for="inputDefault" class="form-label">{{ t('views.company.fields.default') }}</label>
-                        <div class="form-switch mt-2">
-                            <input id="inputDefault" type="checkbox" class="form-check-input" name="default" v-model="company.default">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputStatus" class="form-label">{{ t('views.company.fields.status') }}</label>
-                        <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['status']}" id="inputStatus" name="status" rules="required" :label="t('views.company.fields.status')" v-model="company.status">
+                        <label for="category" class="form-label">{{ t('views.unit.fields.category') }}</label>
+                        <VeeField as="select" id="category" name="category" :class="{'form-control form-select':true, 'border-danger': errors['category']}" v-model="unit.category" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in unitCategoryDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
-                        <ErrorMessage name="status" class="text-danger" />
+                        <ErrorMessage name="category" class="text-danger" />
                     </div>
+                    <!-- #endregion -->                    
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -149,14 +146,13 @@
 </template>
 
 <script setup>
-//#region Vue Import
+//#region Imports
 import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
-import { useUserContextStore } from "@/stores/user-context";
-import { useSideMenuStore } from "@/stores/side-menu";
 import dom from "@left4code/tw-starter/dist/js/dom";
+import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main.vue";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 import { getCachedDDL, setCachedDDL } from "@/mixins";
@@ -169,7 +165,6 @@ const { t } = useI18n();
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
-const sideMenuStore = useSideMenuStore();
 //#endregion
 
 //#region Data - UI
@@ -182,24 +177,30 @@ const expandDetail = ref(null);
 //#endregion
 
 //#region Data - Views
-const companyList = ref({});
-const company = ref({
+const unitList = ref({});
+const unit = ref({
     code: '',
     name: '',
-    address: '',
-    default: false,
-    status: 'ACTIVE'
+    description: '',
+    category: '',
 });
-const statusDDL = ref([]);
+const companyDDL = ref([]);
+const unitCategoryDDL = ref([]);
 //#endregion
 
 //#region onMounted
 onMounted(() => {
-    getAllCompany({ page: 1 });
+    if (selectedUserCompany.value !== '') {
+        getAllUnits({ page: 1 });
+        getDDLSync();
+    } else  {
+        
+    }
+
     getDDL();
 
     setMode();
-
+    
     loading.value = false;
 });
 
@@ -213,52 +214,62 @@ const setMode = () => {
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
 }
 
-const getAllCompany = (args) => {
-    companyList.value = {};
-    if (args.page === undefined) args.page = 1;    
-    if (args.pageSize === undefined) args.pageSize = 10;
+const getAllUnits = (args) => {
+    unitList.value = {};
+    let companyId = selectedUserCompany.value;
     if (args.search === undefined) args.search = '';
+    if (args.paginate === undefined) args.paginate = 1;
+    if (args.page === undefined) args.page = 1;
+    if (args.pageSize === undefined) args.pageSize = 10;
 
-    axios.get(route('api.get.db.company.company.list', {
-        "search": args.search,
+    axios.get(route('api.get.db.product.unit.list', {
+        "companyId": companyId,
+        "category": "PRODUCTS_AND_SERVICES",
         "page": args.page,
-        "perPage": args.pageSize
+        "perPage": args.pageSize,
+        "search": args.search
     })).then(response => {
-        companyList.value = response.data;
+        unitList.value = response.data;
         loading.value = false;
     });
 }
 
 const getDDL = () => {
-    if (getCachedDDL('statusDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-            statusDDL.value = response.data;
-            setCachedDDL('statusDDL', response.data);
-        });    
+    if (getCachedDDL('unitCategoryDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.productgroupcategories')).then(response => {
+            unitCategoryDDL.value = response.data;
+            setCachedDDL('unitCategoryDDL', response.data);
+        });
     } else {
-        statusDDL.value = getCachedDDL('statusDDL');
+        unitCategoryDDL.value = getCachedDDL('unitCategoryDDL');
     }
+}
+
+const getDDLSync = () => {
+    axios.get(route('api.get.db.company.company.read.all_active', {
+            companyId: selectedUserCompany.value,
+            paginate: false
+    })).then(response => {
+        companyDDL.value = response.data;
+    });
 }
 
 const onSubmit = (values, actions) => {
     loading.value = true;
 
-    var formData = new FormData(dom('#companyForm')[0]); 
-
+    var formData = new FormData(dom('#unitForm')[0]);
+    formData.append('company_id', selectedUserCompany.value);
+    
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.company.company.save'), formData).then(response => {
+        axios.post(route('api.post.db.product.unit.save'), formData).then(response => {
             backToList();
-            userContextStore.fetchUserContext();
-            sideMenuStore.fetchMenu();
         }).catch(e => {
             handleError(e, actions);
         }).finally(() => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        formData.append('company_id', selectedUserCompany.value);
-
-        axios.post(route('api.post.db.company.company.edit', company.value.uuid), formData).then(response => {
+        axios.post(route('api.post.db.product.unit.edit', unit.value.uuid), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -295,13 +306,12 @@ const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptyCompany = () => {
+const emptyUnit = () => {
     return {
         code: '[AUTO]',
         name: '',
-        address: '',
-        default: false,
-        status: 'ACTIVE'
+        description: '',
+        category: '',
     }
 }
 
@@ -313,30 +323,33 @@ const createNew = () => {
     mode.value = 'create';
     
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
-        company.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        unit.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
-        company.value = emptyCompany();
+        unit.value = emptyUnit();
+
+        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+        // if (c) unit.value.company.hId = c.hId;
     }
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
-    getAllCompany({page, pageSize, search});
+    getAllUnits({page, pageSize, search});
 }
 
 const editSelected = (index) => {
     mode.value = 'edit';
-    company.value = companyList.value.data[index];
+    unit.value = unitList.value.data[index];
 }
 
 const deleteSelected = (index) => {
-    deleteId.value = companyList.value.data[index].uuid;
+    deleteId.value = unitList.value.data[index].uuid;
     deleteModalShow.value = true;
 }
 
 const confirmDelete = () => {
     deleteModalShow.value = false;
-    axios.post(route('api.post.db.company.company.delete', deleteId.value)).then(response => {
+    axios.post(route('api.post.db.product.unit.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
         alertErrors.value = e.response.data;
@@ -354,12 +367,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-
-    if (companyList.value.data.length == 0) {
-        userContextStore.fetchUserContext();
-    }
-
-    getAllCompany({ page: companyList.value.meta.current_page, pageSize: companyList.value.meta.per_page });
+    getAllUnits({ page: unitList.value.meta.current_page, pageSize: unitList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {
@@ -371,8 +379,8 @@ const toggleDetail = (idx) => {
 }
 
 const generateCode = () => {
-    if (company.value.code === '[AUTO]') company.value.code = '';
-    else company.value.code = '[AUTO]'
+    if (unit.value.code === '[AUTO]') unit.value.code = '';
+    else  unit.value.code = '[AUTO]'
 }
 //#endregion
 
@@ -380,7 +388,14 @@ const generateCode = () => {
 //#endregion
 
 //#region Watcher
-watch(company, (newV) => {
+watch(selectedUserCompany, () => {
+    if (selectedUserCompany.value !== '') {
+        getAllUnits({ page: 1 });
+        getDDLSync();
+    }
+});
+
+watch(unit, (newV) => {
     if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
 }, { deep: true });
 //#endregion

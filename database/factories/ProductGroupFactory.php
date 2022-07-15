@@ -23,7 +23,7 @@ class ProductGroupFactory extends Factory
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $this->faker->randomElement($this->productGroups),
-            'category' => $this->faker->randomElement(ProductGroupCategory::toArrayValue()),
+            'category' => $this->faker->randomElement(ProductGroupCategory::toArrayEnum()),
         ];
     }
 
