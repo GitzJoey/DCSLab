@@ -111,8 +111,8 @@ class EmployeeServiceImpl implements EmployeeService
 
             $relationship = ['company', 'user.profile', 'employeeAccesses.branch'];
 
-            $employee = Employee::with('company', 'employeeAccesses.branch')
-            ->whereCompanyId($companyId);
+            $employee = Employee::with($relationship)
+                            ->whereCompanyId($companyId);
 
             if (empty($search)) {
                 $employee = $employee->latest();
@@ -171,7 +171,6 @@ class EmployeeServiceImpl implements EmployeeService
 
             $employee->update([
                 'code' => $employeeArr['code'],
-                'join_date' => $employeeArr['join_date'],
                 'status' => $employeeArr['status'],
             ]);
 

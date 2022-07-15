@@ -91,7 +91,9 @@ class EmployeeRequest extends FormRequest
                     'status' => [new Enum(RecordStatus::class)],
                 ];
 
-                return array_merge($rules_store, $nullableArr);
+                $employeeRequest = array_merge($rules_store, $nullableArr);
+
+                return $employeeRequest;
             case 'update':
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],

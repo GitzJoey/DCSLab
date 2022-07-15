@@ -21,6 +21,86 @@ class EmployeeController extends BaseController
         $this->employeeService = $employeeService;
     }
 
+    public function store(EmployeeRequest $employeeRequest)
+    {
+        $request = $employeeRequest->validated();
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->employeeService->generateUniqueCode();
+            } while (!$this->employeeService->isUniqueCode($code, $company_id));
+        } else {
+            if (!$this->employeeService->isUniqueCode($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $employeeArr = [
+            'company_id' => $company_id,
+            'code' => $code,
+            'join_date' => $request['join_date'],
+            'status' => $request['status'],
+        ];
+
+        $userArr = [
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => 'testing'
+        ];
+
+        $first_name = '';
+        $last_name = '';
+        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
+            $pieces = explode(" ", $request['name']);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+        } else {
+            $first_name = $request['name'];
+        }
+
+        $profileArr = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'postal_code' => $request['postal_code'],
+            'country' => $request['country'],
+            'tax_id' => $request['tax_id'],
+            'ic_num' => $request['ic_num'],
+            'remarks' => $request['remarks'],
+        ];
+
+        $accessesArr = [];
+        if (!empty($request['accessBranchIds'])) {
+            for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
+                array_push($accessesArr, [
+                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
+                ]);
+            }
+        }
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->employeeService->create(
+                $employeeArr,
+                $userArr,
+                $profileArr,
+                $accessesArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
     public function list(EmployeeRequest $employeeRequest)
     {
         $request = $employeeRequest->validated();
@@ -78,85 +158,6 @@ class EmployeeController extends BaseController
         }
     }
 
-    public function store(EmployeeRequest $employeeRequest)
-    {
-        $request = $employeeRequest->validated();
-
-        $company_id = $request['company_id'];
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->employeeService->generateUniqueCode();
-            } while (!$this->employeeService->isUniqueCode($code, $company_id));
-        } else {
-            if (!$this->employeeService->isUniqueCode($code, $company_id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $employeeArr = [
-            'company_id' => $company_id,
-            'code' => $code,
-            'join_date' => $request['join_date'],
-            'status' => $request['status'],
-        ];
-
-        $userArr = [
-            'name' => $request['name'],
-            'email' => $request['email'],
-        ];
-
-        $first_name = '';
-        $last_name = '';
-        if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
-            $pieces = explode(" ", $request['name']);
-            $first_name = $pieces[0];
-            $last_name = $pieces[1];
-        } else {
-            $first_name = $request['name'];
-        }
-
-        $profileArr = [
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'address' => $request['address'],
-            'city' => $request['city'],
-            'postal_code' => $request['postal_code'],
-            'country' => $request['country'],
-            'tax_id' => $request['tax_id'],
-            'ic_num' => $request['ic_num'],
-            'remarks' => $request['remarks'],
-        ];
-
-        $accessesArr = [];
-        if (!empty($request['accessBranchIds'])) {
-            for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
-                array_push($accessesArr, [
-                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
-                ]);
-            }
-        }
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->employeeService->create(
-                $employeeArr,
-                $userArr,
-                $profileArr,
-                $accessesArr
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
     public function update(Employee $employee, EmployeeRequest $employeeRequest)
     {
         $request = $employeeRequest->validated();
@@ -178,13 +179,11 @@ class EmployeeController extends BaseController
 
         $employeeArr = [
             'code' => $code,
-            'join_date' => $request['join_date'],
             'status' => $request['status'],
         ];
 
         $userArr = [
-            'name' => $request['name'],
-            'email' => $request['email'],
+            'name' => $request['name']
         ];
 
         $first_name = '';

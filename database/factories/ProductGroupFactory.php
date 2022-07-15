@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Actions\RandomGenerator;
-use App\Enums\ProductCategory;
+use App\Enums\ProductGroupCategory;
 use App\Models\ProductGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,7 +23,7 @@ class ProductGroupFactory extends Factory
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $this->faker->randomElement($this->productGroups),
-            'category' => $this->faker->randomElement(ProductCategory::toArrayValue()),
+            'category' => $this->faker->randomElement(ProductGroupCategory::toArrayValue()),
         ];
     }
 

@@ -22,53 +22,56 @@ class ProductTableSeeder extends Seeder
     public function run($productPerCompany = 5, $onlyThisCompanyId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            $c = Company::find($onlyThisCompanyId);
+            $company = Company::find($onlyThisCompanyId);
 
-            if ($c) {
-                $companies = (new Collection())->push($c->id);
+            if ($company) {
+                $companyIds = (new Collection())->push($company->id);
             } else {
-                $companies = Company::get()->pluck('id');
+                $companyIds = Company::get()->pluck('id');
             }
         } else {
-            $companies = Company::get()->pluck('id');
+            $companyIds = Company::get()->pluck('id');
         }
 
-        foreach ($companies as $c) {
+        foreach ($companyIds as $companyId) {
             for ($i = 0; $i < $productPerCompany; $i++) {
-                $pbId = Brand::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
-                $gId = ProductGroup::whereCompanyId($c)->inRandomOrder()->limit(1)->value('id');
+                $productGroupId = ProductGroup::whereCompanyId($companyId)->inRandomOrder()->limit(1)->value('id');
+                $brandId = Brand::whereCompanyId($companyId)->inRandomOrder()->limit(1)->value('id');
 
-                $prod = Product::factory()->make([
-                    'company_id' => $c,
-                    'product_group_id' => (new RandomGenerator())->randomTrueOrFalse() ? null : $gId,
-                    'brand_id' => $pbId,
+                $product = Product::factory()->make([
+                    'company_id' => $companyId,
+                    'product_group_id' => $productGroupId,
+                    'brand_id' => (new RandomGenerator())->randomTrueOrFalse() ? null : $brandId,
                 ]);
 
-                $prod->save();
+                $product->save();
 
-                $units = Unit::whereCompanyId($c)->get();
+                $units = Unit::whereCompanyId($companyId)->get();
                 $shuffled_units = $units->shuffle();
+                
+                $brandId = $product->brand_id;
+                if ($brandId) {
+                    $howManyUnitsPerProduct = (new RandomGenerator())->generateNumber(1, $units->count());
+                } else {
+                    $howManyUnitsPerProduct = 1;
+                }
 
-                $howmanyUnitsPerProduct = (new RandomGenerator())->generateNumber(1, $units->count());
+                $isbaseIndex = (new RandomGenerator())->generateNumber(0, $howManyUnitsPerProduct - 1);
+                $isPrimaryUnitIndex = (new RandomGenerator())->generateNumber(0, $howManyUnitsPerProduct - 1);
 
-                $isbaseIndex = (new RandomGenerator())->generateNumber(0, $howmanyUnitsPerProduct - 1);
-                $isPrimaryUnitIndex = (new RandomGenerator())->generateNumber(0, $howmanyUnitsPerProduct - 1);
+                for ($j = 0; $j < $howManyUnitsPerProduct; $j++) {
+                    $productUnit = new ProductUnit();
 
-                for ($j = 0; $j < $howmanyUnitsPerProduct; $j++) {
-                    $rUnitId = $shuffled_units[$j]->id;
+                    $productUnit->company_id = $companyId;
+                    $productUnit->code = (new RandomGenerator())->generateFixedLengthNumber(5);
+                    $productUnit->product_id = $product->id;
+                    $productUnit->unit_id = $shuffled_units[$j]->id;
+                    $productUnit->is_base = $j == $isbaseIndex ? 1 : 0;
+                    $productUnit->conversion_value = $j == $isbaseIndex ? 1 : (new RandomGenerator())->generateRandomOneZero(3);
+                    $productUnit->is_primary_unit = $j == $isPrimaryUnitIndex ? 1 : 0;
+                    $productUnit->remarks = '';
 
-                    $pu = new ProductUnit();
-
-                    $pu->company_id = $c;
-                    $pu->code = (new RandomGenerator())->generateFixedLengthNumber(5);
-                    $pu->product_id = $prod->id;
-                    $pu->unit_id = $rUnitId;
-                    $pu->is_base = $j == $isbaseIndex ? 1 : 0;
-                    $pu->conversion_value = $j == $isbaseIndex ? 1 : (new RandomGenerator())->generateRandomOneZero(3);
-                    $pu->is_primary_unit = $j == $isPrimaryUnitIndex ? 1 : 0;
-                    $pu->remarks = '';
-
-                    $prod->productUnits()->save($pu);
+                    $product->productUnits()->save($productUnit);
                 }
             }
         }

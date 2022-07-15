@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use App\Traits\EnumHelper;
 
-enum ProductCategory: int
+enum ProductGroupCategory: int
 {
     use EnumHelper;
 

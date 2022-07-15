@@ -42,7 +42,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [BranchController::class, 'list'])->name('.list');
                 Route::get('read/{branch:uuid}', [BranchController::class, 'read'])->name('.read');
 
-                Route::get('read/by/company/{company::uuid}', [BranchController::class, 'getBranchByCompany'])->name('.read.by_company');
+                Route::get('read/by/company/{company::uuid}', [BranchController::class, 'getBranchByCompany'])->name('.read.by.company');
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function () {
                 Route::get('read', [EmployeeController::class, 'list'])->name('.list');
@@ -129,6 +129,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
                 Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
                 Route::get('list/confirmation', [CommonController::class, 'getConfirmationDialog'])->name('.list.confirmationdialog');
+                Route::get('list/productgroupcategory', [CommonController::class, 'getProductGroupCategory'])->name('.list.productgroupcategories');
+                Route::get('list/unitcategory', [CommonController::class, 'getUnitCategory'])->name('.list.unitcategories');
             });
         });
     });

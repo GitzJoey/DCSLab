@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use App\Enums\ProductCategory;
 use App\Models\Company;
+use App\Enums\UnitCategory;
 use App\Models\ProductUnit;
+use Illuminate\Support\Str;
 use App\Traits\ScopeableByCompany;
+use Spatie\Activitylog\LogOptions;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Vinkla\Hashids\Facades\Hashids;
 
 class Unit extends Model
 {
@@ -42,7 +42,7 @@ class Unit extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'category' => ProductCategory::class,
+        'category' => UnitCategory::class,
     ];
 
     public function hId() : Attribute

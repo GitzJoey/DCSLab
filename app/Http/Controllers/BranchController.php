@@ -21,6 +21,53 @@ class BranchController extends BaseController
         $this->branchService = $branchService;
     }
 
+    public function store(BranchRequest $branchRequest)
+    {
+        $request = $branchRequest->validated();
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->branchService->generateUniqueCode();
+            } while (!$this->branchService->isUniqueCode($code, $company_id));
+        } else {
+            if (!$this->branchService->isUniqueCode($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $branchArr = [
+            'company_id' => $company_id,
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'contact' => $request['contact'],
+            'is_main' => $request['is_main'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status'],
+        ];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            if ($branchArr['is_main']) {
+                $this->branchService->resetMainBranch(companyId: $company_id);
+            }
+
+            $result = $this->branchService->create($branchArr);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
     public function list(BranchRequest $branchRequest)
     {
         $request = $branchRequest->validated();
@@ -96,53 +143,6 @@ class BranchController extends BaseController
 
             return $response;
         }
-    }
-
-    public function store(BranchRequest $branchRequest)
-    {
-        $request = $branchRequest->validated();
-
-        $company_id = $request['company_id'];
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->branchService->generateUniqueCode();
-            } while (!$this->branchService->isUniqueCode($code, $company_id));
-        } else {
-            if (!$this->branchService->isUniqueCode($code, $company_id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $branchArr = [
-            'company_id' => $company_id,
-            'code' => $code,
-            'name' => $request['name'],
-            'address' => $request['address'],
-            'city' => $request['city'],
-            'contact' => $request['contact'],
-            'is_main' => $request['is_main'],
-            'remarks' => $request['remarks'],
-            'status' => $request['status'],
-        ];
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            if ($branchArr['is_main']) {
-                $this->branchService->resetMainBranch(companyId: $company_id);
-            }
-
-            $result = $this->branchService->create($branchArr);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Branch $branch, BranchRequest $branchRequest)

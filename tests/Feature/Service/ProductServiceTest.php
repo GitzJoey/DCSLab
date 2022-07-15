@@ -11,7 +11,7 @@ use App\Models\Product;
 use Tests\ServiceTestCase;
 use App\Models\ProductUnit;
 use App\Models\ProductGroup;
-use App\Enums\ProductCategory;
+use App\Enums\ProductGroupCategory;
 use App\Services\ProductService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -51,8 +51,8 @@ class ProductServiceTest extends ServiceTestCase
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
         ->whereOr([
-            ['category', '=', ProductCategory::PRODUCTS->value],
-            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;
 
         $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -71,8 +71,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($i = 0; $i < $unitCount ; $i++) {
             $unitId = Unit::where('company_id', '=', $companyId)
                         ->whereOr([
-                            ['category', '=', ProductCategory::PRODUCTS->value], 
-                            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                         ])->inRandomOrder()->first()->id;
 
             $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
@@ -148,8 +148,8 @@ class ProductServiceTest extends ServiceTestCase
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
         ->whereOr([
-            ['category', '=', ProductCategory::SERVICES->value],
-            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+            ['category', '=', ProductGroupCategory::SERVICES->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;        
 
         $productArr = Product::factory()->make([
@@ -312,8 +312,8 @@ class ProductServiceTest extends ServiceTestCase
             for ($iCount = 0; $iCount < 10; $iCount++) {      
                 $productGroupId = ProductGroup::where('company_id', '=', $companyId)
                 ->whereOr([
-                    ['category', '=', ProductCategory::PRODUCTS->value],
-                    ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                    ['category', '=', ProductGroupCategory::PRODUCTS->value],
+                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                 ])->inRandomOrder()->first()->id;
         
                 $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -341,8 +341,8 @@ class ProductServiceTest extends ServiceTestCase
                 for ($i = 0; $i < $unitCount ; $i++) {
                     $unitId = Unit::where('company_id', '=', $companyId)
                                 ->whereOr([
-                                    ['category', '=', ProductCategory::PRODUCTS->value], 
-                                    ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                                    ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                                 ])->inRandomOrder()->first()->id;
         
                     $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
@@ -406,8 +406,8 @@ class ProductServiceTest extends ServiceTestCase
             for ($iCount = 0; $iCount < 10; $iCount++) {      
                 $productGroupId = ProductGroup::where('company_id', '=', $companyId)
                 ->whereOr([
-                    ['category', '=', ProductCategory::SERVICES->value],
-                    ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                    ['category', '=', ProductGroupCategory::SERVICES->value],
+                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                 ])->inRandomOrder()->first()->id;
         
                 if ($n == 0) {
@@ -470,8 +470,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($iCount = 0; $iCount < 10; $iCount++) {
             $productGroupId = ProductGroup::where('company_id', '=', $companyId)
             ->whereOr([
-                ['category', '=', ProductCategory::PRODUCTS->value],
-                ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                ['category', '=', ProductGroupCategory::PRODUCTS->value],
+                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
             ])->inRandomOrder()->first()->id;
     
             $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -490,8 +490,8 @@ class ProductServiceTest extends ServiceTestCase
             for ($i = 0; $i < $unitCount ; $i++) {
                 $unitId = Unit::where('company_id', '=', $companyId)
                             ->whereOr([
-                                ['category', '=', ProductCategory::PRODUCTS->value], 
-                                ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                                ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                             ])->inRandomOrder()->first()->id;
     
                 $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
@@ -553,8 +553,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($iCount = 0; $iCount < 10; $iCount++) {
             $productGroupId = ProductGroup::where('company_id', '=', $companyId)
             ->whereOr([
-                ['category', '=', ProductCategory::SERVICES->value],
-                ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                ['category', '=', ProductGroupCategory::SERVICES->value],
+                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
             ])->inRandomOrder()->first()->id;
     
             $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -611,8 +611,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($iCount = 0; $iCount < 10; $iCount++) {
             $productGroupId = ProductGroup::where('company_id', '=', $companyId)
             ->whereOr([
-                ['category', '=', ProductCategory::PRODUCTS->value],
-                ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                ['category', '=', ProductGroupCategory::PRODUCTS->value],
+                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
             ])->inRandomOrder()->first()->id;
     
             $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -631,8 +631,8 @@ class ProductServiceTest extends ServiceTestCase
             for ($i = 0; $i < $unitCount ; $i++) {
                 $unitId = Unit::where('company_id', '=', $companyId)
                             ->whereOr([
-                                ['category', '=', ProductCategory::PRODUCTS->value], 
-                                ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                                ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                             ])->inRandomOrder()->first()->id;
     
                 $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
@@ -694,8 +694,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($iCount = 0; $iCount < 10; $iCount++) {
             $productGroupId = ProductGroup::where('company_id', '=', $companyId)
             ->whereOr([
-                ['category', '=', ProductCategory::SERVICES->value],
-                ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                ['category', '=', ProductGroupCategory::SERVICES->value],
+                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
             ])->inRandomOrder()->first()->id;
     
             $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -755,8 +755,8 @@ class ProductServiceTest extends ServiceTestCase
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
         ->whereOr([
-            ['category', '=', ProductCategory::PRODUCTS->value],
-            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;
 
         $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -775,8 +775,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($i = 0; $i < $unitCount ; $i++) {
             $unitId = Unit::where('company_id', '=', $companyId)
                         ->whereOr([
-                            ['category', '=', ProductCategory::PRODUCTS->value], 
-                            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                         ])->inRandomOrder()->first()->id;
 
             $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
@@ -831,8 +831,8 @@ class ProductServiceTest extends ServiceTestCase
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
         ->whereOr([
-            ['category', '=', ProductCategory::PRODUCTS->value],
-            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;
 
         $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -851,8 +851,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($i = 0; $i < $unitCount ; $i++) {
             $unitId = Unit::where('company_id', '=', $companyId)
                         ->whereOr([
-                            ['category', '=', ProductCategory::PRODUCTS->value], 
-                            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                         ])->inRandomOrder()->first()->id;
 
             $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
@@ -878,8 +878,8 @@ class ProductServiceTest extends ServiceTestCase
 
         $newProductGroupId = ProductGroup::where('company_id', '=', $companyId)
         ->whereOr([
-            ['category', '=', ProductCategory::PRODUCTS->value],
-            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;
 
         $newBrandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -909,8 +909,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($i = 0; $i < $productUnitCount ; $i++) {
             $newUnitId = Unit::where('company_id', '=', $companyId)
                         ->whereOr([
-                            ['category', '=', ProductCategory::PRODUCTS->value], 
-                            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                         ])->inRandomOrder()->first()->id;
 
             $newConversionValue = $i == 0 ? 1 : $this->faker->numberBetween($newMaxConverionValue + 1, $newMaxConverionValue + 20);
@@ -997,8 +997,8 @@ class ProductServiceTest extends ServiceTestCase
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
         ->whereOr([
-            ['category', '=', ProductCategory::PRODUCTS->value],
-            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;
 
         $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -1017,8 +1017,8 @@ class ProductServiceTest extends ServiceTestCase
         for ($i = 0; $i < $unitCount ; $i++) {
             $unitId = Unit::where('company_id', '=', $companyId)
                         ->whereOr([
-                            ['category', '=', ProductCategory::PRODUCTS->value], 
-                            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                         ])->inRandomOrder()->first()->id;
 
             $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
@@ -1078,8 +1078,8 @@ class ProductServiceTest extends ServiceTestCase
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
         ->whereOr([
-            ['category', '=', ProductCategory::PRODUCTS->value],
-            ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS->value],
+            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;
 
         $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
@@ -1099,8 +1099,8 @@ class ProductServiceTest extends ServiceTestCase
             for ($i = 0; $i < $unitCount ; $i++) {
                 $unitId = Unit::where('company_id', '=', $companyId)
                             ->whereOr([
-                                ['category', '=', ProductCategory::PRODUCTS->value], 
-                                ['category', '=', ProductCategory::PRODUCTS_AND_SERVICES->value],
+                                ['category', '=', ProductGroupCategory::PRODUCTS->value], 
+                                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                             ])->inRandomOrder()->first()->id;
     
                 $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
