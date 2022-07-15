@@ -274,7 +274,7 @@
                                         <tr>
                                             <td class="border-b dark:border-dark-5 w-10">
                                                 <div class="form-switch">
-                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="accessCompanyIds[]" class="form-check-input">
+                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="accessCompanyIds[]" v-model="employee.selected_companies" :value="a.hId" class="form-check-input">
                                                 </div>
                                             </td>
                                             <td class="w-10"></td>
@@ -286,7 +286,7 @@
                                             <td class="w-10"></td>
                                             <td class="border-b dark:border-dark-5 w-10">
                                                 <div class="form-switch">
-                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="accessBranchIds[]" class="form-check-input">
+                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="accessBranchIds[]" v-model="employee.selected_accesses" :value="b.hId" class="form-check-input">
                                                 </div>
                                             </td>
                                             <td>
@@ -322,8 +322,8 @@ import { useI18n } from "vue-i18n";
 import { route } from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
-import DataList from "@/global-components/data-list/Main";
-import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import DataList from "@/global-components/data-list/Main.vue";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
@@ -379,6 +379,7 @@ const employee = ref({
             }
         }
     ],
+    selected_companies: [],
     selected_accesses: [],
     join_date: '',
     status: 'ACTIVE',
@@ -553,6 +554,7 @@ const emptyEmployee = () => {
                 }
             }
         ],
+        selected_companies: [],
         selected_accesses: [],
         code: '[AUTO]',
         join_date: '',
