@@ -1,7 +1,7 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.product_group.table.title')" :data="product_groupList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+        <DataList :title="t('views.product_group.table.title')" :data="productGroupList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
            <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2" aria-describedby="">
                     <thead>
@@ -18,9 +18,9 @@
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>
-                                    <span v-if="item.category == 1">{{ t('components.dropdown.values.productCategoryDDL.product') }}</span>
-                                    <span v-if="item.category == 2">{{ t('components.dropdown.values.productCategoryDDL.service') }}</span>
-                                    <span v-if="item.category == 3">{{ t('components.dropdown.values.productCategoryDDL.product_service') }}</span>
+                                    <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.productGroupCategoryDDL.product') }}</span>
+                                    <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.service') }}</span>
+                                    <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.product_and_service') }}</span>
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
@@ -49,9 +49,9 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.category') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.category == 1">{{ t('components.dropdown.values.productCategoryDDL.product') }}</span>
-                                            <span v-if="item.category == 2">{{ t('components.dropdown.values.productCategoryDDL.service') }}</span>
-                                            <span v-if="item.category == 3">{{ t('components.dropdown.values.productCategoryDDL.product_service') }}</span>
+                                            <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.productGroupCategoryDDL.product') }}</span>
+                                            <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.service') }}</span>
+                                            <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.product_and_service') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -87,7 +87,8 @@
         </div>
         <div class="loader-container">
             <VeeForm id="product_groupForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
-                <div class="p-5">                    
+                <div class="p-5">
+                    <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product_group.fields.code') }}</label>
                         <div class="flex items-center">
@@ -96,19 +97,26 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.product_group.fields.name') }}</label>
                         <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.product_group.fields.name')" :label="t('views.product_group.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product_group.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region Category -->
                     <div class="mb-3">
                         <label for="category" class="form-label">{{ t('views.product_group.fields.category') }}</label>
                         <VeeField as="select" id="category" name="category" :class="{'form-control form-select':true, 'border-danger': errors['category']}" v-model="product_group.category" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in productCategoryDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in productGroupCategoryDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
                         <ErrorMessage name="category" class="text-danger" />
                     </div>
+                    <!-- #endregion -->                    
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -156,14 +164,14 @@ const expandDetail = ref(null);
 //#endregion
 
 //#region Data - Views
-const product_groupList = ref({});
+const productGroupList = ref({});
 const product_group = ref({
     code: '',
     name: '',
     category: '',
 });
 const companyDDL = ref([]);
-const productCategoryDDL = ref([]);
+const productGroupCategoryDDL = ref([]);
 //#endregion
 
 //#region onMounted
@@ -193,27 +201,33 @@ const setMode = () => {
 }
 
 const getAllProductGroups = (args) => {
-    product_groupList.value = {};
+    productGroupList.value = {};
     let companyId = selectedUserCompany.value;
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
     if (args.pageSize === undefined) args.pageSize = 10;
 
-    axios.get(route('api.get.db.product.product_group.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
-        product_groupList.value = response.data;
+    axios.get(route('api.get.db.product.product_group.list', {
+        "companyId": companyId,
+        "category": "PRODUCTS_AND_SERVICES",
+        "page": args.page,
+        "perPage": args.pageSize,
+        "search": args.search
+    })).then(response => {
+        productGroupList.value = response.data;
         loading.value = false;
     });
 }
 
 const getDDL = () => {
-    if (getCachedDDL('productCategoryDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.category')).then(response => {
-            productCategoryDDL.value = response.data;
-            setCachedDDL('productCategoryDDL', response.data);
-        });    
+    if (getCachedDDL('productGroupCategoryDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.productgroupcategories')).then(response => {
+            productGroupCategoryDDL.value = response.data;
+            setCachedDDL('productGroupCategoryDDL', response.data);
+        });
     } else {
-        productCategoryDDL.value = getCachedDDL('productCategoryDDL');
+        productGroupCategoryDDL.value = getCachedDDL('productGroupCategoryDDL');
     }
 }
 
@@ -221,15 +235,16 @@ const getDDLSync = () => {
     axios.get(route('api.get.db.company.company.read.all_active', {
             companyId: selectedUserCompany.value,
             paginate: false
-        })).then(response => {
-            companyDDL.value = response.data;
+    })).then(response => {
+        companyDDL.value = response.data;
     });
 }
 
 const onSubmit = (values, actions) => {
     loading.value = true;
 
-    var formData = new FormData(dom('#product_groupForm')[0]); 
+    var formData = new FormData(dom('#product_groupForm')[0]);
+    formData.append('company_id', selectedUserCompany.value);
     
     if (mode.value === 'create') {
         axios.post(route('api.post.db.product.product_group.save'), formData).then(response => {
@@ -240,8 +255,6 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        formData.append('company_id', selectedUserCompany.value);
-
         axios.post(route('api.post.db.product.product_group.edit', product_group.value.uuid), formData).then(response => {
             actions.resetForm();
             backToList();
@@ -311,11 +324,11 @@ const onDataListChange = ({page, pageSize, search}) => {
 
 const editSelected = (index) => {
     mode.value = 'edit';
-    product_group.value = product_groupList.value.data[index];
+    product_group.value = productGroupList.value.data[index];
 }
 
 const deleteSelected = (index) => {
-    deleteId.value = product_groupList.value.data[index].uuid;
+    deleteId.value = productGroupList.value.data[index].uuid;
     deleteModalShow.value = true;
 }
 
@@ -339,7 +352,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllProductGroups({ page: product_groupList.value.meta.current_page, pageSize: product_groupList.value.meta.per_page });
+    getAllProductGroups({ page: productGroupList.value.meta.current_page, pageSize: productGroupList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {
