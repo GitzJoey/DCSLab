@@ -27,6 +27,8 @@ routes.push(RouteAuth.login());
 routes.push(RouteAuth.register());
 routes.push(RouteDashboard);
 routes.push(RouteCompany);
+routes.push(RouteProduct);
+routes.push(RoutePurchaseOrder);
 routes.push(RouteAdministrator.Admin())
 routes.push(RouteAdministrator.DevTool())
 routes.push(RouteAdministrator.Example())

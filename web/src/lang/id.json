@@ -14,6 +14,8 @@
             "product": "Produk",
             "product-product": "Produk",
             "product-product_group": "Grup Produk",
+            "product-brand": "Merk",
+            "product-unit": "Satuan",            
             "product-service": "Layanan",
             "administrator": "Administrator",
             "administrator-user": "Pengguna",
@@ -288,6 +290,48 @@
                         }
                     }
                 }
+            }
+        },
+        "brand": {
+            "table": {
+                "title": "Daftar Merk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama"
+                }
+            },
+            "actions": {
+                "create": "Tambah Merk",
+                "edit": "Ubah Merk",
+                "show": "Tampilkan Merk",
+                "delete": "Hapus Merk"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama"
+            }
+        },
+        "unit": {
+            "table": {
+                "title": "Daftar Satuan",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "description": "Deskripsi",
+                    "category": "Kategori"
+                }
+            },
+            "actions": {
+                "create": "Tambah Satuan",
+                "edit": "Ubah Satuan",
+                "show": "Tampilkan Satuan",
+                "delete": "Hapus Satuan"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "description": "Deskripsi",
+                "category": "Kategori"
             }
         },
         "supplier": {

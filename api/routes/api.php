@@ -40,7 +40,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('read', [BranchController::class, 'list'])->name('.list');
                 Route::get('read/{branch:uuid}', [BranchController::class, 'read'])->name('.read');
 
-                Route::get('read/by/company/{company::uuid}', [BranchController::class, 'getBranchByCompany'])->name('.read.by_company');
+                Route::get('read/by/company/{company::uuid}', [BranchController::class, 'getBranchByCompany'])->name('.read.by.company');
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function () {
                 Route::get('read', [EmployeeController::class, 'list'])->name('.list');

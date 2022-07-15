@@ -150,7 +150,7 @@
 import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
-import { route } from "@/ziggy";
+import route from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main.vue";
