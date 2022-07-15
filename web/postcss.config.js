@@ -5,5 +5,6 @@ module.exports = {
         require("tailwindcss/nesting"),
         require("tailwindcss")("./tailwind.config.js"),
         require("autoprefixer"),
+        require("cssnano"),
     ],
 };
