@@ -157,8 +157,8 @@ import { route } from "@/ziggy";
 import { useUserContextStore } from "@/stores/user-context";
 import { useSideMenuStore } from "@/stores/side-menu";
 import dom from "@left4code/tw-starter/dist/js/dom";
-import DataList from "@/global-components/data-list/Main";
-import AlertPlaceholder from "@/global-components/alert-placeholder/Main";
+import DataList from "@/global-components/data-list/Main.vue";
+import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 import { getCachedDDL, setCachedDDL } from "@/mixins";
 //#endregion
 
