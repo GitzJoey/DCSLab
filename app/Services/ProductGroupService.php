@@ -12,7 +12,7 @@ interface ProductGroupService
 
     public function list(
         int $companyId,
-        int $productGroupCategory,
+        int $category,
         string $search = '',
         bool $paginate = true,
         int $page = 1,

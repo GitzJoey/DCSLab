@@ -77,7 +77,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function list(
         int $companyId,
-        int $productGroupCategory,
+        int $category,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -89,7 +89,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$productGroupCategory.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.$category.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) {
@@ -101,17 +101,17 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $productGroup = ProductGroup::whereCompanyId($companyId);
 
-            if ($productGroupCategory == ProductGroupCategory::PRODUCTS->value) {
+            if ($category == ProductGroupCategory::PRODUCTS->value) {
                 $productGroup = $productGroup->where([
                     ['category', '=', ProductGroupCategory::PRODUCTS->value],
                     ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
-            } elseif ($productGroupCategory == ProductGroupCategory::SERVICES->value) {
+            } elseif ($category == ProductGroupCategory::SERVICES->value) {
                 $productGroup = $productGroup->where([
                     ['category', '=', ProductGroupCategory::SERVICES->value],
                     ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value]
                 ]);
-            } elseif ($productGroupCategory == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
+            } elseif ($category == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
                 
             } else {
                 return null;
