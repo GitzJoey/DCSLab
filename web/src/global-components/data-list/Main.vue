@@ -45,11 +45,11 @@
             <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
                 <slot name="table" :dataList="data"></slot>
                 <table class="table table-report -mt-2" v-if="dataNotFound" aria-describedby="">
-                    <thead>
-                        <th class="intro-x">
+                    <tbody>
+                        <tr class="intro-x">
                             <td class="text-sm italic text-center">{{ t('components.data-list.data_not_found') }}</td>
-                        </th>
-                    </thead>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
             <div class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center" v-if="!dataNotFound">
