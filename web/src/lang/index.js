@@ -12,7 +12,9 @@ const i18n = createI18n({
     messages: {
         en: en,
         id: id
-    }
+    },
+    missingWarn: false,
+    fallbackWarn: false
 });
 
 export function switchLang(lang) {
