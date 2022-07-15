@@ -11,6 +11,10 @@ export default ({ command, mode }) => {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
+    },
+    test: {
+      globals: true,
+      environment: 'jsdom'
     }
   });
 }
