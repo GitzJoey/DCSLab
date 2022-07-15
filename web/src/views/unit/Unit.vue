@@ -1,14 +1,15 @@
 <template>
     <AlertPlaceholder :messages="alertErrors" />
     <div class="intro-y" v-if="mode === 'list'">
-        <DataList :title="t('views.product_group.table.title')" :data="productGroupList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
+        <DataList :title="t('views.unit.table.title')" :data="unitList" v-on:createNew="createNew" v-on:dataListChange="onDataListChange" :enableSearch="true">
            <template v-slot:table="tableProps">
                 <table class="table table-report -mt-2" aria-describedby="">
                     <thead>
                         <tr>
-                            <th class="whitespace-nowrap">{{ t('views.product_group.table.cols.code') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.product_group.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.product_group.table.cols.category') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.code') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.name') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.description') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.unit.table.cols.category') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
                     </thead>
@@ -17,10 +18,11 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
+                                <td>{{ item.description }}</td>
                                 <td>
-                                    <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.productGroupCategoryDDL.product') }}</span>
-                                    <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.service') }}</span>
-                                    <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.product_and_service') }}</span>
+                                    <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
+                                    <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
+                                    <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
@@ -39,19 +41,23 @@
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
                                 <td colspan="6">
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.code') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.code') }}</div>
                                         <div class="flex-1">{{ item.code }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.name') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.name') }}</div>
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product_group.fields.category') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.description') }}</div>
+                                        <div class="flex-1">{{ item.description }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.unit.fields.category') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.productGroupCategoryDDL.product') }}</span>
-                                            <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.service') }}</span>
-                                            <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.productGroupCategoryDDL.product_and_service') }}</span>
+                                            <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
+                                            <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
+                                            <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -82,17 +88,17 @@
 
     <div class="intro-y box" v-if="mode !== 'list'">
         <div class="flex flex-col sm:flex-row items-center p-5 border-b border-gray-200 dark:border-dark-5">
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.product_group.actions.create') }}</h2>
-            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.product_group.actions.edit') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'create'">{{ t('views.unit.actions.create') }}</h2>
+            <h2 class="font-medium text-base mr-auto" v-if="mode === 'edit'">{{ t('views.unit.actions.edit') }}</h2>
         </div>
         <div class="loader-container">
-            <VeeForm id="product_groupForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
+            <VeeForm id="unitForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
                     <!-- #region Code -->
                     <div class="mb-3">
-                        <label for="inputCode" class="form-label">{{ t('views.product_group.fields.code') }}</label>
+                        <label for="inputCode" class="form-label">{{ t('views.unit.fields.code') }}</label>
                         <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.product_group.fields.code')" :label="t('views.product_group.fields.code')" rules="required" @blur="reValidate(errors)" v-model="product_group.code" :readonly="product_group.code === '[AUTO]'" />
+                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.unit.fields.code')" :label="t('views.unit.fields.code')" rules="required" @blur="reValidate(errors)" v-model="unit.code" :readonly="unit.code === '[AUTO]'" />
                             <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
@@ -101,18 +107,25 @@
 
                     <!-- #region Name -->
                     <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.product_group.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.product_group.fields.name')" :label="t('views.product_group.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product_group.name" />
+                        <label for="inputName" class="form-label">{{ t('views.unit.fields.name') }}</label>
+                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.unit.fields.name')" :label="t('views.unit.fields.name')" rules="required" @blur="reValidate(errors)" v-model="unit.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
                     <!-- #endregion -->
-                    
-                    <!-- #region Category -->
+
+                    <!-- #region Description -->
                     <div class="mb-3">
-                        <label for="category" class="form-label">{{ t('views.product_group.fields.category') }}</label>
-                        <VeeField as="select" id="category" name="category" :class="{'form-control form-select':true, 'border-danger': errors['category']}" v-model="product_group.category" rules="required" @blur="reValidate(errors)">
+                        <label for="inputDescription" class="form-label">{{ t('views.unit.fields.description') }}</label>
+                        <textarea id="inputDescription" name="description" type="text" class="form-control" :placeholder="t('views.unit.fields.description')" v-model="unit.description" rows="3"></textarea>
+                    </div>
+                    <!-- #endregion -->
+                    
+                    <!-- #region Unit Category -->
+                    <div class="mb-3">
+                        <label for="category" class="form-label">{{ t('views.unit.fields.category') }}</label>
+                        <VeeField as="select" id="category" name="category" :class="{'form-control form-select':true, 'border-danger': errors['category']}" v-model="unit.category" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in productGroupCategoryDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            <option v-for="c in unitCategoryDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                         </VeeField>
                         <ErrorMessage name="category" class="text-danger" />
                     </div>
@@ -137,7 +150,7 @@
 import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
-import route from "@/ziggy";
+import { route } from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main.vue";
@@ -164,20 +177,21 @@ const expandDetail = ref(null);
 //#endregion
 
 //#region Data - Views
-const productGroupList = ref({});
-const product_group = ref({
+const unitList = ref({});
+const unit = ref({
     code: '',
     name: '',
+    description: '',
     category: '',
 });
 const companyDDL = ref([]);
-const productGroupCategoryDDL = ref([]);
+const unitCategoryDDL = ref([]);
 //#endregion
 
 //#region onMounted
 onMounted(() => {
     if (selectedUserCompany.value !== '') {
-        getAllProductGroups({ page: 1 });
+        getAllUnits({ page: 1 });
         getDDLSync();
     } else  {
         
@@ -200,34 +214,34 @@ const setMode = () => {
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) createNew();
 }
 
-const getAllProductGroups = (args) => {
-    productGroupList.value = {};
+const getAllUnits = (args) => {
+    unitList.value = {};
     let companyId = selectedUserCompany.value;
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
     if (args.pageSize === undefined) args.pageSize = 10;
 
-    axios.get(route('api.get.db.product.product_group.list', {
+    axios.get(route('api.get.db.product.unit.list', {
         "companyId": companyId,
         "category": "PRODUCTS_AND_SERVICES",
         "page": args.page,
         "perPage": args.pageSize,
         "search": args.search
     })).then(response => {
-        productGroupList.value = response.data;
+        unitList.value = response.data;
         loading.value = false;
     });
 }
 
 const getDDL = () => {
-    if (getCachedDDL('productGroupCategoryDDL') == null) {
+    if (getCachedDDL('unitCategoryDDL') == null) {
         axios.get(route('api.get.db.common.ddl.list.productgroupcategories')).then(response => {
-            productGroupCategoryDDL.value = response.data;
-            setCachedDDL('productGroupCategoryDDL', response.data);
+            unitCategoryDDL.value = response.data;
+            setCachedDDL('unitCategoryDDL', response.data);
         });
     } else {
-        productGroupCategoryDDL.value = getCachedDDL('productGroupCategoryDDL');
+        unitCategoryDDL.value = getCachedDDL('unitCategoryDDL');
     }
 }
 
@@ -243,11 +257,11 @@ const getDDLSync = () => {
 const onSubmit = (values, actions) => {
     loading.value = true;
 
-    var formData = new FormData(dom('#product_groupForm')[0]);
+    var formData = new FormData(dom('#unitForm')[0]);
     formData.append('company_id', selectedUserCompany.value);
     
     if (mode.value === 'create') {
-        axios.post(route('api.post.db.product.product_group.save'), formData).then(response => {
+        axios.post(route('api.post.db.product.unit.save'), formData).then(response => {
             backToList();
         }).catch(e => {
             handleError(e, actions);
@@ -255,7 +269,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        axios.post(route('api.post.db.product.product_group.edit', product_group.value.uuid), formData).then(response => {
+        axios.post(route('api.post.db.product.unit.edit', unit.value.uuid), formData).then(response => {
             actions.resetForm();
             backToList();
         }).catch(e => {
@@ -292,10 +306,11 @@ const reValidate = (errors) => {
     alertErrors.value = errors;
 }
 
-const emptyProductGroup = () => {
+const emptyUnit = () => {
     return {
         code: '[AUTO]',
         name: '',
+        description: '',
         category: '',
     }
 }
@@ -308,33 +323,33 @@ const createNew = () => {
     mode.value = 'create';
     
     if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
-        product_group.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+        unit.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
-        product_group.value = emptyProductGroup();
+        unit.value = emptyUnit();
 
         let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
-        // if (c) product_group.value.company.hId = c.hId;
+        // if (c) unit.value.company.hId = c.hId;
     }
 }
 
 const onDataListChange = ({page, pageSize, search}) => {
-    getAllProductGroups({page, pageSize, search});
+    getAllUnits({page, pageSize, search});
 }
 
 const editSelected = (index) => {
     mode.value = 'edit';
-    product_group.value = productGroupList.value.data[index];
+    unit.value = unitList.value.data[index];
 }
 
 const deleteSelected = (index) => {
-    deleteId.value = productGroupList.value.data[index].uuid;
+    deleteId.value = unitList.value.data[index].uuid;
     deleteModalShow.value = true;
 }
 
 const confirmDelete = () => {
     deleteModalShow.value = false;
-    axios.post(route('api.post.db.product.product_group.delete', deleteId.value)).then(response => {
+    axios.post(route('api.post.db.product.unit.delete', deleteId.value)).then(response => {
         backToList();
     }).catch(e => {
         alertErrors.value = e.response.data;
@@ -352,7 +367,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllProductGroups({ page: productGroupList.value.meta.current_page, pageSize: productGroupList.value.meta.per_page });
+    getAllUnits({ page: unitList.value.meta.current_page, pageSize: unitList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {
@@ -364,8 +379,8 @@ const toggleDetail = (idx) => {
 }
 
 const generateCode = () => {
-    if (product_group.value.code === '[AUTO]') product_group.value.code = '';
-    else  product_group.value.code = '[AUTO]'
+    if (unit.value.code === '[AUTO]') unit.value.code = '';
+    else  unit.value.code = '[AUTO]'
 }
 //#endregion
 
@@ -375,12 +390,12 @@ const generateCode = () => {
 //#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value !== '') {
-        getAllProductGroups({ page: 1 });
+        getAllUnits({ page: 1 });
         getDDLSync();
     }
 });
 
-watch(product_group, (newV) => {
+watch(unit, (newV) => {
     if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));
 }, { deep: true });
 //#endregion
