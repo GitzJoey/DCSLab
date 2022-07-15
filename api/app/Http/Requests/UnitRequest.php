@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ProductCategory;
+use App\Enums\UnitCategory;
 use App\Models\Unit;
 use App\Rules\isValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
@@ -77,8 +77,8 @@ class UnitRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductCategory::class)],
+                    'name' => 'required|min:2|max:255',
+                    'category' => [new Enum(UnitCategory::class)],
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -87,7 +87,7 @@ class UnitRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'category' => [new Enum(ProductCategory::class)],
+                    'category' => [new Enum(UnitCategory::class)],
                 ];
 
                 return array_merge($rules_update, $nullableArr);
@@ -129,7 +129,7 @@ class UnitRequest extends FormRequest
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
-                    'category' => ProductCategory::isValid($this->category) ? ProductCategory::fromName($this->category)->value : -1,
+                    'category' => UnitCategory::isValid($this->category) ? UnitCategory::resolveToEnum($this->category)->value : -1,
                 ]);
                 break;
             default:

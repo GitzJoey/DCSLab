@@ -20,12 +20,52 @@ class UnitController extends BaseController
         $this->unitService = $unitService;
     }
 
+    public function store(UnitRequest $unitRequest)
+    {
+        $request = $unitRequest->validated();
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->unitService->generateUniqueCode();
+            } while (!$this->unitService->isUniqueCode($code, $company_id));
+        } else {
+            if (!$this->unitService->isUniqueCode($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $unitArr = [
+            'company_id' => $company_id,
+            'code' => $code,
+            'company_id' => $request['company_id'],
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'category' => $request['category'],
+        ];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->unitService->create($unitArr);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
     public function list(UnitRequest $unitRequest)
     {
         $request = $unitRequest->validated();
 
         $companyId = $request['company_id'];
-        $category = array_key_exists('category', $request) ? $request['category'] : null;
+        $category = array_key_exists('category', $request) ? $request['category'] : 3;
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
@@ -76,46 +116,6 @@ class UnitController extends BaseController
 
             return $response;
         }
-    }
-
-    public function store(UnitRequest $unitRequest)
-    {
-        $request = $unitRequest->validated();
-
-        $company_id = $request['company_id'];
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->unitService->generateUniqueCode();
-            } while (!$this->unitService->isUniqueCode($code, $company_id));
-        } else {
-            if (!$this->unitService->isUniqueCode($code, $company_id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $unitArr = [
-            'company_id' => $company_id,
-            'code' => $code,
-            'company_id' => $request['company_id'],
-            'name' => $request['name'],
-            'description' => $request['description'],
-            'category' => $request['category'],
-        ];
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->unitService->create($unitArr);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Unit $unit, UnitRequest $unitRequest)
