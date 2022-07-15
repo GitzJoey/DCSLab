@@ -13,7 +13,9 @@
             "supplier-supplier": "Pemasok",
             "product": "Produk",
             "product-product": "Produk",
-            "product-product_group": "Grup Produk",
+            "product-product_group": "Kelompok Produk",
+            "product-brand": "Merk",
+            "product-unit": "Satuan",
             "product-service": "Layanan",
             "administrator": "Administrator",
             "administrator-user": "Pengguna",
@@ -54,11 +56,6 @@
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
                 },
-                "productOrServiceCategoryDDL": {
-                    "product": "Produk",
-                    "service": "Jasa",
-                    "product_and_service": "Produk Dan Jasa"
-                },
                 "paymentTermTypeDDL": {
                     "pia": "Pembayaran Dimuka",
                     "net": "Pembayaran Beberapa Hari Setelah Tgl Invoice",
@@ -70,6 +67,16 @@
                 "yesNoDDL": {
                     "yes": "Ya",
                     "no": "Tidak"
+                },
+                "productGroupCategoryDDL" : {
+                    "product": "Barang",
+                    "service": "Jasa",
+                    "product_and_service": "Barang Dan Jasa"
+                },
+                "unitCategoryDDL" : {
+                    "product": "Barang",
+                    "service": "Jasa",
+                    "product_and_service": "Barang Dan Jasa"
                 },
                 "productTypeDDL": {
                     "raw": "Bahan Baku",
@@ -247,6 +254,71 @@
                         }
                     }
                 }
+            }
+        },
+        "product_group": {
+            "table": {
+                "title": "Daftar Kelompok Produk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "description": "Deskripsi",
+                    "category": "Kategori"
+                }
+            },
+            "actions": {
+                "create": "Tambah Kelompok Produk",
+                "edit": "Ubah Kelompok Produk",
+                "show": "Tampilkan Kelompok Produk",
+                "delete": "Hapus Kelompok Produk"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "description": "Deskripsi",
+                "category": "Kategori"
+            }
+        },
+        "brand": {
+            "table": {
+                "title": "Daftar Merk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama"
+                }
+            },
+            "actions": {
+                "create": "Tambah Merk",
+                "edit": "Ubah Merk",
+                "show": "Tampilkan Merk",
+                "delete": "Hapus Merk"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama"
+            }
+        },
+        "unit": {
+            "table": {
+                "title": "Daftar Satuan",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "description": "Deskripsi",
+                    "category": "Kategori"
+                }
+            },
+            "actions": {
+                "create": "Tambah Satuan",
+                "edit": "Ubah Satuan",
+                "show": "Tampilkan Satuan",
+                "delete": "Hapus Satuan"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "description": "Deskripsi",
+                "category": "Kategori"
             }
         },
         "supplier": {
