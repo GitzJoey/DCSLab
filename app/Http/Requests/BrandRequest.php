@@ -74,7 +74,7 @@ class BrandRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
+                    'name' => 'required|min:2|max:255',
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -82,7 +82,7 @@ class BrandRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
+                    'name' => 'required|min:2|max:255',
                 ];
 
                 return array_merge($rules_update, $nullableArr);
