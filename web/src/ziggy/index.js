@@ -1,20 +1,8 @@
 import ZiggyJS from "ziggy-js";
-import axios from "@/axios";
-import _ from "lodash";
-
-var Ziggy = {};
-
-const loadZiggyRoute = async () => {
-    let response = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/get/dashboard/core/user/ziggy');
-    
-    if (response.status === 200)
-        Ziggy = response.data;
-}
+import ziggyRoute from "./ziggy";
 
 const route = (name, params) => {
-    if (_.isEmpty(Ziggy)) return '';
-
-    return ZiggyJS(name, params, undefined, Ziggy);
+    return ZiggyJS(name, params, undefined, ziggyRoute);
 }
 
-export { route as default, loadZiggyRoute }
+export { route as default }
