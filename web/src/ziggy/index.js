@@ -1,8 +1,12 @@
 import ZiggyJS from "ziggy-js";
-import ziggyRoute from "./ziggy";
+import { Ziggy } from "./ziggy";
 
-const route = (name, params) => {
-    return ZiggyJS(name, params, undefined, ziggyRoute);
+const loadZiggyRoute = (params) => {
+
 }
 
-export { route as default }
+const route = (name, params) => {
+    return ZiggyJS(name, params, undefined, Ziggy);
+}
+
+export { route as default, loadZiggyRoute }
