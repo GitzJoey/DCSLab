@@ -19,7 +19,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'app:install';
+    protected $signature = 'app:install {args}';
 
     /**
      * The console command description.
@@ -117,7 +117,7 @@ class Install extends Command
         $this->info(Artisan::output());
 
         $this->info('Creating Admin/Dev Account ...');
-        $is_dev = $this->confirm('Are you a developer?', false);
+        $is_dev = $this->argument('args') == 'dev' ? true : false;
 
         if (!$is_dev) {
             $this->info('Setting you account as administrator since you\'re not dev...');
