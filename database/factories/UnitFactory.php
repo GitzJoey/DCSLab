@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class UnitFactory extends Factory
 {    
     protected $units = [
-        "PCS", "CC", "STRIP", "BOTOL", "GR", "PACK", "BOX", "ROLL", "KG", "LITER", "KALENG", "BUTIR", "IKAT", "SISIR", "JERIGEN", "BUAH", "IKT", "GALON", "PASANG", "M", "SACHET", "BKS",
+        "PCS", "CC", "STRIP", "BOTOL", "GR", "PACK", "BOX", "ROLL", "KG", "LITER", "KALENG", "BUTIR", "IKAT", "SISIR", "JERIGEN", "BUAH", "IKT", "GALON", "PASANG", "MTR", "SACHET", "BKS",
     ];
     
     public function definition()
