@@ -10,7 +10,7 @@ interface SupplierService
 {
     public function create(
         array $supplierArr,
-        array $pocArr,
+        array $picArr,
         array $productsArr
     ): Supplier;
 
@@ -28,7 +28,7 @@ interface SupplierService
     public function update(
         Supplier $supplier,
         array $supplierArr,
-        array $pocArr,
+        array $picArr,
         array $productsArr
     ): Supplier;
 

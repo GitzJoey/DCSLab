@@ -33,7 +33,7 @@ class SupplierFactory extends Factory
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $faker->company(),
             'payment_term_type' => $array_term,
-            'payment_term' => $array_term == 'NET' ? (new RandomGenerator())->generateNumber(1, 30) : 0,
+            'payment_term' =>(new RandomGenerator())->generateNumber(1, 30),
             'contact' => $faker->e164PhoneNumber(),
             'address' => $faker->address(),
             'city' => $faker->city(),

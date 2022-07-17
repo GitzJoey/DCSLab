@@ -2,22 +2,23 @@
 
 namespace App\Services\Impls;
 
-use App\Actions\RandomGenerator;
-use App\Enums\RecordStatus;
-use App\Models\Supplier;
-use App\Models\SupplierProduct;
-use App\Models\User;
-use App\Services\RoleService;
-use App\Services\SupplierService;
-use App\Services\UserService;
-use App\Traits\CacheHelper;
 use Exception;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Pagination\Paginator;
+use App\Models\Role;
+use App\Models\User;
+use App\Enums\UserRoles;
+use App\Models\Supplier;
+use App\Enums\RecordStatus;
+use App\Traits\CacheHelper;
+use App\Services\UserService;
+use App\Models\SupplierProduct;
+use App\Actions\RandomGenerator;
+use App\Services\SupplierService;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -29,14 +30,14 @@ class SupplierServiceImpl implements SupplierService
 
     public function create(
         array $supplierArr,
-        array $pocArr,
+        array $picArr,
         array $productsArr
     ): Supplier {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $usr = $this->createUserPOC($pocArr);
+            $usr = $this->createUserPIC($picArr);
 
             $supplier = new Supplier();
             $supplier->company_id = $supplierArr['company_id'];
@@ -44,28 +45,28 @@ class SupplierServiceImpl implements SupplierService
             $supplier->name = $supplierArr['name'];
             $supplier->payment_term_type = $supplierArr['payment_term_type'];
             $supplier->payment_term = $supplierArr['payment_term'];
-            $supplier->contact = $pocArr['contact'];
-            $supplier->address = $pocArr['address'];
-            $supplier->city = $pocArr['city'];
+            $supplier->contact = $picArr['contact'];
+            $supplier->address = $picArr['address'];
+            $supplier->city = $picArr['city'];
             $supplier->taxable_enterprise = $supplierArr['taxable_enterprise'];
-            $supplier->tax_id = $pocArr['tax_id'];
+            $supplier->tax_id = $picArr['tax_id'];
             $supplier->remarks = $supplierArr['remarks'];
             $supplier->status = $supplierArr['status'];
             $supplier->user_id = $usr->id;
 
             $supplier->save();
 
-            $sp = [];
-            foreach ($productsArr as $p) {
-                $spe = new SupplierProduct();
-                $spe->company_id = $supplierArr['company_id'];
-                $spe->product_id = $p['product_id'];
-                $spe->main_product = $p['main_product'];
+            $supplierProductArr = [];
+            foreach ($productsArr as $product) {
+                $supplierProduct = new SupplierProduct();
+                $supplierProduct->company_id = $supplierArr['company_id'];
+                $supplierProduct->product_id = $product['product_id'];
+                $supplierProduct->main_product = $product['main_product'];
 
-                array_push($sp, $spe);
+                array_push($supplierProductArr, $supplierProduct);
             }
 
-            $supplier->supplierProducts()->saveMany($sp);
+            $supplier->supplierProducts()->saveMany($supplierProductArr);
 
             DB::commit();
 
@@ -82,28 +83,30 @@ class SupplierServiceImpl implements SupplierService
         }
     }
 
-    private function createUserPOC(array $poc): User
+    private function createUserPIC(array $picArr): User
     {
         $timer_start = microtime(true);
 
         try {
             $container = Container::getInstance();
             $userService = $container->make(UserService::class);
-            $roleService = $container->make(RoleService::class);
 
-            $roles = $roleService->readBy('name', 'POS-supplier')->id;
+            $rolesArr = [];
+            array_push($rolesArr, Role::where('name', '=', UserRoles::POS_SUPPLIER->value)->first()->id);
 
             $profile = [
-                'first_name' => $poc['name'],
+                'first_name' => $picArr['first_name'],
+                'last_name' => $picArr['last_name'],
                 'status' => RecordStatus::ACTIVE,
             ];
 
             $userArr = [
-                'name' => $poc['name'],
-                'email' => $poc['email'],
+                'name' => $picArr['name'],
+                'email' => $picArr['email'],
+                'password' => 'testing'
             ];
 
-            $usr = $userService->create($userArr, $roles, $profile);
+            $usr = $userService->create($userArr, $rolesArr, $profile);
 
             return $usr;
         } catch (Exception $e) {
@@ -179,7 +182,7 @@ class SupplierServiceImpl implements SupplierService
     public function update(
         Supplier $supplier,
         array $supplierArr,
-        array $pocArr,
+        array $picArr,
         array $productsArr
     ): Supplier {
         DB::beginTransaction();
