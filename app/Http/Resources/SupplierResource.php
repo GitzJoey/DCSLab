@@ -34,7 +34,7 @@ class SupplierResource extends JsonResource
                 'main_products' => $this->getMainProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
             ]),
             $this->mergeWhen($this->relationLoaded('user'), [
-                'supplier_poc' => new UserResource($this->whenLoaded('user')),
+                'supplier_pic' => new UserResource($this->whenLoaded('user')),
             ]),
         ];
     }

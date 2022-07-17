@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\PaymentTerm;
 use App\Enums\PaymentTermType;
 use App\Enums\RecordStatus;
 use App\Models\Supplier;
@@ -61,7 +60,7 @@ class SupplierRequest extends FormRequest
             'remarks' => 'nullable',
             'productIds.*' => 'nullable',
             'mainProducts.*' => 'nullable',
-            'poc_name' => 'nullable',
+            'pic_name' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
