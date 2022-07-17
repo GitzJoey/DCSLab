@@ -500,8 +500,6 @@ class BrandAPITest extends APITestCase
 
         $this->actingAs($user);
         $api = $this->json('POST', route('api.post.db.product.brand.delete', null));
-
-        dd($api);
     }
 
     #endregion
