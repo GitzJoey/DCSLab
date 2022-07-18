@@ -39,17 +39,21 @@ class DashboardServiceImpl implements DashboardService
         $usr = Auth::user();
 
         $usrRoles = $usr->roles;
+
         $hasUserRole = $usrRoles->where('name', UserRoles::USER->value)->isNotEmpty() ? true : false;
         $hasOnlyUserRole = $usrRoles->where('name', UserRoles::USER->value)->isNotEmpty() && $usrRoles->count() == 1 ? true : false;
-        $hasDevRole = $usrRoles->where('name', UserRoles::DEVELOPER->value)->isNotEmpty() ? true : false;
+
         $hasAdminRole = $usrRoles->where('name', UserRoles::ADMINISTRATOR->value)->isNotEmpty() ? true : false;
+        $hasOnlyAdminRole = $usrRoles->where('name', UserRoles::ADMINISTRATOR->value)->isNotEmpty() && $usrRoles->count() == 1 ? true : false;
+
+        $hasDevRole = $usrRoles->where('name', UserRoles::DEVELOPER->value)->isNotEmpty() ? true : false;
 
         $hasCompany = $usr->companies->count() != 0 ? true : false;
 
         $showDemoMenu = false;
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
-        $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
@@ -98,9 +102,9 @@ class DashboardServiceImpl implements DashboardService
         return $menu;
     }
 
-    private function createMenu_Company(array $menu, bool $hasOnlyUserRole, bool $hasCompany, bool $hasDevRole): array
+    private function createMenu_Company(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole, bool $hasCompany, bool $hasDevRole): array
     {
-        if ($hasOnlyUserRole) {
+        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
             return $menu;
         }
 
