@@ -28,15 +28,15 @@ class SupplierTableSeeder extends Seeder
     public function run($supplierPerCompany = 10, $onlyThisCompanyId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            $c = Company::find($onlyThisCompanyId);
+            $company = Company::find($onlyThisCompanyId);
 
-            if ($c) {
-                $companies = (new Collection())->push($c->id);
+            if ($company) {
+                $companyIds = (new Collection())->push($company->id);
             } else {
-                $companies = Company::get()->pluck('id');
+                $companyIds = Company::get()->pluck('id');
             }
         } else {
-            $companies = Company::get()->pluck('id');
+            $companyIds = Company::get()->pluck('id');
         }
 
         $instances = Container::getInstance();
@@ -45,48 +45,48 @@ class SupplierTableSeeder extends Seeder
 
         $faker = \Faker\Factory::create('id_ID');
 
-        foreach ($companies as $c) {
-            $products = Product::whereCompanyId($c)->get()->pluck('id');
+        foreach ($companyIds as $companyId) {
+            $productIds = Product::whereCompanyId($companyId)->get()->pluck('id');
 
             for ($i = 0; $i < $supplierPerCompany; $i++) {
                 $name = $faker->name;
-                $usr = User::factory()->make();
 
-                $usr->created_at = Carbon::now();
-                $usr->updated_at = Carbon::now();
-
-                $usr->save();
+                $user = User::factory()->make();
+                $user->created_at = Carbon::now();
+                $user->updated_at = Carbon::now();
+                $user->save();
 
                 $profile = Profile::factory()->setFirstName($name);
-                $usr->profile()->save($profile);
+                $user->profile()->save($profile);
+                
+                $user->companies()->attach($companyId);
 
-                $usr->companies()->attach($c);
-
-                $usr->attachRoles([$roles->id]);
-                $usr->settings()->saveMany($setting);
+                $user->attachRoles([$roles->id]);
+                $user->settings()->saveMany($setting);
 
                 $supplier = Supplier::factory()->create([
-                    'company_id' => $c,
-                    'user_id' => $usr->id,
+                    'company_id' => $companyId,
+                    'user_id' => $user->id,
                 ]);
 
-                $some_prods = $products->shuffle()
-                                ->take((new RandomGenerator())
-                                            ->generateNumber(1, $products->count() > 6 ? 6 : $products->count() - 1));
+                $productCount = $productIds->count();
+                $productCount = $productCount > 6 ? 6 : $productCount - 1;
+                $supplierProductCount = (new RandomGenerator())->generateNumber(1, $productCount);
+                $ProductIds = $productIds->shuffle()->take($supplierProductCount);
 
-                $suppProd = [];
+                $supplierProducts = [];
 
-                foreach ($some_prods as $p) {
-                    $sp = new SupplierProduct();
-                    $sp->company_id = $c;
-                    $sp->supplier_id = $supplier->id;
-                    $sp->product_id = $p;
-                    $sp->main_product = (new RandomGenerator())->randomTrueOrFalse();
+                foreach ($ProductIds as $productId) {
+                    $supplierProduct = new SupplierProduct();
+                    $supplierProduct->company_id = $companyId;
+                    $supplierProduct->supplier_id = $supplier->id;
+                    $supplierProduct->product_id = $productId;
+                    $supplierProduct->main_product = (new RandomGenerator())->randomTrueOrFalse();
 
-                    array_push($suppProd, $sp);
+                    array_push($supplierProducts, $supplierProduct);
                 }
 
-                $supplier->supplierProducts()->saveMany($suppProd);
+                $supplier->supplierProducts()->saveMany($supplierProducts);
             }
         }
     }
