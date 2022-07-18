@@ -19,7 +19,7 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'app:install {args}';
+    protected $signature = 'app:install {args?}';
 
     /**
      * The console command description.
