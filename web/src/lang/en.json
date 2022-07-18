@@ -344,7 +344,7 @@
         "supplier": {
             "tabs": {
                 "supplier": "Supplier",
-                "poc": "Person In Charge",
+                "pic": "Person In Charge",
                 "products": "Products"
             },
             "table": {
@@ -352,7 +352,7 @@
                 "cols": {
                     "code": "Code",
                     "name": "Name",
-                    "poc": "Person In Charge",
+                    "pic": "Person In Charge",
                     "status": "Status"
                 }
             },
@@ -374,7 +374,7 @@
                 "tax_id": "Tax ID",
                 "remarks": "Remarks",
                 "status": "Status",
-                "poc": {
+                "pic": {
                     "label": "Person In Charge",
                     "name": "Name",
                     "email": "Email",

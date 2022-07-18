@@ -542,8 +542,6 @@ class BranchAPITest extends APITestCase
 
         $this->actingAs($user);
         $api = $this->json('POST', route('api.post.db.company.branch.delete', null));
-
-        dd($api);
     }
 
     #endregion

@@ -508,8 +508,6 @@ class ProductGroupAPITest extends APITestCase
 
         $this->actingAs($user);
         $api = $this->json('POST', route('api.post.db.product.product_group.delete', null));
-
-        dd($api);
     }
 
     #endregion

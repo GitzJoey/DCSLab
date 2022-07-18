@@ -8,7 +8,7 @@
                         <tr>
                             <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.code') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.name') }}</th>
-                            <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.poc') }}</th>
+                            <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.pic') }}</th>
                             <th class="whitespace-nowrap">{{ t('views.supplier.table.cols.status') }}</th>
                             <th class="whitespace-nowrap"></th>
                         </tr>
@@ -18,7 +18,7 @@
                             <tr class="intro-x">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
-                                <td>{{ item.supplier_poc.name }}</td>
+                                <td>{{ item.supplier_pic.name }}</td>
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
                                     <XIcon v-if="item.status === 'INACTIVE'" />
@@ -93,8 +93,8 @@
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.poc.label') }}</div>
-                                        <div class="flex-1">{{ item.supplier_poc.name }} - {{ item.supplier_poc.email }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.pic.label') }}</div>
+                                        <div class="flex-1">{{ item.supplier_pic.name }} - {{ item.supplier_pic.email }}</div>
                                     </div>                                    
                                 </td>
                             </tr>
@@ -135,9 +135,9 @@
                             <span :class="{'text-danger':errors['code']||errors['name']|errors['payment_term_type']|errors['status']}">{{ t('views.supplier.tabs.supplier') }}</span>
                         </button>
                     </li>
-                    <li id="tab-poc" class="nav-item flex-1" role="presentation">
-                        <button class="nav-link w-full py-2" data-tw-toggle="pill" data-tw-target="#tab-poc-content" type="button" role="tab" aria-controls="tab-poc-content" aria-selected="false">
-                            <span :class="{'text-danger':errors['poc_name']||errors['email']}">{{ t('views.supplier.tabs.poc') }}</span>
+                    <li id="tab-pic" class="nav-item flex-1" role="presentation">
+                        <button class="nav-link w-full py-2" data-tw-toggle="pill" data-tw-target="#tab-pic-content" type="button" role="tab" aria-controls="tab-pic-content" aria-selected="false">
+                            <span :class="{'text-danger':errors['pic_name']||errors['email']}">{{ t('views.supplier.tabs.pic') }}</span>
                         </button>
                     </li>
                     <li id="tab-product" class="nav-item flex-1" role="presentation">
@@ -212,15 +212,15 @@
                             <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.supplier.fields.remarks')" v-model="supplier.remarks" rows="3"></textarea>
                         </div>
                     </div>
-                    <div id="tab-poc-content" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="tab-poc">
+                    <div id="tab-pic-content" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="tab-pic">
                         <div class="mb-3">
-                            <label for="inputPOCName" class="form-label">{{ t('views.supplier.fields.poc.name') }}</label>
-                            <VeeField id="inputPOCName" name="poc_name" type="text" :class="{'form-control':true, 'border-danger': errors['poc_name']}" :placeholder="t('views.supplier.fields.poc.name')" :label="t('views.supplier.fields.poc.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_poc.name" />
-                            <ErrorMessage name="poc_name" class="text-danger" />
+                            <label for="inputPICName" class="form-label">{{ t('views.supplier.fields.pic.name') }}</label>
+                            <VeeField id="inputPICName" name="pic_name" type="text" :class="{'form-control':true, 'border-danger': errors['pic_name']}" :placeholder="t('views.supplier.fields.pic.name')" :label="t('views.supplier.fields.pic.name')" rules="required" @blur="reValidate(errors)" v-model="supplier.supplier_pic.name" />
+                            <ErrorMessage name="pic_name" class="text-danger" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.poc.email') }}</label>
-                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.poc.email')" :label="t('views.supplier.fields.poc.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_poc.email" :readonly="mode === 'edit'" />
+                            <label for="inputEmail" class="form-label">{{ t('views.supplier.fields.pic.email') }}</label>
+                            <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" :placeholder="t('views.supplier.fields.pic.email')" :label="t('views.supplier.fields.pic.email')" rules="required|email" @blur="reValidate(errors)" v-model="supplier.supplier_pic.email" :readonly="mode === 'edit'" />
                             <ErrorMessage name="email" class="text-danger" />
                         </div>
                     </div>
@@ -275,7 +275,7 @@
 import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
-import route from "@/ziggy";
+import { route } from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
 import DataList from "@/global-components/data-list/Main.vue";
@@ -309,7 +309,7 @@ const supplier = ref({
     term: '',
     contact: '',
     address: '',
-    supplier_poc: {
+    supplier_pic: {
         hId: '',
         profile: {
             first_name: ''
@@ -456,7 +456,7 @@ const emptySupplier = () => {
         contact: '',
         address: '',
         city: '',
-        supplier_poc: {
+        supplier_pic: {
             hId: '',
             profile: {
                 first_name: ''

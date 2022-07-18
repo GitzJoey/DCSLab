@@ -510,8 +510,6 @@ class UnitAPITest extends APITestCase
 
         $this->actingAs($user);
         $api = $this->json('POST', route('api.post.db.product.unit.delete', null));
-
-        dd($api);
     }
 
     #endregion

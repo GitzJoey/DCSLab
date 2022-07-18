@@ -337,7 +337,7 @@
         "supplier": {
             "tabs": {
                 "supplier": "Supplier",
-                "poc": "Penanggung Jawab",
+                "pic": "Penanggung Jawab",
                 "products": "Produk"
             },
             "table": {
@@ -345,7 +345,7 @@
                 "cols": {
                     "code": "Kode",
                     "name": "Nama",
-                    "poc": "Penanggung Jawab",
+                    "pic": "Penanggung Jawab",
                     "status": "Status"
                 }
             },
@@ -367,7 +367,7 @@
                 "tax_id": "NPWP",
                 "remarks": "Remarks",
                 "status": "Status",
-                "poc": {
+                "pic": {
                     "label": "Penanggung Jawab",
                     "name": "Nama",
                     "email": "Email",
