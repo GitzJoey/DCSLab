@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PaymentTerm;
 use App\Enums\PaymentTermType;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
 use App\Services\SupplierService;
 use Exception;
-use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierController extends BaseController
@@ -22,6 +20,72 @@ class SupplierController extends BaseController
 
         $this->middleware('auth');
         $this->supplierService = $supplierService;
+    }
+
+    public function store(SupplierRequest $supplierRequest)
+    {
+        $request = $supplierRequest->validated();
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->supplierService->generateUniqueCode();
+            } while (!$this->supplierService->isUniqueCode($code, $company_id));
+        } else {
+            if (!$this->supplierService->isUniqueCode($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $supplierArr = [
+            'company_id' => $company_id,
+            'code' => $code,
+            'name' => $request['name'],
+            'payment_term_type' => $request['payment_term_type'],
+            'payment_term' => $request['payment_term'],
+            'contact' => $request['contact'],
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'taxable_enterprise' => $request['taxable_enterprise'],
+            'tax_id' => $request['tax_id'],
+            'remarks' => $request['remarks'],
+            'status' => $request['status'],
+        ];
+
+        $picArr = [
+            'name' => $request['pic_name'],
+            'email' => $request['email'],
+        ];
+
+        $productsArr = [];
+        if (!empty($request['productIds'])) {
+            for ($i = 0; $i < count($request['productIds']); $i++) {
+                array_push($productsArr, [
+                    'company_id' => $company_id,
+                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
+                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0,
+                ]);
+            }
+        }
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->supplierService->create(
+                $supplierArr,
+                $picArr,
+                $productsArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function list(SupplierRequest $supplierRequest)
@@ -81,72 +145,6 @@ class SupplierController extends BaseController
         }
     }
 
-    public function store(SupplierRequest $supplierRequest)
-    {
-        $request = $supplierRequest->validated();
-
-        $company_id = $request['company_id'];
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->supplierService->generateUniqueCode();
-            } while (!$this->supplierService->isUniqueCode($code, $company_id));
-        } else {
-            if (!$this->supplierService->isUniqueCode($code, $company_id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $supplierArr = [
-            'company_id' => $company_id,
-            'code' => $code,
-            'name' => $request['name'],
-            'payment_term_type' => $request['payment_term_type'],
-            'payment_term' => $request['payment_term'],
-            'contact' => $request['contact'],
-            'address' => $request['address'],
-            'city' => $request['city'],
-            'taxable_enterprise' => $request['taxable_enterprise'],
-            'tax_id' => $request['tax_id'],
-            'remarks' => $request['remarks'],
-            'status' => $request['status'],
-        ];
-
-        $pocArr = [
-            'name' => $request['poc_name'],
-            'email' => $request['email'],
-        ];
-
-        $productsArr = [];
-        if (!empty($request['productIds'])) {
-            for ($i = 0; $i < count($request['productIds']); $i++) {
-                array_push($productsArr, [
-                    'company_id' => $company_id,
-                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
-                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0,
-                ]);
-            }
-        }
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->supplierService->create(
-                $supplierArr,
-                $pocArr,
-                $productsArr
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
     public function update(Supplier $supplier, SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
@@ -180,8 +178,8 @@ class SupplierController extends BaseController
             'status' => $request['status'],
         ];
 
-        $pocArr = [
-            'name' => $request['poc_name'],
+        $picArr = [
+            'name' => $request['pic_name'],
             'email' => $request['email'],
         ];
 
@@ -203,7 +201,7 @@ class SupplierController extends BaseController
             $result = $this->supplierService->update(
                 $supplier,
                 $supplierArr,
-                $pocArr,
+                $picArr,
                 $productsArr
             );
         } catch (Exception $e) {
