@@ -1,4 +1,4 @@
-name: Laravel
+name: CI/CD
 
 on:
   push:
@@ -33,3 +33,29 @@ jobs:
     - name: Execute tests (Unit and Feature tests) via Artisan
       run: php artisan test
       working-directory: ./api
+
+  vue-tests:
+    needs: laravel-tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - name: NPM Clean Install
+        run: npm ci
+        working-directory: ./web
+      - name: Create Ziggy
+        run: npm run ziggy
+        working-directory: ./web
+      - name: Execute tests
+        run: npm run test
+        working-directory: ./web
