@@ -1,3 +1,4 @@
+[![Laravel](https://github.com/GitzJoey/DCSLab/actions/workflows/laravel.yml/badge.svg)](https://github.com/GitzJoey/DCSLab/actions/workflows/laravel.yml)
 # DCSLab
 
 Doctor Computer SG Lab
