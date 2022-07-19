@@ -54,8 +54,8 @@ jobs:
         run: npm ci
         working-directory: ./web
       - name: Create Ziggy
-        run: npm run ziggy
-        working-directory: ./web
+        run: php artisan ziggy:generate "../web/src/ziggy/ziggy.js"
+        working-directory: ./api
       - name: Execute tests
         run: npm run test
         working-directory: ./web
