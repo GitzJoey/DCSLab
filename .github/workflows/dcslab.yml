@@ -53,6 +53,9 @@ jobs:
       - name: NPM Clean Install
         run: npm ci
         working-directory: ./web
+      - name: Composer Install for ziggy
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        working-directory: ./api        
       - name: Create Ziggy
         run: php artisan ziggy:generate "../web/src/ziggy/ziggy.js"
         working-directory: ./api
