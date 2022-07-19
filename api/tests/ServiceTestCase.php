@@ -15,7 +15,6 @@ class ServiceTestCase extends TestCase
             File::put(database_path('database.sqlite'), null);
 
             $this->artisan('migrate', [
-                '--env' => 'testing',
                 '--seed' => true,
             ]);
         }
