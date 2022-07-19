@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+          cache-dependency-path: web/package-lock.json
       - name: NPM Clean Install
         run: npm ci
         working-directory: ./web
