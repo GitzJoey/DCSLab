@@ -5,13 +5,17 @@ import { createTestingPinia } from "@pinia/testing";
 import i18n from "@/lang";
 import VeeValidate from "@/validation";
 
+import _ from "lodash";
+
 import { useUserContextStore } from "@/stores/user-context";
 import { useSideMenuStore } from "@/stores/side-menu";
 
 import LoadingIcon from "@/global-components/loading-icon/Main.vue";
 import DataList from "@/global-components/data-list/Main.vue";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
-import Modal from "@/global-components/modal";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "@/global-components/modal";
+import { Alert } from "@/global-components/alert";
+import Tippy from "@/global-components/tippy/Main.vue";
 
 import Company from "@/views/company/Company.vue";
 
@@ -20,13 +24,24 @@ describe.skip('Company.vue', () => {
         const wrapper = mount(Company, {
             global: {
                 components: {
-                    LoadingIcon
+                    LoadingIcon,
+                    AlertPlaceholder,
+                    DataList,
+                    Modal,
+                    ModalBody,
+                    Alert,
+                    Tippy
                 },
                 plugins: [
                     i18n,
                     VeeValidate,
                     createTestingPinia()
-                ]
+                ],
+                provide: {
+                    $_() {
+                        return _;
+                    }
+                }
             }
         });
 
