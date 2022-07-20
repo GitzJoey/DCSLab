@@ -15,7 +15,7 @@ export default ({ command, mode }) => {
     test: {
       globals: true,
       environment: 'jsdom',
-      include: ['./tests/vitest/**/*.test.js']
+      include: ['./tests/**/*.test.js']
     }
   });
 }
