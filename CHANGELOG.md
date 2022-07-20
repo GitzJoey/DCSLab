@@ -1,6 +1,7 @@
 # Change Logs
   * **v0.6.0 (2022-07-09)**
     * Break the monolith architecture
+    * Replacing Dusk with Cypress
 
   * **v0.5.0 (2022-07-02)**
     * Adding uuid for parent tables
