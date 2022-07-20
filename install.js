@@ -1,16 +1,25 @@
 var os = require('os');
-var exec = require('child_process').exec;
+var process = require('process');
+var execSync = require('child_process').execSync;
+const { dirname } = require('path');
 
-function puts(error, stdout, stderr) { console.log(stdout); }
+const rootDir = dirname(require.main.filename);
 
-if (os.type() === 'Linux') {
-    exec("cd api && composer install && cp .env.example .env && exit 1", puts);
-    exec("cd api && php artisan key:generate && exit 1", puts);
-    exec("cd web && npm install && cp .env.example .env && exit 1", puts);  
-} else if (os.type() === 'Windows_NT') {
-    exec("cd api && composer install && copy .env.example .env && exit 1", puts);
-    exec("cd api && php artisan key:generate && exit 1", puts);
-    exec("cd web && npm install && copy .env.example .env && exit 1", puts); 
-} else {
-    throw new Error("Unsupported OS found: " + os.type());
-}
+process.chdir(rootDir + '/api');
+let outputComposer = execSync('composer install');
+console.log(outputComposer.toString());
+
+let outputCopyEnvAPI = os.type() === 'Windows_NT' ? execSync('copy .env.example .env') : execSync('cp .env.example .env');
+console.log(outputCopyEnvAPI.toString());
+
+let outputKeyGenerate = execSync('php artisan key:generate');
+console.log(outputKeyGenerate.toString());
+
+process.chdir(rootDir + '/web');
+console.log(process.cwd());
+
+let outputNPMInstall = execSync('npm install');
+console.log(outputNPMInstall.toString());
+
+let outputCopyEnvWEB = os.type() === 'Windows_NT' ? execSync('copy .env.example .env') : execSync('cp .env.example .env');
+console.log(outputCopyEnvWEB.toString());
