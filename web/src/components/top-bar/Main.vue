@@ -42,7 +42,7 @@
         <GlobeIcon class="dark:text-slate-300" />
       </DropdownToggle>
       <DropdownMenu class="w-56">
-        <DropdownContent tag="div">
+        <DropdownContent>
             <DropdownItem href="" @click.prevent="switchLanguage('en')" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
               <img alt="English" src="@/assets/images/us.png" class="w-4 h-4 mr-2" /> <span :class="{ 'font-medium': currentLanguage === 'en' }">English</span>
             </DropdownItem>
