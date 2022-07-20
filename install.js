@@ -16,7 +16,6 @@ let outputKeyGenerate = execSync('php artisan key:generate');
 console.log(outputKeyGenerate.toString());
 
 process.chdir(rootDir + '/web');
-console.log(process.cwd());
 
 let outputNPMInstall = execSync('npm install');
 console.log(outputNPMInstall.toString());
