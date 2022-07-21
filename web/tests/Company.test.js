@@ -16,11 +16,20 @@ import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "@/global-components/modal";
 import { Alert } from "@/global-components/alert";
 import Tippy from "@/global-components/tippy/Main.vue";
+import lucideIcons from "@/global-components/lucide";
 
 import Company from "@/views/company/Company.vue";
 
 describe.skip('Company.vue', () => {
     it('should load properly', () => {
+        let CheckCircleIcon = lucideIcons.CheckCircleIcon;
+        let XIcon = lucideIcons.XIcon;
+        let InfoIcon = lucideIcons.InfoIcon;
+        let CheckSquareIcon = lucideIcons.CheckSquareIcon;
+        let Trash2Icon = lucideIcons.Trash2Icon;
+        let XCircleIcon = lucideIcons.XCircleIcon;
+        let AlertCircleIcon = lucideIcons.AlertCircleIcon;
+
         const wrapper = mount(Company, {
             global: {
                 components: {
@@ -30,7 +39,14 @@ describe.skip('Company.vue', () => {
                     Modal,
                     ModalBody,
                     Alert,
-                    Tippy
+                    Tippy,
+                    CheckCircleIcon,
+                    InfoIcon,
+                    XIcon,
+                    CheckSquareIcon,
+                    Trash2Icon,
+                    XCircleIcon,
+                    AlertCircleIcon
                 },
                 plugins: [
                     i18n,
