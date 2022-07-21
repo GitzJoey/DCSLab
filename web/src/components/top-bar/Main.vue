@@ -10,7 +10,7 @@
               </div>
               </DropdownToggle>
               <DropdownMenu class="w-96">
-                <DropdownContent class="dark:bg-dark-6">
+                <DropdownContent class="overflow-y-auto h-96 dark:bg-dark-6">
                   <template v-for="(c, cIdx) in userCompanyLists">
                     <DropdownHeader>{{ c.name }} </DropdownHeader>
                     <DropdownDivider />
