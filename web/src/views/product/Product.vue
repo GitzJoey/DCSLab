@@ -377,7 +377,7 @@ const productTypeDDL = ref([]);
 
 //#region onMounted
 onMounted(() => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllProducts({ page: 1 });
         getDDLSync();
     } else  {
@@ -406,7 +406,7 @@ const getAllProducts = (args) => {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    let companyId = selectedUserCompany.value;
+    let companyId = selectedUserCompany.value.hId;
 
     axios.get(route('api.get.db.product.product.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         productList.value = response.data;
@@ -436,21 +436,21 @@ const getDDL = () => {
 
 const getDDLSync = () => {
     axios.get(route('api.get.db.product.brand.list', {
-            companyId: selectedUserCompany.value,
+            companyId: selectedUserCompany.value.hId,
             paginate: false
         })).then(response => {
             brandDDL.value = response.data;
     });
 
     axios.get(route('api.get.db.product.product_group.list', {
-            companyId: selectedUserCompany.value,
+            companyId: selectedUserCompany.value.hId,
             paginate: false
         })).then(response => {
             productGroupDDL.value = response.data;
     });
 
     axios.get(route('api.get.db.product.unit.list', {
-            companyId: selectedUserCompany.value,
+            companyId: selectedUserCompany.value.hId,
             category: 1,
             paginate: false
         })).then(response => {
@@ -462,7 +462,7 @@ const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#productForm')[0]); 
-    formData.append('company_id', selectedUserCompany.value);
+    formData.append('company_id', selectedUserCompany.value.hId);
     
     if (mode.value === 'create') {
         axios.post(route('api.post.db.product.product.save'), formData).then(response => {
@@ -668,11 +668,11 @@ const changeIsPrimary = (idx) => {
 
 //#region Watcher
 watch(selectedUserCompany, () => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllProducts({ page: 1 });
         getDDLSync();
     }
-});
+}, { deep: true });
 
 watch(product, (newV) => {
     if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));

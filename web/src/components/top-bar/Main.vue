@@ -6,7 +6,7 @@
             <DropdownToggle tag="div" class="cursor-pointer" role="button">
               <div class="flex flex-row">
                 <UmbrellaIcon class="dark:text-slate-300 mr-2" />
-                <LoadingIcon icon="puff" v-if="selectedCompany === ''"/> <div class="text-gray-700 dark:text-slate-300" v-else><strong>{{ selectedCompany }} {{ selectedBranch === '' ? '': '- ' + selectedBranch }}</strong></div>
+                <LoadingIcon icon="puff" v-if="selectedCompanyName === ''"/> <div class="text-gray-700 dark:text-slate-300" v-else><strong>{{ selectedCompanyName }} {{ selectedBranchName === '' ? '': '- ' + selectedBranchName }}</strong></div>
               </div>
               </DropdownToggle>
               <DropdownMenu class="w-96">
@@ -15,13 +15,13 @@
                     <DropdownHeader>{{ c.name }} </DropdownHeader>
                     <DropdownDivider />
                       <template v-if="!c.branches && c.branches.length == 0">
-                          <DropdownItem href="" @click.prevent="switchCompany(c.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                            <span :class="{ 'underline': c.name === selectedCompany, 'font-medium': c.default === 1 }">{{ c.name }}</span>
+                          <DropdownItem href="" @click.prevent="switchCompany(c)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                            <span :class="{ 'underline': c.name === selectedCompanyName, 'font-medium': c.default === 1 }">{{ c.name }}</span>
                           </DropdownItem>
                       </template>
                       <template v-else v-for="(br, brIdx) in c.branches">
-                        <DropdownItem href="" @click.prevent="switchBranch(c.hId, br.hId)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                          <span :class="{ 'underline': br.name === selectedBranch }">{{ br.name }}</span>
+                        <DropdownItem href="" @click.prevent="switchBranch(c, br)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
+                          <span :class="{ 'underline': br.name === selectedBranchName }">{{ br.name }}</span>
                         </DropdownItem>
                       </template>
                   </template>
@@ -125,8 +125,8 @@ const selectedUserBranch = computed(() => userContextStore.selectedUserBranch);
 
 const slideOverShow = ref(false);
 
-const selectedCompany = ref('');
-const selectedBranch = ref('');
+const selectedCompanyName = ref('');
+const selectedBranchName = ref('');
 
 const userCompanyLists = computed(() => {
   if (userContext.value.companies !== undefined && userContext.value.companies.length > 0) {
@@ -147,51 +147,51 @@ const currentLanguage = computed(() => {
   return getLang();
 });
 
-const switchCompany = (hId) => {
-  setSelectedCompany(userCompanyLists.value, hId);
+const switchCompany = (company) => {
+  setSelectedCompany(userCompanyLists.value, company);
   tailwind.Dropdown.getOrCreateInstance(document.querySelector("#company-dropdown")).hide();
 }
 
-const switchBranch = (company_hId, branch_hId) => {
-  setSelectedCompany(userCompanyLists.value, company_hId);
-  setSelectedBranch(userCompanyLists.value, company_hId, branch_hId);
+const switchBranch = (company, branch) => {
+  setSelectedCompany(userCompanyLists.value, company);
+  setSelectedBranch(userCompanyLists.value, company, branch);
   tailwind.Dropdown.getOrCreateInstance(document.querySelector("#company-dropdown")).hide();
 }
 
-const setSelectedCompany = (companyLists, selected) => {
+const setSelectedCompany = (companyLists, selectedCompany) => {
   if (companyLists.length === 0) return;
 
-  if (selected === '') {
+  if (selectedCompany.hId === '' || selectedCompany.uuid === '') {
     let defaultCompany = _.find(companyLists, { default: true });
-    selectedCompany.value = defaultCompany.name;
-    userContextStore.setSelectedUserCompany(defaultCompany.hId);
+    selectedCompanyName.value = defaultCompany.name;
+    userContextStore.setSelectedUserCompany(defaultCompany.hId, defaultCompany.uuid);
   } else {
     _.forEach(companyLists, function(item) {
-      if (selected === item.hId) {
-        selectedCompany.value = item.name;
-        userContextStore.setSelectedUserCompany(item.hId);
+      if (selectedCompany.hId === item.hId && selectedCompany.uuid === item.uuid) {
+        selectedCompanyName.value = item.name;
+        userContextStore.setSelectedUserCompany(item.hId, item.uuid);
       }
     });
   }
 }
 
-const setSelectedBranch = (companyLists, selectedCompanyId, selectedBranchId) => {
-  if (selectedCompanyId === '') {
+const setSelectedBranch = (companyLists, selectedCompany, selectedBranch) => {
+  if (selectedCompany.hId === '' && selectedCompany.uuid === '') {
     let defaultCompany = _.find(companyLists, { default: true });
     let mainBranch = _.find(defaultCompany.branches, { is_main: true });
 
     if (mainBranch) {
-      selectedBranch.value = mainBranch.name
-      userContextStore.setSelectedUserBranch(mainBranch.hId);
+      selectedBranchName.value = mainBranch.name
+      userContextStore.setSelectedUserBranch(mainBranch.hId, mainBranch.uuid);
     }
   } else {
     _.forEach(companyLists, function(item) {
-      if (selectedCompanyId === item.hId) {
-        let branch = _.find(item.branches, { hId: selectedBranchId });
+      if (selectedCompany.hId === item.hId && selectedCompany.uuid === item.uuid) {
+        let branch = _.find(item.branches, { hId: selectedBranch.hId });
         
         if (branch) {
-          selectedBranch.value = branch.name
-          userContextStore.setSelectedUserBranch(branch.hId);
+          selectedBranchName.value = branch.name
+          userContextStore.setSelectedUserBranch(branch.hId, branch.uuid);
         }
       }
     });
@@ -230,5 +230,5 @@ watch(userContext, () => {
 
 watch(selectedUserCompany, () => {
   setSelectedCompany(userContext.value.companies, selectedUserCompany.value);
-});
+}, { deep: true });
 </script>

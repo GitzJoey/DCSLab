@@ -257,7 +257,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        formData.append('company_id', selectedUserCompany.value);
+        formData.append('company_id', selectedUserCompany.value.hId);
 
         axios.post(route('api.post.db.company.company.edit', company.value.uuid), formData).then(response => {
             actions.resetForm();

@@ -205,7 +205,7 @@ const productSearch = ref('');
 
 //#region onMounted
 onMounted(() => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getDDL();
         getDDLSync();
     }
@@ -222,7 +222,7 @@ const getAllPO = (args) => {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    let companyId = selectedUserCompany.value;
+    let companyId = selectedUserCompany.value.hId;
 
     axios.get(route('api.get.db.purchase_order.purchaseorder.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         poList.value = response.data;
@@ -258,7 +258,7 @@ const getDDL = () => {
 
 const getDDLSync = () => {
     axios.get(route('api.get.db.supplier.supplier.list', {
-            companyId: selectedUserCompany.value,
+            companyId: selectedUserCompany.value.hId,
             paginate: false,
             search: ''
         })).then(response => {
@@ -266,7 +266,7 @@ const getDDLSync = () => {
     });
 
     axios.get(route('api.get.db.product.product.list', {
-            companyId: selectedUserCompany.value,
+            companyId: selectedUserCompany.value.hId,
             paginate: false,
             search: ''
         })).then(response => {
@@ -296,9 +296,9 @@ const filterProducts = () => {
 
 //#region Watcher
 watch(selectedUserCompany, () => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getDDLSync();
     }
-});
+}, { deep: true });
 //#endregion
 </script>

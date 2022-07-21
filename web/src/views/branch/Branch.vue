@@ -268,7 +268,7 @@ const yesNoDDL = ref([]);
 
 //#region onMounted
 onMounted(() => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllBranches({ page: 1 });
         getDDLSync();
     } else  {
@@ -294,7 +294,7 @@ const setMode = () => {
 
 const getAllBranches = (args) => {
     branchList.value = {};
-    let companyId = selectedUserCompany.value;
+    let companyId = selectedUserCompany.value.hId;
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
@@ -328,7 +328,7 @@ const getDDL = () => {
 
 const getDDLSync = () => {
     axios.get(route('api.get.db.company.company.read.all_active', {
-            companyId: selectedUserCompany.value,
+            companyId: selectedUserCompany.value.hId,
             paginate: false
         })).then(response => {
             companyDDL.value = response.data;
@@ -349,7 +349,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        formData.append('company_id', selectedUserCompany.value);
+        formData.append('company_id', selectedUserCompany.value.hId);
 
         axios.post(route('api.post.db.company.branch.edit', branch.value.uuid), formData).then(response => {
             actions.resetForm();
@@ -418,7 +418,7 @@ const createNew = () => {
     } else {
         branch.value = emptyBranch();
 
-        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value.hId });
         if (c) branch.value.company.hId = c.hId;
     }
 }
@@ -479,11 +479,11 @@ const generateCode = () => {
 
 //#region Watcher
 watch(selectedUserCompany, () => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllBranches({ page: 1 });
         getDDLSync();
     }
-});
+}, { deep: true });
 
 watch(branch, (newV) => {
     if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));

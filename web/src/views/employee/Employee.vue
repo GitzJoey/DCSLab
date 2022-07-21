@@ -392,7 +392,7 @@ const accessLists = ref([]);
 
 //#region onMounted
 onMounted(() => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllEmployees({ page: 1 });
         getDDLSync();
     } else  {
@@ -418,7 +418,7 @@ const setMode = () => {
 
 const getAllEmployees = (args) => {
     employeeList.value = {};
-    let companyId = selectedUserCompany.value;
+    let companyId = selectedUserCompany.value.hId;
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
@@ -472,7 +472,7 @@ const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#employeeForm')[0]); 
-    formData.append('company_id', selectedUserCompany.value);
+    formData.append('company_id', selectedUserCompany.value.hId);
     
     if (mode.value === 'create') {
         axios.post(route('api.post.db.company.employee.save'), formData).then(response => {
@@ -483,7 +483,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        formData.append('company_id', selectedUserCompany.value);
+        formData.append('company_id', selectedUserCompany.value.hId);
 
         axios.post(route('api.post.db.company.employee.edit', employee.value.uuid), formData).then(response => {
             actions.resetForm();
@@ -575,7 +575,7 @@ const createNew = () => {
     } else {
         employee.value = emptyEmployee();
 
-        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value.hId });
         if (c) employee.value.company.hId = c.hId;
     }
 }
@@ -663,11 +663,11 @@ const generateCode = () => {
 
 //#region Watcher
 watch(selectedUserCompany, () => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllEmployees({ page: 1 });
         getDDLSync();
     }
-});
+}, { deep: true });
 
 watch(employee, (newV) => {
     if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));

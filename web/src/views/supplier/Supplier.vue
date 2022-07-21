@@ -333,7 +333,7 @@ const productLists = ref([]);
 
 //#region onMounted
 onMounted(() => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllSupplier({ page: 1});
         getDDLSync();
     } else  {
@@ -362,7 +362,7 @@ const getAllSupplier = (args) => {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    let companyId = selectedUserCompany.value;
+    let companyId = selectedUserCompany.value.hId;
 
     axios.get(route('api.get.db.supplier.supplier.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         supplierList.value = response.data;
@@ -391,7 +391,7 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.product.product.list', { "companyId": selectedUserCompany.value, "paginate": false, "search": '' })).then(response => {
+    axios.get(route('api.get.db.product.product.list', { "companyId": selectedUserCompany.value.hId, "paginate": false, "search": '' })).then(response => {
         productLists.value = response.data;
     });
 }
@@ -400,7 +400,7 @@ const onSubmit = (values, actions) => {
     loading.value = true;
 
     var formData = new FormData(dom('#supplierForm')[0]); 
-    formData.append('company_id', selectedUserCompany.value);
+    formData.append('company_id', selectedUserCompany.value.hId);
 
     if (mode.value === 'create') {
         axios.post(route('api.post.db.supplier.supplier.save'), formData).then(response => {
@@ -545,11 +545,11 @@ const generateCode = () => {
 
 //#region Watcher
 watch(selectedUserCompany, () => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllSupplier({ page: 1 });
         getDDLSync();
     }
-});
+}, { deep: true });
 
 watch(computed(() => supplier.value.main_products), () => {
     if (supplier.value.main_products.length != 0) {

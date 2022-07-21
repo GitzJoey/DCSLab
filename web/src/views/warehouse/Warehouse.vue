@@ -225,7 +225,7 @@ const branchDDL = ref([]);
 
 //#region onMounted
 onMounted(() => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllWarehouse({ page: 1 });
         getDDLSync();
     } else  {
@@ -254,7 +254,7 @@ const getAllWarehouse = (args) => {
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
 
-    let companyId = selectedUserCompany.value;
+    let companyId = selectedUserCompany.value.hId;
 
     axios.get(route('api.get.db.company.warehouse.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
         warehouseList.value = response.data;
@@ -278,9 +278,7 @@ const getDDLSync = () => {
         companyDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.company.branch.read.by.company', {
-        companyId: selectedUserCompany.value
-    })).then(response => {
+    axios.get(route('api.get.db.company.branch.read.by.company', [selectedUserCompany.value.uuid])).then(response => {
         branchDDL.value = response.data;
     });
 }
@@ -299,7 +297,7 @@ const onSubmit = (values, actions) => {
             loading.value = false;
         });
     } else if (mode.value === 'edit') {
-        formData.append('company_id', selectedUserCompany.value);
+        formData.append('company_id', selectedUserCompany.value.hId);
 
         var branchId = document.getElementById("branch_id");
         formData.append('branch_id', branchId.value);
@@ -374,7 +372,7 @@ const createNew = () => {
     } else {
         warehouse.value = emptyWarehouse();
 
-        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value });
+        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value.hId });
         if (c) warehouse.value.company.hId = c.hId;
     }
 }
@@ -435,11 +433,11 @@ const generateCode = () => {
 
 //#region Watcher
 watch(selectedUserCompany, () => {
-    if (selectedUserCompany.value !== '') {
+    if (selectedUserCompany.value.hId !== '') {
         getAllWarehouse({ page: 1 });
         getDDLSync();
     }
-});
+}, { deep: true });
 
 watch(warehouse, (newV) => {
     if (mode.value == 'create') sessionStorage.setItem('DCSLAB_LAST_ENTITY', JSON.stringify(newV));

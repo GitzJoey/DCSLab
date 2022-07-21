@@ -4,8 +4,8 @@ import axios from "@/axios";
 export const useUserContextStore = defineStore("userContext", {
     state: () => ({
         userContext: {},
-        selectedUserCompany: '',
-        selectedUserBranch: ''
+        selectedUserCompany: { hId: '', uuid: '' },
+        selectedUserBranch: { hId: '', uuid: '' }
     }),
     getter: {
         getUserContext: state => state.userContext,
@@ -18,11 +18,13 @@ export const useUserContextStore = defineStore("userContext", {
                 this.userContext = response.data;
             });
         },
-        setSelectedUserCompany(hId) {
-            this.selectedUserCompany = hId;
+        setSelectedUserCompany(hId, uuid) {
+            this.selectedUserCompany.hId = hId;
+            this.selectedUserCompany.uuid = uuid;
         },
-        setSelectedUserBranch(hId) {
-            this.selectedUserBranch = hId;
+        setSelectedUserBranch(hId, uuid) {
+            this.selectedUserBranch.hId = hId;
+            this.selectedUserBranch.uuid = uuid;
         }
     }
 });
