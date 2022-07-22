@@ -39,7 +39,7 @@ return [
 
         'main' => [
             'salt' => env('APP_KEY'),
-            'length' => 12,
+            'length' => 24,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 

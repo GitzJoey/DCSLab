@@ -121,7 +121,7 @@ class UnitRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
-                    'category' => UnitCategory::isValid($this->category) ? UnitCategory::fromName($this->category)->value : -1,
+                    'category' => UnitCategory::isValid($this->category) ? UnitCategory::resolveToEnum($this->category)->value : -1,
                 ]);
                 break;
             case 'read':

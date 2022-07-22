@@ -437,6 +437,7 @@ const getDDL = () => {
 const getDDLSync = () => {
     axios.get(route('api.get.db.product.brand.list', {
             companyId: selectedUserCompany.value.hId,
+            search:'',
             paginate: false
         })).then(response => {
             brandDDL.value = response.data;
@@ -444,6 +445,8 @@ const getDDLSync = () => {
 
     axios.get(route('api.get.db.product.product_group.list', {
             companyId: selectedUserCompany.value.hId,
+            search:'',
+            category: 1,
             paginate: false
         })).then(response => {
             productGroupDDL.value = response.data;
@@ -451,6 +454,7 @@ const getDDLSync = () => {
 
     axios.get(route('api.get.db.product.unit.list', {
             companyId: selectedUserCompany.value.hId,
+            search:'',
             category: 1,
             paginate: false
         })).then(response => {
