@@ -36,7 +36,7 @@ class Brand extends Model
 
     protected $hidden = [];
 
-    public function hId() : Attribute
+    public function hId(): Attribute
     {
         return Attribute::make(
             get: fn () => HashIds::encode($this->attributes['id'])

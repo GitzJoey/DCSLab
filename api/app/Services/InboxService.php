@@ -2,9 +2,6 @@
 
 namespace App\Services;
 
-use Cmgmyr\Messenger\Models\Message;
-use Cmgmyr\Messenger\Models\Thread;
-
 interface InboxService
 {
     public function getThreads(int $userId);

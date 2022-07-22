@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\ProductType;
 use App\Models\Product;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;

@@ -199,7 +199,7 @@ return [
 
         Intervention\Image\ImageServiceProvider::class,
         Cmgmyr\Messenger\MessengerServiceProvider::class,
-     
+
         App\Providers\ResponseMacroServiceProvider::class,
     ],
 

@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Spatie\Activitylog\Models\Activity;
-
 interface ActivityLogService
 {
     public function RoutingActivity(

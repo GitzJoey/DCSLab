@@ -9,9 +9,9 @@ return [
     'inactive_user' => 'Your profile status is inactive',
     'company' => [
         'deactivate_default_company' => 'Default company cannot be deactivated',
-        'delete_default_company' => 'Default company cannot be deleted'
+        'delete_default_company' => 'Default company cannot be deleted',
     ],
     'branch' => [
-        'delete_main_branch' => 'Main branch cannot be deleted'
-    ]
+        'delete_main_branch' => 'Main branch cannot be deleted',
+    ],
 ];

@@ -2,8 +2,6 @@
 
 namespace App\Actions;
 
-use Illuminate\Support\Facades\Config;
-
 class RandomGenerator
 {
     private static $RSeed = 0;

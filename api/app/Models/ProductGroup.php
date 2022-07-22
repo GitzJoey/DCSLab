@@ -43,7 +43,7 @@ class ProductGroup extends Model
         'category' => ProductGroupCategory::class,
     ];
 
-    public function hId() : Attribute
+    public function hId(): Attribute
     {
         return Attribute::make(
             get: fn () => HashIds::encode($this->attributes['id'])
