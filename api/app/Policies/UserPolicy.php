@@ -26,7 +26,7 @@ class UserPolicy
             return true;
         }
 
-        if ($user->hasPermission('users-readAny')) {
+        if ($user->hasPermission('user-readAny')) {
             return true;
         }
     }
@@ -48,7 +48,7 @@ class UserPolicy
             return true;
         }
 
-        if ($user->hasPermission('users-read')) {
+        if ($user->hasPermission('user-read')) {
             return true;
         }
     }
@@ -69,7 +69,7 @@ class UserPolicy
             return true;
         }
 
-        if ($user->hasPermission('users-create')) {
+        if ($user->hasPermission('user-create')) {
             return true;
         }
     }
@@ -91,7 +91,7 @@ class UserPolicy
             return true;
         }
 
-        if ($user->hasPermission('users-update')) {
+        if ($user->hasPermission('user-update')) {
             return true;
         }
     }

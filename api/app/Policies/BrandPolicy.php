@@ -21,7 +21,7 @@ class BrandPolicy
             return true;
         }
 
-        if ($user->hasPermission('brands-readAny')) {
+        if ($user->hasPermission('brand-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class BrandPolicy
             return true;
         }
 
-        if ($user->hasPermission('brands-read')) {
+        if ($user->hasPermission('brand-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class BrandPolicy
             return true;
         }
 
-        if ($user->hasPermission('brands-create')) {
+        if ($user->hasPermission('brand-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class BrandPolicy
             return true;
         }
 
-        if ($user->hasPermission('brands-update')) {
+        if ($user->hasPermission('brand-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class BrandPolicy
             return true;
         }
 
-        if ($user->hasPermission('brands-delete')) {
+        if ($user->hasPermission('brand-delete')) {
             return true;
         }
     }

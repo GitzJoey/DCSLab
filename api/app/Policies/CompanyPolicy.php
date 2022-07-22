@@ -27,7 +27,7 @@ class CompanyPolicy
             return true;
         }
 
-        if ($user->hasPermission('companies-readAny')) {
+        if ($user->hasPermission('company-readAny')) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class CompanyPolicy
             return true;
         }
 
-        if ($user->hasPermission('companies-read')) {
+        if ($user->hasPermission('company-read')) {
             return true;
         }
     }

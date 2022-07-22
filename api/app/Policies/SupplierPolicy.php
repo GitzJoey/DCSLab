@@ -27,7 +27,7 @@ class SupplierPolicy
             return true;
         }
 
-        if ($user->hasPermission('suppliers-readAny')) {
+        if ($user->hasPermission('supplier-readAny')) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class SupplierPolicy
             return true;
         }
 
-        if ($user->hasPermission('suppliers-read')) {
+        if ($user->hasPermission('supplier-read')) {
             return true;
         }
     }
@@ -70,7 +70,7 @@ class SupplierPolicy
             return true;
         }
 
-        if ($user->hasPermission('suppliers-create')) {
+        if ($user->hasPermission('supplier-create')) {
             return true;
         }
     }
@@ -92,7 +92,7 @@ class SupplierPolicy
             return true;
         }
 
-        if ($user->hasPermission('suppliers-update')) {
+        if ($user->hasPermission('supplier-update')) {
             return true;
         }
     }
@@ -114,7 +114,7 @@ class SupplierPolicy
             return true;
         }
 
-        if ($user->hasPermission('suppliers-delete')) {
+        if ($user->hasPermission('supplier-delete')) {
             return true;
         }
     }

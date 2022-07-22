@@ -27,7 +27,7 @@ class EmployeePolicy
             return true;
         }
 
-        if ($user->hasPermission('employees-readAny')) {
+        if ($user->hasPermission('employee-readAny')) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class EmployeePolicy
             return true;
         }
 
-        if ($user->hasPermission('employees-read')) {
+        if ($user->hasPermission('employee-read')) {
             return true;
         }
     }
@@ -70,7 +70,7 @@ class EmployeePolicy
             return true;
         }
 
-        if ($user->hasPermission('employees-create')) {
+        if ($user->hasPermission('employee-create')) {
             return true;
         }
     }
@@ -92,7 +92,7 @@ class EmployeePolicy
             return true;
         }
 
-        if ($user->hasPermission('employees-update')) {
+        if ($user->hasPermission('employee-update')) {
             return true;
         }
     }
@@ -114,7 +114,7 @@ class EmployeePolicy
             return true;
         }
 
-        if ($user->hasPermission('employees-delete')) {
+        if ($user->hasPermission('employee-delete')) {
             return true;
         }
     }

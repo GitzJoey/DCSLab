@@ -27,7 +27,7 @@ class BranchPolicy
             return true;
         }
 
-        if ($user->hasPermission('branches-readAny')) {
+        if ($user->hasPermission('branch-readAny')) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class BranchPolicy
             return true;
         }
 
-        if ($user->hasPermission('branches-read')) {
+        if ($user->hasPermission('branch-read')) {
             return true;
         }
     }
@@ -70,7 +70,7 @@ class BranchPolicy
             return true;
         }
 
-        if ($user->hasPermission('branches-create')) {
+        if ($user->hasPermission('branch-create')) {
             return true;
         }
     }
@@ -92,7 +92,7 @@ class BranchPolicy
             return true;
         }
 
-        if ($user->hasPermission('branches-update')) {
+        if ($user->hasPermission('branch-update')) {
             return true;
         }
     }
@@ -114,7 +114,7 @@ class BranchPolicy
             return true;
         }
 
-        if ($user->hasPermission('branches-delete')) {
+        if ($user->hasPermission('branch-delete')) {
             return true;
         }
     }

@@ -27,7 +27,7 @@ class WarehousePolicy
             return true;
         }
 
-        if ($user->hasPermission('warehouses-readAny')) {
+        if ($user->hasPermission('warehouse-readAny')) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class WarehousePolicy
             return true;
         }
 
-        if ($user->hasPermission('warehouses-read')) {
+        if ($user->hasPermission('warehouse-read')) {
             return true;
         }
     }
@@ -70,7 +70,7 @@ class WarehousePolicy
             return true;
         }
 
-        if ($user->hasPermission('warehouses-create')) {
+        if ($user->hasPermission('warehouse-create')) {
             return true;
         }
     }
@@ -92,7 +92,7 @@ class WarehousePolicy
             return true;
         }
 
-        if ($user->hasPermission('warehouses-update')) {
+        if ($user->hasPermission('warehouse-update')) {
             return true;
         }
     }
@@ -114,7 +114,7 @@ class WarehousePolicy
             return true;
         }
 
-        if ($user->hasPermission('warehouses-delete')) {
+        if ($user->hasPermission('warehouse-delete')) {
             return true;
         }
     }

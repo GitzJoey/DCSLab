@@ -27,7 +27,7 @@ class ProductPolicy
             return true;
         }
 
-        if ($user->hasPermission('products-readAny')) {
+        if ($user->hasPermission('product-readAny')) {
             return true;
         }
     }
@@ -49,7 +49,7 @@ class ProductPolicy
             return true;
         }
 
-        if ($user->hasPermission('products-read')) {
+        if ($user->hasPermission('product-read')) {
             return true;
         }
     }
@@ -70,7 +70,7 @@ class ProductPolicy
             return true;
         }
 
-        if ($user->hasPermission('products-create')) {
+        if ($user->hasPermission('product-create')) {
             return true;
         }
     }
@@ -92,7 +92,7 @@ class ProductPolicy
             return true;
         }
 
-        if ($user->hasPermission('products-update')) {
+        if ($user->hasPermission('product-update')) {
             return true;
         }
     }
@@ -114,7 +114,7 @@ class ProductPolicy
             return true;
         }
 
-        if ($user->hasPermission('products-delete')) {
+        if ($user->hasPermission('product-delete')) {
             return true;
         }
     }

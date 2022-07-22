@@ -21,7 +21,7 @@ class UnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('units-readAny')) {
+        if ($user->hasPermission('unit-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class UnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('units-read')) {
+        if ($user->hasPermission('unit-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class UnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('units-create')) {
+        if ($user->hasPermission('unit-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class UnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('units-update')) {
+        if ($user->hasPermission('unit-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class UnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('units-delete')) {
+        if ($user->hasPermission('unit-delete')) {
             return true;
         }
     }
