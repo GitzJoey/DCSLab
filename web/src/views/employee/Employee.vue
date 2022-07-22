@@ -244,7 +244,7 @@
                                                 </div>
                                             </td>
                                             <td class="w-10"></td>
-                                            <td :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(a.status) }">
+                                            <td :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(a.status), 'underline': a.default }">
                                                 <strong>{{ a.name }}</strong>
                                             </td>
                                         </tr>
@@ -255,7 +255,7 @@
                                                     <input :id="'inputAccess_' + ''" type="checkbox" name="accessBranchIds[]" v-model="employee.selected_accesses" :value="b.hId" class="form-check-input">
                                                 </div>
                                             </td>
-                                            <td :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(b.status) }">
+                                            <td :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(b.status), 'underline': b.is_main }">
                                                 <div class="pl-5">{{ b.name }}</div>
                                             </td>
                                         </tr>
