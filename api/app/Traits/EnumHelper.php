@@ -40,7 +40,11 @@ trait EnumHelper
 
     public static function isValid($test): bool
     {
-        if (is_null($test) || empty($test)) {
+        if (is_null($test)) {
+            return false;
+        }
+
+        if (gettype($test) == 'string' && strlen($test) === 0) {
             return false;
         }
 

@@ -123,7 +123,7 @@ class BranchAPITest extends APITestCase
         ]);
     }
 
-    public function test_branch_api_call_store_with_empty_string_parameters_expect_failed()
+    public function test_branch_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
@@ -136,7 +136,7 @@ class BranchAPITest extends APITestCase
         $branchArr = [];
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
 
-        $api->assertStatus(500);
+        $api->assertJsonValidationErrors(['company_id', 'code', 'name']);
     }
 
     #endregion

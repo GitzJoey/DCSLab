@@ -144,7 +144,7 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
-    public function test_warehouse_api_call_store_with_empty_string_parameters_expect_failed()
+    public function test_warehouse_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
@@ -158,7 +158,7 @@ class WarehouseAPITest extends APITestCase
         $warehouseArr = [];
         $api = $this->json('POST', route('api.post.db.company.warehouse.save'), $warehouseArr);
 
-        $api->assertStatus(500);
+        $api->assertJsonValidationErrors(['company_id', 'code', 'name']);
     }
 
     #endregion

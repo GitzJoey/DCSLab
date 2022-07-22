@@ -84,7 +84,7 @@ class ProductGroupAPITest extends APITestCase
         ]);
     }
 
-    public function test_product_group_api_call_store_with_empty_string_parameters_expect_failed()
+    public function test_product_group_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
@@ -97,7 +97,7 @@ class ProductGroupAPITest extends APITestCase
         $productGroupArr = [];
         $api = $this->json('POST', route('api.post.db.product.product_group.save'), $productGroupArr);
 
-        $api->assertStatus(500);
+        $api->assertJsonValidationErrors(['company_id', 'code', 'name']);
     }
 
     #endregion

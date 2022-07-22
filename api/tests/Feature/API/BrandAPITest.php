@@ -82,7 +82,7 @@ class BrandAPITest extends APITestCase
         ]);
     }
 
-    public function test_brand_api_call_store_with_empty_string_parameters_expect_failed()
+    public function test_brand_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
@@ -95,7 +95,7 @@ class BrandAPITest extends APITestCase
         $brandArr = [];
         $api = $this->json('POST', route('api.post.db.product.brand.save'), $brandArr);
 
-        $api->assertStatus(422);
+        $api->assertJsonValidationErrors(['company_id', 'name']);
     }
 
     #endregion
