@@ -9,6 +9,7 @@ use Illuminate\Contracts\Validation\Rule;
 class maxTokens implements Rule
 {
     private string $email;
+
     private int $maxCount;
 
     private UserService $userService;

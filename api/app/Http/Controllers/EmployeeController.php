@@ -50,13 +50,13 @@ class EmployeeController extends BaseController
         $userArr = [
             'name' => $request['name'],
             'email' => $request['email'],
-            'password' => 'testing'
+            'password' => 'testing',
         ];
 
         $first_name = '';
         $last_name = '';
         if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
-            $pieces = explode(" ", $request['name']);
+            $pieces = explode(' ', $request['name']);
             $first_name = $pieces[0];
             $last_name = $pieces[1];
         } else {
@@ -183,13 +183,13 @@ class EmployeeController extends BaseController
         ];
 
         $userArr = [
-            'name' => $request['name']
+            'name' => $request['name'],
         ];
 
         $first_name = '';
         $last_name = '';
         if ($request['name'] == trim($request['name']) && strpos($request['name'], ' ') !== false) {
-            $pieces = explode(" ", $request['name']);
+            $pieces = explode(' ', $request['name']);
             $first_name = $pieces[0];
             $last_name = $pieces[1];
         } else {

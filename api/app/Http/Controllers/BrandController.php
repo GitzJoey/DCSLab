@@ -77,7 +77,7 @@ class BrandController extends BaseController
                 paginate: $paginate,
                 page: $page,
                 perPage: $perPage
-            );    
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

@@ -48,7 +48,7 @@ class ProductTableSeeder extends Seeder
 
                 $units = Unit::whereCompanyId($companyId)->get();
                 $shuffled_units = $units->shuffle();
-                
+
                 $brandId = $product->brand_id;
                 if ($brandId) {
                     $howManyUnitsPerProduct = (new RandomGenerator())->generateNumber(1, $units->count());

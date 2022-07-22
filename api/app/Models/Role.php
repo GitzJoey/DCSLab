@@ -10,7 +10,7 @@ use Vinkla\Hashids\Facades\Hashids;
 class Role extends LaratrustRole
 {
     use HasFactory;
-    
+
     public $guarded = [];
 
     public function hId(): Attribute

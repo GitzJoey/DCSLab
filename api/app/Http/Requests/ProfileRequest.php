@@ -66,7 +66,7 @@ class ProfileRequest extends FormRequest
                 return [
                     'theme' => 'required',
                     'dateFormat' => 'required',
-                    'timeFormat' =>  'required',
+                    'timeFormat' => 'required',
                     'apiToken' => 'nullable',
                 ];
             case 'changePassword':

@@ -58,7 +58,7 @@ class SupplierTableSeeder extends Seeder
 
                 $profile = Profile::factory()->setFirstName($name);
                 $user->profile()->save($profile);
-                
+
                 $user->companies()->attach($companyId);
 
                 $user->attachRoles([$roles->id]);

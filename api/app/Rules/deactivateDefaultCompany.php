@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Rule;
 class deactivateDefaultCompany implements Rule
 {
     private bool $isDefault;
+
     private int $status;
 
     /**

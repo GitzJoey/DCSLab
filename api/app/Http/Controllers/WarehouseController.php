@@ -63,7 +63,7 @@ class WarehouseController extends BaseController
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
-    
+
     public function list(WarehouseRequest $warehouseRequest)
     {
         $request = $warehouseRequest->validated();
