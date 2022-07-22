@@ -166,7 +166,7 @@ class AppHelper extends Command
             $unattended_count = $this->ask('Override the seed count?', 5);
         }
 
-        #region Seeders
+        //region Seeders
 
         if (in_array('UserTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting UserTableSeeder');
@@ -319,7 +319,7 @@ class AppHelper extends Command
             $this->info('CustomerTableSeeder Finish.');
         }
 
-        #endregion
+        //endregion
     }
 
     private function wipeDatabase()

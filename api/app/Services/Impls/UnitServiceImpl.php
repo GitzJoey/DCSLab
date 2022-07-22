@@ -82,20 +82,19 @@ class UnitServiceImpl implements UnitService
             if ($category == UnitCategory::PRODUCTS->value) {
                 $unit = $unit->where([
                     ['category', '=', UnitCategory::PRODUCTS->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
                 ]);
             } elseif ($category == UnitCategory::SERVICES->value) {
                 $unit = $unit->where([
                     ['category', '=', UnitCategory::SERVICES->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
                 ]);
             } elseif ($category == UnitCategory::PRODUCTS_AND_SERVICES->value) {
-                
             } else {
                 return null;
             }
 
-        if (empty($search)) {
+            if (empty($search)) {
                 $unit = $unit->latest();
             } else {
                 $unit = $unit->where('name', 'like', '%'.$search.'%')->latest();

@@ -8,7 +8,7 @@ use App\Services\BrandService;
 use App\Services\CompanyService;
 use App\Services\DashboardService;
 use App\Services\EmployeeService;
-#region Extensions
+//region Extensions
 use App\Services\Impls\ActivityLogServiceImpl;
 use App\Services\Impls\BranchServiceImpl;
 use App\Services\Impls\BrandServiceImpl;
@@ -18,7 +18,7 @@ use App\Services\Impls\EmployeeServiceImpl;
 use App\Services\Impls\InboxServiceImpl;
 use App\Services\Impls\ProductGroupServiceImpl;
 use App\Services\Impls\ProductServiceImpl;
-#endregion
+//endregion
 
 use App\Services\Impls\RoleServiceImpl;
 use App\Services\Impls\SupplierServiceImpl;
@@ -26,7 +26,7 @@ use App\Services\Impls\SystemServiceImpl;
 use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\UserServiceImpl;
 use App\Services\Impls\WarehouseServiceImpl;
-#region Extensions
+//region Extensions
 use App\Services\InboxService;
 use App\Services\ProductGroupService;
 use App\Services\ProductService;
@@ -36,7 +36,7 @@ use App\Services\SystemService;
 use App\Services\UnitService;
 use App\Services\UserService;
 use App\Services\WarehouseService;
-#endregion
+//endregion
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
@@ -74,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
             return new InboxServiceImpl();
         });
 
-        #region Extensions
+        //region Extensions
 
         $this->app->singleton(CompanyService::class, function () {
             return new CompanyServiceImpl();
@@ -112,7 +112,7 @@ class AppServiceProvider extends ServiceProvider
             return new EmployeeServiceImpl();
         });
 
-        #endregion
+        //endregion
     }
 
     /**

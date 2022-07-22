@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\ProductUnit;
 use App\Actions\RandomGenerator;
+use App\Models\ProductUnit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductUnitFactory extends Factory

@@ -2,23 +2,23 @@
 
 namespace App\Services\Impls;
 
-use Exception;
-use App\Models\Role;
-use App\Models\User;
-use App\Enums\UserRoles;
-use App\Models\Supplier;
-use App\Enums\RecordStatus;
-use App\Traits\CacheHelper;
-use App\Services\UserService;
-use App\Models\SupplierProduct;
 use App\Actions\RandomGenerator;
+use App\Enums\RecordStatus;
+use App\Enums\UserRoles;
+use App\Models\Role;
+use App\Models\Supplier;
+use App\Models\SupplierProduct;
+use App\Models\User;
 use App\Services\SupplierService;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use App\Services\UserService;
+use App\Traits\CacheHelper;
+use Exception;
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SupplierServiceImpl implements SupplierService
 {
@@ -103,7 +103,7 @@ class SupplierServiceImpl implements SupplierService
             $userArr = [
                 'name' => $picArr['name'],
                 'email' => $picArr['email'],
-                'password' => 'testing'
+                'password' => 'testing',
             ];
 
             $usr = $userService->create($userArr, $rolesArr, $profile);

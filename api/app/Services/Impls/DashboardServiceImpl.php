@@ -233,17 +233,17 @@ class DashboardServiceImpl implements DashboardService
             'title' => 'components.menu.product-product_group',
         ];
 
-        $brand = array(
+        $brand = [
             'icon' => '',
             'pageName' => 'side-menu-product-brand',
-            'title' => 'components.menu.product-brand'
-        );
+            'title' => 'components.menu.product-brand',
+        ];
 
-        $unit = array(
+        $unit = [
             'icon' => '',
             'pageName' => 'side-menu-product-unit',
-            'title' => 'components.menu.product-unit'
-        );
+            'title' => 'components.menu.product-unit',
+        ];
 
         $product = [
             'icon' => '',

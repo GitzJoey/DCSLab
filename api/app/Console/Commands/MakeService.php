@@ -24,13 +24,15 @@ class MakeService extends Command
 
     /**
      * Filesystem instance
+     *
      * @var Filesystem
      */
     protected $files;
 
     /**
      * Create a new command instance.
-     * @param Filesystem $files
+     *
+     * @param  Filesystem  $files
      */
     public function __construct(Filesystem $files)
     {
@@ -70,6 +72,7 @@ class MakeService extends Command
 
     /**
      * Return the stub file path for Interface
+     *
      * @return string
      */
     public function getStubPathForInterface()
@@ -79,6 +82,7 @@ class MakeService extends Command
 
     /**
      * Return the stub file path for Implementation
+     *
      * @return string
      */
     public function getStubPathForImplementation()
@@ -95,10 +99,10 @@ class MakeService extends Command
     public function getStubVariables()
     {
         return [
-            'INTERFACE_NAMESPACE'         => 'App\\Services',
-            'INTERFACE_CLASS_NAME'        => $this->getSingularClassName($this->argument('name')),
-            'IMPLEMENTATION_NAMESPACE'    => 'App\\Services\\Impls',
-            'IMPLEMENTATION_CLASS_NAME'   => $this->getSingularClassName($this->argument('name')),
+            'INTERFACE_NAMESPACE' => 'App\\Services',
+            'INTERFACE_CLASS_NAME' => $this->getSingularClassName($this->argument('name')),
+            'IMPLEMENTATION_NAMESPACE' => 'App\\Services\\Impls',
+            'IMPLEMENTATION_CLASS_NAME' => $this->getSingularClassName($this->argument('name')),
         ];
     }
 
@@ -120,7 +124,7 @@ class MakeService extends Command
      * Replace the stub variables(key) with the desire value
      *
      * @param $stub
-     * @param array $stubVariables
+     * @param  array  $stubVariables
      * @return bool|mixed|string
      */
     public function getStubContents($stub, $stubVariables = [])
@@ -143,14 +147,15 @@ class MakeService extends Command
     public function getSourceFilePath($mode)
     {
         if ($mode == 'interface') {
-            return base_path(PHP_OS == 'Linux' ? 'app/Services/':'app\\Services\\').$this->getSingularClassName($this->argument('name')).'Service.php';
+            return base_path(PHP_OS == 'Linux' ? 'app/Services/' : 'app\\Services\\').$this->getSingularClassName($this->argument('name')).'Service.php';
         } else {
-            return base_path(PHP_OS == 'Linux' ? 'app/Services/Impls/':'app\\Services\\Impls\\').$this->getSingularClassName($this->argument('name')).'ServiceImpl.php';
+            return base_path(PHP_OS == 'Linux' ? 'app/Services/Impls/' : 'app\\Services\\Impls\\').$this->getSingularClassName($this->argument('name')).'ServiceImpl.php';
         }
     }
 
     /**
      * Return the Singular Capitalize Name
+     *
      * @param $name
      * @return string
      */

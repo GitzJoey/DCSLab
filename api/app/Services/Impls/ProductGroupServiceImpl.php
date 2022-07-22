@@ -2,17 +2,17 @@
 
 namespace App\Services\Impls;
 
-use Exception;
-use App\Traits\CacheHelper;
-use App\Models\ProductGroup;
 use App\Actions\RandomGenerator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use App\Enums\ProductGroupCategory;
-use Illuminate\Support\Facades\Log;
+use App\Models\ProductGroup;
 use App\Services\ProductGroupService;
-use Illuminate\Support\Facades\Config;
+use App\Traits\CacheHelper;
+use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductGroupServiceImpl implements ProductGroupService
 {
@@ -104,15 +104,14 @@ class ProductGroupServiceImpl implements ProductGroupService
             if ($category == ProductGroupCategory::PRODUCTS->value) {
                 $productGroup = $productGroup->where([
                     ['category', '=', ProductGroupCategory::PRODUCTS->value],
-                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                 ]);
             } elseif ($category == ProductGroupCategory::SERVICES->value) {
                 $productGroup = $productGroup->where([
                     ['category', '=', ProductGroupCategory::SERVICES->value],
-                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value]
+                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                 ]);
             } elseif ($category == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
-                
             } else {
                 return null;
             }
