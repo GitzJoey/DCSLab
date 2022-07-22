@@ -94,7 +94,6 @@
         <div class="loader-container">
             <VeeForm id="unitForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
-                    <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.unit.fields.code') }}</label>
                         <div class="flex items-center">
@@ -103,24 +102,15 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.unit.fields.name') }}</label>
                         <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.unit.fields.name')" :label="t('views.unit.fields.name')" rules="required" @blur="reValidate(errors)" v-model="unit.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Description -->
                     <div class="mb-3">
                         <label for="inputDescription" class="form-label">{{ t('views.unit.fields.description') }}</label>
                         <textarea id="inputDescription" name="description" type="text" class="form-control" :placeholder="t('views.unit.fields.description')" v-model="unit.description" rows="3"></textarea>
                     </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Unit Category -->
                     <div class="mb-3">
                         <label for="category" class="form-label">{{ t('views.unit.fields.category') }}</label>
                         <VeeField as="select" id="category" name="category" :class="{'form-control form-select':true, 'border-danger': errors['category']}" v-model="unit.category" rules="required" @blur="reValidate(errors)">
@@ -129,7 +119,6 @@
                         </VeeField>
                         <ErrorMessage name="category" class="text-danger" />
                     </div>
-                    <!-- #endregion -->                    
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -236,7 +225,7 @@ const getAllUnits = (args) => {
 
 const getDDL = () => {
     if (getCachedDDL('unitCategoryDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.productgroupcategories')).then(response => {
+        axios.get(route('api.get.db.common.ddl.list.unitcategories')).then(response => {
             unitCategoryDDL.value = response.data;
             setCachedDDL('unitCategoryDDL', response.data);
         });

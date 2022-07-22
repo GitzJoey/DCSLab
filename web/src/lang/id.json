@@ -61,6 +61,11 @@
                     "service": "Jasa",
                     "product_and_service": "Produk Dan Jasa"
                 },
+                "unitCategoryDDL": {
+                    "product": "Produk",
+                    "service": "Jasa",
+                    "product_and_service": "Produk Dan Jasa"
+                },
                 "paymentTermTypeDDL": {
                     "pia": "Pembayaran Dimuka",
                     "net": "Pembayaran Beberapa Hari Setelah Tgl Invoice",
