@@ -170,7 +170,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch, inject } from "vue";
 import axios from "@/axios";
 import { useI18n } from "vue-i18n";
 import route from "@/ziggy";
@@ -183,10 +183,12 @@ import { getCachedDDL, setCachedDDL } from "@/mixins";
 
 //#region Declarations
 const { t } = useI18n();
+const _ = inject('$_');
 //#endregion
 
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
+const userContext = computed( () => userContextStore.userContext );
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 //#endregion
 
@@ -274,7 +276,11 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.company.company.read.all_active')).then(response => {
+    axios.get(route('api.get.db.company.company.list', {
+        userId: userContext.value.hId,
+        search: '',
+        paginate: false
+    })).then(response => {
         companyDDL.value = response.data;
     });
 
@@ -372,8 +378,7 @@ const createNew = () => {
     } else {
         warehouse.value = emptyWarehouse();
 
-        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value.hId });
-        if (c) warehouse.value.company.hId = c.hId;
+        employee.value.company.hId = selectedUserCompany.value.hId;
     }
 }
 

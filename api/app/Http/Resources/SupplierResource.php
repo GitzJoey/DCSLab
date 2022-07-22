@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SupplierResource extends JsonResource
@@ -27,7 +28,7 @@ class SupplierResource extends JsonResource
             'taxable_enterprise' => $this->taxable_enterprise,
             'tax_id' => $this->tax_id,
             'remarks' => $this->remarks,
-            'status' => $this->status->name,
+            'status' => $this->setStatus($this->status, $this->deleted_at),
             $this->mergeWhen($this->relationLoaded('supplierProducts'), [
                 'supplier_products' => SupplierProductResource::collection($this->whenLoaded('supplierProducts')),
                 'selected_products' => $this->getSelectedProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
@@ -57,5 +58,14 @@ class SupplierResource extends JsonResource
         $mainProducts = $supplierProducts->where('main_product', '=', 1);
 
         return $mainProducts->count() != 0 ? $mainProducts->pluck('product.hId') : [];
+    }
+
+    private function setStatus($status, $deleted_at)
+    {
+        if (!is_null($deleted_at)) {
+            return RecordStatus::DELETED->name;
+        } else {
+            return $status->name;
+        }
     }
 }

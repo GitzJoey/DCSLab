@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -26,7 +27,7 @@ class ProductResource extends JsonResource
             'point' => $this->point,
             'use_serial_number' => $this->use_serial_number,
             'has_expiry_date' => $this->has_expiry_date,
-            'status' => $this->status->name,
+            'status' => $this->setStatus($this->status, $this->deleted_at),
             'remarks' => $this->remarks,
             'brand' => '',
             'product_group' => '',
@@ -34,5 +35,14 @@ class ProductResource extends JsonResource
                 'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits')),
             ]),
         ];
+    }
+
+    private function setStatus($status, $deleted_at)
+    {
+        if (!is_null($deleted_at)) {
+            return RecordStatus::DELETED->name;
+        } else {
+            return $status->name;
+        }
     }
 }

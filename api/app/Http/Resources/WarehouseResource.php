@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class WarehouseResource extends JsonResource
@@ -29,7 +30,16 @@ class WarehouseResource extends JsonResource
             'city' => $this->city,
             'contact' => $this->contact,
             'remarks' => $this->remarks,
-            'status' => $this->status->name,
+            'status' => $this->setStatus($this->status, $this->deleted_at),
         ];
+    }
+
+    private function setStatus($status, $deleted_at)
+    {
+        if (!is_null($deleted_at)) {
+            return RecordStatus::DELETED->name;
+        } else {
+            return $status->name;
+        }
     }
 }

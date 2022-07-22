@@ -101,10 +101,12 @@ class CompanyServiceImpl implements CompanyService
 
             $compIds = $usr->companies()->pluck('company_id');
 
+            $companies = Company::with('branches')->whereIn('id', $compIds);
+
             if (empty($search)) {
-                $companies = Company::whereIn('id', $compIds)->latest();
+                $companies = $companies->latest();
             } else {
-                $companies = Company::whereIn('id', $compIds)->where('name', 'like', '%'.$search.'%')->latest();
+                $companies = $companies->where('name', 'like', '%'.$search.'%')->latest();
             }
 
             if ($paginate) {

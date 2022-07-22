@@ -233,6 +233,7 @@ const { t } = useI18n();
 
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
+const userContext= computed(() => userContextStore.userContext );
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 //#endregion
 
@@ -327,8 +328,9 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.company.company.read.all_active', {
-            companyId: selectedUserCompany.value.hId,
+    axios.get(route('api.get.db.company.company.list', {
+            userId: userContext.value.hId,
+            search: '',
             paginate: false
         })).then(response => {
             companyDDL.value = response.data;
@@ -418,8 +420,7 @@ const createNew = () => {
     } else {
         branch.value = emptyBranch();
 
-        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value.hId });
-        if (c) branch.value.company.hId = c.hId;
+        employee.value.company.hId = selectedUserCompany.value.hId;
     }
 }
 

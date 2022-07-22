@@ -12,16 +12,17 @@
               <DropdownMenu class="w-96">
                 <DropdownContent class="overflow-y-auto h-96 dark:bg-dark-6">
                   <template v-for="(c, cIdx) in userCompanyLists">
-                    <DropdownHeader>{{ c.name }} </DropdownHeader>
+                    <DropdownDivider />
+                    <DropdownHeader :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(c.status) }">{{ c.name }}</DropdownHeader>
                     <DropdownDivider />
                       <template v-if="!c.branches && c.branches.length == 0">
                           <DropdownItem href="" @click.prevent="switchCompany(c)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                            <span :class="{ 'underline': c.name === selectedCompanyName, 'font-medium': c.default === 1 }">{{ c.name }}</span>
+                            <span :class="{ 'underline': c.name === selectedCompanyName, 'line-through': ['INACTIVE', 'DELETED'].includes(c.status), 'font-medium': c.default }">{{ c.name }}</span>
                           </DropdownItem>
                       </template>
                       <template v-else v-for="(br, brIdx) in c.branches">
                         <DropdownItem href="" @click.prevent="switchBranch(c, br)" class="flex items-center block p-2 transition duration-300 ease-in-out hover:bg-gray-200 dark:hover:bg-dark-3 rounded-md">
-                          <span :class="{ 'underline': br.name === selectedBranchName }">{{ br.name }}</span>
+                          &nbsp;&nbsp;&nbsp;<span :class="{ 'underline': br.name === selectedBranchName, 'line-through': ['INACTIVE', 'DELETED'].includes(br.status), 'font-medium': br.is_main }">{{ br.name }}</span>
                         </DropdownItem>
                       </template>
                   </template>

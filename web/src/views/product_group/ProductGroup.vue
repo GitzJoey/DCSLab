@@ -151,6 +151,7 @@ const { t } = useI18n();
 
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
+const userContext = computed( () => userContextStore.userContext );
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 //#endregion
 
@@ -170,7 +171,6 @@ const product_group = ref({
     name: '',
     category: '',
 });
-const companyDDL = ref([]);
 const productGroupCategoryDDL = ref([]);
 //#endregion
 
@@ -232,12 +232,7 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.company.company.read.all_active', {
-            companyId: selectedUserCompany.value.hId,
-            paginate: false
-    })).then(response => {
-        companyDDL.value = response.data;
-    });
+
 }
 
 const onSubmit = (values, actions) => {
@@ -312,9 +307,6 @@ const createNew = () => {
         sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
     } else {
         product_group.value = emptyProductGroup();
-
-        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value.hId });
-        // if (c) product_group.value.company.hId = c.hId;
     }
 }
 

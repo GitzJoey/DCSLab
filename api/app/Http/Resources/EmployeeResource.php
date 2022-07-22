@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EmployeeResource extends JsonResource
@@ -30,7 +31,7 @@ class EmployeeResource extends JsonResource
             ]),
             'code' => $this->code,
             'join_date' => $this->join_date,
-            'status' => $this->status->name,
+            'status' => $this->setStatus($this->status, $this->deleted_at),
         ];
 
         return $resource;
@@ -61,5 +62,14 @@ class EmployeeResource extends JsonResource
         $branchIds = $employeeAccesses->pluck('branch.hId');
 
         return $branchIds;
+    }
+
+    private function setStatus($status, $deleted_at)
+    {
+        if (!is_null($deleted_at)) {
+            return RecordStatus::DELETED->name;
+        } else {
+            return $status->name;
+        }
     }
 }

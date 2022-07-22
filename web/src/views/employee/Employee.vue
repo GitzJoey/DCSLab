@@ -142,35 +142,27 @@
 
                 <div class="tab-content border-l border-r border-b">
                     <div id="tab-employee-content" class="tab-pane leading-relaxed p-5 active" role="tabpanel" aria-labelledby="tab-employee">
-                    <!-- #region Code -->
-                    <div class="mb-3">
-                        <label for="inputCode" class="form-label">{{ t('views.employee.fields.code') }}</label>
-                        <div class="flex items-center">
-                            <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.employee.fields.code')" :label="t('views.employee.fields.code')" rules="required" @blur="reValidate(errors)" v-model="employee.code" :readonly="employee.code === '[AUTO]'" />
-                            <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                        <div class="mb-3">
+                            <label for="inputCode" class="form-label">{{ t('views.employee.fields.code') }}</label>
+                            <div class="flex items-center">
+                                <VeeField id="inputCode" name="code" type="text" :class="{'form-control':true, 'border-danger': errors['code']}" :placeholder="t('views.employee.fields.code')" :label="t('views.employee.fields.code')" rules="required" @blur="reValidate(errors)" v-model="employee.code" :readonly="employee.code === '[AUTO]'" />
+                                <button type="button" class="btn btn-secondary mx-1" @click="generateCode" v-show="mode === 'create'">{{ t('components.buttons.auto') }}</button>
+                            </div>
+                            <ErrorMessage name="code" class="text-danger" />
                         </div>
-                        <ErrorMessage name="code" class="text-danger" />
-                    </div>
-                    <!-- #endregion -->
-
-                    <!-- #region Name-->
-                    <div class="mb-3">
-                        <label for="inputName" class="form-label">{{ t('views.employee.fields.name') }}</label>
-                        <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.employee.fields.name')" :label="t('views.employee.fields.name')" rules="required" @blur="reValidate(errors)" v-model="employee.user.name" />
-                        <ErrorMessage name="name" class="text-danger" />
-                    </div>
-                    <!-- #endregion -->                  
-                    
-                    <!-- #region Email-->
+                        <div class="mb-3">
+                            <label for="inputName" class="form-label">{{ t('views.employee.fields.name') }}</label>
+                            <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.employee.fields.name')" :label="t('views.employee.fields.name')" rules="required" @blur="reValidate(errors)" v-model="employee.user.name" />
+                            <ErrorMessage name="name" class="text-danger" />
+                        </div>
                         <div class="mb-3">
                             <label for="inputEmail" class="form-label">{{ t('views.employee.fields.email') }}</label>
                             <VeeField id="inputEmail" name="email" type="text" :class="{'form-control':true, 'border-danger': errors['email']}" rules="required|email" :placeholder="t('views.employee.fields.email')" :label="t('views.employee.fields.email')" @blur="reValidate(errors)" v-model="employee.user.email" :readonly="mode === 'edit'" />
                             <ErrorMessage name="email" class="text-danger" />
                         </div>
-                    <!-- #endregion -->
                     
-                    <!-- #region Input Img-->
-                        <!-- <div class="mb-3">
+                        <!-- 
+                        <div class="mb-3">
                             <label for="inputImg" class="form-label">{{ t('views.employee.fields.picture') }}</label>
                             <div class="">
                                 <div class="my-1">
@@ -180,31 +172,21 @@
                                     <input type="file" class="h-full w-full" name="img_path" v-if="mode === 'create' || mode === 'edit'" v-on:change="handleUpload" />
                                 </div>
                             </div>
-                        </div> -->
-                    <!-- #endregion -->
+                        </div>
+                        -->
                     
-                    <!-- #region Address-->
                         <div class="mb-3">
                             <label for="inputAddress" class="form-label">{{ t('views.employee.fields.address') }}</label>
                             <textarea id="inputAddress" name="address" type="text" class="form-control" :placeholder="t('views.employee.fields.address')" v-model="employee.user.profile.address" rows="3"></textarea>
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region City-->
                         <div class="mb-3">
                             <label for="inputCity" class="form-label">{{ t('views.employee.fields.city') }}</label>
                             <input id="inputCity" name="city" type="text" class="form-control" :placeholder="t('views.employee.fields.city')" v-model="employee.user.profile.city"/>
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Postal Code-->
                         <div class="mb-3">
                             <label for="inputPostalCode" class="form-label">{{ t('views.employee.fields.postal_code') }}</label>
                             <input id="inputPostalCode" name="postal_code" type="text" class="form-control" :placeholder="t('views.employee.fields.postal_code')" v-model="employee.user.profile.postal_code"/>
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Country-->
                         <div class="mb-3">
                             <label for="inputCountry" class="form-label">{{ t('views.employee.fields.country') }}</label>
                             <VeeField as="select" id="inputCountry" name="country" :class="{'form-control form-select':true, 'border-danger': errors['country']}" v-model="employee.user.profile.country" rules="required" :placeholder="t('views.employee.fields.country')" :label="t('views.employee.fields.country')" @blur="reValidate(errors)">
@@ -213,25 +195,16 @@
                             </VeeField>
                             <ErrorMessage name="country" class="text-danger" />
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Tax Id-->
                         <div class="mb-3">
                             <label for="inputTaxId" class="form-label">{{ t('views.employee.fields.tax_id') }}</label>
                             <VeeField id="inputTaxId" name="tax_id" type="text" :class="{'form-control':true, 'border-danger': errors['tax_id']}" :placeholder="t('views.employee.fields.tax_id')" :label="t('views.employee.fields.tax_id')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.tax_id" />
                             <ErrorMessage name="tax_id" class="text-danger" />
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Ic Num-->
                         <div class="mb-3">
                             <label for="inputIcNum" class="form-label">{{ t('views.employee.fields.ic_num') }}</label>
                             <VeeField id="inputIcNum" name="ic_num" type="text" :class="{'form-control':true, 'border-danger': errors['ic_num']}" :placeholder="t('views.employee.fields.ic_num')" :label="t('views.employee.fields.ic_num')" rules="required" @blur="reValidate(errors)" v-model="employee.user.profile.ic_num" />
                             <ErrorMessage name="ic_num" class="text-danger" />
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Join Date-->
                         <div class="mb-3" v-if="mode === 'create'">
                             <label for="inputJoinDate" class="form-label">{{ t('views.employee.fields.join_date') }}</label>
                             <VeeField name="join_date" v-slot="{ field }" rules="required" :label="t('views.employee.fields.join_date')">
@@ -239,16 +212,10 @@
                             </VeeField>
                             <ErrorMessage name="join_date" class="text-danger" />
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Remarks-->
                         <div class="mb-3">
                             <label for="inputRemarks" class="form-label">{{ t('views.employee.fields.remarks') }}</label>
                             <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.employee.fields.remarks')" v-model="employee.user.profile.remarks" rows="3"></textarea>
                         </div>
-                    <!-- #endregion -->
-                    
-                    <!-- #region Status-->
                         <div class="mb-3">
                             <label for="inputStatus" class="form-label">{{ t('views.employee.fields.status') }}</label>
                             <VeeField as="select" class="form-control form-select" id="inputStatus" name="status" v-model="employee.status" rules="required" :label="t('views.employee.fields.status')">
@@ -257,7 +224,6 @@
                             </VeeField>
                             <ErrorMessage name="status" class="text-danger" />
                         </div>
-                    <!-- #endregion -->
                     </div>
                     <div id="tab-access-content" class="tab-pane leading-relaxed p-5" role="tabpanel" aria-labelledby="tab-access">
                         <div class="mb-3">
@@ -278,7 +244,7 @@
                                                 </div>
                                             </td>
                                             <td class="w-10"></td>
-                                            <td>
+                                            <td :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(a.status) }">
                                                 <strong>{{ a.name }}</strong>
                                             </td>
                                         </tr>
@@ -289,7 +255,7 @@
                                                     <input :id="'inputAccess_' + ''" type="checkbox" name="accessBranchIds[]" v-model="employee.selected_accesses" :value="b.hId" class="form-check-input">
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(b.status) }">
                                                 <div class="pl-5">{{ b.name }}</div>
                                             </td>
                                         </tr>
@@ -333,6 +299,7 @@ const { t } = useI18n();
 
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
+const userContext = computed( () => userContextStore.userContext );
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
 //#endregion
 
@@ -384,7 +351,6 @@ const employee = ref({
     join_date: '',
     status: 'ACTIVE',
 });
-const companyDDL = ref([]);
 const countriesDDL = ref([]);
 const statusDDL = ref([]);
 const accessLists = ref([]);
@@ -457,12 +423,10 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
-    axios.get(route('api.get.db.company.company.read.all_active')).then(response => {
-        companyDDL.value = response.data;
-    });
-
-    axios.get(route('api.get.db.company.company.read.all_active', {
-        with: 'branches'
+    axios.get(route('api.get.db.company.company.list', {
+        userId: userContext.value.hId,
+        search: '',
+        paginate: false
     })).then(response => {
         accessLists.value = response.data;
     });
@@ -575,8 +539,7 @@ const createNew = () => {
     } else {
         employee.value = emptyEmployee();
 
-        let c = _.find(companyDDL.value, { 'hId': selectedUserCompany.value.hId });
-        if (c) employee.value.company.hId = c.hId;
+        employee.value.company.hId = selectedUserCompany.value.hId;
     }
 }
 
