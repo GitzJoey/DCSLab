@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.231.9",
+            "version": "3.231.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "fbda3e544226b44f79ead89de78f220d30ef3796"
+                "reference": "8f8742caa42b260950320c98ddc5da4926e2373d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fbda3e544226b44f79ead89de78f220d30ef3796",
-                "reference": "fbda3e544226b44f79ead89de78f220d30ef3796",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8f8742caa42b260950320c98ddc5da4926e2373d",
+                "reference": "8f8742caa42b260950320c98ddc5da4926e2373d",
                 "shasum": ""
             },
             "require": {
@@ -144,9 +144,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.231.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.231.12"
             },
-            "time": "2022-07-19T18:14:37+00:00"
+            "time": "2022-07-22T18:19:47+00:00"
         },
         {
             "name": "brick/math",
@@ -1723,16 +1723,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v9.21.1",
+            "version": "v9.21.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "eee833e46de5301aa533ce1b7f5372d375b00fd8"
+                "reference": "569d7a2e361895f90e66bb4e02db89c27691a0e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/eee833e46de5301aa533ce1b7f5372d375b00fd8",
-                "reference": "eee833e46de5301aa533ce1b7f5372d375b00fd8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/569d7a2e361895f90e66bb4e02db89c27691a0e7",
+                "reference": "569d7a2e361895f90e66bb4e02db89c27691a0e7",
                 "shasum": ""
             },
             "require": {
@@ -1899,7 +1899,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2022-07-20T13:40:59+00:00"
+            "time": "2022-07-22T14:16:44+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -7266,16 +7266,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.15.0",
+            "version": "v1.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "676e1ff33c1b8af657779f62f57360c376cba666"
+                "reference": "2fe64c0b45a3af56cac0af638c8020a8adc860d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/676e1ff33c1b8af657779f62f57360c376cba666",
-                "reference": "676e1ff33c1b8af657779f62f57360c376cba666",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/2fe64c0b45a3af56cac0af638c8020a8adc860d7",
+                "reference": "2fe64c0b45a3af56cac0af638c8020a8adc860d7",
                 "shasum": ""
             },
             "require": {
@@ -7322,7 +7322,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2022-06-24T13:56:11+00:00"
+            "time": "2022-07-21T14:33:56+00:00"
         },
         {
             "name": "mockery/mockery",
