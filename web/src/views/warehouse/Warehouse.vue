@@ -378,7 +378,7 @@ const createNew = () => {
     } else {
         warehouse.value = emptyWarehouse();
 
-        employee.value.company.hId = selectedUserCompany.value.hId;
+        warehouse.value.company.hId = selectedUserCompany.value.hId;
     }
 }
 

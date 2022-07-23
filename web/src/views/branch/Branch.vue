@@ -420,7 +420,7 @@ const createNew = () => {
     } else {
         branch.value = emptyBranch();
 
-        employee.value.company.hId = selectedUserCompany.value.hId;
+        branch.value.company.hId = selectedUserCompany.value.hId;
     }
 }
 
