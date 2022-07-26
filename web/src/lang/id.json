@@ -56,7 +56,7 @@
                     "active": "Aktif",
                     "inactive": "Tidak Aktif"
                 },
-                "productOrServiceCategoryDDL": {
+                "productGroupCategoryDDL": {
                     "product": "Produk",
                     "service": "Jasa",
                     "product_and_service": "Produk Dan Jasa"
@@ -295,6 +295,29 @@
                         }
                     }
                 }
+            }
+        },
+        "product_group": {
+            "table": {
+                "title": "Daftar Kelompok Produk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "description": "Deskripsi",
+                    "category": "Kategori"
+                }
+            },
+            "actions": {
+                "create": "Tambah Kelompok Produk",
+                "edit": "Ubah Kelompok Produk",
+                "show": "Tampilkan Kelompok Produk",
+                "delete": "Hapus Kelompok Produk"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "description": "Deskripsi",
+                "category": "Kategori"
             }
         },
         "brand": {
