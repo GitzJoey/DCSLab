@@ -54,7 +54,8 @@
             "values": {
                 "statusDDL": {
                     "active": "Aktif",
-                    "inactive": "Tidak Aktif"
+                    "inactive": "Tidak Aktif",
+                    "deleted": "Dihapus"
                 },
                 "productGroupCategoryDDL": {
                     "product": "Produk",

@@ -57,7 +57,8 @@
             "values": {
                 "statusDDL": {
                     "active": "Active",
-                    "inactive": "Inactive"
+                    "inactive": "Inactive",
+                    "deleted": "Deleted"
                 },
                 "productGroupCategoryDDL": {
                     "product": "Product",

@@ -15,7 +15,7 @@
                     </thead>
                     <tbody>
                         <template v-if="tableProps.dataList !== undefined" v-for="(item, itemIdx) in tableProps.dataList.data">
-                            <tr class="intro-x">
+                            <tr :class="{ 'intro-x':true, 'line-through':item.status === 'DELETED' }">
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>
@@ -25,6 +25,7 @@
                                 <td>
                                     <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
                                     <XIcon v-if="item.status === 'INACTIVE'" />
+                                    <XIcon v-if="item.status === 'DELETED'" />
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
@@ -34,9 +35,13 @@
                                         <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.edit')" @click.prevent="editSelected(itemIdx)">
                                             <CheckSquareIcon class="w-4 h-4" />
                                         </Tippy>
-                                        <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.delete')" @click.prevent="deleteSelected(itemIdx)">
-                                            <Trash2Icon class="w-4 h-4 text-danger" />
-                                        </Tippy>
+                                        <template v-if="item.status === 'DELETED'">
+                                        </template>
+                                        <template v-else>
+                                            <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.delete')" @click.prevent="deleteSelected(itemIdx)">
+                                                <Trash2Icon class="w-4 h-4 text-danger" />
+                                            </Tippy>
+                                        </template>
                                     </div>
                                 </td>
                             </tr>
@@ -66,6 +71,7 @@
                                         <div class="flex-1">
                                             <span v-if="item.status === 'ACTIVE'">{{ t('components.dropdown.values.statusDDL.active') }}</span>
                                             <span v-if="item.status === 'INACTIVE'">{{ t('components.dropdown.values.statusDDL.inactive') }}</span>
+                                            <span v-if="item.status === 'DELETED'">{{ t('components.dropdown.values.statusDDL.deleted') }}</span>
                                         </div>
                                     </div>
                                 </td>

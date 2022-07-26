@@ -29,6 +29,7 @@ class CommonController extends BaseController
         return [
             ['name' => 'components.dropdown.values.statusDDL.active', 'code' => RecordStatus::ACTIVE->name],
             ['name' => 'components.dropdown.values.statusDDL.inactive', 'code' => RecordStatus::INACTIVE->name],
+            ['name' => 'components.dropdown.values.statusDDL.deleted', 'code' => RecordStatus::DELETED->name],
         ];
     }
 
