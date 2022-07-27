@@ -72,19 +72,23 @@ jobs:
       - uses: shogo82148/actions-setup-redis@v1
         with:
           redis-version: 'latest'
-      - name: Shutdown Ubuntu MySQL (SUDO)
-        run: sudo service mysql stop
-      - uses: samin/mysql-action@v1
-        with:
-          mysql database: 'laravel'
-      - name: Start Ubuntu MySQL (SUDO)
-        run: sudo service mysql start
       - name: Check Redis
         run: redis-cli ping
       - name: Prepare The Environment
         run: cp .env.example .env
         working-directory: ./api
-      - name: Check Database
+      - name: Set Database Password To Empty
+        run: |
+          sudo systemctl start mysql
+          # To prevent "ERROR 2013 (HY000): Lost connection to MySQL server at 'reading initial communication packet', system error: 0"
+          # See: https://github.com/mirromutth/mysql-action/issues/16
+          sleep 15
+
+          cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
+            UPDATE mysql.user SET authentication_string = null WHERE user = 'root';
+            FLUSH PRIVILEGES;
+          EOF
+      - name: Check Database Connection
         run: mysql --user="root" --password="" -e "show databases;"
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
