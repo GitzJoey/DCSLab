@@ -74,10 +74,10 @@ jobs:
           redis-version: 'latest'
       - name: Check Redis
         run: redis-cli ping
-      - name: Prepare The Environment
+      - name: Prepare The Api Environment
         run: cp .env.example .env
         working-directory: ./api
-      - name: Set Database Password To Empty
+      - name: Set Root Password To Empty
         run: |
           sudo systemctl start mysql
           # To prevent "ERROR 2013 (HY000): Lost connection to MySQL server at 'reading initial communication packet', system error: 0"
@@ -88,10 +88,11 @@ jobs:
             UPDATE mysql.user SET authentication_string = null WHERE user = 'root';
             FLUSH PRIVILEGES;
           EOF
-      - name: Check Database Connection
-        run: mysql --user="root" --password="" -e "show databases;"
+      - name: Create Database
+        run: mysql --user="root" --password="root" -e "CREATE DATABASE dcslab character set UTF8mb4 collate utf8mb4_bin;"
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+        working-directory: ./api
       - name: Run Laravel Server
         run: php artisan serve &
         working-directory: ./api
@@ -101,9 +102,11 @@ jobs:
       - name: Create Ziggy
         run: php artisan ziggy:generate "../web/src/ziggy/ziggy.js"
         working-directory: ./api
-      - name: Prepare The Environment
+      - name: Prepare The Web Environment
         run: cp .env.example .env
         working-directory: ./web
       - name: Run Web Server
         run: npm run dev
         working-directory: ./web
+      - name: Start cypress
+        run: npx cypress run
