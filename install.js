@@ -5,9 +5,6 @@ const { dirname } = require('path');
 
 const rootDir = dirname(require.main.filename);
 
-let cypressOutput = execSync('npm install');
-console.log(cypressOutput);
-
 process.chdir(rootDir + '/api');
 let outputComposer = execSync('composer install');
 console.log(outputComposer.toString());
