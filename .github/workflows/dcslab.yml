@@ -72,6 +72,10 @@ jobs:
       - uses: shogo82148/actions-setup-redis@v1
         with:
           redis-version: 'latest'
+      - uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql user: 'root'
+          mysql password: ''
       - name: Check Redis
         run: redis-cli ping
       - name: Prepare The Environment
