@@ -85,11 +85,11 @@ jobs:
           sleep 15
 
           cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
-            UPDATE mysql.user SET authentication_string = null WHERE user = 'root';
+            UPDATE mysql.user SET authentication_string = password(''), plugin='mysql_native_password' WHERE user = 'root';
             FLUSH PRIVILEGES;
           EOF
       - name: Create Database
-        run: mysql --user="root" --password="root" -e "CREATE DATABASE laravel character set UTF8mb4 collate utf8mb4_bin;"
+        run: mysql --user="root" --password="" -e "CREATE DATABASE laravel character set UTF8mb4 collate utf8mb4_bin;"
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
         working-directory: ./api
