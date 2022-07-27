@@ -3,10 +3,7 @@
   "version": "0.6.0",
   "description": "Doctor Computer SG Lab",
   "scripts": {
-    "install": "node install.js",
-    "serve:api": "cd api && php artisan serve",
-    "serve:web": "cd web && npm run dev",
-    "cypress": "concurrently --kill-others \"npm run serve:api\" \"npm run serve:web\" \"npx cypress open\""
+    "install": "node install.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +16,6 @@
   },
   "homepage": "https://github.com/GitzJoey/DCSLab#readme",
   "devDependencies": {
-    "concurrently": "^7.3.0",
     "cypress": "^10.3.1"
   }
 }
