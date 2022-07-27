@@ -72,6 +72,8 @@ jobs:
       - uses: shogo82148/actions-setup-redis@v1
         with:
           redis-version: 'latest'
+      - name: Shutdown Ubuntu MySQL (SUDO)
+        run: sudo service mysql stop
       - uses: samin/mysql-action@v1
         with:
           mysql database: 'laravel'
