@@ -3,7 +3,8 @@
   "version": "0.6.0",
   "description": "Doctor Computer SG Lab",
   "scripts": {
-    "install": "node install.js"
+    "install": "node install.js",
+    "cypress": "npx cypress open"
   },
   "repository": {
     "type": "git",
@@ -14,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/GitzJoey/DCSLab/issues"
   },
-  "homepage": "https://github.com/GitzJoey/DCSLab#readme"
+  "homepage": "https://github.com/GitzJoey/DCSLab#readme",
+  "devDependencies": {
+    "cypress": "^10.3.1"
+  }
 }
