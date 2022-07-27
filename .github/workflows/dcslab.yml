@@ -80,10 +80,8 @@ jobs:
       - name: Prepare The Environment
         run: cp .env.example .env
         working-directory: ./api
-      - name: Create Database
-        run: |
-          sudo systemctl start mysql
-          mysql --user="root" --password="" -e "show databases;"
+      - name: Check Database
+        run: mysql --user="root" --password="" -e "show databases;"
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
       - name: Run Laravel Server
