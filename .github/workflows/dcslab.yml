@@ -102,7 +102,7 @@ jobs:
         run: php artisan ziggy:generate "../web/src/ziggy/ziggy.js"
         working-directory: ./api
       - name: Run Web Server
-        run: npm run preview &
+        run: npm run dev &
         working-directory: ./web
       - name: Start cypress
         run: npx cypress run
