@@ -77,6 +77,8 @@ jobs:
       - uses: samin/mysql-action@v1
         with:
           mysql database: 'laravel'
+      - name: Start Ubuntu MySQL (SUDO)
+        run: sudo service mysql start
       - name: Check Redis
         run: redis-cli ping
       - name: Prepare The Environment
