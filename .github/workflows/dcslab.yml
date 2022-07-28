@@ -1,0 +1,108 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "v0.6.1" ]
+  pull_request:
+    branches: [ "v0.6.1" ]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+      with:
+        php-version: '8.1'
+    - uses: actions/checkout@v3
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      working-directory: ./api
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      working-directory: ./api
+    - name: Generate key
+      run: php artisan key:generate
+      working-directory: ./api
+    - name: Directory Permissions
+      run: chmod -R 777 storage bootstrap/cache
+      working-directory: ./api
+    - name: Execute tests (Unit and Feature tests) via Artisan
+      run: php artisan test
+      working-directory: ./api
+
+  vue-tests:
+    needs: laravel-tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - name: NPM Clean Install
+        run: npm ci
+        working-directory: ./web
+      - name: Composer Install for ziggy
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        working-directory: ./api        
+      - name: Create Ziggy
+        run: php artisan ziggy:generate "../web/src/ziggy/ziggy.js"
+        working-directory: ./api
+      - name: Execute tests
+        run: npm run test
+        working-directory: ./web
+
+  cypress-tests:
+    needs: vue-tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shogo82148/actions-setup-redis@v1
+        with:
+          redis-version: 'latest'
+      - name: Check Redis
+        run: redis-cli ping
+      - name: Prepare The Api Environment
+        run: cp .env.example .env
+        working-directory: ./api
+      - name: Prepare The Web Environment
+        run: cp .env.example .env
+        working-directory: ./web
+      - name: Set Root Password To Empty
+        run: |
+          sudo systemctl start mysql
+          # To prevent "ERROR 2013 (HY000): Lost connection to MySQL server at 'reading initial communication packet', system error: 0"
+          # See: https://github.com/mirromutth/mysql-action/issues/16
+          sleep 15
+
+          cat <<EOF | mysql -h 127.0.0.1 -u root --password=root
+            UPDATE mysql.user SET authentication_string = null WHERE user = 'root';
+            FLUSH PRIVILEGES;
+          EOF
+      - name: Create Database
+        run: mysql --user="root" --password="" -e "CREATE DATABASE laravel character set UTF8mb4 collate utf8mb4_bin;"
+      - name: Install
+        run: npm install
+      - name: Run Laravel Server
+        run: php artisan serve &
+        working-directory: ./api
+      - name: Create Ziggy
+        run: php artisan ziggy:generate "../web/src/ziggy/ziggy.js"
+        working-directory: ./api
+      - name: Run Web Server
+        run: npm run dev &
+        working-directory: ./web
+      - name: Start cypress
+        run: npx cypress run

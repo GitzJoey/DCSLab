@@ -1,0 +1,442 @@
+{
+    "hId":"Ek2WDKzPBVabgdv9eYwpbR13",
+    "uuid":"3486b47b-5e89-45b7-89fb-ea1e7358b8ac",
+    "name":"GitzJoey",
+    "email":"gitzjoey@yahoo.com",
+    "email_verified":true,
+    "password_expiry_day":360,
+    "profile":{
+       "first_name":"GitzJoey",
+       "last_name":"",
+       "address":null,
+       "city":null,
+       "postal_code":null,
+       "country":"Singapore",
+       "status":"ACTIVE",
+       "tax_id":"",
+       "ic_num":"",
+       "img_path":null,
+       "remarks":null
+    },
+    "roles":[
+       {
+          "hId":"Ek2WDKzPBVabgdv9eYwpbR13",
+          "display_name":"Developer",
+          "permissions":[
+             {
+                "hId":"Ek2WDKzPBVabgdv9eYwpbR13",
+                "display_name":"Read Profile"
+             },
+             {
+                "hId":"zwlNWPq0Zb839anrBY1vLkX2",
+                "display_name":"Update Profile"
+             },
+             {
+                "hId":"g3oNlbypWM4kLaRzKr501xVk",
+                "display_name":"Create Messaging"
+             },
+             {
+                "hId":"qJm6R1GKNBaOY8L5xDjz3Y79",
+                "display_name":"Read Messaging"
+             },
+             {
+                "hId":"5jK1rLbA0NdKD8zeBWDMQO3x",
+                "display_name":"Update Messaging"
+             },
+             {
+                "hId":"ZGWKzpLkJ7djp4XqlP5Qm6Av",
+                "display_name":"Delete Messaging"
+             },
+             {
+                "hId":"1VJgEmz2vb82b8wWQPjkoOpA",
+                "display_name":"Read Settings"
+             },
+             {
+                "hId":"ryNxBLzZ054n247qkJnmYG6V",
+                "display_name":"Update Settings"
+             }
+          ],
+          "permissions_description":"Read Profile,Update Profile,Create Messaging,Read Messaging,Update Messaging,Delete Messaging,Read Settings,Update Settings"
+       }
+    ],
+    "roles_description":"Developer",
+    "selected_roles":[
+       "Ek2WDKzPBVabgdv9eYwpbR13"
+    ],
+    "companies":[
+       {
+          "hId":"Ek2WDKzPBVabgdv9eYwpbR13",
+          "uuid":"71181d4e-71c1-43f5-a683-b4d24be5750f",
+          "code":"3HXCO86629",
+          "name":"UD Nababan Lestari (Persero) Tbk",
+          "address":"Ds. Jaksa No. 537, Administrasi Jakarta Selatan 87656, Kepri",
+          "default":false,
+          "status":"ACTIVE",
+          "branches":[
+             {
+                "hId":"Ek2WDKzPBVabgdv9eYwpbR13",
+                "uuid":"f8cf95ef-9961-4dab-a182-917bea6e76d7",
+                "code":"MM7JH40868",
+                "name":"Kantor Cabang Daerah Ternate",
+                "address":"Dk. Casablanca No. 123, Serang 58269, Maluku",
+                "city":"Ternate",
+                "contact":"+270913517072",
+                "status":"ACTIVE",
+                "is_main":true,
+                "remarks":"Assumenda amet ullam dolorem laudantium sed minus quas."
+             },
+             {
+                "hId":"zwlNWPq0Zb839anrBY1vLkX2",
+                "uuid":"1c77c8ff-6b8a-4ae8-ba65-f528b1750329",
+                "code":"G9MXB58475",
+                "name":"Kantor Cabang Utama Singkawang",
+                "address":"Psr. Cihampelas No. 290, Tebing Tinggi 53249, DKI",
+                "city":"Singkawang",
+                "contact":"+268191499993",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Laborum harum sit rerum rerum maxime beatae."
+             },
+             {
+                "hId":"g3oNlbypWM4kLaRzKr501xVk",
+                "uuid":"0aab9605-e9cb-464d-9b49-6eabd5f43ad6",
+                "code":"KFURS37690",
+                "name":"Kantor Cabang Pembantu Solok",
+                "address":"Jr. Basudewo No. 105, Pasuruan 52232, Papua",
+                "city":"Solok",
+                "contact":"+354855478617",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Aut velit quam ratione."
+             },
+             {
+                "hId":"qJm6R1GKNBaOY8L5xDjz3Y79",
+                "uuid":"ab5b1fe0-69cd-4839-b50b-5376d5549914",
+                "code":"EZNN757727",
+                "name":"Kantor Cabang Utama Bandung",
+                "address":"Jr. Yoga No. 955, Administrasi Jakarta Barat 13727, Lampung",
+                "city":"Bandung",
+                "contact":"+264965748262",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Id adipisci ea tempora."
+             },
+             {
+                "hId":"5jK1rLbA0NdKD8zeBWDMQO3x",
+                "uuid":"a8c9e057-48d3-4b5a-a5da-51778053d24c",
+                "code":"CKVDK97374",
+                "name":"Kantor Cabang Pembantu Dumai",
+                "address":"Ki. Imam No. 805, Parepare 44130, Kalbar",
+                "city":"Dumai",
+                "contact":"+2252981092068",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Quis quibusdam est dolor amet."
+             }
+          ]
+       },
+       {
+          "hId":"zwlNWPq0Zb839anrBY1vLkX2",
+          "uuid":"6e97329b-908c-4e3e-9471-ff52085db343",
+          "code":"VVJRW75504",
+          "name":"Perum Novitasari Tbk",
+          "address":"Psr. Bhayangkara No. 715, Balikpapan 72698, Aceh",
+          "default":false,
+          "status":"ACTIVE",
+          "branches":[
+             {
+                "hId":"ZGWKzpLkJ7djp4XqlP5Qm6Av",
+                "uuid":"49f8a125-3a6c-416f-b8a0-f332df99def2",
+                "code":"TP7PZ68684",
+                "name":"Kantor Cabang Pembantu Palangka Raya",
+                "address":"Jln. Kiaracondong No. 379, Lhokseumawe 24915, Sumbar",
+                "city":"Palangka Raya",
+                "contact":"+261026108415",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Omnis ut dolorem accusantium excepturi consequatur ea commodi."
+             },
+             {
+                "hId":"1VJgEmz2vb82b8wWQPjkoOpA",
+                "uuid":"7a24cca5-2da2-4a17-9c8e-f26bef407896",
+                "code":"ZPZAP33505",
+                "name":"Kantor Cabang Daerah Payakumbuh",
+                "address":"Kpg. Rajawali Barat No. 306, Bandung 42989, Babel",
+                "city":"Payakumbuh",
+                "contact":"+40245791554",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Et cum est totam repellendus."
+             },
+             {
+                "hId":"ryNxBLzZ054n247qkJnmYG6V",
+                "uuid":"e85ad0fb-a713-4e3b-acb4-7e671aa99d50",
+                "code":"VS3PX37949",
+                "name":"Kantor Cabang Pembantu Mojokerto",
+                "address":"Kpg. Lembong No. 97, Banjarmasin 53610, Sumsel",
+                "city":"Mojokerto",
+                "contact":"+665680431842",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Autem modi officiis autem voluptatem est."
+             },
+             {
+                "hId":"ePEAWRwrM24eVaBpzoKmDvJ3",
+                "uuid":"b2fd8ebd-26ae-475b-93bd-e463e0a8cd78",
+                "code":"VF3CY37576",
+                "name":"Kantor Cabang Daerah Bogor",
+                "address":"Psr. Kali No. 290, Gorontalo 74431, Kaltara",
+                "city":"Bogor",
+                "contact":"+9645991033334",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Alias facilis qui ea nulla velit quibusdam quia et."
+             },
+             {
+                "hId":"Gpy7DAbV5NdrQaexJPmX60Oq",
+                "uuid":"c047c587-d12a-424b-8047-f0fe44ae4645",
+                "code":"CTOVB17774",
+                "name":"Kantor Cabang Pembantu Magelang",
+                "address":"Gg. Samanhudi No. 384, Lubuklinggau 93010, Bengkulu",
+                "city":"Magelang",
+                "contact":"+967205215553",
+                "status":"ACTIVE",
+                "is_main":true,
+                "remarks":"Autem fugiat alias facilis et facere earum ea."
+             }
+          ]
+       },
+       {
+          "hId":"g3oNlbypWM4kLaRzKr501xVk",
+          "uuid":"47d51598-9fd9-43d4-9db5-da8085d5be2a",
+          "code":"RBUAV96703",
+          "name":"PD Nuraini Wulandari Tbk",
+          "address":"Kpg. R.E. Martadinata No. 545, Cilegon 99195, Aceh",
+          "default":true,
+          "status":"ACTIVE",
+          "branches":[
+             {
+                "hId":"7BKl2jq56MdA68p0XbJWeykx",
+                "uuid":"d55b2404-056f-4293-8a71-54394aa03d13",
+                "code":"XP9DJ93399",
+                "name":"Kantor Cabang Utama Singkawang",
+                "address":"Ki. Babadak No. 851, Serang 96068, Maluku",
+                "city":"Singkawang",
+                "contact":"+2467220677",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Consequuntur aut ullam iure asperiores eligendi doloribus tempora."
+             },
+             {
+                "hId":"6WJBOK30eld0b4AgQ7Gko2Rx",
+                "uuid":"1e3e14e4-63bd-45bf-a744-a81dc050851e",
+                "code":"G3YXM16365",
+                "name":"Kantor Cabang Utama Makassar",
+                "address":"Jln. Bak Air No. 868, Tangerang Selatan 99564, Sumbar",
+                "city":"Makassar",
+                "contact":"+625040907984",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Corrupti ratione dolor voluptatem ullam dolorum sint quia dolorem."
+             },
+             {
+                "hId":"oB2P9MwnyXaZ6aWEZkb3zxNA",
+                "uuid":"7bd283b2-abba-46fc-b60c-297df43f05f3",
+                "code":"49NGC52844",
+                "name":"Kantor Cabang Daerah Kupang",
+                "address":"Kpg. Orang No. 462, Bandung 16059, Banten",
+                "city":"Kupang",
+                "contact":"+37491124854",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Velit qui tempora non."
+             },
+             {
+                "hId":"Rwj3G26bJEd6YaKZ01WXgAkz",
+                "uuid":"80826aba-86f6-4c87-b879-7d2f65845071",
+                "code":"3WYAR66355",
+                "name":"Kantor Cabang Pembantu Tebing Tinggi",
+                "address":"Kpg. Jend. A. Yani No. 941, Manado 68621, Bali",
+                "city":"Tebing Tinggi",
+                "contact":"+262482207508",
+                "status":"ACTIVE",
+                "is_main":true,
+                "remarks":"Sint delectus ab ea aliquid tempora."
+             },
+             {
+                "hId":"3pXGLJx9Rb4oXao7Qg501mDE",
+                "uuid":"1205d106-f8ea-4356-bfc6-4cdd7167b7d4",
+                "code":"F4ZRV73517",
+                "name":"Kantor Cabang Pembantu Yogyakarta",
+                "address":"Kpg. Jakarta No. 348, Kediri 96949, Kepri",
+                "city":"Yogyakarta",
+                "contact":"+8503437750783",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Consectetur excepturi tenetur qui dicta est natus blanditiis aut."
+             }
+          ]
+       },
+       {
+          "hId":"qJm6R1GKNBaOY8L5xDjz3Y79",
+          "uuid":"a07c9552-f897-4ccb-94a9-9c6f4a8221c1",
+          "code":"JFGTT77508",
+          "name":"PD Wahyuni Wijaya",
+          "address":"Gg. Bank Dagang Negara No. 514, Ternate 48189, Kalsel",
+          "default":false,
+          "status":"ACTIVE",
+          "branches":[
+             {
+                "hId":"6V92xM0Reyagr4rWGEkwjKNL",
+                "uuid":"75963dca-bc1b-4021-b3cb-5204deb25f5e",
+                "code":"93TDM91414",
+                "name":"Kantor Cabang Daerah Langsa",
+                "address":"Kpg. Ciwastra No. 19, Palu 20944, Sultra",
+                "city":"Langsa",
+                "contact":"+9708821538256",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Mollitia placeat sed vitae sapiente iure et."
+             },
+             {
+                "hId":"2eEAVX9lG7dGL8rMwgqn30pj",
+                "uuid":"ead464df-7578-47f3-8a36-683aa765271d",
+                "code":"VCHMS70398",
+                "name":"Kantor Cabang Pembantu Bima",
+                "address":"Ki. Abang No. 702, Madiun 85990, Jabar",
+                "city":"Bima",
+                "contact":"+996228434875",
+                "status":"ACTIVE",
+                "is_main":true,
+                "remarks":"Natus dolores omnis et iusto aliquam."
+             },
+             {
+                "hId":"3YZzK7QqG5aMAamr9JkWMEo2",
+                "uuid":"0a301380-6d9f-4cd6-ade7-49e1abb2662f",
+                "code":"GS3MB66318",
+                "name":"Kantor Cabang Pembantu Bima",
+                "address":"Jln. Uluwatu No. 227, Lhokseumawe 61354, Gorontalo",
+                "city":"Bima",
+                "contact":"+221452113119",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Aut ut fugiat ut molestiae laudantium et exercitationem."
+             },
+             {
+                "hId":"0GyDQb7ZrV8VmdXBR3O9MEoe",
+                "uuid":"b2e6bc89-13ad-459d-903a-af1fa9f79488",
+                "code":"MU39323662",
+                "name":"Kantor Cabang Pembantu Pematangsiantar",
+                "address":"Jln. Gajah Mada No. 187, Batam 68201, Malut",
+                "city":"Pematangsiantar",
+                "contact":"+33598429436",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Quis similique ipsum nisi consectetur quam animi et."
+             },
+             {
+                "hId":"2zGoxVePBOdPR465NAj1WYnk",
+                "uuid":"582c9566-7e4b-4d56-9530-fe763ea8095d",
+                "code":"RBDAZ17233",
+                "name":"Kantor Cabang Utama Lhokseumawe",
+                "address":"Dk. Bak Mandi No. 705, Mojokerto 27291, Sumut",
+                "city":"Lhokseumawe",
+                "contact":"+661036544463",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Quia vitae odit enim voluptas quis odit iure aut."
+             }
+          ]
+       },
+       {
+          "hId":"5jK1rLbA0NdKD8zeBWDMQO3x",
+          "uuid":"8e81ea08-2967-4898-abda-bd75ec8f2846",
+          "code":"FU94U86122",
+          "name":"CV Pertiwi Utama (Persero) Tbk",
+          "address":"Ds. Yosodipuro No. 388, Batam 35890, Kaltara",
+          "default":false,
+          "status":"INACTIVE",
+          "branches":[
+             {
+                "hId":"x5l0qR7NMoavgdYXGQj1wgZW",
+                "uuid":"f85ea122-cd8d-4e9e-8adb-05799fe8eea4",
+                "code":"3ZVCH87186",
+                "name":"Kantor Cabang Daerah Jayapura",
+                "address":"Gg. Achmad No. 75, Surakarta 49617, Bengkulu",
+                "city":"Jayapura",
+                "contact":"+251231951691",
+                "status":"ACTIVE",
+                "is_main":false,
+                "remarks":"Sequi sed corrupti et non aut repellat optio."
+             },
+             {
+                "hId":"MEOqXv2z9ga1bdZo3YRmADPn",
+                "uuid":"a776ae8e-f63b-461b-abee-e5d193957129",
+                "code":"V4Y9A32419",
+                "name":"Kantor Cabang Utama Palangka Raya",
+                "address":"Gg. Pasteur No. 246, Sawahlunto 61720, Sulsel",
+                "city":"Palangka Raya",
+                "contact":"+6783299305",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Repudiandae non facere sapiente vitae ex."
+             },
+             {
+                "hId":"6vr73nqGbwdYb8jApZ9XEzgy",
+                "uuid":"1620384e-3ad7-4312-9212-108dae9c3c4c",
+                "code":"93OSC26621",
+                "name":"Kantor Cabang Daerah Padangpanjang",
+                "address":"Gg. Padma No. 356, Banjar 47008, Jabar",
+                "city":"Padangpanjang",
+                "contact":"+962030652576",
+                "status":"ACTIVE",
+                "is_main":true,
+                "remarks":"Fuga veniam aspernatur blanditiis molestiae dolorum veniam."
+             },
+             {
+                "hId":"1pG9eroPYq89ldNjmK0kl35Q",
+                "uuid":"598ca3c8-2b6e-449c-aa8e-509f53c89258",
+                "code":"JKBR453180",
+                "name":"Kantor Cabang Daerah Tanjung Pinang",
+                "address":"Ds. Bambon No. 204, Tebing Tinggi 36925, Bengkulu",
+                "city":"Tanjung Pinang",
+                "contact":"+689476267514",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Nihil dolorem officia atque consequatur."
+             },
+             {
+                "hId":"Ab60PzlKZ54qVa9BjmVgxWO7",
+                "uuid":"d1a9636b-e73e-4d57-a26d-f98e39f5084e",
+                "code":"PTGDK92041",
+                "name":"Kantor Cabang Pembantu Palopo",
+                "address":"Gg. Bakhita No. 445, Depok 53019, Kaltara",
+                "city":"Palopo",
+                "contact":"+256683052836",
+                "status":"INACTIVE",
+                "is_main":false,
+                "remarks":"Optio inventore unde temporibus qui perspiciatis corrupti minus."
+             }
+          ]
+       }
+    ],
+    "settings":[
+       {
+          "key":"PREFS.THEME",
+          "value":"side-menu-light-full"
+       },
+       {
+          "key":"PREFS.DATE_FORMAT",
+          "value":"yyyy_MM_dd"
+       },
+       {
+          "key":"PREFS.TIME_FORMAT",
+          "value":"hh_mm_ss"
+       }
+    ],
+    "selected_settings":{
+       "theme":"side-menu-light-full",
+       "dateFormat":"yyyy_MM_dd",
+       "timeFormat":"hh_mm_ss"
+    }
+ }
