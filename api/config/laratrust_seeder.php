@@ -15,19 +15,19 @@ return [
         'developer' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
-            'settings' => 'r,u',
+            'setting' => 'r,u',
         ],
         'administrator' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
-            'settings' => 'r,u',
+            'setting' => 'r,u',
 
-            'users' => 'c,r,ra,u',
+            'user' => 'c,r,ra,u',
         ],
         'user' => [
             'profile' => 'r,u',
             'messaging' => 'c,r,u,d',
-            'settings' => 'r,u',
+            'setting' => 'r,u',
         ],
         #region Extensions
         'POS-owner' => [
@@ -45,21 +45,21 @@ return [
             'salesorder' => 'c,r,ra,u,d',
         ],
         'POS-employee' => [
-            'companies' => 'c',
-            'branches' => 'c',
-            'employees' => 'c,u',
-            'warehouses' => 'c,u',
-            'suppliers' => 'c,u',
-            'products' => 'c,u',
-            'brands' => 'c,u',
-            'productgroups' => 'c,u',
-            'services' => 'c,u',
-            'units' => 'c,u',
-            'purchaseorders' => 'c,u',
-            'salesorders' => 'c,u',
+            'company' => 'c',
+            'branch' => 'c',
+            'employee' => 'c,u',
+            'warehouse' => 'c,u',
+            'supplier' => 'c,u',
+            'product' => 'c,u',
+            'brand' => 'c,u',
+            'productgroup' => 'c,u',
+            'service' => 'c,u',
+            'unit' => 'c,u',
+            'purchaseorder' => 'c,u',
+            'salesorder' => 'c,u',
         ],
         'POS-supplier' => [
-            'suppliers' => 'r,u',
+            'supplier' => 'r,u',
         ],
         #endregion
     ],

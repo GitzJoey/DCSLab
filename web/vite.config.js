@@ -12,6 +12,9 @@ export default ({ command, mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
+    server: {
+      port: 3000
+    },
     test: {
       globals: true,
       environment: 'jsdom',
