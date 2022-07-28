@@ -63,4 +63,13 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    public function setNotRequiredResetPassword()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'password_changed_at' => Carbon::now(),
+            ];
+        });
+    }
 }
