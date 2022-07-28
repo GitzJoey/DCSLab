@@ -12,27 +12,71 @@ return [
     'truncate_tables' => true,
 
     'roles_structure' => [
-        'superadministrator' => [
-            'users' => 'c,r,u,d',
-            'payments' => 'c,r,u,d',
-            'profile' => 'r,u'
+        'developer' => [
+            'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'settings' => 'r,u',
         ],
         'administrator' => [
-            'users' => 'c,r,u,d',
-            'profile' => 'r,u'
+            'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'settings' => 'r,u',
+
+            'users' => 'c,r,ra,u',
         ],
         'user' => [
             'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'settings' => 'r,u',
         ],
-        'role_name' => [
-            'module_1_name' => 'c,r,u,d',
-        ]
+        #region Extensions
+        'POS-owner' => [
+            'company' => 'c,r,ra,u,d',
+            'branch' => 'c,r,ra,u,d',
+            'employee' => 'c,r,ra,u,d',
+            'warehouse' => 'c,r,ra,u,d',
+            'supplier' => 'c,r,ra,u,d',
+            'product' => 'c,r,ra,u,d',
+            'brand' => 'c,r,ra,u,d',
+            'productgroup' => 'c,r,ra,u,d',
+            'service' => 'c,r,ra,u,d',
+            'unit' => 'c,r,ra,u,d',
+            'purchaseorder' => 'c,r,ra,u,d',
+            'salesorder' => 'c,r,ra,u,d',
+        ],
+        'POS-employee' => [
+            'companies' => 'c',
+            'branches' => 'c',
+            'employees' => 'c,u',
+            'warehouses' => 'c,u',
+            'suppliers' => 'c,u',
+            'products' => 'c,u',
+            'brands' => 'c,u',
+            'productgroups' => 'c,u',
+            'services' => 'c,u',
+            'units' => 'c,u',
+            'purchaseorders' => 'c,u',
+            'salesorders' => 'c,u',
+        ],
+        'POS-supplier' => [
+            'suppliers' => 'r,u',
+        ],
+        #endregion
     ],
 
     'permissions_map' => [
         'c' => 'create',
         'r' => 'read',
+        'ra' => 'readAny',
         'u' => 'update',
-        'd' => 'delete'
+        'd' => 'delete',
+
+        'rs' => 'restore',
+
+        'ac' => 'authorizeCreate',
+        'au' => 'authorizeUpdate',
+        'ad' => 'authorizeDelete',
+
+        'ars' => 'authorizeRestore',
     ]
 ];
