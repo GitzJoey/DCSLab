@@ -1,4 +1,4 @@
-describe('Login', () => {
+describe('Login Test', () => {
   it('render the login page', () => {
     cy.visit('http://localhost:3000/')
   });
@@ -15,5 +15,5 @@ describe('Login', () => {
     cy.get('#email').type('gitzjoey@yahoo.com');
     cy.get('#password').type('qweasdzxc');
     cy.get('.btn-primary').click();
-  })
-})
+  });
+});
