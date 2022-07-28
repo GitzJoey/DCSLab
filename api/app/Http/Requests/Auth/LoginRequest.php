@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\inactiveUser;
+use App\Rules\mustResetPassword;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -50,6 +53,21 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
+            ]);
+        }
+
+        $customValidator = Validator::make([
+            'email' => $this->input('email'),
+            'password' => $this->input('password'),
+        ], [
+            'email' => [new inactiveUser(auth()->user())],
+            'password' => [new mustResetPassword(auth()->user())],
+        ]);
+
+        if($customValidator->fails()) {
+            throw ValidationException::withMessages([
+                'email' => __('rules.inactive_user'),
+                'password' => __('rules.must_reset_password'),
             ]);
         }
 
