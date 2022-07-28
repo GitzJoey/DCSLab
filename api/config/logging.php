@@ -51,12 +51,6 @@ return [
     */
 
     'channels' => [
-        'stack' => [
-            'driver' => 'stack',
-            'channels' => ['single'],
-            'ignore_exceptions' => false,
-        ],
-
         'cachehits' => [
             'driver' => 'single',
             'path' => storage_path('logs/cachehits.log'),
@@ -67,6 +61,12 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/performances.log'),
             'level' => 'info',
+        ],
+
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => ['single'],
+            'ignore_exceptions' => false,
         ],
 
         'single' => [

@@ -2,11 +2,14 @@
   "name": "web",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run ziggy && vite",
+    "ziggy": "cd ../api && php artisan ziggy:generate \"../web/src/ziggy/ziggy.js\"",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@left4code/tw-starter": "^3.1.35",
