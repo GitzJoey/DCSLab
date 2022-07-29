@@ -65,7 +65,7 @@
 
 <script setup>
 //#region Imports
-import { onMounted, ref } from "vue";
+import { onMounted, ref, inject } from "vue";
 import axios from "@/axios";
 import route from "@/ziggy";
 import { useI18n } from "vue-i18n";
@@ -73,6 +73,7 @@ import { useI18n } from "vue-i18n";
 
 //#region Declarations
 const { t } = useI18n();
+const _ = inject('$_');
 //#endregion
 
 //#region Data - Views

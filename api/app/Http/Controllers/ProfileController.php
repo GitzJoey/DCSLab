@@ -64,8 +64,8 @@ class ProfileController extends BaseController
         $request = $profileRequest->validated();
 
         $usr = Auth::user();
-        $updateActions = new UpdateUserPassword();
-        $updateActions->update($usr, $request);
+
+        $this->userService->changePassword($usr, $request->password);
     }
 
     public function updateSettings(ProfileRequest $profileRequest)
