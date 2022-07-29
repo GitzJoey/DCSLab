@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use App\Models\ProductGroup;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use App\Enums\ProductGroupCategory;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductGroupTableSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class ProductGroupTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($productGroupPerCompany = 5, $onlyThisCompanyId = 0)
+    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 0)
     {
         if ($onlyThisCompanyId != 0) {
             $c = Company::find($onlyThisCompanyId);
@@ -29,9 +30,26 @@ class ProductGroupTableSeeder extends Seeder
         }
 
         foreach ($companies as $c) {
-            ProductGroup::factory()->count($productGroupPerCompany)->create([
-                'company_id' => $c,
-            ]);
+            if ($category == 0) {
+                ProductGroup::factory()->count($countPerCompany)->create([
+                    'company_id' => $c,
+                ]);
+            }
+            if ($category == ProductGroupCategory::PRODUCTS->value) {
+                ProductGroup::factory()->setCategoryToProduct()->count($countPerCompany)->create([
+                    'company_id' => $c,
+                ]);
+            }
+            if ($category == ProductGroupCategory::SERVICES->value) {
+                ProductGroup::factory()->setCategoryToService()->count($countPerCompany)->create([
+                    'company_id' => $c,
+                ]);
+            }
+            if ($category == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
+                ProductGroup::factory()->setCategoryToProductAndService()->count($countPerCompany)->create([
+                    'company_id' => $c,
+                ]);
+            }
         }
     }
 }
