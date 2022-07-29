@@ -28,7 +28,6 @@ interface SupplierService
     public function update(
         Supplier $supplier,
         array $supplierArr,
-        array $picArr,
         array $productsArr
     ): Supplier;
 
