@@ -10,7 +10,7 @@ import { useDarkModeStore } from "@/stores/dark-mode";
 import LoadingIcon from "@/global-components/loading-icon/Main.vue";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main.vue";
 
-import Login from "@/views/login/Main.vue";
+import Login from "@/views/auth/Login.vue";
 
 describe('Login.vue', () => {
     it('should load properly', () => {
