@@ -20,7 +20,7 @@ function register() {
 
 function resetPassword() {
     return {
-        path: "/password/reset",
+        path: "/password/reset/:token?",
         name: "reset-password",
         component: ResetPassword
     }

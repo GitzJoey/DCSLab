@@ -46,7 +46,7 @@ const resolution = ref('');
 //#region onMounted
 onMounted(() => {
     let code = router.currentRoute.value.params.code;
-    console.log(router.currentRoute.value);
+
     switch (code) {
         case '403':
             title.value = 'Forbidden';

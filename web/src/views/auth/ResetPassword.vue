@@ -101,6 +101,11 @@ const mode = ref('email');
 //#region onMounted
 onMounted( async () => {
   dom("body").removeClass("main").removeClass("error-page").addClass("login");
+
+  let token = router.currentRoute.value.params.token;
+  if (token.length !== 0) {
+    mode.value = 'reset';
+  }
 });
 //#endregion
 

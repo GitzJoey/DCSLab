@@ -29,12 +29,10 @@
                                         <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.view')" @click.prevent="showSelected(itemIdx)">
                                             <InfoIcon class="w-4 h-4" />
                                         </Tippy>
-                                        <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.edit')" @click.prevent="editSelected(itemIdx)">
-                                            <CheckSquareIcon class="w-4 h-4" />
-                                        </Tippy>
-                                        <template v-if="item.status === 'DELETED'">
-                                        </template>
-                                        <template v-else>
+                                        <template v-if="item.status !== 'DELETED'">
+                                            <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.edit')" @click.prevent="editSelected(itemIdx)">
+                                                <CheckSquareIcon class="w-4 h-4" />
+                                            </Tippy>
                                             <Tippy tag="a" href="javascript:;" class="tooltip p-2 hover:border" :content="t('components.data-list.delete')" @click.prevent="deleteSelected(itemIdx)">
                                                 <Trash2Icon class="w-4 h-4 text-danger" />
                                             </Tippy>
