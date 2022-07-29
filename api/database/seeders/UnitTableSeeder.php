@@ -32,25 +32,27 @@ class UnitTableSeeder extends Seeder
         }
 
         foreach ($companies as $c) {
-            if ($category == 0) {
-                Unit::factory()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
-            }
-            if ($category == UnitCategory::PRODUCTS->value) {
-                Unit::factory()->setCategoryToProduct()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
-            }
-            if ($category == UnitCategory::SERVICES->value) {
-                Unit::factory()->setCategoryToService()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
-            }
-            if ($category == UnitCategory::PRODUCTS_AND_SERVICES->value) {
-                Unit::factory()->setCategoryToProductAndService()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
+            switch ($category) {
+                case 0:
+                    Unit::factory()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
+                case UnitCategory::PRODUCTS->value:
+                    Unit::factory()->setCategoryToProduct()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
+                case UnitCategory::SERVICES->value:
+                    Unit::factory()->setCategoryToService()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
+                case UnitCategory::PRODUCTS_AND_SERVICES->value:
+                    Unit::factory()->setCategoryToProductAndService()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
             }
         }
     }

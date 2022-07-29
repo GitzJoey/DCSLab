@@ -24,11 +24,10 @@ class EmployeeTableSeeder extends Seeder
     public function run($employeePerPart = 3, $onlyThisCompanyId = 0, $onlyThisBranchId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            // $company = Company::find($onlyThisCompanyId);
-            $company = Company::where('id', '=', $onlyThisCompanyId)->get();
-
+            $company = Company::find($onlyThisCompanyId);
+            
             if ($company) {
-                $companyIds = $company->pluck('id');
+                $companyIds = (new Collection())->push($company->id);
             } else {
                 $companyIds = Company::pluck('id');
             }
@@ -37,10 +36,10 @@ class EmployeeTableSeeder extends Seeder
         }
 
         if ($onlyThisBranchId != 0) {
-            $branch = Branch::where('id', '=', $onlyThisBranchId)->get();
+            $branch = Branch::find($onlyThisBranchId);
 
             if ($branch) {
-                $branchIds = $branch->pluck('id');
+                $branchIds = (new Collection())->push($branch->id);
             } else {
                 $branchIds = Branch::whereIn('company_id', $companyIds)->pluck('id');
             }

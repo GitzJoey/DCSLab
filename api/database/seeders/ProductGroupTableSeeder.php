@@ -30,25 +30,27 @@ class ProductGroupTableSeeder extends Seeder
         }
 
         foreach ($companies as $c) {
-            if ($category == 0) {
-                ProductGroup::factory()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
-            }
-            if ($category == ProductGroupCategory::PRODUCTS->value) {
-                ProductGroup::factory()->setCategoryToProduct()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
-            }
-            if ($category == ProductGroupCategory::SERVICES->value) {
-                ProductGroup::factory()->setCategoryToService()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
-            }
-            if ($category == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
-                ProductGroup::factory()->setCategoryToProductAndService()->count($countPerCompany)->create([
-                    'company_id' => $c,
-                ]);
+            switch ($category) {
+                case 0:
+                    ProductGroup::factory()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
+                case ProductGroupCategory::PRODUCTS->value:
+                    ProductGroup::factory()->setCategoryToProduct()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
+                case ProductGroupCategory::SERVICES->value:
+                    ProductGroup::factory()->setCategoryToService()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
+                case ProductGroupCategory::PRODUCTS_AND_SERVICES->value:
+                    ProductGroup::factory()->setCategoryToProductAndService()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
             }
         }
     }
