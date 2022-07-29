@@ -25,227 +25,227 @@ class BranchServiceTest extends ServiceTestCase
     }
 
     /* #region create */
-        public function test_branch_service_call_create_expect_db_has_record()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault(), 'companies')
-                        ->create();
+    public function test_branch_service_call_create_expect_db_has_record()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
 
-            $branchArr = Branch::factory()->make([
-                'company_id' => $user->companies->first()->id,
-            ]);
+        $branchArr = Branch::factory()->make([
+            'company_id' => $user->companies->first()->id,
+        ]);
 
-            $result = $this->branchService->create($branchArr->toArray());
+        $result = $this->branchService->create($branchArr->toArray());
 
-            $this->assertDatabaseHas('branches', [
-                'id' => $result->id,
-                'company_id' => $branchArr['company_id'],
-                'code' => $branchArr['code'],
-                'name' => $branchArr['name'],
-            ]);
-        }
+        $this->assertDatabaseHas('branches', [
+            'id' => $result->id,
+            'company_id' => $branchArr['company_id'],
+            'code' => $branchArr['code'],
+            'name' => $branchArr['name'],
+        ]);
+    }
 
-        public function test_branch_service_call_create_with_empty_array_parameters_expect_exception()
-        {
-            $this->expectException(Exception::class);
-            $this->branchService->create([]);
-        }
+    public function test_branch_service_call_create_with_empty_array_parameters_expect_exception()
+    {
+        $this->expectException(Exception::class);
+        $this->branchService->create([]);
+    }
     /* #endregion */
 
     /* #region list */
-        public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault()
-                                ->has(Branch::factory()->count(20), 'branches'), 'companies')
-                        ->create();
+    public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(20), 'branches'), 'companies')
+                    ->create();
 
-            $result = $this->branchService->list(
-                companyId: $user->companies->first()->id,
-                search: '',
-                paginate: true,
-                page: 1,
-                perPage: 10
-            );
+        $result = $this->branchService->list(
+            companyId: $user->companies->first()->id,
+            search: '',
+            paginate: true,
+            page: 1,
+            perPage: 10
+        );
 
-            $this->assertInstanceOf(Paginator::class, $result);
-        }
+        $this->assertInstanceOf(Paginator::class, $result);
+    }
 
-        public function test_branch_service_call_list_with_paginate_false_expect_collection_object()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault()
-                                ->has(Branch::factory()->count(20), 'branches'), 'companies')
-                        ->create();
+    public function test_branch_service_call_list_with_paginate_false_expect_collection_object()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(20), 'branches'), 'companies')
+                    ->create();
 
-            $result = $this->branchService->list(
-                companyId: $user->companies->first()->id,
-                search: '',
-                paginate: false
-            );
+        $result = $this->branchService->list(
+            companyId: $user->companies->first()->id,
+            search: '',
+            paginate: false
+        );
 
-            $this->assertInstanceOf(Collection::class, $result);
-        }
+        $this->assertInstanceOf(Collection::class, $result);
+    }
 
-        public function test_branch_service_call_list_with_nonexistance_companyId_expect_empty_collection()
-        {
-            $maxId = Company::max('id') + 1;
-            $result = $this->branchService->list(companyId: $maxId, search: '', paginate: false);
+    public function test_branch_service_call_list_with_nonexistance_companyId_expect_empty_collection()
+    {
+        $maxId = Company::max('id') + 1;
+        $result = $this->branchService->list(companyId: $maxId, search: '', paginate: false);
 
-            $this->assertInstanceOf(Collection::class, $result);
-            $this->assertEmpty($result);
-        }
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertEmpty($result);
+    }
 
-        public function test_branch_service_call_list_with_search_parameter_expect_filtered_results()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault(), 'companies')
-                        ->create();
+    public function test_branch_service_call_list_with_search_parameter_expect_filtered_results()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
 
-            $companyId = $user->companies->first()->id;
+        $companyId = $user->companies->first()->id;
 
-            Branch::factory()->count(10)->create([
-                'company_id' => $companyId,
-                'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.'testing',
-            ]);
+        Branch::factory()->count(10)->create([
+            'company_id' => $companyId,
+            'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.'testing',
+        ]);
 
-            Branch::factory()->count(10)->create([
-                'company_id' => $companyId,
-            ]);
+        Branch::factory()->count(10)->create([
+            'company_id' => $companyId,
+        ]);
 
-            $result = $this->branchService->list(
-                companyId: $companyId,
-                search: 'testing',
-                paginate: true,
-                page: 1,
-                perPage: 10
-            );
+        $result = $this->branchService->list(
+            companyId: $companyId,
+            search: 'testing',
+            paginate: true,
+            page: 1,
+            perPage: 10
+        );
 
-            $this->assertInstanceOf(Paginator::class, $result);
-            $this->assertTrue($result->total() == 10);
-        }
+        $this->assertInstanceOf(Paginator::class, $result);
+        $this->assertTrue($result->total() == 10);
+    }
 
-        public function test_branch_service_call_list_with_page_parameter_negative_expect_results()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault(), 'companies')
-                        ->create();
+    public function test_branch_service_call_list_with_page_parameter_negative_expect_results()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
 
-            $companyId = $user->companies->first()->id;
+        $companyId = $user->companies->first()->id;
 
-            Branch::factory()->count(25)->create([
-                'company_id' => $companyId,
-            ]);
+        Branch::factory()->count(25)->create([
+            'company_id' => $companyId,
+        ]);
 
-            $result = $this->branchService->list(
-                companyId: $companyId,
-                search: '',
-                paginate: true,
-                page: -1,
-                perPage: 10
-            );
+        $result = $this->branchService->list(
+            companyId: $companyId,
+            search: '',
+            paginate: true,
+            page: -1,
+            perPage: 10
+        );
 
-            $this->assertInstanceOf(Paginator::class, $result);
-            $this->assertTrue($result->total() == 25);
-        }
+        $this->assertInstanceOf(Paginator::class, $result);
+        $this->assertTrue($result->total() == 25);
+    }
 
-        public function test_branch_service_call_list_with_perpage_parameter_negative_expect_results()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault(), 'companies')
-                        ->create();
+    public function test_branch_service_call_list_with_perpage_parameter_negative_expect_results()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
 
-            $companyId = $user->companies->first()->id;
+        $companyId = $user->companies->first()->id;
 
-            Branch::factory()->count(25)->create([
-                'company_id' => $companyId,
-            ]);
+        Branch::factory()->count(25)->create([
+            'company_id' => $companyId,
+        ]);
 
-            $result = $this->branchService->list(
-                companyId: $companyId,
-                search: '',
-                paginate: true,
-                page: 1,
-                perPage: -10
-            );
+        $result = $this->branchService->list(
+            companyId: $companyId,
+            search: '',
+            paginate: true,
+            page: 1,
+            perPage: -10
+        );
 
-            $this->assertInstanceOf(Paginator::class, $result);
-            $this->assertTrue($result->total() == 25);
-        }
+        $this->assertInstanceOf(Paginator::class, $result);
+        $this->assertTrue($result->total() == 25);
+    }
     /* #endregion */
 
     /* #region read */
-        public function test_branch_service_call_read_expect_object()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(20), 'branches'), 'companies')
-                        ->create();
+    public function test_branch_service_call_read_expect_object()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Branch::factory()->count(20), 'branches'), 'companies')
+                    ->create();
 
-            $branch = $user->companies->first()->branches()->inRandomOrder()->first();
+        $branch = $user->companies->first()->branches()->inRandomOrder()->first();
 
-            $result = $this->branchService->read($branch);
+        $result = $this->branchService->read($branch);
 
-            $this->assertInstanceOf(Branch::class, $result);
-        }
+        $this->assertInstanceOf(Branch::class, $result);
+    }
     /* #endregion */
 
     /* #region update */
-        public function test_branch_service_call_update_expect_db_updated()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->setIsMainBranch(), 'branches'), 'companies')
-                        ->create();
+    public function test_branch_service_call_update_expect_db_updated()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Branch::factory()->setIsMainBranch(), 'branches'), 'companies')
+                    ->create();
 
-            $branch = $user->companies->first()->branches->first();
-            $branchArr = Branch::factory()->make();
+        $branch = $user->companies->first()->branches->first();
+        $branchArr = Branch::factory()->make();
 
-            $result = $this->branchService->update($branch, $branchArr->toArray());
+        $result = $this->branchService->update($branch, $branchArr->toArray());
 
-            $this->assertInstanceOf(Branch::class, $result);
-            $this->assertDatabaseHas('branches', [
-                'id' => $branch->id,
-                'company_id' => $branch->company_id,
-                'code' => $branchArr['code'],
-                'name' => $branchArr['name'],
-            ]);
-        }
+        $this->assertInstanceOf(Branch::class, $result);
+        $this->assertDatabaseHas('branches', [
+            'id' => $branch->id,
+            'company_id' => $branch->company_id,
+            'code' => $branchArr['code'],
+            'name' => $branchArr['name'],
+        ]);
+    }
 
-        public function test_branch_service_call_update_with_empty_array_parameters_expect_exception()
-        {
-            $this->expectException(Exception::class);
+    public function test_branch_service_call_update_with_empty_array_parameters_expect_exception()
+    {
+        $this->expectException(Exception::class);
 
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->setIsMainBranch(), 'branches'), 'companies')
-                        ->create();
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Branch::factory()->setIsMainBranch(), 'branches'), 'companies')
+                    ->create();
 
-            $branch = $user->companies->first()->branches->first();
-            $branchArr = [];
+        $branch = $user->companies->first()->branches->first();
+        $branchArr = [];
 
-            $this->branchService->update($branch, $branchArr);
-        }
+        $this->branchService->update($branch, $branchArr);
+    }
     /* #endregion */
 
     /* #region delete */
-        public function test_branch_service_call_delete_expect_bool()
-        {
-            $user = User::factory()
-                        ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                        ->create();
+    public function test_branch_service_call_delete_expect_bool()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Branch::factory()->count(5), 'branches'), 'companies')
+                    ->create();
 
-            $branch = $user->companies->first()->branches->first();
+        $branch = $user->companies->first()->branches->first();
 
-            $result = $this->branchService->delete($branch);
+        $result = $this->branchService->delete($branch);
 
-            $this->assertIsBool($result);
-            $this->assertTrue($result);
-            $this->assertSoftDeleted('branches', [
-                'id' => $branch->id,
-            ]);
-        }
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
+        $this->assertSoftDeleted('branches', [
+            'id' => $branch->id,
+        ]);
+    }
     /* #endregion */
 
     /* #region others */
