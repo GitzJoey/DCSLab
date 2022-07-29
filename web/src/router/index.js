@@ -20,7 +20,7 @@ const routes = [
     {
         path: "/",
         name: "root",
-        component: Root,
+        component: Root
     },
 ];
 
@@ -43,7 +43,7 @@ const router = createRouter({
     routes, 
     scrollBehavior(to, from, savedPosition) {
         return savedPosition || { left: 0, top: 0 };
-    },
+    }
 });
 
 router.beforeEach(async (to, from, next) => {

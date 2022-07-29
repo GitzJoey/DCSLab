@@ -13,7 +13,7 @@ function register() {
     return {
         path: "/register",
         name: "register",
-        component: Register,
+        component: Register
     };
 }
 

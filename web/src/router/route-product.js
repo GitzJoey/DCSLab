@@ -26,7 +26,7 @@ export default {
             component: Brand,
             meta: {
                 remember: true,
-                log_route: true,
+                log_route: true
             },
         },
         {
@@ -35,7 +35,7 @@ export default {
             component: Unit,
             meta: {
                 remember: true,
-                log_route: true,
+                log_route: true
             },
         },
         {
