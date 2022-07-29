@@ -24,7 +24,8 @@ class EmployeeTableSeeder extends Seeder
     public function run($employeePerPart = 3, $onlyThisCompanyId = 0, $onlyThisBranchId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            $company = Company::find($onlyThisCompanyId);
+            // $company = Company::find($onlyThisCompanyId);
+            $company = Company::where('id', '=', $onlyThisCompanyId)->get();
 
             if ($company) {
                 $companyIds = $company->pluck('id');
@@ -36,7 +37,7 @@ class EmployeeTableSeeder extends Seeder
         }
 
         if ($onlyThisBranchId != 0) {
-            $branch = Branch::find($onlyThisBranchId);
+            $branch = Branch::where('id', '=', $onlyThisBranchId)->get();
 
             if ($branch) {
                 $branchIds = $branch->pluck('id');
@@ -79,10 +80,10 @@ class EmployeeTableSeeder extends Seeder
                     $faker = \Faker\Factory::create('id_ID');
                     $accessCount = $faker->numberBetween(1, $branchCount);
                     $branchIds = Company::find($c)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
-                    for ($i = 0; $i < $accessCount; $i++) {
+                    for ($j = 0; $j < $accessCount; $j++) {
                         $employeeAccess = new EmployeeAccess;
                         $employeeAccess->employee_id = $employee->id;
-                        $employeeAccess->branch_id = $branchIds[$i];
+                        $employeeAccess->branch_id = $branchIds[$j];
                         $employeeAccess->save();
                         array_push($arrEmployeeAccess, $employeeAccess);
                     }
