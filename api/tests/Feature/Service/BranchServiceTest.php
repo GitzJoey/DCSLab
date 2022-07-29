@@ -25,7 +25,6 @@ class BranchServiceTest extends ServiceTestCase
     }
 
     /* #region create */
-
         public function test_branch_service_call_create_expect_db_has_record()
         {
             $user = User::factory()
@@ -51,11 +50,9 @@ class BranchServiceTest extends ServiceTestCase
             $this->expectException(Exception::class);
             $this->branchService->create([]);
         }
-
     /* #endregion */
 
     /* #region list */
-
         public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
         {
             $user = User::factory()
@@ -175,11 +172,9 @@ class BranchServiceTest extends ServiceTestCase
             $this->assertInstanceOf(Paginator::class, $result);
             $this->assertTrue($result->total() == 25);
         }
-
     /* #endregion */
 
     /* #region read */
-
         public function test_branch_service_call_read_expect_object()
         {
             $user = User::factory()
@@ -193,11 +188,9 @@ class BranchServiceTest extends ServiceTestCase
 
             $this->assertInstanceOf(Branch::class, $result);
         }
-
     /* #endregion */
 
     /* #region update */
-
         public function test_branch_service_call_update_expect_db_updated()
         {
             $user = User::factory()
@@ -233,11 +226,9 @@ class BranchServiceTest extends ServiceTestCase
 
             $this->branchService->update($branch, $branchArr);
         }
-
     /* #endregion */
 
     /* #region delete */
-
         public function test_branch_service_call_delete_expect_bool()
         {
             $user = User::factory()
@@ -255,11 +246,9 @@ class BranchServiceTest extends ServiceTestCase
                 'id' => $branch->id,
             ]);
         }
-
     /* #endregion */
 
     /* #region others */
-
         public function test_branch_service_call_function_getBranchByCompany_expect_collection_object()
         {
             $user = User::factory()
@@ -375,6 +364,5 @@ class BranchServiceTest extends ServiceTestCase
             $this->assertTrue($this->branchService->isUniqueCode('test3', $companyId_1));
             $this->assertTrue($this->branchService->isUniqueCode('test1', $companyId_2));
         }
-
     /* #endregion */
 }
