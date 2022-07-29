@@ -45,11 +45,11 @@ class SupplierServiceImpl implements SupplierService
             $supplier->name = $supplierArr['name'];
             $supplier->payment_term_type = $supplierArr['payment_term_type'];
             $supplier->payment_term = $supplierArr['payment_term'];
-            $supplier->contact = $picArr['contact'];
-            $supplier->address = $picArr['address'];
-            $supplier->city = $picArr['city'];
+            $supplier->contact = $supplierArr['contact'];
+            $supplier->address = $supplierArr['address'];
+            $supplier->city = $supplierArr['city'];
             $supplier->taxable_enterprise = $supplierArr['taxable_enterprise'];
-            $supplier->tax_id = $picArr['tax_id'];
+            $supplier->tax_id = $supplierArr['tax_id'];
             $supplier->remarks = $supplierArr['remarks'];
             $supplier->status = $supplierArr['status'];
             $supplier->user_id = $usr->id;
@@ -182,7 +182,6 @@ class SupplierServiceImpl implements SupplierService
     public function update(
         Supplier $supplier,
         array $supplierArr,
-        array $picArr,
         array $productsArr
     ): Supplier {
         DB::beginTransaction();
@@ -205,18 +204,18 @@ class SupplierServiceImpl implements SupplierService
 
             $supplier->supplierProducts()->delete();
 
-            $newSP = [];
+            $newSupplierProducts = [];
             foreach ($productsArr as $product) {
-                $newSPE = new SupplierProduct();
-                $newSPE->company_id = $supplierArr['company_id'];
-                $newSPE->supplier_id = $supplier->id;
-                $newSPE->product_id = $product['product_id'];
-                $newSPE->main_product = $product['main_product'];
+                $newSupplierProduct = new SupplierProduct();
+                $newSupplierProduct->company_id = $supplierArr['company_id'];
+                $newSupplierProduct->supplier_id = $supplier->id;
+                $newSupplierProduct->product_id = $product['product_id'];
+                $newSupplierProduct->main_product = $product['main_product'];
 
-                array_push($newSP, $newSPE);
+                array_push($newSupplierProducts, $newSupplierProduct);
             }
 
-            $supplier->supplierProducts()->saveMany($newSP);
+            $supplier->supplierProducts()->saveMany($newSupplierProducts);
 
             DB::commit();
 

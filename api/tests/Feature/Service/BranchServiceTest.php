@@ -24,7 +24,7 @@ class BranchServiceTest extends ServiceTestCase
         $this->branchService = app(BranchService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_branch_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -50,11 +50,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->expectException(Exception::class);
         $this->branchService->create([]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_branch_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -174,11 +172,9 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() == 25);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_branch_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -192,11 +188,9 @@ class BranchServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Branch::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_branch_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -232,11 +226,9 @@ class BranchServiceTest extends ServiceTestCase
 
         $this->branchService->update($branch, $branchArr);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_branch_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -254,126 +246,123 @@ class BranchServiceTest extends ServiceTestCase
             'id' => $branch->id,
         ]);
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
+        public function test_branch_service_call_function_getBranchByCompany_expect_collection_object()
+        {
+            $user = User::factory()
+                        ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
+                        ->create();
 
-    #region others
+            $company = $user->companies->first();
+            $companyId = $company->id;
 
-    public function test_branch_service_call_function_getBranchByCompany_expect_collection_object()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                        ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+            $result = $this->branchService->getBranchByCompany(companyId: $companyId);
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
+            $this->assertInstanceOf(Collection::class, $result);
 
-        $result = $this->branchService->getBranchByCompany(companyId: $companyId);
+            $result = $this->branchService->getBranchByCompany(company: $company);
 
-        $this->assertInstanceOf(Collection::class, $result);
+            $this->assertInstanceOf(Collection::class, $result);
 
-        $result = $this->branchService->getBranchByCompany(company: $company);
+            $result = $this->branchService->getBranchByCompany(companyId: $companyId, company: $company);
 
-        $this->assertInstanceOf(Collection::class, $result);
+            $this->assertInstanceOf(Collection::class, $result);
+        }
 
-        $result = $this->branchService->getBranchByCompany(companyId: $companyId, company: $company);
+        public function test_branch_service_call_function_getMainBranchByCompany_expect_main_branch_returned()
+        {
+            $user = User::factory()
+                        ->has(Company::factory()->setIsDefault(), 'companies')
+                        ->create();
 
-        $this->assertInstanceOf(Collection::class, $result);
-    }
+            $company = $user->companies->first();
+            $companyId = $company->id;
 
-    public function test_branch_service_call_function_getMainBranchByCompany_expect_main_branch_returned()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
+            Branch::factory()->setIsMainBranch()->create(['company_id' => $companyId]);
+            Branch::factory()->count(5)->create(['company_id' => $companyId]);
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
+            $result = $this->branchService->getMainBranchByCompany(companyId: $companyId);
 
-        Branch::factory()->setIsMainBranch()->create(['company_id' => $companyId]);
-        Branch::factory()->count(5)->create(['company_id' => $companyId]);
+            $this->assertInstanceOf(Branch::class, $result);
+            $this->assertTrue(boolval($result->is_main));
 
-        $result = $this->branchService->getMainBranchByCompany(companyId: $companyId);
+            $result = $this->branchService->getMainBranchByCompany(company: $company);
 
-        $this->assertInstanceOf(Branch::class, $result);
-        $this->assertTrue(boolval($result->is_main));
+            $this->assertInstanceOf(Branch::class, $result);
+            $this->assertTrue(boolval($result->is_main));
 
-        $result = $this->branchService->getMainBranchByCompany(company: $company);
+            $result = $this->branchService->getMainBranchByCompany(companyId: $companyId, company: $company);
 
-        $this->assertInstanceOf(Branch::class, $result);
-        $this->assertTrue(boolval($result->is_main));
+            $this->assertInstanceOf(Branch::class, $result);
+            $this->assertTrue(boolval($result->is_main));
+        }
 
-        $result = $this->branchService->getMainBranchByCompany(companyId: $companyId, company: $company);
+        public function test_branch_service_call_function_resetMainBranch_expect_no_main_branch_exists()
+        {
+            $user = User::factory()
+                        ->has(Company::factory()->setIsDefault(), 'companies')
+                        ->create();
 
-        $this->assertInstanceOf(Branch::class, $result);
-        $this->assertTrue(boolval($result->is_main));
-    }
+            $company = $user->companies->first();
+            $companyId = $company->id;
 
-    public function test_branch_service_call_function_resetMainBranch_expect_no_main_branch_exists()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
+            Branch::factory()->setIsMainBranch()->create(['company_id' => $companyId]);
+            Branch::factory()->count(5)->create(['company_id' => $companyId]);
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
+            $result = $this->branchService->resetMainBranch(companyId: $companyId);
 
-        Branch::factory()->setIsMainBranch()->create(['company_id' => $companyId]);
-        Branch::factory()->count(5)->create(['company_id' => $companyId]);
+            $this->assertTrue($result);
+            $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
 
-        $result = $this->branchService->resetMainBranch(companyId: $companyId);
+            Branch::whereCompanyId($companyId)->inRandomOrder()->first()->update(['is_main' => true]);
 
-        $this->assertTrue($result);
-        $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
+            $result = $this->branchService->resetMainBranch(company: $company);
 
-        Branch::whereCompanyId($companyId)->inRandomOrder()->first()->update(['is_main' => true]);
+            $this->assertTrue($result);
+            $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
 
-        $result = $this->branchService->resetMainBranch(company: $company);
+            Branch::whereCompanyId($companyId)->inRandomOrder()->first()->update(['is_main' => true]);
 
-        $this->assertTrue($result);
-        $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
+            $result = $this->branchService->resetMainBranch(companyId: $companyId, company: $company);
 
-        Branch::whereCompanyId($companyId)->inRandomOrder()->first()->update(['is_main' => true]);
+            $this->assertTrue($result);
+            $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
+        }
 
-        $result = $this->branchService->resetMainBranch(companyId: $companyId, company: $company);
+        public function test_branch_service_call_function_generateUniqueCode_expect_unique_code_returned()
+        {
+            $this->assertIsString($this->branchService->generateUniqueCode());
+        }
 
-        $this->assertTrue($result);
-        $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
-    }
+        public function test_branch_service_call_function_isUniqueCode_expect_can_detect_unique_code()
+        {
+            $user = User::factory()
+                        ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
+                        ->create();
 
-    public function test_branch_service_call_function_generateUniqueCode_expect_unique_code_returned()
-    {
-        $this->assertIsString($this->branchService->generateUniqueCode());
-    }
+            $company_1 = $user->companies[0];
+            $companyId_1 = $company_1->id;
 
-    public function test_branch_service_call_function_isUniqueCode_expect_can_detect_unique_code()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
-                    ->create();
+            $company_2 = $user->companies[1];
+            $companyId_2 = $company_2->id;
 
-        $company_1 = $user->companies[0];
-        $companyId_1 = $company_1->id;
+            Branch::factory()->create([
+                'company_id' => $companyId_1,
+                'code' => 'test1',
+            ]);
 
-        $company_2 = $user->companies[1];
-        $companyId_2 = $company_2->id;
+            Branch::factory()->create([
+                'company_id' => $companyId_2,
+                'code' => 'test2',
+            ]);
 
-        Branch::factory()->create([
-            'company_id' => $companyId_1,
-            'code' => 'test1',
-        ]);
-
-        Branch::factory()->create([
-            'company_id' => $companyId_2,
-            'code' => 'test2',
-        ]);
-
-        $this->assertFalse($this->branchService->isUniqueCode('test1', $companyId_1));
-        $this->assertTrue($this->branchService->isUniqueCode('test2', $companyId_1));
-        $this->assertTrue($this->branchService->isUniqueCode('test3', $companyId_1));
-        $this->assertTrue($this->branchService->isUniqueCode('test1', $companyId_2));
-    }
-
-    #endregion
+            $this->assertFalse($this->branchService->isUniqueCode('test1', $companyId_1));
+            $this->assertTrue($this->branchService->isUniqueCode('test2', $companyId_1));
+            $this->assertTrue($this->branchService->isUniqueCode('test3', $companyId_1));
+            $this->assertTrue($this->branchService->isUniqueCode('test1', $companyId_2));
+        }
+    /* #endregion */
 }

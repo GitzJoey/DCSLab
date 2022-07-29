@@ -25,6 +25,33 @@ class UnitFactory extends Factory
         ];
     }
 
+    public function setCategoryToProduct()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'category' => UnitCategory::PRODUCTS,
+            ];
+        });
+    }
+
+    public function setCategoryToService()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'category' => UnitCategory::SERVICES,
+            ];
+        });
+    }
+
+    public function setCategoryToProductAndService()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'category' => UnitCategory::PRODUCTS_AND_SERVICES,
+            ];
+        });
+    }
+
     public function insertStringInName(string $str)
     {
         return $this->state(function (array $attributes) use ($str) {

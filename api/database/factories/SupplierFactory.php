@@ -26,7 +26,7 @@ class SupplierFactory extends Factory
     {
         $faker = \Faker\Factory::create('id_ID');
 
-        $array_term = $faker->randomElement(PaymentTermType::toArrayValue());
+        $array_term = $faker->randomElement(PaymentTermType::toArrayEnum());
         $status = $faker->randomElement(RecordStatus::toArrayEnum());
 
         return [
@@ -42,6 +42,17 @@ class SupplierFactory extends Factory
             'remarks' => $faker->word(),
             'status' => $status,
         ];
+    }
+
+    public function setPaymentTermTypeName()
+    {
+        return $this->state(function (array $attributes) {
+            $faker = \Faker\Factory::create('id_ID');
+
+            return [
+                'payment_term_type' => $faker->randomElement(PaymentTermType::toArrayEnum()),
+            ];
+        });
     }
 
     public function setStatusActive()
@@ -60,5 +71,22 @@ class SupplierFactory extends Factory
                 'status' => RecordStatus::INACTIVE,
             ];
         });
+    }
+
+    public function insertStringInName(string $str)
+    {
+        return $this->state(function (array $attributes) use ($str) {
+            return [
+                'name' => $this->craftName($str),
+            ];
+        });
+    }
+
+    private function craftName(string $str)
+    {
+        $faker = \Faker\Factory::create('id_ID');
+        $text = $faker->company();
+
+        return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
 }

@@ -2,16 +2,17 @@
 
 namespace Tests\Feature\Service;
 
-use App\Enums\ProductGroupCategory;
 use Exception;
 use App\Models\User;
 use App\Models\Company;
-use App\Models\ProductGroup;
 use Tests\ServiceTestCase;
+use App\Models\ProductGroup;
+use App\Enums\ProductGroupCategory;
 use App\Services\ProductGroupService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class ProductGroupServiceTest extends ServiceTestCase
 {
@@ -24,7 +25,7 @@ class ProductGroupServiceTest extends ServiceTestCase
         $this->productGroupService = app(ProductGroupService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_productgroup_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -51,11 +52,9 @@ class ProductGroupServiceTest extends ServiceTestCase
         $this->expectException(Exception::class);
         $this->productGroupService->create([]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_productgroup_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -197,11 +196,9 @@ class ProductGroupServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() > 1);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_productgroup_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -215,11 +212,9 @@ class ProductGroupServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(ProductGroup::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_productgroup_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -255,11 +250,9 @@ class ProductGroupServiceTest extends ServiceTestCase
             
         $this->productGroupService->update($productGroup, $productGroupArr);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_productgroup_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -277,10 +270,40 @@ class ProductGroupServiceTest extends ServiceTestCase
             'id' => $productGroup->id
         ]);
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
+        public function test_product_group_service_call_function_generateUniqueCode_expect_unique_code_returned()
+        {
+            $this->assertIsString($this->productGroupService->generateUniqueCode());
+        }
 
-    #region others
+        public function test_product_group_service_call_function_isUniqueCode_expect_can_detect_unique_code()
+        {
+            $user = User::factory()
+                        ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
+                        ->create();
 
-    #endregion
+            $company_1 = $user->companies[0];
+            $companyId_1 = $company_1->id;
+
+            $company_2 = $user->companies[1];
+            $companyId_2 = $company_2->id;
+
+            ProductGroup::factory()->create([
+                'company_id' => $companyId_1,
+                'code' => 'test1',
+            ]);
+
+            ProductGroup::factory()->create([
+                'company_id' => $companyId_2,
+                'code' => 'test2',
+            ]);
+
+            $this->assertFalse($this->productGroupService->isUniqueCode('test1', $companyId_1));
+            $this->assertTrue($this->productGroupService->isUniqueCode('test2', $companyId_1));
+            $this->assertTrue($this->productGroupService->isUniqueCode('test3', $companyId_1));
+            $this->assertTrue($this->productGroupService->isUniqueCode('test1', $companyId_2));
+        }
+    /* #endregion */
 }

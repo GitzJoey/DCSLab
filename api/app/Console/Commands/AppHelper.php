@@ -235,12 +235,13 @@ class AppHelper extends Command
 
         if (in_array('UnitTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting UnitTableSeeder');
+            $unitPerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many units per company (0 to skip) :', 3);
             $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
 
             $this->info('Seeding...');
 
             $seeder = new UnitTableSeeder();
-            $seeder->callWith(UnitTableSeeder::class, [$onlyThisCompanyId]);
+            $seeder->callWith(UnitTableSeeder::class, [$unitPerCompanies, $onlyThisCompanyId]);
 
             $this->info('UnitTableSeeder Finish.');
         }

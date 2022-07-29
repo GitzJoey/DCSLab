@@ -14,7 +14,7 @@ class BrandTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($brandPerCompany = 15, $onlyThisCompanyId = 0)
+    public function run($countPerCompany = 15, $onlyThisCompanyId = 0)
     {
         if ($onlyThisCompanyId != 0) {
             $c = Company::find($onlyThisCompanyId);
@@ -29,7 +29,7 @@ class BrandTableSeeder extends Seeder
         }
 
         foreach ($companies as $c) {
-            Brand::factory()->count($brandPerCompany)->create([
+            Brand::factory()->count($countPerCompany)->create([
                 'company_id' => $c,
             ]);
         }

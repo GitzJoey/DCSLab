@@ -9,12 +9,17 @@ use App\Models\Brand;
 use App\Models\Company;
 use App\Models\Product;
 use Tests\ServiceTestCase;
+use App\Enums\UnitCategory;
 use App\Models\ProductUnit;
 use App\Models\ProductGroup;
-use App\Enums\ProductGroupCategory;
 use App\Services\ProductService;
+use App\Enums\ProductGroupCategory;
+use Database\Seeders\UnitTableSeeder;
+use Database\Seeders\BrandTableSeeder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
+use Database\Seeders\ProductGroupTableSeeder;
+use Database\Seeders\ProductTableSeeder;
 use Illuminate\Contracts\Pagination\Paginator;
 
 class ProductServiceTest extends ServiceTestCase
@@ -28,7 +33,7 @@ class ProductServiceTest extends ServiceTestCase
         $this->productService = app(ProductService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_product_service_call_create_product_expect_db_has_record()
     {
         $user = User::factory()
@@ -192,11 +197,9 @@ class ProductServiceTest extends ServiceTestCase
             []
         );
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_product_service_call_list_products_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -728,11 +731,9 @@ class ProductServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() == 10);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_product_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -804,45 +805,40 @@ class ProductServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Product::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_product_service_call_product_update_expect_db_updated()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        $companyId = $user->companies->first()->id;
+        $company = $user->companies->first();
+        $companyId = $company->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
+        $productGroupSeeder = new ProductGroupTableSeeder();
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
+        $brandSeeder = new BrandTableSeeder();
+        $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
 
-        $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-        ->whereOr([
+        $unitSeeder = new UnitTableSeeder();
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId]);
+
+        $product = $company->products()->first();
+
+        $productArr = Product::factory()->setStatusActive()->make()->toArray();
+        $productArr['product_group_id'] = ProductGroup::where('company_id', '=', $companyId)
+        ->orWhere([
             ['category', '=', ProductGroupCategory::PRODUCTS->value],
             ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
         ])->inRandomOrder()->first()->id;
-
-        $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-
-        $productArr = Product::factory()->make([
-            'company_id' => $companyId,
-            'product_group_id' => $productGroupId,
-            'brand_id' => $brandId,
-            'product_type' => $this->faker->randomElement([1, 2, 3]),
-        ])->toArray();
+        $productArr['brand_id'] = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
+        $productArr['product_type'] = $this->faker->numberBetween(1, 3);
 
         $productUnitsArr = [];
         $unitCount = $this->faker->numberBetween(1, 5);
@@ -860,6 +856,7 @@ class ProductServiceTest extends ServiceTestCase
             $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
 
             $productUnitArr = ProductUnit::factory()->make([
+                'id' => 0,
                 'unit_id' => $unitId,
                 'conv_value' => $conversionValue,
                 'is_base' => $isBase,
@@ -871,69 +868,10 @@ class ProductServiceTest extends ServiceTestCase
             $maxConverionValue = $productUnitArr['conv_value'];
         }
 
-        $product = $this->productService->create(
-            $productArr,
-            $productUnitsArr
-        );
-
-        $newProductGroupId = ProductGroup::where('company_id', '=', $companyId)
-        ->whereOr([
-            ['category', '=', ProductGroupCategory::PRODUCTS->value],
-            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-        ])->inRandomOrder()->first()->id;
-
-        $newBrandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-
-        $newProductArr = Product::factory()->make([
-            'company_id' => $companyId,
-            'product_group_id' => $newProductGroupId,
-            'brand_id' => $newBrandId,
-            'product_type' => $this->faker->randomElement([1, 2, 3]),
-        ])->toArray();
-        
-        $newProductUnitsArr = [];
-        $productUnitCount = ProductUnit::where([
-            ['company_id', '=', $companyId],
-            ['product_id', '=', $product->id]
-        ])->count();
-
-        $primaryUnitIdx = $this->faker->numberBetween(0, $productUnitCount - 1);
-        
-        $productUnitIds = ProductUnit::where([
-            ['company_id', '=', $companyId],
-            ['product_id', '=', $product->id]
-        ])->pluck('id')->toArray();
-
-        $newMaxConverionValue = 1;
-
-        for ($i = 0; $i < $productUnitCount ; $i++) {
-            $newUnitId = Unit::where('company_id', '=', $companyId)
-                        ->whereOr([
-                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                        ])->inRandomOrder()->first()->id;
-
-            $newConversionValue = $i == 0 ? 1 : $this->faker->numberBetween($newMaxConverionValue + 1, $newMaxConverionValue + 20);
-            $newIsBase = $i == 0 ? true : false;
-            $newIsPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-
-            $newProductUnitArr = ProductUnit::factory()->make([
-                'id' => $productUnitIds[$i],
-                'unit_id' => $newUnitId,
-                'conv_value' => $newConversionValue,
-                'is_base' => $newIsBase,
-                'is_primary_unit' => $newIsPrimaryUnit,
-            ])->toArray();
-
-            array_push($newProductUnitsArr, $newProductUnitArr);
-
-            $newMaxConverionValue = $newProductUnitArr['conv_value'];
-        }
-
         $result = $this->productService->update(
             $product,
-            $newProductArr,
-            $newProductUnitsArr
+            $productArr,
+            $productUnitsArr
         );
 
         $this->markTestSkipped('Something wrong...');
@@ -942,33 +880,33 @@ class ProductServiceTest extends ServiceTestCase
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'company_id' => $newProductArr['company_id'],
-            'code' => $newProductArr['code'],
-            'product_group_id' => $newProductArr['product_group_id'],
-            'brand_id' => $newProductArr['brand_id'],
-            'name' => $newProductArr['name'],
-            'taxable_supply' => $newProductArr['taxable_supply'],
-            'standard_rated_supply' => $newProductArr['standard_rated_supply'],
-            'price_include_vat' => $newProductArr['price_include_vat'],
-            'remarks' => $newProductArr['remarks'],
-            'point' => $newProductArr['point'],
-            'use_serial_number' => $newProductArr['use_serial_number'],
-            'has_expiry_date' => $newProductArr['has_expiry_date'],
-            'product_type' => $newProductArr['product_type'],
-            'status' => $newProductArr['status'],
+            'company_id' => $productUnitsArr['company_id'],
+            'code' => $productUnitsArr['code'],
+            'product_group_id' => $productUnitsArr['product_group_id'],
+            'brand_id' => $productUnitsArr['brand_id'],
+            'name' => $productUnitsArr['name'],
+            'taxable_supply' => $productUnitsArr['taxable_supply'],
+            'standard_rated_supply' => $productUnitsArr['standard_rated_supply'],
+            'price_include_vat' => $productUnitsArr['price_include_vat'],
+            'remarks' => $productUnitsArr['remarks'],
+            'point' => $productUnitsArr['point'],
+            'use_serial_number' => $productUnitsArr['use_serial_number'],
+            'has_expiry_date' => $productUnitsArr['has_expiry_date'],
+            'product_type' => $productUnitsArr['product_type'],
+            'status' => $productUnitsArr['status'],
         ]);
 
-        for ($i = 0; $i < $productUnitCount ; $i++) {
+        for ($i = 0; $i < $unitCount ; $i++) {
             $this->assertDatabaseHas('product_units', [
-                'id' => $productUnitIds[$i],
+                // 'id' => $productUnitsArr[$i],
                 'company_id' => $companyId,
                 'product_id' => $product->id,
-                'unit_id' => $newProductUnitsArr[$i]['unit_id'],
-                'code' => $newProductUnitsArr[$i]['code'],
-                'is_base' => $newProductUnitsArr[$i]['is_base'],
-                'conversion_value' => $newProductUnitsArr[$i]['conv_value'],
-                'is_primary_unit' => $newProductUnitsArr[$i]['is_primary_unit'],
-                'remarks' => $newProductUnitsArr[$i]['remarks'],
+                'unit_id' => $productUnitsArr[$i]['unit_id'],
+                'code' => $productUnitsArr[$i]['code'],
+                'is_base' => $productUnitsArr[$i]['is_base'],
+                'conversion_value' => $productUnitsArr[$i]['conv_value'],
+                'is_primary_unit' => $productUnitsArr[$i]['is_primary_unit'],
+                'remarks' => $productUnitsArr[$i]['remarks'],
             ]);
         }
     }
@@ -1051,11 +989,9 @@ class ProductServiceTest extends ServiceTestCase
             $newProductUnitsArr
         );
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_product_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -1136,10 +1072,9 @@ class ProductServiceTest extends ServiceTestCase
         ]);
         
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
 
-    #region others
-
-    #endregion
+    /* #endregion */
 }

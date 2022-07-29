@@ -24,7 +24,7 @@ class UnitServiceTest extends ServiceTestCase
         $this->unitService = app(UnitService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_unit_service_call_create_expect_db_has_record()
     {        
         $user = User::factory()
@@ -33,9 +33,9 @@ class UnitServiceTest extends ServiceTestCase
         
         $unitArr = Unit::factory()->make([
             'company_id' => $user->companies->first()->id
-        ]);
+        ])->toArray();
 
-        $result = $this->unitService->create($unitArr->toArray());
+        $result = $this->unitService->create($unitArr);
 
         $this->assertDatabaseHas('units', [
             'id' => $result->id,
@@ -52,11 +52,9 @@ class UnitServiceTest extends ServiceTestCase
         $this->expectException(Exception::class);
         $this->unitService->create([]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_unit_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -198,11 +196,9 @@ class UnitServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() > 1);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_unit_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -216,11 +212,9 @@ class UnitServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Unit::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_unit_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -229,9 +223,9 @@ class UnitServiceTest extends ServiceTestCase
                     ->create();
 
         $unit = $user->companies->first()->units->first();
-        $unitArr = Unit::factory()->make();
+        $unitArr = Unit::factory()->make()->toArray();
 
-        $result = $this->unitService->update($unit, $unitArr->toArray());
+        $result = $this->unitService->update($unit, $unitArr);
         
         $this->assertInstanceOf(Unit::class, $result);
         $this->assertDatabaseHas('units', [
@@ -256,11 +250,9 @@ class UnitServiceTest extends ServiceTestCase
             
         $this->unitsService->update($units, $unitsArr);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_unit_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -268,20 +260,19 @@ class UnitServiceTest extends ServiceTestCase
                         ->has(Unit::factory()->count(5), 'units'), 'companies')
                     ->create();
 
-        $units = $user->companies->first()->units->first();
+        $unit = $user->companies->first()->units->first();
             
-        $result = $this->unitService->delete($units);
+        $result = $this->unitService->delete($unit);
         
         $this->assertIsBool($result);
         $this->assertTrue($result);
         $this->assertSoftDeleted('units', [
-            'id' => $units->id
+            'id' => $unit->id
         ]);
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
 
-    #region others
-
-    #endregion
+    /* #endregion */
 }

@@ -24,7 +24,7 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->warehouseService = app(WarehouseService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_warehouse_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -58,11 +58,9 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->expectException(Exception::class);
         $this->warehouseService->create([]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_warehouse_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -194,11 +192,9 @@ class WarehouseServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() > 1);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_warehouse_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -219,11 +215,9 @@ class WarehouseServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Warehouse::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_warehouse_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -277,11 +271,9 @@ class WarehouseServiceTest extends ServiceTestCase
             
         $this->warehouseService->update($warehouse, $warehouseArr);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_warehouse_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -306,12 +298,9 @@ class WarehouseServiceTest extends ServiceTestCase
             'id' => $warehouse->id,
         ]);
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
 
-    #region others
-
-    
-
-    #endregion
+    /* #endregion */
 }

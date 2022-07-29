@@ -16,6 +16,7 @@ interface WarehouseService
         bool $paginate = true,
         int $page = 1,
         int $perPage = 10,
+        array $with = [],
         bool $useCache = true
     ): Paginator|Collection;
 
