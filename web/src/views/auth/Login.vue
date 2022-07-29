@@ -40,7 +40,7 @@
                     <input id="remember-me" type="checkbox" class="form-check-input border mr-2" />
                     <label class="cursor-pointer select-none" for="remember-me">{{ t('views.login.fields.remember_me') }}</label>
                   </div>
-                  <a href="">{{ t('views.login.fields.forgot_pass') }}</a>
+                  <a href="" @click="router.push({ name: 'reset-password' })">{{ t('views.login.fields.forgot_pass') }}</a>
                 </div>
                 <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                   <button type="submit" class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">

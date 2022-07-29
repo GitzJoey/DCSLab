@@ -1,7 +1,7 @@
 import SideMenu from "@/layouts/side-menu/Main.vue";
-import ProductGroup from "@/views/product_group/ProductGroup.vue";
-import Brand from "@/views/brand/Brand.vue";
-import Unit from "@/views/unit/Unit.vue";
+import ProductGroup from "@/views/product/ProductGroup.vue";
+import Brand from "@/views/product/Brand.vue";
+import Unit from "@/views/product/Unit.vue";
 import Product from "@/views/product/Product.vue";
 import Service from "@/views/product/Service.vue";
 
@@ -26,7 +26,7 @@ export default {
             component: Brand,
             meta: {
                 remember: true,
-                log_route: true,
+                log_route: true
             },
         },
         {
@@ -35,7 +35,7 @@ export default {
             component: Unit,
             meta: {
                 remember: true,
-                log_route: true,
+                log_route: true
             },
         },
         {

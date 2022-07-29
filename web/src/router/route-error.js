@@ -28,14 +28,14 @@ function pageError() {
     return {
         path: "/error-page",
         name: "error-page",
-        component: ErrorPage,
+        component: ErrorPage
     };
 }
 
 function anyMatch() {
     return {
         path: "/:pathMatch(.*)*",
-        component: ErrorPage,
+        component: ErrorPage
     };
 }
 

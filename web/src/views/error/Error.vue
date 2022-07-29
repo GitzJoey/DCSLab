@@ -46,11 +46,10 @@ const resolution = ref('');
 //#region onMounted
 onMounted(() => {
     let code = router.currentRoute.value.params.code;
-    
+    console.log(router.currentRoute.value);
     switch (code) {
-        case '401':
         case '403':
-            title.value = 'Unauthorized';
+            title.value = 'Forbidden';
             description.value = 'Insufficient Access Rights';
             break;
         case '500':

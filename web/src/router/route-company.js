@@ -1,9 +1,9 @@
 import SideMenu from "@/layouts/side-menu/Main.vue";
 
 import Company from "@/views/company/Company.vue";
-import Branch from "@/views/branch/Branch.vue";
-import Employee from "@/views/employee/Employee.vue";
-import Warehouse from "@/views/warehouse/Warehouse.vue";
+import Branch from "@/views/company/Branch.vue";
+import Employee from "@/views/company/Employee.vue";
+import Warehouse from "@/views/company/Warehouse.vue";
 
 const root = '/dashboard';
 

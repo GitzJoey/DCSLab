@@ -355,11 +355,10 @@ class UserServiceImpl implements UserService
         }
     }
 
-    public function resetPassword(string $email): void
+    public function changePassword(User $user, string $newPassword): void
     {
-        Password::sendResetLink(['email' => $email], function (Message $message) {
-            $message->subject('Reset Password');
-        });
+        $user->password = Hash::make($newPassword);
+        $user->save();
     }
 
     public function resetTokens(User $user): void

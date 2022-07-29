@@ -20,12 +20,13 @@ const routes = [
     {
         path: "/",
         name: "root",
-        component: Root,
+        component: Root
     },
 ];
 
 routes.push(RouteAuth.login());
 routes.push(RouteAuth.register());
+routes.push(RouteAuth.resetPassword());
 routes.push(RouteDashboard);
 routes.push(RouteCompany);
 routes.push(RouteProduct);
@@ -43,7 +44,7 @@ const router = createRouter({
     routes, 
     scrollBehavior(to, from, savedPosition) {
         return savedPosition || { left: 0, top: 0 };
-    },
+    }
 });
 
 router.beforeEach(async (to, from, next) => {

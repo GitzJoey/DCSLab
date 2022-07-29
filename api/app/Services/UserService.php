@@ -44,7 +44,7 @@ interface UserService
 
     public function updateSettings(User $user, array $settings, bool $useTransactions = true): bool;
 
-    public function resetPassword(string $email): void;
+    public function changePassword(User $user, string $newPassword): void;
 
     public function resetTokens(User $user): void;
 
