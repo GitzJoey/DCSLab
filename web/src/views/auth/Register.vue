@@ -5,7 +5,7 @@
       <div class="block xl:grid grid-cols-2 gap-4">
         <div class="hidden xl:flex flex-col min-h-screen">
           <a href="/" class="-intro-x flex items-center pt-5">
-            <img alt="DCSLab" class="w-6" src="@/assets/images/logo.svg" />
+            <img alt="DCSLab" class="w-10" src="@/assets/images/stealth-bomber-color.svg" />
             <span class="text-white text-lg ml-3"> {{ appName }} </span>
           </a>
           <div class="my-auto">
