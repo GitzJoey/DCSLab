@@ -96,6 +96,10 @@ const { t } = useI18n();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
 const mode = ref('email');
+const reset = ref({
+  email: '',
+  token: ''
+})
 //#endregion
 
 //#region onMounted
@@ -103,8 +107,12 @@ onMounted( async () => {
   dom("body").removeClass("main").removeClass("error-page").addClass("login");
 
   let token = router.currentRoute.value.params.token;
+  let email = router.currentRoute.value.query.email;
+
   if (token.length !== 0) {
     mode.value = 'reset';
+    reset.value.email = email;
+    reset.value.token = token;
   }
 });
 //#endregion
@@ -114,7 +122,9 @@ const onSubmit = async (values, actions) => {
   loading.value = true;
   var formData = new FormData(dom('#resetPasswordForm')[0]);
 
-  authAxiosInstance.post('forgot-password', formData).then(response => {
+  await authAxiosInstance.get('/sanctum/csrf-cookie');
+
+  authAxiosInstance.post('http://localhost:8000/forgot-password', formData).then(response => {
     mode.value = 'email_confirmation';    
   }).catch(e => {
     handleError(e, actions);
