@@ -185,7 +185,7 @@
                         <div class="loader-container">
                             <div class="p-5">
                                 <div class="mb-3">
-                                    <div class="grid grid-cols-2 gap-2 place-items-center">
+                                    <div class="grid grid-cols-4 gap-2 place-items-center">
                                         <div class="flex flex-col">
                                             <img alt="" src="@/assets/images/pos_system.png" width="100" height="100" />
                                             <div class="grid grid-cols-1 place-items-center" v-if="hasRolePOSOwner"><CheckIcon class="text-success" /></div>
@@ -194,6 +194,11 @@
                                         <div class="text-center">
                                             <img alt="" src="@/assets/images/warehouse_system.png" width="100" height="100" />
                                             <div class="grid grid-cols-1 place-items-center" v-if="hasRoleWHOwner"><CheckIcon class="text-success" /></div>
+                                            <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
+                                        </div>
+                                        <div class="text-center">
+                                            <img alt="" src="@/assets/images/accounting_system.jpg" width="100" height="100" />
+                                            <div class="grid grid-cols-1 place-items-center" v-if="hasRoleACOwner"><CheckIcon class="text-success" /></div>
                                             <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
                                         </div>
                                     </div>
