@@ -10,8 +10,11 @@ use App\Models\Profile;
 use App\Models\Supplier;
 use Tests\ServiceTestCase;
 use App\Enums\RecordStatus;
+use App\Enums\UnitCategory;
+use App\Enums\ProductCategory;
 use App\Actions\RandomGenerator;
 use App\Services\SupplierService;
+use App\Enums\ProductGroupCategory;
 use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\ProductTableSeeder;
@@ -44,23 +47,16 @@ class SupplierServiceTest extends ServiceTestCase
         $companyId = $company->id;
         
         $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
         $brandSeeder = new BrandTableSeeder();
         $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
 
         $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
-        do {
-            $productSeeder = new ProductTableSeeder();
-            $productSeeder->callWith(ProductTableSeeder::class, [20, $companyId]);
-
-            $productCount = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->count();
-        } while ($productCount == 0);
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
         
         $supplierArr = Supplier::factory()->make([
             'company_id' => $user->companies->first()->id
@@ -73,8 +69,8 @@ class SupplierServiceTest extends ServiceTestCase
         $picArr['address'] = $supplierArr['address'];
         $picArr['city'] = $supplierArr['city'];
         $picArr['tax_id'] = $supplierArr['tax_id'];
-
-        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $productCount);
+            
+        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->get()->count());
         $productIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
@@ -203,61 +199,27 @@ class SupplierServiceTest extends ServiceTestCase
         $companyId = $company->id;
         
         $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
         $brandSeeder = new BrandTableSeeder();
         $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
 
         $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
-        do {
-            $productSeeder = new ProductTableSeeder();
-            $productSeeder->callWith(ProductTableSeeder::class, [20, $companyId]);
-
-            $productCount = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->count();
-        } while ($productCount == 0);
-        
-        for ($i = 0; $i < 10; $i++) {
-            $supplierArr = Supplier::factory()->insertStringInName('testing')->make([
-                'company_id' => $user->companies->first()->id
-            ])->toArray();
-            
-            $picArr = Profile::factory()->make()->toArray();
-            $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . $this->randomGenerator->generateNumber(1, 999);
-            $picArr['email'] = $picArr['name'] . '@something.com';
-            $picArr['contact'] = $supplierArr['contact'];
-            $picArr['address'] = $supplierArr['address'];
-            $picArr['city'] = $supplierArr['city'];
-            $picArr['tax_id'] = $supplierArr['tax_id'];
-
-            $supplierProductsCount = $this->randomGenerator->generateNumber(1, $productCount);
-            $productIds = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->take($supplierProductsCount)->pluck('id');
-            
-            $productsArr = [];
-            foreach ($productIds as $productId) {
-                $supplierProduct = [];
-                $supplierProduct['product_id'] = $productId;
-                $supplierProduct['main_product'] = $this->randomGenerator->generateNumber(0, 1);
-
-                array_push($productsArr, $supplierProduct);
-            }
-
-            $result = $this->supplierService->create(
-                supplierArr: $supplierArr,
-                picArr: $picArr,
-                productsArr: $productsArr
-            );
-        }
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierSeeder = new SupplierTableSeeder();
         $supplierSeeder->callWith(SupplierTableSeeder::class, [10, $companyId]);
+
+        $exampleCount = 3;
+        $someProducts = $company->suppliers()->inRandomOrder()->take($exampleCount)->get();
+        for ($i = 0; $i < $exampleCount; $i++) {
+            $supplier = $someProducts[$i];
+            $supplier->name = substr_replace($supplier->name, 'testing', random_int(0, strlen($supplier->name) - 1), 0);
+            $supplier->save();
+        }
 
         $result = $this->supplierService->list(
             companyId: $companyId, 
@@ -268,7 +230,7 @@ class SupplierServiceTest extends ServiceTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 10);
+        $this->assertTrue($result->total() == 3);
     }
 
     public function test_supplier_service_call_list_with_page_parameter_negative_expect_results()
@@ -281,65 +243,23 @@ class SupplierServiceTest extends ServiceTestCase
         $companyId = $company->id;
         
         $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
         $brandSeeder = new BrandTableSeeder();
         $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
 
         $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
-        do {
-            $productSeeder = new ProductTableSeeder();
-            $productSeeder->callWith(ProductTableSeeder::class, [20, $companyId]);
-
-            $productCount = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->count();
-        } while ($productCount == 0);
-        
-        for ($i = 0; $i < 10; $i++) {
-            $supplierArr = Supplier::factory()->insertStringInName('testing')->make([
-                'company_id' => $user->companies->first()->id
-            ])->toArray();
-            
-            $picArr = Profile::factory()->make()->toArray();
-            $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . $this->randomGenerator->generateNumber(1, 999);
-            $picArr['email'] = $picArr['name'] . '@something.com';
-            $picArr['contact'] = $supplierArr['contact'];
-            $picArr['address'] = $supplierArr['address'];
-            $picArr['city'] = $supplierArr['city'];
-            $picArr['tax_id'] = $supplierArr['tax_id'];
-
-            $supplierProductsCount = $this->randomGenerator->generateNumber(1, $productCount);
-            $productIds = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->take($supplierProductsCount)->pluck('id');
-            
-            $productsArr = [];
-            foreach ($productIds as $productId) {
-                $supplierProduct = [];
-                $supplierProduct['product_id'] = $productId;
-                $supplierProduct['main_product'] = $this->randomGenerator->generateNumber(0, 1);
-
-                array_push($productsArr, $supplierProduct);
-            }
-
-            $result = $this->supplierService->create(
-                supplierArr: $supplierArr,
-                picArr: $picArr,
-                productsArr: $productsArr
-            );
-        }
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierSeeder = new SupplierTableSeeder();
         $supplierSeeder->callWith(SupplierTableSeeder::class, [10, $companyId]);
 
         $result = $this->supplierService->list(
             companyId: $companyId, 
-            search: 'testing',
+            search: '',
             paginate: true,
             page: -1,
             perPage: 10
@@ -359,65 +279,23 @@ class SupplierServiceTest extends ServiceTestCase
         $companyId = $company->id;
         
         $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
         $brandSeeder = new BrandTableSeeder();
         $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
 
         $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
-        do {
-            $productSeeder = new ProductTableSeeder();
-            $productSeeder->callWith(ProductTableSeeder::class, [20, $companyId]);
-
-            $productCount = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->count();
-        } while ($productCount == 0);
-        
-        for ($i = 0; $i < 10; $i++) {
-            $supplierArr = Supplier::factory()->insertStringInName('testing')->make([
-                'company_id' => $user->companies->first()->id
-            ])->toArray();
-            
-            $picArr = Profile::factory()->make()->toArray();
-            $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . $this->randomGenerator->generateNumber(1, 999);
-            $picArr['email'] = $picArr['name'] . '@something.com';
-            $picArr['contact'] = $supplierArr['contact'];
-            $picArr['address'] = $supplierArr['address'];
-            $picArr['city'] = $supplierArr['city'];
-            $picArr['tax_id'] = $supplierArr['tax_id'];
-
-            $supplierProductsCount = $this->randomGenerator->generateNumber(1, $productCount);
-            $productIds = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->take($supplierProductsCount)->pluck('id');
-            
-            $productsArr = [];
-            foreach ($productIds as $productId) {
-                $supplierProduct = [];
-                $supplierProduct['product_id'] = $productId;
-                $supplierProduct['main_product'] = $this->randomGenerator->generateNumber(0, 1);
-
-                array_push($productsArr, $supplierProduct);
-            }
-
-            $result = $this->supplierService->create(
-                supplierArr: $supplierArr,
-                picArr: $picArr,
-                productsArr: $productsArr
-            );
-        }
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierSeeder = new SupplierTableSeeder();
         $supplierSeeder->callWith(SupplierTableSeeder::class, [10, $companyId]);
 
         $result = $this->supplierService->list(
             companyId: $companyId, 
-            search: 'testing',
+            search: '',
             paginate: true,
             page: 1,
             perPage: -10

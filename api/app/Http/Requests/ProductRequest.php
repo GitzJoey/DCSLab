@@ -63,6 +63,7 @@ class ProductRequest extends FormRequest
             'brand_id' => 'nullable',
             'product_units_hId.*' => 'nullable',
             'product_units_code.*' => 'nullable',
+            'product_units_remarks.*' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -107,7 +108,7 @@ class ProductRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'brand_id' => 'required',
+                    'product_group_id' => 'required',
                     'taxable_supply' => 'required|boolean',
                     'use_serial_number' => 'required|boolean',
                     'price_include_vat' => 'required|boolean',

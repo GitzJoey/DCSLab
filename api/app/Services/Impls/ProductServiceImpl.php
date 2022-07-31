@@ -154,7 +154,26 @@ class ProductServiceImpl implements ProductService
 
     public function read(Product $product): Product
     {
-        return $product->with('productGroup', 'brand', 'productUnits.unit')->first();
+        // $brand = $product->brand_id;
+        // if ($brand) {
+        //     return $product->with('productGroup', 'brand', 'productUnits.unit')->first();
+        // } else {
+        //     return $product->with('productGroup', 'productUnits.unit')->first();
+        // }
+        
+        $brand = $product->brand_id;
+        if ($brand) {
+            $result = Product::with('productGroup', 'brand', 'productUnits.unit')->where('id', '=', $product->id)->first();
+        } else {
+            $result = Product::with('productGroup', 'productUnits.unit')->where('id', '=', $product->id)->first();
+        }
+
+        return $result;
+
+        // $anu = Product::where('id', '=', $product->id);
+        // $anu = $anu->with('productGroup', 'brand', 'productUnits.unit');
+        // $anu = $anu->first();
+        // return Product::where('id', '=', $product->id)->with('productGroup', 'brand', 'productUnits.unit')->first();
     }
 
     public function update(
@@ -166,21 +185,36 @@ class ProductServiceImpl implements ProductService
         $timer_start = microtime(true);
 
         try {
-            $product->update([
-                'code' => $productArr['code'],
-                'product_group_id' => $productArr['product_group_id'],
-                'brand_id' => $productArr['brand_id'],
-                'name' => $productArr['name'],
-                'taxable_supply' => $productArr['taxable_supply'],
-                'standard_rated_supply' => $productArr['standard_rated_supply'],
-                'price_include_vat' => $productArr['price_include_vat'],
-                'remarks' => $productArr['remarks'],
-                'point' => $productArr['point'],
-                'use_serial_number' => $productArr['use_serial_number'],
-                'has_expiry_date' => $productArr['has_expiry_date'],
-                'product_type' => $productArr['product_type'],
-                'status' => $productArr['status'],
-            ]);
+            // $product->update([
+            //     'code' => $productArr['code'],
+            //     'product_group_id' => $productArr['product_group_id'],
+            //     'brand_id' => $productArr['brand_id'],
+            //     'name' => $productArr['name'],
+            //     'taxable_supply' => $productArr['taxable_supply'],
+            //     'standard_rated_supply' => $productArr['standard_rated_supply'],
+            //     'price_include_vat' => $productArr['price_include_vat'],
+            //     'remarks' => $productArr['remarks'],
+            //     'point' => $productArr['point'],
+            //     'use_serial_number' => $productArr['use_serial_number'],
+            //     'has_expiry_date' => $productArr['has_expiry_date'],
+            //     'product_type' => $productArr['product_type'],
+            //     'status' => $productArr['status'],
+            // ]);
+
+            $product->code = $productArr['code'];
+            $product->product_group_id = $productArr['product_group_id'];
+            $product->brand_id = $productArr['brand_id'];
+            $product->name = $productArr['name'];
+            $product->taxable_supply = $productArr['taxable_supply'];
+            $product->standard_rated_supply = $productArr['standard_rated_supply'];
+            $product->price_include_vat = $productArr['price_include_vat'];
+            $product->remarks = $productArr['remarks'];
+            $product->point = $productArr['point'];
+            $product->use_serial_number = $productArr['use_serial_number'];
+            $product->has_expiry_date = $productArr['has_expiry_date'];
+            $product->product_type = $productArr['product_type'];
+            $product->status = $productArr['status'];
+            $product->save();
 
             $pu = [];
             foreach ($productUnitsArr as $product_unit) {
@@ -208,7 +242,7 @@ class ProductServiceImpl implements ProductService
             $deletedProductUnitIds = array_diff($puIdsOld, $puIds);
 
             foreach ($deletedProductUnitIds as $deletedProductUnitId) {
-                $productUnit = $product->productUnits()->whereIn('id', $deletedProductUnitId);
+                $productUnit = $product->productUnits()->where('id', $deletedProductUnitId);
                 $productUnit->delete();
             }
 

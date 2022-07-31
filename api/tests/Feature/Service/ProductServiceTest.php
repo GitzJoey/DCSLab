@@ -80,7 +80,7 @@ class ProductServiceTest extends ServiceTestCase
                             ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
                         ])->inRandomOrder()->first()->id;
 
-            $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
+            $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + $this->faker->numberBetween(1, 10));
             $isBase = $i == 0 ? true : false;
             $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
 
@@ -827,11 +827,12 @@ class ProductServiceTest extends ServiceTestCase
         $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
         $productSeeder = new ProductTableSeeder();
-        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId]);
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, 1]);
 
         $product = $company->products()->first();
 
         $productArr = Product::factory()->setStatusActive()->make()->toArray();
+        $productArr['company_id'] = $companyId;
         $productArr['product_group_id'] = ProductGroup::where('company_id', '=', $companyId)
         ->orWhere([
             ['category', '=', ProductGroupCategory::PRODUCTS->value],
@@ -874,31 +875,28 @@ class ProductServiceTest extends ServiceTestCase
             $productUnitsArr
         );
 
-        $this->markTestSkipped('Something wrong...');
-
         $this->assertInstanceOf(Product::class, $result);
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'company_id' => $productUnitsArr['company_id'],
-            'code' => $productUnitsArr['code'],
-            'product_group_id' => $productUnitsArr['product_group_id'],
-            'brand_id' => $productUnitsArr['brand_id'],
-            'name' => $productUnitsArr['name'],
-            'taxable_supply' => $productUnitsArr['taxable_supply'],
-            'standard_rated_supply' => $productUnitsArr['standard_rated_supply'],
-            'price_include_vat' => $productUnitsArr['price_include_vat'],
-            'remarks' => $productUnitsArr['remarks'],
-            'point' => $productUnitsArr['point'],
-            'use_serial_number' => $productUnitsArr['use_serial_number'],
-            'has_expiry_date' => $productUnitsArr['has_expiry_date'],
-            'product_type' => $productUnitsArr['product_type'],
-            'status' => $productUnitsArr['status'],
+            'company_id' => $productArr['company_id'],
+            'code' => $productArr['code'],
+            'product_group_id' => $productArr['product_group_id'],
+            'brand_id' => $productArr['brand_id'],
+            'name' => $productArr['name'],
+            'taxable_supply' => $productArr['taxable_supply'],
+            'standard_rated_supply' => $productArr['standard_rated_supply'],
+            'price_include_vat' => $productArr['price_include_vat'],
+            'remarks' => $productArr['remarks'],
+            'point' => $productArr['point'],
+            'use_serial_number' => $productArr['use_serial_number'],
+            'has_expiry_date' => $productArr['has_expiry_date'],
+            'product_type' => $productArr['product_type'],
+            'status' => $productArr['status'],
         ]);
 
         for ($i = 0; $i < $unitCount ; $i++) {
             $this->assertDatabaseHas('product_units', [
-                // 'id' => $productUnitsArr[$i],
                 'company_id' => $companyId,
                 'product_id' => $product->id,
                 'unit_id' => $productUnitsArr[$i]['unit_id'],
