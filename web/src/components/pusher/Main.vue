@@ -51,12 +51,14 @@ onMounted(() => {
 
 //#region Methods
 const listenPusherPublic = () => {
+    if (typeof Echo === 'undefined') return;
     Echo.channel('public-channel').listen('.event-public-pusher', (e) => { 
         pusherNotificationToast('Beep...Beep!', e.message);
     });
 }
 
 const listenPusherPrivate = (hId) => {
+    if (typeof Echo === 'undefined') return;
     if (Echo.connector.channels.hasOwnProperty('private-' + 'channel-' + hId)) return;
 
     Echo.private('channel-' + hId).listen('.event-private-pusher', (e) => { 

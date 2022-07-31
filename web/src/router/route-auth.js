@@ -1,6 +1,6 @@
 import Login from "@/views/auth/Login.vue";
 import Register from "@/views/auth/Register.vue";
-import ResetPassword from "@/views/auth/ResetPassword.vue";
+import PasswordReset from "@/views/auth/PasswordReset.vue";
 
 function login() {
     return {
@@ -20,9 +20,9 @@ function register() {
 
 function resetPassword() {
     return {
-        path: "/password/reset",
-        name: "reset-password",
-        component: ResetPassword
+        path: "/password-reset/:token?",
+        name: "password-reset",
+        component: PasswordReset
     }
 }
 

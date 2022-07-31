@@ -5,7 +5,7 @@
       <div class="block xl:grid grid-cols-2 gap-4">
         <div class="hidden xl:flex flex-col min-h-screen">
           <a href="/" class="-intro-x flex items-center pt-5">
-            <img alt="DCSLab" class="w-6" src="@/assets/images/logo.svg" />
+            <img alt="DCSLab" class="w-10" src="@/assets/images/stealth-bomber-color.svg" />
             <span class="text-white text-lg ml-3"> {{ appName }} </span>
           </a>
           <div class="my-auto">
@@ -40,7 +40,7 @@
                     <input id="remember-me" type="checkbox" class="form-check-input border mr-2" />
                     <label class="cursor-pointer select-none" for="remember-me">{{ t('views.login.fields.remember_me') }}</label>
                   </div>
-                  <a href="" @click="router.push({ name: 'reset-password' })">{{ t('views.login.fields.forgot_pass') }}</a>
+                  <a href="" @click="router.push({ name: 'password-reset' })">{{ t('views.login.fields.forgot_pass') }}</a>
                 </div>
                 <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                   <button type="submit" class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">
