@@ -70,7 +70,7 @@ class SupplierServiceTest extends ServiceTestCase
         $picArr['city'] = $supplierArr['city'];
         $picArr['tax_id'] = $supplierArr['tax_id'];
             
-        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->get()->count());
+        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
         $productIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]

@@ -11,9 +11,12 @@ use App\Models\Product;
 use App\Models\Profile;
 use App\Enums\UserRoles;
 use App\Models\Supplier;
+use App\Enums\UnitCategory;
 use App\Enums\PaymentTermType;
+use App\Enums\ProductCategory;
 use App\Actions\RandomGenerator;
 use App\Services\SupplierService;
+use App\Enums\ProductGroupCategory;
 use Vinkla\Hashids\Facades\Hashids;
 use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\BrandTableSeeder;
@@ -122,34 +125,24 @@ class SupplierAPITest extends APITestCase
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
+        $this->actingAs($user);
+
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->actingAs($user);
-        
         $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
         $brandSeeder = new BrandTableSeeder();
         $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
 
         $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
-        do {
-            $productSeeder = new ProductTableSeeder();
-            $productSeeder->callWith(ProductTableSeeder::class, [20, $companyId]);
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
-            $productCount = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->count();
-        } while ($productCount == 0);
-        
-        $supplierSeeder = new SupplierTableSeeder();
-        $supplierSeeder->callWith(SupplierTableSeeder::class, [1, $companyId]);
-
-        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $productCount);
+        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
         $supplierProductIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
@@ -218,26 +211,24 @@ class SupplierAPITest extends APITestCase
 
         $this->actingAs($user);
 
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
         $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
         $brandSeeder = new BrandTableSeeder();
         $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
 
         $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
-        do {
-            $productSeeder = new ProductTableSeeder();
-            $productSeeder->callWith(ProductTableSeeder::class, [20, $companyId]);
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
-            $productCount = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->count();
-        } while ($productCount == 0);
-
-        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $productCount);
+        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
         $supplierProductIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
@@ -708,53 +699,6 @@ class SupplierAPITest extends APITestCase
         $companyId = $user->companies->first()->id;
 
         $this->actingAs($user);
-
-        $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
-
-        $brandSeeder = new BrandTableSeeder();
-        $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
-
-        $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
-
-        do {
-            $productSeeder = new ProductTableSeeder();
-            $productSeeder->callWith(ProductTableSeeder::class, [20, $companyId]);
-
-            $productCount = Product::where([
-                ['company_id', '=', $companyId],
-                ['brand_id', '!=', null]
-            ])->count();
-        } while ($productCount == 0);
-
-        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $productCount);
-        $supplierProductIds = Product::where([
-            ['company_id', '=', $companyId],
-            ['brand_id', '!=', null]
-        ])->take($supplierProductsCount)->pluck('id');
-        
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
-        }
-
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
-            $mainProductId = $this->randomGenerator->generateNumber(0, 1);
-            if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
-            }
-        }
-
-        $supplierArr = Supplier::factory()->make([
-            'company_id' => Hashids::encode($companyId)
-        ])->toArray();
-        $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
-        $supplierArr['pic_name'] = $this->faker->name();
-        $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
 
         $uuid = $this->faker->uuid();
 
