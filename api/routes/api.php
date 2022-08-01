@@ -43,6 +43,11 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('read/{branch:uuid}', [BranchController::class, 'read'])->name('.read');
 
                 Route::get('read/by/company/{company:uuid}', [BranchController::class, 'getBranchByCompany'])->name('.read.by.company');
+                Route::get('read/mainbranch/by/company/{company:uuid}', [BranchController::class, 'getMainBranchByCompany'])->name('.read.mainbranch.by.company');
+                Route::get('read/reset/mainbranch/by/company/{company:uuid}', [BranchController::class, 'resetMainBranch'])->name('.read.reset.mainbranch.by.company');
+                
+                Route::get('read/generate/unique/code', [BranchController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{branch:uuid}/{except}', [BranchController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function () {
                 Route::get('read', [EmployeeController::class, 'list'])->name('.list');
