@@ -1,6 +1,6 @@
 # DCSLab
 
-DCSLab - Laravel API
+DCSLab - Vue Web
 
 ## Installation
 
