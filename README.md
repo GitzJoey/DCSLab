@@ -32,6 +32,11 @@ Interested? let discuss it together [here](https://github.com/GitzJoey/DCSLab/di
 
 Full change logs can be found [here](CHANGELOG.md)
 
+## License
+[MIT License](http://opensource.org/licenses/MIT)  
+The MIT License is a permissive license.  
+It lets you do anything with this code as long as you provide **attribution back to this website**. 
+
 ## Treat Us Coffee
 
 If you think this open source project usefull
