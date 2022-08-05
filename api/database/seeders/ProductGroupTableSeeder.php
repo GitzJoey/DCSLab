@@ -46,6 +46,7 @@ class ProductGroupTableSeeder extends Seeder
                         'company_id' => $c,
                     ]);
                     break;
+                case 0:
                 default:
                     ProductGroup::factory()->count($countPerCompany)->create([
                         'company_id' => $c,
