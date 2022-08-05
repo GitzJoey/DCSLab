@@ -77,6 +77,7 @@ class CompanyServiceImpl implements CompanyService
         bool $paginate = true,
         int $page = 1,
         int $perPage = 10,
+        array $with = [],
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -133,6 +134,23 @@ class CompanyServiceImpl implements CompanyService
     public function read(Company $company): Company
     {
         return $company->with('branches.warehouses')->first();
+    }
+
+    public function isDefaultCompany(Company $company): bool
+    {
+        $result = $company->default;
+
+        return is_null($result) ? false : $result;
+    }
+
+    public function getCompanyById(int $companyId): Company
+    {
+        return Company::find($companyId)->first();
+    }
+
+    public function getDefaultCompany(User $user): Company
+    {
+        return $user->companies()->where('default', '=', true)->first();
     }
 
     public function getAllActiveCompany(
@@ -210,6 +228,30 @@ class CompanyServiceImpl implements CompanyService
         }
     }
 
+    public function resetDefaultCompany(User $user): bool
+    {
+        DB::beginTransaction();
+        $timer_start = microtime(true);
+
+        try {
+            $compIds = $user->companies()->pluck('company_id');
+
+            $retval = Company::whereIn('id', $compIds)
+                      ->update(['default' => 0]);
+
+            DB::commit();
+
+            return $retval;
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+        }
+    }
+
     public function delete(Company $company): bool
     {
         DB::beginTransaction();
@@ -260,44 +302,4 @@ class CompanyServiceImpl implements CompanyService
         return $result->count() == 0 ? true : false;
     }
 
-    public function isDefaultCompany(Company $company): bool
-    {
-        $result = $company->default;
-
-        return is_null($result) ? false : $result;
-    }
-
-    public function resetDefaultCompany(User $user): bool
-    {
-        DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $compIds = $user->companies()->pluck('company_id');
-
-            $retval = Company::whereIn('id', $compIds)
-                      ->update(['default' => 0]);
-
-            DB::commit();
-
-            return $retval;
-        } catch (Exception $e) {
-            DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
-    }
-
-    public function getCompanyById(int $companyId): Company
-    {
-        return Company::find($companyId)->first();
-    }
-
-    public function getDefaultCompany(User $user): Company
-    {
-        return $user->companies()->where('default', '=', true)->first();
-    }
 }

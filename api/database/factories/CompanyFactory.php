@@ -27,11 +27,27 @@ class CompanyFactory extends Factory
 
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'address' => $faker->address(),
             'name' => $faker->company(),
+            'address' => $faker->address(),
             'default' => false,
             'status' => RecordStatus::ACTIVE,
         ];
+    }
+
+    public function insertStringInName(string $str)
+    {
+        return $this->state(function (array $attributes) use ($str) {
+            return [
+                'name' => $this->craftName($str),
+            ];
+        });
+    }
+
+    private function craftName(string $str)
+    {
+        $text = $this->faker->company();
+
+        return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
 
     public function setStatusActive()

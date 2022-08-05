@@ -10,6 +10,7 @@ use App\Services\CompanyService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class CompanyServiceTest extends ServiceTestCase
 {
@@ -22,7 +23,7 @@ class CompanyServiceTest extends ServiceTestCase
         $this->companyService = app(CompanyService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_company_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -47,11 +48,9 @@ class CompanyServiceTest extends ServiceTestCase
         $this->expectException(Exception::class);
         $this->companyService->create([]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_company_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -159,11 +158,9 @@ class CompanyServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() > 1);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_company_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -176,11 +173,9 @@ class CompanyServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Company::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_company_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -213,11 +208,9 @@ class CompanyServiceTest extends ServiceTestCase
             
         $this->companyService->update($company, $companyArr);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_company_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -234,12 +227,98 @@ class CompanyServiceTest extends ServiceTestCase
             'id' => $company->id
         ]);
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
+    public function test_company_service_call_function_get_all_active_company_expect_collection_object()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
 
-    #region others
+        $result = $this->companyService->getAllActiveCompany(
+            userId: $user->id
+        );
 
+        $this->assertInstanceOf(Collection::class, $result);
+    }
+
+    public function test_company_service_call_function_get_default_company_expect_default_company_returned()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $result = $this->companyService->getDefaultCompany(
+            $user,
+        );
+
+        $this->assertTrue(boolval($result));
+    }
     
+    public function test_company_service_call_function_get_is_default_company_expect_default_company_returned()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
 
-    #endregion
+        $company = $user->companies->first();
+        $result = $this->companyService->isDefaultCompany(
+            company: $company,
+        );
+        $this->assertTrue(boolval($result));
+    }
+
+    public function test_company_service_call_function_reset_default_company_expect_no_default_company_exists()
+    {
+        $user = User::factory()->create();
+
+        for ($i = 0; $i < 5 ; $i++) {
+            if ($i == 0) {
+                $company = Company::factory()->setIsDefault()->create([]);
+                $companyId = $company->id;
+            } else {
+                $company = Company::factory()->create([]);
+                $companyId = $company->id;
+            }
+
+            $user->companies()->attach([$companyId]);
+        }
+
+        $result = $this->companyService->resetDefaultCompany(
+            user: $user
+        );
+
+        $this->assertTrue($result);
+
+        $defaultCount = $user->companies->where('default', '=', 'true')->count();
+        $this->assertTrue($defaultCount == 0);
+    }
+
+    public function test_company_service_call_function_generateUniqueCode_expect_unique_code_returned()
+    {
+        $this->assertIsString($this->companyService->generateUniqueCode());
+    }
+
+    public function test_company_service_call_function_isUniqueCode_expect_can_detect_unique_code()
+    {
+        $user = User::factory()->create();
+        $userId = $user->id;
+
+        $company1 = Company::factory()->create([
+            'code' => 'test1'
+        ]);
+        $user->companies()->attach([$company1->id]);
+
+        $company2 = Company::factory()->create([
+            'code' => 'test2'
+        ]);
+        $user->companies()->attach([$company2->id]);
+
+        $this->assertFalse($this->companyService->isUniqueCode('test1', $userId));
+        $this->assertFalse($this->companyService->isUniqueCode('test2', $userId));
+        $this->assertTrue($this->companyService->isUniqueCode('test3', $userId));
+        $this->assertTrue($this->companyService->isUniqueCode('test4', $userId));
+    }
+    /* #endregion */
 }
