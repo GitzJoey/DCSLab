@@ -31,11 +31,6 @@ class ProductGroupTableSeeder extends Seeder
 
         foreach ($companies as $c) {
             switch ($category) {
-                case 0:
-                    ProductGroup::factory()->count($countPerCompany)->create([
-                        'company_id' => $c,
-                    ]);
-                    break;
                 case ProductGroupCategory::PRODUCTS->value:
                     ProductGroup::factory()->setCategoryToProduct()->count($countPerCompany)->create([
                         'company_id' => $c,
@@ -48,6 +43,11 @@ class ProductGroupTableSeeder extends Seeder
                     break;
                 case ProductGroupCategory::PRODUCTS_AND_SERVICES->value:
                     ProductGroup::factory()->setCategoryToProductAndService()->count($countPerCompany)->create([
+                        'company_id' => $c,
+                    ]);
+                    break;
+                default:
+                    ProductGroup::factory()->count($countPerCompany)->create([
                         'company_id' => $c,
                     ]);
                     break;
