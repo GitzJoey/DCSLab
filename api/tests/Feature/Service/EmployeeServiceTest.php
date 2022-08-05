@@ -724,18 +724,18 @@ class EmployeeServiceTest extends ServiceTestCase
             $companyId_1 = $company_1->id;
 
             $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_1]);
-            $branch_company_1 = $company_1->branches()->inRandomOrder()->first();
+            $branchId_company_1 = $company_1->branches()->inRandomOrder()->first()->id;
 
-            $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_1, $branch_company_1]);
+            $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_1, $branchId_company_1]);
             $employee_company_1_code = $company_1->employees()->inRandomOrder()->first()->code;
 
             $company_2 = $user->companies[1];
             $companyId_2 = $company_2->id;
 
             $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_2]);
-            $branch_company_2 = $company_2->branches()->inRandomOrder()->first();
+            $branchId_company_2 = $company_2->branches()->inRandomOrder()->first()->id;
 
-            $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_2, $branch_company_2]);
+            $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_2, $branchId_company_2]);
             $employee_company_2_code = $company_2->employees()->inRandomOrder()->first()->code;
 
             $this->assertFalse($this->employeeService->isUniqueCode($employee_company_1_code, $companyId_1));
