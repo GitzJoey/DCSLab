@@ -37,6 +37,22 @@ const install = app => {
             encrypted: true,
             disableStats: true,
             enabledTransports: ['ws'],
+            authorizer: (channel, options) => {
+                return {
+                    authorize: (socketId, callback) => {
+                        axios.post(import.meta.env.VITE_BACKEND_URL + '/broadcasting/auth', {
+                            socket_id: socketId,
+                            channel_name: channel.name
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            callback(false, data);
+                        }).catch((e) => {
+                            callback(true, e);
+                        })
+                    }
+                }
+            }
         }); 
     } else { 
         
