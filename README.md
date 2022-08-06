@@ -28,6 +28,13 @@ Interested? let discuss it together [here](https://github.com/GitzJoey/DCSLab/di
 * [NodeJS/NPM](https://nodejs.org/en/download/) (16.14.0/8.11.0)
 * [Composer](https://getcomposer.org/download/) (2.3.5)
 
+## Installation
+* Run 
+  ```
+  $ npm install
+  ```
+* Update .env files in folder *api* and *web*
+
 ## Change Logs
 
 Full change logs can be found [here](CHANGELOG.md)
