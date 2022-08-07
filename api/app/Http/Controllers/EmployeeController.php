@@ -248,4 +248,51 @@ class EmployeeController extends BaseController
 
         return !$result ? response()->error($errorMsg) : response()->success();
     }
+
+    public function generateUniqueCode()
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->employeeService->generateUniqueCode();
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
+
+    public function isUniqueCode(string $code, Employee $employee, bool $exceptThis)
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $exceptId = null;
+            if ($exceptThis) {
+                $exceptId = $employee->id;
+            }
+
+            $result = $this->employeeService->isUniqueCode(
+                code: $code,
+                companyId: $employee->company_id,
+                exceptId: $exceptId,
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (!$result) {
+            return response()->error([
+                'code' => [trans('rules.unique_code')],
+            ], 422);
+        } else {
+            return $result;
+        }
+    }
 }

@@ -22,6 +22,51 @@ class CompanyController extends BaseController
         $this->companyService = $companyService;
     }
 
+    public function store(CompanyRequest $companyRequest)
+    {
+        $request = $companyRequest->validated();
+
+        $user = Auth::user();
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->companyService->generateUniqueCode();
+            } while (!$this->companyService->isUniqueCode($code, $user->id));
+        } else {
+            if (!$this->companyService->isUniqueCode($code, $user->id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $companyArr = [
+            'user_id' => $user->id,
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'default' => $request['default'],
+            'status' => $request['status'],
+
+        ];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            if ($companyArr['default']) {
+                $this->companyService->resetDefaultCompany($user);
+            }
+
+            $result = $this->companyService->create($companyArr);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
     public function list(CompanyRequest $companyRequest)
     {
         $userId = Auth::id();
@@ -103,51 +148,6 @@ class CompanyController extends BaseController
         return $defaultCompany->hId;
     }
 
-    public function store(CompanyRequest $companyRequest)
-    {
-        $request = $companyRequest->validated();
-
-        $user = Auth::user();
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id));
-        } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $companyArr = [
-            'user_id' => $user->id,
-            'code' => $code,
-            'name' => $request['name'],
-            'address' => $request['address'],
-            'default' => $request['default'],
-            'status' => $request['status'],
-
-        ];
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            if ($companyArr['default']) {
-                $this->companyService->resetDefaultCompany($user);
-            }
-
-            $result = $this->companyService->create($companyArr);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
     public function update(Company $company, CompanyRequest $companyRequest)
     {
         $request = $companyRequest->validated();
@@ -195,6 +195,25 @@ class CompanyController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
+    public function resetDefaultCompany()
+    {
+        $user = Auth::user();
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->companyService->resetDefaultCompany(user: $user);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
+
     public function delete(Company $company)
     {
         $result = false;
@@ -211,5 +230,52 @@ class CompanyController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function generateUniqueCode()
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->companyService->generateUniqueCode();
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
+
+    public function isUniqueCode(string $code, Company $company, bool $exceptThis)
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $exceptId = null;
+            if ($exceptThis) {
+                $exceptId = $company->id;
+            }
+
+            $result = $this->companyService->isUniqueCode(
+                code: $code,
+                userId: $company->user_id,
+                exceptId: $exceptId,
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (!$result) {
+            return response()->error([
+                'code' => [trans('rules.unique_code')],
+            ], 422);
+        } else {
+            return $result;
+        }
     }
 }
