@@ -11,9 +11,12 @@ use App\Models\Profile;
 use App\Models\Employee;
 use Tests\ServiceTestCase;
 use App\Services\EmployeeService;
+use Database\Seeders\BranchTableSeeder;
+use Database\Seeders\EmployeeTableSeeder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class EmployeeServiceTest extends ServiceTestCase
 {
@@ -26,7 +29,7 @@ class EmployeeServiceTest extends ServiceTestCase
         $this->employeeService = app(EmployeeService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_employee_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -108,11 +111,9 @@ class EmployeeServiceTest extends ServiceTestCase
             [],
         );
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_employee_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -358,11 +359,9 @@ class EmployeeServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() == 25);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_employee_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -419,11 +418,9 @@ class EmployeeServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Employee::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_employee_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -619,11 +616,9 @@ class EmployeeServiceTest extends ServiceTestCase
             $newAccessesArr
         );
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_employee_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -688,10 +683,66 @@ class EmployeeServiceTest extends ServiceTestCase
             'id' => $employee->id,
         ]);
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
+    public function test_employee_service_call_function_generateUniqueCode_expect_unique_code_returned()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setIsDefault(), 'companies')
+            ->create();
+        
+        $company = $user->companies->first();
+        $companyId = $company->id;
 
-    #region others
+        $branchSeeder = new BranchTableSeeder();
+        $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId]);
+        
+        $branchId = $company->branches()->first()->id;
 
-    #endregion
+        $employeeSeeder = new EmployeeTableSeeder();
+        $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId, $branchId]);
+        
+        $code = $this->employeeService->generateUniqueCode();
+
+        $this->assertIsString($code);
+        
+        $resultCount = $company->employees()->where('code', '=', $code)->count();
+        $this->assertTrue($resultCount == 0);
+    }
+
+    public function test_employee_service_call_function_isUniqueCode_expect_can_detect_unique_code()
+    {
+        $branchSeeder = new BranchTableSeeder();
+        $employeeSeeder = new EmployeeTableSeeder();
+
+        $user = User::factory()
+                    ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
+                    ->create();
+
+        $company_1 = $user->companies[0];
+        $companyId_1 = $company_1->id;
+
+        $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_1]);
+        $branchId_company_1 = $company_1->branches()->inRandomOrder()->first()->id;
+
+        $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_1, $branchId_company_1]);
+        $employee_company_1_code = $company_1->employees()->inRandomOrder()->first()->code;
+
+        $company_2 = $user->companies[1];
+        $companyId_2 = $company_2->id;
+
+        $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_2]);
+        $branchId_company_2 = $company_2->branches()->inRandomOrder()->first()->id;
+
+        $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_2, $branchId_company_2]);
+        $employee_company_2_code = $company_2->employees()->inRandomOrder()->first()->code;
+
+        $this->assertFalse($this->employeeService->isUniqueCode($employee_company_1_code, $companyId_1));
+        $this->assertTrue($this->employeeService->isUniqueCode('test2', $companyId_1));
+        $this->assertTrue($this->employeeService->isUniqueCode('test3', $companyId_1));
+        $this->assertFalse($this->employeeService->isUniqueCode($employee_company_2_code, $companyId_2));
+        $this->assertTrue($this->employeeService->isUniqueCode('test1', $companyId_2));
+    }
+    /* #endregion */
 }

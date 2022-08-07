@@ -249,7 +249,7 @@ class BranchServiceTest extends ServiceTestCase
     /* #endregion */
 
     /* #region others */
-    public function test_branch_service_call_function_getBranchByCompany_expect_collection_object()
+    public function test_branch_service_call_function_get_branch_by_company_expect_collection_object()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault()
@@ -272,7 +272,7 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Collection::class, $result);
     }
 
-    public function test_branch_service_call_function_getMainBranchByCompany_expect_main_branch_returned()
+    public function test_branch_service_call_function_get_main_branch_by_company_expect_main_branch_returned()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
@@ -300,7 +300,7 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertTrue(boolval($result->is_main));
     }
 
-    public function test_branch_service_call_function_resetMainBranch_expect_no_main_branch_exists()
+    public function test_branch_service_call_function_reset_main_branch_expect_no_main_branch_exists()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
@@ -332,12 +332,22 @@ class BranchServiceTest extends ServiceTestCase
         $this->assertTrue(Branch::whereCompanyId($companyId)->where('is_main', '=', true)->count() == 0);
     }
 
-    public function test_branch_service_call_function_generateUniqueCode_expect_unique_code_returned()
+    public function test_branch_service_call_function_generate_unique_code_expect_unique_code_returned()
     {
-        $this->assertIsString($this->branchService->generateUniqueCode());
+        $user = User::factory()
+            ->has(Company::factory()->setIsDefault()
+                ->has(Branch::factory()->count(5), 'branches'), 'companies')
+            ->create();
+
+        $code = $this->branchService->generateUniqueCode();
+
+        $this->assertIsString($code);
+        
+        $resultCount = $user->companies()->first()->branches()->where('code', '=', $code)->count();
+        $this->assertTrue($resultCount == 0);
     }
 
-    public function test_branch_service_call_function_isUniqueCode_expect_can_detect_unique_code()
+    public function test_branch_service_call_function_is_unique_code_expect_can_detect_unique_code()
     {
         $user = User::factory()
                     ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')

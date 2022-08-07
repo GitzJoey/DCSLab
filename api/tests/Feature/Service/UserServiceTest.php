@@ -87,7 +87,7 @@ class UserServiceTest extends ServiceTestCase
 
     #region list
 
-    public function test_user_service_call_list_with_paginate_true_expect_Paginator_object()
+    public function test_user_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()->create();
 
@@ -101,7 +101,7 @@ class UserServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
     }
 
-    public function test_user_service_call_list_with_paginate_false_expect_Collection_object()
+    public function test_user_service_call_list_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()->create();
 
@@ -111,20 +111,6 @@ class UserServiceTest extends ServiceTestCase
         );
 
         $this->assertInstanceOf(Collection::class, $result);
-    }
-
-    public function test_user_service_call_list_with_nonexistance_companyId_expect_empty_collection()
-    {
-        $maxId = User::max('id') + 1;
-        $result = $this->userService->list(
-            search: '',
-            paginate: false
-        );
-
-        $this->markTestSkipped('Masi bgng');
-
-        $this->assertInstanceOf(Collection::class, $result);
-        $this->assertEmpty($result);
     }
 
     public function test_user_service_call_list_with_search_parameter_expect_filtered_results()
@@ -366,38 +352,6 @@ class UserServiceTest extends ServiceTestCase
     #endregion
 
     #region delete
-
-    public function test_user_service_call_delete_expect_bool()
-    {
-        $profileArr = Profile::factory()->setStatusActive()->make()->toArray();
-
-        $userArr = User::factory()->make([
-            'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).$this->randomGenerator->generateNumber(1, 999)
-        ])->toArray();
-        $userArr['password'] = 'test123';
-
-        $rolesArr = [];
-        array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
-
-        $user = $this->userService->create(
-            $userArr,
-            $rolesArr,
-            $profileArr
-        );
-
-        $user = User::find($user->id);
-        $user->profile->status = RecordStatus::INACTIVE->value;
-
-        // $result = $user->delete();
-
-        // $this->assertIsBool($result);
-        // $this->assertTrue($result);
-        // $this->assertSoftDeleted('profiles', [
-        //     'id' => $user->id,
-        // ]);
-
-        $this->markTestSkipped('Masi bgng');
-    }
 
     #endregion
 
