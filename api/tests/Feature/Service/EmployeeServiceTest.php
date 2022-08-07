@@ -686,8 +686,8 @@ class EmployeeServiceTest extends ServiceTestCase
     /* #endregion */
 
     /* #region others */
-        public function test_employee_service_call_function_generateUniqueCode_expect_unique_code_returned()
-        {
+    public function test_employee_service_call_function_generateUniqueCode_expect_unique_code_returned()
+    {
         $user = User::factory()
             ->has(Company::factory()->setIsDefault(), 'companies')
             ->create();
@@ -709,40 +709,40 @@ class EmployeeServiceTest extends ServiceTestCase
         
         $resultCount = $company->employees()->where('code', '=', $code)->count();
         $this->assertTrue($resultCount == 0);
-        }
+    }
 
-        public function test_employee_service_call_function_isUniqueCode_expect_can_detect_unique_code()
-        {
-            $branchSeeder = new BranchTableSeeder();
-            $employeeSeeder = new EmployeeTableSeeder();
+    public function test_employee_service_call_function_isUniqueCode_expect_can_detect_unique_code()
+    {
+        $branchSeeder = new BranchTableSeeder();
+        $employeeSeeder = new EmployeeTableSeeder();
 
-            $user = User::factory()
-                        ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
-                        ->create();
+        $user = User::factory()
+                    ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
+                    ->create();
 
-            $company_1 = $user->companies[0];
-            $companyId_1 = $company_1->id;
+        $company_1 = $user->companies[0];
+        $companyId_1 = $company_1->id;
 
-            $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_1]);
-            $branchId_company_1 = $company_1->branches()->inRandomOrder()->first()->id;
+        $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_1]);
+        $branchId_company_1 = $company_1->branches()->inRandomOrder()->first()->id;
 
-            $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_1, $branchId_company_1]);
-            $employee_company_1_code = $company_1->employees()->inRandomOrder()->first()->code;
+        $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_1, $branchId_company_1]);
+        $employee_company_1_code = $company_1->employees()->inRandomOrder()->first()->code;
 
-            $company_2 = $user->companies[1];
-            $companyId_2 = $company_2->id;
+        $company_2 = $user->companies[1];
+        $companyId_2 = $company_2->id;
 
-            $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_2]);
-            $branchId_company_2 = $company_2->branches()->inRandomOrder()->first()->id;
+        $branchSeeder->callWith(BranchTableSeeder::class, [1, $companyId_2]);
+        $branchId_company_2 = $company_2->branches()->inRandomOrder()->first()->id;
 
-            $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_2, $branchId_company_2]);
-            $employee_company_2_code = $company_2->employees()->inRandomOrder()->first()->code;
+        $employeeSeeder->callWith(EmployeeTableSeeder::class, [1, $companyId_2, $branchId_company_2]);
+        $employee_company_2_code = $company_2->employees()->inRandomOrder()->first()->code;
 
-            $this->assertFalse($this->employeeService->isUniqueCode($employee_company_1_code, $companyId_1));
-            $this->assertTrue($this->employeeService->isUniqueCode('test2', $companyId_1));
-            $this->assertTrue($this->employeeService->isUniqueCode('test3', $companyId_1));
-            $this->assertFalse($this->employeeService->isUniqueCode($employee_company_2_code, $companyId_2));
-            $this->assertTrue($this->employeeService->isUniqueCode('test1', $companyId_2));
-        }
+        $this->assertFalse($this->employeeService->isUniqueCode($employee_company_1_code, $companyId_1));
+        $this->assertTrue($this->employeeService->isUniqueCode('test2', $companyId_1));
+        $this->assertTrue($this->employeeService->isUniqueCode('test3', $companyId_1));
+        $this->assertFalse($this->employeeService->isUniqueCode($employee_company_2_code, $companyId_2));
+        $this->assertTrue($this->employeeService->isUniqueCode('test1', $companyId_2));
+    }
     /* #endregion */
 }
