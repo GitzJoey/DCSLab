@@ -169,4 +169,51 @@ class ProductGroupController extends BaseController
 
         return !$result ? response()->error($errorMsg) : response()->success();
     }
+
+    public function generateUniqueCode()
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productGroupService->generateUniqueCode();
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
+
+    public function isUniqueCode(string $code, ProductGroup $productGroup, bool $exceptThis)
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $exceptId = null;
+            if ($exceptThis) {
+                $exceptId = $productGroup->id;
+            }
+
+            $result = $this->productGroupService->isUniqueCode(
+                code: $code,
+                companyId: $productGroup->company_id,
+                exceptId: $exceptId,
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (!$result) {
+            return response()->error([
+                'code' => [trans('rules.unique_code')],
+            ], 422);
+        } else {
+            return $result;
+        }
+    }
 }

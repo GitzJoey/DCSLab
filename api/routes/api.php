@@ -37,31 +37,35 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('read/{company:uuid}', [CompanyController::class, 'read'])->name('.read');
 
                 Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('.read.all_active');
+                Route::get('read/reset/mainbranch/by/company/{company:uuid}', [CompanyController::class, 'resetDefaultCompany'])->name('.read.reset.defaultcompany');
+
+                Route::get('read/generate/unique/code', [CompanyController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{company:uuid}/{except}', [CompanyController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
                 Route::get('read', [BranchController::class, 'list'])->name('.list');
                 Route::get('read/{branch:uuid}', [BranchController::class, 'read'])->name('.read');
 
                 Route::get('read/by/company/{company:uuid}', [BranchController::class, 'getBranchByCompany'])->name('.read.by.company');
+                Route::get('read/mainbranch/by/company/{company:uuid}', [BranchController::class, 'getMainBranchByCompany'])->name('.read.mainbranch.by.company');
+                Route::get('read/reset/mainbranch/by/company/{company:uuid}', [BranchController::class, 'resetMainBranch'])->name('.read.reset.mainbranch.by.company');
+                
+                Route::get('read/generate/unique/code', [BranchController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{branch:uuid}/{except}', [BranchController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'employee', 'as' => '.employee'], function () {
                 Route::get('read', [EmployeeController::class, 'list'])->name('.list');
                 Route::get('read/{employee:uuid}', [EmployeeController::class, 'read'])->name('.read');
+
+                Route::get('read/generate/unique/code', [EmployeeController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{employee:uuid}/{except}', [EmployeeController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'list'])->name('.list');
                 Route::get('read/{warehouse:uuid}', [WarehouseController::class, 'read'])->name('.read');
-            });
-        });
 
-        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
-            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
-                Route::get('read', [SupplierController::class, 'list'])->name('.list');
-                Route::get('read/{supplier:uuid}', [SupplierController::class, 'read'])->name('.read');
-            });
-
-            Route::group(['prefix' => 'common', 'as' => '.common'], function () {
-                Route::get('list/payment_term', [SupplierController::class, 'getPaymentTermType'])->name('.list.payment_term');
+                Route::get('read/generate/unique/code', [WarehouseController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{warehouse:uuid}/{except}', [WarehouseController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
         });
 
@@ -69,18 +73,30 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
             Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function () {
                 Route::get('read', [ProductGroupController::class, 'list'])->name('.list');
                 Route::get('read/{productgroup:uuid}', [ProductGroupController::class, 'read'])->name('.read');
+
+                Route::get('read/generate/unique/code', [ProductGroupController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{productGroup:uuid}/{except}', [ProductGroupController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
                 Route::get('read', [BrandController::class, 'list'])->name('.list');
                 Route::get('read/{brand:uuid}', [BrandController::class, 'read'])->name('.read');
+
+                Route::get('read/generate/unique/code', [BrandController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{brand:uuid}/{except}', [BrandController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'unit', 'as' => '.unit'], function () {
                 Route::get('read', [UnitController::class, 'list'])->name('.list');
                 Route::get('read/{unit:uuid}', [UnitController::class, 'read'])->name('.read');
+
+                Route::get('read/generate/unique/code', [UnitController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{unit:uuid}/{except}', [UnitController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'product', 'as' => '.product'], function () {
                 Route::get('read', [ProductController::class, 'listProducts'])->name('.list');
                 Route::get('read/{product:uuid}', [ProductController::class, 'readProducts'])->name('.read');
+
+                Route::get('read/generate/unique/code', [ProductController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{product:uuid}/{except}', [ProductController::class, 'isUniqueCode'])->name('.read.is.unique.code');
             });
             Route::group(['prefix' => 'service', 'as' => '.service'], function () {
                 Route::get('read', [ProductController::class, 'listServices'])->name('.list');
@@ -89,6 +105,20 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function () {
                 Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
+            });
+        });
+
+        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+                Route::get('read', [SupplierController::class, 'list'])->name('.list');
+                Route::get('read/{supplier:uuid}', [SupplierController::class, 'read'])->name('.read');
+
+                Route::get('read/generate/unique/code', [SupplierController::class, 'generateUniqueCode'])->name('.read.generate.unique.code');
+                Route::get('read/is/unique/code/{code}/{supplier:uuid}/{except}', [SupplierController::class, 'isUniqueCode'])->name('.read.is.unique.code');
+            });
+
+            Route::group(['prefix' => 'common', 'as' => '.common'], function () {
+                Route::get('list/payment_term', [SupplierController::class, 'getPaymentTermType'])->name('.list.payment_term');
             });
         });
         //endregion

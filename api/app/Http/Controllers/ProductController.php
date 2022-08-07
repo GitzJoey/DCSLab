@@ -23,6 +23,88 @@ class ProductController extends BaseController
         $this->productService = $productService;
     }
 
+    public function store(ProductRequest $productRequest)
+    {
+        $request = $productRequest->validated();
+
+        $company_id = $request['company_id'];
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->productService->generateUniqueCodeForProduct();
+            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id));
+        } else {
+            if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $productArr = [
+            'company_id' => $company_id,
+            'code' => $code,
+            'name' => $request['name'],
+            'product_group_id' => Hashids::decode($request['product_group_id'])[0],
+            'brand_id' => Hashids::decode($request['brand_id'])[0],
+            'remarks' => $request['remarks'],
+            'point' => $request['point'],
+            'use_serial_number' => $request['use_serial_number'],
+            'has_expiry_date' => $request['has_expiry_date'],
+            'product_type' => $request['product_type'],
+            'status' => $request['status'],
+            'taxable_supply' => $request['taxable_supply'],
+            'standard_rated_supply' => $request['standard_rated_supply'],
+            'price_include_vat' => $request['price_include_vat'],
+        ];
+
+        $productUnitsArr = [];
+        $count_unit = count($request['unit_id']);
+        for ($i = 0; $i < $count_unit; $i++) {
+            $code = $request['product_units_code'][$i];
+            if ($code == config('dcslab.KEYWORDS.AUTO')) {
+                do {
+                    $code = $this->productService->generateUniqueCodeForProductUnits();
+                } while (!$this->productService->isUniqueCodeForProductUnits($code, $company_id));
+            } else {
+                if (!$this->productService->isUniqueCodeForProductUnits($code, $company_id)) {
+                    return response()->error([
+                        'code' => [trans('rules.unique_code')],
+                    ], 422);
+                }
+            }
+            
+            $is_base = $request['is_base'][$i] == '1' ? true : false;
+
+            $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
+
+            array_push($productUnitsArr, [
+                'company_id' => $company_id,
+                'code' => $code,
+                'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
+                'conv_value' => $request['conv_value'][$i],
+                'is_base' => $is_base,
+                'is_primary_unit' => $is_primary_unit,
+                'remarks' => $request['product_units_remarks'][$i],
+            ]);
+        }
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productService->create(
+                $productArr,
+                $productUnitsArr
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
     public function listProducts(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
@@ -65,12 +147,11 @@ class ProductController extends BaseController
     {
         $request = $productRequest->validated();
 
+        $companyId = $request['company_id'];
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
-
-        $companyId = $request['company_id'];
 
         $result = null;
         $errorMsg = '';
@@ -136,78 +217,10 @@ class ProductController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = ProductResource::collection($result);
+            $response = new ProductResource($result);
 
             return $response;
         }
-    }
-
-    public function store(ProductRequest $productRequest)
-    {
-        $request = $productRequest->validated();
-
-        $company_id = $request['company_id'];
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->productService->generateUniqueCodeForProduct();
-            } while (!$this->productService->isUniqueCodeForProduct($code, $company_id));
-        } else {
-            if (!$this->productService->isUniqueCodeForProduct($code, $company_id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $productArr = [
-            'code' => $code,
-            'name' => $request['name'],
-            'product_group_id' => Hashids::decode($request['product_group_id'])[0],
-            'brand_id' => Hashids::decode($request['brand_id'])[0],
-            'remarks' => $request['remarks'],
-            'point' => $request['point'],
-            'use_serial_number' => $request['use_serial_number'],
-            'has_expiry_date' => $request['has_expiry_date'],
-            'product_type' => $request['product_type'],
-            'status' => $request['status'],
-            'taxable_supply' => $request['taxable_supply'],
-            'standard_rated_supply' => $request['standard_rated_supply'],
-            'price_include_vat' => $request['price_include_vat'],
-        ];
-
-        $productUnitsArr = [];
-        $count_unit = count($request['unit_id']);
-        for ($i = 0; $i < $count_unit; $i++) {
-            $is_base = $request['is_base'][$i] == '1' ? true : false;
-
-            $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
-
-            array_push($productUnitsArr, [
-                'company_id' => $company_id,
-                'code' => $code,
-                'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-                'conv_value' => $request['conv_value'][$i],
-                'is_base' => $is_base,
-                'is_primary_unit' => $is_primary_unit,
-                'remarks' => '',
-            ]);
-        }
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->productService->create(
-                $productArr,
-                $productUnitsArr
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Product $product, ProductRequest $productRequest)
@@ -276,7 +289,7 @@ class ProductController extends BaseController
                 'conv_value' => $request['conv_value'][$i],
                 'is_base' => $is_base,
                 'is_primary_unit' => $is_primary_unit,
-                'remarks' => $request['remarks'],
+                'remarks' => $request['product_units_remarks'][$i],
             ]);
         }
 
@@ -329,6 +342,100 @@ class ProductController extends BaseController
                 ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
                 ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name],
             ];
+        }
+    }
+
+    public function generateUniqueCodeForProduct()
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productService->generateUniqueCodeForProduct();
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
+
+    public function generateUniqueCodeForProductUnits()
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productService->generateUniqueCodeForProductUnits();
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
+
+    public function isUniqueCodeForProduct(string $code, Product $product, bool $exceptThis)
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $exceptId = null;
+            if ($exceptThis) {
+                $exceptId = $product->id;
+            }
+
+            $result = $this->productService->isUniqueCodeForProduct(
+                code: $code,
+                companyId: $product->company_id,
+                exceptId: $exceptId,
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (!$result) {
+            return response()->error([
+                'code' => [trans('rules.unique_code')],
+            ], 422);
+        } else {
+            return $result;
+        }
+    }
+
+    public function isUniqueCodeForProductUnits(string $code, Product $product, bool $exceptThis)
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $exceptId = null;
+            if ($exceptThis) {
+                $exceptId = $product->id;
+            }
+
+            $result = $this->productService->isUniqueCodeForProductUnits(
+                code: $code,
+                companyId: $product->company_id,
+                exceptId: $exceptId,
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (!$result) {
+            return response()->error([
+                'code' => [trans('rules.unique_code')],
+            ], 422);
+        } else {
+            return $result;
         }
     }
 }

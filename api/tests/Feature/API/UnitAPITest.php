@@ -25,8 +25,7 @@ class UnitAPITest extends APITestCase
         parent::setUp();
     }
 
-    #region store
-
+    /* #region store */
     public function test_unit_api_call_store_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -102,11 +101,9 @@ class UnitAPITest extends APITestCase
 
         $api->assertJsonValidationErrors(['company_id', 'code', 'name']);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_unit_api_call_list_with_or_without_pagination_expect_paginator_or_collection()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -300,11 +297,9 @@ class UnitAPITest extends APITestCase
             ],
         ]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_unit_api_call_read_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -356,11 +351,9 @@ class UnitAPITest extends APITestCase
 
         $api->assertStatus(404);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_unit_api_call_update_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -461,11 +454,9 @@ class UnitAPITest extends APITestCase
 
         $api->assertSuccessful();
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_unit_api_call_delete_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -511,10 +502,121 @@ class UnitAPITest extends APITestCase
         $this->actingAs($user);
         $api = $this->json('POST', route('api.post.db.product.unit.delete', null));
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
+    public function test_unit_api_call_generate_unique_code_per_company_expect_unique()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Unit::factory()->count(5), 'units'), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
 
-    #region others
+        $company = $user->companies->first();
 
-    #endregion
+        $api = $this->json('GET', route('api.get.db.product.unit.read.generate.unique.code'));
+
+        $api->assertSuccessful();
+
+        $code = $api->baseResponse->getContent();
+        $resultCount = $company->units()->where('code', '=', $code)->count();
+        $this->assertTrue($resultCount == 0);
+    }
+
+    public function test_unit_api_call_is_unique_code_per_company_with_unique_code_expect_successful()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Unit::factory()->count(5), 'units'), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
+
+        $unit = $user->companies->first()->units()->inRandomOrder()->first();
+
+        $api = $this->json('GET', route('api.get.db.product.unit.read.generate.unique.code'));
+        $api->assertSuccessful();
+        $code = $api->baseResponse->getContent();
+
+        $api = $this->json('GET', route('api.get.db.product.unit.read.is.unique.code', [$code, $unit->uuid, 0]));
+        $api->assertSuccessful();
+    }
+
+    public function test_unit_api_call_is_unique_code_per_company_with_exist_code_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Unit::factory()->count(5), 'units'), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
+
+        $unit = $user->companies->first()->units()->inRandomOrder()->first();
+        $code = $unit->code;
+
+        $api = $this->json('GET', route('api.get.db.product.unit.read.is.unique.code', [$code, $unit->uuid, 0]));
+        
+        $api = $api;
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+
+    public function test_unit_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_successful()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Unit::factory()->count(5), 'units'), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
+
+        $unit = $user->companies->first()->units()->inRandomOrder()->first();
+        $code = $unit->code;
+
+        $api = $this->json('GET', route('api.get.db.product.unit.read.is.unique.code', [$code, $unit->uuid, 1]));
+        $api->assertSuccessful();
+    }
+
+    public function test_unit_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Unit::factory()->count(5), 'units'), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+
+        $unit = $company->units()->take(2)->get();
+        $unit_1 = $unit[0];
+        $unit_2 = $unit[1];
+
+        $code = $unit_1->code;
+
+        $api = $this->json('GET', route('api.get.db.product.unit.read.is.unique.code', [$code, $unit_2->uuid, 1]));
+        
+        $api = $api;
+        
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+    /* #endregion */
 }
