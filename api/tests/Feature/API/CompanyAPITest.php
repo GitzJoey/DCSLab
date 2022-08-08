@@ -27,7 +27,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory(), 'companies')
                     ->create();
 
@@ -56,7 +56,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -75,7 +75,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -117,7 +117,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->create();
 
         $userId = $user->id;
@@ -163,7 +163,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -178,7 +178,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -209,7 +209,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -244,7 +244,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -264,7 +264,7 @@ class CompanyAPITest extends APITestCase
         $this->expectException(Exception::class);
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -277,7 +277,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -296,7 +296,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -326,7 +326,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->count(5)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
                     ->create();
 
@@ -354,7 +354,7 @@ class CompanyAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory(), 'companies')
                     ->create();
 

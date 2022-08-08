@@ -29,7 +29,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -57,7 +57,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -88,7 +88,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -106,7 +106,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(15), 'productGroups'), 'companies')
                     ->create();
@@ -153,7 +153,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -203,7 +203,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(2), 'productGroups'), 'companies')
                     ->create();
@@ -226,7 +226,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -263,7 +263,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -302,7 +302,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -323,7 +323,7 @@ class ProductGroupAPITest extends APITestCase
         $this->expectException(Exception::class);
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -336,7 +336,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -356,7 +356,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -389,7 +389,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -421,7 +421,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
                     ->create();
 
@@ -460,7 +460,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();

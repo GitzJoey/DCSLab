@@ -33,7 +33,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                         ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -108,7 +108,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                         ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -160,7 +160,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
                     ->create();
 
@@ -205,7 +205,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -223,7 +223,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(2), 'branches'), 'companies')
                     ->create();
@@ -272,7 +272,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                         ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -322,7 +322,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(2), 'branches'), 'companies')
                     ->create();
@@ -343,7 +343,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -378,7 +378,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -415,7 +415,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(3), 'branches'), 'companies')
                     ->create();
@@ -440,7 +440,7 @@ class EmployeeAPITest extends APITestCase
         $this->expectException(Exception::class);
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -455,7 +455,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -476,7 +476,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -554,7 +554,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                         ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -587,7 +587,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->count(2)->setIsDefault()
                         ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -643,7 +643,7 @@ class EmployeeAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
