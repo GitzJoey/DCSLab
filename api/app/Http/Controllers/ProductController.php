@@ -81,6 +81,8 @@ class ProductController extends BaseController
 
             $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
 
+            $product_units_remarks = array_key_exists('product_units_remarks', $request) == true ? $request['product_units_remarks'][$i] : '';
+
             array_push($productUnitsArr, [
                 'company_id' => $company_id,
                 'code' => $code,
@@ -88,7 +90,7 @@ class ProductController extends BaseController
                 'conv_value' => $request['conv_value'][$i],
                 'is_base' => $is_base,
                 'is_primary_unit' => $is_primary_unit,
-                'remarks' => $request['product_units_remarks'][$i],
+                'remarks' => $product_units_remarks,
             ]);
         }
 
@@ -304,6 +306,8 @@ class ProductController extends BaseController
             $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
             $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
 
+            $product_units_remarks = array_key_exists('product_units_remarks', $request) == true ? $request['product_units_remarks'][$i] : '';
+
             array_push($productUnitsArr, [
                 'id' => $product_unit_id,
                 'company_id' => $company_id,
@@ -313,7 +317,7 @@ class ProductController extends BaseController
                 'conv_value' => $request['conv_value'][$i],
                 'is_base' => $is_base,
                 'is_primary_unit' => $is_primary_unit,
-                'remarks' => $request['product_units_remarks'][$i],
+                'remarks' => $product_units_remarks,
             ]);
         }
 

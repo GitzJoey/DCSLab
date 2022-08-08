@@ -495,7 +495,7 @@ const onSubmit = (values, actions) => {
     } else { }
 }
 
-const handleErrorr = (e, actions) => {
+const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
         for (var key in e.response.data.errors) {
