@@ -20,8 +20,8 @@
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.is_main === 1" />
-                                    <XIcon v-if="item.is_main === 0" />
+                                    <CheckCircleIcon v-if="item.is_main" />
+                                    <XIcon v-else />
                                 </td>
                                 <td>{{ item.remarks }}</td>
                                 <td>
@@ -74,10 +74,10 @@
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.is_main') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.is_main == 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.is_main == 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.is_main">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -172,12 +172,10 @@
 
                     <!-- #region Main -->
                     <div class="mb-3">
-                        <label for="isMainDDL" class="form-label">{{ t('views.branch.fields.is_main') }}</label>
-                        <VeeField as="select" id="isMainDDL" name="is_main" :class="{'form-control form-select':true, 'border-danger': errors['is_main']}" v-model="branch.is_main" rules="required" @blur="reValidate(errors)">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in yesNoDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                        </VeeField>
-                        <ErrorMessage name="is_main" class="text-danger" />
+                        <label for="inputIsMain" class="form-label">{{ t('views.branch.fields.is_main') }}</label>
+                        <div class="form-switch mt-2">
+                            <input id="inputIsMain" type="checkbox" class="form-check-input" name="is_main" v-model="branch.is_main">
+                        </div>
                     </div>
                     <!-- #endregion -->
 
@@ -264,7 +262,7 @@ const branch = ref({
     address: '',
     city: '',
     contact: '',
-    is_main: 0,
+    is_main: false,
     remarks: '',
     status: 'ACTIVE',
 });
@@ -407,7 +405,7 @@ const emptyBranch = () => {
         address: '',
         city: '',
         contact: '',
-        is_main: 0,
+        is_main: false,
         remarks: '',
         status: 'ACTIVE',
     }
