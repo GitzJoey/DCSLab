@@ -27,7 +27,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -54,7 +54,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -86,7 +86,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->count(2), 'companies')
                     ->create();
 
@@ -122,7 +122,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -140,7 +140,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(15), 'branches'), 'companies')
                     ->create();
@@ -186,7 +186,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -233,7 +233,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(2), 'branches'), 'companies')
                     ->create();
@@ -254,7 +254,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -289,7 +289,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -326,7 +326,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -348,7 +348,7 @@ class BranchAPITest extends APITestCase
         $this->expectException(Exception::class);
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -364,7 +364,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -387,7 +387,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -417,7 +417,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -449,7 +449,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
                     ->create();
 
@@ -488,7 +488,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -537,7 +537,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -555,7 +555,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -579,7 +579,7 @@ class BranchAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
@@ -599,120 +599,6 @@ class BranchAPITest extends APITestCase
         $resultCount = $company->branches()->where('is_main', '=', true)->count();
         $this->assertTrue($resultCount == 0);
     }
-
-    public function test_branch_api_call_generate_unique_code_per_company_expect_unique_code_returned()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $company = $user->companies->first();
-
-        $api = $this->json('GET', route('api.get.db.company.branch.read.generate.unique.code'));
-
-        $api->assertSuccessful();
-
-        $code = $api->baseResponse->getContent();
-        $resultCount = $company->branches()->where('code', '=', $code)->count();
-        $this->assertTrue($resultCount == 0);
-    }
-
-    public function test_branch_api_call_is_unique_code_per_company_with_unique_code_expect_successful()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $branch = $user->companies->first()->branches()->inRandomOrder()->first();
-
-        $api = $this->json('GET', route('api.get.db.company.branch.read.generate.unique.code'));
-        $api->assertSuccessful();
-        $code = $api->baseResponse->getContent();
-
-        $api = $this->json('GET', route('api.get.db.company.branch.read.is.unique.code', [$code, $branch->uuid, 0]));
-        $api->assertSuccessful();
-    }
-
-    public function test_branch_api_call_is_unique_code_per_company_with_exist_code_expect_failed()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $branch = $user->companies->first()->branches()->inRandomOrder()->first();
-        $code = $branch->code;
-
-        $api = $this->json('GET', route('api.get.db.company.branch.read.is.unique.code', [$code, $branch->uuid, 0]));
-        
-        $api = $api;
-
-        $api->assertStatus(422);
-        $api->assertJsonStructure([
-            'errors',
-        ]);
-    }
-
-    public function test_branch_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_successful()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $branch = $user->companies->first()->branches()->inRandomOrder()->first();
-        $code = $branch->code;
-
-        $api = $this->json('GET', route('api.get.db.company.branch.read.is.unique.code', [$code, $branch->uuid, 1]));
-        $api->assertSuccessful();
-    }
-
-    public function test_branch_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_failed()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $company = $user->companies->first();
-
-        $branch = $company->branches()->take(2)->get();
-        $branch_1 = $branch[0];
-        $branch_2 = $branch[1];
-
-        $code = $branch_1->code;
-
-        $api = $this->json('GET', route('api.get.db.company.branch.read.is.unique.code', [$code, $branch_2->uuid, 1]));
-        
-        $api = $api;
-        
-        $api->assertStatus(422);
-        $api->assertJsonStructure([
-            'errors',
-        ]);
-    }
-
+    
     /* #endregion */
 }

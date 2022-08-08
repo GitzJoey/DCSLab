@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Brand;
+use App\Models\Company;
+use App\Services\BrandService;
 use App\Http\Requests\BrandRequest;
 use App\Http\Resources\BrandResource;
-use App\Models\Brand;
-use App\Services\BrandService;
-use Exception;
 
 class BrandController extends BaseController
 {
@@ -165,52 +166,5 @@ class BrandController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function generateUniqueCode()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->brandService->generateUniqueCode();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCode(string $code, Brand $brand, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $brand->id;
-            }
-
-            $result = $this->brandService->isUniqueCode(
-                code: $code,
-                companyId: $brand->company_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
     }
 }

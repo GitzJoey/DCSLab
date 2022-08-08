@@ -282,6 +282,7 @@ import { useI18n } from "vue-i18n";
 import route from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useUserContextStore } from "@/stores/user-context";
+import { useSideMenuStore } from "@/stores/side-menu";
 import DataList from "@/global-components/data-list/Main.vue";
 import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 import { getCachedDDL, setCachedDDL } from "@/mixins";
@@ -295,6 +296,7 @@ const _ = inject('$_');
 //#region Data - Pinia
 const userContextStore = useUserContextStore();
 const selectedUserCompany = computed(() => userContextStore.selectedUserCompany );
+const sideMenuStore = useSideMenuStore();
 //#endregion
 
 //#region Data - UI

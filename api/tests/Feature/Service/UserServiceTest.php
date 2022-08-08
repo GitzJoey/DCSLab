@@ -43,7 +43,7 @@ class UserServiceTest extends ServiceTestCase
         $userArr['password'] = 'test123';
 
         $rolesArr = [];
-        array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($rolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
 
         $result = $this->userService->create(
             $userArr,
@@ -134,7 +134,7 @@ class UserServiceTest extends ServiceTestCase
                 $userArr['password'] = 'test123';
         
                 $rolesArr = [];
-                array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+                array_push($rolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
         
                 $this->userService->create(
                     $userArr,
@@ -174,7 +174,7 @@ class UserServiceTest extends ServiceTestCase
             $userArr['password'] = 'test123';
     
             $rolesArr = [];
-            array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+            array_push($rolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
     
             $this->userService->create(
                 $userArr,
@@ -213,7 +213,7 @@ class UserServiceTest extends ServiceTestCase
             $userArr['password'] = 'test123';
     
             $rolesArr = [];
-            array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+            array_push($rolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
     
             $this->userService->create(
                 $userArr,
@@ -247,7 +247,7 @@ class UserServiceTest extends ServiceTestCase
         $userArr['password'] = 'test123';
 
         $rolesArr = [];
-        array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($rolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
 
         $result = $this->userService->create(
             $userArr,
@@ -274,7 +274,7 @@ class UserServiceTest extends ServiceTestCase
         $userArr['password'] = 'test123';
 
         $rolesArr = [];
-        array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($rolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
 
         $user = $this->userService->create(
             $userArr,
@@ -290,7 +290,7 @@ class UserServiceTest extends ServiceTestCase
         $newUserArr['password'] = 'test123';
 
         $newRolesArr = [];
-        array_push($newRolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($newRolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
     
         $result = $this->userService->update(
             $user,
@@ -329,7 +329,7 @@ class UserServiceTest extends ServiceTestCase
         $userArr['password'] = 'test123';
 
         $rolesArr = [];
-        array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($rolesArr, Role::where('name', '=', UserRoles::POS_OWNER->value)->first()->id);
 
         $user = $this->userService->create(
             $userArr,

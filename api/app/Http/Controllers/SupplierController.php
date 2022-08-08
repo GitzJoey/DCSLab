@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Company;
+use App\Models\Supplier;
 use App\Enums\PaymentTermType;
+use App\Services\SupplierService;
+use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
-use App\Models\Supplier;
-use App\Services\SupplierService;
-use Exception;
-use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierController extends BaseController
 {
@@ -139,6 +140,17 @@ class SupplierController extends BaseController
         }
     }
 
+    public function getPaymentTermType()
+    {
+        return [
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTermType::PAYMENT_IN_ADVANCE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTermType::X_DAYS_AFTER_INVOICE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name],
+        ];
+    }
+
     public function read(Supplier $supplier, SupplierRequest $supplierRequest)
     {
         $request = $supplierRequest->validated();
@@ -238,63 +250,5 @@ class SupplierController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function getPaymentTermType()
-    {
-        return [
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTermType::PAYMENT_IN_ADVANCE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTermType::X_DAYS_AFTER_INVOICE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name],
-        ];
-    }
-
-    public function generateUniqueCode()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->supplierService->generateUniqueCode();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCode(string $code, Supplier $supplier, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $supplier->id;
-            }
-
-            $result = $this->supplierService->isUniqueCode(
-                code: $code,
-                companyId: $supplier->company_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
     }
 }

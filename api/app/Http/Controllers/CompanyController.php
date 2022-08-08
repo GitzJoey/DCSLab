@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\User;
+use App\Models\Company;
+use Illuminate\Http\Request;
+use App\Services\CompanyService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CompanyRequest;
 use App\Http\Resources\CompanyResource;
-use App\Models\Company;
-use App\Services\CompanyService;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends BaseController
 {
@@ -195,25 +196,6 @@ class CompanyController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function resetDefaultCompany()
-    {
-        $user = Auth::user();
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->companyService->resetDefaultCompany(user: $user);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
     public function delete(Company $company)
     {
         $result = false;
@@ -230,52 +212,5 @@ class CompanyController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function generateUniqueCode()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->companyService->generateUniqueCode();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCode(string $code, Company $company, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $company->id;
-            }
-
-            $result = $this->companyService->isUniqueCode(
-                code: $code,
-                userId: $company->user_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
     }
 }

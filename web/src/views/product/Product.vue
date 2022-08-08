@@ -240,7 +240,7 @@
                             <div class="col-span-2">
                                 <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['unit_id[' + puIdx + ']']|errors['unit_id.' + puIdx]}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                    <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.description }}</option>
+                                    <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
                                 </VeeField>
                                 <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-danger" />
                                 <ErrorMessage :name="'unit_id.' + puIdx" class="text-danger" />
@@ -349,7 +349,10 @@ const expandDetail = ref(null);
 const productList = ref({});
 const product = ref({
     code: '',
-    product_group: { hId: '' },
+    product_group: { 
+        hId: '',
+        name: '' 
+    },
     brand: { 
         hId: '',
         name: '' 
@@ -439,6 +442,15 @@ const getDDL = () => {
 }
 
 const getDDLSync = () => {
+    axios.get(route('api.get.db.product.product_group.list', {
+            companyId: selectedUserCompany.value.hId,
+            search:'',
+            category: 'PRODUCTS_AND_SERVICES',
+            paginate: false
+        })).then(response => {
+            productGroupDDL.value = response.data;
+    });
+
     axios.get(route('api.get.db.product.brand.list', {
             companyId: selectedUserCompany.value.hId,
             search:'',
@@ -447,19 +459,10 @@ const getDDLSync = () => {
             brandDDL.value = response.data;
     });
 
-    axios.get(route('api.get.db.product.product_group.list', {
-            companyId: selectedUserCompany.value.hId,
-            search:'',
-            category: 1,
-            paginate: false
-        })).then(response => {
-            productGroupDDL.value = response.data;
-    });
-
     axios.get(route('api.get.db.product.unit.list', {
             companyId: selectedUserCompany.value.hId,
             search:'',
-            category: 1,
+            category: 'PRODUCTS_AND_SERVICES',
             paginate: false
         })).then(response => {
             unitDDL.value = response.data;
@@ -521,7 +524,10 @@ const reValidate = (errors) => {
 const emptyProduct = () => {
     return {
         code: '[AUTO]',
-        product_group: { hId: '' },
+        product_group: { 
+            hId: '',
+            name: '' 
+        },
         brand: { 
             hId: '',
             name: '' 

@@ -27,7 +27,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -53,7 +53,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -85,7 +85,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -103,7 +103,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(15), 'brands'), 'companies')
                     ->create();
@@ -149,7 +149,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -195,7 +195,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(2), 'brands'), 'companies')
                     ->create();
@@ -216,7 +216,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(5), 'brands'), 'companies')
                     ->create();
@@ -251,7 +251,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(5), 'brands'), 'companies')
                     ->create();
@@ -288,7 +288,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(5), 'brands'), 'companies')
                     ->create();
@@ -310,7 +310,7 @@ class BrandAPITest extends APITestCase
         $this->expectException(Exception::class);
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -326,7 +326,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(5), 'brands'), 'companies')
                     ->create();
@@ -349,7 +349,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(5), 'brands'), 'companies')
                     ->create();
@@ -379,7 +379,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(5), 'brands'), 'companies')
                     ->create();
@@ -411,7 +411,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
                     ->create();
 
@@ -450,7 +450,7 @@ class BrandAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Brand::factory()->count(5), 'brands'), 'companies')
                     ->create();
@@ -495,118 +495,6 @@ class BrandAPITest extends APITestCase
     /* #endregion */
 
     /* #region other */
-    public function test_brand_api_call_generate_unique_code_per_company_expect_unique()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Brand::factory()->count(5), 'brands'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
 
-        $company = $user->companies->first();
-
-        $api = $this->json('GET', route('api.get.db.product.brand.read.generate.unique.code'));
-
-        $api->assertSuccessful();
-
-        $code = $api->baseResponse->getContent();
-        $resultCount = $company->brands()->where('code', '=', $code)->count();
-        $this->assertTrue($resultCount == 0);
-    }
-
-    public function test_brand_api_call_is_unique_code_per_company_with_unique_code_expect_successful()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Brand::factory()->count(5), 'brands'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $brand = $user->companies->first()->brands()->inRandomOrder()->first();
-
-        $api = $this->json('GET', route('api.get.db.product.brand.read.generate.unique.code'));
-        $api->assertSuccessful();
-        $code = $api->baseResponse->getContent();
-
-        $api = $this->json('GET', route('api.get.db.product.brand.read.is.unique.code', [$code, $brand->uuid, 0]));
-        $api->assertSuccessful();
-    }
-
-    public function test_brand_api_call_is_unique_code_per_company_with_exist_code_expect_failed()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Brand::factory()->count(5), 'brands'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $brand = $user->companies->first()->brands()->inRandomOrder()->first();
-        $code = $brand->code;
-
-        $api = $this->json('GET', route('api.get.db.product.brand.read.is.unique.code', [$code, $brand->uuid, 0]));
-        
-        $api = $api;
-
-        $api->assertStatus(422);
-        $api->assertJsonStructure([
-            'errors',
-        ]);
-    }
-
-    public function test_brand_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_successful()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Brand::factory()->count(5), 'brands'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $brand = $user->companies->first()->brands()->inRandomOrder()->first();
-        $code = $brand->code;
-
-        $api = $this->json('GET', route('api.get.db.product.brand.read.is.unique.code', [$code, $brand->uuid, 1]));
-        $api->assertSuccessful();
-    }
-
-    public function test_brand_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_failed()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Brand::factory()->count(5), 'brands'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $company = $user->companies->first();
-
-        $brand = $company->brands()->take(2)->get();
-        $brand_1 = $brand[0];
-        $brand_2 = $brand[1];
-
-        $code = $brand_1->code;
-
-        $api = $this->json('GET', route('api.get.db.product.brand.read.is.unique.code', [$code, $brand_2->uuid, 1]));
-        
-        $api = $api;
-        
-        $api->assertStatus(422);
-        $api->assertJsonStructure([
-            'errors',
-        ]);
-    }
     /* #endregion */
 }

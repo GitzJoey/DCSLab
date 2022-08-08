@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Unit;
+use App\Models\Company;
+use App\Services\UnitService;
 use App\Http\Requests\UnitRequest;
 use App\Http\Resources\UnitResource;
-use App\Models\Unit;
-use App\Services\UnitService;
-use Exception;
 
 class UnitController extends BaseController
 {
@@ -171,52 +172,5 @@ class UnitController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function generateUniqueCode()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->unitService->generateUniqueCode();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCode(string $code, Unit $unit, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $unit->id;
-            }
-
-            $result = $this->unitService->isUniqueCode(
-                code: $code,
-                companyId: $unit->company_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
     }
 }

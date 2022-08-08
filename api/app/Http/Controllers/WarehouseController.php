@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\WarehouseRequest;
-use App\Http\Resources\WarehouseResource;
+use Exception;
+use App\Models\Company;
 use App\Models\Warehouse;
 use App\Services\WarehouseService;
-use Exception;
+use App\Http\Requests\WarehouseRequest;
+use App\Http\Resources\WarehouseResource;
 
 class WarehouseController extends BaseController
 {
@@ -177,52 +178,5 @@ class WarehouseController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function generateUniqueCode()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->warehouseService->generateUniqueCode();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCode(string $code, Warehouse $warehouse, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $warehouse->id;
-            }
-
-            $result = $this->warehouseService->isUniqueCode(
-                code: $code,
-                companyId: $warehouse->company_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
     }
 }

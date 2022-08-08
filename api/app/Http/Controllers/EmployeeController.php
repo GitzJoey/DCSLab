@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EmployeeRequest;
-use App\Http\Resources\EmployeeResource;
+use Exception;
+use App\Models\Company;
 use App\Models\Employee;
 use App\Services\EmployeeService;
-use Exception;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Requests\EmployeeRequest;
+use App\Http\Resources\EmployeeResource;
 
 class EmployeeController extends BaseController
 {
@@ -247,52 +248,5 @@ class EmployeeController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function generateUniqueCode()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->employeeService->generateUniqueCode();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCode(string $code, Employee $employee, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $employee->id;
-            }
-
-            $result = $this->employeeService->isUniqueCode(
-                code: $code,
-                companyId: $employee->company_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
     }
 }

@@ -29,7 +29,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -57,7 +57,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -88,7 +88,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')
                 ->create();
 
@@ -106,7 +106,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(15), 'productGroups'), 'companies')
                     ->create();
@@ -153,7 +153,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -203,7 +203,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(2), 'productGroups'), 'companies')
                     ->create();
@@ -226,7 +226,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -263,7 +263,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -302,7 +302,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -323,7 +323,7 @@ class ProductGroupAPITest extends APITestCase
         $this->expectException(Exception::class);
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
@@ -336,7 +336,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -356,7 +356,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -389,7 +389,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -421,7 +421,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
                     ->create();
 
@@ -460,7 +460,7 @@ class ProductGroupAPITest extends APITestCase
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
                     ->create();
@@ -504,118 +504,6 @@ class ProductGroupAPITest extends APITestCase
     /* #endregion */
 
     /* #region others */
-    public function test_product_group_api_call_generate_unique_code_per_company_expect_unique()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
 
-        $company = $user->companies->first();
-
-        $api = $this->json('GET', route('api.get.db.product.product_group.read.generate.unique.code'));
-
-        $api->assertSuccessful();
-
-        $code = $api->baseResponse->getContent();
-        $resultCount = $company->productGroups()->where('code', '=', $code)->count();
-        $this->assertTrue($resultCount == 0);
-    }
-
-    public function test_product_group_api_call_is_unique_code_per_company_with_unique_code_expect_successful()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $productGroup = $user->companies->first()->productGroups()->inRandomOrder()->first();
-
-        $api = $this->json('GET', route('api.get.db.product.product_group.read.generate.unique.code'));
-        $api->assertSuccessful();
-        $code = $api->baseResponse->getContent();
-
-        $api = $this->json('GET', route('api.get.db.product.product_group.read.is.unique.code', [$code, $productGroup->uuid, 0]));
-        $api->assertSuccessful();
-    }
-
-    public function test_product_group_api_call_is_unique_code_per_company_with_exist_code_expect_failed()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $productGroup = $user->companies->first()->productGroups()->inRandomOrder()->first();
-        $code = $productGroup->code;
-
-        $api = $this->json('GET', route('api.get.db.product.product_group.read.is.unique.code', [$code, $productGroup->uuid, 0]));
-        
-        $api = $api;
-
-        $api->assertStatus(422);
-        $api->assertJsonStructure([
-            'errors',
-        ]);
-    }
-
-    public function test_product_group_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_successful()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $productGroup = $user->companies->first()->productGroups()->inRandomOrder()->first();
-        $code = $productGroup->code;
-
-        $api = $this->json('GET', route('api.get.db.product.product_group.read.is.unique.code', [$code, $productGroup->uuid, 1]));
-        $api->assertSuccessful();
-    }
-
-    public function test_product_group_api_call_is_unique_code_per_company_with_exist_code_and_except_id_expect_failed()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $company = $user->companies->first();
-
-        $productGroup = $company->productGroups()->take(2)->get();
-        $productGroup_1 = $productGroup[0];
-        $productGroup_2 = $productGroup[1];
-
-        $code = $productGroup_1->code;
-
-        $api = $this->json('GET', route('api.get.db.product.product_group.read.is.unique.code', [$code, $productGroup_2->uuid, 1]));
-        
-        $api = $api;
-        
-        $api->assertStatus(422);
-        $api->assertJsonStructure([
-            'errors',
-        ]);
-    }
     /* #endregion */
 }

@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Company;
+use App\Models\Product;
 use App\Enums\ProductType;
+use App\Models\ProductUnit;
+use Illuminate\Http\Request;
+use App\Services\ProductService;
+use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
-use App\Models\Product;
-use App\Services\ProductService;
-use Exception;
-use Illuminate\Http\Request;
-use Vinkla\Hashids\Facades\Hashids;
 
 class ProductController extends BaseController
 {
@@ -179,6 +181,28 @@ class ProductController extends BaseController
         }
     }
 
+    public function getProductType(Request $request)
+    {
+        if ($request->has('type') && $request['type'] == 'products') {
+            return [
+                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
+            ];
+        } elseif ($request->has('type') && $request['type'] == 'service') {
+            return [
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name],
+            ];
+        } else {
+            return [
+                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
+                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name],
+            ];
+        }
+    }
+
     public function readProducts(Product $product, ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
@@ -321,121 +345,5 @@ class ProductController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function getProductType(Request $request)
-    {
-        if ($request->has('type') && $request['type'] == 'products') {
-            return [
-                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
-                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
-                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
-            ];
-        } elseif ($request->has('type') && $request['type'] == 'service') {
-            return [
-                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name],
-            ];
-        } else {
-            return [
-                ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
-                ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
-                ['name' => 'components.dropdown.values.productTypeDDL.fg', 'code' => ProductType::FINISHED_GOODS->name],
-                ['name' => 'components.dropdown.values.productTypeDDL.svc', 'code' => ProductType::SERVICE->name],
-            ];
-        }
-    }
-
-    public function generateUniqueCodeForProduct()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->productService->generateUniqueCodeForProduct();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function generateUniqueCodeForProductUnits()
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->productService->generateUniqueCodeForProductUnits();
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCodeForProduct(string $code, Product $product, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $product->id;
-            }
-
-            $result = $this->productService->isUniqueCodeForProduct(
-                code: $code,
-                companyId: $product->company_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
-    }
-
-    public function isUniqueCodeForProductUnits(string $code, Product $product, bool $exceptThis)
-    {
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $exceptId = null;
-            if ($exceptThis) {
-                $exceptId = $product->id;
-            }
-
-            $result = $this->productService->isUniqueCodeForProductUnits(
-                code: $code,
-                companyId: $product->company_id,
-                exceptId: $exceptId,
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (!$result) {
-            return response()->error([
-                'code' => [trans('rules.unique_code')],
-            ], 422);
-        } else {
-            return $result;
-        }
     }
 }
