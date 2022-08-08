@@ -906,7 +906,7 @@ class ProductServiceTest extends ServiceTestCase
                 'is_base' => $productUnitsArr[$i]['is_base'],
                 'conversion_value' => $productUnitsArr[$i]['conv_value'],
                 'is_primary_unit' => $productUnitsArr[$i]['is_primary_unit'],
-                'remarks' => $productUnitsArr[$i]['remarks'],
+                // 'remarks' => $productUnitsArr[$i]['remarks'],
             ]);
         }
     }
