@@ -574,31 +574,6 @@ class BranchAPITest extends APITestCase
 
         $api->assertSuccessful();
     }
-
-    public function test_branch_api_call_reset_main_branch_by_company_expect_reseted()
-    {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
-        $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::POS_OWNER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-        
-        $this->actingAs($user);
-
-        $company = $user->companies->first();
-        
-        $mainBranch = $company->branches()->inRandomOrder()->first();
-        $mainBranch->is_main = true;
-        $mainBranch->save();
-
-        $api = $this->json('GET', route('api.get.db.company.branch.read.reset.mainbranch.by.company', $company->uuid));
-
-        $api->assertSuccessful();
-
-        $resultCount = $company->branches()->where('is_main', '=', true)->count();
-        $this->assertTrue($resultCount == 0);
-    }
     
     /* #endregion */
 }
