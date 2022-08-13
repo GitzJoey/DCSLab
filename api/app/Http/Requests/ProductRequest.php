@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ProductCategory;
 use App\Enums\ProductType;
 use App\Enums\RecordStatus;
 use App\Models\Product;
@@ -30,11 +31,9 @@ class ProductRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'listProducts':
-            case 'listServices':
+            case 'list':
                 return $user->can('viewAny', Product::class) ? true : false;
-            case 'readProducts':
-            case 'readServices':
+            case 'read':
                 return $user->can('view', Product::class, $product) ? true : false;
             case 'store':
                 return $user->can('create', Product::class) ? true : false;
@@ -55,23 +54,23 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'remarks' => 'nullable',
-            'unit_id.*' => 'nullable',
-            'is_base.*' => 'nullable',
-            'is_primary_unit.*' => 'nullable',
-            'standard_rated_supply' => 'nullable',
             'brand_id' => 'nullable',
+            'standard_rated_supply' => 'nullable',
+            'remarks' => 'nullable',
             'product_units_hId.*' => 'nullable',
             'product_units_code.*' => 'nullable',
+            'product_units_unit_id.*' => 'nullable',
+            'product_units_is_base.*' => 'nullable',
+            'product_units_is_primary_unit.*' => 'nullable',
             'product_units_remarks.*' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'listProducts':
-            case 'listServices':
+            case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
+                    'productCategory' => ['nullable'],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
@@ -80,8 +79,7 @@ class ProductRequest extends FormRequest
                 ];
 
                 return $rules_list;
-            case 'readProducts':
-            case 'readServices':
+            case 'read':
                 $rules_read = [
                 ];
 
@@ -99,7 +97,7 @@ class ProductRequest extends FormRequest
                     'point' => 'required|numeric|min:0',
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
-                    'conv_value.*' => 'numeric|min:1',
+                    'product_units_conv_value.*' => 'numeric|min:1',
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -116,7 +114,7 @@ class ProductRequest extends FormRequest
                     'point' => 'required|numeric|min:0',
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
-                    'conv_value.*' => 'numeric|min:1',
+                    'product_units_conv_value.*' => 'numeric|min:1',
                 ];
 
                 return array_merge($rules_update, $nullableArr);
@@ -131,7 +129,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.company'),
-            'conv_value.*' => trans('validation_attributes.conv_value'),
+            'product_units_conv_value.*' => trans('validation_attributes.conv_value'),
         ];
     }
 
@@ -146,15 +144,14 @@ class ProductRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'listProducts':
-            case 'listServices':
+            case 'list':
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
+                    'productCategory' => ProductCategory::isValid($this->productCategory) ? ProductCategory::resolveToEnum($this->productCategory)->value : -1,
                 ]);
                 break;
-            case 'readProducts':
-            case 'readServices':
+            case 'read':
                 $this->merge([]);
                 break;
             case 'store':

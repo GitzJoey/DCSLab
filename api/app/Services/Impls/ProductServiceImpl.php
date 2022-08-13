@@ -3,6 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ProductCategory;
 use App\Enums\ProductType;
 use App\Models\Product;
 use App\Models\ProductUnit;
@@ -36,7 +37,7 @@ class ProductServiceImpl implements ProductService
             $product->company_id = $productArr['company_id'];
             $product->code = $productArr['code'];
             $product->product_group_id = $productArr['product_group_id'];
-            $product->brand_id = array_key_exists('brand_id', $productArr) ? $productArr['brand_id'] : null;
+            $product->brand_id = $productArr['brand_id'];
             $product->name = $productArr['name'];
             $product->taxable_supply = $productArr['taxable_supply'];
             $product->standard_rated_supply = $productArr['standard_rated_supply'];
@@ -85,8 +86,7 @@ class ProductServiceImpl implements ProductService
 
     public function list(
         int $companyId,
-        bool $isProduct = true,
-        bool $isService = true,
+        int $productCategory,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -99,7 +99,7 @@ class ProductServiceImpl implements ProductService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$isProduct.'-'.$isService.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.$productCategory.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) {
@@ -113,16 +113,18 @@ class ProductServiceImpl implements ProductService
                 return null;
             }
 
-            $product = Product::with('productGroup', 'brand', 'productUnits.unit')
-                        ->whereCompanyId($companyId);
+            $product = Product::with('productGroup', 'brand', 'productUnits.unit')->whereCompanyId($companyId);
 
-            if (!$isProduct && $isService) {
-                $product = $product->where('product_type', '=', ProductType::SERVICE->value);
-            } elseif ($isProduct && !$isService) {
-                $product = $product->where('product_type', '<>', ProductType::SERVICE->value);
-            } elseif ($isProduct && $isService) {
-            } else {
-                return null;
+            switch ($productCategory) {
+                case ProductCategory::PRODUCTS->value:
+                    $product = $product->where('product_type', '<>', ProductType::SERVICE->value);
+                    break;
+                case ProductCategory::SERVICES->value:
+                    $product = $product->where('product_type', '=', ProductType::SERVICE->value);
+                    break;
+                case ProductCategory::PRODUCTS_AND_SERVICES->value:
+                default:
+                    break;
             }
 
             if (empty($search)) {
