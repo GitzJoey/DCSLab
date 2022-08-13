@@ -69,12 +69,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('read/{unit:uuid}', [UnitController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'product', 'as' => '.product'], function () {
-                Route::get('read', [ProductController::class, 'listProducts'])->name('.list');
-                Route::get('read/{product:uuid}', [ProductController::class, 'readProducts'])->name('.read');
+                Route::get('read', [ProductController::class, 'list'])->name('.list');
+                Route::get('read/{product:uuid}', [ProductController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'service', 'as' => '.service'], function () {
-                Route::get('read', [ProductController::class, 'listServices'])->name('.list');
-                Route::get('read/{product:uuid}', [ProductController::class, 'readServices'])->name('.read');
+                Route::get('read', [ProductController::class, 'list'])->name('.list');
+                Route::get('read/{product:uuid}', [ProductController::class, 'read'])->name('.read');
             });
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function () {
@@ -193,6 +193,12 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth', 'auth:sanctum', 'thro
             });
 
             Route::group(['prefix' => 'product', 'as' => '.product'], function () {
+                Route::post('save', [ProductController::class, 'store'])->name('.save');
+                Route::post('edit/{product:uuid}', [ProductController::class, 'update'])->name('.edit');
+                Route::post('delete/{product:uuid}', [ProductController::class, 'delete'])->name('.delete');
+            });
+
+            Route::group(['prefix' => 'service', 'as' => '.service'], function () {
                 Route::post('save', [ProductController::class, 'store'])->name('.save');
                 Route::post('edit/{product:uuid}', [ProductController::class, 'update'])->name('.edit');
                 Route::post('delete/{product:uuid}', [ProductController::class, 'delete'])->name('.delete');

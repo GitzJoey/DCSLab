@@ -42,31 +42,76 @@
                             </tr>
                             <tr :class="{'intro-x':true, 'hidden transition-all': expandDetail !== itemIdx}">
                                 <td colspan="5">
+                                    <!-- #region Code -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.code') }}</div>
                                         <div class="flex-1">{{ item.code }}</div>
                                     </div>
+                                    <!-- #endregion -->
+                                    
+                                    <!-- #region Product Group -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.product_group_id') }}</div>
                                         <div class="flex-1">{{ item.product_group ? item.product_group.name : '' }}</div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Brand -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.brand_id') }}</div>
                                         <div class="flex-1">{{ item.brand.name }}</div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Name -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.name') }}</div>
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Product Units -->
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.units.title') }}</div>
+
+                                        <div class="mb-3">
+                                            <div class="grid grid-cols-10 mb-3 bg-gray-700 dark:bg-dark-1 gap-2">
+                                                <div class="text-white p-3 font-bold col-span-2">{{ t('views.product.fields.units.table.cols.code') }}</div>
+                                                <div class="text-white p-3 font-bold col-span-2">{{ t('views.product.fields.units.table.cols.unit') }}</div>
+                                                <div class="text-white p-3 font-bold col-span-2 text-right">{{ t('views.product.fields.units.table.cols.conversion_value') }}</div>
+                                                <div class="flex justify-center text-white p-3 col-span-2 font-bold">{{ t('views.product.fields.units.table.cols.is_base') }}</div>
+                                                <div class="flex justify-center text-white p-3 col-span-2 font-bold">{{ t('views.product.fields.units.table.cols.is_primary') }}</div>
+                                            </div>
+
+                                            <div class="grid grid-cols-10 gap-2 mb-2" v-for="(subItem, subItemIdx) in item.product_units">
+                                                <div class="col-span-2">{{ subItem.code }}</div>
+                                                <div class="col-span-2">{{ subItem.unit.name }}</div>
+                                                <div class="col-span-2 text-right">{{ subItem.conversion_value }}</div>
+                                                <div class="col-span-2">
+                                                    <span v-if="subItem.is_base === true">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                                    <span v-if="subItem.is_base === false">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                                </div>
+                                                <div class="col-span-2">
+                                                    <span v-if="subItem.is_primary_unit === true">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                                    <span v-if="subItem.is_primary_unit === false">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Product Type -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.product_type') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.product_type === 1">{{ t('components.dropdown.values.productTypeDDL.raw') }}</span>
-                                            <span v-if="item.product_type === 2">{{ t('components.dropdown.values.productTypeDDL.wip') }}</span>
-                                            <span v-if="item.product_type === 3">{{ t('components.dropdown.values.productTypeDDL.fg') }}</span>
-                                            <span v-if="item.product_type === 4">{{ t('components.dropdown.values.productTypeDDL.svc') }}</span>
+                                            <span v-if="item.product_type === 'RAW_MATERIAL'">{{ t('components.dropdown.values.productTypeDDL.raw') }}</span>
+                                            <span v-if="item.product_type === 'WORK_IN_PROGRESS'">{{ t('components.dropdown.values.productTypeDDL.wip') }}</span>
+                                            <span v-if="item.product_type === 'FINISHED_GOODS'">{{ t('components.dropdown.values.productTypeDDL.fg') }}</span>
                                         </div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Taxable Supply -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.taxable_supply') }}</div>
                                         <div class="flex-1">
@@ -74,30 +119,16 @@
                                             <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Standard Rated Supply -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.standard_rated_supply') }}</div>
                                         <div class="flex-1">{{ item.standard_rated_supply }}</div>
                                     </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.units.title') }}</div>
-                                        <table aria-describedby="">
-                                            <tbody>
-                                                <tr v-for="(subItem, subItemIdx) in item.product_units">
-                                                    <td>{{ subItem.code }}</td>
-                                                    <td>{{ subItem.unit.name }}</td>
-                                                    <td>{{ subItem.conversion_value }}</td>
-                                                    <td>
-                                                        <span v-if="subItem.is_base === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                                        <span v-if="subItem.is_base === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
-                                                    </td>
-                                                    <td>
-                                                        <span v-if="subItem.is_primary_unit === 1">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                                        <span v-if="subItem.is_primary_unit === 0">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Price Include Vat -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.price_include_vat') }}</div>
                                         <div class="flex-1">
@@ -105,10 +136,16 @@
                                             <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Point -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.point') }}</div>
                                         <div class="flex-1">{{ item.point }}</div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Use Serial Number -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.use_serial_number') }}</div>
                                         <div class="flex-1">
@@ -116,6 +153,9 @@
                                             <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Has Expiry Date -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.has_expiry_date') }}</div>
                                         <div class="flex-1">
@@ -123,6 +163,16 @@
                                             <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Remarks -->
+                                    <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.remarks') }}</div>
+                                        <div class="flex-1">{{ item.Remarks }}</div>
+                                    </div>
+                                    <!-- #endregion -->
+
+                                    <!-- #region Status -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.status') }}</div>
                                         <div class="flex-1">
@@ -131,10 +181,7 @@
                                             <span v-if="item.status === 'DELETED'">{{ t('components.dropdown.values.statusDDL.deleted') }}</span>
                                         </div>
                                     </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.remarks') }}</div>
-                                        <div class="flex-1">{{ item.Remarks }}</div>
-                                    </div>
+                                    <!-- #endregion -->
                                 </td>
                             </tr>
                         </template>
@@ -169,6 +216,7 @@
         <div class="loader-container">
             <VeeForm id="productForm" class="p-5" @submit="onSubmit" @invalid-submit="invalidSubmit" v-slot="{ handleReset, errors }">
                 <div class="p-5">
+                    <!-- #region Code -->
                     <div class="mb-3">
                         <label for="inputCode" class="form-label">{{ t('views.product.fields.code') }}</label>
                         <div class="flex items-center">
@@ -177,6 +225,9 @@
                         </div>
                         <ErrorMessage name="code" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Product Group -->
                     <div class="mb-3">
                         <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
                         <select id="product_group_id" name="product_group_id" class="form-control form-select" v-model="product.product_group.hId">
@@ -185,6 +236,9 @@
                         </select>
                         <ErrorMessage name="product_group_id" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Brand -->
                     <div class="mb-3">
                         <label class="form-label" for="brand_id">{{ t('views.product.fields.brand_id') }}</label>
                         <VeeField as="select" id="brand_id" name="brand_id" :class="{'form-control form-select':true, 'border-danger': errors['brand_id']}" v-model="product.brand.hId" :label="t('views.product.fields.brand_id')" rules="required" @blur="reValidate(errors)">
@@ -193,30 +247,17 @@
                         </VeeField>
                         <ErrorMessage name="brand_id" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Name -->
                     <div class="mb-3">
                         <label for="inputName" class="form-label">{{ t('views.product.fields.name') }}</label>
                         <VeeField id="inputName" name="name" type="text" :class="{'form-control':true, 'border-danger': errors['name']}" :placeholder="t('views.product.fields.name')" :label="t('views.product.fields.name')" rules="required" @blur="reValidate(errors)" v-model="product.name" />
                         <ErrorMessage name="name" class="text-danger" />
                     </div>
-                    <div class="mb-3">
-                        <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
-                        <VeeField as="select" id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-danger': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" rules="required" @blur="reValidate(errors)">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ t(pt.name) }}</option>
-                        </VeeField>
-                        <ErrorMessage name="product_type" class="text-danger" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputTaxableSupply" class="form-label">{{ t('views.product.fields.taxable_supply') }}</label>
-                        <div class="form-switch mt-2">
-                            <input id="inputTaxableSupply" type="checkbox" class="form-check-input" name="taxable_supply" v-model="product.taxable_supply" :true-value="1" :false-value="0">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputStandardRatedSupply" class="form-label">{{ t('views.product.fields.standard_rated_supply') }}</label>
-                        <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" type="text" :class="{'form-control':true, 'border-danger': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
-                        <ErrorMessage name="standard_rated_supply" class="text-danger" />
-                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Product Units -->
                     <div class="mb-3">
                         <label for="inputUnit" class="form-label">{{ t('views.product.fields.units.title') }}</label>
                         <div class="grid grid-cols-9 mb-3 bg-gray-700 dark:bg-dark-1 gap-2">
@@ -228,6 +269,7 @@
                             <div class="text-white p-3 font-bold"></div>
                         </div>
                         <div class="grid grid-cols-9 gap-2 mb-2" v-for="(pu, puIdx) in product.product_units">
+                            <!-- #region Code -->
                             <div class="col-span-2">
                                 <input type="hidden" :name="'product_units_hId[' + puIdx + ']'" v-model="pu.hId" />
                                 <div class="flex items-center">
@@ -237,56 +279,124 @@
                                 <ErrorMessage :name="'product_units_code[' + puIdx + ']'" class="text-danger" />
                                 <ErrorMessage :name="'product_units_code.' + puIdx" class="text-danger" />
                             </div>
+                            <!-- #endregion -->
+
+                            <!-- #region Unit -->
                             <div class="col-span-2">
-                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['unit_id[' + puIdx + ']']|errors['unit_id.' + puIdx]}" id="unit_id" :name="'unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['product_units_unit_id[' + puIdx + ']']|errors['product_units_unit_id.' + puIdx]}" id="product_units_unit_id" :name="'product_units_unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
                                 </VeeField>
-                                <ErrorMessage :name="'unit_id[' + puIdx + ']'" class="text-danger" />
-                                <ErrorMessage :name="'unit_id.' + puIdx" class="text-danger" />
+                                <ErrorMessage :name="'product_units_unit_id[' + puIdx + ']'" class="text-danger" />
+                                <ErrorMessage :name="'product_units_unit_id.' + puIdx" class="text-danger" />
                             </div>
+                            <!-- #endregion -->
+
+                            <!-- #region Conv Value -->
                             <div class="col-span-2">
-                                <VeeField type="text" :class="{'form-control text-right':true, 'border-danger':errors['conv_value[' + puIdx +']']|errors['conv_value.' + puIdx]}" v-model="pu.conversion_value" id="conv_value" :name="'conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
-                                <ErrorMessage :name="'conv_value[' + puIdx +']'" class="text-danger" />
-                                <ErrorMessage :name="'conv_value.' + puIdx" class="text-danger" />
+                                <VeeField type="text" :class="{'form-control text-right':true, 'border-danger':errors['product_units_conv_value[' + puIdx +']']|errors['product_units_conv_value.' + puIdx]}" v-model="pu.conversion_value" id="product_units_conv_value" :name="'product_units_conv_value[' + puIdx +']'" :label="t('views.product.fields.units.table.cols.conversion_value') + ' ' + (puIdx+1)" rules="required" @focus="$event.target.select()" :readonly="pu.is_base" />
+                                <ErrorMessage :name="'product_units_conv_value[' + puIdx +']'" class="text-danger" />
+                                <ErrorMessage :name="'product_units_conv_value.' + puIdx" class="text-danger" />
                             </div>
+                            <!-- #endregion -->
+
+                            <!-- #region Is Base -->
                             <div class="flex items-center justify-center">
-                                <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" :true-value="1" :false-value="0" @click="changeIsBase(puIdx)"> 
-                                <input type="hidden" v-model="pu.is_base" :name="'is_base[' + puIdx + ']'" />
+                                <input id="inputIsBase" class="form-check-input" type="checkbox" v-model="pu.is_base" :true-value="true" :false-value="false" @click="changeIsBase(puIdx)"> 
+                                <input type="hidden" v-model="pu.is_base" :name="'product_units_is_base[' + puIdx + ']'" />
                             </div>
+                            <!-- #endregion -->
+
+                            <!-- #region Is Primary -->
                             <div class="flex items-center justify-center">
-                                <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary_unit" :true-value="1" :false-value="0" @click="changeIsPrimary(puIdx)">
-                                <input type="hidden" v-model="pu.is_primary_unit" :name="'is_primary_unit[' + puIdx + ']'" />
+                                <input id="inputIsPrimary" class="form-check-input" type="checkbox" v-model="pu.is_primary_unit" :true-value="true" :false-value="false" @click="changeIsPrimary(puIdx)">
+                                <input type="hidden" v-model="pu.is_primary_unit" :name="'product_units_is_primary_unit[' + puIdx + ']'" />
                             </div>
+                            <!-- #endregion -->
+
+                            <!-- #region Remarks -->
+                            <input type="hidden" name="product_units_remarks[]" v-model="pu.remarks"/>
+                            <!-- #endregion -->
+                            
                             <div class="flex items-center justify-center">
                                 <button class="btn btn-sm btn-secondary" v-if="puIdx !== 0" @click.prevent="deleteUnitSelected(puIdx)"><TrashIcon class="w-3 h-4" /></button>
                             </div>
                         </div>
                         <button class="btn btn-sm btn-secondary w-24" @click.prevent="createNewUnit"><PlusIcon class="w-3 h-4" /></button>
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Product Type -->
+                    <div class="mb-3">
+                        <label for="product_type" class="form-label">{{ t('views.product.fields.product_type') }}</label>
+                        <VeeField as="select" id="product_type" name="product_type" :class="{'form-control form-select':true, 'border-danger': errors['product_type']}" v-model="product.product_type" :label="t('views.product.fields.product_type')" rules="required" @blur="reValidate(errors)">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option :value="pt.code" v-for="pt in productTypeDDL" v-bind:key="pt.code">{{ t(pt.name) }}</option>
+                        </VeeField>
+                        <ErrorMessage name="product_type" class="text-danger" />
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Taxable Supply -->
+                    <div class="mb-3">
+                        <label for="inputTaxableSupply" class="form-label">{{ t('views.product.fields.taxable_supply') }}</label>
+                        <div class="form-switch mt-2">
+                            <input id="inputTaxableSupply" type="checkbox" class="form-check-input" name="taxable_supply" v-model="product.taxable_supply" :true-value="true" :false-value="false">
+                        </div>
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Standard Rated Supply -->
+                    <div class="mb-3">
+                        <label for="inputStandardRatedSupply" class="form-label">{{ t('views.product.fields.standard_rated_supply') }}</label>
+                        <VeeField id="inputStandardRatedSupply" name="standard_rated_supply" type="text" :class="{'form-control':true, 'border-danger': errors['standard_rated_supply']}" :placeholder="t('views.product.fields.standard_rated_supply')" :label="t('views.product.fields.standard_rated_supply')" rules="required|numeric|max:100" @blur="reValidate(errors)" v-model="product.standard_rated_supply" />
+                        <ErrorMessage name="standard_rated_supply" class="text-danger" />
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Price Include VAT -->
+                    <div class="mb-3">
+                        <label for="inputPriceIncludeVAT" class="form-label">{{ t('views.product.fields.price_include_vat') }}</label>
+                        <div class="form-switch mt-2">
+                            <input id="inputPriceIncludeVAT" type="checkbox" class="form-check-input" name="price_include_vat" v-model="product.price_include_vat" :true-value="true" :false-value="false">
+                        </div>
+                    </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Point -->
                     <div class="mb-3">
                         <label for="inputPoint" class="form-label">{{ t('views.product.fields.point') }}</label>
                         <VeeField id="inputPoint" name="point" type="text" :class="{'form-control':true, 'border-danger': errors['point']}" :placeholder="t('views.product.fields.point')" :label="t('views.product.fields.point')" rules="required|numeric|max_value:1000" v-model="product.point" />
                         <ErrorMessage name="point" class="text-danger" />
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Use Serial Number -->
                     <div class="mb-3">
                         <label for="inputUseSerialNumber" class="form-label">{{ t('views.product.fields.use_serial_number') }}</label>
                         <div class="form-switch mt-2">
-                            <input id="inputUseSerialNumber" type="checkbox" class="form-check-input" name="use_serial_number" v-model="product.use_serial_number" :true-value="1" :false-value="0">
+                            <input id="inputUseSerialNumber" type="checkbox" class="form-check-input" name="use_serial_number" v-model="product.use_serial_number" :true-value="true" :false-value="false">
                         </div>
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Has Expiry Date -->
                     <div class="mb-3">
                         <label for="inputHasExpiryDate" class="form-label">{{ t('views.product.fields.has_expiry_date') }}</label>
                         <div class="form-switch mt-2">
-                            <input id="inputHasExpiryDate" type="checkbox" class="form-check-input" name="has_expiry_date" v-model="product.has_expiry_date" :true-value="1" :false-value="0">
+                            <input id="inputHasExpiryDate" type="checkbox" class="form-check-input" name="has_expiry_date" v-model="product.has_expiry_date" :true-value="true" :false-value="false">
                         </div>
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Remarks -->
                     <div class="mb-3">
-                        <label for="inputPriceIncludeVAT" class="form-label">{{ t('views.product.fields.price_include_vat') }}</label>
-                        <div class="form-switch mt-2">
-                            <input id="inputPriceIncludeVAT" type="checkbox" class="form-check-input" name="price_include_vat" v-model="product.price_include_vat" :true-value="1" :false-value="0">
-                        </div>
+                        <label for="inputRemarks" class="form-label">{{ t('views.product.fields.remarks') }}</label>
+                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.product.fields.remarks')" v-model="product.remarks" rows="3"></textarea>
                     </div>
+                    <!-- #endregion -->
+
+                    <!-- #region Status -->
                     <div class="mb-3">
                         <label for="status" class="form-label">{{ t('views.product.fields.status') }}</label>
                         <VeeField as="select" id="status" name="status" :class="{'form-control form-select':true, 'border-danger': errors['status']}" v-model="product.status" rules="required" @blur="reValidate(errors)">
@@ -295,10 +405,7 @@
                         </VeeField>
                         <ErrorMessage name="status" class="text-danger" />
                     </div>
-                    <div class="mb-3">
-                        <label for="inputRemarks" class="form-label">{{ t('views.product.fields.remarks') }}</label>
-                        <textarea id="inputRemarks" name="remarks" type="text" class="form-control" :placeholder="t('views.product.fields.remarks')" v-model="product.remarks" rows="3"></textarea>
-                    </div>
+                    <!-- #endregion -->
                 </div>
                 <div class="pl-5" v-if="mode === 'create' || mode === 'edit'">
                     <button type="submit" class="btn btn-primary w-24 mr-3">{{ t('components.buttons.save') }}</button>
@@ -362,7 +469,10 @@ const product = ref({
         {
             hId: '',
             conversion_value: 0,
-            unit: { hId: '' }
+            unit: {
+                hId: '',
+                name: '',
+            }
         }
     ],
     taxable_supply: false,
@@ -410,12 +520,19 @@ const setMode = () => {
 
 const getAllProducts = (args) => {
     productList.value = {};
-    if (args.pageSize === undefined) args.pageSize = 10;
-    if (args.search === undefined) args.search = '';
-
     let companyId = selectedUserCompany.value.hId;
+    if (args.search === undefined) args.search = "";
+    if (args.paginate === undefined) args.paginate = 1;
+    if (args.page === undefined) args.page = 1;
+    if (args.pageSize === undefined) args.pageSize = 10;
 
-    axios.get(route('api.get.db.product.product.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.product.product.list', {
+        companyId: companyId,
+        productCategory: 'PRODUCTS',
+        search: args.search,
+        page: args.page,
+        perPage: args.pageSize
+    })).then(response => {
         productList.value = response.data;
         loading.value = false;
     });
@@ -432,7 +549,9 @@ const getDDL = () => {
     }
 
     if (getCachedDDL('productTypeDDL') == null) {
-        axios.get(route('api.get.db.product.common.list.product_type')).then(response => {
+        axios.get(route('api.get.db.product.common.list.product_type', {
+            type: 'product'
+        })).then(response => {
             productTypeDDL.value = response.data;
             setCachedDDL('productTypeDDL', response.data);
         });    
@@ -445,27 +564,27 @@ const getDDLSync = () => {
     axios.get(route('api.get.db.product.product_group.list', {
             companyId: selectedUserCompany.value.hId,
             search:'',
-            category: 'PRODUCTS_AND_SERVICES',
+            category: 'PRODUCTS',
             paginate: false
         })).then(response => {
             productGroupDDL.value = response.data;
     });
 
     axios.get(route('api.get.db.product.brand.list', {
-            companyId: selectedUserCompany.value.hId,
-            search:'',
-            paginate: false
-        })).then(response => {
-            brandDDL.value = response.data;
+        companyId: selectedUserCompany.value.hId,
+        search:'',
+        paginate: false
+    })).then(response => {
+        brandDDL.value = response.data;
     });
 
     axios.get(route('api.get.db.product.unit.list', {
-            companyId: selectedUserCompany.value.hId,
-            search:'',
-            category: 'PRODUCTS_AND_SERVICES',
-            paginate: false
-        })).then(response => {
-            unitDDL.value = response.data;
+        companyId: selectedUserCompany.value.hId,
+        search:'',
+        category: 'PRODUCTS',
+        paginate: false
+    })).then(response => {
+        unitDDL.value = response.data;
     });
 }
 
@@ -537,20 +656,24 @@ const emptyProduct = () => {
             {
                 hId: '',
                 code: '[AUTO]',
-                is_base: 1,
+                is_base: true,
                 conversion_value: 1,
-                is_primary_unit: 1,
-                unit: { hId: '' }
+                is_primary_unit: true,
+                remarks: '',
+                unit: {
+                    hId: '',
+                    name: '',
+                }
             }
         ],
+        product_type: '',
         taxable_supply: false,
         standard_rated_supply: 0,
         price_include_vat: false,
-        remarks: '',
         point: 0,
+        remarks: '',
         use_serial_number: false,
         has_expiry_date: false,
-        product_type: '',
         status: 'ACTIVE',
     }
 }
@@ -572,11 +695,11 @@ const createNew = () => {
 
 const createNewUnit = () => {
     let product_unit = {
-        hId: '',
+        hId: '0',
         code: '[AUTO]',
         conversion_value: 0,
-        is_base: 0,
-        is_primary_unit: 0,
+        is_base: false,
+        is_primary_unit: false,
         unit: { hId: '' }
     };
 
@@ -627,7 +750,10 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllProducts({ page: productList.value.meta.current_page, pageSize: productList.value.meta.per_page });
+    getAllProducts({
+        page: productList.value.meta.current_page, 
+        pageSize: productList.value.meta.per_page
+    });
 }
 
 const toggleDetail = (idx) => {
@@ -649,14 +775,14 @@ const generateCodeUnit = (idx) => {
 }
 
 const changeIsBase = (idx) => {
-    let checked_state = product.value.product_units[idx].is_base === 1 ? true:false;
-    
+    let checked_state = product.value.product_units[idx].is_base === true ? true:false;
+
     if (!checked_state) {
         for (let i = 0; i < product.value.product_units.length; i++) {
             if (i === idx) {
                 product.value.product_units[i].conversion_value = 1;
             }
-            product.value.product_units[i].is_base = 0;
+            product.value.product_units[i].is_base = false;
         }
     } else {
 
@@ -664,12 +790,12 @@ const changeIsBase = (idx) => {
 }
 
 const changeIsPrimary = (idx) => {
-    let checked_state = product.value.product_units[idx].is_primary_unit === 1 ? true:false;
-
+    let checked_state = product.value.product_units[idx].is_primary_unit === true ? true:false;
+    
     if (!checked_state) {
         for (let i = 0; i < product.value.product_units.length; i++) {
             if (i === idx) continue;
-            product.value.product_units[i].is_primary_unit = 0;
+            product.value.product_units[i].is_primary_unit = false;
         }
     } else {
         

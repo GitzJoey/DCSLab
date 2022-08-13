@@ -15,7 +15,7 @@
             "product-product": "Produk",
             "product-product_group": "Grup Produk",
             "product-brand": "Merk",
-            "product-unit": "Satuan",            
+            "product-unit": "Satuan",
             "product-service": "Layanan",
             "administrator": "Administrator",
             "administrator-user": "Pengguna",
@@ -151,7 +151,7 @@
                 "page_title": "Reset Password",
                 "page_title_desc": "Silahkan masukan Email",
                 "fields": {
-                    "email": "Email"    
+                    "email": "Email"
                 }
             },
             "reset": {
@@ -292,10 +292,45 @@
                             "unit": "Satuan",
                             "conversion_value": "Nilai Tukar",
                             "is_base": "Satuan Dasar",
-                            "is_primary": "Satuan Utama"    
+                            "is_primary": "Satuan Utama"
                         }
                     }
                 }
+            }
+        },
+        "service": {
+            "table": {
+                "title": " Daftar Layanan",
+                "cols": {
+                    "code": "Kode",
+                    "product_group_id": "Kelompok Produk",
+                    "name": "Nama",
+                    "unit_id": "Satuan",
+                    "taxable_supply": "Produk Kena Pajak",
+                    "standard_rated_supply": "PPN",
+                    "point": "Poin",
+                    "price_include_vat": "Harga Termasuk Pajak",
+                    "remarks": "Keterangan",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Layanan",
+                "edit": "Ubah Layanan",
+                "show": "Tampilkan Layanan",
+                "delete": "Hapus Layanan"
+            },
+            "fields": {
+                "code": "Kode",
+                "product_group_id": "Kelompok Produk",
+                "name": "Nama",
+                "unit_id": "Satuan",
+                "taxable_supply": "Produk Kena Pajak",
+                "standard_rated_supply": "PPN",
+                "point": "Poin",
+                "price_include_vat": "Harga Termasuk Pajak",
+                "remarks": "Keterangan",
+                "status": "Status"
             }
         },
         "product_group": {
@@ -581,7 +616,7 @@
                 "show": "Tampilkan Pembelian",
                 "delete": "Hapus Pembelian"
             },
-            "fields": {                
+            "fields": {
                 "supplier": "Supplier",
                 "invoice_no": "Nomor Faktur",
                 "po_type": "Tipe",

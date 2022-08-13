@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ProductCategory;
 use Exception;
 use App\Models\Company;
 use App\Models\Product;
 use App\Enums\ProductType;
-use App\Models\ProductUnit;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use Vinkla\Hashids\Facades\Hashids;
@@ -43,53 +43,75 @@ class ProductController extends BaseController
                 ], 422);
             }
         }
+        
+        $brandId = null;
+        if(array_key_exists('brand_id', $request)) {
+            $brandId = Hashids::decode($request['brand_id'])[0];
+        }
+        
+        $useSerialNumber = false;
+        if (array_key_exists('use_serial_number', $request)) {
+            $useSerialNumber = $request['use_serial_number'];
+        };
+
+        $hasExpiryDate = false;
+        if (array_key_exists('has_expiry_date', $request)) {
+            $hasExpiryDate = $request['has_expiry_date'];
+        };
 
         $productArr = [
             'company_id' => $company_id,
             'code' => $code,
-            'name' => $request['name'],
             'product_group_id' => Hashids::decode($request['product_group_id'])[0],
-            'brand_id' => Hashids::decode($request['brand_id'])[0],
-            'remarks' => $request['remarks'],
-            'point' => $request['point'],
-            'use_serial_number' => $request['use_serial_number'],
-            'has_expiry_date' => $request['has_expiry_date'],
+            'brand_id' => $brandId,
+            'name' => $request['name'],
             'product_type' => $request['product_type'],
-            'status' => $request['status'],
             'taxable_supply' => $request['taxable_supply'],
             'standard_rated_supply' => $request['standard_rated_supply'],
             'price_include_vat' => $request['price_include_vat'],
+            'point' => $request['point'],
+            'use_serial_number' => $useSerialNumber,
+            'has_expiry_date' => $hasExpiryDate,
+            'remarks' => $request['remarks'],
+            'status' => $request['status'],
         ];
 
         $productUnitsArr = [];
-        $count_unit = count($request['unit_id']);
+        $count_unit = count($request['product_units_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $code = $request['product_units_code'][$i];
-            if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            $productUnitCode = array_key_exists('product_units_code', $request) ? $request['product_units_code'][$i] : '[AUTO]';
+
+            if ($productUnitCode == config('dcslab.KEYWORDS.AUTO')) {
                 do {
-                    $code = $this->productService->generateUniqueCodeForProductUnits();
-                } while (!$this->productService->isUniqueCodeForProductUnits($code, $company_id));
+                    $productUnitCode = $this->productService->generateUniqueCodeForProductUnits();
+                } while (!$this->productService->isUniqueCodeForProductUnits($productUnitCode, $company_id));
             } else {
-                if (!$this->productService->isUniqueCodeForProductUnits($code, $company_id)) {
+                if (!$this->productService->isUniqueCodeForProductUnits($productUnitCode, $company_id)) {
                     return response()->error([
                         'code' => [trans('rules.unique_code')],
                     ], 422);
                 }
             }
             
-            $is_base = $request['is_base'][$i] == '1' ? true : false;
+            $product_units_unit_id = Hashids::decode($request['product_units_unit_id'][$i])[0];
 
-            $is_primary_unit = $request['is_primary_unit'][$i] == '1' ? true : false;
+            $product_units_conv_value = $request['product_units_conv_value'][$i];
 
-            $product_units_remarks = array_key_exists('product_units_remarks', $request) == true ? $request['product_units_remarks'][$i] : '';
+            $product_units_is_base = filter_var($request['product_units_is_base'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_base = $product_units_is_base == true ? 1 : 0;
+
+            $product_units_is_primary_unit = filter_var($request['product_units_is_primary_unit'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_primary_unit = $product_units_is_primary_unit == true ? 1 : 0;
+
+            $product_units_remarks = $request['product_units_remarks'][$i];
 
             array_push($productUnitsArr, [
                 'company_id' => $company_id,
-                'code' => $code,
-                'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-                'conv_value' => $request['conv_value'][$i],
-                'is_base' => $is_base,
-                'is_primary_unit' => $is_primary_unit,
+                'code' => $productUnitCode,
+                'unit_id' => $product_units_unit_id,
+                'conv_value' => $product_units_conv_value,
+                'is_base' => $product_units_is_base,
+                'is_primary_unit' => $product_units_is_primary_unit,
                 'remarks' => $product_units_remarks,
             ]);
         }
@@ -109,10 +131,11 @@ class ProductController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function listProducts(ProductRequest $productRequest)
+    public function list(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
 
+        $productCategory = array_key_exists('productCategory', $request) ? $request['productCategory'] : ProductCategory::PRODUCTS_AND_SERVICES->value;
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
@@ -130,8 +153,7 @@ class ProductController extends BaseController
 
         $result = $this->productService->list(
             companyId: $companyId,
-            isProduct: true,
-            isService: false,
+            productCategory: $productCategory,
             search: $search,
             paginate: $paginate,
             page: $page,
@@ -147,45 +169,9 @@ class ProductController extends BaseController
         }
     }
 
-    public function listServices(ProductRequest $productRequest)
-    {
-        $request = $productRequest->validated();
-
-        $companyId = $request['company_id'];
-        $search = $request['search'];
-        $paginate = $request['paginate'];
-        $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
-        $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->productService->list(
-                companyId: $companyId,
-                isProduct: false,
-                isService: true,
-                search: $search,
-                paginate: $paginate,
-                page: $page,
-                perPage: $perPage
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            $response = ProductResource::collection($result);
-
-            return $response;
-        }
-    }
-
     public function getProductType(Request $request)
     {
-        if ($request->has('type') && $request['type'] == 'products') {
+        if ($request->has('type') && $request['type'] == 'product') {
             return [
                 ['name' => 'components.dropdown.values.productTypeDDL.raw', 'code' => ProductType::RAW_MATERIAL->name],
                 ['name' => 'components.dropdown.values.productTypeDDL.wip', 'code' => ProductType::WORK_IN_PROGRESS->name],
@@ -205,29 +191,7 @@ class ProductController extends BaseController
         }
     }
 
-    public function readProducts(Product $product, ProductRequest $productRequest)
-    {
-        $request = $productRequest->validated();
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->productService->read($product);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            $response = new ProductResource($result);
-
-            return $response;
-        }
-    }
-
-    public function readServices(Product $product, ProductRequest $productRequest)
+    public function read(Product $product, ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
 
@@ -268,55 +232,78 @@ class ProductController extends BaseController
             }
         }
 
+        $brandId = null;
+        if(array_key_exists('brand_id', $request)) {
+            $brandId = Hashids::decode($request['brand_id'])[0];
+        }
+
+        $useSerialNumber = false;
+        if (array_key_exists('use_serial_number', $request)) {
+            $useSerialNumber = $request['use_serial_number'];
+        };
+
+        $hasExpiryDate = false;
+        if (array_key_exists('has_expiry_date', $request)) {
+            $hasExpiryDate = $request['has_expiry_date'];
+        };
+
         $productArr = [
             'company_id' => $company_id,
             'code' => $code,
-            'name' => $request['name'],
             'product_group_id' => Hashids::decode($request['product_group_id'])[0],
-            'brand_id' => Hashids::decode($request['brand_id'])[0],
-            'remarks' => $request['remarks'],
-            'point' => $request['point'],
-            'use_serial_number' => $request['use_serial_number'],
-            'has_expiry_date' => $request['has_expiry_date'],
+            'brand_id' => $brandId,
+            'name' => $request['name'],
             'product_type' => $request['product_type'],
-            'status' => $request['status'],
             'taxable_supply' => $request['taxable_supply'],
             'standard_rated_supply' => $request['standard_rated_supply'],
             'price_include_vat' => $request['price_include_vat'],
+            'point' => $request['point'],
+            'use_serial_number' => $useSerialNumber,
+            'has_expiry_date' => $hasExpiryDate,
+            'remarks' => $request['remarks'],
+            'status' => $request['status'],
         ];
 
-        $use_serial_number = $request['use_serial_number'];
-        $has_expiry_date = $request['has_expiry_date'];
-
         $productUnitsArr = [];
-        $count_unit = count($request['unit_id']);
+        $count_unit = count($request['product_units_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
             $product_unit_id = $request['product_units_hId'][$i] == 0 ? 0 : Hashids::decode($request['product_units_hId'][$i])[0];
-            $code = $request['product_units_code'][$i];
+            
+            $productUnitCode = array_key_exists('product_units_code', $request) ? $request['product_units_code'][$i] : '[AUTO]';
 
-            $is_base = is_null($request['is_base'][$i]) ? 0 : $request['is_base'][$i];
-            $is_base = is_numeric($is_base) ? $is_base : 0;
+            if ($productUnitCode == config('dcslab.KEYWORDS.AUTO')) {
+                do {
+                    $productUnitCode = $this->productService->generateUniqueCodeForProductUnits();
+                } while (!$this->productService->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id));
+            } else {
+                if (!$this->productService->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id)) {
+                    return response()->error([
+                        'code' => [trans('rules.unique_code')],
+                    ], 422);
+                }
+            }
+            
+            $product_units_unit_id = Hashids::decode($request['product_units_unit_id'][$i])[0];
 
-            $is_primary_unit = is_null($request['is_primary_unit'][$i]) ? 0 : $request['is_primary_unit'][$i];
-            $is_primary_unit = is_numeric($is_primary_unit) ? $is_primary_unit : 0;
+            $product_units_conv_value = $request['product_units_conv_value'][$i];
 
-            $use_serial_number = is_null($use_serial_number) ? 0 : $use_serial_number;
-            $use_serial_number = is_numeric($use_serial_number) ? $use_serial_number : 0;
+            $product_units_is_base = filter_var($request['product_units_is_base'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_base = $product_units_is_base == true ? 1 : 0;
 
-            $has_expiry_date = is_null($has_expiry_date) ? 0 : $has_expiry_date;
-            $has_expiry_date = is_numeric($has_expiry_date) ? $has_expiry_date : 0;
+            $product_units_is_primary_unit = filter_var($request['product_units_is_primary_unit'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_primary_unit = $product_units_is_primary_unit == true ? 1 : 0;
 
-            $product_units_remarks = array_key_exists('product_units_remarks', $request) == true ? $request['product_units_remarks'][$i] : '';
+            $product_units_remarks = $request['product_units_remarks'][$i];
 
             array_push($productUnitsArr, [
                 'id' => $product_unit_id,
                 'company_id' => $company_id,
                 'product_id' => $product->id,
-                'code' => $code,
-                'unit_id' => Hashids::decode($request['unit_id'][$i])[0],
-                'conv_value' => $request['conv_value'][$i],
-                'is_base' => $is_base,
-                'is_primary_unit' => $is_primary_unit,
+                'code' => $productUnitCode,
+                'unit_id' => $product_units_unit_id,
+                'conv_value' => $product_units_conv_value,
+                'is_base' => $product_units_is_base,
+                'is_primary_unit' => $product_units_is_primary_unit,
                 'remarks' => $product_units_remarks,
             ]);
         }
