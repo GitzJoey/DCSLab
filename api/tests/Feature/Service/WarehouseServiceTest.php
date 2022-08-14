@@ -301,6 +301,50 @@ class WarehouseServiceTest extends ServiceTestCase
     /* #endregion */
 
     /* #region others */
+    public function test_warehouse_service_call_function_generate_unique_code_expect_unique_code_returned()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Branch::factory()->setIsMainBranch(), 'branches'), 'companies')
+                    ->create();
 
+        $code = $this->warehouseService->generateUniqueCode();
+
+        $this->assertIsString($code);
+        
+        $resultCount = $user->companies()->first()->warehouses()->where('code', '=', $code)->count();
+        $this->assertTrue($resultCount == 0);
+    }
+
+    public function test_warehouse_service_call_function_is_unique_code_expect_can_detect_unique_code()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->count(2)
+                        ->has(Branch::factory()->setIsMainBranch(), 'branches'), 'companies')
+                    ->create();
+
+        $company_1 = $user->companies[0];
+        $companyId_1 = $company_1->id;
+
+        $company_2 = $user->companies[1];
+        $companyId_2 = $company_2->id;
+
+        warehouse::factory()->create([
+            'company_id' => $companyId_1,
+            'branch_id' => $company_1->branches()->first()->id,
+            'code' => 'test1',
+        ]);
+
+        warehouse::factory()->create([
+            'company_id' => $companyId_2,
+            'branch_id' => $company_2->branches()->first()->id,
+            'code' => 'test2',
+        ]);
+
+        $this->assertFalse($this->warehouseService->isUniqueCode('test1', $companyId_1));
+        $this->assertTrue($this->warehouseService->isUniqueCode('test2', $companyId_1));
+        $this->assertTrue($this->warehouseService->isUniqueCode('test3', $companyId_1));
+        $this->assertTrue($this->warehouseService->isUniqueCode('test1', $companyId_2));
+    }
     /* #endregion */
 }

@@ -11,6 +11,7 @@ use App\Services\BrandService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class BrandServiceTest extends ServiceTestCase
 {
@@ -23,7 +24,7 @@ class BrandServiceTest extends ServiceTestCase
         $this->brandService = app(BrandService::class);
     }
 
-    #region create
+    /* #region create */
     public function test_brand_service_call_create_expect_db_has_record()
     {
         $user = User::factory()
@@ -49,10 +50,9 @@ class BrandServiceTest extends ServiceTestCase
         $this->expectException(Exception::class);
         $this->brandService->create([]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
+    /* #region list */
     public function test_brand_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
@@ -173,11 +173,9 @@ class BrandServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
         $this->assertTrue($result->total() > 1);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_brand_service_call_read_expect_object()
     {
         $user = User::factory()
@@ -190,11 +188,9 @@ class BrandServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Brand::class, $result);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_brand_service_call_update_expect_db_updated()
     {
         $user = User::factory()
@@ -230,11 +226,9 @@ class BrandServiceTest extends ServiceTestCase
         
         $this->brandService->update($brand, $brandArr);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_brand_service_call_delete_expect_bool()
     {
         $user = User::factory()
@@ -252,10 +246,50 @@ class BrandServiceTest extends ServiceTestCase
             'id' => $brand->id
         ]);
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
+    public function test_brand_service_call_function_generate_unique_code_expect_unique_code_returned()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Brand::factory()->count(5), 'brands'), 'companies')
+                    ->create();
 
-    #region others
+        $code = $this->brandService->generateUniqueCode();
 
-    #endregion
+        $this->assertIsString($code);
+        
+        $resultCount = $user->companies()->first()->brands()->where('code', '=', $code)->count();
+        $this->assertTrue($resultCount == 0);
+    }
+
+    public function test_brand_service_call_function_is_unique_code_expect_can_detect_unique_code()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->count(2)->state(new Sequence(['default' => true], ['default' => false])), 'companies')
+                    ->create();
+
+        $company_1 = $user->companies[0];
+        $companyId_1 = $company_1->id;
+
+        $company_2 = $user->companies[1];
+        $companyId_2 = $company_2->id;
+
+        Brand::factory()->create([
+            'company_id' => $companyId_1,
+            'code' => 'test1',
+        ]);
+
+        Brand::factory()->create([
+            'company_id' => $companyId_2,
+            'code' => 'test2',
+        ]);
+
+        $this->assertFalse($this->brandService->isUniqueCode('test1', $companyId_1));
+        $this->assertTrue($this->brandService->isUniqueCode('test2', $companyId_1));
+        $this->assertTrue($this->brandService->isUniqueCode('test3', $companyId_1));
+        $this->assertTrue($this->brandService->isUniqueCode('test1', $companyId_2));
+    }
+    /* #endregion */
 }

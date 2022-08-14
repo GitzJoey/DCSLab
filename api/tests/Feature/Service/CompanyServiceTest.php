@@ -295,12 +295,21 @@ class CompanyServiceTest extends ServiceTestCase
         $this->assertTrue($defaultCount == 0);
     }
 
-    public function test_company_service_call_function_generateUniqueCode_expect_unique_code_returned()
+    public function test_company_service_call_function_generate_unique_code_expect_unique_code_returned()
     {
-        $this->assertIsString($this->companyService->generateUniqueCode());
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $code = $this->companyService->generateUniqueCode();
+
+        $this->assertIsString($code);
+        
+        $resultCount = $user->companies()->first()->where('code', '=', $code)->count();
+        $this->assertTrue($resultCount == 0);
     }
 
-    public function test_company_service_call_function_isUniqueCode_expect_can_detect_unique_code()
+    public function test_company_service_call_function_is_unique_code_expect_can_detect_unique_code()
     {
         $user = User::factory()->create();
         $userId = $user->id;
