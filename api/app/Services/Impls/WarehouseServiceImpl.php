@@ -62,6 +62,7 @@ class WarehouseServiceImpl implements WarehouseService
         int $page = 1,
         int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -83,8 +84,11 @@ class WarehouseServiceImpl implements WarehouseService
                 return null;
             }
 
-            $warehouse = Warehouse::with('company', 'branch')
-                        ->whereCompanyId($companyId);
+            $warehouse = count($with) != 0 ? Warehouse::with($with) : Warehouse::with('company', 'branch');
+            $warehouse = $warehouse->whereCompanyId($companyId);
+
+            if ($withTrashed)
+            $warehouse = $warehouse->withTrashed();
 
             if (empty($search)) {
                 $warehouse = $warehouse->latest();

@@ -341,8 +341,6 @@ const service = ref({
     price_include_vat: false,
     point: '',
     remarks: '',
-    use_serial_number: false,
-    has_expiry_date: false,
     status: 'ACTIVE',
 });
 const statusDDL = ref([]);
