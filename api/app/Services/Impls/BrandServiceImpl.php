@@ -80,8 +80,11 @@ class BrandServiceImpl implements BrandService
 
             $timer_start = microtime(true);
 
-            $brand = count($with) != 0 ? Brand::with($with) : Brand::with('company');
-            $brand = $brand->whereCompanyId($companyId);
+            if (count($with) != 0) {
+                $brand = Brand::with($with)->whereCompanyId($companyId);
+            } else {
+                $brand = Brand::whereCompanyId($companyId);
+            }
 
             if ($withTrashed)
                 $brand = $brand->withTrashed();

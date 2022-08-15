@@ -109,7 +109,7 @@ class ProductController extends BaseController
                 'company_id' => $company_id,
                 'code' => $productUnitCode,
                 'unit_id' => $product_units_unit_id,
-                'conv_value' => $product_units_conv_value,
+                'conversion_value' => $product_units_conv_value,
                 'is_base' => $product_units_is_base,
                 'is_primary_unit' => $product_units_is_primary_unit,
                 'remarks' => $product_units_remarks,
@@ -267,7 +267,7 @@ class ProductController extends BaseController
         $productUnitsArr = [];
         $count_unit = count($request['product_units_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $product_unit_id = $request['product_units_hId'][$i] == 0 ? 0 : Hashids::decode($request['product_units_hId'][$i])[0];
+            $product_unit_id = $request['product_units_hId'][$i] == '' ? null : Hashids::decode($request['product_units_hId'][$i])[0];
             
             $productUnitCode = array_key_exists('product_units_code', $request) ? $request['product_units_code'][$i] : '[AUTO]';
 
@@ -301,7 +301,7 @@ class ProductController extends BaseController
                 'product_id' => $product->id,
                 'code' => $productUnitCode,
                 'unit_id' => $product_units_unit_id,
-                'conv_value' => $product_units_conv_value,
+                'conversion_value' => $product_units_conv_value,
                 'is_base' => $product_units_is_base,
                 'is_primary_unit' => $product_units_is_primary_unit,
                 'remarks' => $product_units_remarks,

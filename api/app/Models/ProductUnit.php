@@ -76,8 +76,6 @@ class ProductUnit extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->uuid = Str::uuid();
-
             $user = Auth::check();
             if ($user) {
                 $model->created_by = Auth::id();

@@ -58,7 +58,7 @@ class ProductServiceImpl implements ProductService
                     'product_id' => $product->id,
                     'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
-                    'conversion_value' => $product_unit['conv_value'],
+                    'conversion_value' => $product_unit['conversion_value'],
                     'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks'],
@@ -130,7 +130,7 @@ class ProductServiceImpl implements ProductService
             }
 
             if ($withTrashed)
-                $product = $product->withTrashed();
+            $product = $product->withTrashed();
 
             if (empty($search)) {
                 $product = $product->latest();
@@ -203,7 +203,7 @@ class ProductServiceImpl implements ProductService
                     'product_id' => $product->id,
                     'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
-                    'conversion_value' => $product_unit['conv_value'],
+                    'conversion_value' => $product_unit['conversion_value'],
                     'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks'],
@@ -226,14 +226,20 @@ class ProductServiceImpl implements ProductService
             }
 
             if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
-                $product->productUnits()->upsert($pu, ['id'], [
-                    'code',
-                    'unit_id',
-                    'is_base',
-                    'conversion_value',
-                    'is_primary_unit',
-                    'remarks',
-                ]);
+                ProductUnit::upsert(
+                    $pu, 
+                    ['id'], 
+                    [
+                        'company_id',
+                        'product_id',
+                        'code',
+                        'unit_id',
+                        'is_base',
+                        'conversion_value',
+                        'is_primary_unit',
+                        'remarks',
+                    ]
+                );
             }
 
             DB::commit();

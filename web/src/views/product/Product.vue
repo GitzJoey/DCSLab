@@ -695,7 +695,7 @@ const createNew = () => {
 
 const createNewUnit = () => {
     let product_unit = {
-        hId: '0',
+        hId: '',
         code: '[AUTO]',
         conversion_value: 0,
         is_base: false,

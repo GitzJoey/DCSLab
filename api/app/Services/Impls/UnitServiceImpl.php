@@ -79,7 +79,11 @@ class UnitServiceImpl implements UnitService
 
             $result = null;
 
-            $unit = Unit::whereCompanyId($companyId);
+            if (count($with) != 0) {
+                $unit = Unit::with($with)->whereCompanyId($companyId);
+            } else {
+                $unit = Unit::whereCompanyId($companyId);
+            }
 
             if ($category == UnitCategory::PRODUCTS->value) {
                 $unit = $unit->where('category', '<>', UnitCategory::SERVICES->value);
@@ -89,9 +93,6 @@ class UnitServiceImpl implements UnitService
             } else {
                 return null;
             }
-
-            $unit = count($with) != 0 ? Unit::with($with) : Unit::with('company');
-            $unit = $unit->whereCompanyId($companyId);
 
             if ($withTrashed)
                 $unit = $unit->withTrashed();

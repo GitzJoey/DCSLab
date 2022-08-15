@@ -93,7 +93,7 @@ class CompanyServiceImpl implements CompanyService
                     return $cacheResult;
                 }
             }
-
+ 
             $result = null;
 
             $usr = User::find($userId);
@@ -103,8 +103,11 @@ class CompanyServiceImpl implements CompanyService
 
             $compIds = $usr->companies()->pluck('company_id');
 
-            $companies = count($with) != 0 ? Company::with($with) : Company::with('branches');
-            $companies = $companies->whereCompanyId('id', $compIds);
+            if (count($with) != 0) {
+                $companies = Company::with($with)->whereIn('id', $compIds);
+            } else {
+                $companies = Company::with('branches')->whereIn('id', $compIds);
+            }
 
             if ($withTrashed)
                 $companies = $companies->withTrashed();

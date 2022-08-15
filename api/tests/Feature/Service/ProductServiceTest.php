@@ -15,6 +15,7 @@ use App\Models\ProductUnit;
 use App\Models\ProductGroup;
 use App\Services\ProductService;
 use App\Enums\ProductGroupCategory;
+use App\Enums\ProductType;
 use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\ProductTableSeeder;
@@ -33,6 +34,10 @@ class ProductServiceTest extends ServiceTestCase
         parent::setUp();
 
         $this->productService = app(ProductService::class);
+        $this->productGroupSeeder = new ProductGroupTableSeeder();
+        $this->brandSeeder = new BrandTableSeeder();
+        $this->unitSeeder = new UnitTableSeeder();
+        $this->productSeeder = new ProductTableSeeder();
     }
 
     /* #region create */
@@ -44,23 +49,13 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-        ->whereOr([
-            ['category', '=', ProductGroupCategory::PRODUCTS->value],
-            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-        ])->inRandomOrder()->first()->id;
+                            ->where('category', '<>', ProductGroupCategory::SERVICES->value)
+                            ->inRandomOrder()->first()->id;
 
         $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
 
@@ -77,10 +72,8 @@ class ProductServiceTest extends ServiceTestCase
         $maxConverionValue = 1;
         for ($i = 0; $i < $unitCount ; $i++) {
             $unitId = Unit::where('company_id', '=', $companyId)
-                        ->whereOr([
-                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                        ])->inRandomOrder()->first()->id;
+                        ->where('category', '<>', ProductGroupCategory::SERVICES->value)
+                        ->inRandomOrder()->first()->id;
 
             $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + $this->faker->numberBetween(1, 10));
             $isBase = $i == 0 ? true : false;
@@ -88,14 +81,14 @@ class ProductServiceTest extends ServiceTestCase
 
             $productUnitArr = ProductUnit::factory()->make([
                 'unit_id' => $unitId,
-                'conv_value' => $conversionValue,
+                'conversion_value' => $conversionValue,
                 'is_base' => $isBase,
-                'is_primary_unit' => $isPrimaryUnit,
+                'is_primary_unit' => $isPrimaryUnit
             ])->toArray();
 
             array_push($productUnitsArr, $productUnitArr);
 
-            $maxConverionValue = $productUnitArr['conv_value'];
+            $maxConverionValue = $productUnitArr['conversion_value'];
         }
 
         $result = $this->productService->create(
@@ -128,7 +121,7 @@ class ProductServiceTest extends ServiceTestCase
                 'unit_id' => $productUnitsArr[$i]['unit_id'],
                 'code' => $productUnitsArr[$i]['code'],
                 'is_base' => $productUnitsArr[$i]['is_base'],
-                'conversion_value' => $productUnitsArr[$i]['conv_value'],
+                'conversion_value' => $productUnitsArr[$i]['conversion_value'],
                 'is_primary_unit' => $productUnitsArr[$i]['is_primary_unit'],
                 'remarks' => $productUnitsArr[$i]['remarks'],
             ]);
@@ -143,29 +136,32 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::SERVICES->value]);
 
         $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-        ->whereOr([
-            ['category', '=', ProductGroupCategory::SERVICES->value],
-            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-        ])->inRandomOrder()->first()->id;        
+                            ->where('category', '<>', ProductGroupCategory::PRODUCTS->value)
+                            ->inRandomOrder()->first()->id;        
 
         $productArr = Product::factory()->make([
             'company_id' => $companyId,
             'product_group_id' => $productGroupId,
-            'product_type' => 4,
+            'brand_id' => null,
+            'product_type' => ProductType::SERVICE->value,
         ])->toArray();
 
+        $unitId = Unit::where('company_id', '=', $companyId)
+                    ->where('category', '<>', ProductGroupCategory::PRODUCTS->value)
+                    ->inRandomOrder()->first()->id;
+        
         $productUnitsArr = [];
+        $productUnitArr = ProductUnit::factory()->make([
+            'unit_id' => $unitId,
+            'conversion_value' => 1,
+            'is_base' => true,
+            'is_primary_unit' => true
+        ])->toArray();
+        array_push($productUnitsArr, $productUnitArr);
 
         $result = $this->productService->create(
             $productArr,
@@ -189,6 +185,17 @@ class ProductServiceTest extends ServiceTestCase
             'product_type' => $productArr['product_type'],
             'status' => $productArr['status'],
         ]);
+
+        $this->assertDatabaseHas('product_units', [
+            'company_id' => $companyId,
+            'product_id' => $result->id,
+            'unit_id' => $productUnitsArr[0]['unit_id'],
+            'code' => $productUnitsArr[0]['code'],
+            'is_base' => $productUnitsArr[0]['is_base'],
+            'conversion_value' => $productUnitsArr[0]['conversion_value'],
+            'is_primary_unit' => $productUnitsArr[0]['is_primary_unit'],
+            'remarks' => $productUnitsArr[0]['remarks'],
+        ]);
     }
 
     public function test_product_service_call_create_with_empty_array_parameters_expect_exception()
@@ -202,16 +209,53 @@ class ProductServiceTest extends ServiceTestCase
     /* #endregion */
 
     /* #region list */
-    public function test_product_service_call_list_products_with_paginate_true_expect_paginator_object()
+    public function test_product_service_call_list_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
+        $companyId = $user->companies->first()->id;
+
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
+        
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
+        
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
+
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+
         $result = $this->productService->list(
-            companyId: $user->companies->first()->id,
-            isProduct: true,
-            isService: false,
+            companyId: $companyId,
+            productCategory: ProductCategory::PRODUCTS->value,
+            search: '',
+            paginate: true,
+            page: 1,
+            perPage: 10
+        );
+
+        $this->assertInstanceOf(Paginator::class, $result);
+
+        $result = $this->productService->list(
+            companyId: $companyId,
+            productCategory: ProductCategory::SERVICES->value,
+            search: '',
+            paginate: true,
+            page: 1,
+            perPage: 10
+        );
+
+        $this->assertInstanceOf(Paginator::class, $result);
+
+        $result = $this->productService->list(
+            companyId: $companyId,
+            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
             search: '',
             paginate: true,
             page: 1,
@@ -221,70 +265,83 @@ class ProductServiceTest extends ServiceTestCase
         $this->assertInstanceOf(Paginator::class, $result);
     }
 
-    public function test_product_service_call_list_services_with_paginate_true_expect_paginator_object()
+    public function test_product_service_call_list_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        $result = $this->productService->list(
-            companyId: $user->companies->first()->id,
-            isProduct: false,
-            isService: true,
-            search: '',
-            paginate: true,
-            page: 1,
-            perPage: 10
-        );
+        $companyId = $user->companies->first()->id;
 
-        $this->assertInstanceOf(Paginator::class, $result);
-    }
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
+        
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
+        
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
 
-    public function test_product_service_call_list_products_and_services_with_paginate_true_expect_paginator_object()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
 
         $result = $this->productService->list(
-            companyId: $user->companies->first()->id,
-            isProduct: true,
-            isService: true,
-            search: '',
-            paginate: true,
-            page: 1,
-            perPage: 10
-        );
-
-        $this->assertInstanceOf(Paginator::class, $result);
-    }
-
-    public function test_product_service_call_list_products_and_services_with_paginate_false_expect_collection_object()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
-
-        $result = $this->productService->list(
-            companyId: $user->companies->first()->id,
-            isProduct: true,
-            isService: true,
+            companyId: $companyId,
+            productCategory: ProductCategory::PRODUCTS->value,
             search: '',
             paginate: false,
         );
 
         $this->assertInstanceOf(Collection::class, $result);
-        $this->assertEmpty($result);
+
+        $result = $this->productService->list(
+            companyId: $companyId,
+            productCategory: ProductCategory::SERVICES->value,
+            search: '',
+            paginate: false,
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);
+
+        $result = $this->productService->list(
+            companyId: $companyId,
+            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
+            search: '',
+            paginate: false,
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);
     }
 
-    public function test_product_service_call_list_products_and_services_with_nonexistance_companyId_expect_empty_collection()
+    public function test_product_service_call_list_with_nonexistance_company_id_expect_empty_collection()
     {
-        $maxId = Product::max('id') + 1;
+        $maxId = Company::max('id') + 1;
 
         $result = $this->productService->list(
             companyId: $maxId,
-            isProduct: true,
-            isService: true,
+            productCategory: ProductCategory::PRODUCTS->value,
+            search: '',
+            paginate: false,
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertEmpty($result);
+
+        $result = $this->productService->list(
+            companyId: $maxId,
+            productCategory: ProductCategory::SERVICES->value,
+            search: '',
+            paginate: false,
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertEmpty($result);
+
+        $result = $this->productService->list(
+            companyId: $maxId,
+            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
             search: '',
             paginate: false,
         );
@@ -293,90 +350,32 @@ class ProductServiceTest extends ServiceTestCase
         $this->assertEmpty($result);
     }
 
-    public function test_product_service_call_list_products_with_search_parameter_expect_filtered_results()
+    public function test_product_service_call_list_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        $companyId = $user->companies->first()->id;
+        $company = $user->companies->first();
+        $companyId = $company->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
 
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
+        $productCount = 5;
+        $products = $company->products()->take($productCount)->get();
         
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        for ($n = 0; $n < 2; $n++) {
-            for ($iCount = 0; $iCount < 10; $iCount++) {      
-                $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-                ->whereOr([
-                    ['category', '=', ProductGroupCategory::PRODUCTS->value],
-                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                ])->inRandomOrder()->first()->id;
-        
-                $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-        
-                if ($n == 0) {
-                    $productArr = Product::factory()->make([
-                        'company_id' => $companyId,
-                        'product_group_id' => $productGroupId,
-                        'brand_id' => $brandId,
-                        'product_type' => $this->faker->randomElement([1, 2, 3]),
-                    ])->toArray();
-                } elseif ($n == 1) {
-                    $productArr = Product::factory()->insertStringInName(' testing')->make([
-                        'company_id' => $companyId,
-                        'product_group_id' => $productGroupId,
-                        'brand_id' => $brandId,
-                        'product_type' => $this->faker->randomElement([1, 2, 3]),
-                    ])->toArray();
-                }
-        
-                $productUnitsArr = [];
-                $unitCount = $this->faker->numberBetween(1, 5);
-                $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-                $maxConverionValue = 1;
-                for ($i = 0; $i < $unitCount ; $i++) {
-                    $unitId = Unit::where('company_id', '=', $companyId)
-                                ->whereOr([
-                                    ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                                ])->inRandomOrder()->first()->id;
-        
-                    $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-                    $isBase = $i == 0 ? true : false;
-                    $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-        
-                    $productUnitArr = ProductUnit::factory()->make([
-                        'unit_id' => $unitId,
-                        'conv_value' => $conversionValue,
-                        'is_base' => $isBase,
-                        'is_primary_unit' => $isPrimaryUnit,
-                    ])->toArray();
-        
-                    array_push($productUnitsArr, $productUnitArr);
-        
-                    $maxConverionValue = $productUnitArr['conv_value'];
-                }
-        
-                $result = $this->productService->create(
-                    $productArr,
-                    $productUnitsArr
-                );
-            }
+        for ($i = 0; $i < $productCount; $i++) {      
+            $product = $products[$i];
+            $product->name = $product->name . ' testing';
+            $product->save();
         }
 
         $result = $this->productService->list(
             companyId: $companyId,
-            isProduct: true,
-            isService: false,
+            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -384,10 +383,10 @@ class ProductServiceTest extends ServiceTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 10);
+        $this->assertTrue($result->total() == $productCount);
     }
 
-    public function test_product_service_call_list_services_with_search_parameter_expect_filtered_results()
+    public function test_product_service_call_list_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
@@ -395,194 +394,14 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
-
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
-
-        for ($n = 0; $n < 2; $n++) {
-            for ($iCount = 0; $iCount < 10; $iCount++) {      
-                $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-                ->whereOr([
-                    ['category', '=', ProductGroupCategory::SERVICES->value],
-                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                ])->inRandomOrder()->first()->id;
-        
-                if ($n == 0) {
-                    $productArr = Product::factory()->make([
-                        'company_id' => $companyId,
-                        'product_group_id' => $productGroupId,
-                        'product_type' => 4,
-                    ])->toArray();
-                } elseif ($n == 1) {
-                    $productArr = Product::factory()->insertStringInName(' testing')->make([
-                        'company_id' => $companyId,
-                        'product_group_id' => $productGroupId,
-                        'product_type' => 4,
-                    ])->toArray();
-                }
-
-                $productUnitsArr = [];
-        
-                $result = $this->productService->create(
-                    $productArr,
-                    $productUnitsArr
-                );
-            }
-        }
-
-        $result = $this->productService->list(
-            companyId: $companyId,
-            isProduct: false,
-            isService: true,
-            search: 'testing',
-            paginate: true,
-            page: 1,
-            perPage: 10
-        );
-
-        $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 10);
-    }
-
-    public function test_product_service_call_list_products_with_page_parameter_negative_expect_results()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
-
-        $companyId = $user->companies->first()->id;
-        
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        for ($iCount = 0; $iCount < 10; $iCount++) {
-            $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-            ->whereOr([
-                ['category', '=', ProductGroupCategory::PRODUCTS->value],
-                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-            ])->inRandomOrder()->first()->id;
-    
-            $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-    
-            $productArr = Product::factory()->make([
-                'company_id' => $companyId,
-                'product_group_id' => $productGroupId,
-                'brand_id' => $brandId,
-                'product_type' => $this->faker->randomElement([1, 2, 3]),
-            ])->toArray();
-    
-            $productUnitsArr = [];
-            $unitCount = $this->faker->numberBetween(1, 5);
-            $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-            $maxConverionValue = 1;
-            for ($i = 0; $i < $unitCount ; $i++) {
-                $unitId = Unit::where('company_id', '=', $companyId)
-                            ->whereOr([
-                                ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                            ])->inRandomOrder()->first()->id;
-    
-                $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-                $isBase = $i == 0 ? true : false;
-                $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-    
-                $productUnitArr = ProductUnit::factory()->make([
-                    'unit_id' => $unitId,
-                    'conv_value' => $conversionValue,
-                    'is_base' => $isBase,
-                    'is_primary_unit' => $isPrimaryUnit,
-                ])->toArray();
-    
-                array_push($productUnitsArr, $productUnitArr);
-    
-                $maxConverionValue = $productUnitArr['conv_value'];
-            }
-
-            $this->productService->create(
-                $productArr,
-                $productUnitsArr
-            );
-        }
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [5, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
         
         $result = $this->productService->list(
             companyId: $companyId, 
-            isProduct: true,
-            isService: false,
-            search: '',
-            paginate: true,
-            page: -1,
-            perPage: 10
-        );
-
-        $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 10);
-    }
-
-    public function test_product_service_call_list_services_with_page_parameter_negative_expect_results()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
-
-        $companyId = $user->companies->first()->id;
-        
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
-
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
-
-        for ($iCount = 0; $iCount < 10; $iCount++) {
-            $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-            ->whereOr([
-                ['category', '=', ProductGroupCategory::SERVICES->value],
-                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-            ])->inRandomOrder()->first()->id;
-    
-            $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-    
-            $productArr = Product::factory()->make([
-                'company_id' => $companyId,
-                'product_group_id' => $productGroupId,
-                'brand_id' => $brandId,
-                'product_type' => 4,
-            ])->toArray();
-    
-            $productUnitsArr = [];
-
-            $this->productService->create(
-                $productArr,
-                $productUnitsArr
-            );
-        }
-        
-        $result = $this->productService->list(
-            companyId: $companyId, 
-            isProduct: false,
-            isService: true,
+            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
             search: '',
             paginate: true,
             page: -1,
@@ -601,129 +420,14 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        for ($iCount = 0; $iCount < 10; $iCount++) {
-            $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-            ->whereOr([
-                ['category', '=', ProductGroupCategory::PRODUCTS->value],
-                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-            ])->inRandomOrder()->first()->id;
-    
-            $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-    
-            $productArr = Product::factory()->make([
-                'company_id' => $companyId,
-                'product_group_id' => $productGroupId,
-                'brand_id' => $brandId,
-                'product_type' => $this->faker->randomElement([1, 2, 3]),
-            ])->toArray();
-    
-            $productUnitsArr = [];
-            $unitCount = $this->faker->numberBetween(1, 5);
-            $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-            $maxConverionValue = 1;
-            for ($i = 0; $i < $unitCount ; $i++) {
-                $unitId = Unit::where('company_id', '=', $companyId)
-                            ->whereOr([
-                                ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                            ])->inRandomOrder()->first()->id;
-    
-                $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-                $isBase = $i == 0 ? true : false;
-                $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-    
-                $productUnitArr = ProductUnit::factory()->make([
-                    'unit_id' => $unitId,
-                    'conv_value' => $conversionValue,
-                    'is_base' => $isBase,
-                    'is_primary_unit' => $isPrimaryUnit,
-                ])->toArray();
-    
-                array_push($productUnitsArr, $productUnitArr);
-    
-                $maxConverionValue = $productUnitArr['conv_value'];
-            }
-
-            $this->productService->create(
-                $productArr,
-                $productUnitsArr
-            );
-        }
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [5, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
         
         $result = $this->productService->list(
             companyId: $companyId, 
-            isProduct: true,
-            isService: false,
-            search: '',
-            paginate: true,
-            page: 1,
-            perPage: -10
-        );
-
-        $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 10);
-    }
-
-    public function test_product_service_call_list_services_with_perpage_parameter_negative_expect_results()
-    {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
-
-        $companyId = $user->companies->first()->id;
-        
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
-
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([2, 3])
-        ]);
-
-        for ($iCount = 0; $iCount < 10; $iCount++) {
-            $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-            ->whereOr([
-                ['category', '=', ProductGroupCategory::SERVICES->value],
-                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-            ])->inRandomOrder()->first()->id;
-    
-            $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-    
-            $productArr = Product::factory()->make([
-                'company_id' => $companyId,
-                'product_group_id' => $productGroupId,
-                'brand_id' => $brandId,
-                'product_type' => 4,
-            ])->toArray();
-    
-            $productUnitsArr = [];
-
-            $this->productService->create(
-                $productArr,
-                $productUnitsArr
-            );
-        }
-        
-        $result = $this->productService->list(
-            companyId: $companyId, 
-            isProduct: false,
-            isService: true,
+            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
             search: '',
             paginate: true,
             page: 1,
@@ -742,66 +446,15 @@ class ProductServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        $companyId = $user->companies->first()->id;
+        $company = $user->companies->first();
+        $companyId = $company->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
 
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-        ->whereOr([
-            ['category', '=', ProductGroupCategory::PRODUCTS->value],
-            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-        ])->inRandomOrder()->first()->id;
-
-        $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-
-        $productArr = Product::factory()->make([
-            'company_id' => $companyId,
-            'product_group_id' => $productGroupId,
-            'brand_id' => $brandId,
-            'product_type' => $this->faker->randomElement([1, 2, 3]),
-        ])->toArray();
-
-        $productUnitsArr = [];
-        $unitCount = $this->faker->numberBetween(1, 5);
-        $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-        $maxConverionValue = 1;
-        for ($i = 0; $i < $unitCount ; $i++) {
-            $unitId = Unit::where('company_id', '=', $companyId)
-                        ->whereOr([
-                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                        ])->inRandomOrder()->first()->id;
-
-            $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-            $isBase = $i == 0 ? true : false;
-            $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-
-            $productUnitArr = ProductUnit::factory()->make([
-                'unit_id' => $unitId,
-                'conv_value' => $conversionValue,
-                'is_base' => $isBase,
-                'is_primary_unit' => $isPrimaryUnit,
-            ])->toArray();
-
-            array_push($productUnitsArr, $productUnitArr);
-
-            $maxConverionValue = $productUnitArr['conv_value'];
-        }
-
-        $product = $this->productService->create(
-            $productArr,
-            $productUnitsArr
-        );
+        $product = $company->products()->inRandomOrder()->first();
 
         $result = $this->productService->read($product);
 
@@ -810,7 +463,7 @@ class ProductServiceTest extends ServiceTestCase
     /* #endregion */
 
     /* #region update */
-    public function test_product_service_call_product_update_expect_db_updated()
+    public function test_product_service_call_update_product_and_insert_product_units_expect_db_updated()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault(), 'companies')
@@ -818,58 +471,33 @@ class ProductServiceTest extends ServiceTestCase
 
         $company = $user->companies->first();
         $companyId = $company->id;
-        
-        $productGroupSeeder = new ProductGroupTableSeeder();
-        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
 
-        $brandSeeder = new BrandTableSeeder();
-        $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
-        $unitSeeder = new UnitTableSeeder();
-        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+        $product = $company->products()->where('product_type', '<>', ProductType::SERVICE->value)->inRandomOrder()->first();
 
-        $productSeeder = new ProductTableSeeder();
-        $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, 1]);
+        $productArr = Product::factory()->setStatusActive()->make([
+            'company_id' => $companyId,
+            'product_group_id' => ProductGroup::where('company_id', '=', $companyId)->where('category', '<>', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id,
+            'brand_id' => Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id,
+            'product_type' => $this->faker->numberBetween(1, 3)
+        ])->toArray();
 
-        $product = $company->products()->first();
+        $productUnitsArr = $product->productUnits->toArray();
+        $newProductUnit = [
+            'id' => null,
+            'code' => $this->productService->generateUniqueCodeForProductUnits(),
+            'unit_id' => $company->units()->where('category', '<>', ProductCategory::SERVICES->value)->inRandomOrder()->first()->id,
+            'conversion_value' => $productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2,
+            'is_base' => false,
+            'is_primary_unit' => false,
+            'remarks' => $this->faker->sentence(),
+        ];
 
-        $productArr = Product::factory()->setStatusActive()->make()->toArray();
-        $productArr['company_id'] = $companyId;
-        $productArr['product_group_id'] = ProductGroup::where('company_id', '=', $companyId)
-        ->orWhere([
-            ['category', '=', ProductGroupCategory::PRODUCTS->value],
-            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-        ])->inRandomOrder()->first()->id;
-        $productArr['brand_id'] = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-        $productArr['product_type'] = $this->faker->numberBetween(1, 3);
-
-        $productUnitsArr = [];
-        $unitCount = $this->faker->numberBetween(1, 5);
-        $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-        $maxConverionValue = 1;
-        for ($i = 0; $i < $unitCount ; $i++) {
-            $unitId = Unit::where('company_id', '=', $companyId)
-                        ->whereOr([
-                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                        ])->inRandomOrder()->first()->id;
-
-            $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-            $isBase = $i == 0 ? true : false;
-            $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-
-            $productUnitArr = ProductUnit::factory()->make([
-                'id' => 0,
-                'unit_id' => $unitId,
-                'conv_value' => $conversionValue,
-                'is_base' => $isBase,
-                'is_primary_unit' => $isPrimaryUnit,
-            ])->toArray();
-
-            array_push($productUnitsArr, $productUnitArr);
-
-            $maxConverionValue = $productUnitArr['conv_value'];
-        }
+        array_push($productUnitsArr, $newProductUnit);
 
         $result = $this->productService->update(
             $product,
@@ -896,15 +524,159 @@ class ProductServiceTest extends ServiceTestCase
             'product_type' => $productArr['product_type'],
             'status' => $productArr['status'],
         ]);
-
-        for ($i = 0; $i < $unitCount ; $i++) {
+        
+        for ($i = 0; $i < count($productUnitsArr) ; $i++) {
             $this->assertDatabaseHas('product_units', [
                 'company_id' => $companyId,
                 'product_id' => $product->id,
                 'unit_id' => $productUnitsArr[$i]['unit_id'],
                 'code' => $productUnitsArr[$i]['code'],
                 'is_base' => $productUnitsArr[$i]['is_base'],
-                'conversion_value' => $productUnitsArr[$i]['conv_value'],
+                'conversion_value' => $productUnitsArr[$i]['conversion_value'],
+                'is_primary_unit' => $productUnitsArr[$i]['is_primary_unit'],
+                'remarks' => $productUnitsArr[$i]['remarks'],
+            ]);
+        }
+    }
+
+    public function test_product_service_call_update_product_and_edit_product_units_expect_db_updated()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
+
+        $product = $company->products()->where('product_type', '<>', ProductType::SERVICE->value)->inRandomOrder()->first();
+
+        $productArr = Product::factory()->setStatusActive()->make([
+            'company_id' => $companyId,
+            'product_group_id' => ProductGroup::where('company_id', '=', $companyId)->where('category', '<>', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id,
+            'brand_id' => Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id,
+            'product_type' => $this->faker->numberBetween(1, 3)
+        ])->toArray();
+        
+
+        $productUnitsArr = $product->productUnits->toArray();
+
+        $lastRow = count($productUnitsArr) - 1;
+        $productUnitsArr[$lastRow]['id'] = null;
+        $productUnitsArr[$lastRow]['code'] = $this->productService->generateUniqueCodeForProductUnits();
+        $productUnitsArr[$lastRow]['unit_id'] = $company->units()->where('category', '<>', ProductCategory::SERVICES->value)->inRandomOrder()->first()->id;
+        $productUnitsArr[$lastRow]['conversion_value'] = $productUnitsArr[$lastRow]['conversion_value'] * 2;
+        $productUnitsArr[$lastRow]['is_base'] = false;
+        $productUnitsArr[$lastRow]['is_primary_unit'] = false;
+        $productUnitsArr[$lastRow]['remarks'] = $this->faker->sentence();
+
+        $result = $this->productService->update(
+            $product,
+            $productArr,
+            $productUnitsArr
+        );
+
+        $this->assertInstanceOf(Product::class, $result);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'company_id' => $productArr['company_id'],
+            'code' => $productArr['code'],
+            'product_group_id' => $productArr['product_group_id'],
+            'brand_id' => $productArr['brand_id'],
+            'name' => $productArr['name'],
+            'taxable_supply' => $productArr['taxable_supply'],
+            'standard_rated_supply' => $productArr['standard_rated_supply'],
+            'price_include_vat' => $productArr['price_include_vat'],
+            'remarks' => $productArr['remarks'],
+            'point' => $productArr['point'],
+            'use_serial_number' => $productArr['use_serial_number'],
+            'has_expiry_date' => $productArr['has_expiry_date'],
+            'product_type' => $productArr['product_type'],
+            'status' => $productArr['status'],
+        ]);
+        
+        for ($i = 0; $i < count($productUnitsArr) ; $i++) {
+            $this->assertDatabaseHas('product_units', [
+                'company_id' => $companyId,
+                'product_id' => $product->id,
+                'unit_id' => $productUnitsArr[$i]['unit_id'],
+                'code' => $productUnitsArr[$i]['code'],
+                'is_base' => $productUnitsArr[$i]['is_base'],
+                'conversion_value' => $productUnitsArr[$i]['conversion_value'],
+                'is_primary_unit' => $productUnitsArr[$i]['is_primary_unit'],
+                'remarks' => $productUnitsArr[$i]['remarks'],
+            ]);
+        }
+    }
+
+    public function test_product_service_call_update_product_and_delete_product_units_expect_db_updated()
+    {
+        $user = User::factory()
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
+
+        do {
+            $product = $company->products()->where('product_type', '<>', ProductType::SERVICE->value)->inRandomOrder()->first();
+        } while ($product->ProductUnits()->count() == 1);
+
+        $productArr = Product::factory()->setStatusActive()->make([
+            'company_id' => $companyId,
+            'product_group_id' => ProductGroup::where('company_id', '=', $companyId)->where('category', '<>', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id,
+            'brand_id' => Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id,
+            'product_type' => $this->faker->numberBetween(1, 3)
+        ])->toArray();
+
+        $productUnitsArr = $product->productUnits->toArray();
+
+        array_pop($productUnitsArr);
+
+        $result = $this->productService->update(
+            $product,
+            $productArr,
+            $productUnitsArr
+        );
+
+        $this->assertInstanceOf(Product::class, $result);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'company_id' => $productArr['company_id'],
+            'code' => $productArr['code'],
+            'product_group_id' => $productArr['product_group_id'],
+            'brand_id' => $productArr['brand_id'],
+            'name' => $productArr['name'],
+            'taxable_supply' => $productArr['taxable_supply'],
+            'standard_rated_supply' => $productArr['standard_rated_supply'],
+            'price_include_vat' => $productArr['price_include_vat'],
+            'remarks' => $productArr['remarks'],
+            'point' => $productArr['point'],
+            'use_serial_number' => $productArr['use_serial_number'],
+            'has_expiry_date' => $productArr['has_expiry_date'],
+            'product_type' => $productArr['product_type'],
+            'status' => $productArr['status'],
+        ]);
+        
+        for ($i = 0; $i < count($productUnitsArr) ; $i++) {
+            $this->assertDatabaseHas('product_units', [
+                'company_id' => $companyId,
+                'product_id' => $product->id,
+                'unit_id' => $productUnitsArr[$i]['unit_id'],
+                'code' => $productUnitsArr[$i]['code'],
+                'is_base' => $productUnitsArr[$i]['is_base'],
+                'conversion_value' => $productUnitsArr[$i]['conversion_value'],
                 'is_primary_unit' => $productUnitsArr[$i]['is_primary_unit'],
                 'remarks' => $productUnitsArr[$i]['remarks'],
             ]);
@@ -919,66 +691,15 @@ class ProductServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        $companyId = $user->companies->first()->id;
+        $company = $user->companies->first();
+        $companyId = $company->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-        ->whereOr([
-            ['category', '=', ProductGroupCategory::PRODUCTS->value],
-            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-        ])->inRandomOrder()->first()->id;
-
-        $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-
-        $productArr = Product::factory()->make([
-            'company_id' => $companyId,
-            'product_group_id' => $productGroupId,
-            'brand_id' => $brandId,
-            'product_type' => $this->faker->randomElement([1, 2, 3]),
-        ])->toArray();
-
-        $productUnitsArr = [];
-        $unitCount = $this->faker->numberBetween(1, 5);
-        $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-        $maxConverionValue = 1;
-        for ($i = 0; $i < $unitCount ; $i++) {
-            $unitId = Unit::where('company_id', '=', $companyId)
-                        ->whereOr([
-                            ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                        ])->inRandomOrder()->first()->id;
-
-            $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-            $isBase = $i == 0 ? true : false;
-            $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-
-            $productUnitArr = ProductUnit::factory()->make([
-                'unit_id' => $unitId,
-                'conv_value' => $conversionValue,
-                'is_base' => $isBase,
-                'is_primary_unit' => $isPrimaryUnit,
-            ])->toArray();
-
-            array_push($productUnitsArr, $productUnitArr);
-
-            $maxConverionValue = $productUnitArr['conv_value'];
-        }
-
-        $product = $this->productService->create(
-            $productArr,
-            $productUnitsArr
-        );
+        $product = $company->products()->inRandomOrder()->first();
         
         $newProductArr = [];
         $newProductUnitsArr = [];
@@ -998,70 +719,15 @@ class ProductServiceTest extends ServiceTestCase
                     ->has(Company::factory()->setIsDefault(), 'companies')
                     ->create();
 
-        $companyId = $user->companies->first()->id;
+        $company = $user->companies->first();
+        $companyId = $company->id;
         
-        ProductGroup::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
-        Brand::factory()->count(10)->create(['company_id' => $companyId]);
-        
-        Unit::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'category' => $this->faker->randomElement([1, 3])
-        ]);
-
-        $productGroupId = ProductGroup::where('company_id', '=', $companyId)
-        ->whereOr([
-            ['category', '=', ProductGroupCategory::PRODUCTS->value],
-            ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-        ])->inRandomOrder()->first()->id;
-
-        $brandId = Brand::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
-
-        for ($i = 0; $i < 5; $i++) {
-            $productArr = Product::factory()->make([
-                'company_id' => $companyId,
-                'product_group_id' => $productGroupId,
-                'brand_id' => $brandId,
-                'product_type' => $this->faker->randomElement([1, 2, 3]),
-            ])->toArray();
-    
-            $productUnitsArr = [];
-            $unitCount = $this->faker->numberBetween(1, 5);
-            $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-            $maxConverionValue = 1;
-            for ($i = 0; $i < $unitCount ; $i++) {
-                $unitId = Unit::where('company_id', '=', $companyId)
-                            ->whereOr([
-                                ['category', '=', ProductGroupCategory::PRODUCTS->value], 
-                                ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                            ])->inRandomOrder()->first()->id;
-    
-                $conversionValue = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-                $isBase = $i == 0 ? true : false;
-                $isPrimaryUnit = $i == $primaryUnitIdx ? true : false;
-    
-                $productUnitArr = ProductUnit::factory()->make([
-                    'unit_id' => $unitId,
-                    'conv_value' => $conversionValue,
-                    'is_base' => $isBase,
-                    'is_primary_unit' => $isPrimaryUnit,
-                ])->toArray();
-    
-                array_push($productUnitsArr, $productUnitArr);
-    
-                $maxConverionValue = $productUnitArr['conv_value'];
-            }
-    
-            $this->productService->create(
-                $productArr,
-                $productUnitsArr
-            );
-        }
-
-        $product = $user->companies()->inRandomOrder()->first()->products()->inRandomOrder()->first();
+        $product = $company->products()->inRandomOrder()->first();
 
         $result = $this->productService->delete($product);
 

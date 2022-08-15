@@ -59,10 +59,8 @@ class ProductTableSeeder extends Seeder
                         $product->save();
         
                         $units = Unit::whereCompanyId($companyId)
-                        ->whereOr([
-                            ['category', '=', UnitCategory::PRODUCTS->value], 
-                            ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
-                        ])->take(5)->inRandomOrder()->get();
+                        ->where('category', '<>', UnitCategory::SERVICES->value)
+                        ->take(5)->inRandomOrder()->get();
 
                         $shuffledUnits = $units->shuffle();
                         $productUnitCount = (new RandomGenerator())->generateNumber(1, $units->count());

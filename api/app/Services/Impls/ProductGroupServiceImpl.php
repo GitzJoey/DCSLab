@@ -101,8 +101,11 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $result = null;
 
-            $productGroup = count($with) != 0 ? ProductGroup::with($with) : ProductGroup::with('company');
-            $productGroup = $productGroup->whereCompanyId($companyId);
+            if (count($with) != 0) {
+                $productGroup = ProductGroup::with($with)->whereCompanyId($companyId);
+            } else {
+                $productGroup = ProductGroup::whereCompanyId($companyId);
+            }
 
             if ($category == ProductGroupCategory::PRODUCTS->value) {
                 $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::SERVICES->value);
