@@ -83,6 +83,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         int $page = 1,
         ?int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -100,7 +101,8 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $result = null;
 
-            $productGroup = ProductGroup::whereCompanyId($companyId);
+            $productGroup = count($with) != 0 ? ProductGroup::with($with) : ProductGroup::with('company');
+            $productGroup = $productGroup->whereCompanyId($companyId);
 
             if ($category == ProductGroupCategory::PRODUCTS->value) {
                 $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::SERVICES->value);
@@ -110,6 +112,9 @@ class ProductGroupServiceImpl implements ProductGroupService
             } else {
                 return null;
             }
+
+            if ($withTrashed)
+                $productGroup = $productGroup->withTrashed();
 
             if (empty($search)) {
                 $productGroup = $productGroup->latest();

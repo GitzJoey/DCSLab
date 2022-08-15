@@ -92,6 +92,7 @@ class ProductServiceImpl implements ProductService
         int $page = 1,
         ?int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -113,7 +114,8 @@ class ProductServiceImpl implements ProductService
                 return null;
             }
 
-            $product = Product::with('productGroup', 'brand', 'productUnits.unit')->whereCompanyId($companyId);
+            $product = count($with) != 0 ? Product::with($with) : Product::with('company', 'productGroup', 'brand', 'productUnits.unit');
+            $product = $product->whereCompanyId($companyId);
 
             switch ($productCategory) {
                 case ProductCategory::PRODUCTS->value:
@@ -126,6 +128,9 @@ class ProductServiceImpl implements ProductService
                 default:
                     break;
             }
+
+            if ($withTrashed)
+                $product = $product->withTrashed();
 
             if (empty($search)) {
                 $product = $product->latest();

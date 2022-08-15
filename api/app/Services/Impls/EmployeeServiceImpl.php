@@ -88,6 +88,8 @@ class EmployeeServiceImpl implements EmployeeService
         bool $paginate,
         int $page = 1,
         int $perPage = 10,
+        array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -111,8 +113,11 @@ class EmployeeServiceImpl implements EmployeeService
 
             $relationship = ['company', 'user.profile', 'employeeAccesses.branch'];
 
-            $employee = Employee::with($relationship)
-                            ->whereCompanyId($companyId);
+            $employee = count($with) != 0 ? Employee::with($with) : Employee::with($relationship);
+            $employee = $employee->whereCompanyId($companyId);
+            
+            if ($withTrashed)
+            $employee = $employee->withTrashed();
 
             if (empty($search)) {
                 $employee = $employee->latest();

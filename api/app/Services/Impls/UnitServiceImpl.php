@@ -61,6 +61,7 @@ class UnitServiceImpl implements UnitService
         int $page = 1,
         ?int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -88,6 +89,12 @@ class UnitServiceImpl implements UnitService
             } else {
                 return null;
             }
+
+            $unit = count($with) != 0 ? Unit::with($with) : Unit::with('company');
+            $unit = $unit->whereCompanyId($companyId);
+
+            if ($withTrashed)
+                $unit = $unit->withTrashed();
 
             if (empty($search)) {
                 $unit = $unit->latest();

@@ -13,7 +13,7 @@
             "supplier-supplier": "Pemasok",
             "product": "Produk",
             "product-product": "Produk",
-            "product-product_group": "Grup Produk",
+            "product-product_group": "Kelompok Produk",
             "product-brand": "Merk",
             "product-unit": "Satuan",
             "product-service": "Layanan",
@@ -400,12 +400,12 @@
         },
         "supplier": {
             "tabs": {
-                "supplier": "Supplier",
+                "supplier": "Pemasok",
                 "pic": "Penanggung Jawab",
                 "products": "Produk"
             },
             "table": {
-                "title": "Daftar Supplier",
+                "title": "Daftar Pemasok",
                 "cols": {
                     "code": "Kode",
                     "name": "Nama",
@@ -414,10 +414,10 @@
                 }
             },
             "actions": {
-                "create": "Tambah Supplier",
-                "edit": "Ubah Supplier",
-                "show": "Tampilkan Supplier",
-                "delete": "Hapus Supplier"
+                "create": "Tambah Pemasok",
+                "edit": "Ubah Pemasok",
+                "show": "Tampilkan Pemasok",
+                "delete": "Hapus Pemasok"
             },
             "fields": {
                 "code": "Kode",
@@ -594,7 +594,7 @@
                     "cols": {
                         "code": "Kode",
                         "po_date": "Tanggal",
-                        "supplier": "Supplier",
+                        "supplier": "Pemasok",
                         "shipping_date": "Tanggal Kirim",
                         "status": "Status"
                     }
@@ -617,7 +617,7 @@
                 "delete": "Hapus Pembelian"
             },
             "fields": {
-                "supplier": "Supplier",
+                "supplier": "Pemasok",
                 "invoice_no": "Nomor Faktur",
                 "po_type": "Tipe",
                 "invoice_date": "Tanggal Faktur",

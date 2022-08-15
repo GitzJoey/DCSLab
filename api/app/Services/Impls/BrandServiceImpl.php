@@ -61,23 +61,31 @@ class BrandServiceImpl implements BrandService
         int $page = 1,
         ?int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
-        $cacheKey = '';
-        if ($useCache) {
-            $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-            $cacheResult = $this->readFromCache($cacheKey);
-
-            if (!is_null($cacheResult)) {
-                return $cacheResult;
-            }
-        }
-
-        $result = null;
-
-        $timer_start = microtime(true);
 
         try {
+            $cacheKey = '';
+            if ($useCache) {
+                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (!is_null($cacheResult)) {
+                    return $cacheResult;
+                }
+            }
+
+            $result = null;
+
+            $timer_start = microtime(true);
+
+            $brand = count($with) != 0 ? Brand::with($with) : Brand::with('company');
+            $brand = $brand->whereCompanyId($companyId);
+
+            if ($withTrashed)
+                $brand = $brand->withTrashed();
+
             if (empty($search)) {
                 $pb = Brand::whereCompanyId($companyId)->latest();
             } else {

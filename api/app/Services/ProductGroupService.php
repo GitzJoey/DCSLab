@@ -18,6 +18,7 @@ interface ProductGroupService
         int $page = 1,
         ?int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection;
 
