@@ -80,6 +80,7 @@ class BranchServiceImpl implements BranchService
         int $page = 1,
         int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -101,8 +102,11 @@ class BranchServiceImpl implements BranchService
                 return null;
             }
 
-            $branch = Branch::with('company')
-                        ->whereCompanyId($companyId);
+            $branch = count($with) != 0 ? Branch::with($with) : Branch::with('company');
+            $branch = $branch->whereCompanyId($companyId);
+
+            if ($withTrashed)
+                $branch = $branch->withTrashed();
 
             if (empty($search)) {
                 $branch = $branch->latest();
