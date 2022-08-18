@@ -486,7 +486,7 @@ const emptyService = () => {
         name: '',
         product_units: [
             {
-                hId: '0',
+                hId: '',
                 code: '[AUTO]',
                 is_base: 1,
                 conversion_value: 1,

@@ -44,11 +44,6 @@ class ProductController extends BaseController
             }
         }
         
-        $brandId = null;
-        if(array_key_exists('brand_id', $request)) {
-            $brandId = Hashids::decode($request['brand_id'])[0];
-        }
-        
         $useSerialNumber = false;
         if (array_key_exists('use_serial_number', $request)) {
             $useSerialNumber = $request['use_serial_number'];
@@ -62,8 +57,8 @@ class ProductController extends BaseController
         $productArr = [
             'company_id' => $company_id,
             'code' => $code,
-            'product_group_id' => Hashids::decode($request['product_group_id'])[0],
-            'brand_id' => $brandId,
+            'product_group_id' => $request['product_group_id'],
+            'brand_id' => $request['brand_id'],
             'name' => $request['name'],
             'product_type' => $request['product_type'],
             'taxable_supply' => $request['taxable_supply'],
@@ -232,11 +227,6 @@ class ProductController extends BaseController
             }
         }
 
-        $brandId = null;
-        if(array_key_exists('brand_id', $request)) {
-            $brandId = Hashids::decode($request['brand_id'])[0];
-        }
-
         $useSerialNumber = false;
         if (array_key_exists('use_serial_number', $request)) {
             $useSerialNumber = $request['use_serial_number'];
@@ -250,8 +240,8 @@ class ProductController extends BaseController
         $productArr = [
             'company_id' => $company_id,
             'code' => $code,
-            'product_group_id' => Hashids::decode($request['product_group_id'])[0],
-            'brand_id' => $brandId,
+            'product_group_id' => $request['product_group_id'],
+            'brand_id' => $request['brand_id'],
             'name' => $request['name'],
             'product_type' => $request['product_type'],
             'taxable_supply' => $request['taxable_supply'],

@@ -158,6 +158,8 @@ class ProductRequest extends FormRequest
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
+                    'product_group_id' => $this->has('product_group_id') ? Hashids::decode($this['product_group_id'])[0] : '',
+                    'brand_id' => $this->has('brand_id') ? Hashids::decode($this['brand_id'])[0] : null,
                     'taxable_supply' => $this->has('taxable_supply') ? filter_var($this->taxable_supply, FILTER_VALIDATE_BOOLEAN) : false,
                     'use_serial_number' => $this->has('use_serial_number') ? filter_var($this->use_serial_number, FILTER_VALIDATE_BOOLEAN) : false,
                     'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,

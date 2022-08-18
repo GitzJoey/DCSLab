@@ -20,8 +20,8 @@
                                 <td>{{ item.code }}</td>
                                 <td><a href="" @click.prevent="toggleDetail(itemIdx)" class="hover:animate-pulse">{{ item.name }}</a></td>
                                 <td>
-                                    <CheckCircleIcon v-if="item.is_main" />
-                                    <XIcon v-else />
+                                    <CheckCircleIcon v-if="item.is_main == true" />
+                                    <XIcon v-if="item.is_main == false" />
                                 </td>
                                 <td>{{ item.remarks }}</td>
                                 <td>
@@ -74,10 +74,10 @@
                                         <div class="flex-1">{{ item.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.is_main') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.is_main">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.is_main == true">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
+                                            <span v-if="item.is_main == false">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">

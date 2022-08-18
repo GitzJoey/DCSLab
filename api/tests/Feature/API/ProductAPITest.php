@@ -172,7 +172,7 @@ class ProductAPITest extends APITestCase
             'company_id' => Hashids::encode($companyId),
             'product_group_id' => Hashids::encode(ProductGroup::where('company_id', '=', $companyId)->where('category', '!=',  ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
-            'product_type' => 4,
+            'product_type' => ProductType::SERVICE->value,
             'product_units_code' => $productUnitsCode,
             'product_units_unit_id' => $unitId,
             'product_units_conv_value' => $conversionValue,
@@ -323,7 +323,7 @@ class ProductAPITest extends APITestCase
             'code' => $company->products()->inRandomOrder()->first()->code,
             'product_group_id' => Hashids::encode(ProductGroup::where('company_id', '=', $companyId)->where('category', '!=',  ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
-            'product_type' => 4,
+            'product_type' => ProductType::SERVICE->value,
             'product_units_code' => $productUnitsCode,
             'product_units_unit_id' => $unitId,
             'product_units_conv_value' => $conversionValue,
@@ -785,7 +785,7 @@ class ProductAPITest extends APITestCase
     /* #endregion */
 
     /* #region update */
-    public function test_product_api_call_update_product_expect_successful()
+    public function test_product_api_call_update_product_and_insert_product_units_expect_db_updated()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
@@ -803,6 +803,8 @@ class ProductAPITest extends APITestCase
         $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
         $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
+        $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
+
         $product_units_hId = [];
         $productUnitsCode = [];
         $unitId = [];
@@ -810,29 +812,26 @@ class ProductAPITest extends APITestCase
         $isBase = [];
         $isPrimaryUnit = [];
         $productUnitsRemarks = [];
-        
-        $unitCount = $this->faker->numberBetween(1, 5);
-        $primaryUnitIdx = $this->faker->numberBetween(0, $unitCount - 1);
-        $maxConverionValue = 1;
-        for ($i = 0; $i < $unitCount ; $i++) {
-            $unitIdTemp = Unit::where('company_id', '=', $companyId)->where('category', '!=', UnitCategory::SERVICES->value)->inRandomOrder()->first()->id;
 
-            $conversionValueTemp = $i == 0 ? 1 : $this->faker->numberBetween($maxConverionValue + 1, $maxConverionValue + 20);
-            $isBaseTemp = $i == 0 ? true : false;
-            $isPrimaryUnitTemp = $i == $primaryUnitIdx ? true : false;
-
-            array_push($product_units_hId, '');
-            array_push($productUnitsCode, ProductUnit::factory()->make()->code);
-            array_push($unitId, Hashids::encode($unitIdTemp));
-            array_push($conversionValue, $conversionValueTemp);
-            array_push($isBase, $isBaseTemp);
-            array_push($isPrimaryUnit, $isPrimaryUnitTemp);
-            array_push($productUnitsRemarks, $this->faker->sentence());
-
-            $maxConverionValue = $conversionValueTemp;
+        $productUnitsArr = $product->productUnits->toArray();
+        for ($i = 0; $i < count($productUnitsArr) ; $i++) {
+            array_push($product_units_hId, Hashids::encode($productUnitsArr[$i]['id']));
+            array_push($productUnitsCode, $productUnitsArr[$i]['code']);
+            array_push($unitId, Hashids::encode($productUnitsArr[$i]['unit_id']));
+            array_push($conversionValue, $productUnitsArr[$i]['conversion_value']);
+            array_push($isBase, $productUnitsArr[$i]['is_base']);
+            array_push($isPrimaryUnit, $productUnitsArr[$i]['is_primary_unit']);
+            array_push($productUnitsRemarks, $productUnitsArr[$i]['remarks']);
         }
 
-        $product = $company->products()->where('product_type', '!=', 4)->inRandomOrder()->first();
+        array_push($product_units_hId, null);
+        array_push($productUnitsCode, $this->faker->numberBetween(1000000, 9999999));
+        array_push($unitId, Hashids::encode($company->units()->where('category', '<>', ProductCategory::SERVICES->value)->inRandomOrder()->first()->id));
+        array_push($conversionValue, $productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2);
+        array_push($isBase, false);
+        array_push($isPrimaryUnit, false);
+        array_push($productUnitsRemarks, $this->faker->sentence());
+
         $productArr = array_merge([
             'company_id' => Hashids::encode($companyId),
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '!=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id),
@@ -880,7 +879,7 @@ class ProductAPITest extends APITestCase
         }
     }
 
-    public function test_product_api_call_update_service_expect_successful()
+    public function test_product_api_call_update_product_and_edit_product_units_expect_db_updated()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
@@ -893,10 +892,12 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
+
+        $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
         $product_units_hId = [];
         $productUnitsCode = [];
@@ -905,21 +906,30 @@ class ProductAPITest extends APITestCase
         $isBase = [];
         $isPrimaryUnit = [];
         $productUnitsRemarks = [];
-        $unitIdTemp = Unit::where('company_id', '=', $companyId)->where('category', '!=', UnitCategory::PRODUCTS->value)->inRandomOrder()->first()->id;
 
-        array_push($product_units_hId, '');
-        array_push($productUnitsCode, ProductUnit::factory()->make()->code);
-        array_push($unitId, Hashids::encode($unitIdTemp));
-        array_push($conversionValue, 1);
-        array_push($isBase, 1);
-        array_push($isPrimaryUnit, 1);
-        array_push($productUnitsRemarks, $this->faker->sentence());
+        $productUnitsArr = $product->productUnits->toArray();
+        for ($i = 0; $i < count($productUnitsArr) ; $i++) {
+            array_push($product_units_hId, Hashids::encode($productUnitsArr[$i]['id']));
+            array_push($productUnitsCode, $productUnitsArr[$i]['code']);
+            array_push($unitId, Hashids::encode($productUnitsArr[$i]['unit_id']));
+            array_push($conversionValue, $productUnitsArr[$i]['conversion_value']);
+            array_push($isBase, $productUnitsArr[$i]['is_base']);
+            array_push($isPrimaryUnit, $productUnitsArr[$i]['is_primary_unit']);
+            array_push($productUnitsRemarks, $productUnitsArr[$i]['remarks']);
+        }
 
+        $lastRow = count($product_units_hId) - 1;
+        $product_units_hId[$lastRow] = null;
+        $productUnitsCode[$lastRow] = $this->faker->numberBetween(1000000, 9999999);
+        $unitId[$lastRow] = Hashids::encode($company->units()->where('category', '<>', ProductCategory::SERVICES->value)->inRandomOrder()->first()->id);
+        $conversionValue[$lastRow] = $productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2;
+        $isBase[$lastRow] = false;
+        $isPrimaryUnit[$lastRow] = false;
+        $productUnitsRemarks[$lastRow] = $this->faker->sentence();
 
-        $product = $company->products()->where('product_type', '=', 4)->inRandomOrder()->first();
         $productArr = array_merge([
             'company_id' => Hashids::encode($companyId),
-            'product_group_id' => Hashids::encode($company->productGroups()->where('category', '!=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
+            'product_group_id' => Hashids::encode($company->productGroups()->where('category', '!=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'product_type' => $this->faker->numberBetween(1, 3),
             'product_units_hId' => $product_units_hId,
@@ -951,15 +961,113 @@ class ProductAPITest extends APITestCase
             'status' => $productArr['status'],
         ]);
 
-        $this->assertDatabaseHas('product_units', [
-            'company_id' => $companyId,
-            'unit_id' => Hashids::decode($unitId[0])[0],
-            'code' => $productUnitsCode[0],
-            'is_base' => $isBase[0],
-            'conversion_value' => $conversionValue[0],
-            'is_primary_unit' => $isPrimaryUnit[0],
-            'remarks' => $productUnitsRemarks[0],
+        for ($i = 0; $i < count($productUnitsCode) ; $i++) {
+            $this->assertDatabaseHas('product_units', [
+                'company_id' => $companyId,
+                'unit_id' => Hashids::decode($unitId[$i])[0],
+                'code' => $productUnitsCode[$i],
+                'is_base' => $isBase[$i],
+                'conversion_value' => $conversionValue[$i],
+                'is_primary_unit' => $isPrimaryUnit[$i],
+                'remarks' => $productUnitsRemarks[$i],
+            ]);
+        }
+    }
+
+    public function test_product_api_call_update_product_and_delete_product_units_expect_db_updated()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
+
+        do {
+            $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
+        } while ($product->ProductUnits()->count() == 1);
+
+        $product_units_hId = [];
+        $productUnitsCode = [];
+        $unitId = [];
+        $conversionValue = [];
+        $isBase = [];
+        $isPrimaryUnit = [];
+        $productUnitsRemarks = [];
+
+        $productUnitsArr = $product->productUnits->toArray();
+        for ($i = 0; $i < count($productUnitsArr) ; $i++) {
+            array_push($product_units_hId, Hashids::encode($productUnitsArr[$i]['id']));
+            array_push($productUnitsCode, $productUnitsArr[$i]['code']);
+            array_push($unitId, Hashids::encode($productUnitsArr[$i]['unit_id']));
+            array_push($conversionValue, $productUnitsArr[$i]['conversion_value']);
+            array_push($isBase, $productUnitsArr[$i]['is_base']);
+            array_push($isPrimaryUnit, $productUnitsArr[$i]['is_primary_unit']);
+            array_push($productUnitsRemarks, $productUnitsArr[$i]['remarks']);
+        }
+
+        array_pop($product_units_hId);
+        array_pop($productUnitsCode);
+        array_pop($unitId);
+        array_pop($conversionValue);
+        array_pop($isBase);
+        array_pop($isPrimaryUnit);
+        array_pop($productUnitsRemarks);
+
+        $productArr = array_merge([
+            'company_id' => Hashids::encode($companyId),
+            'product_group_id' => Hashids::encode($company->productGroups()->where('category', '!=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id),
+            'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
+            'product_type' => $this->faker->numberBetween(1, 3),
+            'product_units_hId' => $product_units_hId,
+            'product_units_code' => $productUnitsCode,
+            'product_units_unit_id' => $unitId,
+            'product_units_conv_value' => $conversionValue,
+            'product_units_is_base' => $isBase,
+            'product_units_is_primary_unit' => $isPrimaryUnit,
+            'product_units_remarks' => $productUnitsRemarks,
+        ], Product::factory()->make()->toArray());
+
+        $api = $this->json('POST', route('api.post.db.product.product.edit', $product->uuid), $productArr);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('products', [
+            'company_id' => Hashids::decode($productArr['company_id'])[0],
+            'code' => $productArr['code'],
+            'product_group_id' => Hashids::decode($productArr['product_group_id']),
+            'brand_id' => Hashids::decode($productArr['brand_id']),
+            'name' => $productArr['name'],
+            'taxable_supply' => $productArr['taxable_supply'],
+            'standard_rated_supply' => $productArr['standard_rated_supply'],
+            'price_include_vat' => $productArr['price_include_vat'],
+            'remarks' => $productArr['remarks'],
+            'point' => $productArr['point'],
+            'use_serial_number' => $productArr['use_serial_number'],
+            'has_expiry_date' => $productArr['has_expiry_date'],
+            'product_type' => $productArr['product_type'],
+            'status' => $productArr['status'],
         ]);
+
+        for ($i = 0; $i < count($productUnitsCode) ; $i++) {
+            $this->assertDatabaseHas('product_units', [
+                'company_id' => $companyId,
+                'unit_id' => Hashids::decode($unitId[$i])[0],
+                'code' => $productUnitsCode[$i],
+                'is_base' => $isBase[$i],
+                'conversion_value' => $conversionValue[$i],
+                'is_primary_unit' => $isPrimaryUnit[$i],
+                'remarks' => $productUnitsRemarks[$i],
+            ]);
+        }
     }
 
     public function test_product_api_call_update_product_and_use_existing_code_in_same_company_expect_failed()
@@ -980,7 +1088,7 @@ class ProductAPITest extends APITestCase
         $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
         $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
-        $products = $company->products()->where('product_type', '!=', 4)->inRandomOrder()->take(2)->get();
+        $products = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->take(2)->get();
         $product_1 = $products[0];
         $product_2 = $products[1];
 
@@ -1072,7 +1180,7 @@ class ProductAPITest extends APITestCase
         array_push($isPrimaryUnit, 1);
         array_push($productUnitsRemarks, $this->faker->sentence());
 
-        $products = $company->products()->where('product_type', '=', 4)->inRandomOrder()->take(2)->get();
+        $products = $company->products()->where('product_type', '=', ProductType::SERVICE->value)->inRandomOrder()->take(2)->get();
         $product_1 = $products[0];
         $product_2 = $products[1];
 
@@ -1224,7 +1332,7 @@ class ProductAPITest extends APITestCase
         $productArr = Product::factory()->make()->toArray();
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($companyId_2),
-            'code' => $company_1->products()->where('product_type', '=', 4)->inRandomOrder()->first()->code,
+            'code' => $company_1->products()->where('product_type', '=', ProductType::SERVICE->value)->inRandomOrder()->first()->code,
             'product_group_id' => Hashids::encode($company_2->productGroups()->where('category', '!=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company_2->brands()->inRandomOrder()->first()->id),
             'product_type' => $this->faker->numberBetween(1, 3),

@@ -93,7 +93,7 @@ class CompanyServiceImpl implements CompanyService
                     return $cacheResult;
                 }
             }
- 
+
             $result = null;
 
             $usr = User::find($userId);

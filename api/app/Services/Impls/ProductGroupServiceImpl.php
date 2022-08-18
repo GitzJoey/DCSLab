@@ -107,13 +107,13 @@ class ProductGroupServiceImpl implements ProductGroupService
                 $productGroup = ProductGroup::whereCompanyId($companyId);
             }
 
-            if ($category == ProductGroupCategory::PRODUCTS->value) {
-                $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::SERVICES->value);
-            } elseif ($category == ProductGroupCategory::SERVICES->value) {
-                $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::PRODUCTS->value);
-            } elseif ($category == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
-            } else {
-                return null;
+            switch ($category) {
+                case ProductGroupCategory::PRODUCTS->value:
+                    $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::SERVICES->value);
+                    break;
+                case ProductGroupCategory::SERVICES->value:
+                    $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::PRODUCTS->value);
+                    break;
             }
 
             if ($withTrashed)
