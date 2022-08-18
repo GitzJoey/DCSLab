@@ -58,6 +58,10 @@
                                         <div class="flex-1">{{ item.code }}</div>
                                     </div>
                                     <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
+                                        <div class="flex-1">{{ item.name }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.address') }}</div>
                                         <div class="flex-1">{{ item.address }}</div>
                                     </div>
@@ -70,11 +74,7 @@
                                         <div class="flex-1">{{ item.contact }}</div>
                                     </div>
                                     <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
-                                        <div class="flex-1">{{ item.name }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.is_main') }}</div>
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
                                         <div class="flex-1">
                                             <span v-if="item.is_main">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
                                             <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
