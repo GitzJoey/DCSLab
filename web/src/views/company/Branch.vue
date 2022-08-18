@@ -58,6 +58,10 @@
                                         <div class="flex-1">{{ item.code }}</div>
                                     </div>
                                     <div class="flex flex-row">
+                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
+                                        <div class="flex-1">{{ item.name }}</div>
+                                    </div>
+                                    <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.address') }}</div>
                                         <div class="flex-1">{{ item.address }}</div>
                                     </div>
@@ -68,10 +72,6 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.contact') }}</div>
                                         <div class="flex-1">{{ item.contact }}</div>
-                                    </div>
-                                    <div class="flex flex-row">
-                                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
-                                        <div class="flex-1">{{ item.name }}</div>
                                     </div>
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>

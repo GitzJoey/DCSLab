@@ -64,6 +64,7 @@ class BrandServiceImpl implements BrandService
         bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
+        $timer_start = microtime(true);
 
         try {
             $cacheKey = '';
@@ -77,8 +78,6 @@ class BrandServiceImpl implements BrandService
             }
 
             $result = null;
-
-            $timer_start = microtime(true);
 
             if (count($with) != 0) {
                 $brand = Brand::with($with)->whereCompanyId($companyId);

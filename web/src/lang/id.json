@@ -422,7 +422,7 @@
             "fields": {
                 "code": "Kode",
                 "name": "Nama",
-                "contact": "",
+                "contact": "Kontak",
                 "address": "Alamat",
                 "city": "Kota",
                 "taxable_enterprise": "Pengusaha Kena Pajak",
