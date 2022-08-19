@@ -57,7 +57,7 @@ class ProductRequest extends FormRequest
             'brand_id' => 'nullable',
             'standard_rated_supply' => 'nullable',
             'remarks' => 'nullable',
-            'product_units_hId.*' => 'nullable',
+            'product_units_id.*' => 'nullable',
             'product_units_code.*' => 'nullable',
             'product_units_unit_id.*' => 'nullable',
             'product_units_is_base.*' => 'nullable',
@@ -156,6 +156,29 @@ class ProductRequest extends FormRequest
                 break;
             case 'store':
             case 'update':
+                $product_units_id = [];
+                if ($this->has('product_units_hId')) {
+                    for ($i = 0; $i < count($this->product_units_hId); $i++) {
+                        if ($this->product_units_hId[$i] != '') {
+                            array_push($product_units_id, Hashids::decode($this->product_units_hId[$i])[0]);
+                        } else {
+                            array_push($product_units_id, null);
+                        }
+                    }
+                }
+
+                $product_units_unit_id = [];
+                if ($this->has('product_units_unit_hId')) {
+                    $nRow = count($this->product_units_unit_hId);
+                    for ($i = 0; $i < $nRow; $i++) {
+                        if ($this->product_units_unit_hId[$i] != '') {
+                            array_push($product_units_unit_id, Hashids::decode($this->product_units_unit_hId[$i])[0]);
+                        } else {
+                            array_push($product_units_unit_id, null);
+                        }
+                    }
+                }
+
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'product_group_id' => $this->has('product_group_id') ? Hashids::decode($this['product_group_id'])[0] : '',
@@ -166,6 +189,8 @@ class ProductRequest extends FormRequest
                     'has_expiry_date' => $this->has('has_expiry_date') ? filter_var($this->has_expiry_date, FILTER_VALIDATE_BOOLEAN) : false,
                     'product_type' => ProductType::isValid($this->product_type) ? ProductType::resolveToEnum($this->product_type)->value : -1,
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
+                    'product_units_id' => $product_units_id,
+                    'product_units_unit_id' => $product_units_unit_id,
                 ]);
                 break;
             default:

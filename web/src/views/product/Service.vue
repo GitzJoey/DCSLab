@@ -172,12 +172,12 @@
                     
                         <!-- #region Unit -->
                         <div class="mb-3">
-                            <label class="form-label" for="product_units_unit_id">{{ t('views.service.fields.unit_id') }}</label>
-                            <select id="product_units_unit_id" name="product_units_unit_id[]" class="form-control form-select" v-model="service.product_units[0].unit.hId">
+                            <label class="form-label" for="product_units_unit_hId">{{ t('views.service.fields.unit_id') }}</label>
+                            <select id="product_units_unit_hId" name="product_units_unit_hId[]" class="form-control form-select" v-model="service.product_units[0].unit.hId">
                                 <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                 <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.code }} - {{ u.name }}</option>
                             </select>
-                            <ErrorMessage name="product_units_unit_id" class="text-danger" />
+                            <ErrorMessage name="product_units_unit_hId" class="text-danger" />
                         </div>
                         <!-- #endregion -->
 

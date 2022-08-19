@@ -9,7 +9,6 @@ use App\Models\Product;
 use App\Enums\ProductType;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 
@@ -88,7 +87,7 @@ class ProductController extends BaseController
                 }
             }
             
-            $product_units_unit_id = Hashids::decode($request['product_units_unit_id'][$i])[0];
+            $product_units_unit_id = $request['product_units_unit_id'][$i];
 
             $product_units_conv_value = $request['product_units_conv_value'][$i];
 
@@ -257,7 +256,7 @@ class ProductController extends BaseController
         $productUnitsArr = [];
         $count_unit = count($request['product_units_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $product_unit_id = $request['product_units_hId'][$i] == '' ? null : Hashids::decode($request['product_units_hId'][$i])[0];
+            $product_unit_id = $request['product_units_id'][$i] != null ? $request['product_units_id'][$i] : null;
             
             $productUnitCode = array_key_exists('product_units_code', $request) ? $request['product_units_code'][$i] : '[AUTO]';
 
@@ -273,7 +272,7 @@ class ProductController extends BaseController
                 }
             }
             
-            $product_units_unit_id = Hashids::decode($request['product_units_unit_id'][$i])[0];
+            $product_units_unit_id = $request['product_units_unit_id'][$i];
 
             $product_units_conv_value = $request['product_units_conv_value'][$i];
 

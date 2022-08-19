@@ -283,12 +283,12 @@
 
                             <!-- #region Unit -->
                             <div class="col-span-2">
-                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['product_units_unit_id[' + puIdx + ']']|errors['product_units_unit_id.' + puIdx]}" id="product_units_unit_id" :name="'product_units_unit_id[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
+                                <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['product_units_unit_hId[' + puIdx + ']']|errors['product_units_unit_hId.' + puIdx]}" id="product_units_unit_hId" :name="'product_units_unit_hId[' + puIdx + ']'" :label="t('views.product.fields.units.table.cols.unit') + ' ' + (puIdx+1)" rules="required" @blur="reValidate(errors)" v-model="pu.unit.hId">
                                     <option value="">{{ t('components.dropdown.placeholder') }}</option>
                                     <option :value="u.hId" v-for="u in unitDDL" v-bind:key="u.hId">{{ u.name }}</option>
                                 </VeeField>
-                                <ErrorMessage :name="'product_units_unit_id[' + puIdx + ']'" class="text-danger" />
-                                <ErrorMessage :name="'product_units_unit_id.' + puIdx" class="text-danger" />
+                                <ErrorMessage :name="'product_units_unit_hId[' + puIdx + ']'" class="text-danger" />
+                                <ErrorMessage :name="'product_units_unit_hId.' + puIdx" class="text-danger" />
                             </div>
                             <!-- #endregion -->
 
