@@ -65,21 +65,21 @@ class SupplierAPITest extends APITestCase
         $productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }
         }
 
@@ -89,8 +89,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
+        $supplierArr['productIds'] = $product_hIds;
+        $supplierArr['mainProducts'] = $main_product_hIds;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
 
@@ -140,21 +140,21 @@ class SupplierAPITest extends APITestCase
         $supplierSeeder->callWith(SupplierTableSeeder::class, [3, $companyId]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }
         }
         
@@ -165,8 +165,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
+        $supplierArr['productIds'] = $product_hIds;
+        $supplierArr['mainProducts'] = $main_product_hIds;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
 
@@ -227,21 +227,21 @@ class SupplierAPITest extends APITestCase
         $productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }
         }
 
@@ -251,8 +251,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
+        $supplierArr['productIds'] = $product_hIds;
+        $supplierArr['mainProducts'] = $main_product_hIds;
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
             'companyId' => Hashids::encode($companyId),
@@ -325,13 +325,13 @@ class SupplierAPITest extends APITestCase
             $picArr['tax_id'] = $supplierArr['tax_id'];
 
             $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-            $productIds = Product::where([
+            $product_hIds = Product::where([
                 ['company_id', '=', $companyId],
                 ['brand_id', '!=', null]
             ])->take($supplierProductsCount)->pluck('id');
             
             $productsArr = [];
-            foreach ($productIds as $productId) {
+            foreach ($product_hIds as $productId) {
                 $supplierProduct = [];
                 $supplierProduct['product_id'] = $productId;
                 $supplierProduct['main_product'] = $this->randomGenerator->generateNumber(0, 1);
@@ -400,21 +400,21 @@ class SupplierAPITest extends APITestCase
         $productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }
         }
 
@@ -424,8 +424,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
+        $supplierArr['productIds'] = $product_hIds;
+        $supplierArr['mainProducts'] = $main_product_hIds;
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
             'companyId' => Hashids::encode($companyId),
@@ -460,21 +460,21 @@ class SupplierAPITest extends APITestCase
         $productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }
         }
 
@@ -484,8 +484,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
+        $supplierArr['productIds'] = $product_hIds;
+        $supplierArr['mainProducts'] = $main_product_hIds;
 
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
@@ -535,21 +535,21 @@ class SupplierAPITest extends APITestCase
         $productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS->value]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }
         }
 
@@ -559,8 +559,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
+        $supplierArr['productIds'] = $product_hIds;
+        $supplierArr['mainProducts'] = $main_product_hIds;
         $this->actingAs($user);
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
@@ -615,21 +615,21 @@ class SupplierAPITest extends APITestCase
         $supplierSeeder->callWith(SupplierTableSeeder::class, [1, $companyId]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }           
         }
 
@@ -705,21 +705,21 @@ class SupplierAPITest extends APITestCase
         $supplierSeeder->callWith(SupplierTableSeeder::class, [1, $companyId]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }           
         }
 
@@ -729,8 +729,8 @@ class SupplierAPITest extends APITestCase
         ], Supplier::factory()->make()->toArray());
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['email'] = $supplier->user()->first()->email;
-        $supplierArr['productIds'] = $productIds;
-        $supplierArr['mainProducts'] = $mainProducts;
+        $supplierArr['productIds'] = $product_hIds;
+        $supplierArr['mainProducts'] = $main_product_hIds;
         
         $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->uuid), $supplierArr);
 
@@ -850,21 +850,21 @@ class SupplierAPITest extends APITestCase
         $supplierSeeder->callWith(SupplierTableSeeder::class, [1, $companyId]);
 
         $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
-        $supplierProductIds = Product::where([
+        $supplier_product_hIds = Product::where([
             ['company_id', '=', $companyId],
             ['brand_id', '!=', null]
         ])->take($supplierProductsCount)->pluck('id');
         
-        $productIds = [];
-        foreach ($supplierProductIds as $supplierProductId) {           
-            array_push($productIds, Hashids::encode($supplierProductId));
+        $product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {           
+            array_push($product_hIds, Hashids::encode($supplierProductId));
         }
 
-        $mainProducts = [];
-        foreach ($supplierProductIds as $supplierProductId) {
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
             $mainProductId = $this->randomGenerator->generateNumber(0, 1);
             if ($mainProductId == 1) {
-                array_push($mainProducts, Hashids::encode($supplierProductId));
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
             }           
         }
 

@@ -142,9 +142,17 @@ class EmployeeRequest extends FormRequest
                 break;
             case 'store':
             case 'update':
+                $accessBranchIds = [];
+                if ($this->has('access_branch_hIds')) {
+                    for ($i = 0; $i < count($this->access_branch_hIds); $i++) {
+                        array_push($accessBranchIds, Hashids::decode($this->access_branch_hIds[$i])[0]);
+                    }
+                }
+
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
+                    'accessBranchIds' => $accessBranchIds,
                 ]);
                 break;
             default:

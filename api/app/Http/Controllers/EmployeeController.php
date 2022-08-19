@@ -6,7 +6,6 @@ use Exception;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Services\EmployeeService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 
@@ -80,7 +79,7 @@ class EmployeeController extends BaseController
         if (!empty($request['accessBranchIds'])) {
             for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
                 array_push($accessesArr, [
-                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
+                    'branch_id' => $request['accessBranchIds'][$i],
                 ]);
             }
         }
@@ -213,7 +212,7 @@ class EmployeeController extends BaseController
         if (!empty($request['accessBranchIds'])) {
             for ($i = 0; $i < count($request['accessBranchIds']); $i++) {
                 array_push($accessesArr, [
-                    'branch_id' => Hashids::decode($request['accessBranchIds'][$i])[0],
+                    'branch_id' => $request['accessBranchIds'][$i],
                 ]);
             }
         }

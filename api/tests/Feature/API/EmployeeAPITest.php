@@ -45,9 +45,9 @@ class EmployeeAPITest extends APITestCase
 
         $accessCount = $this->randomGenerator->generateNumber(1, $company->branches()->count());
         $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
-        $accessBranchIds = [];
+        $access_branch_hIds = [];
         for ($i = 0; $i < $accessCount; $i++) {
-            array_push($accessBranchIds, Hashids::encode($branches[$i]->id));
+            array_push($access_branch_hIds, Hashids::encode($branches[$i]->id));
         }
 
         $userArr = User::factory()->make()->toArray();
@@ -65,7 +65,7 @@ class EmployeeAPITest extends APITestCase
             'tax_id' => $profileArr['tax_id'],
             'ic_num' => $profileArr['ic_num'],
             'remarks' => $profileArr['remarks'],
-            'accessBranchIds' => $accessBranchIds,
+            'access_branch_hIds' => $access_branch_hIds,
         ], Employee::factory()->setStatusActive()->make()->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.employee.save'), $employeeArr);
@@ -123,9 +123,9 @@ class EmployeeAPITest extends APITestCase
 
         $accessCount = $this->randomGenerator->generateNumber(1, $company->branches()->count());
         $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
-        $accessBranchIds = [];
+        $access_branch_hIds = [];
         for ($i = 0; $i < $accessCount; $i++) {
-            array_push($accessBranchIds, Hashids::encode($branches[$i]->id));
+            array_push($access_branch_hIds, Hashids::encode($branches[$i]->id));
         }
 
         $userArr = User::factory()->make()->toArray();
@@ -145,7 +145,7 @@ class EmployeeAPITest extends APITestCase
             'tax_id' => $profileArr['tax_id'],
             'ic_num' => $profileArr['ic_num'],
             'remarks' => $profileArr['remarks'],
-            'accessBranchIds' => $accessBranchIds,
+            'access_branch_hIds' => $access_branch_hIds,
         ]);
 
         $api = $this->json('POST', route('api.post.db.company.employee.save'), $employeeArr);
@@ -491,9 +491,9 @@ class EmployeeAPITest extends APITestCase
 
         $accessCount = $this->randomGenerator->generateNumber(1, $company->branches()->count());
         $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
-        $accessBranchIds = [];
+        $access_branch_hIds = [];
         for ($i = 0; $i < $accessCount; $i++) {
-            array_push($accessBranchIds, Hashids::encode($branches[$i]->id));
+            array_push($access_branch_hIds, Hashids::encode($branches[$i]->id));
         }
 
         $userArr = User::factory()->make()->toArray();
@@ -510,7 +510,7 @@ class EmployeeAPITest extends APITestCase
             'tax_id' => $profileArr['tax_id'],
             'ic_num' => $profileArr['ic_num'],
             'remarks' => $profileArr['remarks'],
-            'accessBranchIds' => $accessBranchIds,
+            'access_branch_hIds' => $access_branch_hIds,
         ], Employee::factory()->setStatusActive()->make()->toArray());
 
         $employee = $company->employees()->inRandomOrder()->first();
@@ -545,7 +545,7 @@ class EmployeeAPITest extends APITestCase
         for ($i = 0; $i < $accessCount ; $i++) {           
             $this->assertDatabaseHas('employee_accesses', [
                 'employee_id' =>$employee->id,
-                'branch_id' => Hashids::decode($accessBranchIds[$i])[0],
+                'branch_id' => Hashids::decode($access_branch_hIds[$i])[0],
             ]);
         }
     }
@@ -608,9 +608,9 @@ class EmployeeAPITest extends APITestCase
 
         $accessCount = $this->randomGenerator->generateNumber(1, $company_2->branches()->count());
         $branches = $company_2->branches()->inRandomOrder()->take($accessCount)->get();
-        $accessBranchIds = [];
+        $access_branch_hIds = [];
         for ($i = 0; $i < $accessCount; $i++) {
-            array_push($accessBranchIds, Hashids::encode($branches[$i]->id));
+            array_push($access_branch_hIds, Hashids::encode($branches[$i]->id));
         }
 
         $userArr = User::factory()->make()->toArray();
@@ -629,7 +629,7 @@ class EmployeeAPITest extends APITestCase
             'tax_id' => $profileArr['tax_id'],
             'ic_num' => $profileArr['ic_num'],
             'remarks' => $profileArr['remarks'],
-            'accessBranchIds' => $accessBranchIds,
+            'access_branch_hIds' => $access_branch_hIds,
         ], Employee::factory()->setStatusActive()->make()->toArray());
 
         $api = $this->json('POST', route('api.post.db.company.employee.edit', $employee_company_2->uuid), $employeeArr);

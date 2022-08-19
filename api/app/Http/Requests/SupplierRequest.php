@@ -58,9 +58,9 @@ class SupplierRequest extends FormRequest
             'city' => 'nullable',
             'tax_id' => 'nullable',
             'remarks' => 'nullable',
+            'pic_name' => 'nullable',
             'productIds.*' => 'nullable',
             'mainProducts.*' => 'nullable',
-            'pic_name' => 'nullable',
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -144,11 +144,27 @@ class SupplierRequest extends FormRequest
                 break;
             case 'store':
             case 'update':
+                $productIds = [];
+                if ($this->has('product_hIds')) {
+                    for ($i = 0; $i < count($this->product_hIds); $i++) {
+                        array_push($productIds, Hashids::decode($this['product_hIds'][$i])[0]);
+                    }
+                }
+
+                $mainProducts = [];
+                if ($this->has('main_product_hIds')) {
+                    for ($i = 0; $i < count($this->main_product_hIds); $i++) {
+                        array_push($mainProducts, Hashids::decode($this['main_product_hIds'][$i])[0]);
+                    }
+                }
+
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'taxable_enterprise' => $this->has('taxable_enterprise') ? filter_var($this->taxable_enterprise, FILTER_VALIDATE_BOOLEAN) : false,
                     'payment_term_type' => PaymentTermType::isValid($this->payment_term_type) ? PaymentTermType::resolveToEnum($this->payment_term_type)->value : '',
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
+                    'productIds' => $productIds,
+                    'mainProducts' => $mainProducts,
                 ]);
                 break;
             default:

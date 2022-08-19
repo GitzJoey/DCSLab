@@ -256,7 +256,7 @@
                                             <td class="w-10"></td>
                                             <td class="border-b dark:border-dark-5 w-10">
                                                 <div class="form-switch">
-                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="accessBranchIds[]" v-model="employee.selected_accesses" :value="b.hId" class="form-check-input">
+                                                    <input :id="'inputAccess_' + ''" type="checkbox" name="access_branch_hIds[]" v-model="employee.selected_accesses" :value="b.hId" class="form-check-input">
                                                 </div>
                                             </td>
                                             <td :class="{ 'line-through': ['INACTIVE', 'DELETED'].includes(b.status), 'underline': b.is_main }">

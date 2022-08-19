@@ -243,12 +243,12 @@
                                     <tr v-for="(p, pIdx) in productLists">
                                         <td class="border-b dark:border-dark-5">
                                             <div class="form-switch">
-                                                <input :id="'inputProduct_' + p.hId" type="checkbox" name="productIds[]" v-model="supplier.selected_products" :value="p.hId" class="form-check-input">
+                                                <input :id="'inputProduct_' + p.hId" type="checkbox" name="product_hIds[]" v-model="supplier.selected_products" :value="p.hId" class="form-check-input">
                                             </div>
                                         </td>
                                         <td class="border-b dark:border-dark-5">
                                             <div class="form-switch">
-                                                <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="mainProducts[]" v-model="supplier.main_products" :value="p.hId" class="form-check-input">
+                                                <input :id="'inputMainProduct_' + p.hId" type="checkbox" name="main_product_hIds[]" v-model="supplier.main_products" :value="p.hId" class="form-check-input">
                                             </div>
                                         </td>
                                         <td>

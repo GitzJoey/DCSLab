@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\Company;
 use App\Models\Supplier;
 use App\Enums\PaymentTermType;
 use App\Services\SupplierService;
-use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
 
@@ -83,7 +81,7 @@ class SupplierController extends BaseController
                 }
                 array_push($productsArr, [
                     'company_id' => $company_id,
-                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
+                    'product_id' => $request['productIds'][$i],
                     'main_product' => $mainProduct,
                 ]);
             }
@@ -216,7 +214,7 @@ class SupplierController extends BaseController
                 }
                 array_push($productsArr, [
                     'company_id' => $company_id,
-                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
+                    'product_id' => $request['productIds'][$i],
                     'main_product' => $mainProduct,
                 ]);
             }

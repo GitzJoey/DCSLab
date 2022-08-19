@@ -58,10 +58,6 @@ class ProductRequest extends FormRequest
             'standard_rated_supply' => 'nullable',
             'remarks' => 'nullable',
             'product_units_id.*' => 'nullable',
-            'product_units_code.*' => 'nullable',
-            'product_units_unit_id.*' => 'nullable',
-            'product_units_is_base.*' => 'nullable',
-            'product_units_is_primary_unit.*' => 'nullable',
             'product_units_remarks.*' => 'nullable',
         ];
 
@@ -97,7 +93,11 @@ class ProductRequest extends FormRequest
                     'point' => 'required|numeric|min:0',
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
+                    'product_units_code.*' => ['required', 'max:255'],
+                    'product_units_unit_id.*' => 'required',
                     'product_units_conv_value.*' => 'numeric|min:1',
+                    'product_units_is_base.*' => ['required|boolean'],
+                    'product_units_is_primary_unit.*' => ['required|boolean'],
                 ];
 
                 return array_merge($rules_store, $nullableArr);
@@ -114,7 +114,11 @@ class ProductRequest extends FormRequest
                     'point' => 'required|numeric|min:0',
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
+                    'product_units_code.*' => ['required', 'max:255'],
+                    'product_units_unit_id.*' => 'required',
                     'product_units_conv_value.*' => 'numeric|min:1',
+                    'product_units_is_base.*' => ['required|boolean'],
+                    'product_units_is_primary_unit.*' => ['required|boolean'],
                 ];
 
                 return array_merge($rules_update, $nullableArr);
@@ -169,13 +173,28 @@ class ProductRequest extends FormRequest
 
                 $product_units_unit_id = [];
                 if ($this->has('product_units_unit_hId')) {
-                    $nRow = count($this->product_units_unit_hId);
-                    for ($i = 0; $i < $nRow; $i++) {
+                    for ($i = 0; $i < count($this->product_units_unit_hId); $i++) {
                         if ($this->product_units_unit_hId[$i] != '') {
                             array_push($product_units_unit_id, Hashids::decode($this->product_units_unit_hId[$i])[0]);
                         } else {
                             array_push($product_units_unit_id, null);
                         }
+                    }
+                }
+
+                $product_units_is_base = [];
+                if ($this->has('product_units_is_base')) {
+                    for ($i = 0; $i < count($this->product_units_is_base); $i++) {
+                        $is_base = $this->product_units_is_base[$i] ? filter_var($this->product_units_is_base[$i], FILTER_VALIDATE_BOOLEAN) : false;
+                        array_push($product_units_is_base, $is_base);
+                    }
+                }
+
+                $product_units_is_primary_unit = [];
+                if ($this->has('product_units_is_primary_unit')) {
+                    for ($i = 0; $i < count($this->product_units_is_primary_unit); $i++) {
+                        $unit_id = $this->product_units_is_primary_unit[$i] ? filter_var($this->product_units_is_primary_unit[$i], FILTER_VALIDATE_BOOLEAN) : false;
+                        array_push($product_units_is_primary_unit, $unit_id);
                     }
                 }
 
@@ -191,6 +210,8 @@ class ProductRequest extends FormRequest
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                     'product_units_id' => $product_units_id,
                     'product_units_unit_id' => $product_units_unit_id,
+                    'product_units_is_base' => $product_units_is_base,
+                    'product_units_is_primary_unit' => $product_units_is_primary_unit,
                 ]);
                 break;
             default:
