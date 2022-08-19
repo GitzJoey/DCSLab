@@ -913,7 +913,7 @@ class SupplierAPITest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.supplier.common.list.payment_term'));
+        $api = $this->getJson(route('api.get.db.common.ddl.list.paymenttermtype'));
 
         $api->assertSuccessful();
 
