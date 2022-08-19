@@ -185,7 +185,7 @@ class ProductRequest extends FormRequest
                 $product_units_is_base = [];
                 if ($this->has('product_units_is_base')) {
                     for ($i = 0; $i < count($this->product_units_is_base); $i++) {
-                        $is_base = $this->product_units_is_base[$i] ? filter_var($this->product_units_is_base[$i], FILTER_VALIDATE_BOOLEAN) : false;
+                        $is_base = filter_var($this->product_units_is_base[$i], FILTER_VALIDATE_BOOLEAN) ? true : false;
                         array_push($product_units_is_base, $is_base);
                     }
                 }
@@ -193,7 +193,7 @@ class ProductRequest extends FormRequest
                 $product_units_is_primary_unit = [];
                 if ($this->has('product_units_is_primary_unit')) {
                     for ($i = 0; $i < count($this->product_units_is_primary_unit); $i++) {
-                        $unit_id = $this->product_units_is_primary_unit[$i] ? filter_var($this->product_units_is_primary_unit[$i], FILTER_VALIDATE_BOOLEAN) : false;
+                        $unit_id = filter_var($this->product_units_is_primary_unit[$i], FILTER_VALIDATE_BOOLEAN) ? true : false;
                         array_push($product_units_is_primary_unit, $unit_id);
                     }
                 }
