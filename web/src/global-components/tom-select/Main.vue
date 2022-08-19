@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { computed, watch, toRaw } from "vue";
+import { computed, watch, toRaw, ref, onMounted, inject } from "vue";
 import { setValue, init, updateValue } from "./index";
 import dom from "@left4code/tw-starter/dist/js/dom";
 
@@ -21,6 +21,9 @@ const vSelectDirective = {
     // Initialize tom select
     setValue(clonedEl, value.props);
     init(el, clonedEl, value.props, value.emit, value.computedOptions);
+
+    // Attach instance
+    tomSelectRef.value = clonedEl;
   },
   updated(el, { value }) {
     const clonedEl = dom(el).next()[0];
@@ -33,6 +36,9 @@ const vSelectDirective = {
       value.emit,
       value.computedOptions
     );
+
+    // Attach instance
+    tomSelectRef.value = clonedEl;
   },
 };
 
@@ -47,9 +53,23 @@ const props = defineProps({
     type: [String, Number, Array],
     default: "",
   },
+  refKey: {
+    type: String,
+    default: null,
+  },
 });
 
 const emit = defineEmits();
+
+const tomSelectRef = ref();
+const bindInstance = () => {
+  if (props.refKey) {
+    const bind = inject(`bind[${props.refKey}]`);
+    if (bind) {
+      bind(tomSelectRef.value);
+    }
+  }
+};
 
 // Compute all default options
 const computedOptions = computed(() => {
@@ -94,4 +114,8 @@ watch(
     emit("change");
   }
 );
+
+onMounted(() => {
+  bindInstance();
+});
 </script>
