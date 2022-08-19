@@ -68,12 +68,12 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.payment_term_type') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.payment_term_type === 'PIA'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
-                                            <span v-if="item.payment_term_type === 'NET'">{{ t('components.dropdown.values.paymentTermTypeDDL.net') }}</span>
-                                            <span v-if="item.payment_term_type === 'EOM'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
-                                            <span v-if="item.payment_term_type === 'COD'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
-                                            <span v-if="item.payment_term_type === 'CND'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
-                                            <span v-if="item.payment_term_type === 'CBS'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
+                                            <span v-if="item.payment_term_type === 'PAYMENT_IN_ADVANCE'">{{ t('components.dropdown.values.paymentTermTypeDDL.pia') }}</span>
+                                            <span v-if="item.payment_term_type === 'X_DAYS_AFTER_INVOICE'">{{ t('components.dropdown.values.paymentTermTypeDDL.net') }}</span>
+                                            <span v-if="item.payment_term_type === 'END_OF_MONTH'">{{ t('components.dropdown.values.paymentTermTypeDDL.eom') }}</span>
+                                            <span v-if="item.payment_term_type === 'CASH_ON_DELIVERY'">{{ t('components.dropdown.values.paymentTermTypeDDL.cod') }}</span>
+                                            <span v-if="item.payment_term_type === 'CASH_ON_NEXT_DELIVERY'">{{ t('components.dropdown.values.paymentTermTypeDDL.cnd') }}</span>
+                                            <span v-if="item.payment_term_type === 'CASH_BEFORE_SHIPMENT'">{{ t('components.dropdown.values.paymentTermTypeDDL.cbs') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -192,7 +192,7 @@
                             <label for="inputPaymentTermType" class="form-label">{{ t('views.supplier.fields.payment_term_type') }}</label>
                             <VeeField as="select" :class="{'form-control form-select':true, 'border-danger':errors['payment_term_type']}" id="inputPaymentTermType" name="payment_term_type" :label="t('views.supplier.fields.payment_term_type')" rules="required" @blur="reValidate(errors)" v-model="supplier.payment_term_type">
                                 <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in paymentTermDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                                <option v-for="c in paymentTermTypeDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                             </VeeField>
                             <ErrorMessage name="payment_term_type" class="text-danger" />
                         </div>
@@ -332,7 +332,7 @@ const supplier = ref({
     status: 'ACTIVE',
 });
 const statusDDL = ref([]);
-const paymentTermDDL = ref([]);
+const paymentTermTypeDDL = ref([]);
 const productLists = ref([]);
 //#endregion
 
@@ -385,13 +385,13 @@ const getDDL = () => {
         statusDDL.value = getCachedDDL('statusDDL');
     }
 
-    if (getCachedDDL('api.get.db.supplier.common.list.payment_term') == null) {
-        axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
-            paymentTermDDL.value = response.data;
-            setCachedDDL('paymentTermDDL', response.data);
+    if (getCachedDDL('paymentTermTypeDDL') == null) {
+        axios.get(route('api.get.db.common.ddl.list.paymenttermtype')).then(response => {
+            paymentTermTypeDDL.value = response.data;
+            setCachedDDL('paymentTermTypeDDL', response.data);
         });    
     } else {
-        paymentTermDDL.value = getCachedDDL('paymentTermDDL');
+        paymentTermTypeDDL.value = getCachedDDL('paymentTermTypeDDL');
     }
 }
 

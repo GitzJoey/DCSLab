@@ -69,7 +69,7 @@
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Pembayaran Dimuka",
-                    "net": "Pembayaran Beberapa Hari Setelah Tgl Invoice",
+                    "net": "Pembayaran X Hari Setelah Tgl Invoice",
                     "eom": "Akhir Bulan",
                     "cod": "Cash On Delivery",
                     "cnd": "Cash Di Pengiriman Selanjutnya",

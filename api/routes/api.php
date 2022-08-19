@@ -87,10 +87,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('read', [SupplierController::class, 'list'])->name('.list');
                 Route::get('read/{supplier:uuid}', [SupplierController::class, 'read'])->name('.read');
             });
-
-            Route::group(['prefix' => 'common', 'as' => '.common'], function () {
-                Route::get('list/payment_term', [SupplierController::class, 'getPaymentTermType'])->name('.list.payment_term');
-            });
         });
         //endregion
 
@@ -133,6 +129,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('list/confirmation', [CommonController::class, 'getConfirmationDialog'])->name('.list.confirmationdialog');
                 Route::get('list/productgroupcategory', [CommonController::class, 'getProductGroupCategory'])->name('.list.productgroupcategories');
                 Route::get('list/unitcategory', [CommonController::class, 'getUnitCategory'])->name('.list.unitcategories');
+                Route::get('list/paymenttermtype', [CommonController::class, 'getPaymentTermType'])->name('.list.paymenttermtype');
             });
         });
     });

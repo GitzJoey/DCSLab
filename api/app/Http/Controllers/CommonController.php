@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ProductGroupCategory;
 use App\Enums\RecordStatus;
 use App\Enums\UnitCategory;
-use Illuminate\Http\Request;
+use App\Enums\PaymentTermType;
+use App\Enums\ProductGroupCategory;
 
 class CommonController extends BaseController
 {
@@ -56,6 +56,17 @@ class CommonController extends BaseController
             ['name' => 'components.dropdown.values.unitCategoryDDL.product', 'code' => UnitCategory::PRODUCTS->name],
             ['name' => 'components.dropdown.values.unitCategoryDDL.service', 'code' => UnitCategory::SERVICES->name],
             ['name' => 'components.dropdown.values.unitCategoryDDL.product_and_service', 'code' => UnitCategory::PRODUCTS_AND_SERVICES->name],
+        ];
+    }
+    
+    public function getPaymentTermType()
+    {
+        return [
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTermType::PAYMENT_IN_ADVANCE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTermType::X_DAYS_AFTER_INVOICE->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name],
         ];
     }
 }

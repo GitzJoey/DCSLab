@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Supplier;
-use App\Enums\PaymentTermType;
 use App\Services\SupplierService;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
@@ -136,17 +135,6 @@ class SupplierController extends BaseController
 
             return $response;
         }
-    }
-
-    public function getPaymentTermType()
-    {
-        return [
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTermType::PAYMENT_IN_ADVANCE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTermType::X_DAYS_AFTER_INVOICE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name],
-        ];
     }
 
     public function read(Supplier $supplier, SupplierRequest $supplierRequest)
