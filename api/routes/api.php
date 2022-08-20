@@ -78,8 +78,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
             });
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function () {
+                Route::get('list/productgroupcategory', [ProductGroupController::class, 'getProductGroupCategory'])->name('.list.productgroupcategories');
+                Route::get('list/unitcategory', [UnitController::class, 'getUnitCategory'])->name('.list.unitcategories');
                 Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
-            });
+            });           
         });
 
         Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
@@ -126,9 +128,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
             Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function () {
                 Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
                 Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
-                Route::get('list/confirmation', [CommonController::class, 'getConfirmationDialog'])->name('.list.confirmationdialog');
-                Route::get('list/productgroupcategory', [CommonController::class, 'getProductGroupCategory'])->name('.list.productgroupcategories');
-                Route::get('list/unitcategory', [CommonController::class, 'getUnitCategory'])->name('.list.unitcategories');
                 Route::get('list/paymenttermtype', [CommonController::class, 'getPaymentTermType'])->name('.list.paymenttermtype');
             });
         });

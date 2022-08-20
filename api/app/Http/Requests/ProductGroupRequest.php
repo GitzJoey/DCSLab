@@ -76,7 +76,7 @@ class ProductGroupRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:2|max:255',
+                    'name' => ['required', 'min:2', 'max:255'],
                     'category' => [new Enum(ProductGroupCategory::class)],
                 ];
 
@@ -85,7 +85,7 @@ class ProductGroupRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:2|max:255',
+                    'name' => ['required', 'min:2', 'max:255'],
                     'category' => [new Enum(ProductGroupCategory::class)],
                 ];
 

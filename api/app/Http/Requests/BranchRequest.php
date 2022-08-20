@@ -81,7 +81,7 @@ class BranchRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|max:255',
+                    'name' => ['required', 'max:255'],
                     'is_main' => ['boolean'],
                     'status' => [new Enum(RecordStatus::class)],
                 ];
@@ -91,7 +91,7 @@ class BranchRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|max:255',
+                    'name' => ['required', 'max:255'],
                     'is_main' => ['boolean'],
                     'status' => [new Enum(RecordStatus::class)],
                 ];

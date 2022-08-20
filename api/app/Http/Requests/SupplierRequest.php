@@ -86,11 +86,11 @@ class SupplierRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|max:255',
+                    'name' => ['required', 'max:255'],
                     'status' => [new Enum(RecordStatus::class)],
                     'payment_term_type' => [new Enum(PaymentTermType::class)],
-                    'payment_term' => 'required|numeric',
-                    'taxable_enterprise' => 'required|boolean',
+                    'payment_term' => ['required', 'numeric'],
+                    'taxable_enterprise' => ['required', 'boolean'],
                     'email' => ['required', 'email'],
                 ];
 
@@ -99,11 +99,11 @@ class SupplierRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|max:255',
+                    'name' => ['required', 'max:255'],
                     'status' => [new Enum(RecordStatus::class)],
                     'payment_term_type' => [new Enum(PaymentTermType::class)],
-                    'payment_term' => 'required|numeric',
-                    'taxable_enterprise' => 'required|boolean',
+                    'payment_term' => ['required', 'numeric'],
+                    'taxable_enterprise' => ['required', 'boolean'],
                     'email' => ['required', 'email'],
                 ];
 

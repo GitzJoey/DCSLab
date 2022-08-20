@@ -320,15 +320,6 @@ const getDDL = () => {
     } else {
         statusDDL.value = getCachedDDL('statusDDL');
     }
-    
-    if (getCachedDDL('yesNoDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.confirmationdialog')).then(response => {
-            yesNoDDL.value = response.data;
-            setCachedDDL('yesNoDDL', response.data);
-        });    
-    } else {
-        yesNoDDL.value = getCachedDDL('yesNoDDL');
-    }
 }
 
 const getDDLSync = () => {
