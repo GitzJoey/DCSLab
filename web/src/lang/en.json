@@ -78,10 +78,6 @@
                     "cnd": "Cash Next Delivery",
                     "cbs": "Cash Before Shipment"
                 },
-                "yesNoDDL": {
-                    "yes": "Yes",
-                    "no": "No"
-                },
                 "productTypeDDL": {
                     "raw": "Raw Material",
                     "wip": "Work In Progress",
@@ -124,6 +120,10 @@
                 "cancel": "Cancel"
             },
             "data_not_found": "Data Not Found"
+        },
+        "switch": {
+            "on": "On",
+            "off": "Off"
         }
     },
     "views": {

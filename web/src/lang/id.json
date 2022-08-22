@@ -75,10 +75,6 @@
                     "cnd": "Cash Di Pengiriman Selanjutnya",
                     "cbs": "Cash Sebelum Pengiriman"
                 },
-                "yesNoDDL": {
-                    "yes": "Ya",
-                    "no": "Tidak"
-                },
                 "productTypeDDL": {
                     "raw": "Bahan Baku",
                     "wip": "Barang Setengah Jadi",
@@ -121,6 +117,10 @@
                 "cancel": "Batal"
             },
             "data_not_found": "Data Tidak Ditemukan"
+        },
+        "switch": {
+            "on": "Ya",
+            "off": "Tidak"
         }
     },
     "views": {

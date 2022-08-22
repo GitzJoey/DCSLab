@@ -88,12 +88,12 @@
                                                 <div class="col-span-2">{{ subItem.unit.name }}</div>
                                                 <div class="col-span-2 text-right">{{ subItem.conversion_value }}</div>
                                                 <div class="col-span-2">
-                                                    <span v-if="subItem.is_base === true">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                                    <span v-if="subItem.is_base === false">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                                    <span v-if="subItem.is_base === true">{{ t('components.switch.on') }}</span>
+                                                    <span v-if="subItem.is_base === false">{{ t('components.switch.off') }}</span>
                                                 </div>
                                                 <div class="col-span-2">
-                                                    <span v-if="subItem.is_primary_unit === true">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                                    <span v-if="subItem.is_primary_unit === false">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                                    <span v-if="subItem.is_primary_unit === true">{{ t('components.switch.on') }}</span>
+                                                    <span v-if="subItem.is_primary_unit === false">{{ t('components.switch.off') }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -115,8 +115,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.taxable_supply') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.taxable_supply">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.taxable_supply">{{ t('components.switch.on') }}</span>
+                                            <span v-else>{{ t('components.switch.off') }}</span>
                                         </div>
                                     </div>
                                     <!-- #endregion -->
@@ -132,8 +132,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.price_include_vat') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.price_include_vat">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.price_include_vat">{{ t('components.switch.on') }}</span>
+                                            <span v-else>{{ t('components.switch.off') }}</span>
                                         </div>
                                     </div>
                                     <!-- #endregion -->
@@ -149,8 +149,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.use_serial_number') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.use_serial_number">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.use_serial_number">{{ t('components.switch.on') }}</span>
+                                            <span v-else>{{ t('components.switch.off') }}</span>
                                         </div>
                                     </div>
                                     <!-- #endregion -->
@@ -159,8 +159,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.has_expiry_date') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.has_expiry_date">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.has_expiry_date">{{ t('components.switch.on') }}</span>
+                                            <span v-else>{{ t('components.switch.off') }}</span>
                                         </div>
                                     </div>
                                     <!-- #endregion -->

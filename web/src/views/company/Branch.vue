@@ -76,8 +76,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.is_main == true">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-if="item.is_main == false">{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.is_main == true">{{ t('components.switch.on') }}</span>
+                                            <span v-if="item.is_main == false">{{ t('components.switch.off') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -268,7 +268,6 @@ const branch = ref({
 });
 const companyDDL = ref([]);
 const statusDDL = ref([]);
-const yesNoDDL = ref([]);
 //#endregion
 
 //#region onMounted

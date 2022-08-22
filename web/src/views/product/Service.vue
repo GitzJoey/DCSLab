@@ -59,8 +59,8 @@
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.service.fields.taxable_supply') }}</div>
                                         <div class="flex-1">
-                                            <span v-if="item.taxable_supply">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                            <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                            <span v-if="item.taxable_supply">{{ t('components.switch.on') }}</span>
+                                            <span v-else>{{ t('components.switch.off') }}</span>
                                         </div>
                                     </div>
                                     <div class="flex flex-row">
@@ -74,8 +74,8 @@
                                     <div class="flex flex-row">
                                     <div class="ml-5 w-48 text-right pr-5">{{ t('views.service.fields.price_include_vat') }}</div>
                                     <div class="flex-1">
-                                        <span v-if="item.price_include_vat">{{ t('components.dropdown.values.yesNoDDL.yes') }}</span>
-                                        <span v-else>{{ t('components.dropdown.values.yesNoDDL.no') }}</span>
+                                        <span v-if="item.price_include_vat">{{ t('components.switch.on') }}</span>
+                                        <span v-else>{{ t('components.switch.off') }}</span>
                                     </div>
                                 </div>
                                     <div class="flex flex-row">
