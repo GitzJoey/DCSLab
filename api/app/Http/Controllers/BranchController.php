@@ -145,6 +145,24 @@ class BranchController extends BaseController
         }
     }
 
+    public function getMainBranchByCompany(Company $company)
+    {
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->branchService->getMainBranchByCompany(company: $company);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
+
     public function update(Branch $branch, BranchRequest $branchRequest)
     {
         $request = $branchRequest->validated();

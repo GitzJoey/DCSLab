@@ -83,6 +83,7 @@ class ProductGroupServiceImpl implements ProductGroupService
         int $page = 1,
         ?int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -100,22 +101,23 @@ class ProductGroupServiceImpl implements ProductGroupService
 
             $result = null;
 
-            $productGroup = ProductGroup::whereCompanyId($companyId);
-
-            if ($category == ProductGroupCategory::PRODUCTS->value) {
-                $productGroup = $productGroup->where([
-                    ['category', '=', ProductGroupCategory::PRODUCTS->value],
-                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                ]);
-            } elseif ($category == ProductGroupCategory::SERVICES->value) {
-                $productGroup = $productGroup->where([
-                    ['category', '=', ProductGroupCategory::SERVICES->value],
-                    ['category', '=', ProductGroupCategory::PRODUCTS_AND_SERVICES->value],
-                ]);
-            } elseif ($category == ProductGroupCategory::PRODUCTS_AND_SERVICES->value) {
+            if (count($with) != 0) {
+                $productGroup = ProductGroup::with($with)->whereCompanyId($companyId);
             } else {
-                return null;
+                $productGroup = ProductGroup::whereCompanyId($companyId);
             }
+
+            switch ($category) {
+                case ProductGroupCategory::PRODUCTS->value:
+                    $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::SERVICES->value);
+                    break;
+                case ProductGroupCategory::SERVICES->value:
+                    $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::PRODUCTS->value);
+                    break;
+            }
+
+            if ($withTrashed)
+                $productGroup = $productGroup->withTrashed();
 
             if (empty($search)) {
                 $productGroup = $productGroup->latest();

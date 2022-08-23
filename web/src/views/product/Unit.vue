@@ -225,7 +225,7 @@ const getAllUnits = (args) => {
 
 const getDDL = () => {
     if (getCachedDDL('unitCategoryDDL') == null) {
-        axios.get(route('api.get.db.common.ddl.list.unitcategories')).then(response => {
+        axios.get(route('api.get.db.product.common.list.unitcategories')).then(response => {
             unitCategoryDDL.value = response.data;
             setCachedDDL('unitCategoryDDL', response.data);
         });

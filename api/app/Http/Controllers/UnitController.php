@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Unit;
+use App\Models\Company;
+use App\Enums\UnitCategory;
+use App\Services\UnitService;
 use App\Http\Requests\UnitRequest;
 use App\Http\Resources\UnitResource;
-use App\Models\Unit;
-use App\Services\UnitService;
-use Exception;
 
 class UnitController extends BaseController
 {
@@ -171,5 +173,14 @@ class UnitController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function getUnitCategory()
+    {
+        return [
+            ['name' => 'components.dropdown.values.unitCategoryDDL.product', 'code' => UnitCategory::PRODUCTS->name],
+            ['name' => 'components.dropdown.values.unitCategoryDDL.service', 'code' => UnitCategory::SERVICES->name],
+            ['name' => 'components.dropdown.values.unitCategoryDDL.product_and_service', 'code' => UnitCategory::PRODUCTS_AND_SERVICES->name],
+        ];
     }
 }

@@ -76,8 +76,8 @@ class CompanyRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|max:255',
-                    'default' => 'required|boolean',
+                    'name' => ['required', 'max:255'],
+                    'default' => ['required', 'boolean'],
                     'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))],
                 ];
 
@@ -86,8 +86,8 @@ class CompanyRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|max:255',
-                    'default' => 'required|boolean',
+                    'name' => ['required', 'max:255'],
+                    'default' => ['required', 'boolean'],
                     'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))],
                 ];
 

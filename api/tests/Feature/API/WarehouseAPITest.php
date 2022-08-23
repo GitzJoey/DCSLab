@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Enums\UserRoles;
 use App\Models\Warehouse;
 use Vinkla\Hashids\Facades\Hashids;
+use Database\Seeders\WarehouseTableSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 

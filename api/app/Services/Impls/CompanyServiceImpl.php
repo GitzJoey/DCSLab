@@ -78,6 +78,7 @@ class CompanyServiceImpl implements CompanyService
         int $page = 1,
         int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -102,7 +103,14 @@ class CompanyServiceImpl implements CompanyService
 
             $compIds = $usr->companies()->pluck('company_id');
 
-            $companies = Company::with('branches')->whereIn('id', $compIds);
+            if (count($with) != 0) {
+                $companies = Company::with($with)->whereIn('id', $compIds);
+            } else {
+                $companies = Company::with('branches')->whereIn('id', $compIds);
+            }
+
+            if ($withTrashed)
+                $companies = $companies->withTrashed();
 
             if (empty($search)) {
                 $companies = $companies->latest();

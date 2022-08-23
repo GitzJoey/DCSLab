@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\WarehouseRequest;
-use App\Http\Resources\WarehouseResource;
+use Exception;
+use App\Models\Company;
 use App\Models\Warehouse;
 use App\Services\WarehouseService;
-use Exception;
+use App\Http\Requests\WarehouseRequest;
+use App\Http\Resources\WarehouseResource;
 
 class WarehouseController extends BaseController
 {

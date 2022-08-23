@@ -15,7 +15,7 @@
             "product-product": "Product",
             "product-product_group": "Product Group",
             "product-brand": "Brand",
-            "product-unit": "Unit",            
+            "product-unit": "Unit",
             "product-service": "Service",
             "administrator": "Administrator",
             "administrator-user": "User",
@@ -78,10 +78,6 @@
                     "cnd": "Cash Next Delivery",
                     "cbs": "Cash Before Shipment"
                 },
-                "yesNoDDL": {
-                    "yes": "Yes",
-                    "no": "No"
-                },
                 "productTypeDDL": {
                     "raw": "Raw Material",
                     "wip": "Work In Progress",
@@ -124,6 +120,10 @@
                 "cancel": "Cancel"
             },
             "data_not_found": "Data Not Found"
+        },
+        "switch": {
+            "on": "Yes",
+            "off": "No"
         }
     },
     "views": {
@@ -266,7 +266,7 @@
                 "title": "Product Lists",
                 "cols": {
                     "code": "Code",
-                    "name": "Name",    
+                    "name": "Name",
                     "brand": "Brand",
                     "status": "Status"
                 }
@@ -299,10 +299,45 @@
                             "unit": "Unit",
                             "conversion_value": "Conversion Value",
                             "is_base": "Base Unit",
-                            "is_primary": "Primary Unit"    
+                            "is_primary": "Primary Unit"
                         }
                     }
                 }
+            }
+        },
+        "service": {
+            "table": {
+                "title": "Service Lists",
+                "cols": {
+                    "code": "Code",
+                    "product_group_id": "Product Group",
+                    "name": "Name",
+                    "unit_id": "Unit",
+                    "taxable_supply": "Taxable Supply",
+                    "standard_rated_supply": "Standard-Rated Supply",
+                    "point": "Point",
+                    "price_include_vat": "Price Include VAT",
+                    "remarks": "Remarks",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Service",
+                "edit": "Edit Service",
+                "show": "Show Service",
+                "delete": "Delete Service"
+            },
+            "fields": {
+                "code": "Code",
+                "product_group_id": "Product Group",
+                "name": "Name",
+                "unit_id": "Unit",
+                "taxable_supply": "Taxable Supply",
+                "standard_rated_supply": "Standard-Rated Supply",
+                "point": "Point",
+                "price_include_vat": "Price Include VAT",
+                "remarks": "Remarks",
+                "status": "Status"
             }
         },
         "product_group": {
@@ -310,7 +345,7 @@
                 "title": "Product Group Lists",
                 "cols": {
                     "code": "Code",
-                    "name": "Name",    
+                    "name": "Name",
                     "description": "Description",
                     "category": "Category"
                 }
@@ -352,7 +387,7 @@
                 "title": "Unit Lists",
                 "cols": {
                     "code": "Code",
-                    "name": "Name",    
+                    "name": "Name",
                     "description": "Description",
                     "category": "Category"
                 }

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\User;
+use App\Models\Company;
+use Illuminate\Http\Request;
+use App\Services\CompanyService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CompanyRequest;
 use App\Http\Resources\CompanyResource;
-use App\Models\Company;
-use App\Services\CompanyService;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends BaseController
 {
@@ -20,6 +21,51 @@ class CompanyController extends BaseController
 
         $this->middleware('auth');
         $this->companyService = $companyService;
+    }
+
+    public function store(CompanyRequest $companyRequest)
+    {
+        $request = $companyRequest->validated();
+
+        $user = Auth::user();
+
+        $code = $request['code'];
+        if ($code == config('dcslab.KEYWORDS.AUTO')) {
+            do {
+                $code = $this->companyService->generateUniqueCode();
+            } while (!$this->companyService->isUniqueCode($code, $user->id));
+        } else {
+            if (!$this->companyService->isUniqueCode($code, $user->id)) {
+                return response()->error([
+                    'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        $companyArr = [
+            'user_id' => $user->id,
+            'code' => $code,
+            'name' => $request['name'],
+            'address' => $request['address'],
+            'default' => $request['default'],
+            'status' => $request['status'],
+
+        ];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            if ($companyArr['default']) {
+                $this->companyService->resetDefaultCompany($user);
+            }
+
+            $result = $this->companyService->create($companyArr);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function list(CompanyRequest $companyRequest)
@@ -101,51 +147,6 @@ class CompanyController extends BaseController
         $defaultCompany = $this->companyService->getDefaultCompany($user);
 
         return $defaultCompany->hId;
-    }
-
-    public function store(CompanyRequest $companyRequest)
-    {
-        $request = $companyRequest->validated();
-
-        $user = Auth::user();
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id));
-        } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $companyArr = [
-            'user_id' => $user->id,
-            'code' => $code,
-            'name' => $request['name'],
-            'address' => $request['address'],
-            'default' => $request['default'],
-            'status' => $request['status'],
-
-        ];
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            if ($companyArr['default']) {
-                $this->companyService->resetDefaultCompany($user);
-            }
-
-            $result = $this->companyService->create($companyArr);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Company $company, CompanyRequest $companyRequest)

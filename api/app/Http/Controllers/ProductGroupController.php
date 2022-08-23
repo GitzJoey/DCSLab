@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use App\Models\Company;
+use App\Models\ProductGroup;
+use App\Enums\ProductGroupCategory;
+use App\Services\ProductGroupService;
 use App\Http\Requests\ProductGroupRequest;
 use App\Http\Resources\ProductGroupResource;
-use App\Models\ProductGroup;
-use App\Services\ProductGroupService;
-use Exception;
 
 class ProductGroupController extends BaseController
 {
@@ -168,5 +170,14 @@ class ProductGroupController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function getProductGroupCategory()
+    {
+        return [
+            ['name' => 'components.dropdown.values.productGroupCategoryDDL.product', 'code' => ProductGroupCategory::PRODUCTS->name],
+            ['name' => 'components.dropdown.values.productGroupCategoryDDL.service', 'code' => ProductGroupCategory::SERVICES->name],
+            ['name' => 'components.dropdown.values.productGroupCategoryDDL.product_and_service', 'code' => ProductGroupCategory::PRODUCTS_AND_SERVICES->name],
+        ];
     }
 }

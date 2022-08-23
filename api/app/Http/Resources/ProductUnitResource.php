@@ -15,6 +15,7 @@ class ProductUnitResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'hId' => $this->hId,
             'code' => $this->code,
             $this->mergeWhen($this->relationLoaded('unit'), [
                 'unit' => new UnitResource($this->whenLoaded('unit')),

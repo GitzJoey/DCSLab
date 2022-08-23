@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PaymentTermType;
-use App\Http\Requests\SupplierRequest;
-use App\Http\Resources\SupplierResource;
+use Exception;
 use App\Models\Supplier;
 use App\Services\SupplierService;
-use Exception;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Requests\SupplierRequest;
+use App\Http\Resources\SupplierResource;
 
 class SupplierController extends BaseController
 {
@@ -56,18 +54,34 @@ class SupplierController extends BaseController
             'status' => $request['status'],
         ];
 
+        $first_name = '';
+        $last_name = '';
+        if ($request['pic_name'] == trim($request['pic_name']) && strpos($request['pic_name'], ' ') !== false) {
+            $pieces = explode(' ', $request['pic_name']);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+        } else {
+            $first_name = $request['pic_name'];
+        }
+
         $picArr = [
             'name' => $request['pic_name'],
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'email' => $request['email'],
         ];
-
+        
         $productsArr = [];
-        if (!empty($request['productIds'])) {
+        if (array_key_exists('productIds', $request) && !empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
+                $mainProduct = 0;
+                if (array_key_exists('mainProducts', $request)) {
+                    $mainProduct = in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0;
+                }
                 array_push($productsArr, [
                     'company_id' => $company_id,
-                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
-                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0,
+                    'product_id' => $request['productIds'][$i],
+                    'main_product' => $mainProduct,
                 ]);
             }
         }
@@ -165,6 +179,7 @@ class SupplierController extends BaseController
         }
 
         $supplierArr = [
+            'company_id' => $company_id,
             'code' => $code,
             'name' => $request['name'],
             'payment_term_type' => $request['payment_term_type'],
@@ -178,18 +193,17 @@ class SupplierController extends BaseController
             'status' => $request['status'],
         ];
 
-        $picArr = [
-            'name' => $request['pic_name'],
-            'email' => $request['email'],
-        ];
-
         $productsArr = [];
-        if (!empty($request['productIds'])) {
+        if (array_key_exists('productIds', $request) && !empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
+                $mainProduct = 0;
+                if (array_key_exists('mainProducts', $request)) {
+                    $mainProduct = in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0;
+                }
                 array_push($productsArr, [
                     'company_id' => $company_id,
-                    'product_id' => Hashids::decode($request['productIds'][$i])[0],
-                    'main_product' => in_array($request['productIds'][$i], $request['mainProducts']) ? 1 : 0,
+                    'product_id' => $request['productIds'][$i],
+                    'main_product' => $mainProduct,
                 ]);
             }
         }
@@ -201,7 +215,6 @@ class SupplierController extends BaseController
             $result = $this->supplierService->update(
                 $supplier,
                 $supplierArr,
-                $picArr,
                 $productsArr
             );
         } catch (Exception $e) {
@@ -223,16 +236,5 @@ class SupplierController extends BaseController
         }
 
         return !$result ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function getPaymentTermType()
-    {
-        return [
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.pia', 'code' => PaymentTermType::PAYMENT_IN_ADVANCE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.net', 'code' => PaymentTermType::X_DAYS_AFTER_INVOICE->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
-            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name],
-        ];
     }
 }

@@ -29,9 +29,9 @@ class RoleServiceImpl implements RoleService
 
         try {
             $role = new Role();
-            $role->name = $role['name'];
-            $role->display_name = $role['display_name'];
-            $role->description = $role['description'];
+            $role->name = $roleArr['name'];
+            $role->display_name = $roleArr['display_name'];
+            $role->description = $roleArr['description'];
 
             $role->save();
 

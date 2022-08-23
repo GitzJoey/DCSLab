@@ -3,6 +3,7 @@
 namespace App\Services\Impls;
 
 use App\Actions\RandomGenerator;
+use App\Enums\ProductCategory;
 use App\Enums\ProductType;
 use App\Models\Product;
 use App\Models\ProductUnit;
@@ -36,7 +37,7 @@ class ProductServiceImpl implements ProductService
             $product->company_id = $productArr['company_id'];
             $product->code = $productArr['code'];
             $product->product_group_id = $productArr['product_group_id'];
-            $product->brand_id = array_key_exists('brand_id', $productArr) ? $productArr['brand_id'] : null;
+            $product->brand_id = $productArr['brand_id'];
             $product->name = $productArr['name'];
             $product->taxable_supply = $productArr['taxable_supply'];
             $product->standard_rated_supply = $productArr['standard_rated_supply'];
@@ -57,7 +58,7 @@ class ProductServiceImpl implements ProductService
                     'product_id' => $product->id,
                     'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
-                    'conversion_value' => $product_unit['conv_value'],
+                    'conversion_value' => $product_unit['conversion_value'],
                     'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks'],
@@ -85,12 +86,13 @@ class ProductServiceImpl implements ProductService
 
     public function list(
         int $companyId,
-        bool $isProduct = true,
-        bool $isService = true,
+        int $productCategory,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
         ?int $perPage = 10,
+        array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -98,7 +100,7 @@ class ProductServiceImpl implements ProductService
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$isProduct.'-'.$isService.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_'.$companyId.'-'.$productCategory.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (!is_null($cacheResult)) {
@@ -112,17 +114,23 @@ class ProductServiceImpl implements ProductService
                 return null;
             }
 
-            $product = Product::with('productGroup', 'brand', 'productUnits.unit')
-                        ->whereCompanyId($companyId);
+            $product = count($with) != 0 ? Product::with($with) : Product::with('company', 'productGroup', 'brand', 'productUnits.unit');
+            $product = $product->whereCompanyId($companyId);
 
-            if (!$isProduct && $isService) {
-                $product = $product->where('product_type', '=', ProductType::SERVICE->value);
-            } elseif ($isProduct && !$isService) {
-                $product = $product->where('product_type', '<>', ProductType::SERVICE->value);
-            } elseif ($isProduct && $isService) {
-            } else {
-                return null;
+            switch ($productCategory) {
+                case ProductCategory::PRODUCTS->value:
+                    $product = $product->where('product_type', '<>', ProductType::SERVICE->value);
+                    break;
+                case ProductCategory::SERVICES->value:
+                    $product = $product->where('product_type', '=', ProductType::SERVICE->value);
+                    break;
+                case ProductCategory::PRODUCTS_AND_SERVICES->value:
+                default:
+                    break;
             }
+
+            if ($withTrashed)
+            $product = $product->withTrashed();
 
             if (empty($search)) {
                 $product = $product->latest();
@@ -153,7 +161,14 @@ class ProductServiceImpl implements ProductService
 
     public function read(Product $product): Product
     {
-        return $product->with('productGroup', 'brand', 'productUnits.unit')->first();
+        $brand = $product->brand_id;
+        if ($brand) {
+            $result = Product::with('productGroup', 'brand', 'productUnits.unit')->where('id', '=', $product->id)->first();
+        } else {
+            $result = Product::with('productGroup', 'productUnits.unit')->where('id', '=', $product->id)->first();
+        }
+
+        return $result;
     }
 
     public function update(
@@ -165,21 +180,20 @@ class ProductServiceImpl implements ProductService
         $timer_start = microtime(true);
 
         try {
-            $product->update([
-                'code' => $productArr['code'],
-                'product_group_id' => $productArr['product_group_id'],
-                'brand_id' => $productArr['brand_id'],
-                'name' => $productArr['name'],
-                'taxable_supply' => $productArr['taxable_supply'],
-                'standard_rated_supply' => $productArr['standard_rated_supply'],
-                'price_include_vat' => $productArr['price_include_vat'],
-                'remarks' => $productArr['remarks'],
-                'point' => $productArr['point'],
-                'use_serial_number' => $productArr['use_serial_number'],
-                'has_expiry_date' => $productArr['has_expiry_date'],
-                'product_type' => $productArr['product_type'],
-                'status' => $productArr['status'],
-            ]);
+            $product->code = $productArr['code'];
+            $product->product_group_id = $productArr['product_group_id'];
+            $product->brand_id = $productArr['brand_id'];
+            $product->name = $productArr['name'];
+            $product->taxable_supply = $productArr['taxable_supply'];
+            $product->standard_rated_supply = $productArr['standard_rated_supply'];
+            $product->price_include_vat = $productArr['price_include_vat'];
+            $product->remarks = $productArr['remarks'];
+            $product->point = $productArr['point'];
+            $product->use_serial_number = $productArr['use_serial_number'];
+            $product->has_expiry_date = $productArr['has_expiry_date'];
+            $product->product_type = $productArr['product_type'];
+            $product->status = $productArr['status'];
+            $product->save();
 
             $pu = [];
             foreach ($productUnitsArr as $product_unit) {
@@ -189,7 +203,7 @@ class ProductServiceImpl implements ProductService
                     'product_id' => $product->id,
                     'code' => $product_unit['code'],
                     'unit_id' => $product_unit['unit_id'],
-                    'conversion_value' => $product_unit['conv_value'],
+                    'conversion_value' => $product_unit['conversion_value'],
                     'is_base' => $product_unit['is_base'],
                     'is_primary_unit' => $product_unit['is_primary_unit'],
                     'remarks' => $product_unit['remarks'],
@@ -207,19 +221,25 @@ class ProductServiceImpl implements ProductService
             $deletedProductUnitIds = array_diff($puIdsOld, $puIds);
 
             foreach ($deletedProductUnitIds as $deletedProductUnitId) {
-                $productUnit = $product->productUnits()->whereIn('id', $deletedProductUnitId);
+                $productUnit = $product->productUnits()->where('id', $deletedProductUnitId);
                 $productUnit->delete();
             }
 
             if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
-                $product->productUnits()->upsert($pu, ['id'], [
-                    'code',
-                    'unit_id',
-                    'is_base',
-                    'conversion_value',
-                    'is_primary_unit',
-                    'remarks',
-                ]);
+                ProductUnit::upsert(
+                    $pu, 
+                    ['id'], 
+                    [
+                        'company_id',
+                        'product_id',
+                        'code',
+                        'unit_id',
+                        'is_base',
+                        'conversion_value',
+                        'is_primary_unit',
+                        'remarks',
+                    ]
+                );
             }
 
             DB::commit();

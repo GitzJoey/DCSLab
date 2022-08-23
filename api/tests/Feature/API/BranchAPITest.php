@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\API;
 
-use App\Actions\RandomGenerator;
-use App\Enums\ActiveStatus;
 use App\Enums\UserRoles;
 use App\Models\Branch;
 use App\Models\Company;
@@ -11,9 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Sequence;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\DB;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -26,8 +22,7 @@ class BranchAPITest extends APITestCase
         parent::setUp();
     }
 
-    #region store
-
+    /* #region store */
     public function test_branch_api_call_store_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -138,11 +133,9 @@ class BranchAPITest extends APITestCase
 
         $api->assertJsonValidationErrors(['company_id', 'code', 'name']);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region list
-
+    /* #region list */
     public function test_branch_api_call_list_with_or_without_pagination_expect_paginator_or_collection()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -326,11 +319,9 @@ class BranchAPITest extends APITestCase
             ],
         ]);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region read
-
+    /* #region read */
     public function test_branch_api_call_read_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -389,11 +380,9 @@ class BranchAPITest extends APITestCase
 
         $api->assertStatus(404);
     }
+    /* #endregion */
 
-    #endregion
-
-    #region update
-
+    /* #region update */
     public function test_branch_api_call_update_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -492,11 +481,9 @@ class BranchAPITest extends APITestCase
 
         $api->assertSuccessful();
     }
+    /* #endregion */
 
-    #endregion
-
-    #region delete
-
+    /* #region delete */
     public function test_branch_api_call_delete_expect_successful()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -507,7 +494,6 @@ class BranchAPITest extends APITestCase
                     ->create();
 
         $company = $user->companies->first();
-        $companyId = $company->id;
 
         $branch = $company->branches()->inRandomOrder()->first();
 
@@ -543,10 +529,51 @@ class BranchAPITest extends APITestCase
         $this->actingAs($user);
         $api = $this->json('POST', route('api.post.db.company.branch.delete', null));
     }
+    /* #endregion */
 
-    #endregion
+    /* #region others */
 
-    #region others
+    public function test_branch_api_call_get_branch_by_company_expect_successful()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
 
-    #endregion
+        $companyUuid = $user->companies->first()->uuid;
+
+        $api = $this->json('GET', route('api.get.db.company.branch.read.by.company', $companyUuid));
+
+        $api->assertSuccessful();
+    }
+
+    public function test_branch_api_call_get_main_branch_by_company_expect_successful()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        
+        $mainBranch = $company->branches()->inRandomOrder()->first();
+        $mainBranch->is_main = true;
+        $mainBranch->save();
+
+        $companyUuid = $company->uuid;
+
+        $api = $this->json('GET', route('api.get.db.company.branch.read.mainbranch.by.company', $companyUuid));
+
+        $api->assertSuccessful();
+    }
+    
+    /* #endregion */
 }

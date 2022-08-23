@@ -29,8 +29,12 @@ class ProductResource extends JsonResource
             'has_expiry_date' => $this->has_expiry_date,
             'status' => $this->setStatus($this->status, $this->deleted_at),
             'remarks' => $this->remarks,
-            'brand' => '',
-            'product_group' => '',
+            $this->mergeWhen($this->relationLoaded('productGroup'), [
+                'product_group' => new ProductGroupResource($this->whenLoaded('productGroup')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('brand'), [
+                'brand' => new BrandResource($this->whenLoaded('brand')),
+            ]),
             $this->mergeWhen($this->relationLoaded('productUnits'), [
                 'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits')),
             ]),

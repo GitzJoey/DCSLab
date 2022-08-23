@@ -61,6 +61,7 @@ class UnitServiceImpl implements UnitService
         int $page = 1,
         ?int $perPage = 10,
         array $with = [],
+        bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
@@ -78,22 +79,23 @@ class UnitServiceImpl implements UnitService
 
             $result = null;
 
-            $unit = Unit::whereCompanyId($companyId);
-
-            if ($category == UnitCategory::PRODUCTS->value) {
-                $unit = $unit->where([
-                    ['category', '=', UnitCategory::PRODUCTS->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
-                ]);
-            } elseif ($category == UnitCategory::SERVICES->value) {
-                $unit = $unit->where([
-                    ['category', '=', UnitCategory::SERVICES->value],
-                    ['category', '=', UnitCategory::PRODUCTS_AND_SERVICES->value],
-                ]);
-            } elseif ($category == UnitCategory::PRODUCTS_AND_SERVICES->value) {
+            if (count($with) != 0) {
+                $unit = Unit::with($with)->whereCompanyId($companyId);
             } else {
-                return null;
+                $unit = Unit::whereCompanyId($companyId);
             }
+
+            switch ($category) {
+                case UnitCategory::PRODUCTS->value:
+                    $unit = $unit->where('category', '<>', UnitCategory::SERVICES->value);
+                    break;
+                case UnitCategory::SERVICES->value:
+                    $unit = $unit->where('category', '<>', UnitCategory::PRODUCTS->value);
+                    break;
+            }
+
+            if ($withTrashed)
+                $unit = $unit->withTrashed();
 
             if (empty($search)) {
                 $unit = $unit->latest();

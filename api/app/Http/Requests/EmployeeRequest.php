@@ -52,12 +52,12 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'address' => 'nullable|max:255',
-            'city' => 'nullable|max:255',
-            'postal_code' => 'nullable|max:10',
-            'img_path' => 'nullable',
-            'remarks' => 'nullable|max:255',
-            'accessBranchIds.*' => 'nullable',
+            'address' => ['nullable', 'max:255'],
+            'city' => ['nullable', 'max:255'],
+            'postal_code' => ['nullable', 'max:10'],
+            'img_path' => ['nullable'],
+            'remarks' => ['nullable', 'max:255'],
+            'accessBranchIds.*' => ['nullable'],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -82,12 +82,12 @@ class EmployeeRequest extends FormRequest
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
-                    'email' => 'required|email|max:255',
-                    'country' => 'required',
-                    'tax_id' => 'required',
-                    'ic_num' => 'required|min:12|max:255',
-                    'join_date' => 'required',
+                    'name' => ['required', 'min:3', 'max:255'],
+                    'email' => ['required', 'email', 'max:255'],
+                    'country' => ['required'],
+                    'tax_id' => ['required'],
+                    'ic_num' => ['required', 'min:12', 'max:255'],
+                    'join_date' => ['required'],
                     'status' => [new Enum(RecordStatus::class)],
                 ];
 
@@ -98,10 +98,10 @@ class EmployeeRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
-                    'country' => 'required',
-                    'tax_id' => 'required',
-                    'ic_num' => 'required|min:12|max:255',
+                    'name' => ['required', 'min:3', 'max:255'],
+                    'country' => ['required'],
+                    'tax_id' => ['required'],
+                    'ic_num' => ['required', 'min:12', 'max:255'],
                     'status' => [new Enum(RecordStatus::class)],
                 ];
 
@@ -142,9 +142,17 @@ class EmployeeRequest extends FormRequest
                 break;
             case 'store':
             case 'update':
+                $accessBranchIds = [];
+                if ($this->has('access_branch_hIds')) {
+                    for ($i = 0; $i < count($this->access_branch_hIds); $i++) {
+                        array_push($accessBranchIds, Hashids::decode($this->access_branch_hIds[$i])[0]);
+                    }
+                }
+
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
+                    'accessBranchIds' => $accessBranchIds,
                 ]);
                 break;
             default:
