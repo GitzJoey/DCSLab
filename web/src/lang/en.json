@@ -122,8 +122,8 @@
             "data_not_found": "Data Not Found"
         },
         "switch": {
-            "on": "On",
-            "off": "Off"
+            "on": "Yes",
+            "off": "No"
         }
     },
     "views": {
