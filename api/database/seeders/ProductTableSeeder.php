@@ -13,7 +13,6 @@ use App\Enums\ProductCategory;
 use Illuminate\Database\Seeder;
 use App\Actions\RandomGenerator;
 use App\Enums\ProductGroupCategory;
-use App\Enums\ProductType;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductTableSeeder extends Seeder

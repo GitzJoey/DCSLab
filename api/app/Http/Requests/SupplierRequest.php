@@ -53,12 +53,12 @@ class SupplierRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'address' => 'nullable',
-            'contact' => 'nullable',
-            'city' => 'nullable',
-            'tax_id' => 'nullable',
-            'remarks' => 'nullable',
-            'pic_name' => 'nullable',
+            'address' => ['nullable', 'max:255'],
+            'contact' => ['nullable', 'max:255'],
+            'city' => ['nullable', 'max:255'],
+            'tax_id' => ['nullable', 'max:255'],
+            'remarks' => ['nullable', 'max:255'],
+            'pic_name' => ['nullable', 'max:255'],
             'productIds.*' => 'nullable',
             'mainProducts.*' => 'nullable',
         ];

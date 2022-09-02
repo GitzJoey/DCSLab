@@ -52,10 +52,10 @@ class WarehouseRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'address' => 'nullable',
-            'city' => 'nullable',
-            'contact' => 'nullable',
-            'remarks' => 'nullable',
+            'address' => ['nullable', 'max:255'],
+            'city' => ['nullable', 'max:255'],
+            'contact' => ['nullable', 'max:255'],
+            'remarks' => ['nullable', 'max:255'],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();

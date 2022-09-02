@@ -52,7 +52,7 @@ class UnitRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'description' => 'nullable',
+            'description' => ['nullable', 'max:255'],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
