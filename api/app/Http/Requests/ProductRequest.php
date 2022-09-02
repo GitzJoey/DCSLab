@@ -56,9 +56,9 @@ class ProductRequest extends FormRequest
         $nullableArr = [
             'brand_id' => 'nullable',
             'standard_rated_supply' => 'nullable',
-            'remarks' => 'nullable',
+            'remarks' =>['nullable', 'max:255'],
             'product_units_id.*' => 'nullable',
-            'product_units_remarks.*' => 'nullable',
+            'product_units_remarks.*' => ['nullable', 'max:255'],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
