@@ -53,7 +53,7 @@ class CompanyRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'address' => 'nullable',
+            'address' => ['nullable', 'max:255'],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();

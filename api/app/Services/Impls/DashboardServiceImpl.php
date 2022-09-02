@@ -56,8 +56,8 @@ class DashboardServiceImpl implements DashboardService
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
-        $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_SalesOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
@@ -151,6 +151,119 @@ class DashboardServiceImpl implements DashboardService
         return $menu;
     }
 
+    private function createMenu_Product(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $product_group = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-product_group',
+            'title' => 'components.menu.product-product_group',
+        ];
+
+        $brand = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-brand',
+            'title' => 'components.menu.product-brand',
+        ];
+
+        $unit = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-unit',
+            'title' => 'components.menu.product-unit',
+        ];
+
+        $product = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-product',
+            'title' => 'components.menu.product-product',
+        ];
+
+        $service = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-service',
+            'title' => 'components.menu.product-service',
+        ];
+
+        $root_array = [
+            'icon' => 'PackageIcon',
+            'pageName' => 'side-menu-product',
+            'title' => 'components.menu.product',
+            'subMenu' => [
+            ],
+        ];
+
+        array_push($root_array['subMenu'], $product_group);
+        array_push($root_array['subMenu'], $brand);
+        array_push($root_array['subMenu'], $unit);
+        array_push($root_array['subMenu'], $product);
+        array_push($root_array['subMenu'], $service);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+    
+    private function createMenu_Supplier(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $supplier = [
+            'icon' => '',
+            'pageName' => 'side-menu-supplier-supplier',
+            'title' => 'components.menu.supplier-supplier',
+        ];
+
+        $root_array = [
+            'icon' => 'TruckIcon',
+            'pageName' => 'side-menu-supplier',
+            'title' => 'components.menu.supplier',
+            'subMenu' => [
+            ],
+        ];
+
+        array_push($root_array['subMenu'], $supplier);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+
+    private function createMenu_PurchaseOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $po = [
+            'icon' => '',
+            'pageName' => 'side-menu-purchase_order-purchaseorder',
+            'title' => 'components.menu.purchase_order-purchaseorder',
+        ];
+
+        $root_array = [
+            'icon' => 'FilePlusIcon',
+            'pageName' => 'side-menu-purchase_order',
+            'title' => 'components.menu.purchase_order',
+            'subMenu' => [
+            ],
+        ];
+
+        array_push($root_array['subMenu'], $po);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+    
+    private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        return $menu;
+    }
+
+    private function createMenu_SalesOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        return $menu;
+    }
+
     private function createMenu_Administrator(array $menu, bool $hasAdminRole, bool $hasDevRole): array
     {
         $user = [
@@ -222,119 +335,6 @@ class DashboardServiceImpl implements DashboardService
             array_push($menu, $root_array);
         }
 
-        return $menu;
-    }
-
-    private function createMenu_Product(array $menu, bool $hasCompany, bool $hasDevRole): array
-    {
-        $product_group = [
-            'icon' => '',
-            'pageName' => 'side-menu-product-product_group',
-            'title' => 'components.menu.product-product_group',
-        ];
-
-        $brand = [
-            'icon' => '',
-            'pageName' => 'side-menu-product-brand',
-            'title' => 'components.menu.product-brand',
-        ];
-
-        $unit = [
-            'icon' => '',
-            'pageName' => 'side-menu-product-unit',
-            'title' => 'components.menu.product-unit',
-        ];
-
-        $product = [
-            'icon' => '',
-            'pageName' => 'side-menu-product-product',
-            'title' => 'components.menu.product-product',
-        ];
-
-        $service = [
-            'icon' => '',
-            'pageName' => 'side-menu-product-service',
-            'title' => 'components.menu.product-service',
-        ];
-
-        $root_array = [
-            'icon' => 'PackageIcon',
-            'pageName' => 'side-menu-product',
-            'title' => 'components.menu.product',
-            'subMenu' => [
-            ],
-        ];
-
-        array_push($root_array['subMenu'], $product_group);
-        array_push($root_array['subMenu'], $brand);
-        array_push($root_array['subMenu'], $unit);
-        array_push($root_array['subMenu'], $product);
-        array_push($root_array['subMenu'], $service);
-
-        if ($hasCompany || $hasDevRole) {
-            array_push($menu, $root_array);
-        }
-
-        return $menu;
-    }
-
-    private function createMenu_Supplier(array $menu, bool $hasCompany, bool $hasDevRole): array
-    {
-        $supplier = [
-            'icon' => '',
-            'pageName' => 'side-menu-supplier-supplier',
-            'title' => 'components.menu.supplier-supplier',
-        ];
-
-        $root_array = [
-            'icon' => 'TruckIcon',
-            'pageName' => 'side-menu-supplier',
-            'title' => 'components.menu.supplier',
-            'subMenu' => [
-            ],
-        ];
-
-        array_push($root_array['subMenu'], $supplier);
-
-        if ($hasCompany || $hasDevRole) {
-            array_push($menu, $root_array);
-        }
-
-        return $menu;
-    }
-
-    private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
-    {
-        return $menu;
-    }
-
-    private function createMenu_PurchaseOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
-    {
-        $po = [
-            'icon' => '',
-            'pageName' => 'side-menu-purchase_order-purchaseorder',
-            'title' => 'components.menu.purchase_order-purchaseorder',
-        ];
-
-        $root_array = [
-            'icon' => 'FilePlusIcon',
-            'pageName' => 'side-menu-purchase_order',
-            'title' => 'components.menu.purchase_order',
-            'subMenu' => [
-            ],
-        ];
-
-        array_push($root_array['subMenu'], $po);
-
-        if ($hasCompany || $hasDevRole) {
-            array_push($menu, $root_array);
-        }
-
-        return $menu;
-    }
-
-    private function createMenu_SalesOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
-    {
         return $menu;
     }
 }

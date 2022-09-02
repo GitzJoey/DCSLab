@@ -55,8 +55,8 @@ class ProductRequest extends FormRequest
     {
         $nullableArr = [
             'brand_id' => 'nullable',
-            'standard_rated_supply' => 'nullable',
-            'remarks' => 'nullable',
+            'standard_rated_supply' => ['nullable', 'max:255'],
+            'remarks' => ['nullable', 'max:255'],
             'product_units_id.*' => 'nullable',
             'product_units_remarks.*' => 'nullable',
         ];

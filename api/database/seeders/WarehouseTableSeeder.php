@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Actions\RandomGenerator;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Warehouse;
