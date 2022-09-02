@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Product;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidProduct implements Rule
@@ -25,7 +26,9 @@ class isValidProduct implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->products->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $productIds = Product::whereIn('company_id', $companyIds)->pluck('id');
+        return $productIds->contains($value);
     }
 
     /**

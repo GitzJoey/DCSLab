@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Brand;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidBrand implements Rule
@@ -25,7 +26,9 @@ class isValidBrand implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->brands->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $brandIds = Brand::whereIn('company_id', $companyIds)->pluck('id');
+        return $brandIds->contains($value);
     }
 
     /**

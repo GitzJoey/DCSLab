@@ -55,7 +55,6 @@ class ProductRequest extends FormRequest
     {
         $nullableArr = [
             'brand_id' => 'nullable',
-            'standard_rated_supply' => 'nullable',
             'remarks' =>['nullable', 'max:255'],
             'product_units_id.*' => 'nullable',
             'product_units_remarks.*' => ['nullable', 'max:255'],
@@ -87,6 +86,7 @@ class ProductRequest extends FormRequest
                     'name' => ['required', 'min:3', 'max:255'],
                     'product_group_id' => ['required'],
                     'taxable_supply' => ['required', 'boolean'],
+                    'standard_rated_supply' =>  ['required', 'numeric', 'min:0'],
                     'use_serial_number' => ['required', 'boolean'],
                     'price_include_vat' => ['required', 'boolean'],
                     'has_expiry_date' => ['required', 'boolean'],
@@ -108,6 +108,7 @@ class ProductRequest extends FormRequest
                     'name' => 'required|min:3|max:255',
                     'product_group_id' => ['required'],
                     'taxable_supply' => ['required', 'boolean'],
+                    'standard_rated_supply' =>  ['required', 'numeric', 'min:0'],
                     'use_serial_number' => ['required', 'boolean'],
                     'price_include_vat' => ['required', 'boolean'],
                     'has_expiry_date' => ['required', 'boolean'],

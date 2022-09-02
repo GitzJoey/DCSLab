@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Supplier;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidSupplier implements Rule
@@ -25,7 +26,9 @@ class isValidSupplier implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->suppliers->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $supplierIds = Supplier::whereIn('company_id', $companyIds)->pluck('id');
+        return $supplierIds->contains($value);
     }
 
     /**

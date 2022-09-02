@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Unit;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidUnit implements Rule
@@ -25,7 +26,9 @@ class isValidUnit implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->units->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $unitIds = Unit::whereIn('company_id', $companyIds)->pluck('id');
+        return $unitIds->contains($value);
     }
 
     /**

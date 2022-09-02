@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\ProductGroup;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidProductGroup implements Rule
@@ -25,7 +26,9 @@ class isValidProductGroup implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->productGroups->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $productGroupIds = ProductGroup::whereIn('company_id', $companyIds)->pluck('id');
+        return $productGroupIds->contains($value);
     }
 
     /**

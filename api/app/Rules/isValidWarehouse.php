@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Warehouse;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidWarehouse implements Rule
@@ -25,7 +26,9 @@ class isValidWarehouse implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->warehouses->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $warehouseIds = Warehouse::whereIn('company_id', $companyIds)->pluck('id');
+        return $warehouseIds->contains($value);
     }
 
     /**

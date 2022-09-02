@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Branch;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidBranch implements Rule
@@ -25,7 +26,9 @@ class isValidBranch implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->branches->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $branchIds = Branch::whereIn('company_id', $companyIds)->pluck('id');
+        return $branchIds->contains($value);
     }
 
     /**

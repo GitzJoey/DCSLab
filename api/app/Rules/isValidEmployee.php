@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Employee;
 use Illuminate\Contracts\Validation\Rule;
 
 class isValidEmployee implements Rule
@@ -25,7 +26,9 @@ class isValidEmployee implements Rule
      */
     public function passes($attribute, $value)
     {
-        return auth()->user()->employees->pluck('id')->contains($value);
+        $companyIds = auth()->user()->companies->pluck('id')->toArray();
+        $employeeIds = Employee::whereIn('company_id', $companyIds)->pluck('id');
+        return $employeeIds->contains($value);
     }
 
     /**
