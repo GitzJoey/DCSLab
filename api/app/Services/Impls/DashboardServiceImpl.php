@@ -56,8 +56,8 @@ class DashboardServiceImpl implements DashboardService
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
-        $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_SalesOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
@@ -203,7 +203,7 @@ class DashboardServiceImpl implements DashboardService
 
         return $menu;
     }
-    
+
     private function createMenu_Supplier(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
         $supplier = [
@@ -229,6 +229,11 @@ class DashboardServiceImpl implements DashboardService
         return $menu;
     }
 
+    private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        return $menu;
+    }
+
     private function createMenu_PurchaseOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
         $po = [
@@ -251,11 +256,6 @@ class DashboardServiceImpl implements DashboardService
             array_push($menu, $root_array);
         }
 
-        return $menu;
-    }
-    
-    private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
-    {
         return $menu;
     }
 
