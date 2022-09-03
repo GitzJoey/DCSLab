@@ -236,7 +236,7 @@ class ProductGroupServiceTest extends ServiceTestCase
         ]);
     }
 
-    public function test_productgroup_service_call_update_with_empty_array_parameters_expect_exception()
+    public function test_product_group_service_call_update_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
 
@@ -253,7 +253,7 @@ class ProductGroupServiceTest extends ServiceTestCase
     /* #endregion */
 
     /* #region delete */
-    public function test_productgroup_service_call_delete_expect_bool()
+    public function test_product_group_service_call_delete_expect_bool()
     {
         $user = User::factory()
                     ->has(Company::factory()->setIsDefault()

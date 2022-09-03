@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Rules\isValidBrand;
 use App\Rules\isValidCompany;
 use App\Rules\isValidProductGroup;
+use App\Rules\isValidProductUnit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -58,7 +59,7 @@ class ProductRequest extends FormRequest
         $nullableArr = [
             'brand_id' => ['nullable', new isValidBrand()],
             'remarks' =>['nullable', 'max:255'],
-            'product_units_id.*' => 'nullable',
+            'product_units_id.*' => ['nullable', new isValidProductUnit()],
             'product_units_remarks.*' => ['nullable', 'max:255'],
         ];
 

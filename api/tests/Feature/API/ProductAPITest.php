@@ -989,6 +989,80 @@ class ProductAPITest extends APITestCase
         }
     }
 
+    public function test_product_api_call_update_product_and_insert_product_units_with_nonexistance_product_unit_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
+
+        $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
+
+        $product_units_hId = [];
+        $productUnitsCode = [];
+        $unitId = [];
+        $conversionValue = [];
+        $isBase = [];
+        $isPrimaryUnit = [];
+        $productUnitsRemarks = [];
+
+        $productUnitsArr = $product->productUnits->toArray();
+        for ($i = 0; $i < count($productUnitsArr) ; $i++) {
+            $productUnitId = Hashids::encode($productUnitsArr[$i]['id']);
+            if ($i == 0) {
+                $productUnitId = Hashids::encode(ProductUnit::max('id') + 1);
+            }
+
+            array_push($product_units_hId, $productUnitId);
+            array_push($productUnitsCode, $productUnitsArr[$i]['code']);
+            array_push($unitId, Hashids::encode($productUnitsArr[$i]['unit_id']));
+            array_push($conversionValue, $productUnitsArr[$i]['conversion_value']);
+            array_push($isBase, $productUnitsArr[$i]['is_base']);
+            array_push($isPrimaryUnit, $productUnitsArr[$i]['is_primary_unit']);
+            array_push($productUnitsRemarks, $productUnitsArr[$i]['remarks']);
+        }
+
+        array_push($product_units_hId, null);
+        array_push($productUnitsCode, $this->faker->numberBetween(1000000, 9999999));
+        array_push($unitId, Hashids::encode($company->units()->where('category', '<>', ProductCategory::SERVICES->value)->inRandomOrder()->first()->id));
+        array_push($conversionValue, $productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2);
+        array_push($isBase, false);
+        array_push($isPrimaryUnit, false);
+        array_push($productUnitsRemarks, $this->faker->sentence());
+
+        $productArr = array_merge([
+            'company_id' => Hashids::encode($companyId),
+            'product_group_id' => Hashids::encode($company->productGroups()->where('category', '!=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id),
+            'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
+            'product_type' => $this->faker->numberBetween(1, 3),
+            'product_units_hId' => $product_units_hId,
+            'product_units_code' => $productUnitsCode,
+            'product_units_unit_hId' => $unitId,
+            'product_units_conv_value' => $conversionValue,
+            'product_units_is_base' => $isBase,
+            'product_units_is_primary_unit' => $isPrimaryUnit,
+            'product_units_remarks' => $productUnitsRemarks,
+        ], Product::factory()->make()->toArray());
+
+        $api = $this->json('POST', route('api.post.db.product.product.edit', $product->uuid), $productArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+
     public function test_product_api_call_update_product_and_insert_product_units_with_non_numeric_conv_code_expect_failed()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -1053,6 +1127,9 @@ class ProductAPITest extends APITestCase
         $api = $this->json('POST', route('api.post.db.product.product.edit', $product->uuid), $productArr);
 
         $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
     }
 
     public function test_product_api_call_update_product_and_edit_product_units_expect_db_updated()

@@ -11,6 +11,7 @@ return [
     'valid_brand' => 'Merk tidak valid',
     'valid_unit' => 'Satuan tidak valid',
     'valid_product' => 'Produk tidak valid',
+    'valid_product_unit' => 'Satuan Produk tidak valid',
     'valid_supplier' => 'Pemasok tidak valid',
     'too_many_tokens' => 'Terlalu banyak permintaan token',
     'must_reset_password' => 'Harap lakukan reset password',

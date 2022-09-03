@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RecordStatus;
 use App\Models\Employee;
+use App\Enums\RecordStatus;
+use App\Rules\isValidBranch;
 use App\Rules\isValidCompany;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 
 class EmployeeRequest extends FormRequest
 {
@@ -57,7 +58,7 @@ class EmployeeRequest extends FormRequest
             'postal_code' => ['nullable', 'max:10'],
             'img_path' => ['nullable'],
             'remarks' => ['nullable', 'max:255'],
-            'accessBranchIds.*' => ['nullable'],
+            'accessBranchIds.*' => ['nullable', new isValidBranch()],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
