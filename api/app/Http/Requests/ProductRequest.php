@@ -10,6 +10,7 @@ use App\Rules\isValidBrand;
 use App\Rules\isValidCompany;
 use App\Rules\isValidProductGroup;
 use App\Rules\isValidProductUnit;
+use App\Rules\isValidUnit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -97,7 +98,7 @@ class ProductRequest extends FormRequest
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
                     'product_units_code.*' => ['required', 'max:255'],
-                    'product_units_unit_id.*' => ['required'],
+                    'product_units_unit_id.*' => ['required', new isValidUnit()],
                     'product_units_conv_value.*' => ['numeric', 'min:1'],
                     'product_units_is_base.*' => ['required', 'boolean'],
                     'product_units_is_primary_unit.*' => ['required', 'boolean'],
@@ -119,7 +120,7 @@ class ProductRequest extends FormRequest
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
                     'product_units_code.*' => ['required', 'max:255'],
-                    'product_units_unit_id.*' => ['required'],
+                    'product_units_unit_id.*' => ['required', new isValidUnit()],
                     'product_units_conv_value.*' => ['numeric', 'min:1'],
                     'product_units_is_base.*' => ['required', 'boolean'],
                     'product_units_is_primary_unit.*' => ['required', 'boolean'],
