@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Brand;
 use Tests\APITestCase;
 use App\Models\Company;
 use App\Models\Product;
@@ -206,6 +207,90 @@ class ProductAPITest extends APITestCase
             'conversion_value' => $conversionValue[0],
             'is_primary_unit' => $isPrimaryUnit[0],
             'remarks' => $productUnitsRemarks[0],
+        ]);
+    }
+
+    public function test_product_group_api_call_store_with_nonexistance_product_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(ProductGroup::factory()->count(5), 'productGroups'), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        $productGroupId = ProductGroup::max('id') + 1;
+
+        $this->actingAs($user);
+
+        $productArr = Product::factory()->make([
+            'company_id' => Hashids::encode($companyId),
+            'product_group_id' => Hashids::encode($productGroupId),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.product.product.save'), $productArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+
+    public function test_brand_api_call_store_with_nonexistance_product_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Brand::factory()->count(5), 'brands'), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        $brandId = Brand::max('id') + 1;
+
+        $this->actingAs($user);
+
+        $productArr = Product::factory()->make([
+            'company_id' => Hashids::encode($companyId),
+            'product_group_id' => Hashids::encode($brandId),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.product.product.save'), $productArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+
+    public function test_unit_api_call_store_with_nonexistance_product_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Unit::factory()->count(5), 'units'), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        $unitId = Unit::max('id') + 1;
+
+        $this->actingAs($user);
+
+        $productArr = Product::factory()->make([
+            'company_id' => Hashids::encode($companyId),
+            'product_group_id' => Hashids::encode($unitId),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.product.product.save'), $productArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
         ]);
     }
 
