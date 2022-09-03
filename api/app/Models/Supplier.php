@@ -38,6 +38,7 @@ class Supplier extends Model
     ];
 
     protected static $logAttributes = [
+        'company_id',
         'code',
         'name',
         'contact',

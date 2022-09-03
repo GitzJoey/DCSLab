@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -32,7 +33,16 @@ class ProductUnit extends Model
         'remarks',
     ];
 
-    protected static $logAttributes = ['company_id', 'product_id', 'unit_id', 'code', 'is_base', 'conversion_value', 'is_primary_unit', 'remarks'];
+    protected static $logAttributes = [
+        'company_id',
+        'product_id',
+        'unit_id',
+        'code',
+        'is_base',
+        'conversion_value',
+        'is_primary_unit',
+        'remarks'
+    ];
 
     protected static $logOnlyDirty = true;
 

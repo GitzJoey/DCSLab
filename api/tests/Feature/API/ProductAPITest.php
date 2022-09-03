@@ -19,12 +19,9 @@ use App\Enums\ProductGroupCategory;
 use Vinkla\Hashids\Facades\Hashids;
 use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\BrandTableSeeder;
-use App\Http\Resources\ProductResource;
 use Database\Seeders\ProductTableSeeder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Database\Seeders\ProductGroupTableSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class ProductAPITest extends APITestCase
@@ -209,6 +206,34 @@ class ProductAPITest extends APITestCase
             'conversion_value' => $conversionValue[0],
             'is_primary_unit' => $isPrimaryUnit[0],
             'remarks' => $productUnitsRemarks[0],
+        ]);
+    }
+
+    public function test_product_api_call_store_with_nonexistance_product_group_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(ProductGroup::factory()->count(3), 'productGroups'), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        $productGroupId = ProductGroup::max('id') + 1;
+
+        $this->actingAs($user);
+
+        $productArr = Product::factory()->make([
+            'company_id' => Hashids::encode($companyId),
+            'product_group_id' => Hashids::encode($productGroupId),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.product.product.save'), $productArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
         ]);
     }
 

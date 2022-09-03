@@ -6,7 +6,9 @@ use App\Enums\ProductCategory;
 use App\Enums\ProductType;
 use App\Enums\RecordStatus;
 use App\Models\Product;
+use App\Rules\isValidBrand;
 use App\Rules\isValidCompany;
+use App\Rules\isValidProductGroup;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -54,7 +56,7 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'brand_id' => 'nullable',
+            'brand_id' => ['nullable', new isValidBrand()],
             'remarks' =>['nullable', 'max:255'],
             'product_units_id.*' => 'nullable',
             'product_units_remarks.*' => ['nullable', 'max:255'],
@@ -84,7 +86,7 @@ class ProductRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => ['required', 'min:3', 'max:255'],
-                    'product_group_id' => ['required'],
+                    'product_group_id' => ['required', new isValidProductGroup()],
                     'taxable_supply' => ['required', 'boolean'],
                     'standard_rated_supply' =>  ['required', 'numeric', 'min:0'],
                     'use_serial_number' => ['required', 'boolean'],
@@ -106,7 +108,7 @@ class ProductRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'product_group_id' => ['required'],
+                    'product_group_id' => ['required', new isValidProductGroup()],
                     'taxable_supply' => ['required', 'boolean'],
                     'standard_rated_supply' =>  ['required', 'numeric', 'min:0'],
                     'use_serial_number' => ['required', 'boolean'],
