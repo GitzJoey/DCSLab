@@ -12,9 +12,9 @@ class isValidProductGroup implements Rule
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($company_id)
     {
-        //
+        $this->company_id = $company_id;
     }
 
     /**
@@ -26,8 +26,7 @@ class isValidProductGroup implements Rule
      */
     public function passes($attribute, $value)
     {
-        $companyIds = auth()->user()->companies->pluck('id')->toArray();
-        $productGroupIds = ProductGroup::whereIn('company_id', $companyIds)->pluck('id');
+        $productGroupIds = ProductGroup::where('company_id', '=', $this->company_id)->pluck('id');
         return $productGroupIds->contains($value);
     }
 

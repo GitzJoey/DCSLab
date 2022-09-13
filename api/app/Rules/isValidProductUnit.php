@@ -12,9 +12,9 @@ class isValidProductUnit implements Rule
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($company_id)
     {
-        //
+        $this->company_id = $company_id;
     }
 
     /**
@@ -27,8 +27,7 @@ class isValidProductUnit implements Rule
     public function passes($attribute, $value)
     {
         if ($value) {
-            $companyIds = auth()->user()->companies->pluck('id')->toArray();
-            $productUnitIds = ProductUnit::whereIn('company_id', $companyIds)->pluck('id');
+            $productUnitIds = ProductUnit::where('company_id', '=', $this->company_id)->pluck('id');
             return $productUnitIds->contains($value);
         } else {
             return true;

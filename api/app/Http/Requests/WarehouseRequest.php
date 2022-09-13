@@ -80,7 +80,7 @@ class WarehouseRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'branch_id' => ['required', new isValidBranch()],
+                    'branch_id' => ['required', new isValidBranch($this->company_id)],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(RecordStatus::class)],
@@ -88,9 +88,9 @@ class WarehouseRequest extends FormRequest
 
                 return array_merge($rules_store, $nullableArr);
             case 'update':
-                $rules_update = [
+            $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'branch_id' => ['required', new isValidBranch()],
+                    'branch_id' => ['required', new isValidBranch($this->company_id)],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(RecordStatus::class)],

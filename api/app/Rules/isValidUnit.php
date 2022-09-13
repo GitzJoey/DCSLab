@@ -12,9 +12,9 @@ class isValidUnit implements Rule
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($company_id)
     {
-        //
+        $this->company_id = $company_id;
     }
 
     /**
@@ -26,8 +26,7 @@ class isValidUnit implements Rule
      */
     public function passes($attribute, $value)
     {
-        $companyIds = auth()->user()->companies->pluck('id')->toArray();
-        $unitIds = Unit::whereIn('company_id', $companyIds)->pluck('id');
+        $unitIds = Unit::where('company_id', '=', $this->company_id)->pluck('id');
         return $unitIds->contains($value);
     }
 

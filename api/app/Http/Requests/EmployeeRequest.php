@@ -58,7 +58,7 @@ class EmployeeRequest extends FormRequest
             'postal_code' => ['nullable', 'max:10'],
             'img_path' => ['nullable'],
             'remarks' => ['nullable', 'max:255'],
-            'accessBranchIds.*' => ['nullable', new isValidBranch()],
+            'accessBranchIds.*' => ['nullable', new isValidBranch($this->company_id)],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();

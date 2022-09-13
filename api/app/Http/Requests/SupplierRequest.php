@@ -60,7 +60,7 @@ class SupplierRequest extends FormRequest
             'tax_id' => ['nullable', 'max:255'],
             'remarks' => ['nullable', 'max:255'],
             'pic_name' => ['nullable', 'max:255'],
-            'productIds.*' => ['nullable', new isValidProduct()],
+            'productIds.*' => ['nullable', new isValidProduct($this->company_id)],
             'mainProducts.*' => 'nullable',
         ];
 

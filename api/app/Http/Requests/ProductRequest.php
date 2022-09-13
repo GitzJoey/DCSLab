@@ -58,9 +58,9 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'brand_id' => ['nullable', new isValidBrand()],
+            'brand_id' => ['nullable', new isValidBrand($this->company_id)],
             'remarks' =>['nullable', 'max:255'],
-            'product_units_id.*' => ['nullable', new isValidProductUnit()],
+            'product_units_id.*' => ['nullable', new isValidProductUnit($this->company_id)],
             'product_units_remarks.*' => ['nullable', 'max:255'],
         ];
 
@@ -88,7 +88,7 @@ class ProductRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => ['required', 'min:3', 'max:255'],
-                    'product_group_id' => ['required', new isValidProductGroup()],
+                    'product_group_id' => ['required', new isValidProductGroup($this->company_id)],
                     'taxable_supply' => ['required', 'boolean'],
                     'standard_rated_supply' =>  ['required', 'numeric', 'min:0'],
                     'use_serial_number' => ['required', 'boolean'],
@@ -98,7 +98,7 @@ class ProductRequest extends FormRequest
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
                     'product_units_code.*' => ['required', 'max:255'],
-                    'product_units_unit_id.*' => ['required', new isValidUnit()],
+                    'product_units_unit_id.*' => ['required', new isValidUnit($this->company_id)],
                     'product_units_conv_value.*' => ['numeric', 'min:1'],
                     'product_units_is_base.*' => ['required', 'boolean'],
                     'product_units_is_primary_unit.*' => ['required', 'boolean'],
@@ -110,7 +110,7 @@ class ProductRequest extends FormRequest
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|min:3|max:255',
-                    'product_group_id' => ['required', new isValidProductGroup()],
+                    'product_group_id' => ['required', new isValidProductGroup($this->company_id)],
                     'taxable_supply' => ['required', 'boolean'],
                     'standard_rated_supply' =>  ['required', 'numeric', 'min:0'],
                     'use_serial_number' => ['required', 'boolean'],
@@ -120,7 +120,7 @@ class ProductRequest extends FormRequest
                     'status' => [new Enum(RecordStatus::class)],
                     'product_type' => [new Enum(ProductType::class)],
                     'product_units_code.*' => ['required', 'max:255'],
-                    'product_units_unit_id.*' => ['required', new isValidUnit()],
+                    'product_units_unit_id.*' => ['required', new isValidUnit($this->company_id)],
                     'product_units_conv_value.*' => ['numeric', 'min:1'],
                     'product_units_is_base.*' => ['required', 'boolean'],
                     'product_units_is_primary_unit.*' => ['required', 'boolean'],
