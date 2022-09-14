@@ -7,6 +7,8 @@ use Illuminate\Contracts\Validation\Rule;
 
 class isValidBranch implements Rule
 {
+    private $company_id;
+    
     /**
      * Create a new rule instance.
      *
@@ -29,8 +31,8 @@ class isValidBranch implements Rule
         $result = Branch::where([
             ['id', '=', $value],
             ['company_id', '=', $this->company_id],
-        ])->count();
-        return $result > 0 ? true : false;
+        ])->exists();
+        return $result;
     }
 
     /**

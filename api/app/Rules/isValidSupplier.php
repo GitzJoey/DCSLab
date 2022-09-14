@@ -7,6 +7,8 @@ use Illuminate\Contracts\Validation\Rule;
 
 class isValidSupplier implements Rule
 {
+    private $company_id;
+    
     /**
      * Create a new rule instance.
      *
@@ -29,8 +31,8 @@ class isValidSupplier implements Rule
         $result = Supplier::where([
             ['id', '=', $value],
             ['company_id', '=', $this->company_id],
-        ])->count();
-        return $result > 0 ? true : false;
+        ])->exists();
+        return $result;
     }
 
     /**

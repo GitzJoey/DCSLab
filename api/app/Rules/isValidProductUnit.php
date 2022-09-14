@@ -7,6 +7,8 @@ use Illuminate\Contracts\Validation\Rule;
 
 class isValidProductUnit implements Rule
 {
+    private $company_id;
+    
     /**
      * Create a new rule instance.
      *
@@ -30,8 +32,8 @@ class isValidProductUnit implements Rule
             $result = ProductUnit::where([
                 ['id', '=', $value],
                 ['company_id', '=', $this->company_id],
-            ])->count();
-            return $result > 0 ? true : false;
+            ])->exists();
+            return $result;
         } else {
             return true;
         }
