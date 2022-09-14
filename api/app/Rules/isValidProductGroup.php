@@ -26,8 +26,11 @@ class isValidProductGroup implements Rule
      */
     public function passes($attribute, $value)
     {
-        $productGroupIds = ProductGroup::where('company_id', '=', $this->company_id)->pluck('id');
-        return $productGroupIds->contains($value);
+        $result = ProductGroup::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->company_id],
+        ])->count();
+        return $result > 0 ? true : false;
     }
 
     /**

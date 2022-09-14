@@ -26,8 +26,11 @@ class isValidProduct implements Rule
      */
     public function passes($attribute, $value)
     {
-        $productIds = Product::where('company_id', '=', $this->company_id)->pluck('id');
-        return $productIds->contains($value);
+        $result = Product::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->company_id],
+        ])->count();
+        return $result > 0 ? true : false;
     }
 
     /**

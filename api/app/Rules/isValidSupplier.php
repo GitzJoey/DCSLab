@@ -26,8 +26,11 @@ class isValidSupplier implements Rule
      */
     public function passes($attribute, $value)
     {
-        $supplierIds = Supplier::where('company_id', '=', $this->company_id)->pluck('id');
-        return $supplierIds->contains($value);
+        $result = Supplier::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->company_id],
+        ])->count();
+        return $result > 0 ? true : false;
     }
 
     /**

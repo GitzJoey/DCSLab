@@ -26,8 +26,11 @@ class isValidEmployee implements Rule
      */
     public function passes($attribute, $value)
     {
-        $employeeIds = Employee::where('company_id', '=', $this->company_id)->pluck('id');
-        return $employeeIds->contains($value);
+        $result = Employee::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->company_id],
+        ])->count();
+        return $result > 0 ? true : false;
     }
 
     /**

@@ -26,8 +26,11 @@ class isValidBrand implements Rule
      */
     public function passes($attribute, $value)
     {
-        $brandIds = Brand::where('company_id', '=', $this->company_id)->pluck('id');
-        return $brandIds->contains($value);
+        $result = Brand::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->company_id],
+        ])->count();
+        return $result > 0 ? true : false;
     }
 
     /**

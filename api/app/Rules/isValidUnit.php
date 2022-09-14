@@ -26,8 +26,11 @@ class isValidUnit implements Rule
      */
     public function passes($attribute, $value)
     {
-        $unitIds = Unit::where('company_id', '=', $this->company_id)->pluck('id');
-        return $unitIds->contains($value);
+        $result = Unit::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->company_id],
+        ])->count();
+        return $result > 0 ? true : false;
     }
 
     /**

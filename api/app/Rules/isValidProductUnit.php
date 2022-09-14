@@ -27,8 +27,11 @@ class isValidProductUnit implements Rule
     public function passes($attribute, $value)
     {
         if ($value) {
-            $productUnitIds = ProductUnit::where('company_id', '=', $this->company_id)->pluck('id');
-            return $productUnitIds->contains($value);
+            $result = ProductUnit::where([
+                ['id', '=', $value],
+                ['company_id', '=', $this->company_id],
+            ])->count();
+            return $result > 0 ? true : false;
         } else {
             return true;
         }

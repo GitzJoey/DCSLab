@@ -26,8 +26,11 @@ class isValidWarehouse implements Rule
      */
     public function passes($attribute, $value)
     {
-        $warehouseIds = Warehouse::where('company_id', '=', $this->company_id)->pluck('id');
-        return $warehouseIds->contains($value);
+        $result = Warehouse::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->company_id],
+        ])->count();
+        return $result > 0 ? true : false;
     }
 
     /**
