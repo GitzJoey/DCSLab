@@ -28,7 +28,12 @@ class isValidBranch implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (!$this->companyId) return false;
+        if ($this->companyId) {
+            $result = auth()->user()->companies->pluck('id')->contains($this->companyId);
+            if(!$result) return false;
+        } else {
+            return false;
+        }
 
         if ($value) {
             $result = Branch::where([
