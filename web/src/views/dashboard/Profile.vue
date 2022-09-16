@@ -66,7 +66,7 @@
                                         <div class="form-inline">                                            
                                             <div class="flex-1">
                                                 <img alt="" class="my-1" src="@/assets/images/def-user.png" v-if="retrieveImage === ''" />
-                                                <img alt="" class="my-1" :src="retrieveImage" v-else />
+                                                <img alt="" class="my-1 max-w-80 max-h-60" :src="retrieveImage" v-else />
                                                 <input type="file" class="h-full w-full" id="inputImg" name="img_path" data-toggle="custom-file-input" v-on:change="handleUpload" />
                                             </div>
                                         </div>
@@ -364,6 +364,7 @@ const handleUpload = (e) => {
     const fileReader = new FileReader()
     
     fileReader.addEventListener('load', () => {
+        userContext.value.profile.img_path = fileReader.result;
     });
 
     fileReader.readAsDataURL(files[0]);
