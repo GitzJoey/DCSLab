@@ -358,6 +358,17 @@ const onSubmit = (values, actions) => {
     }
 }
 
+const handleUpload = (e) => {
+    const files = e.target.files;
+    let filename = files[0].name;
+    const fileReader = new FileReader()
+    
+    fileReader.addEventListener('load', () => {
+    });
+
+    fileReader.readAsDataURL(files[0]);
+}
+
 const handleError = (e, actions) => {
     //Laravel Validations
     if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
