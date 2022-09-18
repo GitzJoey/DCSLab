@@ -14,9 +14,10 @@ class isValidWarehouse implements Rule
      *
      * @return void
      */
-    public function __construct($company_id)
+    public function __construct($companyId, $branchId)
     {
-        $this->companyId = $company_id;
+        $this->companyId = $companyId;
+        $this->branchId = $branchId;
     }
 
     /**
@@ -28,22 +29,15 @@ class isValidWarehouse implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->companyId) {
-            $result = auth()->user()->companies->pluck('id')->contains($this->companyId);
-            if(!$result) return false;
-        } else {
-            return false;
-        }
+        if (!$this->companyId || !$this->branchId || !$value) return false;
 
-        if ($value) {
-            $result = Warehouse::where([
-                ['id', '=', $value],
-                ['company_id', '=', $this->companyId],
-            ])->exists();
-            return $result;
-        } else {
-            return true;
-        }
+        $result = Warehouse::where([
+            ['id', '=', $value],
+            ['company_id', '=', $this->companyId],
+            ['branch_id', '=', $this->branchId],
+        ])->exists();
+
+        return $result;
     }
 
     /**
