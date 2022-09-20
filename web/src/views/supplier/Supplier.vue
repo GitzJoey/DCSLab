@@ -278,6 +278,7 @@
 //#region Imports
 import { onMounted, onUnmounted, ref, computed, watch, inject } from "vue";
 import axios from "@/axios";
+import _ from "lodash";
 import { useI18n } from "vue-i18n";
 import route from "@/ziggy";
 import dom from "@left4code/tw-starter/dist/js/dom";
@@ -289,7 +290,6 @@ import { getCachedDDL, setCachedDDL } from "@/mixins";
 
 //#region Declarations
 const { t } = useI18n();
-const _ = inject('$_');
 //#endregion
 
 //#region Data - Pinia
