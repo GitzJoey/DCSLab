@@ -61,7 +61,7 @@ class SupplierRequest extends FormRequest
             'remarks' => ['nullable', 'max:255'],
             'pic_name' => ['nullable', 'max:255'],
             'productIds.*' => ['nullable', new isValidProduct($this->company_id)],
-            'mainProducts.*' => 'nullable',
+            'mainProducts.*' => ['nullable', new isValidProduct($this->company_id)],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
