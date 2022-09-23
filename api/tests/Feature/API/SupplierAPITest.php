@@ -89,8 +89,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $product_hIds;
-        $supplierArr['mainProducts'] = $main_product_hIds;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
 
@@ -108,6 +108,71 @@ class SupplierAPITest extends APITestCase
             'tax_id' => $supplierArr['tax_id'],
             'remarks' => $supplierArr['remarks'],
             'status' => $supplierArr['status'],
+        ]);
+    }
+
+    public function test_supplier_api_call_store_with_nonexistance_supplier_product_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+        
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $productGroupSeeder = new ProductGroupTableSeeder();
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
+
+        $brandSeeder = new BrandTableSeeder();
+        $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+
+        $unitSeeder = new UnitTableSeeder();
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS->value]);
+
+        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
+        $supplier_product_hIds = Product::where([
+            ['company_id', '=', $companyId],
+            ['brand_id', '!=', null]
+        ])->take($supplierProductsCount)->pluck('id');
+        
+        $product_hIds = [];
+        for ($i = 0; $i < count($supplier_product_hIds); $i++) {
+            $producthId = Hashids::encode($supplier_product_hIds[0]);
+            if ($i == 0) {
+                $producthId = Hashids::encode(Product::max('id') + 1);
+            }
+            array_push($product_hIds, $producthId);
+        }
+
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
+            $mainProductId = $this->randomGenerator->generateNumber(0, 1);
+            if ($mainProductId == 1) {
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
+            }
+        }
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode($companyId)
+        ])->toArray();
+        $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
+        $supplierArr['pic_name'] = $this->faker->name();
+        $supplierArr['email'] = $this->faker->email();
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
+
+        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
         ]);
     }
 
@@ -165,8 +230,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $product_hIds;
-        $supplierArr['mainProducts'] = $main_product_hIds;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
 
@@ -251,8 +316,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $product_hIds;
-        $supplierArr['mainProducts'] = $main_product_hIds;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
             'companyId' => Hashids::encode($companyId),
@@ -424,8 +489,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $product_hIds;
-        $supplierArr['mainProducts'] = $main_product_hIds;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
             'companyId' => Hashids::encode($companyId),
@@ -484,8 +549,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $product_hIds;
-        $supplierArr['mainProducts'] = $main_product_hIds;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
 
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
@@ -559,8 +624,8 @@ class SupplierAPITest extends APITestCase
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['pic_name'] = $this->faker->name();
         $supplierArr['email'] = $this->faker->email();
-        $supplierArr['productIds'] = $product_hIds;
-        $supplierArr['mainProducts'] = $main_product_hIds;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
         $this->actingAs($user);
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.list', [
@@ -729,8 +794,8 @@ class SupplierAPITest extends APITestCase
         ], Supplier::factory()->make()->toArray());
         $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
         $supplierArr['email'] = $supplier->user()->first()->email;
-        $supplierArr['productIds'] = $product_hIds;
-        $supplierArr['mainProducts'] = $main_product_hIds;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
         
         $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->uuid), $supplierArr);
 
@@ -749,6 +814,74 @@ class SupplierAPITest extends APITestCase
             'tax_id' => $supplierArr['tax_id'],
             'remarks' => $supplierArr['remarks'],
             'status' => $supplierArr['status'],
+        ]);
+    }
+
+    public function test_supplier_api_call_update_with_nonexistance_supplier_product_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $this->actingAs($user);
+
+        $productGroupSeeder = new ProductGroupTableSeeder();
+        $productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
+
+        $brandSeeder = new BrandTableSeeder();
+        $brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+
+        $unitSeeder = new UnitTableSeeder();
+        $unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
+
+        $productSeeder = new ProductTableSeeder();
+        $productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS->value]);
+
+        $supplierSeeder = new SupplierTableSeeder();
+        $supplierSeeder->callWith(SupplierTableSeeder::class, [1, $companyId]);
+
+        $supplierProductsCount = $this->randomGenerator->generateNumber(1, $company->products()->count());
+        $supplier_product_hIds = Product::where([
+            ['company_id', '=', $companyId],
+            ['brand_id', '!=', null]
+        ])->take($supplierProductsCount)->pluck('id');
+
+        $product_hIds = [];
+        for ($i = 0; $i < count($supplier_product_hIds); $i++) {
+            $producthId = Hashids::encode($supplier_product_hIds[0]);
+            if ($i == 0) {
+                $producthId = Hashids::encode(Product::max('id') + 1);
+            }
+            array_push($product_hIds, $producthId);
+        }
+
+        $main_product_hIds = [];
+        foreach ($supplier_product_hIds as $supplierProductId) {
+            $mainProductId = $this->randomGenerator->generateNumber(0, 1);
+            if ($mainProductId == 1) {
+                array_push($main_product_hIds, Hashids::encode($supplierProductId));
+            }           
+        }
+
+        $supplier = $company->suppliers()->inRandomOrder()->first();
+        $supplierArr = array_merge([
+            'company_id' => Hashids::encode($companyId),
+        ], Supplier::factory()->make()->toArray());
+        $supplierArr['payment_term_type'] = $this->faker->randomElement(PaymentTermType::toArrayEnum())->name;
+        $supplierArr['email'] = $supplier->user()->first()->email;
+        $supplierArr['product_hIds'] = $product_hIds;
+        $supplierArr['main_product_hIds'] = $main_product_hIds;
+        
+        $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->uuid), $supplierArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
         ]);
     }
 

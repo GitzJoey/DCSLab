@@ -104,6 +104,58 @@ class EmployeeAPITest extends APITestCase
         }
     }
 
+    public function test_employee_api_call_store_with_nonexistance_branch_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                        ->has(Branch::factory()->count(5), 'branches'), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $this->actingAs($user);
+
+        $accessCount = $this->randomGenerator->generateNumber(1, $company->branches()->count());
+        $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
+        $access_branch_hIds = [];
+        for ($i = 0; $i < $accessCount; $i++) {
+            $branch_hId = Hashids::encode($branches[$i]->id);
+            if ($i == 0) {
+                $branch_hId = Hashids::encode(Branch::max('id') + 1);
+            }
+
+            array_push($access_branch_hIds, $branch_hId);
+        }
+
+        $userArr = User::factory()->make()->toArray();
+
+        $profileArr = Profile::factory()->make()->toArray();
+
+        $employeeArr = array_merge([
+            'company_id' => Hashids::encode($companyId),
+            'name' => $userArr['name'],
+            'email' => $userArr['email'],
+            'address' => $profileArr['address'],
+            'city' => $profileArr['city'],
+            'postal_code' => $profileArr['postal_code'],
+            'country' => $profileArr['country'],
+            'tax_id' => $profileArr['tax_id'],
+            'ic_num' => $profileArr['ic_num'],
+            'remarks' => $profileArr['remarks'],
+            'access_branch_hIds' => $access_branch_hIds,
+        ], Employee::factory()->setStatusActive()->make()->toArray());
+
+        $api = $this->json('POST', route('api.post.db.company.employee.save'), $employeeArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+
     public function test_employee_api_call_store_with_existing_code_in_same_company_expect_failed()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -548,6 +600,62 @@ class EmployeeAPITest extends APITestCase
                 'branch_id' => Hashids::decode($access_branch_hIds[$i])[0],
             ]);
         }
+    }
+
+    public function test_employee_api_call_update_with_nonexistance_branch_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+
+        $employeeSeeder = new EmployeeTableSeeder();
+        $employeeSeeder->callWith(EmployeeTableSeeder::class, [3, $companyId]);
+
+        $this->actingAs($user);
+
+        $accessCount = $this->randomGenerator->generateNumber(1, $company->branches()->count());
+        $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
+        $access_branch_hIds = [];
+        for ($i = 0; $i < $accessCount; $i++) {
+            $branch_hId = Hashids::encode($branches[$i]->id);
+            if ($i == 0) {
+                $branch_hId = Hashids::encode(Branch::max('id') + 1);
+            }
+
+            array_push($access_branch_hIds, $branch_hId);
+        }
+
+        $userArr = User::factory()->make()->toArray();
+        
+        $profileArr = Profile::factory()->make()->toArray();
+
+        $employeeArr = array_merge([
+            'company_id' => Hashids::encode($companyId),
+            'name' => $userArr['name'],
+            'address' => $profileArr['address'],
+            'city' => $profileArr['city'],
+            'postal_code' => $profileArr['postal_code'],
+            'country' => $profileArr['country'],
+            'tax_id' => $profileArr['tax_id'],
+            'ic_num' => $profileArr['ic_num'],
+            'remarks' => $profileArr['remarks'],
+            'access_branch_hIds' => $access_branch_hIds,
+        ], Employee::factory()->setStatusActive()->make()->toArray());
+
+        $employee = $company->employees()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.company.employee.edit', $employee->uuid), $employeeArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
     }
 
     public function test_employee_api_call_update_and_use_existing_code_in_same_company_expect_failed()

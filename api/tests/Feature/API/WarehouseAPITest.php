@@ -61,6 +61,34 @@ class WarehouseAPITest extends APITestCase
         ]);
     }
 
+    public function test_warehouse_api_call_store_with_nonexistance_branch_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory()->count(3), 'branches'), 'companies')
+                    ->create();
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        $branchId = Branch::max('id') + 1;
+
+        $this->actingAs($user);
+
+        $warehouseArr = Warehouse::factory()->make([
+            'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($branchId),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), $warehouseArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+
     public function test_warehouse_api_call_store_with_existing_code_in_same_company_expect_failed()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable */
@@ -483,6 +511,41 @@ class WarehouseAPITest extends APITestCase
             'contact' => $warehouseArr['contact'],
             'remarks' => $warehouseArr['remarks'],
             'status' => $warehouseArr['status'],
+        ]);
+    }
+
+    public function test_warehouse_api_call_update_with_nonexistance_branch_id_expect_failed()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable */
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setIsDefault()
+                            ->has(Branch::factory(), 'branches'), 'companies')
+                    ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        $companyId = $company->id;
+        $branchId = $company->branches()->first()->id;
+
+        Warehouse::factory()->create([
+            'company_id' => $companyId,
+            'branch_id' => $branchId,
+        ]);
+
+        $newBranchId = Branch::max('id') + 1;
+        $warehouse = $company->warehouses()->inRandomOrder()->first();
+        $warehouseArr = Warehouse::factory()->make([
+            'company_id' => Hashids::encode($companyId),
+            'branch_id' => Hashids::encode($newBranchId),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.warehouse.edit', $warehouse->uuid), $warehouseArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
         ]);
     }
 

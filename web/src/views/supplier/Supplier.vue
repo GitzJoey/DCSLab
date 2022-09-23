@@ -197,11 +197,9 @@
                             <ErrorMessage name="payment_term_type" class="text-danger" />
                         </div>
                         <div class="mb-3">
-                            <label for="inputPaymentTerm">{{ t('views.supplier.fields.payment_term') }}</label>
-                            <div class="mt-2">
-                                <VeeField id="inputPaymentTerm" type="text" rules="required|numeric|max:365" class="form-control" name="payment_term" v-model="supplier.payment_term" />
-                                <ErrorMessage name="payment_term_type" class="text-danger" />
-                            </div>
+                            <label for="inputPaymentTerm" class="form-label">{{ t('views.supplier.fields.payment_term') }}</label>
+                            <VeeField id="inputPaymentTerm" name="payment_term" type="text" :class="{'form-control':true, 'border-danger': errors['payment_term']}" rules="required" :placeholder="t('views.supplier.fields.payment_term')" :label="t('views.supplier.fields.payment_term')" @blur="reValidate(errors)" v-model="supplier.payment_term" />
+                            <ErrorMessage name="payment_term" class="text-danger" />
                         </div>
                         <div class="mb-3">
                             <label for="inputStatus" class="form-label">{{ t('views.supplier.fields.status') }}</label>
@@ -380,7 +378,7 @@ const getDDL = () => {
         axios.get(route('api.get.db.common.ddl.list.statuses')).then(response => {
             statusDDL.value = response.data;
             setCachedDDL('statusDDL', response.data);
-        });    
+        });
     } else {
         statusDDL.value = getCachedDDL('statusDDL');
     }

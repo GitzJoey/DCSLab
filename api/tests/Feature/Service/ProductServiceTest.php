@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Database\Seeders\ProductGroupTableSeeder;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class ProductServiceTest extends ServiceTestCase
 {

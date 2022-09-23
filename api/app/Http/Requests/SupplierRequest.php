@@ -2,14 +2,15 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\PaymentTermType;
-use App\Enums\RecordStatus;
 use App\Models\Supplier;
+use App\Enums\RecordStatus;
 use App\Rules\isValidCompany;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\isValidProduct;
+use App\Enums\PaymentTermType;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 
 class SupplierRequest extends FormRequest
 {
@@ -53,14 +54,14 @@ class SupplierRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'address' => 'nullable',
-            'contact' => 'nullable',
-            'city' => 'nullable',
-            'tax_id' => 'nullable',
-            'remarks' => 'nullable',
-            'pic_name' => 'nullable',
-            'productIds.*' => 'nullable',
-            'mainProducts.*' => 'nullable',
+            'address' => ['nullable', 'max:255'],
+            'contact' => ['nullable', 'max:255'],
+            'city' => ['nullable', 'max:255'],
+            'tax_id' => ['nullable', 'max:255'],
+            'remarks' => ['nullable', 'max:255'],
+            'pic_name' => ['nullable', 'max:255'],
+            'productIds.*' => ['nullable', new isValidProduct($this->company_id)],
+            'mainProducts.*' => ['nullable', new isValidProduct($this->company_id)],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();

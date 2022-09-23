@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RecordStatus;
 use App\Models\Warehouse;
+use App\Enums\RecordStatus;
+use App\Rules\isValidBranch;
 use App\Rules\isValidCompany;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 
 class WarehouseRequest extends FormRequest
 {
@@ -52,10 +53,10 @@ class WarehouseRequest extends FormRequest
     public function rules()
     {
         $nullableArr = [
-            'address' => 'nullable',
-            'city' => 'nullable',
-            'contact' => 'nullable',
-            'remarks' => 'nullable',
+            'address' => ['nullable', 'max:255'],
+            'city' => ['nullable', 'max:255'],
+            'contact' => ['nullable', 'max:255'],
+            'remarks' => ['nullable', 'max:255'],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -79,7 +80,7 @@ class WarehouseRequest extends FormRequest
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'branch_id' => ['required'],
+                    'branch_id' => ['required', new isValidBranch($this->company_id)],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(RecordStatus::class)],
@@ -87,9 +88,9 @@ class WarehouseRequest extends FormRequest
 
                 return array_merge($rules_store, $nullableArr);
             case 'update':
-                $rules_update = [
+            $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'branch_id' => ['required'],
+                    'branch_id' => ['required', new isValidBranch($this->company_id)],
                     'code' => ['required', 'max:255'],
                     'name' => 'required|max:255',
                     'status' => [new Enum(RecordStatus::class)],

@@ -7,7 +7,6 @@ use App\Enums\ProductType;
 use App\Enums\RecordStatus;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class ProductFactory extends Factory
 {

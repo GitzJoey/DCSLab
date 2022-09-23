@@ -151,80 +151,6 @@ class DashboardServiceImpl implements DashboardService
         return $menu;
     }
 
-    private function createMenu_Administrator(array $menu, bool $hasAdminRole, bool $hasDevRole): array
-    {
-        $user = [
-            'icon' => '',
-            'pageName' => 'side-menu-administrator-user',
-            'title' => 'components.menu.administrator-user',
-        ];
-
-        $root_array = [
-            'icon' => 'CpuIcon',
-            'pageName' => 'side-menu-administrator',
-            'title' => 'components.menu.administrator',
-            'subMenu' => [
-            ],
-        ];
-
-        array_push($root_array['subMenu'], $user);
-
-        if ($hasAdminRole || $hasDevRole) {
-            array_push($menu, $root_array);
-        }
-
-        return $menu;
-    }
-
-    private function createMenu_DevTool(array $menu, bool $hasDevRole): array
-    {
-        $dbbackup = [
-            'icon' => '',
-            'pageName' => 'side-menu-devtool-backup',
-            'title' => 'components.menu.devtool-dbbackup',
-        ];
-
-        $playground = [
-            'icon' => '',
-            'pageName' => 'side-menu-devtool-example',
-            'title' => 'components.menu.devtool-playground',
-            'subMenu' => [
-            ],
-        ];
-
-        $playground_ex1 = [
-            'icon' => '',
-            'pageName' => 'side-menu-devtool-example-ex1',
-            'title' => 'components.menu.devtool-playground-ex1',
-        ];
-
-        $playground_ex2 = [
-            'icon' => '',
-            'pageName' => 'side-menu-devtool-example-ex2',
-            'title' => 'components.menu.devtool-playground-ex2',
-        ];
-
-        array_push($playground['subMenu'], $playground_ex1);
-        array_push($playground['subMenu'], $playground_ex2);
-
-        $root_array = [
-            'icon' => 'GithubIcon',
-            'pageName' => 'side-menu-devtool',
-            'title' => 'components.menu.devtool',
-            'subMenu' => [
-            ],
-        ];
-
-        array_push($root_array['subMenu'], $dbbackup);
-        array_push($root_array['subMenu'], $playground);
-
-        if ($hasDevRole) {
-            array_push($menu, $root_array);
-        }
-
-        return $menu;
-    }
-
     private function createMenu_Product(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
         $product_group = [
@@ -335,6 +261,80 @@ class DashboardServiceImpl implements DashboardService
 
     private function createMenu_SalesOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
+        return $menu;
+    }
+
+    private function createMenu_Administrator(array $menu, bool $hasAdminRole, bool $hasDevRole): array
+    {
+        $user = [
+            'icon' => '',
+            'pageName' => 'side-menu-administrator-user',
+            'title' => 'components.menu.administrator-user',
+        ];
+
+        $root_array = [
+            'icon' => 'CpuIcon',
+            'pageName' => 'side-menu-administrator',
+            'title' => 'components.menu.administrator',
+            'subMenu' => [
+            ],
+        ];
+
+        array_push($root_array['subMenu'], $user);
+
+        if ($hasAdminRole || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+
+    private function createMenu_DevTool(array $menu, bool $hasDevRole): array
+    {
+        $dbbackup = [
+            'icon' => '',
+            'pageName' => 'side-menu-devtool-backup',
+            'title' => 'components.menu.devtool-dbbackup',
+        ];
+
+        $playground = [
+            'icon' => '',
+            'pageName' => 'side-menu-devtool-example',
+            'title' => 'components.menu.devtool-playground',
+            'subMenu' => [
+            ],
+        ];
+
+        $playground_ex1 = [
+            'icon' => '',
+            'pageName' => 'side-menu-devtool-example-ex1',
+            'title' => 'components.menu.devtool-playground-ex1',
+        ];
+
+        $playground_ex2 = [
+            'icon' => '',
+            'pageName' => 'side-menu-devtool-example-ex2',
+            'title' => 'components.menu.devtool-playground-ex2',
+        ];
+
+        array_push($playground['subMenu'], $playground_ex1);
+        array_push($playground['subMenu'], $playground_ex2);
+
+        $root_array = [
+            'icon' => 'GithubIcon',
+            'pageName' => 'side-menu-devtool',
+            'title' => 'components.menu.devtool',
+            'subMenu' => [
+            ],
+        ];
+
+        array_push($root_array['subMenu'], $dbbackup);
+        array_push($root_array['subMenu'], $playground);
+
+        if ($hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
         return $menu;
     }
 }
