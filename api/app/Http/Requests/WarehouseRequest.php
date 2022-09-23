@@ -88,7 +88,7 @@ class WarehouseRequest extends FormRequest
 
                 return array_merge($rules_store, $nullableArr);
             case 'update':
-            $rules_update = [
+                $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'branch_id' => ['required', new isValidBranch($this->company_id)],
                     'code' => ['required', 'max:255'],
