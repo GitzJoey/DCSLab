@@ -106,7 +106,7 @@ class BrandServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
         
-        Brand::factory()->insertStringInName(' testing')->count(25)->create([
+        Brand::factory()->insertStringInName('testing')->count(25)->create([
             'company_id' => $companyId
         ]);
 

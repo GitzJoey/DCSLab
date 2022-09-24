@@ -156,7 +156,7 @@ class BrandAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        Brand::factory()->insertStringInName(' testing')->count(10)->create([
+        Brand::factory()->insertStringInName('testing')->count(10)->create([
             'company_id' => $companyId
         ]);
 
