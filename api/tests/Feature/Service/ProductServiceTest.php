@@ -368,7 +368,7 @@ class ProductServiceTest extends ServiceTestCase
         
         for ($i = 0; $i < $productCount; $i++) {      
             $product = $products[$i];
-            $product->name = $product->name . ' testing';
+            $product->name = $product->name . 'testing';
             $product->save();
         }
 
