@@ -28,14 +28,13 @@
 
 <script setup>
 import { toRef, inject } from "vue";
+import _ from "lodash";
 
 const props = defineProps({
     alertType: { type: String, default: 'danger' },
     messages: { type: Object, default: {} },
     title: { type: String }
 });
-
-const _ = inject('$_');
 
 const isEmptyObject = (obj) => _.isEmpty(obj);
 

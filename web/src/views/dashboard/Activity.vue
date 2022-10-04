@@ -68,12 +68,12 @@
 import { onMounted, ref, inject } from "vue";
 import axios from "@/axios";
 import route from "@/ziggy";
+import _ from "lodash";
 import { useI18n } from "vue-i18n";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
-const _ = inject('$_');
 //#endregion
 
 //#region Data - Views

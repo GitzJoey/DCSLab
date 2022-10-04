@@ -252,6 +252,7 @@
 //#region Imports
 import { computed, inject, onMounted, ref } from "vue";
 import axios from "@/axios";
+import _ from "lodash";
 import { useI18n } from "vue-i18n";
 import { helper } from "@/utils/helper";
 import route from "@/ziggy";
@@ -263,7 +264,6 @@ import AlertPlaceholder from "@/global-components/alert-placeholder/Main.vue";
 
 //#region Declarations
 const { t } = useI18n();
-const _ = inject('$_');
 //#endregion
 
 //#region Data - Pinia
