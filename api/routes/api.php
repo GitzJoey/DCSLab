@@ -2,21 +2,22 @@
 
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ApiAuthController;
-use App\Http\Controllers\BranchController;
-use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CommonController;
-use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DevController;
-use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InboxController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductGroupController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\ProductGroupController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -161,14 +162,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth', 'auth:sanctum', 'thro
             });
         });
 
-        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
-            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
-                Route::post('save', [SupplierController::class, 'store'])->name('.save');
-                Route::post('edit/{supplier:uuid}', [SupplierController::class, 'update'])->name('.edit');
-                Route::post('delete/{supplier:uuid}', [SupplierController::class, 'delete'])->name('.delete');
-            });
-        });
-
         Route::group(['prefix' => 'product', 'as' => '.product'], function () {
             Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function () {
                 Route::post('save', [ProductGroupController::class, 'store'])->name('.save');
@@ -198,6 +191,14 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth', 'auth:sanctum', 'thro
                 Route::post('save', [ProductController::class, 'store'])->name('.save');
                 Route::post('edit/{product:uuid}', [ProductController::class, 'update'])->name('.edit');
                 Route::post('delete/{product:uuid}', [ProductController::class, 'delete'])->name('.delete');
+            });
+        });
+
+        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+                Route::post('save', [SupplierController::class, 'store'])->name('.save');
+                Route::post('edit/{supplier:uuid}', [SupplierController::class, 'update'])->name('.edit');
+                Route::post('delete/{supplier:uuid}', [SupplierController::class, 'delete'])->name('.delete');
             });
         });
         //endregion

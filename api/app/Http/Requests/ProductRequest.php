@@ -69,7 +69,7 @@ class ProductRequest extends FormRequest
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'productCategory' => ['nullable'],
+                    'productCategory' => ['nullable', new Enum(ProductCategory::class)],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
@@ -157,8 +157,18 @@ class ProductRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
-                    'productCategory' => ProductCategory::isValid($this->productCategory) ? ProductCategory::resolveToEnum($this->productCategory)->value : -1,
                 ]);
+
+                if (array_key_exists('productCategory', $this->toArray())) {
+                    $this->merge([
+                        'productCategory' => ProductCategory::isValid($this->productCategory) ? ProductCategory::resolveToEnum($this->productCategory)->value : -1,
+                    ]);
+                } else {
+                    $this->merge([
+                        'productCategory' => ProductCategory::resolveToEnum('PRODUCTS_AND_SERVICES')->value,
+                    ]);
+                }
+
                 break;
             case 'read':
                 $this->merge([]);

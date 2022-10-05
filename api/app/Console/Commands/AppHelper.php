@@ -6,23 +6,24 @@ use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
 use App\Services\RoleService;
 use App\Services\UserService;
-use Database\Seeders\BranchTableSeeder;
-use Database\Seeders\BrandTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\EmployeeTableSeeder;
-use Database\Seeders\ProductGroupTableSeeder;
-use Database\Seeders\ProductTableSeeder;
-use Database\Seeders\RoleTableSeeder;
-use Database\Seeders\SupplierTableSeeder;
-use Database\Seeders\UnitTableSeeder;
+
 use Database\Seeders\UserTableSeeder;
+use Database\Seeders\RoleTableSeeder;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\BranchTableSeeder;
+use Database\Seeders\EmployeeTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
+use Database\Seeders\ProductGroupTableSeeder;
+use Database\Seeders\BrandTableSeeder;
+use Database\Seeders\UnitTableSeeder;
+use Database\Seeders\ProductTableSeeder;
+use Database\Seeders\SupplierTableSeeder;
+
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Vinkla\Hashids\Facades\Hashids;
@@ -220,6 +221,18 @@ class AppHelper extends Command
             $this->info('BranchTableSeeder Finish.');
         }
 
+        if (in_array('EmployeeTableSeeder', $seeders) || $unattended_mode) {
+            $this->info('Starting EmployeeTableSeeder');
+            $count = $unattended_mode ? $unattended_count : $this->ask('How many employee for each branches in companies:', 5);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+            $onlyThisBranchId = $unattended_mode ? 0 : $this->ask('Only for this branchId (0 to all):', 0);
+
+            $seeder = new EmployeeTableSeeder();
+            $seeder->callWith(EmployeeTableSeeder::class, [$count, $onlyThisCompanyId, $onlyThisBranchId]);
+
+            $this->info('CustomerTableSeeder Finish.');
+        }
+
         if (in_array('WarehouseTableSeeder', $seeders) || $unattended_mode) {
             $this->info('Starting WarehouseTableSeeder');
             $warehousePerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many warehouses per company (0 to skip) :', 3);
@@ -231,19 +244,6 @@ class AppHelper extends Command
             $seeder->callWith(WarehouseTableSeeder::class, [$warehousePerCompanies, $onlyThisCompanyId]);
 
             $this->info('WarehouseTableSeeder Finish.');
-        }
-
-        if (in_array('UnitTableSeeder', $seeders) || $unattended_mode) {
-            $this->info('Starting UnitTableSeeder');
-            $unitPerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many units per company (0 to skip) :', 3);
-            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
-
-            $this->info('Seeding...');
-
-            $seeder = new UnitTableSeeder();
-            $seeder->callWith(UnitTableSeeder::class, [$unitPerCompanies, $onlyThisCompanyId]);
-
-            $this->info('UnitTableSeeder Finish.');
         }
 
         if (in_array('ProductGroupTableSeeder', $seeders) || $unattended_mode) {
@@ -270,6 +270,19 @@ class AppHelper extends Command
             $seeder->callWith(BrandTableSeeder::class, [$brandPerCompany, $onlyThisCompanyId]);
 
             $this->info('BrandTableSeeder Finish.');
+        }
+
+        if (in_array('UnitTableSeeder', $seeders) || $unattended_mode) {
+            $this->info('Starting UnitTableSeeder');
+            $unitPerCompanies = $unattended_mode ? $unattended_count : $this->ask('How many units per company (0 to skip) :', 3);
+            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
+
+            $this->info('Seeding...');
+
+            $seeder = new UnitTableSeeder();
+            $seeder->callWith(UnitTableSeeder::class, [$unitPerCompanies, $onlyThisCompanyId]);
+
+            $this->info('UnitTableSeeder Finish.');
         }
 
         if (in_array('ProductTableSeeder', $seeders) || $unattended_mode) {
@@ -304,18 +317,6 @@ class AppHelper extends Command
 
             //$seeder = new CustomerTableSeeder();
             //$seeder->callWith(CustomerTableSeeder::class, [$count]);
-
-            $this->info('CustomerTableSeeder Finish.');
-        }
-
-        if (in_array('EmployeeTableSeeder', $seeders) || $unattended_mode) {
-            $this->info('Starting EmployeeTableSeeder');
-            $count = $unattended_mode ? $unattended_count : $this->ask('How many employee for each branches in companies:', 5);
-            $onlyThisCompanyId = $unattended_mode ? 0 : $this->ask('Only for this companyId (0 to all):', 0);
-            $onlyThisBranchId = $unattended_mode ? 0 : $this->ask('Only for this branchId (0 to all):', 0);
-
-            $seeder = new EmployeeTableSeeder();
-            $seeder->callWith(EmployeeTableSeeder::class, [$count, $onlyThisCompanyId, $onlyThisBranchId]);
 
             $this->info('CustomerTableSeeder Finish.');
         }
