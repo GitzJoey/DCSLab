@@ -9,14 +9,14 @@
             "company-branch": "Cabang",
             "company-employee": "Karyawan",
             "company-warehouse": "Gudang",
-            "supplier": "Pemasok",
-            "supplier-supplier": "Pemasok",
             "product": "Produk",
-            "product-product": "Produk",
             "product-product_group": "Kelompok Produk",
             "product-brand": "Merk",
             "product-unit": "Satuan",
+            "product-product": "Produk",
             "product-service": "Layanan",
+            "supplier": "Pemasok",
+            "supplier-supplier": "Pemasok",
             "administrator": "Administrator",
             "administrator-user": "Pengguna",
             "purchase_order": "Pembelian",
@@ -254,202 +254,6 @@
         "activity": {
             "title": "Catatan Aktifitas"
         },
-        "product": {
-            "table": {
-                "title": "Daftar Produk",
-                "cols": {
-                    "code": "Kode",
-                    "name": "Nama",
-                    "brand": "Merk",
-                    "status": "Status"
-                }
-            },
-            "actions": {
-                "create": "Tambah Produk",
-                "edit": "Ubah Produk",
-                "show": "Tampilkan Produk",
-                "delete": "Hapus Produk"
-            },
-            "fields": {
-                "code": "Kode",
-                "product_group_id": "Nama Group",
-                "brand_id": "Nama Merk",
-                "name": "Nama",
-                "taxable_supply": "Produk Kena Pajak",
-                "standard_rated_supply": "PPN",
-                "price_include_vat": "Harga Termasuk Pajak",
-                "remarks": "Remarks",
-                "point": "Poin",
-                "use_serial_number": "Memakai Nomor Serial",
-                "has_expiry_date": "Tanggal Kadaluarsa",
-                "product_type": "Tipe Produk",
-                "status": "Status",
-                "units": {
-                    "title": "Satuan",
-                    "table": {
-                        "cols": {
-                            "code": "Kode",
-                            "unit": "Satuan",
-                            "conversion_value": "Nilai Tukar",
-                            "is_base": "Satuan Dasar",
-                            "is_primary": "Satuan Utama"
-                        }
-                    }
-                }
-            }
-        },
-        "service": {
-            "table": {
-                "title": " Daftar Layanan",
-                "cols": {
-                    "code": "Kode",
-                    "product_group_id": "Kelompok Produk",
-                    "name": "Nama",
-                    "unit_id": "Satuan",
-                    "taxable_supply": "Produk Kena Pajak",
-                    "standard_rated_supply": "PPN",
-                    "point": "Poin",
-                    "price_include_vat": "Harga Termasuk Pajak",
-                    "remarks": "Keterangan",
-                    "status": "Status"
-                }
-            },
-            "actions": {
-                "create": "Tambah Layanan",
-                "edit": "Ubah Layanan",
-                "show": "Tampilkan Layanan",
-                "delete": "Hapus Layanan"
-            },
-            "fields": {
-                "code": "Kode",
-                "product_group_id": "Kelompok Produk",
-                "name": "Nama",
-                "unit_id": "Satuan",
-                "taxable_supply": "Produk Kena Pajak",
-                "standard_rated_supply": "PPN",
-                "point": "Poin",
-                "price_include_vat": "Harga Termasuk Pajak",
-                "remarks": "Keterangan",
-                "status": "Status"
-            }
-        },
-        "product_group": {
-            "table": {
-                "title": "Daftar Kelompok Produk",
-                "cols": {
-                    "code": "Kode",
-                    "name": "Nama",
-                    "description": "Deskripsi",
-                    "category": "Kategori"
-                }
-            },
-            "actions": {
-                "create": "Tambah Kelompok Produk",
-                "edit": "Ubah Kelompok Produk",
-                "show": "Tampilkan Kelompok Produk",
-                "delete": "Hapus Kelompok Produk"
-            },
-            "fields": {
-                "code": "Kode",
-                "name": "Nama",
-                "description": "Deskripsi",
-                "category": "Kategori"
-            }
-        },
-        "brand": {
-            "table": {
-                "title": "Daftar Merk",
-                "cols": {
-                    "code": "Kode",
-                    "name": "Nama"
-                }
-            },
-            "actions": {
-                "create": "Tambah Merk",
-                "edit": "Ubah Merk",
-                "show": "Tampilkan Merk",
-                "delete": "Hapus Merk"
-            },
-            "fields": {
-                "code": "Kode",
-                "name": "Nama"
-            }
-        },
-        "unit": {
-            "table": {
-                "title": "Daftar Satuan",
-                "cols": {
-                    "code": "Kode",
-                    "name": "Nama",
-                    "description": "Deskripsi",
-                    "category": "Kategori"
-                }
-            },
-            "actions": {
-                "create": "Tambah Satuan",
-                "edit": "Ubah Satuan",
-                "show": "Tampilkan Satuan",
-                "delete": "Hapus Satuan"
-            },
-            "fields": {
-                "code": "Kode",
-                "name": "Nama",
-                "description": "Deskripsi",
-                "category": "Kategori"
-            }
-        },
-        "supplier": {
-            "tabs": {
-                "supplier": "Pemasok",
-                "pic": "Penanggung Jawab",
-                "products": "Produk"
-            },
-            "table": {
-                "title": "Daftar Pemasok",
-                "cols": {
-                    "code": "Kode",
-                    "name": "Nama",
-                    "pic": "Penanggung Jawab",
-                    "status": "Status"
-                }
-            },
-            "actions": {
-                "create": "Tambah Pemasok",
-                "edit": "Ubah Pemasok",
-                "show": "Tampilkan Pemasok",
-                "delete": "Hapus Pemasok"
-            },
-            "fields": {
-                "code": "Kode",
-                "name": "Nama",
-                "contact": "Kontak",
-                "address": "Alamat",
-                "city": "Kota",
-                "taxable_enterprise": "Pengusaha Kena Pajak",
-                "payment_term_type": "Ketentuan Pembayaran",
-                "payment_term": "Tempo",
-                "tax_id": "NPWP",
-                "remarks": "Remarks",
-                "status": "Status",
-                "pic": {
-                    "label": "Penanggung Jawab",
-                    "name": "Nama",
-                    "email": "Email",
-                    "ic_num": "No KTP",
-                    "tax_id": "NPWP"
-                },
-                "products": {
-                    "product_lists": "Daftar Produk",
-                    "table": {
-                        "cols": {
-                            "selected": "",
-                            "main_product": "Produk Utama",
-                            "product_name": "Nama Produk"
-                        }
-                    }
-                }
-            }
-        },
         "company": {
             "table": {
                 "title": "Daftar Perusahaan",
@@ -580,6 +384,202 @@
                 "contact": "Kontak",
                 "remarks": "Keterangan",
                 "status": "Status"
+            }
+        },
+        "product_group": {
+            "table": {
+                "title": "Daftar Kelompok Produk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "description": "Deskripsi",
+                    "category": "Kategori"
+                }
+            },
+            "actions": {
+                "create": "Tambah Kelompok Produk",
+                "edit": "Ubah Kelompok Produk",
+                "show": "Tampilkan Kelompok Produk",
+                "delete": "Hapus Kelompok Produk"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "description": "Deskripsi",
+                "category": "Kategori"
+            }
+        },
+        "brand": {
+            "table": {
+                "title": "Daftar Merk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama"
+                }
+            },
+            "actions": {
+                "create": "Tambah Merk",
+                "edit": "Ubah Merk",
+                "show": "Tampilkan Merk",
+                "delete": "Hapus Merk"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama"
+            }
+        },
+        "unit": {
+            "table": {
+                "title": "Daftar Satuan",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "description": "Deskripsi",
+                    "category": "Kategori"
+                }
+            },
+            "actions": {
+                "create": "Tambah Satuan",
+                "edit": "Ubah Satuan",
+                "show": "Tampilkan Satuan",
+                "delete": "Hapus Satuan"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "description": "Deskripsi",
+                "category": "Kategori"
+            }
+        },
+        "product": {
+            "table": {
+                "title": "Daftar Produk",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "brand": "Merk",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Produk",
+                "edit": "Ubah Produk",
+                "show": "Tampilkan Produk",
+                "delete": "Hapus Produk"
+            },
+            "fields": {
+                "code": "Kode",
+                "product_group_id": "Nama Group",
+                "brand_id": "Nama Merk",
+                "name": "Nama",
+                "taxable_supply": "Produk Kena Pajak",
+                "standard_rated_supply": "PPN",
+                "price_include_vat": "Harga Termasuk Pajak",
+                "remarks": "Remarks",
+                "point": "Poin",
+                "use_serial_number": "Memakai Nomor Serial",
+                "has_expiry_date": "Tanggal Kadaluarsa",
+                "product_type": "Tipe Produk",
+                "status": "Status",
+                "units": {
+                    "title": "Satuan",
+                    "table": {
+                        "cols": {
+                            "code": "Kode",
+                            "unit": "Satuan",
+                            "conversion_value": "Nilai Tukar",
+                            "is_base": "Satuan Dasar",
+                            "is_primary": "Satuan Utama"
+                        }
+                    }
+                }
+            }
+        },
+        "service": {
+            "table": {
+                "title": " Daftar Layanan",
+                "cols": {
+                    "code": "Kode",
+                    "product_group_id": "Kelompok Produk",
+                    "name": "Nama",
+                    "unit_id": "Satuan",
+                    "taxable_supply": "Produk Kena Pajak",
+                    "standard_rated_supply": "PPN",
+                    "point": "Poin",
+                    "price_include_vat": "Harga Termasuk Pajak",
+                    "remarks": "Keterangan",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Layanan",
+                "edit": "Ubah Layanan",
+                "show": "Tampilkan Layanan",
+                "delete": "Hapus Layanan"
+            },
+            "fields": {
+                "code": "Kode",
+                "product_group_id": "Kelompok Produk",
+                "name": "Nama",
+                "unit_id": "Satuan",
+                "taxable_supply": "Produk Kena Pajak",
+                "standard_rated_supply": "PPN",
+                "point": "Poin",
+                "price_include_vat": "Harga Termasuk Pajak",
+                "remarks": "Keterangan",
+                "status": "Status"
+            }
+        },
+        "supplier": {
+            "tabs": {
+                "supplier": "Pemasok",
+                "pic": "Penanggung Jawab",
+                "products": "Produk"
+            },
+            "table": {
+                "title": "Daftar Pemasok",
+                "cols": {
+                    "code": "Kode",
+                    "name": "Nama",
+                    "pic": "Penanggung Jawab",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Tambah Pemasok",
+                "edit": "Ubah Pemasok",
+                "show": "Tampilkan Pemasok",
+                "delete": "Hapus Pemasok"
+            },
+            "fields": {
+                "code": "Kode",
+                "name": "Nama",
+                "contact": "Kontak",
+                "address": "Alamat",
+                "city": "Kota",
+                "taxable_enterprise": "Pengusaha Kena Pajak",
+                "payment_term_type": "Ketentuan Pembayaran",
+                "payment_term": "Tempo",
+                "tax_id": "NPWP",
+                "remarks": "Remarks",
+                "status": "Status",
+                "pic": {
+                    "label": "Penanggung Jawab",
+                    "name": "Nama",
+                    "email": "Email",
+                    "ic_num": "No KTP",
+                    "tax_id": "NPWP"
+                },
+                "products": {
+                    "product_lists": "Daftar Produk",
+                    "table": {
+                        "cols": {
+                            "selected": "",
+                            "main_product": "Produk Utama",
+                            "product_name": "Nama Produk"
+                        }
+                    }
+                }
             }
         },
         "purchase_order": {
