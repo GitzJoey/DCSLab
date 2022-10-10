@@ -30,6 +30,7 @@ $field = [
     'category' => 'Category',
     'taxable_supply' => 'Taxable Supply',
     'standard_rated_supply' => 'Standard Rated Supply',
+    'price_include_vat' => 'Price Include VAT',
     'point' => 'Point',
     'use_serial_number' => 'Use Serial Number',
     'has_expiry_date' => 'Has Expiry Date',

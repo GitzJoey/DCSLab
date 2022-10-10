@@ -30,6 +30,7 @@ $field = [
     'category' => 'Kategori',
     'taxable_supply' => 'Harga Termasuk Pajak',
     'standard_rated_supply' => 'Nilai Pajak Standard',
+    'price_include_vat' => 'Harga Termasuk Pajak',
     'point' => 'Poin',
     'use_serial_number' => 'Menggunakan Nomor Seri',
     'has_expiry_date' => 'Memiliki Tanggal Kadaluarsa',
