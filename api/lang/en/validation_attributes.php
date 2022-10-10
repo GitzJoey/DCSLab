@@ -1,13 +1,43 @@
 <?php
+$menu = [
+    'roles' => 'Roles',
+    'company' => 'Company',
+    'branch' => 'Branch',
+    'employee' => 'Employee',
+    'warehouse' => 'Warehouse',
+    'product_group' => 'Product Group',
+    'brand' => 'Brand',
+    'unit' => 'Unit',
+    'product' => 'Product',
+    'product_unit' => 'Product Unit',
+];
 
-return [
+$field = [
+    'code' => 'Code',
     'name' => 'Name',
     'email' => 'Email',
-    'roles' => 'Roles',
+    'address' => 'Address',
+    'city' => 'City',
+    'postal_code' => 'Postal Code',
+    'country' => 'Country',
     'tax_id' => 'Tax ID',
     'ic_num' => 'IC Num',
-    'status' => 'Status',
-    'country' => 'Country',
-    'company' => 'Company',
+    'contact' => 'Contact',
+    'remarks' => 'Remarks',
+    'description' => 'Description',
     'conv_value' => 'Conversion Value',
+    'join_date' => 'Join Date',
+    'category' => 'Category',
+    'taxable_supply' => 'Price Include Vat',
+    'standard_rated_supply' => 'Standard Rated Supply',
+    'point' => 'Point',
+    'use_serial_number' => 'Use Serial Number',
+    'has_expiry_date' => 'Has Expiry Date',
+    'type' => 'Type',
+    'base' => 'Base',
+    'primary' => 'Primary',
+    'main' => 'Main',
+    'default' => 'Default',
+    'status' => 'Status',
 ];
+return array_merge($menu, $field);

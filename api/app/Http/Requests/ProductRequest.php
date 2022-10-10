@@ -138,7 +138,25 @@ class ProductRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.company'),
+            'product_group_id' => trans('validation_attributes.product_group'),
+            'brand_id' => trans('validation_attributes.brand'),
+            'name' => trans('validation_attributes.name'),
+            'product_units_id.*' => trans('validation_attributes.product_unit'),
+            'product_units_code.*' => trans('validation_attributes.code'),
+            'product_units_unit_id.*' => trans('validation_attributes.unit'),
             'product_units_conv_value.*' => trans('validation_attributes.conv_value'),
+            'product_units_is_base.*' => trans('validation_attributes.base'),
+            'product_units_is_primary_unit.*' => trans('validation_attributes.primary'),
+            'product_units_remarks.*' => trans('validation_attributes.remarks'),
+            'product_type' => trans('validation_attributes.type'),
+            'taxable_supply' => trans('validation_attributes.taxable_supply'),
+            'price_include_vat' => trans('validation_attributes.price_include_vat'),
+            'standard_rated_supply' => trans('validation_attributes.standard_rated_supply'),
+            'point' => trans('validation_attributes.point'),
+            'use_serial_number' => trans('validation_attributes.use_serial_number'),
+            'has_expiry_date' => trans('validation_attributes.has_expiry_date'),
+            'remarks' => trans('validation_attributes.remarks'),
+            'status' => trans('validation_attributes.status'),
         ];
     }
 

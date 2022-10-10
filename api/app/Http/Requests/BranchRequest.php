@@ -108,6 +108,14 @@ class BranchRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.company'),
+            'code' => trans('validation_attributes.code'),
+            'name' => trans('validation_attributes.name'),
+            'address' => trans('validation_attributes.address'),
+            'city' => trans('validation_attributes.city'),
+            'is_main' => trans('validation_attributes.main'),
+            'contact' => trans('validation_attributes.contact'),
+            'remarks' => trans('validation_attributes.remarks'),
+            'status' => trans('validation_attributes.status'),
         ];
     }
 

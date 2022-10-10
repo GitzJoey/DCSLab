@@ -118,6 +118,19 @@ class EmployeeRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.company'),
+            'code' => trans('validation_attributes.code'),
+            'name' => trans('validation_attributes.name'),
+            'email' => trans('validation_attributes.email'),
+            'address' => trans('validation_attributes.address'),
+            'city' => trans('validation_attributes.city'),
+            'postal_code' => trans('validation_attributes.postal_code'),
+            'country' => trans('validation_attributes.country'),
+            'tax_id' => trans('validation_attributes.tax_id'),
+            'ic_num' => trans('validation_attributes.ic_num'),
+            'join_date' => trans('validation_attributes.join_date'),
+            'remarks' => trans('validation_attributes.remarks'),
+            'status' => trans('validation_attributes.status'),
+            'accessBranchIds.*' => trans('validation_attributes.branch'),
         ];
     }
 

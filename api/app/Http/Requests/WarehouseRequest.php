@@ -108,6 +108,14 @@ class WarehouseRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.company'),
+            'branch_id' => trans('validation_attributes.branch'),
+            'code' => trans('validation_attributes.code'),
+            'name' => trans('validation_attributes.name'),
+            'address' => trans('validation_attributes.address'),
+            'city' => trans('validation_attributes.city'),
+            'contact' => trans('validation_attributes.contact'),
+            'remarks' => trans('validation_attributes.remarks'),
+            'status' => trans('validation_attributes.status'),
         ];
     }
 

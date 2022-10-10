@@ -101,6 +101,9 @@ class ProductGroupRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.company'),
+            'code' => trans('validation_attributes.code'),
+            'name' => trans('validation_attributes.name'),
+            'category' => trans('validation_attributes.category'),
         ];
     }
 

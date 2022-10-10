@@ -469,7 +469,7 @@
             },
             "fields": {
                 "code": "Kode",
-                "product_group_id": "Nama Group",
+                "product_group_id": "Nama Kelompok",
                 "brand_id": "Nama Merk",
                 "name": "Nama",
                 "taxable_supply": "Produk Kena Pajak",

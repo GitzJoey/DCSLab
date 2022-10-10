@@ -152,14 +152,14 @@ class AppHelper extends Command
                     'RoleTableSeeder',
                     'CompanyTableSeeder',
                     'BranchTableSeeder',
+                    'EmployeeTableSeeder',
                     'WarehouseTableSeeder',
-                    'UnitTableSeeder',
-                    'ProductTableSeeder',
                     'ProductGroupTableSeeder',
                     'BrandTableSeeder',
+                    'UnitTableSeeder',
+                    'ProductTableSeeder',
                     'SupplierTableSeeder',
                     'CustomerTableSeeder',
-                    'EmployeeTableSeeder',
                 ],
                 null, 3, true
             );
