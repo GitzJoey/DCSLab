@@ -100,10 +100,10 @@ class ProductGroupRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
-            'code' => trans('validation_attributes.code'),
-            'name' => trans('validation_attributes.name'),
-            'category' => trans('validation_attributes.category'),
+            'company_id' => trans('validation_attributes.product_group.company'),
+            'code' => trans('validation_attributes.product_group.code'),
+            'name' => trans('validation_attributes.product_group.name'),
+            'category' => trans('validation_attributes.product_group.category'),
         ];
     }
 

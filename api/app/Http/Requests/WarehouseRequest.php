@@ -107,15 +107,15 @@ class WarehouseRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
-            'branch_id' => trans('validation_attributes.branch'),
-            'code' => trans('validation_attributes.code'),
-            'name' => trans('validation_attributes.name'),
-            'address' => trans('validation_attributes.address'),
-            'city' => trans('validation_attributes.city'),
-            'contact' => trans('validation_attributes.contact'),
-            'remarks' => trans('validation_attributes.remarks'),
-            'status' => trans('validation_attributes.status'),
+            'company_id' => trans('validation_attributes.warehouse.company'),
+            'branch_id' => trans('validation_attributes.warehouse.branch'),
+            'code' => trans('validation_attributes.warehouse.code'),
+            'name' => trans('validation_attributes.warehouse.name'),
+            'address' => trans('validation_attributes.warehouse.address'),
+            'city' => trans('validation_attributes.warehouse.city'),
+            'contact' => trans('validation_attributes.warehouse.contact'),
+            'remarks' => trans('validation_attributes.warehouse.remarks'),
+            'status' => trans('validation_attributes.warehouse.status'),
         ];
     }
 

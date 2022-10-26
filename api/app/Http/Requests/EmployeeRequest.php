@@ -117,20 +117,20 @@ class EmployeeRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
-            'code' => trans('validation_attributes.code'),
-            'name' => trans('validation_attributes.name'),
-            'email' => trans('validation_attributes.email'),
-            'address' => trans('validation_attributes.address'),
-            'city' => trans('validation_attributes.city'),
-            'postal_code' => trans('validation_attributes.postal_code'),
-            'country' => trans('validation_attributes.country'),
-            'tax_id' => trans('validation_attributes.tax_id'),
-            'ic_num' => trans('validation_attributes.ic_num'),
-            'join_date' => trans('validation_attributes.join_date'),
-            'remarks' => trans('validation_attributes.remarks'),
-            'status' => trans('validation_attributes.status'),
-            'accessBranchIds.*' => trans('validation_attributes.branch'),
+            'company_id' => trans('validation_attributes.employee.company'),
+            'code' => trans('validation_attributes.employee.code'),
+            'name' => trans('validation_attributes.employee.name'),
+            'email' => trans('validation_attributes.employee.email'),
+            'address' => trans('validation_attributes.employee.address'),
+            'city' => trans('validation_attributes.employee.city'),
+            'postal_code' => trans('validation_attributes.employee.postal_code'),
+            'country' => trans('validation_attributes.employee.country'),
+            'tax_id' => trans('validation_attributes.employee.tax_id'),
+            'ic_num' => trans('validation_attributes.employee.ic_num'),
+            'join_date' => trans('validation_attributes.employee.join_date'),
+            'remarks' => trans('validation_attributes.employee.remarks'),
+            'status' => trans('validation_attributes.employee.status'),
+            'accessBranchIds.*' => trans('validation_attributes.employee.branch'),
         ];
     }
 

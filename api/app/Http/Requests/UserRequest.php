@@ -119,13 +119,13 @@ class UserRequest extends FormRequest
     public function attributes()
     {
         return [
-            'name' => trans('validation_attributes.name'),
-            'email' => trans('validation_attributes.email'),
-            'roles' => trans('validation_attributes.roles'),
-            'tax_id' => trans('validation_attributes.tax_id'),
-            'ic_num' => trans('validation_attributes.ic_num'),
-            'status' => trans('validation_attributes.status'),
-            'country' => trans('validation_attributes.country'),
+            'name' => trans('validation_attributes.user.name'),
+            'email' => trans('validation_attributes.user.email'),
+            'roles' => trans('validation_attributes.user.roles'),
+            'tax_id' => trans('validation_attributes.user.tax_id'),
+            'ic_num' => trans('validation_attributes.user.ic_num'),
+            'country' => trans('validation_attributes.user.country'),
+            'status' => trans('validation_attributes.user.status'),
         ];
     }
 
