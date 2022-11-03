@@ -225,11 +225,13 @@ const getAllCompany = (args) => {
     if (args.page === undefined) args.page = 1;    
     if (args.pageSize === undefined) args.pageSize = 10;
     if (args.search === undefined) args.search = '';
+    if (args.useCache === undefined) args.useCache = true;
 
     axios.get(route('api.get.db.company.company.list', {
         "search": args.search,
         "page": args.page,
-        "perPage": args.pageSize
+        "perPage": args.pageSize,
+        "useCache": args.useCache
     })).then(response => {
         companyList.value = response.data;
         loading.value = false;
@@ -327,8 +329,8 @@ const createNew = () => {
     }
 }
 
-const onDataListChange = ({page, pageSize, search}) => {
-    getAllCompany({page, pageSize, search});
+const onDataListChange = ({page, pageSize, search, useCache}) => {
+    getAllCompany({page, pageSize, search, useCache});
 }
 
 const editSelected = (index) => {
