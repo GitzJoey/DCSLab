@@ -521,17 +521,20 @@ const setMode = () => {
 const getAllProducts = (args) => {
     productList.value = {};
     let companyId = selectedUserCompany.value.hId;
-    if (args.search === undefined) args.search = "";
+    
+    if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
     if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.useCache === undefined) args.useCache = true;
 
     axios.get(route('api.get.db.product.product.list', {
         companyId: companyId,
         productCategory: 'PRODUCTS',
         search: args.search,
         page: args.page,
-        perPage: args.pageSize
+        perPage: args.pageSize,
+        useCache: args.useCache
     })).then(response => {
         productList.value = response.data;
         loading.value = false;
@@ -706,8 +709,8 @@ const createNewUnit = () => {
     product.value.product_units.push(product_unit);
 }
 
-const onDataListChange = ({page, pageSize, search}) => {
-    getAllProducts({page, pageSize, search});
+const onDataListChange = ({search, paginate, page, perPage, useCache}) => {
+    getAllProducts({search, paginate, page, perPage, useCache});
 }
 
 const editSelected = (index) => {

@@ -298,13 +298,22 @@ const setMode = () => {
 
 const getAllBranches = (args) => {
     branchList.value = {};
+    console.log(args);
     let companyId = selectedUserCompany.value.hId;
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.perPage === undefined) args.perPage = 10;
+    if (args.useCache === undefined) args.useCache = true;
 
-    axios.get(route('api.get.db.company.branch.list', { "companyId": companyId, "page": args.page, "perPage": args.pageSize, "search": args.search })).then(response => {
+    axios.get(route('api.get.db.company.branch.list', {
+        "companyId": companyId,
+        "search": args.search,
+        "paginate": args.paginate,
+        "page": args.page,
+        "perPage": args.perPage,
+        "useCache": args.useCache
+    })).then(response => {
         branchList.value = response.data;
         loading.value = false;
     });
@@ -418,8 +427,8 @@ const createNew = () => {
     }
 }
 
-const onDataListChange = ({page, pageSize, search}) => {
-    getAllBranches({page, pageSize, search});
+const onDataListChange = ({search, paginate, page, perPage, useCache}) => {
+    getAllBranches({search, paginate, page, perPage, useCache});
 }
 
 const editSelected = (index) => {
@@ -452,7 +461,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllBranches({ page: branchList.value.meta.current_page, pageSize: branchList.value.meta.per_page });
+    getAllBranches({ page: branchList.value.meta.current_page, perPage: branchList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {
