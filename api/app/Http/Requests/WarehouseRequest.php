@@ -88,7 +88,7 @@ class WarehouseRequest extends FormRequest
 
                 return array_merge($rules_store, $nullableArr);
             case 'update':
-                $rules_update = [
+            $rules_update = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
                     'branch_id' => ['required', new isValidBranch($this->company_id)],
                     'code' => ['required', 'max:255'],
@@ -107,7 +107,15 @@ class WarehouseRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
+            'company_id' => trans('validation_attributes.warehouse.company'),
+            'branch_id' => trans('validation_attributes.warehouse.branch'),
+            'code' => trans('validation_attributes.warehouse.code'),
+            'name' => trans('validation_attributes.warehouse.name'),
+            'address' => trans('validation_attributes.warehouse.address'),
+            'city' => trans('validation_attributes.warehouse.city'),
+            'contact' => trans('validation_attributes.warehouse.contact'),
+            'remarks' => trans('validation_attributes.warehouse.remarks'),
+            'status' => trans('validation_attributes.warehouse.status'),
         ];
     }
 

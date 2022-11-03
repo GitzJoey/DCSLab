@@ -174,7 +174,7 @@ class EmployeeServiceTest extends ServiceTestCase
                 $employeeUserArr->created_at = Carbon::now();
                 $employeeUserArr->updated_at = Carbon::now();
                 $employeeUserArr = $employeeUserArr->toArray();
-                $employeeUserArr['name'] = $n == 1 ? $employeeUserArr['name'] . ' testing' : $employeeUserArr['name'];
+                $employeeUserArr['name'] = $n == 1 ? $employeeUserArr['name'] . 'testing' : $employeeUserArr['name'];
                 $employeeUserArr['password'] = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
 
                 $employeeArr = Employee::factory()->make([

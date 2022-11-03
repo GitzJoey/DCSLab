@@ -119,7 +119,7 @@ class SupplierRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
+            'company_id' => trans('validation_attributes.supplier.company'),
         ];
     }
 

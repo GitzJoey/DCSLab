@@ -102,7 +102,11 @@ class UnitRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
+            'company_id' => trans('validation_attributes.unit.company'),
+            'code' => trans('validation_attributes.unit.code'),
+            'name' => trans('validation_attributes.unit.name'),
+            'description' => trans('validation_attributes.unit.description'),
+            'category' => trans('validation_attributes.unit.category'),
         ];
     }
 

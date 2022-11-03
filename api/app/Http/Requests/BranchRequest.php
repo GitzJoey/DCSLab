@@ -107,7 +107,15 @@ class BranchRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
+            'company_id' => trans('validation_attributes.branch.company'),
+            'code' => trans('validation_attributes.branch.code'),
+            'name' => trans('validation_attributes.branch.name'),
+            'address' => trans('validation_attributes.branch.address'),
+            'city' => trans('validation_attributes.branch.city'),
+            'is_main' => trans('validation_attributes.branch.main'),
+            'contact' => trans('validation_attributes.branch.contact'),
+            'remarks' => trans('validation_attributes.branch.remarks'),
+            'status' => trans('validation_attributes.branch.status'),
         ];
     }
 

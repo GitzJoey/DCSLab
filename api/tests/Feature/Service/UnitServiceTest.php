@@ -121,7 +121,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
 
-        Unit::factory()->insertStringInName(' testing')->count(10)->create([
+        Unit::factory()->insertStringInName('testing')->count(10)->create([
             'company_id' => $companyId
         ]);
 

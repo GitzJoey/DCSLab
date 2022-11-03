@@ -341,7 +341,7 @@ class EmployeeAPITest extends APITestCase
         for ($i = 0; $i < $employees->count(); $i++) {
             $employeeUser = $employees[$i]->user()->first();
             $employeeUser->update([
-                'name' => $employeeUser->name . ' testing',
+                'name' => $employeeUser->name . 'testing',
             ]);
         }
 

@@ -96,7 +96,9 @@ class BrandRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
+            'company_id' => trans('validation_attributes.brand.company'),
+            'code' => trans('validation_attributes.brand.code'),
+            'name' => trans('validation_attributes.brand.name'),
         ];
     }
 

@@ -162,7 +162,7 @@ const brand = ref({
 //#region onMounted
 onMounted(() => {
     if (selectedUserCompany.value.hId !== "") {
-        getAllProductGroups({ page: 1 });
+        getAllBrands({ page: 1 });
         getDDLSync();
     } else {
     }
@@ -184,7 +184,7 @@ const setMode = () => {
     if (sessionStorage.getItem("DCSLAB_LAST_ENTITY") !== null) createNew();
 };
 
-const getAllProductGroups = (args) => {
+const getAllBrands = (args) => {
     brandList.value = {};
     let companyId = selectedUserCompany.value.hId;
     if (args.search === undefined) args.search = "";
@@ -286,7 +286,7 @@ const createNew = () => {
 }
 
 const onDataListChange = ({ page, pageSize, search }) => {
-    getAllProductGroups({ page, pageSize, search });
+    getAllBrands({ page, pageSize, search });
 }
 
 const editSelected = (index) => {
@@ -319,7 +319,7 @@ const backToList = () => {
     sessionStorage.removeItem("DCSLAB_LAST_ENTITY");
 
     mode.value = "list";
-    getAllProductGroups({ page: brandList.value.meta.current_page, pageSize: brandList.value.meta.per_page, });
+    getAllBrands({ page: brandList.value.meta.current_page, pageSize: brandList.value.meta.per_page, });
 }
 
 const toggleDetail = (idx) => {
@@ -342,7 +342,7 @@ const generateCode = () => {
 //#region Watcher
 watch(selectedUserCompany, () => {
     if (selectedUserCompany.value.hId !== "") {
-        getAllProductGroups({ page: 1 });
+        getAllBrands({ page: 1 });
         getDDLSync();
     }
 }, { deep: true });

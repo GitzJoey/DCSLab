@@ -230,10 +230,10 @@
                     <!-- #region Product Group -->
                     <div class="mb-3">
                         <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
-                        <select id="product_group_id" name="product_group_id" class="form-control form-select" v-model="product.product_group.hId">
+                        <VeeField as="select" id="product_group_id" name="product_group_id" :class="{'form-control form-select':true, 'border-danger': errors['product_group_id']}" v-model="product.product_group.hId" :label="t('views.product.fields.product_group_id')" rules="required" @blur="reValidate(errors)">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="g.hId" v-for="g in productGroupDDL" v-bind:key="g.hId">{{ g.code }} - {{ g.name }}</option>
-                        </select>
+                        </VeeField>
                         <ErrorMessage name="product_group_id" class="text-danger" />
                     </div>
                     <!-- #endregion -->

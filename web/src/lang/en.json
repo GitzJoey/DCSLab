@@ -9,18 +9,18 @@
             "company-branch": "Branch",
             "company-employee": "Employee",
             "company-warehouse": "Warehouse",
-            "supplier": "Supplier",
-            "supplier-supplier": "Supplier",
             "product": "Product",
-            "product-product": "Product",
             "product-product_group": "Product Group",
             "product-brand": "Brand",
             "product-unit": "Unit",
+            "product-product": "Product",
             "product-service": "Service",
-            "administrator": "Administrator",
-            "administrator-user": "User",
+            "supplier": "Supplier",
+            "supplier-supplier": "Supplier",
             "purchase_order": "Purchase Order",
             "purchase_order-purchaseorder": "Purchase Order",
+            "administrator": "Administrator",
+            "administrator-user": "User",
             "devtool": "Dev Tool",
             "devtool-dbbackup": "DB Backup",
             "devtool-playground": "Playground",
@@ -261,202 +261,6 @@
         "activity": {
             "title": "Activity Log"
         },
-        "product": {
-            "table": {
-                "title": "Product Lists",
-                "cols": {
-                    "code": "Code",
-                    "name": "Name",
-                    "brand": "Brand",
-                    "status": "Status"
-                }
-            },
-            "actions": {
-                "create": "Create Product",
-                "edit": "Edit Product",
-                "show": "Show Product",
-                "delete": "Delete Product"
-            },
-            "fields": {
-                "code": "Code",
-                "product_group_id": "Group Name",
-                "brand_id": "Brand Name",
-                "name": "Name",
-                "taxable_supply": "Taxable Supply",
-                "standard_rated_supply": "Standard-Rated Supply",
-                "price_include_vat": "Price Include VAT",
-                "remarks": "Remarks",
-                "point": "Point",
-                "use_serial_number": "Use Serial Number",
-                "has_expiry_date": "Has Expiry Date",
-                "product_type": "Product Type",
-                "status": "Status",
-                "units": {
-                    "title": "Units",
-                    "table": {
-                        "cols": {
-                            "code": "Code",
-                            "unit": "Unit",
-                            "conversion_value": "Conversion Value",
-                            "is_base": "Base Unit",
-                            "is_primary": "Primary Unit"
-                        }
-                    }
-                }
-            }
-        },
-        "service": {
-            "table": {
-                "title": "Service Lists",
-                "cols": {
-                    "code": "Code",
-                    "product_group_id": "Product Group",
-                    "name": "Name",
-                    "unit_id": "Unit",
-                    "taxable_supply": "Taxable Supply",
-                    "standard_rated_supply": "Standard-Rated Supply",
-                    "point": "Point",
-                    "price_include_vat": "Price Include VAT",
-                    "remarks": "Remarks",
-                    "status": "Status"
-                }
-            },
-            "actions": {
-                "create": "Create Service",
-                "edit": "Edit Service",
-                "show": "Show Service",
-                "delete": "Delete Service"
-            },
-            "fields": {
-                "code": "Code",
-                "product_group_id": "Product Group",
-                "name": "Name",
-                "unit_id": "Unit",
-                "taxable_supply": "Taxable Supply",
-                "standard_rated_supply": "Standard-Rated Supply",
-                "point": "Point",
-                "price_include_vat": "Price Include VAT",
-                "remarks": "Remarks",
-                "status": "Status"
-            }
-        },
-        "product_group": {
-            "table": {
-                "title": "Product Group Lists",
-                "cols": {
-                    "code": "Code",
-                    "name": "Name",
-                    "description": "Description",
-                    "category": "Category"
-                }
-            },
-            "actions": {
-                "create": "Create Product Group",
-                "edit": "Edit Product Group",
-                "show": "Show Product Group",
-                "delete": "Delete Product Group"
-            },
-            "fields": {
-                "code": "Code",
-                "name": "Name",
-                "description": "Description",
-                "category": "Category"
-            }
-        },
-        "brand": {
-            "table": {
-                "title": "Brand Lists",
-                "cols": {
-                    "code": "Code",
-                    "name": "Name"
-                }
-            },
-            "actions": {
-                "create": "Create Brand",
-                "edit": "Edit Brand",
-                "show": "Show Brand",
-                "delete": "Delete Brand"
-            },
-            "fields": {
-                "code": "Code",
-                "name": "Name"
-            }
-        },
-        "unit": {
-            "table": {
-                "title": "Unit Lists",
-                "cols": {
-                    "code": "Code",
-                    "name": "Name",
-                    "description": "Description",
-                    "category": "Category"
-                }
-            },
-            "actions": {
-                "create": "Create Unit",
-                "edit": "Edit Unit",
-                "show": "Show Unit",
-                "delete": "Delete Unit"
-            },
-            "fields": {
-                "code": "Code",
-                "name": "Name",
-                "description": "Description",
-                "category": "Category"
-            }
-        },
-        "supplier": {
-            "tabs": {
-                "supplier": "Supplier",
-                "pic": "Person In Charge",
-                "products": "Products"
-            },
-            "table": {
-                "title": "Supplier Lists",
-                "cols": {
-                    "code": "Code",
-                    "name": "Name",
-                    "pic": "Person In Charge",
-                    "status": "Status"
-                }
-            },
-            "actions": {
-                "create": "Create Supplier",
-                "edit": "Edit Supplier",
-                "show": "Show Supplier",
-                "delete": "Delete Supplier"
-            },
-            "fields": {
-                "code": "Code",
-                "name": "Name",
-                "contact": "Contact",
-                "address": "Address",
-                "city": "City",
-                "taxable_enterprise": "Taxable Enterprise",
-                "payment_term_type": "Term of Payment",
-                "payment_term": "Payment Term",
-                "tax_id": "Tax ID",
-                "remarks": "Remarks",
-                "status": "Status",
-                "pic": {
-                    "label": "Person In Charge",
-                    "name": "Name",
-                    "email": "Email",
-                    "ic_num": "IC Number",
-                    "tax_id": "Tax ID"
-                },
-                "products": {
-                    "product_lists": "Product Lists",
-                    "table": {
-                        "cols": {
-                            "selected": "Selected",
-                            "main_product": "Main Product",
-                            "product_name": "Product Name"
-                        }
-                    }
-                }
-            }
-        },
         "company": {
             "table": {
                 "title": "Company Lists",
@@ -587,6 +391,202 @@
                 "contact": "Contact",
                 "remarks": "Remarks",
                 "status": "Status"
+            }
+        },
+        "product_group": {
+            "table": {
+                "title": "Product Group Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "description": "Description",
+                    "category": "Category"
+                }
+            },
+            "actions": {
+                "create": "Create Product Group",
+                "edit": "Edit Product Group",
+                "show": "Show Product Group",
+                "delete": "Delete Product Group"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "description": "Description",
+                "category": "Category"
+            }
+        },
+        "brand": {
+            "table": {
+                "title": "Brand Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name"
+                }
+            },
+            "actions": {
+                "create": "Create Brand",
+                "edit": "Edit Brand",
+                "show": "Show Brand",
+                "delete": "Delete Brand"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name"
+            }
+        },
+        "unit": {
+            "table": {
+                "title": "Unit Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "description": "Description",
+                    "category": "Category"
+                }
+            },
+            "actions": {
+                "create": "Create Unit",
+                "edit": "Edit Unit",
+                "show": "Show Unit",
+                "delete": "Delete Unit"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "description": "Description",
+                "category": "Category"
+            }
+        },
+        "product": {
+            "table": {
+                "title": "Product Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "brand": "Brand",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Product",
+                "edit": "Edit Product",
+                "show": "Show Product",
+                "delete": "Delete Product"
+            },
+            "fields": {
+                "code": "Code",
+                "product_group_id": "Group Name",
+                "brand_id": "Brand Name",
+                "name": "Name",
+                "taxable_supply": "Taxable Supply",
+                "standard_rated_supply": "Standard-Rated Supply",
+                "price_include_vat": "Price Include VAT",
+                "remarks": "Remarks",
+                "point": "Point",
+                "use_serial_number": "Use Serial Number",
+                "has_expiry_date": "Has Expiry Date",
+                "product_type": "Product Type",
+                "status": "Status",
+                "units": {
+                    "title": "Units",
+                    "table": {
+                        "cols": {
+                            "code": "Code",
+                            "unit": "Unit",
+                            "conversion_value": "Conversion Value",
+                            "is_base": "Base Unit",
+                            "is_primary": "Primary Unit"
+                        }
+                    }
+                }
+            }
+        },
+        "service": {
+            "table": {
+                "title": "Service Lists",
+                "cols": {
+                    "code": "Code",
+                    "product_group_id": "Product Group",
+                    "name": "Name",
+                    "unit_id": "Unit",
+                    "taxable_supply": "Taxable Supply",
+                    "standard_rated_supply": "Standard-Rated Supply",
+                    "point": "Point",
+                    "price_include_vat": "Price Include VAT",
+                    "remarks": "Remarks",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Service",
+                "edit": "Edit Service",
+                "show": "Show Service",
+                "delete": "Delete Service"
+            },
+            "fields": {
+                "code": "Code",
+                "product_group_id": "Product Group",
+                "name": "Name",
+                "unit_id": "Unit",
+                "taxable_supply": "Taxable Supply",
+                "standard_rated_supply": "Standard-Rated Supply",
+                "point": "Point",
+                "price_include_vat": "Price Include VAT",
+                "remarks": "Remarks",
+                "status": "Status"
+            }
+        },
+        "supplier": {
+            "tabs": {
+                "supplier": "Supplier",
+                "pic": "Person In Charge",
+                "products": "Products"
+            },
+            "table": {
+                "title": "Supplier Lists",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "pic": "Person In Charge",
+                    "status": "Status"
+                }
+            },
+            "actions": {
+                "create": "Create Supplier",
+                "edit": "Edit Supplier",
+                "show": "Show Supplier",
+                "delete": "Delete Supplier"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "contact": "Contact",
+                "address": "Address",
+                "city": "City",
+                "taxable_enterprise": "Taxable Enterprise",
+                "payment_term_type": "Term of Payment",
+                "payment_term": "Payment Term",
+                "tax_id": "Tax ID",
+                "remarks": "Remarks",
+                "status": "Status",
+                "pic": {
+                    "label": "Person In Charge",
+                    "name": "Name",
+                    "email": "Email",
+                    "ic_num": "IC Number",
+                    "tax_id": "Tax ID"
+                },
+                "products": {
+                    "product_lists": "Product Lists",
+                    "table": {
+                        "cols": {
+                            "selected": "Selected",
+                            "main_product": "Main Product",
+                            "product_name": "Product Name"
+                        }
+                    }
+                }
             }
         },
         "purchase_order": {

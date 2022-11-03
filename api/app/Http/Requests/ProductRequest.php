@@ -69,7 +69,7 @@ class ProductRequest extends FormRequest
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'productCategory' => ['nullable'],
+                    'productCategory' => ['required', new Enum(ProductCategory::class)],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
@@ -137,8 +137,27 @@ class ProductRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
-            'product_units_conv_value.*' => trans('validation_attributes.conv_value'),
+            'company_id' => trans('validation_attributes.product.company'),
+            'product_group_id' => trans('validation_attributes.product.product_group'),
+            'brand_id' => trans('validation_attributes.product.brand'),
+            'code' => trans('validation_attributes.product.code'),
+            'name' => trans('validation_attributes.product.name'),
+            'product_units_id.*' => trans('validation_attributes.product.product_units.product_unit'),
+            'product_units_code.*' => trans('validation_attributes.product.product_units.code'),
+            'product_units_unit_id.*' => trans('validation_attributes.product.product_units.unit'),
+            'product_units_conv_value.*' => trans('validation_attributes.product.product_units.conv_value'),
+            'product_units_is_base.*' => trans('validation_attributes.product.product_units.base'),
+            'product_units_is_primary_unit.*' => trans('validation_attributes.product.product_units.primary'),
+            'product_units_remarks.*' => trans('validation_attributes.product.product_units.remarks'),
+            'product_type' => trans('validation_attributes.product.type'),
+            'taxable_supply' => trans('validation_attributes.product.taxable_supply'),
+            'price_include_vat' => trans('validation_attributes.product.price_include_vat'),
+            'standard_rated_supply' => trans('validation_attributes.product.standard_rated_supply'),
+            'point' => trans('validation_attributes.product.point'),
+            'use_serial_number' => trans('validation_attributes.product.use_serial_number'),
+            'has_expiry_date' => trans('validation_attributes.product.has_expiry_date'),
+            'remarks' => trans('validation_attributes.product.remarks'),
+            'status' => trans('validation_attributes.product.status'),
         ];
     }
 
@@ -157,8 +176,9 @@ class ProductRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
-                    'productCategory' => ProductCategory::isValid($this->productCategory) ? ProductCategory::resolveToEnum($this->productCategory)->value : -1,
+                    'productCategory' => ProductCategory::resolveToEnum('PRODUCTS_AND_SERVICES')->value,
                 ]);
+
                 break;
             case 'read':
                 $this->merge([]);
