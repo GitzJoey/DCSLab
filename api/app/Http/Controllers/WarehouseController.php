@@ -73,6 +73,7 @@ class WarehouseController extends BaseController
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
+        $useCache = array_key_exists('useCache', $request) ? boolval($request['useCache']) : true;
 
         $companyId = $request['company_id'];
 
@@ -85,7 +86,8 @@ class WarehouseController extends BaseController
                 search: $search,
                 paginate: $paginate,
                 page: $page,
-                perPage: $perPage
+                perPage: $perPage,
+                useCache: $useCache
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
