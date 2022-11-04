@@ -7,7 +7,6 @@
         "single_blank_line_at_eof": false,
         "no_extra_blank_lines": false,
         "no_unneeded_control_parentheses": false,
-        "trailing_comma_in_multiline": false,
         "curly_braces_position": false,
         "line_ending": false,
         "ordered_imports": false,

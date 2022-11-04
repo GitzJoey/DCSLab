@@ -26,7 +26,7 @@ class ProductUnitFactory extends Factory
 
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
-            'remarks' => $faker->sentence()
+            'remarks' => $faker->sentence(),
         ];
     }
 }

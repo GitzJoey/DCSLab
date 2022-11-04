@@ -41,7 +41,7 @@ class ProductUnit extends Model
         'is_base',
         'conversion_value',
         'is_primary_unit',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;
