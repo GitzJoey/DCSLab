@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Enums\UnitCategory;
-use App\Models\Company;
-use App\Models\ProductUnit;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

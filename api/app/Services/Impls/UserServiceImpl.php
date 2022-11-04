@@ -14,13 +14,11 @@ use App\Traits\CacheHelper;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Mail\Message;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Password;
 
 class UserServiceImpl implements UserService
 {

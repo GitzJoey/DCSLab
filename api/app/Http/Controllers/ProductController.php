@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductCategory;
-use Exception;
-use App\Models\Company;
-use App\Models\Product;
 use App\Enums\ProductType;
-use Illuminate\Http\Request;
-use App\Services\ProductService;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
+use App\Services\ProductService;
+use Exception;
+use Illuminate\Http\Request;
 
 class ProductController extends BaseController
 {

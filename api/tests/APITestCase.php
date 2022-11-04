@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Support\Facades\File;
-use Tests\TestCase;
 
 class APITestCase extends TestCase
 {

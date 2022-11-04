@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Services\RoleService;
 use App\Services\UserService;
 use Exception;
-use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 
 class UserController extends BaseController

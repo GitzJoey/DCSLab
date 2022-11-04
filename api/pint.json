@@ -1,14 +1,12 @@
 {
     "preset": "laravel",
     "rules": {
-        "no_unused_imports": false,
         "braces": false,
         "blank_line_after_namespace": false,
         "single_blank_line_at_eof": false,
         "no_extra_blank_lines": false,
         "curly_braces_position": false,
         "line_ending": false,
-        "ordered_imports": false,
         "no_whitespace_in_blank_line": false
     },
     "exclude": [

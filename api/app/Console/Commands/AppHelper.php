@@ -7,17 +7,17 @@ use App\Enums\UserRoles;
 use App\Services\RoleService;
 use App\Services\UserService;
 
-use Database\Seeders\UserTableSeeder;
-use Database\Seeders\RoleTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\BranchTableSeeder;
-use Database\Seeders\EmployeeTableSeeder;
-use Database\Seeders\WarehouseTableSeeder;
-use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\BrandTableSeeder;
-use Database\Seeders\UnitTableSeeder;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\EmployeeTableSeeder;
+use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\ProductTableSeeder;
+use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
+use Database\Seeders\UnitTableSeeder;
+use Database\Seeders\UserTableSeeder;
+use Database\Seeders\WarehouseTableSeeder;
 
 use Exception;
 use Illuminate\Console\Command;

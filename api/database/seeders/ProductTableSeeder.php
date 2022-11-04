@@ -2,18 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\Unit;
+use App\Actions\RandomGenerator;
+use App\Enums\ProductCategory;
+use App\Enums\ProductGroupCategory;
+use App\Enums\UnitCategory;
 use App\Models\Brand;
 use App\Models\Company;
 use App\Models\Product;
-use App\Enums\UnitCategory;
-use App\Models\ProductUnit;
 use App\Models\ProductGroup;
-use App\Enums\ProductCategory;
-use Illuminate\Database\Seeder;
-use App\Actions\RandomGenerator;
-use App\Enums\ProductGroupCategory;
+use App\Models\ProductUnit;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Seeder;
 
 class ProductTableSeeder extends Seeder
 {

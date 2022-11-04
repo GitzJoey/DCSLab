@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Supplier;
-use App\Services\SupplierService;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
+use App\Models\Supplier;
+use App\Services\SupplierService;
+use Exception;
 
 class SupplierController extends BaseController
 {

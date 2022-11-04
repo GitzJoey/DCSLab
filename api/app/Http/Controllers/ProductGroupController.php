@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Company;
-use App\Models\ProductGroup;
 use App\Enums\ProductGroupCategory;
-use App\Services\ProductGroupService;
 use App\Http\Requests\ProductGroupRequest;
 use App\Http\Resources\ProductGroupResource;
+use App\Models\ProductGroup;
+use App\Services\ProductGroupService;
+use Exception;
 
 class ProductGroupController extends BaseController
 {

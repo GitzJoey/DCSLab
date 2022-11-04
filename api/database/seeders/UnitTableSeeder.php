@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Actions\RandomGenerator;
 use App\Enums\UnitCategory;
 use App\Models\Company;
 use App\Models\Unit;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 

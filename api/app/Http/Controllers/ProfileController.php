@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Fortify\UpdateUserPassword;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Services\RoleService;

@@ -2,23 +2,22 @@
 
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ApiAuthController;
-use App\Http\Controllers\CommonController;
-use App\Http\Controllers\DevController;
-use App\Http\Controllers\InboxController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
-
-use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\CommonController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DevController;
+
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductGroupController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 Route::bind('id', function ($id) {

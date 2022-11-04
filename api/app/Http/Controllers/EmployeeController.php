@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Company;
-use App\Models\Employee;
-use App\Services\EmployeeService;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
+use App\Models\Employee;
+use App\Services\EmployeeService;
+use Exception;
 
 class EmployeeController extends BaseController
 {

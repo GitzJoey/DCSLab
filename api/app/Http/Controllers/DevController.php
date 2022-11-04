@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\SupplierResource;
-use Illuminate\Http\Request;
 
 class DevController extends BaseController
 {

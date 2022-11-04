@@ -4,8 +4,6 @@ namespace App\Listeners;
 
 use App\Services\ActivityLogService;
 use App\Services\DashboardService;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class LogoutEventListener
 {

@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Warehouse;
 use App\Enums\RecordStatus;
+use App\Models\Warehouse;
 use App\Rules\isValidBranch;
 use App\Rules\isValidCompany;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseRequest extends FormRequest
 {
