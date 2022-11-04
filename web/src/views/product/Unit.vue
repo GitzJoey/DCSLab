@@ -210,15 +210,16 @@ const getAllUnits = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.perPage === undefined) args.perPage = 10;
     if (args.useCache === undefined) args.useCache = true;
 
     axios.get(route('api.get.db.product.unit.list', {
         "companyId": companyId,
         "category": "PRODUCTS_AND_SERVICES",
-        "page": args.page,
-        "perPage": args.pageSize,
         "search": args.search,
+        "paginate" : 1,
+        "page": args.page,
+        "perPage": args.perPage,
         "useCache": args.useCache
     })).then(response => {
         unitList.value = response.data;
@@ -351,7 +352,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllUnits({ page: unitList.value.meta.current_page, pageSize: unitList.value.meta.per_page });
+    getAllUnits({ page: unitList.value.meta.current_page, perPage: unitList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {

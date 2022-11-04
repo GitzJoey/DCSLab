@@ -393,7 +393,7 @@ const getAllEmployees = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.perPage === undefined) args.perPage = 10;
     if (args.useCache === undefined) args.useCache = true;
 
     axios.get(route('api.get.db.company.employee.list', { 
@@ -401,7 +401,7 @@ const getAllEmployees = (args) => {
         "search": args.search,
         "paginate" : 1,
         "page": args.page,
-        "perPage": args.pageSize,
+        "perPage": args.perPage,
         "useCache": args.useCache
     })).then(response => {
         employeeList.value = response.data;
@@ -587,7 +587,7 @@ const backToList = () => {
     getAllEmployees({
         paginate : 1,
         page: employeeList.value.meta.current_page,
-        pageSize: employeeList.value.meta.per_page 
+        perPage: employeeList.value.meta.per_page 
     });
 }
 

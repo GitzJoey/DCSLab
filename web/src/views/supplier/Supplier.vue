@@ -367,14 +367,15 @@ const getAllSupplier = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.perPage === undefined) args.perPage = 10;
     if (args.useCache === undefined) args.useCache = true;
 
     axios.get(route('api.get.db.supplier.supplier.list', {
         "companyId": companyId,
-        "page": args.page,
-        "perPage": args.pageSize,
         "search": args.search,
+        "paginate" : 1,
+        "page": args.page,
+        "perPage": args.perPage,
         "useCache": args.useCache
     })).then(response => {
         supplierList.value = response.data;
@@ -535,7 +536,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllSupplier({ page: supplierList.value.meta.current_page, pageSize: supplierList.value.meta.per_page });
+    getAllSupplier({ page: supplierList.value.meta.current_page, perPage: supplierList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {
