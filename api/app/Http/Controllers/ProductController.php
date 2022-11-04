@@ -46,12 +46,12 @@ class ProductController extends BaseController
         $useSerialNumber = false;
         if (array_key_exists('use_serial_number', $request)) {
             $useSerialNumber = $request['use_serial_number'];
-        };
+        }
 
         $hasExpiryDate = false;
         if (array_key_exists('has_expiry_date', $request)) {
             $hasExpiryDate = $request['has_expiry_date'];
-        };
+        }
 
         $productArr = [
             'company_id' => $company_id,
@@ -231,12 +231,12 @@ class ProductController extends BaseController
         $useSerialNumber = false;
         if (array_key_exists('use_serial_number', $request)) {
             $useSerialNumber = $request['use_serial_number'];
-        };
+        }
 
         $hasExpiryDate = false;
         if (array_key_exists('has_expiry_date', $request)) {
             $hasExpiryDate = $request['has_expiry_date'];
-        };
+        }
 
         $productArr = [
             'company_id' => $company_id,
