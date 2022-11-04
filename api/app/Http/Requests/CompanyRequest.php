@@ -65,6 +65,7 @@ class CompanyRequest extends FormRequest
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
+                    'useCache' => ['nullable', 'boolean'],
                 ];
 
                 return $rules_list;

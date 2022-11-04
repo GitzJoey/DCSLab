@@ -75,6 +75,7 @@ class ProductRequest extends FormRequest
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
+                    'useCache' => ['nullable', 'boolean'],
                 ];
 
                 return $rules_list;
@@ -176,7 +177,7 @@ class ProductRequest extends FormRequest
                 $this->merge([
                     'company_id' => $this->has('companyId') ? Hashids::decode($this['companyId'])[0] : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
-                    'productCategory' => ProductCategory::resolveToEnum('PRODUCTS_AND_SERVICES')->value,
+                    'productCategory' => ProductCategory::isValid($this->productCategory) ? ProductCategory::resolveToEnum($this->productCategory)->value : -1,
                 ]);
 
                 break;

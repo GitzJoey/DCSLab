@@ -264,14 +264,17 @@ const getAllWarehouse = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.perPage === undefined) args.perPage = 10;
     if (args.useCache === undefined) args.useCache = true;
 
     axios.get(route('api.get.db.company.warehouse.list', {
         "companyId": companyId,
+        "paginate": 1,
         "page": args.page,
-        "perPage": args.pageSize,
-        "search": args.search })).
+        "perPage": args.perPage,
+        "search": args.search,
+        "useCache": args.useCache
+    })).
     then(response => {
         warehouseList.value = response.data;
         loading.value = false;
@@ -430,7 +433,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllWarehouse({ page: warehouseList.value.meta.current_page, pageSize: warehouseList.value.meta.per_page });
+    getAllWarehouse({ page: warehouseList.value.meta.current_page, perPage: warehouseList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {

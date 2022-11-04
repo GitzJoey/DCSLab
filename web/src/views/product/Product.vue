@@ -525,15 +525,16 @@ const getAllProducts = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
+    if (args.perPage === undefined) args.perPage = 10;
     if (args.useCache === undefined) args.useCache = true;
 
     axios.get(route('api.get.db.product.product.list', {
         companyId: companyId,
         productCategory: 'PRODUCTS',
         search: args.search,
+        paginate : 1,
         page: args.page,
-        perPage: args.pageSize,
+        perPage: args.perPage,
         useCache: args.useCache
     })).then(response => {
         productList.value = response.data;
@@ -755,7 +756,7 @@ const backToList = () => {
     mode.value = 'list';
     getAllProducts({
         page: productList.value.meta.current_page, 
-        pageSize: productList.value.meta.per_page
+        perPage: productList.value.meta.per_page
     });
 }
 

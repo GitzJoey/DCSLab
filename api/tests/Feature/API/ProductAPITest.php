@@ -679,6 +679,7 @@ class ProductAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
+            'productCategory' => 'PRODUCTS',
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -699,6 +700,7 @@ class ProductAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.service.list', [
             'companyId' => Hashids::encode($companyId),
+            'productCategory' => 'SERVICES',
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -746,6 +748,7 @@ class ProductAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
+            'productCategory' => 'PRODUCTS',
             'search' => 'testing',
             'paginate' => true,
             'page' => 1,
@@ -796,6 +799,7 @@ class ProductAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.service.list', [
             'companyId' => Hashids::encode($companyId),
+            'productCategory' => 'SERVICES',
             'search' => 'testing',
             'paginate' => true,
             'page' => 1,
@@ -862,6 +866,7 @@ class ProductAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
+            'productCategory' => 'PRODUCTS',
             'search' => " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~",
             'paginate' => true,
             'page' => 1,
@@ -900,6 +905,7 @@ class ProductAPITest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
+            'productCategory' => 'PRODUCTS',
             'search' => '',
             'paginate' => true,
             'page' => -1,
