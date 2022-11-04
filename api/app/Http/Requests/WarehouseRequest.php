@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Warehouse;
 use App\Enums\RecordStatus;
+use App\Models\Warehouse;
 use App\Rules\isValidBranch;
 use App\Rules\isValidCompany;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseRequest extends FormRequest
 {
@@ -20,7 +20,7 @@ class WarehouseRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 
@@ -90,12 +90,12 @@ class WarehouseRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
             $rules_update = [
-                    'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'branch_id' => ['required', new isValidBranch($this->company_id)],
-                    'code' => ['required', 'max:255'],
-                    'name' => 'required|max:255',
-                    'status' => [new Enum(RecordStatus::class)],
-                ];
+                'company_id' => ['required', new isValidCompany(), 'bail'],
+                'branch_id' => ['required', new isValidBranch($this->company_id)],
+                'code' => ['required', 'max:255'],
+                'name' => 'required|max:255',
+                'status' => [new Enum(RecordStatus::class)],
+            ];
 
                 return array_merge($rules_update, $nullableArr);
             default:

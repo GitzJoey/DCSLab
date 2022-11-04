@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProductGroupCategory;
 use App\Models\Company;
 use App\Models\ProductGroup;
-use Illuminate\Database\Seeder;
-use App\Enums\ProductGroupCategory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Seeder;
 
 class ProductGroupTableSeeder extends Seeder
 {

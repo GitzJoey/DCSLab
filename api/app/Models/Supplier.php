@@ -4,8 +4,6 @@ namespace App\Models;
 
 use App\Enums\PaymentTermType;
 use App\Enums\RecordStatus;
-use App\Models\Company;
-use App\Models\SupplierProduct;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

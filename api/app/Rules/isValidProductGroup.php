@@ -28,7 +28,7 @@ class isValidProductGroup implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (!$this->companyId || !$value) return false;
+        if (! $this->companyId || ! $value) return false;
 
         $result = ProductGroup::where([
             ['id', '=', $value],

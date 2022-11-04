@@ -28,7 +28,7 @@ class isValidEmployee implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (!$this->companyId || !$value) return false;
+        if (! $this->companyId || ! $value) return false;
 
         $result = Employee::where([
             ['id', '=', $value],

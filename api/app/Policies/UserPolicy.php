@@ -22,7 +22,7 @@ class UserPolicy
             return false;
         }
 
-        if (!app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
 
@@ -44,7 +44,7 @@ class UserPolicy
             return false;
         }
 
-        if (!app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
 
@@ -65,7 +65,7 @@ class UserPolicy
             return false;
         }
 
-        if (!app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
 
@@ -87,7 +87,7 @@ class UserPolicy
             return false;
         }
 
-        if (!app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
             return true;
         }
 

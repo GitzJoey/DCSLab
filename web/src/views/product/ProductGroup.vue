@@ -216,7 +216,8 @@ const getAllProductGroups = (args) => {
         "search": args.search,
         "paginate" : 1,
         "page": args.page,
-        "perPage": args.perPage,
+        "perPage": args.pageSize,
+        "search": args.search,
         "useCache": args.useCache
     })).then(response => {
         productGroupList.value = response.data;

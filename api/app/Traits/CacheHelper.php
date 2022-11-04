@@ -14,11 +14,11 @@ trait CacheHelper
         $hit = false;
         $tagsArr = [];
         try {
-            if (!Config::get('dcslab.DATA_CACHE.ENABLED')) {
+            if (! Config::get('dcslab.DATA_CACHE.ENABLED')) {
                 return Config::get('dcslab.ERROR_RETURN_VALUE');
             }
 
-            if (!Cache::tags([auth()->user()->id, class_basename(__CLASS__)])->has($key)) {
+            if (! Cache::tags([auth()->user()->id, class_basename(__CLASS__)])->has($key)) {
                 return Config::get('dcslab.ERROR_RETURN_VALUE');
             }
 
@@ -58,7 +58,7 @@ trait CacheHelper
         try {
             $tagsArr = [auth()->user()->id, class_basename(__CLASS__)];
 
-            if (!empty($tags)) {
+            if (! empty($tags)) {
                 $tagsArr = str_contains($tags, ',') ? explode(',', $tags) : [$tags];
             }
 

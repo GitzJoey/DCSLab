@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Fortify\UpdateUserPassword;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Services\RoleService;
@@ -56,7 +55,7 @@ class ProfileController extends BaseController
 
         $result = $this->userService->updateProfile($user, $profile, true);
 
-        return !$result ? response()->error() : response()->success();
+        return ! $result ? response()->error() : response()->success();
     }
 
     public function changePassword(ProfileRequest $profileRequest)
@@ -85,7 +84,7 @@ class ProfileController extends BaseController
             $this->userService->resetTokens($usr->id);
         }
 
-        return !$result ? response()->error() : response()->success();
+        return ! $result ? response()->error() : response()->success();
     }
 
     public function updateRoles(ProfileRequest $profileRequest)

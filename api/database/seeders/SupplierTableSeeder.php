@@ -16,7 +16,6 @@ use Carbon\Carbon;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Config;
 
 class SupplierTableSeeder extends Seeder
 {

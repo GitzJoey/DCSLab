@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Tightenco\Ziggy\Ziggy;
 
 class DashboardController extends BaseController

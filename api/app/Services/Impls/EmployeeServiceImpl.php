@@ -100,14 +100,14 @@ class EmployeeServiceImpl implements EmployeeService
                 $cacheKey = 'read_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) {
+                if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
 
             $result = null;
 
-            if (!$companyId) {
+            if (! $companyId) {
                 return null;
             }
 
@@ -181,7 +181,7 @@ class EmployeeServiceImpl implements EmployeeService
 
             $employee->employeeAccesses()->delete();
 
-            if (!empty($accessesArr)) {
+            if (! empty($accessesArr)) {
                 $newAccesses = [];
 
                 foreach ($accessesArr as $access) {
