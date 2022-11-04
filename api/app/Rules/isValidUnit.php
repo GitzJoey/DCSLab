@@ -35,7 +35,7 @@ class isValidUnit implements Rule
             ['company_id', '=', $this->companyId],
         ])->exists();
 
-        return $result;   
+        return $result;
     }
 
     /**

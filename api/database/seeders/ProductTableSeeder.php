@@ -22,7 +22,6 @@ class ProductTableSeeder extends Seeder
      *
      * @return void
      */
-
     public function run($productPerCompany = 5, $onlyThisCompanyId = 0, $productCategory = 3)
     {
         if ($onlyThisCompanyId != 0) {

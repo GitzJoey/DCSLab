@@ -82,7 +82,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('list/productgroupcategory', [ProductGroupController::class, 'getProductGroupCategory'])->name('.list.productgroupcategories');
                 Route::get('list/unitcategory', [UnitController::class, 'getUnitCategory'])->name('.list.unitcategories');
                 Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
-            });           
+            });
         });
 
         Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {

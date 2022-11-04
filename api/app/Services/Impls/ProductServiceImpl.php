@@ -227,8 +227,8 @@ class ProductServiceImpl implements ProductService
 
             if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
                 ProductUnit::upsert(
-                    $pu, 
-                    ['id'], 
+                    $pu,
+                    ['id'],
                     [
                         'company_id',
                         'product_id',
