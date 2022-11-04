@@ -1,8 +1,6 @@
 {
     "preset": "laravel",
     "rules": {
-        "unary_operator_spaces": false,
-        "not_operator_with_successor_space": false,
         "no_unused_imports": false,
         "braces": false,
         "blank_line_after_namespace": false,

@@ -31,9 +31,9 @@ class WarehouseController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->warehouseService->generateUniqueCode();
-            } while (!$this->warehouseService->isUniqueCode($code, $company_id));
+            } while (! $this->warehouseService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->warehouseService->isUniqueCode($code, $company_id)) {
+            if (! $this->warehouseService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -134,9 +134,9 @@ class WarehouseController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->warehouseService->generateUniqueCode();
-            } while (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id));
+            } while (! $this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id));
         } else {
-            if (!$this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id)) {
+            if (! $this->warehouseService->isUniqueCode($code, $company_id, $warehouse->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -179,6 +179,6 @@ class WarehouseController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }

@@ -56,7 +56,7 @@ class ProfileController extends BaseController
 
         $result = $this->userService->updateProfile($user, $profile, true);
 
-        return !$result ? response()->error() : response()->success();
+        return ! $result ? response()->error() : response()->success();
     }
 
     public function changePassword(ProfileRequest $profileRequest)
@@ -85,7 +85,7 @@ class ProfileController extends BaseController
             $this->userService->resetTokens($usr->id);
         }
 
-        return !$result ? response()->error() : response()->success();
+        return ! $result ? response()->error() : response()->success();
     }
 
     public function updateRoles(ProfileRequest $profileRequest)

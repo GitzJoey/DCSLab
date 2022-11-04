@@ -66,7 +66,7 @@ class EmployeeResource extends JsonResource
 
     private function setStatus($status, $deleted_at)
     {
-        if (!is_null($deleted_at)) {
+        if (! is_null($deleted_at)) {
             return RecordStatus::DELETED->name;
         } else {
             return $status->name;

@@ -29,7 +29,7 @@ class isValidWarehouse implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (!$this->companyId || !$this->branchId || !$value) return false;
+        if (! $this->companyId || ! $this->branchId || ! $value) return false;
 
         $result = Warehouse::where([
             ['id', '=', $value],

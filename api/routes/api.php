@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::bind('id', function ($id) {
-    return !is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
+    return ! is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
 });
 
 Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest', 'throttle:3,1']])->name('api.auth');

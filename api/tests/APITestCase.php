@@ -11,7 +11,7 @@ class APITestCase extends TestCase
     {
         parent::setUp();
 
-        if (!file_exists(database_path('database.sqlite'))) {
+        if (! file_exists(database_path('database.sqlite'))) {
             File::put(database_path('database.sqlite'), null);
 
             $this->artisan('migrate', [

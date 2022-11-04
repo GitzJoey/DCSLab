@@ -65,7 +65,7 @@ class ProductServiceImpl implements ProductService
                 ]));
             }
 
-            if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
+            if (! empty($pu) && $this->checkUniqueCodeInArray($pu)) {
                 $product->productUnits()->saveMany($pu);
             }
 
@@ -103,14 +103,14 @@ class ProductServiceImpl implements ProductService
                 $cacheKey = 'read_'.$companyId.'-'.$productCategory.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) {
+                if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
 
             $result = null;
 
-            if (!$companyId) {
+            if (! $companyId) {
                 return null;
             }
 
@@ -225,7 +225,7 @@ class ProductServiceImpl implements ProductService
                 $productUnit->delete();
             }
 
-            if (!empty($pu) && $this->checkUniqueCodeInArray($pu)) {
+            if (! empty($pu) && $this->checkUniqueCodeInArray($pu)) {
                 ProductUnit::upsert(
                     $pu,
                     ['id'],

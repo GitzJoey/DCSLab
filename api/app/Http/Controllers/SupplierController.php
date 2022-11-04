@@ -30,9 +30,9 @@ class SupplierController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->supplierService->generateUniqueCode();
-            } while (!$this->supplierService->isUniqueCode($code, $company_id));
+            } while (! $this->supplierService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->supplierService->isUniqueCode($code, $company_id)) {
+            if (! $this->supplierService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -72,7 +72,7 @@ class SupplierController extends BaseController
         ];
         
         $productsArr = [];
-        if (array_key_exists('productIds', $request) && !empty($request['productIds'])) {
+        if (array_key_exists('productIds', $request) && ! empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
                 $mainProduct = 0;
                 if (array_key_exists('mainProducts', $request)) {
@@ -171,9 +171,9 @@ class SupplierController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->supplierService->generateUniqueCode();
-            } while (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id));
+            } while (! $this->supplierService->isUniqueCode($code, $company_id, $supplier->id));
         } else {
-            if (!$this->supplierService->isUniqueCode($code, $company_id, $supplier->id)) {
+            if (! $this->supplierService->isUniqueCode($code, $company_id, $supplier->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -196,7 +196,7 @@ class SupplierController extends BaseController
         ];
 
         $productsArr = [];
-        if (array_key_exists('productIds', $request) && !empty($request['productIds'])) {
+        if (array_key_exists('productIds', $request) && ! empty($request['productIds'])) {
             for ($i = 0; $i < count($request['productIds']); $i++) {
                 $mainProduct = 0;
                 if (array_key_exists('mainProducts', $request)) {
@@ -237,6 +237,6 @@ class SupplierController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }
