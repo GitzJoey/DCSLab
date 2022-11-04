@@ -309,5 +309,4 @@ class CompanyServiceImpl implements CompanyService
 
         return $result->count() == 0 ? true : false;
     }
-
 }

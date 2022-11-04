@@ -11,8 +11,7 @@
         "line_ending": false,
         "ordered_imports": false,
         "no_empty_statement": false,
-        "no_whitespace_in_blank_line": false,
-        "class_attributes_separation": false
+        "no_whitespace_in_blank_line": false
     },
     "exclude": [
         "database/migrations"
