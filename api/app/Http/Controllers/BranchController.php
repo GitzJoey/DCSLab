@@ -76,7 +76,7 @@ class BranchController extends BaseController
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
-        $useCache = array_key_exists('useCache', $request) ? boolval($request['useCache']) : true;
+        $useCache = array_key_exists('refresh', $request) ? boolval($request['refresh']) : true;
 
         $companyId = $request['company_id'];
 

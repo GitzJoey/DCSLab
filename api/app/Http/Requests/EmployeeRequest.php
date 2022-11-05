@@ -71,7 +71,7 @@ class EmployeeRequest extends FormRequest
                     'page' => ['required_if:paginate,true', 'numeric'],
                     'perPage' => ['required_if:paginate,true', 'numeric'],
                     'refresh' => ['nullable', 'boolean'],
-                    'useCache' => ['nullable', 'boolean'],
+                    'refresh' => ['nullable', 'boolean'],
                 ];
 
                 return $rules_list;
