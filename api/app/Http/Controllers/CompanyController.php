@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\User;
-use App\Models\Company;
-use Illuminate\Http\Request;
-use App\Services\CompanyService;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CompanyRequest;
 use App\Http\Resources\CompanyResource;
+use App\Models\Company;
+use App\Services\CompanyService;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends BaseController
 {
@@ -33,9 +32,9 @@ class CompanyController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id));
+            } while (! $this->companyService->isUniqueCode($code, $user->id));
         } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id)) {
+            if (! $this->companyService->isUniqueCode($code, $user->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -161,9 +160,9 @@ class CompanyController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->companyService->generateUniqueCode();
-            } while (!$this->companyService->isUniqueCode($code, $user->id, $company->id));
+            } while (! $this->companyService->isUniqueCode($code, $user->id, $company->id));
         } else {
-            if (!$this->companyService->isUniqueCode($code, $user->id, $company->id)) {
+            if (! $this->companyService->isUniqueCode($code, $user->id, $company->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -213,6 +212,6 @@ class CompanyController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }

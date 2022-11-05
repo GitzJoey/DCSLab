@@ -7,17 +7,17 @@ use App\Enums\UserRoles;
 use App\Services\RoleService;
 use App\Services\UserService;
 
-use Database\Seeders\UserTableSeeder;
-use Database\Seeders\RoleTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\BranchTableSeeder;
-use Database\Seeders\EmployeeTableSeeder;
-use Database\Seeders\WarehouseTableSeeder;
-use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\BrandTableSeeder;
-use Database\Seeders\UnitTableSeeder;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\EmployeeTableSeeder;
+use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\ProductTableSeeder;
+use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
+use Database\Seeders\UnitTableSeeder;
+use Database\Seeders\UserTableSeeder;
+use Database\Seeders\WarehouseTableSeeder;
 
 use Exception;
 use Illuminate\Console\Command;
@@ -61,7 +61,7 @@ class AppHelper extends Command
      */
     public function handle()
     {
-        if (!File::exists('.env')) {
+        if (! File::exists('.env')) {
             $this->error('File Not Found: .env');
             $this->error('Aborted');
 
@@ -121,7 +121,7 @@ class AppHelper extends Command
             }
             sleep(3);
 
-            if (!is_null($option)) {
+            if (! is_null($option)) {
                 $loop = false;
             }
         }
@@ -137,7 +137,7 @@ class AppHelper extends Command
 
             $runInProd = $this->confirm('Do you really wish to run this command?', false);
 
-            if (!$runInProd) {
+            if (! $runInProd) {
                 return;
             }
         }
@@ -145,7 +145,7 @@ class AppHelper extends Command
         $unattended_mode = $this->confirm('Unattended Mode?', true);
 
         $seeders = [];
-        if (!$unattended_mode) {
+        if (! $unattended_mode) {
             $seeders = $this->choice(
                 'Please select the seeders (comma separated for multiple choices):', [
                     'UserTableSeeder',
@@ -344,7 +344,7 @@ class AppHelper extends Command
 
     private function encodeDecodeInputValue()
     {
-        if (!is_null($this->argument('option'))) {
+        if (! is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
             $input = $args[0];
@@ -367,7 +367,7 @@ class AppHelper extends Command
 
     private function createAdminDevUser()
     {
-        if (!is_null($this->argument('option'))) {
+        if (! is_null($this->argument('option'))) {
             $args = $this->argument('args');
 
             $userName = $args[0];
@@ -384,7 +384,7 @@ class AppHelper extends Command
             $this->info('Creating Admin/Dev Account ...');
             $is_dev = $this->confirm('Are you a developer?', false);
 
-            if (!$is_dev) {
+            if (! $is_dev) {
                 $this->info('Setting you account as administrator since you\'re not dev...');
             }
 
@@ -394,7 +394,7 @@ class AppHelper extends Command
 
             $valid = false;
 
-            while (!$valid) {
+            while (! $valid) {
                 $userName = $this->ask('Name:', $userName);
                 $userEmail = $this->ask('Email:', $userEmail);
                 $userPassword = $this->secret('Password:', $userPassword);
@@ -409,7 +409,7 @@ class AppHelper extends Command
                     'password' => 'required|min:7',
                 ]);
 
-                if (!$validator->fails()) {
+                if (! $validator->fails()) {
                     $valid = true;
                 } else {
                     foreach ($validator->errors()->all() as $errorMessage) {
@@ -420,7 +420,7 @@ class AppHelper extends Command
 
             $confirmed = $this->confirm("Everything's OK? Do you wish to continue?");
 
-            if (!$confirmed) {
+            if (! $confirmed) {
                 $this->error('Aborted');
 
                 return false;
@@ -469,7 +469,7 @@ class AppHelper extends Command
 
         $email = '';
 
-        while (!$valid) {
+        while (! $valid) {
             $email = $this->ask('Email:', $email);
 
             $usr = $userService->readby('EMAIL', $email);
@@ -484,7 +484,7 @@ class AppHelper extends Command
 
                 $role = $roleService->readBy('DISPLAY_NAME', $roleDisplayName);
 
-                if (!$role) {
+                if (! $role) {
                     $this->error('Invalid Role');
 
                     return false;
@@ -492,7 +492,7 @@ class AppHelper extends Command
 
                 $confirmed = $this->confirm("Proceed to $mode Role $role->display_name to $usr->name?", true);
 
-                if (!$confirmed) {
+                if (! $confirmed) {
                     $this->error('Aborted');
 
                     return false;
@@ -512,7 +512,7 @@ class AppHelper extends Command
 
                 $confirmedExit = $this->confirm('Do you want to attach/remove another role?', false);
 
-                if (!$confirmedExit) {
+                if (! $confirmedExit) {
                     $this->error('Exiting');
 
                     return false;

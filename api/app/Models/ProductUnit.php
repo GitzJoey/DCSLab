@@ -2,15 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\Unit;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
@@ -41,7 +37,7 @@ class ProductUnit extends Model
         'is_base',
         'conversion_value',
         'is_primary_unit',
-        'remarks'
+        'remarks',
     ];
 
     protected static $logOnlyDirty = true;

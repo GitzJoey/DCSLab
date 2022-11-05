@@ -2,27 +2,26 @@
 
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ApiAuthController;
-use App\Http\Controllers\CommonController;
-use App\Http\Controllers\DevController;
-use App\Http\Controllers\InboxController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
-
-use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\BranchController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\UnitController;
+use App\Http\Controllers\CommonController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DevController;
+
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductGroupController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UnitController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 Route::bind('id', function ($id) {
-    return !is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
+    return ! is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
 });
 
 Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest', 'throttle:3,1']])->name('api.auth');
@@ -82,7 +81,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
                 Route::get('list/productgroupcategory', [ProductGroupController::class, 'getProductGroupCategory'])->name('.list.productgroupcategories');
                 Route::get('list/unitcategory', [UnitController::class, 'getUnitCategory'])->name('.list.unitcategories');
                 Route::get('list/product_type', [ProductController::class, 'getProductType'])->name('.list.product_type');
-            });           
+            });
         });
 
         Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {

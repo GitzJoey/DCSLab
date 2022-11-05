@@ -4,11 +4,6 @@ namespace App\Models;
 
 use App\Enums\ProductType;
 use App\Enums\RecordStatus;
-use App\Models\Brand;
-use App\Models\Company;
-use App\Models\ProductGroup;
-use App\Models\ProductUnit;
-use App\Models\Supplier;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -2,15 +2,15 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Supplier;
+use App\Enums\PaymentTermType;
 use App\Enums\RecordStatus;
+use App\Models\Supplier;
 use App\Rules\isValidCompany;
 use App\Rules\isValidProduct;
-use App\Enums\PaymentTermType;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Illuminate\Foundation\Http\FormRequest;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierRequest extends FormRequest
 {
@@ -21,7 +21,7 @@ class SupplierRequest extends FormRequest
      */
     public function authorize()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return false;
         }
 

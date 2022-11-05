@@ -14,13 +14,11 @@ use App\Traits\CacheHelper;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Mail\Message;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Password;
 
 class UserServiceImpl implements UserService
 {
@@ -133,7 +131,7 @@ class UserServiceImpl implements UserService
                 $cacheKey = 'read_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) {
+                if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -207,19 +205,19 @@ class UserServiceImpl implements UserService
         $timer_start = microtime(true);
 
         try {
-            if (!is_null($userArr)) {
+            if (! is_null($userArr)) {
                 $this->updateUser($user, $userArr, false);
             }
 
-            if (!is_null($profileArr)) {
+            if (! is_null($profileArr)) {
                 $this->updateProfile($user, $profileArr, false);
             }
 
-            if (!is_null($rolesArr)) {
+            if (! is_null($rolesArr)) {
                 $this->updateRoles($user, $rolesArr, false);
             }
 
-            if (!is_null($settingsArr)) {
+            if (! is_null($settingsArr)) {
                 $this->updateSettings($user, $settingsArr, false);
             }
 
@@ -240,7 +238,7 @@ class UserServiceImpl implements UserService
 
     public function updateUser(User $user, array $userArr, bool $useTransactions = true): bool
     {
-        !$useTransactions ?: DB::beginTransaction();
+        ! $useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -252,11 +250,11 @@ class UserServiceImpl implements UserService
 
             //$queryLog = DB::getQueryLog();
 
-            !$useTransactions ?: DB::commit();
+            ! $useTransactions ?: DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            ! $useTransactions ?: DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
@@ -267,7 +265,7 @@ class UserServiceImpl implements UserService
 
     public function updateProfile(User $user, array $profileArr, bool $useTransactions = true): bool
     {
-        !$useTransactions ?: DB::beginTransaction();
+        ! $useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -289,11 +287,11 @@ class UserServiceImpl implements UserService
                 ]);
             }
 
-            !$useTransactions ?: DB::commit();
+            ! $useTransactions ?: DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            ! $useTransactions ?: DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
@@ -304,17 +302,17 @@ class UserServiceImpl implements UserService
 
     public function updateRoles(User $user, array $rolesArr, bool $useTransactions = true): User
     {
-        !$useTransactions ?: DB::beginTransaction();
+        ! $useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $updated_usr = $user->syncRoles($rolesArr);
 
-            !$useTransactions ?: DB::commit();
+            ! $useTransactions ?: DB::commit();
 
             return $updated_usr->refresh();
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            ! $useTransactions ?: DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
@@ -325,14 +323,14 @@ class UserServiceImpl implements UserService
 
     public function updateSettings(User $user, array $settingsArr, bool $useTransactions = true): bool
     {
-        !$useTransactions ?: DB::beginTransaction();
+        ! $useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $retval = 0;
             foreach ($settingsArr as $key => $value) {
                 $setting = $user->settings()->where('key', $key)->first();
-                if (!$setting || $value == null) {
+                if (! $setting || $value == null) {
                     continue;
                 }
                 if ($setting->value != $value) {
@@ -342,11 +340,11 @@ class UserServiceImpl implements UserService
                 }
             }
 
-            !$useTransactions ?: DB::commit();
+            ! $useTransactions ?: DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            !$useTransactions ?: DB::rollBack();
+            ! $useTransactions ?: DB::rollBack();
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {

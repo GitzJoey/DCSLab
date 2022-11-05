@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Company;
-use App\Models\ProductGroup;
 use App\Enums\ProductGroupCategory;
-use App\Services\ProductGroupService;
 use App\Http\Requests\ProductGroupRequest;
 use App\Http\Resources\ProductGroupResource;
+use App\Models\ProductGroup;
+use App\Services\ProductGroupService;
+use Exception;
 
 class ProductGroupController extends BaseController
 {
@@ -32,9 +31,9 @@ class ProductGroupController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productGroupService->generateUniqueCode();
-            } while (!$this->productGroupService->isUniqueCode($code, $company_id));
+            } while (! $this->productGroupService->isUniqueCode($code, $company_id));
         } else {
-            if (!$this->productGroupService->isUniqueCode($code, $company_id)) {
+            if (! $this->productGroupService->isUniqueCode($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -130,9 +129,9 @@ class ProductGroupController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productGroupService->generateUniqueCode();
-            } while (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id));
+            } while (! $this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id));
         } else {
-            if (!$this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
+            if (! $this->productGroupService->isUniqueCode($code, $company_id, $productgroup->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -171,7 +170,7 @@ class ProductGroupController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 
     public function getProductGroupCategory()

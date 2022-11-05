@@ -36,7 +36,7 @@ class CompanyServiceImpl implements CompanyService
             $userId = $companyArr['user_id'];
 
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -89,7 +89,7 @@ class CompanyServiceImpl implements CompanyService
                 $cacheKey = 'read_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) {
+                if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -97,7 +97,7 @@ class CompanyServiceImpl implements CompanyService
             $result = null;
 
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -169,7 +169,7 @@ class CompanyServiceImpl implements CompanyService
 
         try {
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -309,5 +309,4 @@ class CompanyServiceImpl implements CompanyService
 
         return $result->count() == 0 ? true : false;
     }
-
 }
