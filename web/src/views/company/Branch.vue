@@ -304,7 +304,7 @@ const getAllBranches = (args) => {
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
     if (args.perPage === undefined) args.perPage = 10;
-    if (args.useCache === undefined) args.useCache = true;
+    if (args.refresh === undefined) args.refresh = true;
 
     axios.get(route('api.get.db.company.branch.list', {
         "companyId": companyId,
@@ -312,7 +312,7 @@ const getAllBranches = (args) => {
         "paginate": args.paginate,
         "page": args.page,
         "perPage": args.perPage,
-        "useCache": args.useCache
+        "refresh": args.refresh
     })).then(response => {
         branchList.value = response.data;
         loading.value = false;
@@ -427,8 +427,8 @@ const createNew = () => {
     }
 }
 
-const onDataListChange = ({search, paginate, page, perPage, useCache}) => {
-    getAllBranches({search, paginate, page, perPage, useCache});
+const onDataListChange = ({search, paginate, page, perPage, refresh}) => {
+    getAllBranches({search, paginate, page, perPage, refresh});
 }
 
 const editSelected = (index) => {

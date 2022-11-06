@@ -208,7 +208,7 @@ const getAllProductGroups = (args) => {
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
     if (args.perPage === undefined) args.perPage = 10;
-    if (args.useCache === undefined) args.useCache = true;
+    if (args.refresh === undefined) args.refresh = true;
 
     axios.get(route('api.get.db.product.product_group.list', {
         "companyId": companyId,
@@ -216,9 +216,8 @@ const getAllProductGroups = (args) => {
         "search": args.search,
         "paginate" : 1,
         "page": args.page,
-        "perPage": args.pageSize,
-        "search": args.search,
-        "useCache": args.useCache
+        "perPage": args.perPage,
+        "refresh": args.refresh
     })).then(response => {
         productGroupList.value = response.data;
         loading.value = false;
@@ -315,8 +314,8 @@ const createNew = () => {
     }
 }
 
-const onDataListChange = ({search, paginate, page, perPage, useCache}) => {
-    getAllProductGroups({search, paginate, page, perPage, useCache});
+const onDataListChange = ({search, paginate, page, perPage, refresh}) => {
+    getAllProductGroups({search, paginate, page, perPage, refresh});
 }
 
 const editSelected = (index) => {
