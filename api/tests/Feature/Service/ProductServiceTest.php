@@ -396,7 +396,7 @@ class ProductServiceTest extends ServiceTestCase
         $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
         $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [5, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
         
         $result = $this->productService->list(
             companyId: $companyId, 
@@ -408,7 +408,7 @@ class ProductServiceTest extends ServiceTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 10);
+        $this->assertTrue($result->total() == 20);
     }
 
     public function test_product_service_call_list_products_with_perpage_parameter_negative_expect_results()
@@ -422,7 +422,7 @@ class ProductServiceTest extends ServiceTestCase
         $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
         $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [5, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
         
         $result = $this->productService->list(
             companyId: $companyId, 
@@ -434,7 +434,7 @@ class ProductServiceTest extends ServiceTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 10);
+        $this->assertTrue($result->total() == 20);
     }
     /* #endregion */
 
