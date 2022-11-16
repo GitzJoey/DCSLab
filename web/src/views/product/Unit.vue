@@ -22,7 +22,6 @@
                                 <td>
                                     <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
                                     <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
-                                    <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
@@ -57,7 +56,6 @@
                                         <div class="flex-1">
                                             <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
                                             <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
-                                            <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                         </div>
                                     </div>
                                 </td>

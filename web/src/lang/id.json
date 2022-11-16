@@ -59,13 +59,11 @@
                 },
                 "productGroupCategoryDDL": {
                     "product": "Produk",
-                    "service": "Jasa",
-                    "product_and_service": "Produk Dan Jasa"
+                    "service": "Jasa"
                 },
                 "unitCategoryDDL": {
                     "product": "Produk",
-                    "service": "Jasa",
-                    "product_and_service": "Produk Dan Jasa"
+                    "service": "Jasa"
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Pembayaran Dimuka",

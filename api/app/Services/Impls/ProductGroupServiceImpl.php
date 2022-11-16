@@ -77,7 +77,7 @@ class ProductGroupServiceImpl implements ProductGroupService
 
     public function list(
         int $companyId,
-        int $category,
+        ?int $category,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -107,13 +107,15 @@ class ProductGroupServiceImpl implements ProductGroupService
                 $productGroup = ProductGroup::whereCompanyId($companyId);
             }
 
-            switch ($category) {
-                case ProductGroupCategory::PRODUCTS->value:
-                    $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::SERVICES->value);
-                    break;
-                case ProductGroupCategory::SERVICES->value:
-                    $productGroup = $productGroup->where('category', '<>', ProductGroupCategory::PRODUCTS->value);
-                    break;
+            if ($category) {
+                switch ($category) {
+                    case ProductGroupCategory::PRODUCTS->value:
+                        $productGroup = $productGroup->where('category', '=', ProductGroupCategory::PRODUCTS->value);
+                        break;
+                    case ProductGroupCategory::SERVICES->value:
+                        $productGroup = $productGroup->where('category', '=', ProductGroupCategory::SERVICES->value);
+                        break;
+                }
             }
 
             if ($withTrashed)

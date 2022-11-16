@@ -62,13 +62,11 @@
                 },
                 "productGroupCategoryDDL": {
                     "product": "Product",
-                    "service": "Service",
-                    "product_and_service": "Product And Service"
+                    "service": "Service"
                 },
                 "unitCategoryDDL": {
                     "product": "Product",
-                    "service": "Service",
-                    "product_and_service": "Product And Service"
+                    "service": "Service"
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Payment In Advance",

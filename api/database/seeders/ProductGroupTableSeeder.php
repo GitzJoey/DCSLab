@@ -15,7 +15,7 @@ class ProductGroupTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 0)
+    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 3)
     {
         if ($onlyThisCompanyId != 0) {
             $c = Company::find($onlyThisCompanyId);
@@ -42,11 +42,6 @@ class ProductGroupTableSeeder extends Seeder
                     ]);
                     break;
                 case ProductGroupCategory::PRODUCTS_AND_SERVICES->value:
-                    ProductGroup::factory()->setCategoryToProductAndService()->count($countPerCompany)->create([
-                        'company_id' => $c,
-                    ]);
-                    break;
-                case 0:
                 default:
                     ProductGroup::factory()->count($countPerCompany)->create([
                         'company_id' => $c,

@@ -163,17 +163,17 @@ class UnitAPITest extends APITestCase
 
         Unit::factory()->insertStringInName('testing')->count(10)->create([
             'company_id' => $companyId,
-            'category' => 3,
+            'category' => 1,
         ]);
 
         Unit::factory()->count(10)->create([
             'company_id' => $companyId,
-            'category' => 3,
+            'category' => 1,
         ]);
 
         $this->actingAs($user);
 
-        $category = UnitCategory::PRODUCTS_AND_SERVICES->name;
+        $category = UnitCategory::PRODUCTS->name;
 
         $api = $this->getJson(route('api.get.db.product.unit.list', [
             'companyId' => Hashids::encode($companyId),
@@ -214,7 +214,7 @@ class UnitAPITest extends APITestCase
 
         $this->actingAs($user);
 
-        $category = UnitCategory::PRODUCTS_AND_SERVICES->name;
+        $category = UnitCategory::PRODUCTS->name;
 
         $api = $this->getJson(route('api.get.db.product.unit.list', [
             'companyId' => Hashids::encode($companyId),
@@ -237,7 +237,7 @@ class UnitAPITest extends APITestCase
 
         $this->actingAs($user);
 
-        $category = UnitCategory::PRODUCTS_AND_SERVICES->name;
+        $category = UnitCategory::PRODUCTS->name;
 
         $api = $this->getJson(route('api.get.db.product.unit.list', [
             'companyId' => Hashids::encode($companyId),
@@ -274,7 +274,7 @@ class UnitAPITest extends APITestCase
 
         $this->actingAs($user);
 
-        $category = UnitCategory::PRODUCTS_AND_SERVICES->name;
+        $category = UnitCategory::PRODUCTS->name;
 
         $api = $this->getJson(route('api.get.db.product.unit.list', [
             'companyId' => Hashids::encode($companyId),

@@ -42,8 +42,15 @@ class ProductTableSeeder extends Seeder
             } elseif ($productCategory == ProductCategory::SERVICES->value) {
                 createService($productPerCompany, $companyId);
             } elseif ($productCategory == ProductCategory::PRODUCTS_AND_SERVICES->value) {
-                createProduct($productPerCompany, $companyId);
-                createService($productPerCompany, $companyId);
+                for ($i = 0; $i < $productPerCompany; $i++) {
+                    $faker = \Faker\Factory::create();
+                    $rand = $faker->boolean();
+                    if ($rand == true) {
+                        createProduct(1, $companyId);
+                    } else {
+                        createService(1, $companyId);
+                    }                    
+                }
             }
         }
     }
@@ -54,7 +61,7 @@ function createProduct($productPerCompany, $companyId)
     $faker = \Faker\Factory::create();
 
     for ($i = 0; $i < $productPerCompany; $i++) {
-        $productGroupId = ProductGroup::whereCompanyId($companyId)->where('category', '!=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id;
+        $productGroupId = ProductGroup::whereCompanyId($companyId)->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id;
 
         $brandId = Brand::whereCompanyId($companyId)->inRandomOrder()->first()->id;
 
@@ -68,7 +75,7 @@ function createProduct($productPerCompany, $companyId)
         $product->save();
 
         $units = Unit::whereCompanyId($companyId)
-            ->where('category', '<>', UnitCategory::SERVICES->value)
+            ->where('category', '=', UnitCategory::PRODUCTS->value)
             ->take(5)->inRandomOrder()->get();
 
         $shuffledUnits = $units->shuffle();
@@ -100,9 +107,9 @@ function createService($productPerCompany, $companyId)
     $faker = \Faker\Factory::create();
 
     for ($i = 0; $i < $productPerCompany; $i++) {
-        $productGroupId = ProductGroup::whereCompanyId($companyId)->where('category', '!=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id;
+        $productGroupId = ProductGroup::whereCompanyId($companyId)->where('category', '=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id;
 
-        $unitId = Unit::whereCompanyId($companyId)->where('category', '!=', UnitCategory::PRODUCTS->value)->inRandomOrder()->first()->id;
+        $unitId = Unit::whereCompanyId($companyId)->where('category', '=', UnitCategory::SERVICES->value)->inRandomOrder()->first()->id;
 
         $product = Product::factory()->make([
             'company_id' => $companyId,
