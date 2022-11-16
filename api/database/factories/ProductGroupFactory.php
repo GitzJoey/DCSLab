@@ -20,10 +20,13 @@ class ProductGroupFactory extends Factory
 
     public function definition()
     {
+        $productGroupCategory = ProductGroupCategory::toArrayValue();
+        unset($productGroupCategory[2]);
+        
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
             'name' => $this->faker->randomElement($this->productGroups),
-            'category' => $this->faker->randomElement(ProductGroupCategory::toArrayValue()),
+            'category' => $this->faker->randomElement($productGroupCategory),
         ];
     }
 
@@ -41,15 +44,6 @@ class ProductGroupFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'category' => ProductGroupCategory::SERVICES,
-            ];
-        });
-    }
-
-    public function setCategoryToProductAndService()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'category' => ProductGroupCategory::PRODUCTS_AND_SERVICES,
             ];
         });
     }

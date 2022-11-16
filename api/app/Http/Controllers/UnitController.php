@@ -66,7 +66,7 @@ class UnitController extends BaseController
         $request = $unitRequest->validated();
 
         $companyId = $request['company_id'];
-        $category = array_key_exists('category', $request) ? $request['category'] : 3;
+        $category = array_key_exists('category', $request) ? $request['category'] : null;
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
@@ -181,7 +181,6 @@ class UnitController extends BaseController
         return [
             ['name' => 'components.dropdown.values.unitCategoryDDL.product', 'code' => UnitCategory::PRODUCTS->name],
             ['name' => 'components.dropdown.values.unitCategoryDDL.service', 'code' => UnitCategory::SERVICES->name],
-            ['name' => 'components.dropdown.values.unitCategoryDDL.product_and_service', 'code' => UnitCategory::PRODUCTS_AND_SERVICES->name],
         ];
     }
 }
