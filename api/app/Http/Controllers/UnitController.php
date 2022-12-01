@@ -66,12 +66,12 @@ class UnitController extends BaseController
         $request = $unitRequest->validated();
 
         $companyId = $request['company_id'];
-        $category = array_key_exists('category', $request) ? $request['category'] : 3;
+        $category = array_key_exists('category', $request) ? $request['category'] : null;
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
-        $useCache = array_key_exists('useCache', $request) ? boolval($request['useCache']) : true;
+        $useCache = array_key_exists('refresh', $request) ? boolval($request['refresh']) : true;
 
         $result = null;
         $errorMsg = '';
@@ -181,7 +181,6 @@ class UnitController extends BaseController
         return [
             ['name' => 'components.dropdown.values.unitCategoryDDL.product', 'code' => UnitCategory::PRODUCTS->name],
             ['name' => 'components.dropdown.values.unitCategoryDDL.service', 'code' => UnitCategory::SERVICES->name],
-            ['name' => 'components.dropdown.values.unitCategoryDDL.product_and_service', 'code' => UnitCategory::PRODUCTS_AND_SERVICES->name],
         ];
     }
 }

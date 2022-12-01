@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API;
 
+use App\Enums\ProductCategory;
 use Exception;
 use App\Models\Role;
 use App\Models\User;
@@ -161,17 +162,17 @@ class ProductGroupAPITest extends APITestCase
 
         ProductGroup::factory()->insertStringInName('testing')->count(10)->create([
             'company_id' => $companyId,
-            'category' => 3,
+            'category' => 1,
         ]);
 
         ProductGroup::factory()->count(10)->create([
             'company_id' => $companyId,
-            'category' => 3,
+            'category' => 1,
         ]);
 
         $this->actingAs($user);
 
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->name;
+        $category = ProductCategory::PRODUCTS->name;
 
         $api = $this->getJson(route('api.get.db.product.product_group.list', [
             'companyId' => Hashids::encode($companyId),
@@ -212,7 +213,7 @@ class ProductGroupAPITest extends APITestCase
 
         $this->actingAs($user);
 
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->name;
+        $category = null;
 
         $api = $this->getJson(route('api.get.db.product.product_group.list', [
             'companyId' => Hashids::encode($companyId),
@@ -235,7 +236,7 @@ class ProductGroupAPITest extends APITestCase
 
         $this->actingAs($user);
 
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->name;
+        $category = ProductCategory::PRODUCTS->name;
 
         $api = $this->getJson(route('api.get.db.product.product_group.list', [
             'companyId' => Hashids::encode($companyId),
@@ -272,7 +273,7 @@ class ProductGroupAPITest extends APITestCase
 
         $this->actingAs($user);
 
-        $category = ProductGroupCategory::PRODUCTS_AND_SERVICES->name;
+        $category = ProductCategory::PRODUCTS->name;
 
         $api = $this->getJson(route('api.get.db.product.product_group.list', [
             'companyId' => Hashids::encode($companyId),

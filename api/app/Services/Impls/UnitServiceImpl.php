@@ -55,7 +55,7 @@ class UnitServiceImpl implements UnitService
 
     public function list(
         int $companyId,
-        int $category,
+        ?int $category,
         string $search = '',
         bool $paginate = true,
         int $page = 1,
@@ -85,13 +85,15 @@ class UnitServiceImpl implements UnitService
                 $unit = Unit::whereCompanyId($companyId);
             }
 
-            switch ($category) {
-                case UnitCategory::PRODUCTS->value:
-                    $unit = $unit->where('category', '<>', UnitCategory::SERVICES->value);
-                    break;
-                case UnitCategory::SERVICES->value:
-                    $unit = $unit->where('category', '<>', UnitCategory::PRODUCTS->value);
-                    break;
+            if ($category) {
+                switch ($category) {
+                    case UnitCategory::PRODUCTS->value:
+                        $unit = $unit->where('category', '=', UnitCategory::PRODUCTS->value);
+                        break;
+                    case UnitCategory::SERVICES->value:
+                        $unit = $unit->where('category', '=', UnitCategory::SERVICES->value);
+                        break;
+                }
             }
 
             if ($withTrashed)

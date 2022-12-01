@@ -22,7 +22,6 @@
                                 <td>
                                     <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
                                     <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
-                                    <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                 </td>
                                 <td class="table-report__action w-12">
                                     <div class="flex justify-center items-center">
@@ -57,7 +56,6 @@
                                         <div class="flex-1">
                                             <span v-if="item.category == 'PRODUCTS'">{{ t('components.dropdown.values.unitCategoryDDL.product') }}</span>
                                             <span v-if="item.category == 'SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.service') }}</span>
-                                            <span v-if="item.category == 'PRODUCTS_AND_SERVICES'">{{ t('components.dropdown.values.unitCategoryDDL.product_and_service') }}</span>
                                         </div>
                                     </div>
                                 </td>
@@ -210,16 +208,17 @@ const getAllUnits = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
-    if (args.useCache === undefined) args.useCache = true;
+    if (args.perPage === undefined) args.perPage = 10;
+    if (args.refresh === undefined) args.refresh = true;
 
     axios.get(route('api.get.db.product.unit.list', {
         "companyId": companyId,
         "category": "PRODUCTS_AND_SERVICES",
-        "page": args.page,
-        "perPage": args.pageSize,
         "search": args.search,
-        "useCache": args.useCache
+        "paginate" : 1,
+        "page": args.page,
+        "perPage": args.perPage,
+        "refresh": args.refresh
     })).then(response => {
         unitList.value = response.data;
         loading.value = false;
@@ -317,8 +316,8 @@ const createNew = () => {
     }
 }
 
-const onDataListChange = ({search, paginate, page, perPage, useCache}) => {
-    getAllUnits({search, paginate, page, perPage, useCache});
+const onDataListChange = ({search, paginate, page, perPage, refresh}) => {
+    getAllUnits({search, paginate, page, perPage, refresh});
 }
 
 const editSelected = (index) => {
@@ -351,7 +350,7 @@ const backToList = () => {
     sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
 
     mode.value = 'list';
-    getAllUnits({ page: unitList.value.meta.current_page, pageSize: unitList.value.meta.per_page });
+    getAllUnits({ page: unitList.value.meta.current_page, perPage: unitList.value.meta.per_page });
 }
 
 const toggleDetail = (idx) => {

@@ -393,16 +393,16 @@ const getAllEmployees = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
-    if (args.useCache === undefined) args.useCache = true;
+    if (args.perPage === undefined) args.perPage = 10;
+    if (args.refresh === undefined) args.refresh = true;
 
     axios.get(route('api.get.db.company.employee.list', { 
         "companyId": companyId,
         "search": args.search,
         "paginate" : 1,
         "page": args.page,
-        "perPage": args.pageSize,
-        "useCache": args.useCache
+        "perPage": args.perPage,
+        "refresh": args.refresh
     })).then(response => {
         employeeList.value = response.data;
         loading.value = false;
@@ -550,8 +550,8 @@ const createNew = () => {
     }
 }
 
-const onDataListChange = ({search, paginate, page, perPage, useCache}) => {
-    getAllEmployees({search, paginate, page, perPage, useCache});
+const onDataListChange = ({search, paginate, page, perPage, refresh}) => {
+    getAllEmployees({search, paginate, page, perPage, refresh});
 }
 
 const editSelected = (index) => {
@@ -587,7 +587,7 @@ const backToList = () => {
     getAllEmployees({
         paginate : 1,
         page: employeeList.value.meta.current_page,
-        pageSize: employeeList.value.meta.per_page 
+        perPage: employeeList.value.meta.per_page 
     });
 }
 

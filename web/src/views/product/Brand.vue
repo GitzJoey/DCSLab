@@ -191,15 +191,16 @@ const getAllBrands = (args) => {
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.pageSize === undefined) args.pageSize = 10;
-    if (args.useCache === undefined) args.useCache = true;
+    if (args.perPage === undefined) args.perPage = 10;
+    if (args.refresh === undefined) args.refresh = true;
 
     axios.get( route("api.get.db.product.brand.list", {
         companyId: companyId,
-        page: args.page,
-        perPage: args.pageSize,
         search: args.search,
-        useCache: args.useCache
+        paginate : 1,
+        page: args.page,
+        perPage: args.perPage,
+        refresh: args.refresh
     })).then((response) => {
         brandList.value = response.data;
         loading.value = false;
@@ -288,8 +289,8 @@ const createNew = () => {
     }
 }
 
-const onDataListChange = ({search, paginate, page, perPage, useCache}) => {
-    getAllBrands({search, paginate, page, perPage, useCache});
+const onDataListChange = ({search, paginate, page, perPage, refresh}) => {
+    getAllBrands({search, paginate, page, perPage, refresh});
 }
 
 const editSelected = (index) => {
@@ -322,7 +323,7 @@ const backToList = () => {
     sessionStorage.removeItem("DCSLAB_LAST_ENTITY");
 
     mode.value = "list";
-    getAllBrands({ page: brandList.value.meta.current_page, pageSize: brandList.value.meta.per_page, });
+    getAllBrands({ page: brandList.value.meta.current_page, perPage: brandList.value.meta.per_page, });
 }
 
 const toggleDetail = (idx) => {

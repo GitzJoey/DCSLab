@@ -64,12 +64,12 @@ class ProductGroupController extends BaseController
         $request = $productGroupRequest->validated();
 
         $companyId = $request['company_id'];
-        $category = array_key_exists('category', $request) ? $request['category'] : 3;
+        $category = $request['category'];
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
-        $useCache = array_key_exists('useCache', $request) ? boolval($request['useCache']) : true;
+        $useCache = array_key_exists('refresh', $request) ? boolval($request['refresh']) : true;
 
         $result = null;
         $errorMsg = '';
@@ -178,7 +178,6 @@ class ProductGroupController extends BaseController
         return [
             ['name' => 'components.dropdown.values.productGroupCategoryDDL.product', 'code' => ProductGroupCategory::PRODUCTS->name],
             ['name' => 'components.dropdown.values.productGroupCategoryDDL.service', 'code' => ProductGroupCategory::SERVICES->name],
-            ['name' => 'components.dropdown.values.productGroupCategoryDDL.product_and_service', 'code' => ProductGroupCategory::PRODUCTS_AND_SERVICES->name],
         ];
     }
 }
