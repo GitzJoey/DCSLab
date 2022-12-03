@@ -2,58 +2,50 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
+use Illuminate\Support\Str;
+use App\Traits\ScopeableByCompany;
+use Spatie\Activitylog\LogOptions;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Vinkla\Hashids\Facades\Hashids;
 
-use App\Models\Company;
-use App\Models\Warehouse;
-use App\Models\AccountingJournal;
-
-class Branch extends Model
+class AccountingJournal extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
+    use ScopeableByCompany;
 
     protected $fillable = [
         'company_id',
-        'code',
-        'name',
-        'address',
-        'city',
-        'contact',
-        'status',
-        'is_main',
+        'branch_id',
+        'ref',
+        'ref_number',
+        'chart_of_account_id',
+        'date',
+        'transaction_type',
+        'value',
         'remarks',
     ];
 
     protected static $logAttributes = [
         'company_id',
-        'code',
-        'name',
-        'address',
-        'city',
-        'contact',
-        'status',
-        'is_main',
+        'branch_id',
+        'ref',
+        'ref_number',
+        'chart_of_account_id',
+        'date',
+        'transaction_type',
+        'value',
         'remarks',
     ];
 
     protected static $logOnlyDirty = true;
 
     protected $hidden = [];
-
-    protected $casts = [
-        'is_main' => 'boolean',
-        'status' => RecordStatus::class,
-    ];
 
     public function hId(): Attribute
     {
@@ -66,20 +58,10 @@ class Branch extends Model
     {
         return $this->belongsTo(Company::class);
     }
-
-    public function employeeAccesses()
+    
+    public function branch()
     {
-        return $this->hasMany(EmployeeAccess::class);
-    }
-
-    public function warehouses()
-    {
-        return $this->hasMany(Warehouse::class);
-    }
-
-    public function accountingJournals()
-    {
-        return $this->hasMany(AccountingJournal::class);
+        return $this->belongsTo(Branch::class);
     }
 
     public function getActivitylogOptions(): LogOptions

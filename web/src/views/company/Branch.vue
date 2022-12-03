@@ -298,7 +298,7 @@ const setMode = () => {
 
 const getAllBranches = (args) => {
     branchList.value = {};
-    console.log(args);
+    
     let companyId = selectedUserCompany.value.hId;
     if (args.search === undefined) args.search = '';
     if (args.paginate === undefined) args.paginate = 1;

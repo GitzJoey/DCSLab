@@ -2,47 +2,39 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
+use App\Enums\AccountType;
+use Illuminate\Support\Str;
+use App\Traits\ScopeableByCompany;
+use Spatie\Activitylog\LogOptions;
+use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Vinkla\Hashids\Facades\Hashids;
 
-use App\Models\Company;
-use App\Models\Warehouse;
-use App\Models\AccountingJournal;
-
-class Branch extends Model
+class ChartOfAccount extends Model
 {
     use HasFactory, LogsActivity;
     use SoftDeletes;
+    use ScopeableByCompany;
 
     protected $fillable = [
         'company_id',
+        'parent_id',
         'code',
         'name',
-        'address',
-        'city',
-        'contact',
-        'status',
-        'is_main',
+        'account_type',
         'remarks',
     ];
 
     protected static $logAttributes = [
         'company_id',
+        'parent_id',
         'code',
         'name',
-        'address',
-        'city',
-        'contact',
-        'status',
-        'is_main',
+        'account_type',
         'remarks',
     ];
 
@@ -51,8 +43,7 @@ class Branch extends Model
     protected $hidden = [];
 
     protected $casts = [
-        'is_main' => 'boolean',
-        'status' => RecordStatus::class,
+        'account_type' => AccountType::class,
     ];
 
     public function hId(): Attribute
@@ -62,25 +53,27 @@ class Branch extends Model
         );
     }
 
+    public function hParentId(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => HashIds::encode($this->attributes['parent_id'])
+        );
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function employeeAccesses()
+    public function parentAccount()
     {
-        return $this->hasMany(EmployeeAccess::class);
+        return $this->belongsTo(ChartOfAccount::class, 'parent_id');
     }
 
-    public function warehouses()
+    public function childAccounts()
     {
-        return $this->hasMany(Warehouse::class);
-    }
-
-    public function accountingJournals()
-    {
-        return $this->hasMany(AccountingJournal::class);
-    }
+        return $this->hasMany(ChartOfAccount::class, 'parent_id', 'id');
+    }  
 
     public function getActivitylogOptions(): LogOptions
     {

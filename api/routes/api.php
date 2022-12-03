@@ -4,11 +4,11 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DevController;
-
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\ProductController;
@@ -21,7 +21,7 @@ use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 Route::bind('id', function ($id) {
-    return ! is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
+    return !is_numeric($id) ? \Vinkla\Hashids\Facades\Hashids::decode($id)[0] : '';
 });
 
 Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest', 'throttle:3,1']])->name('api.auth');
@@ -52,6 +52,16 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'list'])->name('.list');
                 Route::get('read/{warehouse:uuid}', [WarehouseController::class, 'read'])->name('.read');
+            });
+        });
+
+        Route::group(['prefix' => 'finance', 'as' => '.finance'], function () {
+            Route::group(['prefix' => 'chart_of_account', 'as' => '.chart_of_account'], function () {
+                Route::get('read', [ChartOfAccountController::class, 'list'])->name('.list');
+                Route::get('read/{chartofaccount:uuid}', [ChartOfAccountController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'common', 'as' => '.common'], function () {
+                Route::get('list/account_type', [ChartOfAccountController::class, 'getAccountType'])->name('.list.account_type');
             });
         });
 
@@ -158,6 +168,14 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth', 'auth:sanctum', 'thro
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
                 Route::post('edit/{warehouse:uuid}', [WarehouseController::class, 'update'])->name('.edit');
                 Route::post('delete/{warehouse:uuid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
+        });
+
+        Route::group(['prefix' => 'finance', 'as' => '.finance'], function () {
+            Route::group(['prefix' => 'chart_of_account', 'as' => '.chart_of_account'], function () {
+                Route::post('save', [ChartOfAccountController::class, 'store'])->name('.save');
+                Route::post('edit/{chart_of_account:uuid}', [ChartOfAccountController::class, 'update'])->name('.edit');
+                Route::post('delete/{chart_of_account:uuid}', [ChartOfAccountController::class, 'delete'])->name('.delete');
             });
         });
 

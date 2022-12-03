@@ -9,6 +9,8 @@
             "company-branch": "Branch",
             "company-employee": "Employee",
             "company-warehouse": "Warehouse",
+            "finance": "Finance",
+            "finance-coa": "Chart Of Account",
             "product": "Product",
             "product-product_group": "Product Group",
             "product-brand": "Brand",
@@ -62,11 +64,13 @@
                 },
                 "productGroupCategoryDDL": {
                     "product": "Product",
-                    "service": "Service"
+                    "service": "Service",
+                    "product_and_service": "Product And Service"
                 },
                 "unitCategoryDDL": {
                     "product": "Product",
-                    "service": "Service"
+                    "service": "Service",
+                    "product_and_service": "Product And Service"
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Payment In Advance",
@@ -389,6 +393,31 @@
                 "contact": "Contact",
                 "remarks": "Remarks",
                 "status": "Status"
+            }
+        },
+        "chart_of_account": {
+            "table": {
+                "title": "Chart Of Account",
+                "cols": {
+                    "code": "Code",
+                    "name": "Name",
+                    "parent_account": "Parent Account",
+                    "account_type": "Account Type",
+                    "remarks": "Remarks"
+                }
+            },
+            "actions": {
+                "create": "Create Account",
+                "edit": "Edit Account",
+                "show": "Show Account",
+                "delete": "Delete Account"
+            },
+            "fields": {
+                "code": "Code",
+                "name": "Name",
+                "parent_account": "Parent Account",
+                "account_type": "Account Type",
+                "remarks": "Remarks"
             }
         },
         "product_group": {

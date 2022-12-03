@@ -168,7 +168,7 @@
                                     <!-- #region Remarks -->
                                     <div class="flex flex-row">
                                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.product.fields.remarks') }}</div>
-                                        <div class="flex-1">{{ item.Remarks }}</div>
+                                        <div class="flex-1">{{ item.remarks }}</div>
                                     </div>
                                     <!-- #endregion -->
 
@@ -230,10 +230,10 @@
                     <!-- #region Product Group -->
                     <div class="mb-3">
                         <label class="form-label" for="product_group_id">{{ t('views.product.fields.product_group_id') }}</label>
-                        <VeeField as="select" id="product_group_id" name="product_group_id" :class="{'form-control form-select':true, 'border-danger': errors['product_group_id']}" v-model="product.product_group.hId" :label="t('views.product.fields.product_group_id')" rules="required" @blur="reValidate(errors)">
+                        <select id="product_group_id" name="product_group_id" class="form-control form-select" v-model="product.product_group.hId">
                             <option value="">{{ t('components.dropdown.placeholder') }}</option>
                             <option :value="g.hId" v-for="g in productGroupDDL" v-bind:key="g.hId">{{ g.code }} - {{ g.name }}</option>
-                        </VeeField>
+                        </select>
                         <ErrorMessage name="product_group_id" class="text-danger" />
                     </div>
                     <!-- #endregion -->
@@ -521,18 +521,18 @@ const setMode = () => {
 const getAllProducts = (args) => {
     productList.value = {};
     let companyId = selectedUserCompany.value.hId;
-    
-    if (args.search === undefined) args.search = '';
+
+    if (args.search === undefined) args.search = "";
     if (args.paginate === undefined) args.paginate = 1;
     if (args.page === undefined) args.page = 1;
-    if (args.perPage === undefined) args.perPage = 10;
+    if (args.pageSize === undefined) args.pageSize = 10;
     if (args.refresh === undefined) args.refresh = true;
 
     axios.get(route('api.get.db.product.product.list', {
         companyId: companyId,
         productCategory: 'PRODUCTS',
         search: args.search,
-        paginate : 1,
+        paginate : args.paginate,
         page: args.page,
         perPage: args.perPage,
         refresh: args.refresh

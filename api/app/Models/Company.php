@@ -13,6 +13,16 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
+use App\Models\User;
+use App\Models\Branch;
+use App\Models\Employee;
+use App\Models\Warehouse;
+use App\Models\ChartOfAccount;
+use App\Models\AccountingJournal;
+use App\Models\Unit;
+use App\Models\Product;
+use App\Models\ProductUnit;
+
 class Company extends Model
 {
     use HasFactory, LogsActivity;
@@ -60,14 +70,24 @@ class Company extends Model
         return $this->hasMany(Branch::class);
     }
 
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
+
     public function warehouses()
     {
         return $this->hasMany(Warehouse::class);
     }
 
-    public function employees()
+    public function chartOfAccounts()
     {
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(chartOfAccount::class);
+    }
+
+    public function accountingJournals()
+    {
+        return $this->hasMany(AccountingJournal::class);
     }
 
     public function productGroups()
