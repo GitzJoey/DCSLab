@@ -13,10 +13,6 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Vinkla\Hashids\Facades\Hashids;
 
-use App\Models\Company;
-use App\Models\Warehouse;
-use App\Models\AccountingJournal;
-
 class Branch extends Model
 {
     use HasFactory, LogsActivity;
@@ -75,11 +71,6 @@ class Branch extends Model
     public function warehouses()
     {
         return $this->hasMany(Warehouse::class);
-    }
-
-    public function accountingJournals()
-    {
-        return $this->hasMany(AccountingJournal::class);
     }
 
     public function getActivitylogOptions(): LogOptions

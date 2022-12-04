@@ -2,44 +2,42 @@
 
 namespace App\Providers;
 
-use App\Services\SystemService;
-use App\Services\DashboardService;
-use App\Services\RoleService;
-use App\Services\UserService;
 use App\Services\ActivityLogService;
-use App\Services\InboxService;
+use App\Services\BranchService;
+use App\Services\BrandService;
+use App\Services\CompanyService;
+use App\Services\DashboardService;
+use App\Services\EmployeeService;
 
 //region Extensions
-use App\Services\CompanyService;
-use App\Services\BranchService;
-use App\Services\EmployeeService;
-use App\Services\WarehouseService;
-use App\Services\ChartOfAccountService;
-use App\Services\ProductGroupService;
-use App\Services\BrandService;
-use App\Services\UnitService;
-use App\Services\ProductService;
-use App\Services\SupplierService;
+use App\Services\Impls\ActivityLogServiceImpl;
+use App\Services\Impls\BranchServiceImpl;
+use App\Services\Impls\BrandServiceImpl;
+use App\Services\Impls\CompanyServiceImpl;
+use App\Services\Impls\DashboardServiceImpl;
+use App\Services\Impls\EmployeeServiceImpl;
+use App\Services\Impls\InboxServiceImpl;
+use App\Services\Impls\ProductGroupServiceImpl;
+use App\Services\Impls\ProductServiceImpl;
 //endregion
 
-use App\Services\Impls\SystemServiceImpl;
-use App\Services\Impls\DashboardServiceImpl;
 use App\Services\Impls\RoleServiceImpl;
+use App\Services\Impls\SupplierServiceImpl;
+use App\Services\Impls\SystemServiceImpl;
+use App\Services\Impls\UnitServiceImpl;
 use App\Services\Impls\UserServiceImpl;
-use App\Services\Impls\ActivityLogServiceImpl;
-use App\Services\Impls\InboxServiceImpl;
+use App\Services\Impls\WarehouseServiceImpl;
 
 //region Extensions
-use App\Services\Impls\CompanyServiceImpl;
-use App\Services\Impls\BranchServiceImpl;
-use App\Services\Impls\EmployeeServiceImpl;
-use App\Services\Impls\WarehouseServiceImpl;
-use App\Services\Impls\ChartOfAccountServiceImpl;
-use App\Services\Impls\ProductGroupServiceImpl;
-use App\Services\Impls\BrandServiceImpl;
-use App\Services\Impls\UnitServiceImpl;
-use App\Services\Impls\ProductServiceImpl;
-use App\Services\Impls\SupplierServiceImpl;
+use App\Services\InboxService;
+use App\Services\ProductGroupService;
+use App\Services\ProductService;
+use App\Services\RoleService;
+use App\Services\SupplierService;
+use App\Services\SystemService;
+use App\Services\UnitService;
+use App\Services\UserService;
+use App\Services\WarehouseService;
 //endregion
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -94,10 +92,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(WarehouseService::class, function () {
             return new WarehouseServiceImpl();
-        });
-
-        $this->app->singleton(ChartOfAccountService::class, function () {
-            return new ChartOfAccountServiceImpl();
         });
 
         $this->app->singleton(ProductGroupService::class, function () {

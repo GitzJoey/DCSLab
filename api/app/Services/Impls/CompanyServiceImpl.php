@@ -5,7 +5,6 @@ namespace App\Services\Impls;
 use App\Actions\RandomGenerator;
 use App\Models\Company;
 use App\Models\User;
-use App\Services\ChartOfAccountService;
 use App\Services\CompanyService;
 use App\Traits\CacheHelper;
 use Exception;
@@ -37,7 +36,7 @@ class CompanyServiceImpl implements CompanyService
             $userId = $companyArr['user_id'];
 
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -56,9 +55,6 @@ class CompanyServiceImpl implements CompanyService
             $company->save();
 
             $usr->companies()->attach([$company->id]);
-
-            $coaService = app(ChartOfAccountService::class);
-            $coaService->createRootAccount($company->id);
 
             DB::commit();
 
@@ -93,7 +89,7 @@ class CompanyServiceImpl implements CompanyService
                 $cacheKey = 'read_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) {
+                if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -101,7 +97,7 @@ class CompanyServiceImpl implements CompanyService
             $result = null;
 
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -173,7 +169,7 @@ class CompanyServiceImpl implements CompanyService
 
         try {
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 

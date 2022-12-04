@@ -29,7 +29,7 @@ class DashboardServiceImpl implements DashboardService
             $cacheKey = 'menu_'.Auth::id();
             $cacheResult = $this->readFromCache($cacheKey);
 
-            if (!is_null($cacheResult)) {
+            if (! is_null($cacheResult)) {
                 return $cacheResult;
             }
         }
@@ -54,7 +54,6 @@ class DashboardServiceImpl implements DashboardService
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
-        $menu = $this->createMenu_Finance($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
@@ -197,31 +196,6 @@ class DashboardServiceImpl implements DashboardService
         array_push($root_array['subMenu'], $unit);
         array_push($root_array['subMenu'], $product);
         array_push($root_array['subMenu'], $service);
-
-        if ($hasCompany || $hasDevRole) {
-            array_push($menu, $root_array);
-        }
-
-        return $menu;
-    }
-
-    private function createMenu_Finance(array $menu, bool $hasCompany, bool $hasDevRole): array
-    {
-        $chart_of_account = [
-            'icon' => '',
-            'pageName' => 'side-menu-finance-chart_of_account',
-            'title' => 'components.menu.finance-coa',
-        ];
-
-        $root_array = [
-            'icon' => 'PackageIcon',
-            'pageName' => 'side-menu-finance',
-            'title' => 'components.menu.finance',
-            'subMenu' => [
-            ],
-        ];
-
-        array_push($root_array['subMenu'], $chart_of_account);
 
         if ($hasCompany || $hasDevRole) {
             array_push($menu, $root_array);

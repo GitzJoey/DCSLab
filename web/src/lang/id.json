@@ -9,8 +9,6 @@
             "company-branch": "Cabang",
             "company-employee": "Karyawan",
             "company-warehouse": "Gudang",
-            "finance": "Keuangan",
-            "finance-coa": "Daftar Akun",
             "product": "Produk",
             "product-product_group": "Kelompok Produk",
             "product-brand": "Merk",
@@ -19,8 +17,8 @@
             "product-service": "Layanan",
             "supplier": "Pemasok",
             "supplier-supplier": "Pemasok",
-            "purchase_order": "Pesanan Pembelian",
-            "purchase_order-purchaseorder": "Pesanan Pembelian",
+            "purchase_order": "Pembelian",
+            "purchase_order-purchaseorder": "Pembelian",
             "administrator": "Administrator",
             "administrator-user": "Pengguna",
             "devtool": "Dev Tool",
@@ -61,13 +59,11 @@
                 },
                 "productGroupCategoryDDL": {
                     "product": "Produk",
-                    "service": "Jasa",
-                    "product_and_service": "Produk Dan Jasa"
+                    "service": "Jasa"
                 },
                 "unitCategoryDDL": {
                     "product": "Produk",
-                    "service": "Jasa",
-                    "product_and_service": "Produk Dan Jasa"
+                    "service": "Jasa"
                 },
                 "paymentTermTypeDDL": {
                     "pia": "Pembayaran Dimuka",
@@ -386,31 +382,6 @@
                 "contact": "Kontak",
                 "remarks": "Keterangan",
                 "status": "Status"
-            }
-        },
-        "chart_of_account": {
-            "table": {
-                "title": "Daftar Akun",
-                "cols": {
-                    "code": "Kode",
-                    "name": "Nama",
-                    "parent_account": "Akun Induk",
-                    "account_type": "Tipe Akun",
-                    "remarks": "Keterangan"
-                }
-            },
-            "actions": {
-                "create": "Tambah Akun",
-                "edit": "Ubah Akun",
-                "show": "Tampilkan Akun",
-                "delete": "Hapus Akun"
-            },
-            "fields": {
-                "code": "Kode",
-                "name": "Nama",
-                "parent_account": "Akun Induk",
-                "account_type": "Tipe Akun",
-                "remarks": "Keterangan"
             }
         },
         "product_group": {
