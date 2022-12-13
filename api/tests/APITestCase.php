@@ -13,9 +13,8 @@ class APITestCase extends TestCase
         if (! file_exists(database_path('database.sqlite'))) {
             File::put(database_path('database.sqlite'), null);
 
-            $this->artisan('migrate', [
-                '--seed' => true,
-            ]);
+            $this->artisan('migrate');
+            $this->artisan('db:seed');
         }
     }
 }
