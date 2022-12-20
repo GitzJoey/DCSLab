@@ -435,12 +435,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $productUnitsCode = [];
         $unitId = [];
@@ -475,7 +473,7 @@ class ProductAPITest extends APITestCase
             'code' => $company->products()->inRandomOrder()->first()->code,
             'product_group_id' => Hashids::encode($company->productGroups()->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
-            'product_type' => $this->faker->numberBetween(1, 3),
+            'product_type' => $this->faker->randomElement(ProductType::toArrayValue()),
             'product_units_code' => $productUnitsCode,
             'product_units_unit_hId' => $unitId,
             'product_units_conv_value' => $conversionValue,
@@ -505,12 +503,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $productUnitsCode = [];
         array_push($productUnitsCode, ProductUnit::factory()->make()->code);
@@ -686,12 +682,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
@@ -851,12 +845,10 @@ class ProductAPITest extends APITestCase
 
         $companyId = $user->companies->first()->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
@@ -877,12 +869,10 @@ class ProductAPITest extends APITestCase
         
         $companyId = $user->companies->first()->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
@@ -918,12 +908,10 @@ class ProductAPITest extends APITestCase
 
         $companyId = $user->companies->first()->id;      
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $api = $this->getJson(route('api.get.db.product.product.list', [
             'companyId' => Hashids::encode($companyId),
@@ -962,12 +950,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $productUuid = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first()->uuid;
 
@@ -1028,12 +1014,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -1124,12 +1108,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -1195,12 +1177,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -1266,12 +1246,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -1346,12 +1324,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -1422,12 +1398,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -1493,12 +1467,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -1590,12 +1562,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         do {
             $product = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->first();
@@ -1688,12 +1658,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $products = $company->products()->where('product_type', '!=', ProductType::SERVICE->value)->inRandomOrder()->take(2)->get();
         $product_1 = $products[0];
@@ -1972,10 +1940,10 @@ class ProductAPITest extends APITestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
-        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->inRandomOrder()->first();
 

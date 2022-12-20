@@ -216,19 +216,10 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::SERVICES->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
-        
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::SERVICES->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
-
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId]);
 
         $result = $this->productService->list(
             companyId: $companyId,
@@ -244,17 +235,6 @@ class ProductServiceTest extends ServiceTestCase
         $result = $this->productService->list(
             companyId: $companyId,
             productCategory: ProductCategory::SERVICES->value,
-            search: '',
-            paginate: true,
-            page: 1,
-            perPage: 10
-        );
-
-        $this->assertInstanceOf(Paginator::class, $result);
-
-        $result = $this->productService->list(
-            companyId: $companyId,
-            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
             search: '',
             paginate: true,
             page: 1,
@@ -272,19 +252,10 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::SERVICES->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId, ProductGroupCategory::PRODUCTS_AND_SERVICES->value]);
-        
-        $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::SERVICES->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId, UnitCategory::PRODUCTS_AND_SERVICES->value]);
-
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
+        $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);        
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId]);
 
         $result = $this->productService->list(
             companyId: $companyId,
@@ -298,15 +269,6 @@ class ProductServiceTest extends ServiceTestCase
         $result = $this->productService->list(
             companyId: $companyId,
             productCategory: ProductCategory::SERVICES->value,
-            search: '',
-            paginate: false,
-        );
-
-        $this->assertInstanceOf(Collection::class, $result);
-
-        $result = $this->productService->list(
-            companyId: $companyId,
-            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
             search: '',
             paginate: false,
         );
@@ -337,16 +299,6 @@ class ProductServiceTest extends ServiceTestCase
 
         $this->assertInstanceOf(Collection::class, $result);
         $this->assertEmpty($result);
-
-        $result = $this->productService->list(
-            companyId: $maxId,
-            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
-            search: '',
-            paginate: false,
-        );
-
-        $this->assertInstanceOf(Collection::class, $result);
-        $this->assertEmpty($result);
     }
 
     public function test_product_service_call_list_with_search_parameter_expect_filtered_results()
@@ -358,12 +310,10 @@ class ProductServiceTest extends ServiceTestCase
         $company = $user->companies->first();
         $companyId = $company->id;
         
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $productCount = 5;
         $products = $company->products()->take($productCount)->get();
@@ -376,7 +326,7 @@ class ProductServiceTest extends ServiceTestCase
 
         $result = $this->productService->list(
             companyId: $companyId,
-            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
+            productCategory: 0,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -395,16 +345,14 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
         
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
         
         $result = $this->productService->list(
             companyId: $companyId, 
-            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
+            productCategory: 0,
             search: '',
             paginate: true,
             page: -1,
@@ -423,16 +371,14 @@ class ProductServiceTest extends ServiceTestCase
 
         $companyId = $user->companies->first()->id;
         
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
         
         $result = $this->productService->list(
             companyId: $companyId, 
-            productCategory: ProductCategory::PRODUCTS_AND_SERVICES->value,
+            productCategory: 0,
             search: '',
             paginate: true,
             page: 1,
@@ -454,12 +400,10 @@ class ProductServiceTest extends ServiceTestCase
         $company = $user->companies->first();
         $companyId = $company->id;
         
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->inRandomOrder()->first();
 
@@ -479,12 +423,10 @@ class ProductServiceTest extends ServiceTestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '<>', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -557,12 +499,10 @@ class ProductServiceTest extends ServiceTestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->where('product_type', '<>', ProductType::SERVICE->value)->inRandomOrder()->first();
 
@@ -634,12 +574,10 @@ class ProductServiceTest extends ServiceTestCase
         $company = $user->companies->first();
         $companyId = $company->id;
 
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         do {
             $product = $company->products()->where('product_type', '<>', ProductType::SERVICE->value)->inRandomOrder()->first();
@@ -707,12 +645,10 @@ class ProductServiceTest extends ServiceTestCase
         $company = $user->companies->first();
         $companyId = $company->id;
         
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->inRandomOrder()->first();
         
@@ -737,12 +673,10 @@ class ProductServiceTest extends ServiceTestCase
         $company = $user->companies->first();
         $companyId = $company->id;
         
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::PRODUCTS->value]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId, ProductGroupCategory::SERVICES->value]);
+        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [5, $companyId]);
         $this->brandSeeder->callWith(BrandTableSeeder::class, [5, $companyId]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::PRODUCTS->value]);
-        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId, UnitCategory::SERVICES->value]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId, ProductCategory::PRODUCTS_AND_SERVICES->value]);
+        $this->unitSeeder->callWith(UnitTableSeeder::class, [5, $companyId]);
+        $this->productSeeder->callWith(ProductTableSeeder::class, [10, $companyId]);
 
         $product = $company->products()->inRandomOrder()->first();
 

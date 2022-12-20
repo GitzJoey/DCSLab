@@ -15,12 +15,9 @@ use Carbon\Carbon;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
-use Illuminate\Foundation\Testing\WithFaker;
 
 class EmployeeTableSeeder extends Seeder
 {
-    use WithFaker;
-
     public function run($employeePerPart = 3, $onlyThisCompanyId = 0, $onlyThisBranchId = 0)
     {
         if ($onlyThisCompanyId != 0) {

@@ -124,7 +124,6 @@ class ProductServiceImpl implements ProductService
                 case ProductCategory::SERVICES->value:
                     $product = $product->where('product_type', '=', ProductType::SERVICE->value);
                     break;
-                case ProductCategory::PRODUCTS_AND_SERVICES->value:
                 default:
                     break;
             }

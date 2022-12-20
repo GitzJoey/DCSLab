@@ -8,6 +8,8 @@ use TypeError;
 
 class RandomGeneratorTest extends TestCase
 {
+    private object $instance;
+
     protected function setUp(): void
     {
         $this->instance = new RandomGenerator();

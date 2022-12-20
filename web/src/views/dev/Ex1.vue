@@ -1,7 +1,9 @@
 <template>
+    <BasicTreeview />
 </template>
 
 <script setup>
+import BasicTreeview from "@/global-components/basic-treeview/Main.vue"
 //#region Imports
 //#endregion
 

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\UnitCategory;
 use App\Models\Company;
 use App\Models\Unit;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 
@@ -15,7 +16,7 @@ class UnitTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 3)
+    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 0)
     {
         if ($onlyThisCompanyId != 0) {
             $c = Company::find($onlyThisCompanyId);
@@ -41,9 +42,12 @@ class UnitTableSeeder extends Seeder
                         'company_id' => $c,
                     ]);
                     break;
-                case UnitCategory::PRODUCTS_AND_SERVICES->value:
                 default:
-                    Unit::factory()->count($countPerCompany)->create([
+                    $countPerCompany = $countPerCompany < 3 ? 3 : $countPerCompany; 
+                    Unit::factory()->count($countPerCompany)->state(new Sequence(
+                        ['category' => UnitCategory::PRODUCTS->value],
+                        ['category' => UnitCategory::SERVICES->value],
+                    ))->create([
                         'company_id' => $c,
                     ]);
                     break;

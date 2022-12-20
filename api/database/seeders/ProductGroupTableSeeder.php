@@ -6,6 +6,7 @@ use App\Enums\ProductGroupCategory;
 use App\Models\Company;
 use App\Models\ProductGroup;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
 class ProductGroupTableSeeder extends Seeder
@@ -15,7 +16,7 @@ class ProductGroupTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 3)
+    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 0)
     {
         if ($onlyThisCompanyId != 0) {
             $c = Company::find($onlyThisCompanyId);
@@ -41,9 +42,11 @@ class ProductGroupTableSeeder extends Seeder
                         'company_id' => $c,
                     ]);
                     break;
-                case ProductGroupCategory::PRODUCTS_AND_SERVICES->value:
                 default:
-                    ProductGroup::factory()->count($countPerCompany)->create([
+                    ProductGroup::factory()->count($countPerCompany)->state(new Sequence(
+                        ['category' => ProductGroupCategory::PRODUCTS->value],
+                        ['category' => ProductGroupCategory::SERVICES->value],
+                    ))->create([
                         'company_id' => $c,
                     ]);
                     break;

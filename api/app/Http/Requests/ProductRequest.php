@@ -69,7 +69,7 @@ class ProductRequest extends FormRequest
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'productCategory' => ['required', new Enum(ProductCategory::class)],
+                    'productCategory' => ['exclude_if:category,-1', new Enum(ProductCategory::class)],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
