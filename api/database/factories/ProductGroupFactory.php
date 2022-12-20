@@ -21,7 +21,6 @@ class ProductGroupFactory extends Factory
     public function definition()
     {
         $productGroupCategory = ProductGroupCategory::toArrayValue();
-        unset($productGroupCategory[2]);
         
         return [
             'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),

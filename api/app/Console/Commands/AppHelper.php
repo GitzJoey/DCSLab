@@ -395,9 +395,9 @@ class AppHelper extends Command
             $valid = false;
 
             while (! $valid) {
-                $userName = $this->ask('Name:', $userName);
-                $userEmail = $this->ask('Email:', $userEmail);
-                $userPassword = $this->secret('Password:', $userPassword);
+                $userName = $this->ask('Name', $userName);
+                $userEmail = $this->ask('Email', $userEmail);
+                $userPassword = $this->secret('Password', $userPassword);
 
                 $validator = Validator::make([
                     'name' => $userName,

@@ -37,20 +37,18 @@ class ProductTableSeeder extends Seeder
         }
         
         foreach ($companyIds as $companyId) {
-            if ($productCategory == ProductCategory::PRODUCTS->value) {
-                createProduct($productPerCompany, $companyId);
-            } elseif ($productCategory == ProductCategory::SERVICES->value) {
-                createService($productPerCompany, $companyId);
-            } elseif ($productCategory == ProductCategory::PRODUCTS_AND_SERVICES->value) {
-                for ($i = 0; $i < $productPerCompany; $i++) {
-                    $faker = \Faker\Factory::create();
-                    $rand = $faker->boolean();
-                    if ($rand == true) {
-                        createProduct(1, $companyId);
-                    } else {
-                        createService(1, $companyId);
-                    }                    
-                }
+            switch ($productCategory) {
+                case ProductCategory::PRODUCTS->value:
+                    createProduct($productPerCompany, $companyId);
+                    break;
+                case ProductCategory::SERVICES->value:
+                    createService($productPerCompany, $companyId);
+                    break;
+                case ProductCategory::PRODUCTS_AND_SERVICES->value:
+                    break;
+                default:
+                
+                    break;
             }
         }
     }
