@@ -44,8 +44,6 @@ class ProductTableSeeder extends Seeder
                 case ProductCategory::SERVICES->value:
                     createService($productPerCompany, $companyId);
                     break;
-                case ProductCategory::PRODUCTS_AND_SERVICES->value:
-                    break;
                 default:
                 
                     break;

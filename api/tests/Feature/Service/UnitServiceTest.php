@@ -65,7 +65,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            category: UnitCategory::PRODUCTS_AND_SERVICES->value,
+            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
             search: '',
             paginate: true,
             page: 1,
@@ -84,7 +84,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $result = $this->unitService->list(
             companyId: $user->companies->first()->id,
-            category: UnitCategory::PRODUCTS_AND_SERVICES->value,
+            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
             search: '',
             paginate: false
         );
@@ -98,7 +98,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $result = $this->unitService->list(
             companyId: $maxId,
-            category: UnitCategory::PRODUCTS_AND_SERVICES->value,
+            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
             search: '',
             paginate: false
         );
@@ -125,7 +125,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $result = $this->unitService->list(
             companyId: $companyId,
-            category: UnitCategory::PRODUCTS_AND_SERVICES->value,
+            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
             search: 'testing',
             paginate: true,
             page: 1,
@@ -150,7 +150,7 @@ class UnitServiceTest extends ServiceTestCase
         
         $result = $this->unitService->list(
             companyId: $companyId, 
-            category: UnitCategory::PRODUCTS_AND_SERVICES->value,
+            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
             search: '',
             paginate: true,
             page: -1,
@@ -176,7 +176,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $result = $this->unitService->list(
             companyId: $companyId, 
-            category: UnitCategory::PRODUCTS_AND_SERVICES->value,
+            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
             search: '',
             paginate: true,
             page: 1,
