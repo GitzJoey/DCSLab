@@ -5,52 +5,51 @@
 
 .basictreeview,
 .basictreeview ul {
-    margin:0 0 0 1em; /* indentation */
-    padding:0;
-    list-style:none;
+    @apply m-0 ml-3;
+    @apply p-0;
+    @apply list-none;
     color:#369;
-    position:relative;
+    @apply relative;
 }
 
 .basictreeview ul {
-    margin-left:.5em
+    @apply ml-2;
 }
 
 .basictreeview:before,
 .basictreeview ul:before {
-    content:"";
-    display:block;
-    width:0;
-    position:absolute;
-    top:0;
-    bottom:0;
-    left:0;
-    border-left:1px solid;
+    @apply content-[''];
+    @apply block;
+    @apply w-0;
+    @apply absolute;
+    @apply inset-y-0;
+    @apply left-0;
+    @apply border-l-2 border-solid border-current;
 }
 
 .basictreeview li {
-    margin:0;
-    padding:0 1.5em; /* indentation + .5em */
-    line-height:2em; /* default list item's `line-height` */
+    @apply m-0;
+    @apply pt-0 pr-4 pb-0 pl-4;
+    @apply leading-8;
     @apply font-bold;
-    position:relative;
+    @apply relative;
 }
 
 .basictreeview li:before {
-    content:"";
-    display:block;
-    width:10px; /* same with indentation */
-    height:0;
-    border-top:1px solid;
-    margin-top:-1px; /* border top width */
-    position:absolute;
-    top:1em; /* (line-height/2) */
-    left:0;
+    @apply content-[''];
+    @apply block;
+    @apply w-2.5;
+    @apply h-0;
+    @apply border-t-2 border-solid border-current;
+    @apply mt-0;
+    @apply absolute;
+    @apply top-4;
+    @apply left-0;
 }
 
 .basictreeview li:last-child:before {
     background:#f1f5f9; /* same with body background */
-    height:auto;
-    top:1em; /* (line-height/2) */
-    bottom:0;
+    @apply h-auto;
+    @apply top-4;
+    @apply bottom-0;
 }
