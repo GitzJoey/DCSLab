@@ -58,7 +58,7 @@ class ProductGroupRequest extends FormRequest
             case 'list':
                 $rules_list = [
                     'company_id' => ['required', new isValidCompany(), 'bail'],
-                    'category' => ['required', new Enum(ProductGroupCategory::class)],
+                    'category' => ['exclude_if:category,-1', new Enum(ProductGroupCategory::class)],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],

@@ -326,7 +326,7 @@ class ProductServiceTest extends ServiceTestCase
 
         $result = $this->productService->list(
             companyId: $companyId,
-            productCategory: $this->faker->randomElement(ProductCategory::toArrayValue()),
+            productCategory: 0,
             search: 'testing',
             paginate: true,
             page: 1,
@@ -352,7 +352,7 @@ class ProductServiceTest extends ServiceTestCase
         
         $result = $this->productService->list(
             companyId: $companyId, 
-            productCategory: $this->faker->randomElement(ProductCategory::toArrayValue()),
+            productCategory: 0,
             search: '',
             paginate: true,
             page: -1,
@@ -378,7 +378,7 @@ class ProductServiceTest extends ServiceTestCase
         
         $result = $this->productService->list(
             companyId: $companyId, 
-            productCategory: $this->faker->randomElement(ProductCategory::toArrayValue()),
+            productCategory: 0,
             search: '',
             paginate: true,
             page: 1,

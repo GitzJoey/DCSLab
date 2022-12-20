@@ -122,11 +122,9 @@ class ProductGroupServiceTest extends ServiceTestCase
             'company_id' => $companyId,
         ]);
 
-        $category = $this->faker->randomElement(ProductGroupCategory::toArrayValue());
-        
         $result = $this->productGroupService->list(
             companyId: $companyId, 
-            category: $category,
+            category: 0,
             search: 'testing',
             paginate: true,
             page: 1,

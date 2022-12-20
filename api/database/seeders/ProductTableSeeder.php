@@ -17,12 +17,7 @@ use Illuminate\Database\Seeder;
 
 class ProductTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run($productPerCompany = 5, $onlyThisCompanyId = 0, $productCategory = 3)
+    public function run($productPerCompany = 5, $onlyThisCompanyId = 0, $productCategory = 0)
     {
         if ($onlyThisCompanyId != 0) {
             $company = Company::find($onlyThisCompanyId);
@@ -36,6 +31,7 @@ class ProductTableSeeder extends Seeder
             $companyIds = Company::get()->pluck('id');
         }
         
+        $faker = \Faker\Factory::create('id_ID');
         foreach ($companyIds as $companyId) {
             switch ($productCategory) {
                 case ProductCategory::PRODUCTS->value:
@@ -45,7 +41,13 @@ class ProductTableSeeder extends Seeder
                     createService($productPerCompany, $companyId);
                     break;
                 default:
-                
+                    createProduct(1, $companyId);
+                    createService(1, $companyId);
+                    
+                    for ($i = 0; $i < $productPerCompany - 2; $i++) {
+                        if ($faker->boolean) createProduct(1, $companyId);
+                        else createService(1, $companyId);
+                    }
                     break;
             }
         }

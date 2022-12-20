@@ -125,7 +125,7 @@ class UnitServiceTest extends ServiceTestCase
 
         $result = $this->unitService->list(
             companyId: $companyId,
-            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
+            category: -1,
             search: 'testing',
             paginate: true,
             page: 1,
