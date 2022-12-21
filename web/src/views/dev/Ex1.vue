@@ -11,10 +11,6 @@ const data = ref({
     name: 'Root',
     nodes: [
         {
-            code: '011',
-            name: 'Level 1.1'
-        },
-        {
             code: '012',
             name: 'Level 1.2',
             nodes: [
