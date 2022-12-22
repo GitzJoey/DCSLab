@@ -13,32 +13,38 @@ const data = ref({
         {
             code: '012',
             name: 'Level 1.2',
+            status: 'ACTIVE',
             nodes: [
                 {
                     code: '0121',
-                    name: 'Level 1.2.1'
+                    name: 'Level 1.2.1',
                 }
             ]            
         },
         {
             code: '013',
             name: 'Level 1.3',
+            status: 'INACTIVE',
             nodes: [
                 {
                     code: '0131',
-                    name: 'Level 1.3.1'
+                    name: 'Level 1.3.1',
+                    status: 'ACTIVE',
                 },
                 {
                     code: '0132',
                     name: 'Level 1.3.2',
+                    status: 'ACTIVE',
                     nodes: [
                         {
                             code: '01321',
-                            name: 'Level 1.3.2.1'
+                            name: 'Level 1.3.2.1',
+                            status: 'INACTIVE',
                         },
                         {
                             code: '01322',
-                            name: 'Level 1.3.2.2'
+                            name: 'Level 1.3.2.2',
+                            status: 'ACTIVE',
                         },
                     ]
                 },
