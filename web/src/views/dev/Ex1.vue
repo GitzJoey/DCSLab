@@ -6,6 +6,8 @@
 import { ref } from "vue";
 import BasicTreeview from "@/global-components/basic-treeview/Main.vue";
 
+const datanotfound = ref({});
+
 const data = ref({
     code: '00',
     name: 'Root',
@@ -45,11 +47,28 @@ const data = ref({
                             code: '01322',
                             name: 'Level 1.3.2.2',
                             status: 'ACTIVE',
+                            nodes: [
+                                {
+                                    code: '013221',
+                                    name: 'Level 1.3.2.2.1',
+                                    status: 'ACTIVE',
+                                },
+                                {
+                                    code: '013222',
+                                    name: 'Level 1.3.2.2.2',
+                                    status: 'INACTIVE',
+                                },
+                            ]
                         },
                     ]
                 },
             ]
         },
+        {
+            code: '014',
+            name: 'Level 1.4',
+            status: 'ACTIVE',
+        }
     ]
 });
 
