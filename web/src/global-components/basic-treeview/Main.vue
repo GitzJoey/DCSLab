@@ -30,7 +30,7 @@ const toggleCollapse = () => {
 
 <template>
     <div class="basictreeview">
-        <div class="border border-gray-300 flex flex-row h-50 items-center hover:bg-gray-400 cursor-pointer rounded-xl p-2">
+        <div class="border border-gray-300 flex flex-row h-50 items-center hover:border-gray-800 cursor-pointer rounded-xl px-2 py-1">
             <div class="border border-gray-400 rounded-xl" @click.prevent="toggleCollapse" v-if="modelValue.nodes != null">
                 <div v-if="collapseState">
                     <ChevronsDownIcon />
