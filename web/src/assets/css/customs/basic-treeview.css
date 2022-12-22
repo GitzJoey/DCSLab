@@ -5,4 +5,31 @@
 .basictreeview_nodes {
     @apply ml-6;
     @apply py-1;
+    position: relative;
 };
+
+.basictreeview_nodes::before{
+    content: "";
+    position: absolute;
+    top:-4px;
+    left: -20px;
+    border-left: 1px solid #DDD;
+    border-bottom:1px solid #DDD;
+    width:20px;
+    height:25px;
+}
+
+.basictreeview_nodes::after{
+    position:absolute;
+    content:"";
+    top: 5px;
+    left:-20px;
+    border-left: 1px solid #DDD;
+    border-top:1px solid #DDD;
+    width:20;
+    height:100%;
+}
+
+.basictreeview_nodes:last-child::after{
+    display: none;
+}

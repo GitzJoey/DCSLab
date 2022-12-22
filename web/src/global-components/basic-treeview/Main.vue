@@ -6,6 +6,7 @@ import BasicTreeviewNodes from "@/global-components/basic-treeview/Nodes.vue";
 interface RootNode {
     code: string,
     name: string,
+    status: string,
     nodes?: Array<Nodes>,
 }
 
@@ -29,14 +30,29 @@ const toggleCollapse = () => {
 
 <template>
     <div class="basictreeview">
-        <div class="flex flex-row h-50 items-center bg-sky-500 hover:bg-gray-400 cursor-pointer rounded-xl p-2">
-            <div @click.prevent="toggleCollapse" v-if="modelValue.nodes != null">
+        <div class="border border-gray-300 flex flex-row h-50 items-center hover:bg-gray-400 cursor-pointer rounded-xl p-2">
+            <div class="border border-gray-400 rounded-xl" @click.prevent="toggleCollapse" v-if="modelValue.nodes != null">
+                <div v-if="collapseState">
+                    <ChevronDownIcon />
+                </div>
+                <div class="-rotate-90" v-else="!collapseState">
+                    <ChevronDownIcon />
+                </div>
+            </div>
+            <div class="border border-gray-400 rounded-xl" v-if="status != null">
+                <CheckIcon class="text-success" v-if="status == 'ACTIVE'" />
+                <XIcon class="text-danger" v-else />
+            </div>
+            <div class="ml-3 mr-10">{{ modelValue.name }}</div>
+            <div class="border border-gray-400 rounded-xl" @click.prevent="toggleCollapse" v-if="nodes != null">
                 <PlusIcon class="w-4 h-4" v-if="collapseState"/>
                 <MinusIcon class="w-4 h-4" v-else="!collapseState"/>
             </div>
-            <div class="mr-auto">{{ modelValue.name }}</div>
+            <div v-else>
+                <CircleIcon class="w-4 h-4" />
+            </div>
         </div>        
-        <div class="bg-white z-10 rounded-xl p-5" v-if="!collapseState">
+        <div class="p-2" v-if="!collapseState">
             <BasicTreeviewNodes v-for="item in modelValue.nodes" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
         </div>
     </div>
