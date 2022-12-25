@@ -1,55 +1,35 @@
-.basictreeview_container p {
-    color:#369;
-    @apply font-bold;
+.basictreeview {
+    @apply p-5;
+};
+
+.basictreeview_nodes {
+    @apply ml-6;
+    @apply py-1;
+    position: relative;
+};
+
+.basictreeview_nodes::before{
+    content: "";
+    position: absolute;
+    top:-4px;
+    left: -20px;
+    border-left: 1px solid #DDD;
+    border-bottom:1px solid #DDD;
+    width:20px;
+    height:25px;
 }
 
-.basictreeview,
-.basictreeview ul {
-    @apply m-0 ml-3;
-    @apply p-0;
-    @apply list-none;
-    color:#369;
-    @apply relative;
+.basictreeview_nodes::after{
+    position:absolute;
+    content:"";
+    top: 5px;
+    left:-20px;
+    border-left: 1px solid #DDD;
+    border-top:1px solid #DDD;
+    width:20;
+    height:100%;
 }
 
-.basictreeview ul {
-    @apply ml-2;
-}
-
-.basictreeview:before,
-.basictreeview ul:before {
-    @apply content-[''];
-    @apply block;
-    @apply w-0;
-    @apply absolute;
-    @apply inset-y-0;
-    @apply left-0;
-    @apply border-l-2 border-solid border-current;
-}
-
-.basictreeview li {
-    @apply m-0;
-    @apply pt-0 pr-4 pb-0 pl-4;
-    @apply leading-8;
-    @apply font-bold;
-    @apply relative;
-}
-
-.basictreeview li:before {
-    @apply content-[''];
-    @apply block;
-    @apply w-2.5;
-    @apply h-0;
-    @apply border-t-2 border-solid border-current;
-    @apply mt-0;
-    @apply absolute;
-    @apply top-4;
-    @apply left-0;
-}
-
-.basictreeview li:last-child:before {
-    background:#f1f5f9; /* same with body background */
-    @apply h-auto;
-    @apply top-4;
-    @apply bottom-0;
+.basictreeview_nodes:last-child::after{
+    display: none;
 }
