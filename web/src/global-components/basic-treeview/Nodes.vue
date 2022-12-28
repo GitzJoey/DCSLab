@@ -2,8 +2,11 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
 import BasicTreeviewNodes from "@/global-components/basic-treeview/Nodes.vue";
+import { emit } from "process";
 
 interface Nodes {
+    hId: string,
+    uuid: string,
     code: string,
     name: string,
     status: string,
@@ -11,6 +14,8 @@ interface Nodes {
 }
 
 defineProps<{
+    hId: string,
+    uuid: string,
     code: string,
     name: string,
     status: string,
@@ -21,10 +26,6 @@ const collapseState: Ref<boolean> = ref(true);
 
 const toggleCollapse = () => {
     collapseState.value = !collapseState.value;
-}
-
-const triggerAction = () => {
-    alert('Trigger Action!');
 }
 </script>
 
@@ -52,7 +53,7 @@ const triggerAction = () => {
                     <XIcon class="w-4 h-4 text-danger" />
                 </div>
 
-                <div class="border border-gray-400 rounded-xl" @click.prevent="triggerAction">
+                <div class="border border-gray-400 rounded-xl">
                     <PlusIcon class="w-4 h-4" />
                 </div>
             </div>
@@ -60,7 +61,7 @@ const triggerAction = () => {
             <div class="ml-3 mr-10">{{ code }} {{ name }}</div>
         </div>
         <div>
-            <BasicTreeviewNodes v-if="!collapseState" v-for="item in nodes" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
+            <BasicTreeviewNodes v-if="!collapseState" v-for="item in nodes" :hId="item.hId" :uuid="item.uuid" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
         </div>
     </div>
 </template>

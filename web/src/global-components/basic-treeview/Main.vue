@@ -11,6 +11,8 @@ interface RootNode {
 }
 
 interface Nodes {
+    hId: string,
+    uuid: string,
     code: string,
     name: string,
     status: string,
@@ -46,7 +48,7 @@ const toggleCollapse = () => {
             <div class="ml-3 mr-10">{{ modelValue.name }}</div>
         </div>        
         <div class="p-2" v-if="!collapseState">
-            <BasicTreeviewNodes v-for="item in modelValue.nodes" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
+            <BasicTreeviewNodes v-for="item in modelValue.nodes" :hId="item.hId" :uuid="item.uuid" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
         </div>
     </div>
 </template>
