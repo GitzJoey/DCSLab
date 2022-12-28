@@ -1,10 +1,14 @@
 <template>
-    <BasicTreeview v-model="data"/>
+    <BasicTreeview v-model="data" v-on:triggerAction="triggerAction"/>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import BasicTreeview from "@/global-components/basic-treeview/Main.vue";
+
+const triggerAction = (data) => {
+    console.log(data);
+}
 
 const datanotfound = ref({});
 

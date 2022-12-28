@@ -13,6 +13,11 @@ interface Nodes {
     nodes?: Array<Nodes>
 }
 
+interface actionType {
+    hId: string,
+    uuid: string
+}
+
 defineProps<{
     hId: string,
     uuid: string,
@@ -22,10 +27,18 @@ defineProps<{
     nodes?: Array<Nodes>
 }>();
 
+const emit = defineEmits<{
+    (e: 'triggerAction', data: actionType): void
+}>()
+
 const collapseState: Ref<boolean> = ref(true);
 
 const toggleCollapse = () => {
     collapseState.value = !collapseState.value;
+}
+
+const triggerAction = (data: actionType) => {
+    emit('triggerAction', data);
 }
 </script>
 
@@ -53,7 +66,7 @@ const toggleCollapse = () => {
                     <XIcon class="w-4 h-4 text-danger" />
                 </div>
 
-                <div class="border border-gray-400 rounded-xl">
+                <div class="border border-gray-400 rounded-xl" @click.prevent="$emit('triggerAction', { hId, uuid })">
                     <PlusIcon class="w-4 h-4" />
                 </div>
             </div>
@@ -61,7 +74,7 @@ const toggleCollapse = () => {
             <div class="ml-3 mr-10">{{ code }} {{ name }}</div>
         </div>
         <div>
-            <BasicTreeviewNodes v-if="!collapseState" v-for="item in nodes" :hId="item.hId" :uuid="item.uuid" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
+            <BasicTreeviewNodes v-if="!collapseState" v-for="item in nodes" v-on:triggerAction="triggerAction" :hId="item.hId" :uuid="item.uuid" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
         </div>
     </div>
 </template>

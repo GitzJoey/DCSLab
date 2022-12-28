@@ -19,14 +19,27 @@ interface Nodes {
     nodes?: Array<Nodes>,
 }
 
+interface actionType {
+    hId: string,
+    uuid: string
+}
+
 defineProps<{
     modelValue: RootNode
 }>();
+
+const emit = defineEmits<{
+    (e: 'triggerAction', data: actionType): void
+}>()
 
 const collapseState: Ref<boolean> = ref(true);
 
 const toggleCollapse = () => {
     collapseState.value = !collapseState.value;
+}
+
+const triggerAction = (data: actionType) => {
+    emit('triggerAction', data);
 }
 </script>
 
@@ -48,7 +61,7 @@ const toggleCollapse = () => {
             <div class="ml-3 mr-10">{{ modelValue.name }}</div>
         </div>        
         <div class="p-2" v-if="!collapseState">
-            <BasicTreeviewNodes v-for="item in modelValue.nodes" :hId="item.hId" :uuid="item.uuid" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
+            <BasicTreeviewNodes v-for="item in modelValue.nodes" v-on:triggerAction="triggerAction" :hId="item.hId" :uuid="item.uuid" :code="item.code" :name="item.name" :status="item.status" :nodes="item.nodes" />
         </div>
     </div>
 </template>
