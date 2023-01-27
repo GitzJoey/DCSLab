@@ -57,9 +57,9 @@ class EmployeeServiceTest extends ServiceTestCase
         $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
         $accessesArr = [];
         for ($i = 0; $i < $accessCount ; $i++) {
-            array_push($accessesArr, array(
+            array_push($accessesArr, [
                 'branch_id' => $branchIds[$i]
-            ));
+            ]);
         }
 
         $result = $this->employeeService->create(
@@ -202,9 +202,9 @@ class EmployeeServiceTest extends ServiceTestCase
                 $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
                 $accessesArr = [];
                 for ($x = 0; $x < $accessCount ; $x++) {
-                    array_push($accessesArr, array(
+                    array_push($accessesArr, [
                         'branch_id' => $branchIds[$x]
-                    ));
+                    ]);
                 }
     
                 $this->employeeService->create(
@@ -269,9 +269,9 @@ class EmployeeServiceTest extends ServiceTestCase
             $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
             $accessesArr = [];
             for ($x = 0; $x < $accessCount ; $x++) {
-                array_push($accessesArr, array(
+                array_push($accessesArr, [
                     'branch_id' => $branchIds[$x]
-                ));
+                ]);
             }
 
             $this->employeeService->create(
@@ -335,9 +335,9 @@ class EmployeeServiceTest extends ServiceTestCase
             $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
             $accessesArr = [];
             for ($x = 0; $x < $accessCount ; $x++) {
-                array_push($accessesArr, array(
+                array_push($accessesArr, [
                     'branch_id' => $branchIds[$x]
-                ));
+                ]);
             }
 
             $this->employeeService->create(
@@ -402,9 +402,9 @@ class EmployeeServiceTest extends ServiceTestCase
         $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
         $accessesArr = [];
         for ($x = 0; $x < $accessCount ; $x++) {
-            array_push($accessesArr, array(
+            array_push($accessesArr, [
                 'branch_id' => $branchIds[$x]
-            ));
+            ]);
         }
 
         $employee = $this->employeeService->create(
@@ -461,9 +461,9 @@ class EmployeeServiceTest extends ServiceTestCase
         $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
         $accessesArr = [];
         for ($x = 0; $x < $accessCount ; $x++) {
-            array_push($accessesArr, array(
+            array_push($accessesArr, [
                 'branch_id' => $branchIds[$x]
-            ));
+            ]);
         }
 
         $employee = $this->employeeService->create(
@@ -504,9 +504,9 @@ class EmployeeServiceTest extends ServiceTestCase
         $newBranchIds = Company::find($companyId)->branches()->inRandomOrder()->take($newAccessCount)->pluck('id');
         $newAccessesArr = [];
         for ($x = 0; $x < $newAccessCount ; $x++) {
-            array_push($newAccessesArr, array(
+            array_push($newAccessesArr, [
                 'branch_id' => $newBranchIds[$x]
-            ));
+            ]);
         }
 
         $result = $this->employeeService->update(
@@ -591,9 +591,9 @@ class EmployeeServiceTest extends ServiceTestCase
         $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
         $accessesArr = [];
         for ($x = 0; $x < $accessCount ; $x++) {
-            array_push($accessesArr, array(
+            array_push($accessesArr, [
                 'branch_id' => $branchIds[$x]
-            ));
+            ]);
         }
 
         $employee = $this->employeeService->create(
@@ -660,9 +660,9 @@ class EmployeeServiceTest extends ServiceTestCase
             $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
             $accessesArr = [];
             for ($x = 0; $x < $accessCount ; $x++) {
-                array_push($accessesArr, array(
+                array_push($accessesArr, [
                     'branch_id' => $branchIds[$x]
-                ));
+                ]);
             }
 
             $this->employeeService->create(
