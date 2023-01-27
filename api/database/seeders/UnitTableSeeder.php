@@ -43,7 +43,7 @@ class UnitTableSeeder extends Seeder
                     ]);
                     break;
                 default:
-                    $countPerCompany = $countPerCompany < 3 ? 3 : $countPerCompany; 
+                    $countPerCompany = $countPerCompany < 3 ? 3 : $countPerCompany;
                     Unit::factory()->count($countPerCompany)->state(new Sequence(
                         ['category' => UnitCategory::PRODUCTS->value],
                         ['category' => UnitCategory::SERVICES->value],
