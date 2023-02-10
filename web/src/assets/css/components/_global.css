@@ -1,0 +1,37 @@
+html {
+  scroll-behavior: smooth;
+  background-color: theme("colors.primary");
+  @media screen(md) {
+    background-color: theme("colors.slate.200");
+  }
+  &.dark {
+    background-color: theme("colors.darkmode.800");
+    body {
+      color: theme("colors.slate.300");
+      *,
+      ::before,
+      ::after {
+        border-color: theme("colors.white" / 5%);
+      }
+    }
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    padding-left: theme("spacing.3");
+    padding-right: theme("spacing.3");
+    font-family: theme("fontFamily.roboto");
+    font-size: theme("fontSize.sm");
+    line-height: theme("lineHeight.5");
+    color: theme("colors.slate.800");
+    @media screen(sm) {
+      padding-left: theme("spacing.8");
+      padding-right: theme("spacing.8");
+    }
+    @media screen(md) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}

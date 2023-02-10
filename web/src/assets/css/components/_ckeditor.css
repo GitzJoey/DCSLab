@@ -1,0 +1,289 @@
+.ck-editor,
+.document-editor,
+.ck-editor__editable {
+  box-shadow: theme("boxShadow.sm");
+}
+
+.document-editor {
+  display: flex;
+  max-height: 700px;
+  flex-flow: column nowrap;
+  border-radius: var(--ck-border-radius);
+  border: 1px solid theme("colors.slate.200");
+  .document-editor__toolbar {
+    z-index: 1;
+    border-bottom: 1px solid theme("colors.slate.200");
+  }
+  .document-editor__toolbar .ck-toolbar {
+    border: 0;
+    border-radius: 0;
+    background-color: theme("colors.slate.100");
+    .ck-icon {
+      width: 16px;
+    }
+  }
+  .document-editor__editable-container {
+    overflow-y: scroll;
+    padding: calc(2 * var(--ck-spacing-large));
+    background-color: theme("colors.slate.100");
+  }
+  .document-editor__editable-container .ck-editor__editable {
+    width: 15.8cm;
+    margin: 0 auto;
+    min-height: 21cm;
+    background: white;
+    padding: 1cm 2cm 2cm;
+    border-radius: var(--ck-border-radius);
+    border: 1px solid theme("colors.slate.200");
+    box-shadow: theme("boxShadow.sm");
+  }
+  .ck-heading-dropdown .ck-list .ck-button__label {
+    line-height: calc(
+      1.7 * var(--ck-line-height-base) * var(--ck-font-size-base)
+    );
+    min-width: 6em;
+  }
+  .ck-heading-dropdown
+    .ck-list
+    .ck-button:not(.ck-heading_paragraph)
+    .ck-button__label {
+    transform: scale(0.8);
+    transform-origin: left;
+  }
+  .ck-content h2,
+  .ck-heading-dropdown .ck-heading_heading1 .ck-button__label {
+    font-size: 2.18em;
+    font-weight: normal;
+  }
+  .ck-content h2 {
+    line-height: 1.37em;
+    padding-top: 0.342em;
+    margin-bottom: 0.142em;
+  }
+  .ck-content h3,
+  .ck-heading-dropdown .ck-heading_heading2 .ck-button__label {
+    font-size: 1.75em;
+    font-weight: normal;
+    color: hsl(203, 100%, 50%);
+  }
+  .ck-heading-dropdown .ck-heading_heading2.ck-on .ck-button__label {
+    color: var(--ck-color-list-button-on-text);
+  }
+  .ck-content h3 {
+    line-height: 1.86em;
+    padding-top: 0.171em;
+    margin-bottom: 0.357em;
+  }
+  .ck-content h4,
+  .ck-heading-dropdown .ck-heading_heading3 .ck-button__label {
+    font-size: 1.31em;
+    font-weight: bold;
+  }
+  .ck-content h4 {
+    line-height: 1.24em;
+    padding-top: 0.286em;
+    margin-bottom: 0.952em;
+  }
+  .ck-content p {
+    font-size: 1em;
+    line-height: 1.63em;
+    padding-top: 0.5em;
+    margin-bottom: 1.13em;
+  }
+  .ck-content blockquote {
+    font-family: Georgia, serif;
+    margin-left: calc(2 * var(--ck-spacing-large));
+    margin-right: calc(2 * var(--ck-spacing-large));
+  }
+}
+
+.ck.ck-content {
+  min-height: 250px;
+  &.ck-editor__editable_inline {
+    border: 1px solid theme("colors.slate.200");
+  }
+}
+
+.ck .ck {
+  .ck-content {
+    min-height: 250px;
+    &.ck-editor__editable_inline {
+      border: 1px solid theme("colors.slate.200");
+    }
+    blockquote,
+    dl,
+    dd,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    hr,
+    figure,
+    p,
+    pre {
+      margin: revert;
+    }
+    ol,
+    ul {
+      list-style: revert;
+      margin: revert;
+      padding: revert;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: revert;
+      font-weight: revert;
+    }
+    img,
+    svg,
+    video,
+    canvas,
+    audio,
+    iframe,
+    embed,
+    object {
+      display: revert;
+      vertical-align: revert;
+    }
+  }
+  &.ck-reset_all,
+  &.ck-reset_all * {
+    color: theme("colors.slate.800");
+  }
+  &.ck-toolbar,
+  &.ck-balloon-panel {
+    background-color: theme("colors.slate.100");
+    border-color: theme("colors.slate.200");
+    .ck-icon {
+      width: 16px;
+    }
+  }
+  &.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+    border-color: theme("colors.slate.200");
+  }
+  &.ck-button:not(.ck-disabled):hover,
+  &a.ck-button:not(.ck-disabled):hover {
+    background-color: theme("colors.slate.200");
+  }
+}
+
+.dark {
+  .document-editor {
+    border-color: theme("colors.darkmode.900" / 30%);
+    .document-editor__toolbar {
+      border-color: theme("colors.darkmode.900" / 20%);
+    }
+    .document-editor__toolbar .ck-toolbar {
+      background-color: theme("colors.darkmode.900" / 20%);
+      .ck-toolbar__separator {
+        background-color: theme("colors.darkmode.800");
+      }
+      .ck-tooltip .ck-tooltip__text {
+        color: theme("colors.slate.200");
+        background-color: theme("colors.darkmode.800");
+        &:after {
+          border-bottom: theme("colors.darkmode.800");
+        }
+      }
+      .ck.ck-icon :not([fill]) {
+        fill: theme("colors.slate.300");
+      }
+      .ck.ck-dropdown__panel {
+        border-color: theme("colors.darkmode.800");
+      }
+      .ck.ck-button.ck-on,
+      a.ck.ck-button.ck-on {
+        background-color: theme("colors.darkmode.800");
+      }
+    }
+    .document-editor__editable-container {
+      background-color: theme("colors.darkmode.600");
+    }
+    .document-editor__editable-container .ck-editor__editable {
+      border-color: theme("colors.darkmode.900" / 20%);
+      background-color: theme("colors.darkmode.800");
+    }
+  }
+
+  .ck.ck-content.ck-editor__editable_inline {
+    border-color: theme("colors.darkmode.900" / 20%);
+    background-color: theme("colors.darkmode.800");
+  }
+
+  .ck {
+    &.ck-list {
+      background-color: theme("colors.darkmode.800");
+    }
+    &.ck-dropdown__panel {
+      background-color: theme("colors.darkmode.800");
+      border-color: theme("colors.darkmode.800");
+    }
+    &.ck.ck-input-text {
+      background-color: theme("colors.darkmode.400");
+      border-color: theme("colors.darkmode.400");
+      &:focus {
+        box-shadow: none;
+      }
+    }
+    .ck-insert-table-dropdown-grid-box {
+      border-color: theme("colors.darkmode.400");
+    }
+    &.ck-reset_all,
+    &.ck-reset_all * {
+      color: theme("colors.slate.300") !important;
+    }
+    .ck {
+      .ck-content.ck-editor__editable_inline {
+        border-color: theme("colors.darkmode.900" / 20%);
+        background-color: theme("colors.darkmode.800");
+      }
+      &.ck-toolbar,
+      &.ck-balloon-panel {
+        background-color: theme("colors.darkmode.700");
+        border-color: theme("colors.darkmode.900" / 20%);
+        &:before {
+          border-bottom-color: theme("colors.darkmode.900" / 20%) !important;
+        }
+        &:after {
+          border-bottom-color: theme("colors.darkmode.900" / 20%) !important;
+        }
+        .ck-toolbar__separator {
+          background-color: theme("colors.darkmode.800");
+        }
+        .ck-tooltip .ck-tooltip__text {
+          color: theme("colors.slate.200");
+          background-color: theme("colors.darkmode.800");
+          &:after {
+            border-bottom-color: theme("colors.darkmode.900" / 20%);
+          }
+        }
+        .ck.ck-icon :not([fill]) {
+          fill: theme("colors.slate.300");
+        }
+        .ck.ck-dropdown__panel {
+          border-color: theme("colors.darkmode.800");
+        }
+        .ck.ck-button.ck-on,
+        a.ck.ck-button.ck-on {
+          background-color: theme("colors.darkmode.800");
+        }
+      }
+      &.ck-editor__main > .ck-editor__editable {
+        background-color: theme("colors.darkmode.800");
+        &:not(.ck-focused) {
+          border-color: theme("colors.darkmode.900" / 20%);
+        }
+      }
+      &.ck-button:not(.ck-disabled):hover,
+      &a.ck-button:not(.ck-disabled):hover {
+        background-color: theme("colors.darkmode.900" / 20%);
+      }
+    }
+  }
+}
