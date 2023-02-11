@@ -34,18 +34,18 @@
    | Import 3rd party library CSS files.
    |
    */
-@import "simplebar/src/simplebar.css";
-@import "dropzone/dist/dropzone.css";
+@import "simplebar/dist/simplebar.css";
+/*@import "dropzone/dist/dropzone.css";*/
 @import "tabulator-tables/dist/css/tabulator.css";
 @import "tom-select/dist/css/tom-select.css";
-@import "zoom-vanilla.js/dist/zoom.css";
+/*@import "zoom-vanilla.js/dist/zoom.css";*/
 @import "toastify-js/src/toastify.css";
-@import "highlight.js/styles/github.css";
+/*@import "highlight.js/styles/github.css";*/
 @import "tippy.js/dist/tippy.css";
 @import "tippy.js/themes/light.css";
 @import "tippy.js/dist/svg-arrow.css";
 @import "tippy.js/animations/shift-away.css";
-@import "tiny-slider/dist/tiny-slider.css";
+/*@import "tiny-slider/dist/tiny-slider.css";*/
 
 /*
    |--------------------------------------------------------------------------
@@ -65,9 +65,9 @@
 @import "./components/_tiny-slider.css";
 @import "./components/_tippy.css";
 @import "./components/_toastify.css";
-@import "./components/_zoom-vanilla.css";
+/*@import "./components/_zoom-vanilla.css";*/
 @import "./components/_tom-select.css";
-@import "./components/_ckeditor.css";
+/*@import "./components/_ckeditor.css";*/
 @import "./components/_litepicker.css";
-@import "./components/_full-calendar.css";
+/*@import "./components/_full-calendar.css";*/
 @import "./components/_tabulator.css";
