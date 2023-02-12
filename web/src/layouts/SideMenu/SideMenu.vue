@@ -10,6 +10,7 @@ import { useSideMenuStore } from "../../stores/side-menu";
 import { FormattedMenu, nestedMenu, enter, leave } from "./side-menu";
 import { watch, reactive, computed, onMounted } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
+import ScrollToTop from "../../base-components/ScrollToTop";
 
 const route = useRoute();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
@@ -140,6 +141,7 @@ onMounted(() => {
           ]"
         >
           <RouterView />
+          <ScrollToTop />
         </div>
       </div>
     </LoadingOverlay>

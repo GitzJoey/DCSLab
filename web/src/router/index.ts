@@ -3,6 +3,8 @@ import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 
 import Login from "../pages/auth/Login.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
+import Error from "../pages/dashboard/Error.vue";
+import ErrorPage from "../pages/error/ErrorPage.vue";
 
 const routes = [
   {
@@ -24,8 +26,32 @@ const routes = [
         path: "/dashboard/main",
         name: "side-menu-dashboard-maindashboard",
         component: MainDashboard,
+        meta: { 
+          remember: true,
+          log_route: true,
+          skipBeforeEach: false
+        }
+      },
+      {
+        path: "/dashboard/error" + "/:code",
+        name: "side-menu-error-code",
+        component: Error,
+        meta: { 
+          remember: false,
+          log_route: false,
+          skipBeforeEach: true
+        }
       }
     ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: ErrorPage
+  },
+  {
+    path: "/error-page",
+    name: "error-page",
+    component: ErrorPage
   }
 ];
 
@@ -35,6 +61,13 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     return savedPosition || { left: 0, top: 0 };
   },
+});
+
+router.beforeEach(async (to, from, next) => {
+  next();
+});
+
+router.afterEach((to, from) => {
 });
 
 export default router;
