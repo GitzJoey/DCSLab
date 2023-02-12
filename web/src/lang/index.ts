@@ -1,6 +1,6 @@
-import { createI18n } from "vue-i18n"
-import * as en from "./en.json"
-import * as id from "./id.json"
+import { createI18n } from "vue-i18n";
+import en from "./messages.en";
+import id from "./messages.id";
 import { setLocale } from "@vee-validate/i18n";
 import { Ref } from "vue";
 
