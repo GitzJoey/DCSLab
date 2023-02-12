@@ -8,18 +8,15 @@ import { Menu, Popover } from "../../base-components/Headless";
 import defUserUrl from "../../assets/images/def-user.png";
 import _ from "lodash";
 import { TransitionRoot } from "@headlessui/vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   layout?: "side-menu" | "simple-menu" | "top-menu";
 }>();
 
-const searchDropdown = ref(false);
-const showSearchDropdown = () => {
-  searchDropdown.value = true;
-};
-const hideSearchDropdown = () => {
-  searchDropdown.value = false;
-};
+const appName = import.meta.env.VITE_APP_NAME;
 </script>
 
 <template>
@@ -32,9 +29,8 @@ const hideSearchDropdown = () => {
     ]"
   >
     <div class="flex items-center h-full">
-      <!-- BEGIN: Logo -->
       <RouterLink
-        :to="{ name: 'side-menu-page-1' }"
+        :to="{ name: 'side-menu-dashboard-maindashboard' }"
         :class="[
           '-intro-x hidden md:flex',
           props.layout == 'side-menu' && 'xl:w-[180px]',
@@ -43,7 +39,7 @@ const hideSearchDropdown = () => {
         ]"
       >
         <img
-          alt="Enigma Tailwind HTML Admin Template"
+          alt="DCSLab"
           class="w-6"
           :src="logoUrl"
         />
@@ -54,10 +50,9 @@ const hideSearchDropdown = () => {
             props.layout == 'simple-menu' && 'hidden',
           ]"
         >
-          Enigma
+          {{ appName }}
         </span>
       </RouterLink>
-      <!-- END: Logo -->
       <!-- BEGIN: Breadcrumb -->
       <Breadcrumb
         light
@@ -72,7 +67,6 @@ const hideSearchDropdown = () => {
       </Breadcrumb>
       <!-- END: Breadcrumb -->
 
-      <!-- BEGIN: Account Menu -->
       <Menu>
         <Menu.Button
           class="block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x"
@@ -93,21 +87,20 @@ const hideSearchDropdown = () => {
           </Menu.Header>
           <Menu.Divider class="bg-white/[0.08]" />
           <Menu.Item class="hover:bg-white/5">
-            <Lucide icon="User" class="w-4 h-4 mr-2" /> Profile
+            <Lucide icon="User" class="w-4 h-4 mr-2" /> {{ t('components.top-bar.profile_ddl.profile') }}
           </Menu.Item>
           <Menu.Item class="hover:bg-white/5">
-            <Lucide icon="Lock" class="w-4 h-4 mr-2" /> Inbox
+            <Lucide icon="Mail" class="w-4 h-4 mr-2" /> {{ t('components.top-bar.profile_ddl.inbox') }}
           </Menu.Item>
           <Menu.Item class="hover:bg-white/5">
-            <Lucide icon="HelpCircle" class="w-4 h-4 mr-2" /> Activity
+            <Lucide icon="Activity" class="w-4 h-4 mr-2" /> {{ t('components.top-bar.profile_ddl.activity') }}
           </Menu.Item>
           <Menu.Divider class="bg-white/[0.08]" />
           <Menu.Item class="hover:bg-white/5">
-            <Lucide icon="ToggleRight" class="w-4 h-4 mr-2" /> Logout
+            <Lucide icon="ToggleRight" class="w-4 h-4 mr-2" /> {{ t('components.top-bar.profile_ddl.logout') }}
           </Menu.Item>
         </Menu.Items>
       </Menu>
-      <!-- END: Account Menu -->
     </div>
   </div>
 </template>

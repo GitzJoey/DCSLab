@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
-import Page1 from "../pages/Page1.vue";
-import Page2 from "../pages/Page2.vue";
 
 import Login from "../pages/auth/Login.vue";
+import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 
 const routes = [
   {
@@ -12,8 +11,19 @@ const routes = [
     children: [
       {
         path: "/login",
-        name: "side-menu-page-1",
+        name: "login",
         component: Login,
+      }
+    ],
+  },
+  {
+    path: "/dashboard",
+    component: SideMenu,
+    children: [
+      {
+        path: "/dashboard/main",
+        name: "side-menu-dashboard-maindashboard",
+        component: MainDashboard,
       }
     ],
   }
