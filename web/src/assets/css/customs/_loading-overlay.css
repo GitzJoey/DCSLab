@@ -1,0 +1,24 @@
+.loading-container {
+  @apply relative;
+  @apply z-0;
+}
+
+.loading-overlay {
+  @apply absolute;
+  @apply inset-0;
+  @apply top-0;
+  @apply right-0;
+  @apply bottom-0;
+  @apply left-0;
+  @apply w-full;
+  @apply h-full;
+  background-image:url('spinner-big.gif');
+  @apply bg-no-repeat;
+  @apply bg-center;
+  @apply z-[150];
+  @apply opacity-50;
+}
+
+.loading-overlay-gray {
+  @apply bg-gray-200;
+}

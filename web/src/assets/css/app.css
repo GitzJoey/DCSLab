@@ -71,3 +71,5 @@
 @import "./components/_litepicker.css";
 /*@import "./components/_full-calendar.css";*/
 @import "./components/_tabulator.css";
+
+@import "./customs/_loading-overlay.css"
