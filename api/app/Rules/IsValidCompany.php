@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\InvokableRule;
 
-class InactiveUser implements InvokableRule
+class IsValidCompany implements InvokableRule
 {
     /**
      * Run the validation rule.
