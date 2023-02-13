@@ -53,7 +53,7 @@ const appName = import.meta.env.VITE_APP_NAME;
           {{ appName }}
         </span>
       </RouterLink>
-      <!-- BEGIN: Breadcrumb -->
+
       <Breadcrumb
         light
         :class="[
@@ -65,7 +65,6 @@ const appName = import.meta.env.VITE_APP_NAME;
         <Breadcrumb.Link to="/">Application</Breadcrumb.Link>
         <Breadcrumb.Link to="/" :active="true"> Dashboard </Breadcrumb.Link>
       </Breadcrumb>
-      <!-- END: Breadcrumb -->
 
       <Menu>
         <Menu.Button
