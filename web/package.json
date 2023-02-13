@@ -18,7 +18,7 @@
     "litepicker": "^2.0.12",
     "lucide-vue-next": "^0.112.0",
     "pinia": "^2.0.30",
-    "simplebar": "^6.2.1",
+    "simplebar": "^5.3.9",
     "tabulator-tables": "^5.4.3",
     "tippy.js": "^6.3.7",
     "toastify-js": "^1.12.0",
