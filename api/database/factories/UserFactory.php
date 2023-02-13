@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -36,5 +37,32 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function setCreatedAt(Carbon $date = null)
+    {
+        return $this->state(function (array $attributes) use ($date) {
+            return [
+                'created_at' => is_null($date) ? Carbon::now() : $date,
+            ];
+        });
+    }
+
+    public function setUpdatedAt(Carbon $date = null)
+    {
+        return $this->state(function (array $attributes) use ($date) {
+            return [
+                'updated_at' => is_null($date) ? Carbon::now() : $date,
+            ];
+        });
+    }
+
+    public function setNotRequiredResetPassword()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'password_changed_at' => Carbon::now(),
+            ];
+        });
     }
 }
