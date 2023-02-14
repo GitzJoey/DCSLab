@@ -23,7 +23,7 @@ export default {
     install(app: any) {
         app.component("VeeForm", VeeForm);
         app.component("VeeField", VeeField);
-        app.component("ErrorMessage", ErrorMessage);
+        app.component("VeeErrorMessage", ErrorMessage);
 
         Object.keys(allRules).forEach(rule => {
             defineRule(rule, allRules[rule]);

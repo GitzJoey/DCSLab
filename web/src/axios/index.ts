@@ -12,7 +12,7 @@ const defaultAxiosInstance = axios.create({
 defaultAxiosInstance.defaults.withCredentials = true;
 
 defaultAxiosInstance.interceptors.request.use(function (config) {
-    config.headers.common['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
+    config.headers['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
     return config;
 });
 
@@ -47,7 +47,7 @@ const authAxiosInstance = axios.create({
 authAxiosInstance.defaults.withCredentials = true;
 
 authAxiosInstance.interceptors.request.use(function (config) {
-    config.headers.common['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
+    config.headers['X-localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
     return config;
 });
 

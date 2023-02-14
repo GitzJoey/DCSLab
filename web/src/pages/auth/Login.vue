@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
@@ -7,10 +8,21 @@ import { FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
+import { AuthService } from "../../services/AuthServices";
+import router from "../../router";
 
 const { t } = useI18n();
 
+const authService = new AuthService();
+
 const appName = import.meta.env.VITE_APP_NAME;
+const loading = ref(false);
+
+const onSubmit = () => {
+  loading.value = false;
+
+  authService.doLogin();
+}
 </script>
 
 <template>
@@ -44,13 +56,13 @@ const appName = import.meta.env.VITE_APP_NAME;
               <div
                 class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
               >
-                <span class="hidden">A few more clicks to</span><br />
-                <span class="hidden">sign in to your account.</span>
+                <span class="hidden">&nbsp;</span><br />
+                <span class="hidden">&nbsp;</span>
               </div>
               <div
                 class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
               >
-                <span class="hidden">Manage all your e-commerce accounts in one place</span>
+                <span class="hidden">&nbsp;</span>
               </div>
             </div>
           </div>
@@ -58,67 +70,81 @@ const appName = import.meta.env.VITE_APP_NAME;
             <div
               class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
             >
-              <LoadingOverlay>
+              <LoadingOverlay :visible="loading" :transparent="true">
                 <h2
                   class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
                 >
                   {{ t('views.login.title') }}
                 </h2>
                 <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
-                  A few more clicks to sign in to your account. Manage all your
-                  e-commerce accounts in one place
+                  &nbsp;
                 </div>
-                <div class="mt-8 intro-x">
-                  <FormInput
-                    type="text"
-                    class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
-                    placeholder="Email"
-                  />
-                  <FormInput
-                    type="password"
-                    class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                    placeholder="Password"
-                  />
-                </div>
-                <div
-                  class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-                >
-                  <div class="flex items-center mr-auto">
-                    <FormCheck.Input
-                      id="remember-me"
-                      type="checkbox"
-                      class="mr-2 border"
-                    />
-                    <label class="cursor-pointer select-none" htmlFor="remember-me">
-                      Remember me
-                    </label>
+                <VeeForm id="loginForm" @submit="onSubmit" v-slot="{ errors }">
+                  <div class="mt-8 intro-x">
+                    <VeeField name="email" v-slot="{ field }" rules="required|email" :label="t('views.login.fields.email')">
+                      <FormInput
+                        type="text"
+                        name="email"
+                        class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
+                        :class="{ 'border-danger': errors['email'] }"
+                        :placeholder="t('views.login.fields.email')"
+                        v-bind="field"
+                      />
+                    </VeeField>
+                    <VeeErrorMessage name="email" as="span" class="text-danger" />
+                    <VeeField name="password" v-slot="{ field }" rules="required" :label="t('views.login.fields.password')">
+                      <FormInput
+                        type="password"
+                        name="password"
+                        class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
+                        :class="{ 'border-danger': errors['password'] }"
+                        :placeholder="t('views.login.fields.password')"
+                        v-bind="field"
+                      />                    
+                    </VeeField>
+                    <VeeErrorMessage name="password" as="span" class="text-danger" />
                   </div>
-                  <a href="">Forgot Password?</a>
-                </div>
-                <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button
-                    variant="primary"
-                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
+                  <div
+                    class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
                   >
-                    Login
-                  </Button>
-                  <Button
-                    variant="outline-secondary"
-                    class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
-                  >
-                    Register
-                  </Button>
-                </div>
+                    <div class="flex items-center mr-auto">
+                      <FormCheck.Input
+                        id="remember-me"
+                        name="remember-me"
+                        type="checkbox"
+                        class="mr-2 border"
+                      />
+                      <label class="cursor-pointer select-none" htmlFor="remember-me">
+                        {{ t('views.login.fields.remember_me') }}
+                      </label>
+                    </div>
+                    <a href="" @click="router.push({ name: 'password-reset' })">{{ t('views.login.fields.forgot_pass') }}</a>
+                  </div>
+                  <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
+                    <Button
+                      variant="primary"
+                      class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
+                    >
+                      {{ t('components.buttons.login') }}
+                    </Button>
+                    <Button
+                      variant="outline-secondary"
+                      class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
+                    >
+                      {{ t('components.buttons.register') }}
+                    </Button>
+                  </div>
+                </VeeForm>
                 <div
                   class="mt-10 text-center intro-x xl:mt-24 text-slate-600 dark:text-slate-500 xl:text-left"
                 >
                   By signin up, you agree to our
                   <a class="text-primary dark:text-slate-200" href="">
-                    Terms and Conditions
+                    {{ t('views.login.fields.terms_and_cond') }}
                   </a>
                   &
                   <a class="text-primary dark:text-slate-200" href="">
-                    Privacy Policy
+                    {{ t('views.login.fields.privacy_policy') }}
                   </a>
                 </div>
               </LoadingOverlay>
