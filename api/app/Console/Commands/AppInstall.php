@@ -41,12 +41,6 @@ class AppInstall extends Command
         $this->info('Review this installation process in \App\Console\Commands\Install.php');
 
         sleep(3);
-        
-        $passPreInstallCheck = $this->passPreInstallCheck();
-        if (! $passPreInstallCheck) return;
-
-        $systemCheckIsOK = $this->systemCheckingIsOK();
-        if (! $systemCheckIsOK) return;
 
         switch (strtolower($this->argument('args'))) {
             case 'dev':
@@ -54,16 +48,27 @@ class AppInstall extends Command
                 $this->createAdminOrDevAccount(strtolower($this->argument('args')));
                 break;
             default:
-                $this->generateAppKey();
-                $this->seedingData();
-                $this->storageLinking();
-                $this->createAdminOrDevAccount('admin');
+                $this->defaultInstallation();
                 break;
         }
 
         $this->info('Done!');
 
         return Command::SUCCESS;
+    }
+
+    private function defaultInstallation(): void
+    {
+        $passPreInstallCheck = $this->passPreInstallCheck();
+        if (! $passPreInstallCheck) return;
+
+        $systemCheckIsOK = $this->systemCheckingIsOK();
+        if (! $systemCheckIsOK) return;
+
+        $this->generateAppKey();
+        $this->seedingData();
+        $this->storageLinking();
+        $this->createAdminOrDevAccount('admin');
     }
 
     private function systemCheckingIsOK(): bool 
@@ -132,7 +137,7 @@ class AppInstall extends Command
 
     private function createAdminOrDevAccount(string $accountType): void 
     {
-        $this->info('Creating '.$accountType == 'dev' ? 'Dev' : 'Admin'.' Account ...');
+        $this->info('Creating '.($accountType == 'dev' ? 'Dev' : 'Admin').' Account ...');
 
         $userName = 'GitzJoey';
         $userEmail = 'gitzjoey@yahoo.com';
@@ -182,10 +187,18 @@ class AppInstall extends Command
                         $rolesId,
                         $profile
                     );
+        
+                    $this->info('Creating Account...');
+                    $this->info('Name: '.$userName);
+                    $this->info('Email: '.$userEmail);
+                    $this->info('Password: '.'***********');
+                    $this->info('Account Type: '.($is_dev ? 'Developers' : 'Administrator'));
+
                     $invalid = false;
                 }
             } catch (Exception $e) {
                 $this->error($e->getMessage());
+                $this->info('');
                 $this->error('Retrying...');
             }
         } while ($invalid);
