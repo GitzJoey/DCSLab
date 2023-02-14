@@ -2,6 +2,9 @@
 
 namespace App\Actions\Fortify;
 
+use App\Enums\RecordStatus;
+use App\Enums\UserRoles;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -31,10 +34,33 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-        ]);
+        $name = $input['name'];
+
+        if ($name == trim($name) && strpos($name, ' ') !== false) {
+            $pieces = explode(' ', $name);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+
+            $name = str_replace(' ', '', $name);
+        } else {
+            $first_name = $name;
+            $last_name = '';
+        }
+
+        $profile = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'status' => RecordStatus::ACTIVE,
+        ];
+
+        $roles = [Role::where('name', UserRoles::USER->value)->first()->id];
+
+        $usr = $this->create(
+            $input,
+            $roles,
+            $profile
+        );
+
+        return $usr;
     }
 }
