@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Database\Seeders\RoleTableSeeder;
+use Database\Seeders\UserTableSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 
@@ -45,10 +47,56 @@ class AppSeed extends Command
             case 'usertableseeder':
                 $this->runUserTableSeederInteractive();
                 break;
+            case 'role':
+            case 'roletableseeder':
+                $this->runRoleTableSeederInteractive();
+                break;
+            case 'company':
+            case 'companytableseeder':
+                $this->runCompanyTableSeederInteractive();
+                break;
+            case 'branch':
+            case 'branchtableseeder':
+                $this->runBranchTableSeederInteractive();
+                break;
+            case 'employee':
+            case 'employeetableseeder':
+                $this->runEmployeeTableSeederInteractive();
+                break;
+            case 'warehouse':
+            case 'warehousetableseeder':
+                $this->runWarehouseTableSeederInteractive();
+                break;
+            case 'productgroup':
+            case 'productgrouptableseeder':
+                $this->runProductGroupTableSeederInteractive();
+                break;
+            case 'brand':
+            case 'brandtableseeder':
+                $this->runBrandTableSeederInteractive();
+                break;
+            case 'unit':
+            case 'unittableseeder':
+                $this->runUnitTableSeederInteractive();
+                break;
+            case 'product':
+            case 'producttableseeder':
+                $this->runProductTableSeederInteractive();
+                break;
+            case 'supplier':
+            case 'suppliertableseeder':
+                $this->runSupplierTableSeederInteractive();
+                break;
+            case 'customer':
+            case 'customertableseeder':
+                $this->runCustomerTableSeederInteractive();
+                break;
             default:
                 $total = 12;
+                $this->info('');
                 $progressBar = $this->output->createProgressBar($total);
                 $progressBar->start();
+
                 $this->runUserTableSeeder(false, 5); $progressBar->advance();
                 $this->runRoleTableSeeder(true, 5); $progressBar->advance();
                 $this->runCompanyTableSeeder(5, 0); $progressBar->advance();
@@ -61,11 +109,13 @@ class AppSeed extends Command
                 $this->runProductTableSeeder(5, 0); $progressBar->advance();
                 $this->runSupplierTableSeeder(5, 0); $progressBar->advance();
                 $this->runCustomerTableSeeder(5, 0); $progressBar->advance();
+                
                 $progressBar->finish();
-                $this->info('');
+                $this->info(''); $this->info('');
                 break;
         }
 
+        $this->info('Done!');
         return Command::SUCCESS;
     }
 
@@ -84,8 +134,8 @@ class AppSeed extends Command
 
     private function runUserTableSeeder($truncate, $count)
     {
-        //$seeder = new UserTableSeeder();
-        //$seeder->callWith(UserTableSeeder::class, [$truncate, $count]);
+        $seeder = new UserTableSeeder();
+        $seeder->callWith(UserTableSeeder::class, [$truncate, $count]);
     }
 
     private function runRoleTableSeederInteractive()
@@ -103,8 +153,8 @@ class AppSeed extends Command
 
     private function runRoleTableSeeder($randomPermission, $count)
     {
-        //$seeder = new RoleTableSeeder();
-        //$seeder->callWith(RoleTableSeeder::class, [$randomPermission, $count]);
+        $seeder = new RoleTableSeeder();
+        $seeder->callWith(RoleTableSeeder::class, [$randomPermission, $count]);
     }
 
     private function runCompanyTableSeederInteractive()
