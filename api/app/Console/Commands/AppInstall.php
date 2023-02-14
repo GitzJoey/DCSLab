@@ -66,7 +66,8 @@ class AppInstall extends Command
         return Command::SUCCESS;
     }
 
-    private function systemCheckingIsOK(): bool {
+    private function systemCheckingIsOK(): bool 
+    {
         $result = true;
 
         $systemActions = new SystemActions();
@@ -88,7 +89,8 @@ class AppInstall extends Command
         return $result;
     }
 
-    private function generateAppKey(): void {
+    private function generateAppKey(): void 
+    {
         $this->info('Generating App Key...');
         if (App::environment('prod', 'production')) {
             Artisan::call('key:generate', [
@@ -101,7 +103,8 @@ class AppInstall extends Command
         $this->info(Artisan::output());
     }
 
-    private function seedingData(): void {
+    private function seedingData(): void 
+    {
         if (App::environment('prod', 'production')) {
             $this->info('[PROD] Seeding ...');
             Artisan::call('db:seed', [
@@ -115,7 +118,8 @@ class AppInstall extends Command
         $this->info(Artisan::output());
     }
 
-    private function storageLinking(): void {
+    private function storageLinking(): void 
+    {
         $this->info('Storage Linking ...');
         if (is_link(public_path().'/storage')) {
             $this->info('Found Storage Link, Skipping ...');
@@ -126,7 +130,8 @@ class AppInstall extends Command
         $this->info(Artisan::output());
     }
 
-    private function createAdminOrDevAccount(string $accountType): void {
+    private function createAdminOrDevAccount(string $accountType): void 
+    {
         $this->info('Creating '.$accountType == 'dev' ? 'Dev' : 'Admin'.' Account ...');
 
         $userName = 'GitzJoey';
