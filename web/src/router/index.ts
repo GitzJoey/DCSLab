@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 
 import Login from "../pages/auth/Login.vue";
+import Register from "../pages/auth/Register.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 import Error from "../pages/dashboard/Error.vue";
 import ErrorPage from "../pages/error/ErrorPage.vue";
@@ -9,14 +10,22 @@ import ErrorPage from "../pages/error/ErrorPage.vue";
 const routes = [
   {
     path: "/",
-    redirect: "/login",
+    redirect: "/auth/login",
+  },
+  {
+    path: "/auth",
     children: [
       {
-        path: "/login",
+        path: "/auth/login",
         name: "login",
         component: Login,
-      }
-    ],
+      },
+      {
+        path: "/auth/register",
+        name: 'register',
+        component: Register,
+      },
+    ]
   },
   {
     path: "/dashboard",
