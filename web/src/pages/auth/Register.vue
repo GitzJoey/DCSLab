@@ -12,7 +12,7 @@ import AuthService from "../../services/AuthServices";
 const { t } = useI18n();
 
 const authService = new AuthService();
-const a = ref('es');
+const a = ref('esd');
 
 </script>
 

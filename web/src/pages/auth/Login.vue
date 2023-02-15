@@ -8,24 +8,29 @@ import { FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
-//import { AuthService } from "../../services/AuthServices";
+import AuthService from "../../services/AuthServices";
 
 const { t } = useI18n();
 
-//const authService = new AuthService();
+const authService = new AuthService();
 
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
 
-const onSubmit = () => {
+const onSubmit = (values: any, actions: any) => {
   loading.value = true;
+  
+  try {
+    console.log(values);
+    authService.doLogin(values.email, values.password, values.remember);
+  } catch (e) {
+    console.log('Login');
+  }
 
-  //authService.doLogin();
 }
 </script>
 
 <template>
-
     <div
       :class="[
         '-m-3 sm:-mx-8 p-3 sm:px-8 relative h-screen lg:overflow-hidden bg-primary xl:bg-white dark:bg-darkmode-800 xl:dark:bg-darkmode-600',
@@ -107,15 +112,18 @@ const onSubmit = () => {
                     class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
                   >
                     <div class="flex items-center mr-auto">
-                      <FormCheck.Input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        class="mr-2 border"
-                      />
-                      <label class="cursor-pointer select-none" htmlFor="remember-me">
-                        {{ t('views.login.fields.remember_me') }}
-                      </label>
+                      <VeeField name="remember" v-slot="{ field }">
+                        <FormCheck.Input
+                          id="remember-me"
+                          name="remember-me"
+                          type="checkbox"
+                          class="mr-2 border"
+                          v-bind="field"
+                        />
+                        <label class="cursor-pointer select-none" htmlFor="remember-me">
+                          {{ t('views.login.fields.remember_me') }}
+                        </label>
+                      </VeeField>
                     </div>
                     <RouterLink to="/auth/password-reset">{{ t('views.login.fields.forgot_pass') }}</RouterLink>
                   </div>
