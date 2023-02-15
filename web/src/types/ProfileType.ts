@@ -1,4 +1,4 @@
-export interface profileType {
+export interface ProfileType {
     firstName: string,
     lastName: string,
     status: string,

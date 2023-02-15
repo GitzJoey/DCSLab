@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { userProfileType } from "../types/userProfileType";
-import { companyType } from "../types/companyType";
+import { UserProfileType } from "../types/UserProfileType";
+import { CompanyType } from "../types/CompanyType";
 
 interface UserContextState {
-  userContextValue: userProfileType,
+  userContextValue: UserProfileType,
   selectedUserLocationValue: {
     company: {
       uuid: string,

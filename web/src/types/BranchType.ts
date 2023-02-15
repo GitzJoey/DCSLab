@@ -1,8 +1,8 @@
-import { companyType } from "./companyType"
+import { CompanyType } from "./CompanyType"
 
-export interface branchType {
+export interface BranchType {
     uuid: string,
-    company: companyType,
+    company: CompanyType,
     code: string,
     name: string,
     address: string,

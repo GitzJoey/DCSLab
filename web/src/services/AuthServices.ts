@@ -4,19 +4,14 @@ export class AuthService {
     public doLogin(): boolean {
         let result = false;
         authAxiosInstance.get('/sanctum/csrf-cookie').then(() => {
-            console.log('1');
+            authAxiosInstance.post('login', { email: 'gitzjoey@yahoo.com', password: 'qweadszxc' }).then(response => {
+                result = true;
+            }).catch(e => {
+                throw e;
+            })
         }).catch(e => {
-            console.log(e);
-            result = false;
+            throw e;
         });
-
-        authAxiosInstance.post('login', { email: 'gitzjoey@yahoo.com', password: 'qweadszxc' }).then(response => {
-            console.log('2');
-            result = true;
-        }).catch(e => {
-            console.log('3');
-            result = false;
-        })
 
         return result;
     }

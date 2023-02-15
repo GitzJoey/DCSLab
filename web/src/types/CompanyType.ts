@@ -1,11 +1,11 @@
-import { branchType } from "./branchType";
+import { BranchType } from "./BranchType";
 
-export interface companyType {
+export interface CompanyType {
     uuid: string,
     code: string,
     name: string,
     address: string,
     default: boolean,
     status: string,
-    branches: branchType[],
+    branches: BranchType[],
 }
