@@ -1,6 +1,6 @@
 import { authAxiosInstance } from "../axios";
 
-export class AuthService {
+export default class AuthService {
     public doLogin(): boolean {
         let result = false;
         authAxiosInstance.get('/sanctum/csrf-cookie').then(() => {

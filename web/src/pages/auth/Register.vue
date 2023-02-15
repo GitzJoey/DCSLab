@@ -7,21 +7,12 @@ import illustrationUrl from "../../assets/images/illustration.svg";
 import { FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
-import { useRouter } from 'vue-router'
-import { AuthService } from "../../services/AuthServices";
-
+import AuthService from "../../services/AuthServices";
 
 const { t } = useI18n();
-const router = useRouter();
 
 const authService = new AuthService();
-
-//
-const a = ref('r');
-
-const goTo = () => {
-    router.push({ name: 'login '});
-}
+const a = ref('es');
 
 </script>
 
@@ -52,7 +43,6 @@ const goTo = () => {
               alt="Midone Tailwind HTML Admin Template"
               class="w-1/2 -mt-16 -intro-x"
               :src="illustrationUrl"
-              @click="goTo"
             />
             <div
               class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
@@ -154,6 +144,7 @@ const goTo = () => {
               >
                 Sign in
               </Button>
+              <RouterLink to="/login">sdsd</RouterLink>
             </div>
           </div>
         </div>

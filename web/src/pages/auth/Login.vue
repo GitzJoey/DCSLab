@@ -8,20 +8,19 @@ import { FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
-import { AuthService } from "../../services/AuthServices";
-import router from "../../router";
+//import { AuthService } from "../../services/AuthServices";
 
 const { t } = useI18n();
 
-const authService = new AuthService();
+//const authService = new AuthService();
 
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
 
 const onSubmit = () => {
-  loading.value = false;
+  loading.value = true;
 
-  authService.doLogin();
+  //authService.doLogin();
 }
 </script>
 
@@ -118,7 +117,7 @@ const onSubmit = () => {
                         {{ t('views.login.fields.remember_me') }}
                       </label>
                     </div>
-                    <a href="" @click="router.push({ name: 'password-reset' })">{{ t('views.login.fields.forgot_pass') }}</a>
+                    <RouterLink to="/auth/password-reset">{{ t('views.login.fields.forgot_pass') }}</RouterLink>
                   </div>
                   <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                     <Button

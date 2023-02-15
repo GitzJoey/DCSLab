@@ -1,5 +1,4 @@
 import axios from "axios";
-import router from "../router";
 
 const defaultAxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -22,13 +21,10 @@ defaultAxiosInstance.interceptors.response.use(response => {
     if (error.response == undefined || error.response.status == undefined) return Promise.reject(error);
     switch(error.response.status) {
         case 401:
-            router.push({ name: 'error-page', params: { code: error.response.status } });
             break;
         case 403:
-            router.push({ name: 'side-menu-error-code', params: { code: error.response.status } });
             break;
         case 500:
-            router.push({ name: 'side-menu-error-code', params: { code: error.response.status } });
             break;
         default:
             break;

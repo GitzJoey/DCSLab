@@ -25,6 +25,11 @@ const routes = [
         name: 'register',
         component: Register,
       },
+      {
+        path: "/auth/password-reset",
+        name: 'password-reset',
+        component: Register,
+      },
     ]
   },
   {
