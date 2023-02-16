@@ -26,11 +26,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import router from "@/router";
+import { useRouter } from "vue-router";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main.vue";
 import dom from "@left4code/tw-starter/dist/js/dom";
 
 const { t } = useI18n();
+const router = useRouter();
 
 const title = ref('Error');
 const description = ref('');

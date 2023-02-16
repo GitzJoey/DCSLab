@@ -44,11 +44,12 @@ const nestedMenu = (menu, route) => {
   return menu;
 };
 
-const linkTo = (menu, router, event) => {
+const linkTo = (menu, router, event) => {  
   if (menu.subMenu) {
     menu.activeDropdown = !menu.activeDropdown;
   } else {
     event.preventDefault();
+
     router.push({
       name: menu.pageName,
     });
