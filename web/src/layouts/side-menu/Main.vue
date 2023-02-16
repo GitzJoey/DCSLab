@@ -155,6 +155,7 @@ import { linkTo, nestedMenu, enter, leave } from "./index";
 import dom from "@left4code/tw-starter/dist/js/dom";
 
 const { t } = useI18n();
+const rounter = useRouter();
 
 const route = useRoute();
 const router = useRouter();

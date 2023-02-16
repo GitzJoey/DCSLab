@@ -67,12 +67,13 @@ import { onMounted, ref } from "vue";
 import DarkModeSwitcher from "@/components/dark-mode-switcher/Main.vue";
 import dom from "@left4code/tw-starter/dist/js/dom";
 import { useI18n } from "vue-i18n";
-import router from "@/router";
+import { useRouter } from "vue-router";
 import { authAxiosInstance } from "@/axios";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
+const router = useRouter();
 //#endregion
 
 //#region Data - UI
