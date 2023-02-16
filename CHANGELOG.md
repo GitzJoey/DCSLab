@@ -4,6 +4,7 @@
     * Dropping Breeze, use Fortify solely
     * Dropping Hashids
     * Embracing TypeScript
+    * Change UUID to ULID
 
   * **v0.6.0 (2022-07-09)**
     * Break the monolith architecture

@@ -1,26 +1,28 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { authAxiosInstance } from "../axios";
 
 export default class AuthService {
-    private async axiosCall<T>(config: AxiosRequestConfig) {
+    public async doLogin(emailText: string, passwordText: string, rememberMeCheck: boolean): Promise<AxiosResponse> {
+        let result = {} as AxiosResponse;
+
         try {
-            const { data } = await authAxiosInstance.request(config);
-            return [ null, data];
-        } catch (e) {
-            return [ e ];
+            await authAxiosInstance.get('/sanctum/csrf-cookie');
+            result = await authAxiosInstance.post('login', { email: emailText, password: passwordText });
+            return result;
+        } catch (e: any) {
+            return e.response;
         }
     }
 
+    public async register(emailText: string, passwordText: string, rememberMeCheck: boolean): Promise<AxiosResponse> {
+        let result = {} as AxiosResponse;
 
-    public async doLogin(emailText: string, passwordText: string, rememberMeCheck: boolean): Promise<boolean> {
-        let result = false;
-        
-        authAxiosInstance.get('/sanctum/csrf-cookie').then(() => {
-            authAxiosInstance.post('login', { email: emailText, password: passwordText }).then(response => {
-                result = true;
-            })
-        })
-
-        return result;
+        try {
+            await authAxiosInstance.get('/sanctum/csrf-cookie');
+            result = await authAxiosInstance.post('login', { email: emailText, password: passwordText });
+            return result;
+        } catch (e: any) {
+            return e.response;
+        }
     }
 }

@@ -17,15 +17,12 @@ const authService = new AuthService();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
 
-const onSubmit = (values: any, actions: any) => {
+const onSubmit = async (values: any, actions: any) => {
   loading.value = true;
-  
-  try {
-    console.log(values);
-    authService.doLogin(values.email, values.password, values.remember);
-  } catch (e) {
-    console.log('Login');
-  }
+
+  let result = await authService.doLogin(values.email, values.password, values.remember);
+  console.log(result);
+
 
 }
 </script>
