@@ -23,7 +23,7 @@ class ProfileController extends BaseController
         $this->roleActions = $roleActions;
     }
 
-    public function read()
+    public function readProfile()
     {
         $result = $this->userActions->readBy('ID', Auth::id());
 

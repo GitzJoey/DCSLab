@@ -10,4 +10,8 @@ export default class DashboardService {
             return [ e ];
         }
     }
+
+    public async readProfile() {
+        
+    }
 }
