@@ -9,10 +9,15 @@ import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
+import { StatusCodes } from "../../types/StatusCodesEnum";
+import { useRouter } from "vue-router";
+import { ErrorHandlerService } from "../../services/ErrorHandlerService";
 
 const { t } = useI18n();
+const router = useRouter();
 
 const authService = new AuthService();
+const errorHandlerService = new ErrorHandlerService();
 
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
@@ -21,9 +26,12 @@ const onSubmit = async (values: any, actions: any) => {
   loading.value = true;
 
   let result = await authService.doLogin(values.email, values.password, values.remember);
-  console.log(result);
 
-
+  if (result.status === StatusCodes.OK) {
+    router.push('/dashboard/main');
+  } else {
+    errorHandlerService.handleLaravelError(result.data, actions, 'email');
+  }
 }
 </script>
 

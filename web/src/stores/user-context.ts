@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { UserProfileType } from "../types/UserProfileType";
-import { CompanyType } from "../types/CompanyType";
 
 interface UserContextState {
   userContextValue: UserProfileType,

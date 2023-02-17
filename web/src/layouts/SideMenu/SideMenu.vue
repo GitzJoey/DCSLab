@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useRoute } from "vue-router";
 import Divider from "./Divider.vue";
 import Menu from "./Menu.vue";
@@ -12,6 +13,7 @@ import { FormattedMenu, nestedMenu, enter, leave } from "./side-menu";
 import { watch, reactive, computed, onMounted } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
+import { useDashboardStore } from "../../stores/dashboard";
 
 const route = useRoute();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
@@ -23,6 +25,10 @@ const setFormattedMenu = (
 const sideMenuStore = useSideMenuStore();
 const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 
+const dashboardStore = useDashboardStore();
+
+const screenMask = computed(() => dashboardStore.screenMaskValue );
+
 watch(sideMenu, () => {
   setFormattedMenu(sideMenu.value);
 });
@@ -30,11 +36,15 @@ watch(sideMenu, () => {
 onMounted(() => {
   setFormattedMenu(sideMenu.value);
 });
+
+const toggleScreenMask = (toggle: boolean) => {
+  screenMask.value = toggle ? toggle : !screenMask.value;
+}
 </script>
 
 <template>
   <div class="py-5 md:py-0">
-    <LoadingOverlay :visible="false" :transparent="false">
+    <LoadingOverlay :visible="screenMask" :transparent="false">
       <DarkModeSwitcher />
       <MainColorSwitcher />
       <MobileMenu />

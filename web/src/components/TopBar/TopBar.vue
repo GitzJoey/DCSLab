@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import Lucide from "../../base-components/Lucide";
 import logoUrl from "../../assets/images/logo.svg";
 import Breadcrumb from "../../base-components/Breadcrumb";
@@ -9,14 +8,30 @@ import defUserUrl from "../../assets/images/def-user.png";
 import _ from "lodash";
 import { TransitionRoot } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
+import axios from "../../axios";
+import { useDashboardStore } from "../../stores/dashboard";
 
 const { t } = useI18n();
+
+const dashboardStore = useDashboardStore();
 
 const props = defineProps<{
   layout?: "side-menu" | "simple-menu" | "top-menu";
 }>();
 
 const appName = import.meta.env.VITE_APP_NAME;
+
+const logout = () => {
+  dashboardStore.toggleScreenMaskValue();
+
+  axios.post('/logout').then(response => {
+    sessionStorage.clear();
+    window.location.href = '/';
+  }).catch((e) => {
+  }).finally(() => {
+    dashboardStore.toggleScreenMaskValue();
+  });
+}
 </script>
 
 <template>
@@ -95,7 +110,7 @@ const appName = import.meta.env.VITE_APP_NAME;
             <Lucide icon="Activity" class="w-4 h-4 mr-2" /> {{ t('components.top-bar.profile_ddl.activity') }}
           </Menu.Item>
           <Menu.Divider class="bg-white/[0.08]" />
-          <Menu.Item class="hover:bg-white/5">
+          <Menu.Item class="hover:bg-white/5" @click="logout">
             <Lucide icon="ToggleRight" class="w-4 h-4 mr-2" /> {{ t('components.top-bar.profile_ddl.logout') }}
           </Menu.Item>
         </Menu.Items>

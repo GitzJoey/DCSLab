@@ -1,13 +1,17 @@
 export class ErrorHandlerService {
-    public handleLaravelError(e: any, actions: any, forceSetToField?: string): void {
-        if (e.response.data.errors !== undefined && Object.keys(e.response.data.errors).length > 0) {
-            for (var key in e.response.data.errors) {
-                for (var i = 0; i < e.response.data.errors[key].size; i++) {
-                    //actions.setFieldError(key, '');
+    public handleLaravelError(data: any, actions: any, forceSetToField?: string): void {
+        if (data.errors !== undefined && Object.keys(data.errors).length > 0) {
+            for (let key in data.errors) {
+                for (let i = 0; i < data.errors[key].length; i++) {
+                    actions.setFieldError(key, data.errors[key][i]);
                 }
             }
         } else {
-            actions.setFieldError(forceSetToField, e.response.status + ' ' + e.response.statusText +': ' + e.response.data.message);
+            if (forceSetToField) {
+                actions.setFieldError(forceSetToField, data.status + ' ' + data.statusText +': ' + data.message);
+            } else {
+                console.error(data.status + ' ' + data.statusText);
+            }
         }
     }
 }
