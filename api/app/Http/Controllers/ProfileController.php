@@ -25,12 +25,13 @@ class ProfileController extends BaseController
 
     public function readProfile()
     {
-        $result = $this->userActions->readBy('ID', Auth::id());
+        //$result = $this->userActions->readBy('ID', Auth::id());
+        $result = $this->userActions->read(Auth::user());
 
         if (is_null($result)) {
             return response()->error();
         } else {
-            $response = new UserResource($result);
+            $response = new UserResource($result, );
 
             return $response;
         }
