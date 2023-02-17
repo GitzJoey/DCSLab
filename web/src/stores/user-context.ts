@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { UserProfileType } from "../types/UserProfileType";
 
 interface UserContextState {
+  isAuthenticated: boolean,
   userContextValue: UserProfileType,
   selectedUserLocationValue: {
     company: {
@@ -15,6 +16,7 @@ interface UserContextState {
 
 export const useUserContextStore = defineStore("userContext", {
   state: (): UserContextState => ({
+    isAuthenticated: false,
     userContextValue: {
       uuid: '',
       name: '',
@@ -36,7 +38,7 @@ export const useUserContextStore = defineStore("userContext", {
       branch: {
         uuid: '',
       }
-    }    
+    }
   }),
   getters: {
     getUserContext: state => state.userContextValue,
