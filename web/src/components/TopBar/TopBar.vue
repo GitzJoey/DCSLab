@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import Lucide from "../../base-components/Lucide";
 import logoUrl from "../../assets/images/logo.svg";
 import Breadcrumb from "../../base-components/Breadcrumb";
@@ -10,10 +11,16 @@ import { TransitionRoot } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
 import axios from "../../axios";
 import { useDashboardStore } from "../../stores/dashboard";
+import { useUserContextStore } from "../../stores/user-context";
+import { useRouter } from "vue-router";
 
 const { t } = useI18n();
+const router = useRouter();
 
 const dashboardStore = useDashboardStore();
+const userContextStore = useUserContextStore();
+
+const userContext = computed(() => userContextStore.getUserContext);
 
 const props = defineProps<{
   layout?: "side-menu" | "simple-menu" | "top-menu";
@@ -100,7 +107,7 @@ const logout = () => {
             </div>
           </Menu.Header>
           <Menu.Divider class="bg-white/[0.08]" />
-          <Menu.Item class="hover:bg-white/5">
+          <Menu.Item class="hover:bg-white/5" @click="router.push({ name: 'side-menu-dashboard-profile' })">
             <Lucide icon="User" class="w-4 h-4 mr-2" /> {{ t('components.top-bar.profile_ddl.profile') }}
           </Menu.Item>
           <Menu.Item class="hover:bg-white/5">

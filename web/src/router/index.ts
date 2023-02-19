@@ -4,6 +4,7 @@ import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 import Login from "../pages/auth/Login.vue";
 import Register from "../pages/auth/Register.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
+import Profile from "../pages/dashboard/Profile.vue";
 import Error from "../pages/dashboard/Error.vue";
 import ErrorPage from "../pages/error/ErrorPage.vue";
 
@@ -40,6 +41,16 @@ const routes = [
         path: "/dashboard/main",
         name: "side-menu-dashboard-maindashboard",
         component: MainDashboard,
+        meta: { 
+          remember: true,
+          log_route: true,
+          skipBeforeEach: false
+        }
+      },
+      {
+        path: "/dashboard/profile",
+        name: "side-menu-dashboard-profile",
+        component: Profile,
         meta: { 
           remember: true,
           log_route: true,
