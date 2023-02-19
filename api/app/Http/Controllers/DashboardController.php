@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Impls\DashboardActions;
+use App\Actions\Dashboard\DashboardActions;
 use Illuminate\Http\Request;
 use Tightenco\Ziggy\Ziggy;
 

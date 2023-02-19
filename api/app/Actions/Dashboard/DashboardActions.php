@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Impls;
+namespace App\Actions\Dashboard;
 
 use App\Enums\UserRoles;
 use App\Traits\CacheHelper;
