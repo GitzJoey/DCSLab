@@ -20,8 +20,8 @@
     "administrator": "Administrator",
     "administrator-user": "Pengguna",
     "devtool": "Dev Tool",
-    "devtool-dbbackup": "DB Backup",
+    "devtool-devtool": "Dev Tool",
     "devtool-playground": "Playground",
-    "devtool-playground-ex1": "Playground 1",
-    "devtool-playground-ex2": "Playground 2"
+    "devtool-playground-p1": "Playground 1",
+    "devtool-playground-p2": "Playground 2"
 }

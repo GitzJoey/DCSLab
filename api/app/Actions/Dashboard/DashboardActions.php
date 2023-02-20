@@ -285,13 +285,13 @@ class DashboardActions
     {
         $dbbackup = [
             'icon' => '',
-            'pageName' => 'side-menu-devtool-backup',
-            'title' => 'components.menu.devtool-dbbackup',
+            'pageName' => 'side-menu-devtool-devtool',
+            'title' => 'components.menu.devtool-devtool',
         ];
 
         $playground = [
             'icon' => '',
-            'pageName' => 'side-menu-devtool-example',
+            'pageName' => 'side-menu-devtool-playground',
             'title' => 'components.menu.devtool-playground',
             'subMenu' => [
             ],
@@ -299,14 +299,14 @@ class DashboardActions
 
         $playground_ex1 = [
             'icon' => '',
-            'pageName' => 'side-menu-devtool-example-ex1',
-            'title' => 'components.menu.devtool-playground-ex1',
+            'pageName' => 'side-menu-devtool-playground-p1',
+            'title' => 'components.menu.devtool-playground-p1',
         ];
 
         $playground_ex2 = [
             'icon' => '',
-            'pageName' => 'side-menu-devtool-example-ex2',
-            'title' => 'components.menu.devtool-playground-ex2',
+            'pageName' => 'side-menu-devtool-playground-p2',
+            'title' => 'components.menu.devtool-playground-p2',
         ];
 
         array_push($playground['subMenu'], $playground_ex1);
