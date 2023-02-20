@@ -31,7 +31,7 @@ class ProfileController extends BaseController
         if (is_null($result)) {
             return response()->error();
         } else {
-            $response = new UserResource($result, );
+            $response = (new UserResource($result))->type('UserProfile');
 
             return $response;
         }

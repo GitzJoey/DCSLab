@@ -7,21 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    protected static $type;
+    protected string $type;
 
-	public static function make(...$parameters)
-	{
-		$resource = $parameters['resource'] ?? $parameters[0];
-		self::$type = $parameters['type'] ?? $parameters[1] ?? null;
-		return parent::make($resource);
-	}
-
-    public static function collection(...$parameters)
-	{
-		$resource = $parameters['resource'] ?? $parameters[0];
-		self::$type = $parameters['type'] ?? $parameters[1] ?? null;
-		return parent::collection($resource);
-	}
+    public function type(string $value) {
+        $this->type = $value;
+        return $this;
+    }
 
     /**
      * Transform the resource into an array.
@@ -31,7 +22,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        if (self::$type == 'UserProfile') {
+        if ($this->type == 'UserProfile') {
             return [
                 $this->mergeWhen(env('APP_DEBUG', false), [
                     'id' => $this->id,
@@ -42,7 +33,7 @@ class UserResource extends JsonResource
                 'emailVerified' => ! is_null($this->email_verified_at),
                 'passwordExpiryDay' => $this->getPasswordExpiryDay($this->password_changed_at),
                 $this->mergeWhen($this->relationLoaded('profile'), [
-                    'profile' => new ProfileResource($this->whenLoaded('profile')),
+                    'profile' => (new ProfileResource($this->whenLoaded('profile')))->type('UserProfile'),
                 ]),
                 $this->mergeWhen($this->relationLoaded('roles'), [
                     'roles' => RoleResource::collection($this->whenLoaded('roles')),

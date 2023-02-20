@@ -12,7 +12,8 @@ export default class CompanyService {
 
     private async axiosGet(url: string): Promise<any> {
         try {
-            return await axios.get(url);
+            let response = await axios.get(url);
+            return response.data;
         } catch (e) {
             return e;
         }
@@ -20,7 +21,8 @@ export default class CompanyService {
 
     private async axiosPost(url: string, data: any): Promise<any> {
         try {
-            return await axios.post(url, data);
+            let response = await axios.post(url, data);
+            return response.data;
         } catch (e) {
             return e;
         }

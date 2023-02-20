@@ -23,11 +23,7 @@ export const useUserContextStore = defineStore("userContext", {
       email: '',
       emailVerified: false,
       profile: {
-        firstName: '',
-        lastName: '',
-        status: '',
-        imgPath: '',
-        remarks: '',
+        fullName: '',
       },
       companies: [],
     },

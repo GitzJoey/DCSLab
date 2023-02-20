@@ -101,7 +101,7 @@ const logout = () => {
           class="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white"
         >
           <Menu.Header class="font-normal">
-            <div class="font-medium">{{ '' }}</div>
+            <div class="font-medium">{{ userContext.profile.fullName }}</div>
             <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">
               {{ '' }}
             </div>

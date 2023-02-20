@@ -34,8 +34,8 @@ export const useSideMenuStore = defineStore("sideMenu", {
     getUserMenu: state => state.menu,
   },
   actions: {
-    setUserMenu(userMenu: SideMenuState) {
-      this.menu = userMenu.menu;
+    setUserMenu(userMenu: Array<Menu>) {
+      this.menu = userMenu;
     }
   } 
 });

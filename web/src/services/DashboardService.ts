@@ -12,7 +12,8 @@ export default class DashboardService {
 
     private async axiosGet(url: string): Promise<any> {
         try {
-            return await axios.get(url);
+            let response = await axios.get(url);
+            return response.data;
         } catch (e) {
             return e;
         }

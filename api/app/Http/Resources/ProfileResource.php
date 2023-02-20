@@ -6,21 +6,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProfileResource extends JsonResource
 {
-    protected static $type;
+    protected string $type;
 
-	public static function make(...$parameters)
-	{
-		$resource = $parameters['resource'] ?? $parameters[0];
-		self::$type = $parameters['type'] ?? $parameters[1] ?? null;
-		return parent::make($resource);
-	}
-
-    public static function collection(...$parameters)
-	{
-		$resource = $parameters['resource'] ?? $parameters[0];
-		self::$type = $parameters['type'] ?? $parameters[1] ?? null;
-		return parent::collection($resource);
-	}
+    public function type(string $value) {
+        $this->type = $value;
+        return $this;
+    }
 
     /**
      * Transform the resource into an array.
@@ -30,18 +21,27 @@ class ProfileResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'firstName' => $this->first_name,
-            'lastName' => $this->last_name,
-            'address' => $this->address,
-            'city' => $this->city,
-            'postalCode' => $this->postal_code,
-            'country' => $this->country,
-            'status' => $this->status->name,
-            'taxId' => $this->tax_id,
-            'icNum' => $this->ic_num,
-            'imgPath' => $this->img_path,
-            'remarks' => $this->remarks,
-        ];
+        if ($this->type == 'UserProfile') {
+            return [
+                'fullName' => $this->first_name.' '.$this->last_name, 
+                'country' => $this->country,
+                'status' => $this->status->name,
+                'imgPath' => $this->img_path,
+            ];
+        } else {
+            return [
+                'firstName' => $this->first_name,
+                'lastName' => $this->last_name,
+                'address' => $this->address,
+                'city' => $this->city,
+                'postalCode' => $this->postal_code,
+                'country' => $this->country,
+                'status' => $this->status->name,
+                'taxId' => $this->tax_id,
+                'icNum' => $this->ic_num,
+                'imgPath' => $this->img_path,
+                'remarks' => $this->remarks,
+            ];
+        }
     }
 }
