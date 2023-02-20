@@ -60,31 +60,19 @@ export default [
                 }
             },
             {
-                path: "/dashboard/devtool",
-                name: "side-menu-devtool",
-                children: [
-                    {
-                        path: "/dashboard/devtool/devtool",
-                        name: "side-menu-devtool-devtool",
-                        component: DevTool
-                    },
-                    {
-                        path: "/dashboard/devtool/playground",
-                        name: "side-menu-devtool-playground",
-                        children: [
-                            {
-                                path: "/dashboard/devtool/playground/p1",
-                                name: "side-menu-devtool-playground-p1",
-                                component: Play1
-                            },
-                            {
-                                path: "/dashboard/devtool/playground/p2",
-                                name: "side-menu-devtool-playground-p2",
-                                component: Play2
-                            }
-                        ]
-                    }
-                ]
+                path: "/dashboard/devtool/devtool",
+                name: "side-menu-devtool-devtool",
+                component: DevTool
+            },
+            {
+                path: "/dashboard/devtool/playground/p1",
+                name: "side-menu-devtool-playground-p1",
+                component: Play1
+            },
+            {
+                path: "/dashboard/devtool/playground/p2",
+                name: "side-menu-devtool-playground-p2",
+                component: Play2
             },
             {
                 path: "/dashboard/error" + "/:code",

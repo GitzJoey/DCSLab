@@ -36,10 +36,6 @@ watch(sideMenu, () => {
 onMounted(() => {
   setFormattedMenu(sideMenu.value);
 });
-
-const toggleScreenMask = (toggle: boolean) => {
-  screenMask.value = toggle ? toggle : !screenMask.value;
-}
 </script>
 
 <template>
