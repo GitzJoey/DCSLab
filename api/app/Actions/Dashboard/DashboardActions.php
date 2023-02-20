@@ -40,7 +40,7 @@ class DashboardActions
 
         $hasDevRole = $usrRoles->where('name', UserRoles::DEVELOPER->value)->isNotEmpty() ? true : false;
 
-        $hasCompany = $usr->companies->count() != 0 ? true : false;
+        $hasCompany = false;//$usr->companies->count() != 0 ? true : false;
 
         $showDemoMenu = false;
 

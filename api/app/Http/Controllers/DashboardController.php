@@ -19,11 +19,6 @@ class DashboardController extends BaseController
         $this->dashboardActions = $dashboardActions;
     }
 
-    public function index()
-    {
-        return view('dashboard.midone');
-    }
-
     public function userMenu(Request $request)
     {
         $menu = [];
@@ -37,6 +32,6 @@ class DashboardController extends BaseController
 
     public function userApi()
     {
-        return response()->json(new Ziggy);
+        return response()->json(new Ziggy(['all']));
     }
 }

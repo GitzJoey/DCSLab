@@ -10,8 +10,11 @@ const userContextStore = useUserContextStore();
 const dashboardService = new DashboardService();
 
 onMounted(async () => {
-  let result = await dashboardService.readProfile();
-  console.log(result);
+  let profile = await dashboardService.readProfile();
+  let menu = await dashboardService.readUserMenu();
+  let api = await dashboardService.readUserApi();
+
+
 });
 
 </script>

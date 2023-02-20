@@ -24,13 +24,13 @@ Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest',
 Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
         
-        Route::group(['prefix' => 'core', 'as' => '.core'], function () {
+        Route::group(['prefix' => 'module', 'as' => '.module'], function () {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function () {
                 Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');
             });
         });
 
-        Route::group(['prefix' => 'helper', 'as' => '.helper'], function () {
+        Route::group(['prefix' => 'core', 'as' => '.core'], function () {
             Route::get('user/menu', [DashboardController::class, 'userMenu'])->name('.user.menu');
             Route::get('user/api', [DashboardController::class, 'userApi'])->name('.user.api');
         }); 

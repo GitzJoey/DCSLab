@@ -12,14 +12,14 @@ export default class DashboardService {
     }
 
     public async readProfile() {
-        return this.axiosCall({ method: 'GET', url: '/api/get/dashboard/core/profile/read' });
+        return this.axiosCall({ method: 'GET', url: '/api/get/dashboard/module/profile/read' });
     }
 
     public async readUserMenu() {
-        
+        return this.axiosCall({ method: 'GET', url: '/api/get/dashboard/core/user/menu'});
     }
 
     public async readUserApi() {
-        
+        return this.axiosCall({ method: 'GET', url: '/api/get/dashboard/core/user/api'});
     }
 }
