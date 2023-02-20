@@ -13,6 +13,7 @@ import axios from "../../axios";
 import { useDashboardStore } from "../../stores/dashboard";
 import { useUserContextStore } from "../../stores/user-context";
 import { useRouter } from "vue-router";
+import Button from "../../base-components/Button";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -84,8 +85,21 @@ const logout = () => {
           props.layout == 'top-menu' && 'md:pl-10',
         ]"
       >
-        <Breadcrumb.Link to="/">Application</Breadcrumb.Link>
-        <Breadcrumb.Link to="/" :active="true"> Dashboard </Breadcrumb.Link>
+        <Breadcrumb.Text>
+          <Menu>
+            <Menu.Button :as="Button" variant="primary">
+              <Lucide icon="Umbrella" />
+            </Menu.Button>
+            <Menu.Items class="w-96 h-96 overflow-y-auto" placement="bottom-start">
+              <Menu.Item><span class="text-primary">January</span></Menu.Item>
+              <Menu.Item>February</Menu.Item>
+              <Menu.Item>March</Menu.Item>
+              <Menu.Item>June</Menu.Item>
+              <Menu.Item>July</Menu.Item>
+            </Menu.Items>
+          </Menu>
+        </Breadcrumb.Text>
+        <Breadcrumb.Text>PT ABC - Cabang Pusat</Breadcrumb.Text>
       </Breadcrumb>
 
       <Menu>
