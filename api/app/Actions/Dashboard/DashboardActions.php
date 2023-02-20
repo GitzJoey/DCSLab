@@ -283,7 +283,7 @@ class DashboardActions
 
     private function createMenu_DevTool(array $menu, bool $hasDevRole): array
     {
-        $dbbackup = [
+        $devtool = [
             'icon' => '',
             'pageName' => 'side-menu-devtool-devtool',
             'title' => 'components.menu.devtool-devtool',
@@ -320,7 +320,7 @@ class DashboardActions
             ],
         ];
 
-        array_push($root_array['subMenu'], $dbbackup);
+        array_push($root_array['subMenu'], $devtool);
         array_push($root_array['subMenu'], $playground);
 
         if ($hasDevRole) {
