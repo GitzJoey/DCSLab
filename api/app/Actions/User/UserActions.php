@@ -30,7 +30,7 @@ class UserActions
         $timer_start = microtime(true);
 
         try {
-            //throw New \Exception('Test Exception From Services');
+            //throw New \Exception('Test Exception From Actions');
 
             $usr = new User();
             $usr->name = $userArr['name'];

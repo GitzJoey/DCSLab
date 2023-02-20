@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { UserProfileType } from "../types/UserProfileType";
 
-interface UserContextState {
-  isAuthenticated: boolean,
+export interface UserContextState {
+  isAuthenticatedValue: boolean,
   userContextValue: UserProfileType,
   selectedUserLocationValue: {
     company: {
@@ -16,7 +16,7 @@ interface UserContextState {
 
 export const useUserContextStore = defineStore("userContext", {
   state: (): UserContextState => ({
-    isAuthenticated: false,
+    isAuthenticatedValue: false,
     userContextValue: {
       uuid: '',
       name: '',
@@ -41,14 +41,17 @@ export const useUserContextStore = defineStore("userContext", {
     }
   }),
   getters: {
+    getIsAuthenticated: state => state.isAuthenticatedValue,
     getUserContext: state => state.userContextValue,
     getSelectedUserLocation: state => state.selectedUserLocationValue,
     getSelectedUserCompany: state => state.selectedUserLocationValue.company,
     getSelectedUserBranch: state => state.selectedUserLocationValue.branch,
   },
   actions: {
-    setUserContext(userContext: UserContextState) {
-      this.userContextValue = userContext.userContextValue;
+    setUserContext(userContext: UserProfileType) {
+      this.userContextValue = userContext;
+
+      this.isAuthenticatedValue = true;
     },
     setSelectedUserLocation(companyId: string, branchId: string) {
       this.selectedUserLocationValue.company.uuid = companyId;

@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { useDashboardStore } from '../../stores/dashboard';
 import { useUserContextStore } from '../../stores/user-context';
+import { UserProfileType } from '../../types/UserProfileType';
 import DashboardService from '../../services/DashboardService';
 
 const dashboardStore = useDashboardStore();

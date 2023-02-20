@@ -32,6 +32,6 @@ class DashboardController extends BaseController
 
     public function userApi()
     {
-        return response()->json(new Ziggy(['all']));
+        return response()->json(new Ziggy());
     }
 }
