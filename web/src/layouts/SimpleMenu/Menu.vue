@@ -9,6 +9,7 @@ import { useRouter } from "vue-router";
 import Lucide from "../../base-components/Lucide";
 import Tippy from "../../base-components/Tippy";
 import { FormattedMenu, linkTo } from "./simple-menu";
+import { useI18n } from "vue-i18n";
 
 interface MenuProps {
   class?: string | object;
@@ -20,6 +21,7 @@ interface MenuProps {
   level: "first" | "second" | "third";
 }
 
+const { t } = useI18n();
 const router = useRouter();
 const props = defineProps<MenuProps>();
 const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
@@ -31,7 +33,7 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
     :options="{
       placement: 'left',
     }"
-    :content="props.menu.title"
+    :content="t(props.menu.title)"
     :href="
       props.menu.subMenu
         ? '#'

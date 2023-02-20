@@ -9,6 +9,7 @@ import { useRouter } from "vue-router";
 import Lucide from "../../base-components/Lucide";
 import SideMenuTooltip from "./SideMenuTooltip.vue";
 import { FormattedMenu, linkTo } from "./side-menu";
+import { useI18n } from "vue-i18n";
 
 interface MenuProps {
   class?: string | object;
@@ -20,6 +21,7 @@ interface MenuProps {
   level: "first" | "second" | "third";
 }
 
+const { t } = useI18n();
 const router = useRouter();
 const props = defineProps<MenuProps>();
 const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
@@ -93,7 +95,7 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
         },
       ]"
     >
-      {{ props.menu.title }}
+      {{ t(props.menu.title) }}
 
       <div
         v-if="props.menu.subMenu"
