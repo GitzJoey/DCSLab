@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Table from "../../base-components/Table";
-import { FormInput } from "../../base-components/Form";
+import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { Menu } from "../../base-components/Headless";
 import Lucide from "../../base-components/Lucide";
-
+import Pagination from "../../base-components/Pagination";
 </script>
 
 <template>
@@ -12,9 +12,9 @@ import Lucide from "../../base-components/Lucide";
         <div class="grid justify-items-end">
             <div class="flex flex-row gap-2">
                 <div class="relative w-56 text-slate-500">
-                    <FormInput
+                    <FormInput                        
                         type="text"
-                        class="w-56 pr-10 !box"
+                        class="w-56 pr-10"
                         placeholder="Search..."
                     />
                     <Lucide
@@ -22,13 +22,13 @@ import Lucide from "../../base-components/Lucide";
                         class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
                     />
                 </div>
-                <Button variant="outline-primary">
+                <Button>
                     <Lucide icon="RefreshCw" class="w-4 h-4" />
                 </Button>
                 <Menu>
-                    <Menu.Button :as="Button" class="px-2 !box">
+                    <Menu.Button :as="Button" class="px-2">
                         <span class="flex items-center justify-center w-5 h-5">
-                            <Lucide icon="Plus" class="w-4 h-4" />
+                            <Lucide icon="Printer" class="w-4 h-4" />
                         </span>
                     </Menu.Button>
                     <Menu.Items class="w-40" placement="bottom-end">
@@ -45,7 +45,7 @@ import Lucide from "../../base-components/Lucide";
                 </Menu>
             </div>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto mb-4">
             <Table class="mt-5">
                 <Table.Thead variant="light">
                     <Table.Tr>
@@ -76,6 +76,33 @@ import Lucide from "../../base-components/Lucide";
                     </Table.Tr>
                 </Table.Tbody>
             </Table>
+        </div>
+        <div class="flex flex-wrap items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap">
+            <Pagination class="w-full sm:w-auto sm:mr-auto">
+                <Pagination.Link>
+                    <Lucide icon="ChevronsLeft" class="w-4 h-4" />
+                </Pagination.Link>
+                <Pagination.Link>
+                    <Lucide icon="ChevronLeft" class="w-4 h-4" />
+                </Pagination.Link>
+                <Pagination.Link>...</Pagination.Link>
+                <Pagination.Link>1</Pagination.Link>
+                <Pagination.Link active>2</Pagination.Link>
+                <Pagination.Link>3</Pagination.Link>
+                <Pagination.Link>...</Pagination.Link>
+                <Pagination.Link>
+                    <Lucide icon="ChevronRight" class="w-4 h-4" />
+                </Pagination.Link>
+                <Pagination.Link>
+                    <Lucide icon="ChevronsRight" class="w-4 h-4" />
+                </Pagination.Link>
+            </Pagination>
+            <FormSelect class="w-20 mt-3 sm:mt-0">
+                <option>10</option>
+                <option>25</option>
+                <option>35</option>
+                <option>50</option>
+            </FormSelect>
         </div>
     </div>
 </template>
