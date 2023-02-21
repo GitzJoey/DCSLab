@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { onMounted, computed, ref } from "vue";
 import Lucide from "../../base-components/Lucide";
 import logoUrl from "../../assets/images/logo.svg";
 import Breadcrumb from "../../base-components/Breadcrumb";
@@ -16,6 +16,7 @@ import { useRouter } from "vue-router";
 import Button from "../../base-components/Button";
 import DashboardService from '../../services/DashboardService';
 import { UserProfileType } from '../../types/UserProfileType';
+import LoadingIcon from "../../base-components/LoadingIcon";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -45,9 +46,15 @@ const logout = () => {
   });
 }
 
+const loading = ref(false);
+
 onMounted(async () => {
+  loading.value = true;
+
   let userprofile = await dashboardService.readProfile();
   userContextStore.setUserContext(userprofile.data as UserProfileType);
+
+  loading.value = false;
 })
 </script>
 
@@ -100,11 +107,7 @@ onMounted(async () => {
               <Lucide icon="Umbrella" />
             </Menu.Button>
             <Menu.Items class="w-96 h-96 overflow-y-auto" placement="bottom-start">
-              <Menu.Item><span class="text-primary">January</span></Menu.Item>
-              <Menu.Item>February</Menu.Item>
-              <Menu.Item>March</Menu.Item>
-              <Menu.Item>June</Menu.Item>
-              <Menu.Item>July</Menu.Item>
+              <Menu.Item><span class="text-primary">PT ABC - Cabang Pusat</span></Menu.Item>
             </Menu.Items>
           </Menu>
         </Breadcrumb.Text>
@@ -118,7 +121,9 @@ onMounted(async () => {
           <img
             alt="Midone Tailwind HTML Admin Template"
             :src="defUserUrl"
+            v-if="!loading"
           />
+          <LoadingIcon icon="puff" v-else />
         </Menu.Button>
         <Menu.Items
           class="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white"

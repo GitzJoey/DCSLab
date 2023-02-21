@@ -199,6 +199,8 @@ const slideDown = (
   }, duration);
 };
 
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
 export {
   cutText,
   formatDate,
@@ -214,4 +216,5 @@ export {
   stringToHTML,
   slideUp,
   slideDown,
+  sleep
 };

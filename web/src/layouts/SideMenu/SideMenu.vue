@@ -42,6 +42,8 @@ watch(sideMenu, () => {
 });
 
 onMounted(async () => {
+  dashboardStore.toggleScreenMaskValue();
+
   let menu = await dashboardService.readUserMenu();
   sideMenuStore.setUserMenu(menu as Array<sMenu>);
 
@@ -49,6 +51,8 @@ onMounted(async () => {
   ziggyRouteStore.setZiggy(api as Config)
 
   setFormattedMenu(sideMenu.value);
+  
+  dashboardStore.toggleScreenMaskValue();
 });
 </script>
 
