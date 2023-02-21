@@ -58,11 +58,11 @@ onMounted(async () => {
       <DarkModeSwitcher />
       <MainColorSwitcher />
       <MobileMenu />
-      <TopBar layout="side-menu" />
+      <TopBar :layout="dashboardStore.getLayoutValue" />
       <div class="flex overflow-hidden">
         <nav
           class="w-[105px] px-5 pb-16 overflow-x-hidden z-50 pt-32 -mt-4 hidden md:block"
-          v-if="false"
+          v-if="dashboardStore.getLayoutValue == 'simple-menu'"
         >
           <ul>
             <template v-for="(menu, menuKey) in formattedMenu">
