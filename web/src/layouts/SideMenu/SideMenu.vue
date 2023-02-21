@@ -8,14 +8,20 @@ import TopBar from "../../components/TopBar";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import MobileMenu from "../../components/MobileMenu";
-import { useSideMenuStore } from "../../stores/side-menu";
+import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
 import { FormattedMenu, nestedMenu, enter, leave } from "./side-menu";
 import { watch, reactive, computed, onMounted } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
 import { useDashboardStore } from "../../stores/dashboard";
+import DashboardService from "../../services/DashboardService";
+import { useZiggyRouteStore } from "../../stores/ziggy-route";
+import { Config } from "ziggy-js";
 
 const route = useRoute();
+
+const dashboardService = new DashboardService();
+
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
 const setFormattedMenu = (
   computedFormattedMenu: Array<FormattedMenu | "divider">
@@ -27,13 +33,21 @@ const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 
 const dashboardStore = useDashboardStore();
 
+const ziggyRouteStore = useZiggyRouteStore();
+
 const screenMask = computed(() => dashboardStore.screenMaskValue );
 
 watch(sideMenu, () => {
   setFormattedMenu(sideMenu.value);
 });
 
-onMounted(() => {
+onMounted(async () => {
+  let menu = await dashboardService.readUserMenu();
+  sideMenuStore.setUserMenu(menu as Array<sMenu>);
+
+  let api = await dashboardService.readUserApi();
+  ziggyRouteStore.setZiggy(api as Config)
+
   setFormattedMenu(sideMenu.value);
 });
 </script>

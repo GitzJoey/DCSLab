@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { onMounted, computed } from "vue";
 import Lucide from "../../base-components/Lucide";
 import logoUrl from "../../assets/images/logo.svg";
 import Breadcrumb from "../../base-components/Breadcrumb";
@@ -14,9 +14,13 @@ import { useDashboardStore } from "../../stores/dashboard";
 import { useUserContextStore } from "../../stores/user-context";
 import { useRouter } from "vue-router";
 import Button from "../../base-components/Button";
+import DashboardService from '../../services/DashboardService';
+import { UserProfileType } from '../../types/UserProfileType';
 
 const { t } = useI18n();
 const router = useRouter();
+
+const dashboardService = new DashboardService();
 
 const dashboardStore = useDashboardStore();
 const userContextStore = useUserContextStore();
@@ -40,6 +44,11 @@ const logout = () => {
     dashboardStore.toggleScreenMaskValue();
   });
 }
+
+onMounted(async () => {
+  let userprofile = await dashboardService.readProfile();
+  userContextStore.setUserContext(userprofile.data as UserProfileType);
+})
 </script>
 
 <template>
