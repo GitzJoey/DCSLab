@@ -1,10 +1,88 @@
 <script setup lang="ts">
+import { computed, ref, toRef } from "vue";
 import Table from "../../base-components/Table";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { Menu } from "../../base-components/Headless";
 import Lucide from "../../base-components/Lucide";
 import Pagination from "../../base-components/Pagination";
+import { useI18n } from "vue-i18n";
+
+const props = defineProps({
+    visible: { type: Boolean, default: true },
+    canPrint: { type: Boolean, default: false },
+    canExport: { type: Boolean, default: false },
+    enableSearch: { type: Boolean, default: false },
+    data: { type: Object, default: null },
+});
+
+const emit = defineEmits(['dataListChange', 'print', 'export']);
+
+const visible = toRef(props, 'visible');
+const canPrint = toRef(props, 'canPrint');
+const canExport = toRef(props, 'canExport');
+const enableSearch = toRef(props, 'enableSearch');
+const data = toRef(props, 'data');
+
+const search = ref('');
+const pageSize = ref(10);
+
+const dataNotFound = computed(() => {
+    if (data.value == null) return true;
+
+    return false;
+});
+
+const pages = computed(() => {
+    if (data.value.meta.current_page !== undefined && data.value.meta.last_page !== undefined) {
+         return paginate(data.value.meta.current_page, data.value.meta.total, 2, '...');
+    } else {
+        return [];
+    }
+});
+
+const first = computed(() => { return 1; });
+
+let previous = computed(() => {
+    if (data.value.meta.current_page === undefined) return 1;
+    if (data.value.meta.current_page === 1) return 1;
+    return data.value.meta.current_page - 1;
+});
+
+const next = computed(() => {
+    if (data.value.meta.current_page === undefined) return 1;
+    if (data.value.meta.current_page === data.value.meta.last_page) return data.value.meta.last_page;
+    return data.value.meta.current_page + 1;
+});
+
+const last = computed(() => { return data.value.meta.last_page; });
+
+const paginate = (current: number, total: number, delta = 2, gap = '...') => {
+    if (total <= 1) return [1]
+
+    const center = [current] as (number | typeof gap)[]
+
+    for (let i = 1; i <= delta; i++) {
+        center.unshift(current - i)
+        center.push(current + i)
+    }
+
+    const filteredCenter = center.filter((page) => page > 1 && page < total)
+
+    const includeLeftGap = current > 3 + delta
+    const includeLeftPages = current === 3 + delta
+    const includeRightGap = current < total - (2 + delta)
+    const includeRightPages = current === total - (2 + delta)
+
+    if (includeLeftPages) filteredCenter.unshift(2)
+    if (includeRightPages) filteredCenter.push(total - 1)
+    if (includeLeftGap) filteredCenter.unshift(gap)
+    if (includeRightGap) filteredCenter.push(gap)
+
+    return [1, ...filteredCenter, total]
+}
+
+
 </script>
 
 <template>
@@ -97,7 +175,7 @@ import Pagination from "../../base-components/Pagination";
                     <Lucide icon="ChevronsRight" class="w-4 h-4" />
                 </Pagination.Link>
             </Pagination>
-            <FormSelect class="w-20 mt-3 sm:mt-0">
+            <FormSelect class="w-20 mt-3 sm:mt-0" v-model="pageSize">
                 <option>10</option>
                 <option>25</option>
                 <option>35</option>
