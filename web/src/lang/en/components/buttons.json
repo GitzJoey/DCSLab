@@ -12,5 +12,6 @@
     "auto": "Auto",
     "new_order": "New Order",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "create_new": "Create New"
 }

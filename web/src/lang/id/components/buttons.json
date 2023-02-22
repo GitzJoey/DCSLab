@@ -10,5 +10,8 @@
     "submit": "Kirim",
     "send_verification_email": "Kirim Email Verifikasi",
     "auto": "Auto",
-    "new_order": "Order Baru"
+    "new_order": "Order Baru",
+    "login": "Login",
+    "register": "Register",
+    "create_new": "Tambah Baru"
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from "vue";
-import Table from "../../base-components/Table";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { Menu } from "../../base-components/Headless";
@@ -81,8 +80,6 @@ const paginate = (current: number, total: number, delta = 2, gap = '...') => {
 
     return [1, ...filteredCenter, total]
 }
-
-
 </script>
 
 <template>
@@ -124,38 +121,9 @@ const paginate = (current: number, total: number, delta = 2, gap = '...') => {
             </div>
         </div>
         <div class="overflow-x-auto mb-4">
-            <Table class="mt-5">
-                <Table.Thead variant="light">
-                    <Table.Tr>
-                    <Table.Th class="whitespace-nowrap">#</Table.Th>
-                    <Table.Th class="whitespace-nowrap"> First Name </Table.Th>
-                    <Table.Th class="whitespace-nowrap"> Last Name </Table.Th>
-                    <Table.Th class="whitespace-nowrap"> Username </Table.Th>
-                    </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                    <Table.Tr>
-                    <Table.Td>1</Table.Td>
-                    <Table.Td>Angelina</Table.Td>
-                    <Table.Td>Jolie</Table.Td>
-                    <Table.Td>@angelinajolie</Table.Td>
-                    </Table.Tr>
-                    <Table.Tr>
-                    <Table.Td>2</Table.Td>
-                    <Table.Td>Brad</Table.Td>
-                    <Table.Td>Pitt</Table.Td>
-                    <Table.Td>@bradpitt</Table.Td>
-                    </Table.Tr>
-                    <Table.Tr>
-                    <Table.Td>3</Table.Td>
-                    <Table.Td>Charlie</Table.Td>
-                    <Table.Td>Hunnam</Table.Td>
-                    <Table.Td>@charliehunnam</Table.Td>
-                    </Table.Tr>
-                </Table.Tbody>
-            </Table>
+            <slot name="table" :dataList="data"></slot>
         </div>
-        <div class="flex flex-wrap items-center col-span-12 intro-y sm:flex-row sm:flex-nowrap">
+        <div class="flex flex-wrap intro-y sm:flex-row sm:flex-nowrap">
             <Pagination class="w-full sm:w-auto sm:mr-auto">
                 <Pagination.Link>
                     <Lucide icon="ChevronsLeft" class="w-4 h-4" />

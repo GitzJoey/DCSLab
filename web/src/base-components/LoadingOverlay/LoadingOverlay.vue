@@ -3,7 +3,7 @@ import { toRef, computed } from "vue";
 
 const props = defineProps({
     visible: {type: Boolean, default: false},
-    transparent: {type: Boolean, default: true}
+    transparent: {type: Boolean, default: false}
 });
 
 const visible = toRef(props, 'visible');

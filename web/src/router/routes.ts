@@ -9,6 +9,7 @@ import Play1 from "../pages/dev/Play1.vue";
 import Play2 from "../pages/dev/Play2.vue";
 import Error from "../pages/dashboard/Error.vue";
 import ErrorPage from "../pages/error/ErrorPage.vue";
+import User from "../pages/administrator/User.vue";
 
 export default [
     {
@@ -60,19 +61,42 @@ export default [
                 }
             },
             {
-                path: "/dashboard/devtool/devtool",
-                name: "side-menu-devtool-devtool",
-                component: DevTool
+                path: "/dashboard/administrator",
+                name: "side-menu-administrator",
+                children: [
+                    {
+                        path: "/dashboard/administrator/user",
+                        name: "side-menu-administrator-user",
+                        component: User
+                    }                    
+                ]
             },
             {
-                path: "/dashboard/devtool/playground/p1",
-                name: "side-menu-devtool-playground-p1",
-                component: Play1
-            },
-            {
-                path: "/dashboard/devtool/playground/p2",
-                name: "side-menu-devtool-playground-p2",
-                component: Play2
+                path: "/dashboard/devtool",
+                name: "side-menu-devtool",
+                children: [
+                    {
+                        path: "/dashboard/devtool/devtool",
+                        name: "side-menu-devtool-devtool",
+                        component: DevTool
+                    },
+                    {
+                        path: "/dashboard/devtool/playground",
+                        name: "side-menu-devtool-playground",
+                        children: [
+                            {
+                                path: "/dashboard/devtool/playground/p1",
+                                name: "side-menu-devtool-playground-p1",
+                                component: Play1
+                            },
+                            {
+                                path: "/dashboard/devtool/playground/p2",
+                                name: "side-menu-devtool-playground-p2",
+                                component: Play2
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 path: "/dashboard/error" + "/:code",
