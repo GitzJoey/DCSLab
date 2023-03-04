@@ -2,17 +2,10 @@
 
 namespace App\Models;
 
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PurchaseOrder extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
-
     protected $fillable = [
         'company_id',
         'branch_id',
@@ -24,13 +17,6 @@ class PurchaseOrder extends Model
         'remarks',
         'status',
     ];
-
-    public function hId(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => HashIds::encode($this->attributes['id'])
-        );
-    }
 
     public function company()
     {
