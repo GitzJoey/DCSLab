@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('payment_term')->default(0);
             $table->boolean('taxable_enterprise')->default(false);
             $table->string('tax_id')->nullable();
-			$table->integer('status')->default(0);
+            $table->integer('status')->default(0);
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
