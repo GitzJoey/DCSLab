@@ -38,11 +38,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'is_member',
-                'name',
-                'zone',
-                'taxable_enterprise',
-                'status'
+                'name'
             ]);
         });
     }

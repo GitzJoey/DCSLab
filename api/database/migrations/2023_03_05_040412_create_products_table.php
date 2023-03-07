@@ -36,13 +36,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'name',
-                'product_type',
-                'taxable_supply',
-                'price_include_vat',
-                'use_serial_number',
-                'has_expiry_date',
-                'status'
+                'name'
             ]);
         });
     }

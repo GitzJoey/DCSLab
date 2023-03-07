@@ -31,9 +31,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'name',
-                'is_main',
-                'status'
+                'name'
             ]);
         });
     }

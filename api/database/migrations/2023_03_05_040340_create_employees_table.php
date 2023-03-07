@@ -26,9 +26,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index([
-                'code',
-                'join_date',
-                'status'
+                'code'
             ]);
         });
     }

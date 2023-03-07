@@ -29,9 +29,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index([
-                'code',
-                'is_base',
-                'is_primary_unit'
+                'code'
             ]);
         });
     }
