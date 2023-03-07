@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('supplier_id')->references('id')->on('suppliers');
             $table->foreignId('product_id')->references('id')->on('products');
-            $table->integer('main_product')->nullable()->default(0);
+            $table->integer('main_product')->default(0);
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
