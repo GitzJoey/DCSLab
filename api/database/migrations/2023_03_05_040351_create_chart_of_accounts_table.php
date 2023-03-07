@@ -31,10 +31,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'name',
-                'can_have_child',
-                'account_type',
-                'status'
+                'name'
             ]);
         });
     }

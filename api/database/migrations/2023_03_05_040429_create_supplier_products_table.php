@@ -23,8 +23,6 @@ return new class extends Migration
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['main_product']);
         });
     }
 

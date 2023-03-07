@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('discount_type');
             $table->decimal('amount', 19, 8)->default(0);
             $table->timestamps();
-
-            $table->index(['discount_type']);
         });
     }
 

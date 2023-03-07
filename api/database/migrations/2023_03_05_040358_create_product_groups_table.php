@@ -26,8 +26,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'name',
-                'category'
+                'name'
             ]);
         });
     }

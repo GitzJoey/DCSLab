@@ -35,9 +35,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'name',
-                'taxable_enterprise',
-                'status'
+                'name'
             ]);
         });
     }
