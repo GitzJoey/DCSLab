@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('company_user', function (Blueprint $table) {
             $table->id();
-            $table->ulid();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('company_id')->references('id')->on('companies');
         });
