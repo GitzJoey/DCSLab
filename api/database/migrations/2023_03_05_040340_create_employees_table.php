@@ -18,14 +18,18 @@ return new class extends Migration
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('code');
             $table->date('join_date')->nullable();
-            $table->integer('status')->nullable();
+            $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['join_date', 'status']);
+            $table->index([
+                'code',
+                'join_date',
+                'status'
+            ]);
         });
     }
 

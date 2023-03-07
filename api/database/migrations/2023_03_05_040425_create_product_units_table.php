@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('unit_id')->references('id')->on('units');
-            $table->string('code')->nullable();
+            $table->string('code');
             $table->boolean('is_base')->default(false);
             $table->decimal('conversion_value', 19, 2)->nullable();
             $table->boolean('is_primary_unit')->default(false);

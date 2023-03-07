@@ -16,20 +16,25 @@ return new class extends Migration
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->string('code');
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('contact')->nullable();
             $table->boolean('is_main')->default(false);
             $table->string('remarks')->nullable();
-            $table->integer('status')->nullable();
+            $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['name', 'status']);
+            $table->index([
+                'code',
+                'name',
+                'is_main',
+                'status'
+            ]);
         });
     }
 

@@ -15,17 +15,21 @@ return new class extends Migration
             $table->id();
             $table->ulid();
             $table->string('code');
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('address')->nullable();
             $table->boolean('default')->default(false);
-            $table->integer('status')->nullable();
+            $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['name', 'status']);
+            $table->index([
+                'code',
+                'name',
+                'status'
+            ]);
         });
     }
 

@@ -17,19 +17,23 @@ return new class extends Migration
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->string('code');
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('contact')->nullable();
             $table->string('remarks')->nullable();
-            $table->integer('status')->nullable();
+            $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['name', 'status']);
+            $table->index([
+                'code',
+                'name',
+                'status'
+            ]);
         });
     }
 
