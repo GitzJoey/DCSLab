@@ -1,0 +1,7 @@
+{
+    "name": "api",
+    "scripts": {
+        "serve": "php artisan serve"
+      }
+    
+}
