@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('customer_addresses', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('customer_id')->references('id')->on('customers');
@@ -26,6 +26,8 @@ return new class extends Migration
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['is_main']);
         });
     }
 

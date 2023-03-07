@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('purchase_order_product_units', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->decimal('product_unit_global_discount_percent', 19, 8)->default(0);
             $table->decimal('product_unit_global_discount_nominal', 19, 8)->default(0);
             $table->decimal('product_unit_final_price', 19, 8)->default(0);
-            $table->integer('vat_status')->index();
+            $table->integer('vat_status');
             $table->decimal('vat_rate', 19, 8);
             $table->decimal('vat_amount', 19, 8);
             $table->string('remarks')->nullable();
@@ -39,6 +39,8 @@ return new class extends Migration
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['vat_status']);
         });
     }
 

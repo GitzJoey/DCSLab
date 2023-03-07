@@ -12,15 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('purchase_order_discounts', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('purchase_order_id')->nullable()->references('id')->on('purchase_orders');
             $table->foreignId('purchase_order_product_unit_id')->nullable()->references('id')->on('purchase_order_product_units');
-            $table->string('discount_type')->index();
+            $table->string('discount_type');
             $table->decimal('amount', 19, 8)->default(0);
             $table->timestamps();
+
+            $table->index(['discount_type']);
         });
     }
 

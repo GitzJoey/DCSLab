@@ -11,24 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('customer_groups', function (Blueprint $table) {
             $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
-            $table->foreignId('customer_group_id')->references('id')->on('customer_groups');
-            $table->foreignId('user_id')->nullable()->references('id')->on('users');
             $table->string('code');
-            $table->integer('is_member');
             $table->string('name');
-            $table->string('zone')->nullable();
             $table->integer('max_open_invoice')->default(0);
             $table->decimal('max_outstanding_invoice', $precision = 16, $scale = 8)->default(0);
             $table->integer('max_invoice_age')->default(0);
             $table->string('payment_term_type');
             $table->integer('payment_term')->default(0);
-            $table->boolean('taxable_enterprise')->default(false);
-            $table->string('tax_id')->nullable();
-            $table->integer('status')->default(0);
+            $table->decimal('selling_point', $precision = 8, $scale = 2)->default(0);
+            $table->decimal('selling_point_multiple', $precision = 16, $scale = 8)->default(0);
+            $table->integer('sell_at_cost')->default(0);
+            $table->decimal('price_markup_percent', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('price_markup_nominal', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('price_markdown_percent', $precision = 16, $scale = 8)->default(0);
+            $table->decimal('price_markdown_nominal', $precision = 16, $scale = 8)->default(0);
+            $table->integer('round_on')->default(0);
+            $table->integer('round_digit')->default(0);
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
@@ -38,11 +40,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'is_member',
-                'name',
-                'zone',
-                'taxable_enterprise',
-                'status'
+                'name'
             ]);
         });
     }
@@ -52,6 +50,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('customer_grops');
     }
 };

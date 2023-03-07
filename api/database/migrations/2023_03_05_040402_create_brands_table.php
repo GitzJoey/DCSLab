@@ -12,16 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('brands', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
-            $table->string('code')->index();
-            $table->string('name')->index();
+            $table->string('code');
+            $table->string('name');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index([
+                'code',
+                'name'
+            ]);
         });
     }
 

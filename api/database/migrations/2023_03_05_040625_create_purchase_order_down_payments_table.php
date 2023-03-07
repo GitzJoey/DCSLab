@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('purchase_order_down_payments', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('purchase_order_id')->references('id')->on('purchase_orders');
             $table->foreignId('coa_cash_and_bank_id')->references('id')->on('chart_of_accounts');
-            $table->string('payment_code')->index();
-            $table->dateTime('date')->index();
+            $table->string('payment_code');
+            $table->dateTime('date');
             $table->integer('payment_term');
             $table->decimal('amount', 19, 8)->default(0);
             $table->string('remarks')->nullable();
@@ -28,6 +28,11 @@ return new class extends Migration
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index([
+                'payment_code',
+                'date'
+            ]);
         });
     }
 

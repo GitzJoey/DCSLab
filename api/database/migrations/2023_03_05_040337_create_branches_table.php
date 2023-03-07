@@ -12,22 +12,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('branches', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
-            $table->string('code')->index();
-            $table->string('name')->nullable()->index();
+            $table->string('code');
+            $table->string('name');
             $table->string('address')->nullable();
             $table->string('city')->nullable();
             $table->string('contact')->nullable();
             $table->boolean('is_main')->default(false);
             $table->string('remarks')->nullable();
-            $table->integer('status')->nullable()->index();
+            $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index([
+                'code',
+                'name',
+                'is_main',
+                'status'
+            ]);
         });
     }
 

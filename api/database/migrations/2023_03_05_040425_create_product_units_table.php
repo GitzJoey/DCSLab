@@ -12,21 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_units', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->ulid();
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('unit_id')->references('id')->on('units');
-            $table->string('code')->nullable()->index();
-            $table->boolean('is_base')->default(false)->index();
+            $table->string('code');
+            $table->boolean('is_base')->default(false);
             $table->decimal('conversion_value', 19, 2)->nullable();
-            $table->boolean('is_primary_unit')->default(false)->index();
+            $table->boolean('is_primary_unit')->default(false);
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index([
+                'code',
+                'is_base',
+                'is_primary_unit'
+            ]);
         });
     }
 
