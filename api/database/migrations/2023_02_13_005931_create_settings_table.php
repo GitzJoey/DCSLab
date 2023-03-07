@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
+            $table->ulid();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->string('type');
             $table->string('key');
@@ -22,8 +23,6 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->timestamps();
-
-            $table->index(['user_id']);
         });
     }
 
