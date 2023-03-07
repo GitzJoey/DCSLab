@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Actions\Role\RoleActions;
+use App\Models\Permission;
 use App\Models\Role;
 use Exception;
 use Faker\Factory as Faker;
@@ -19,9 +19,7 @@ class RoleTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        $roleActions = new RoleActions();
-
-        $permissions = $roleActions->getAllPermissions()->pluck('id')->toArray();
+        $permissions = Permission::get()->pluck('id')->toArray();
 
         for ($i = 0; $i < $count; $i++) {
             try {

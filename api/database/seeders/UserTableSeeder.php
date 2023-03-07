@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Actions\Role\RoleActions;
 use App\Enums\UserRoles;
 use App\Models\Profile;
+use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -26,8 +26,6 @@ class UserTableSeeder extends Seeder
 
         $faker = \Faker\Factory::create('id_ID');
 
-        $roleActions = new RoleActions();
-
         for ($i = 0; $i < $count; $i++) {
             $name = $faker->name;
 
@@ -41,10 +39,10 @@ class UserTableSeeder extends Seeder
 
             $usr->settings()->saveMany($setting);
 
-            $roles = $roleActions->readBy('NAME', $role);
+            $roles = Role::where('name', '=', $role)->first();
 
             if (! $roles) {
-                $roles = $roleActions->readBy('NAME', UserRoles::USER->value);
+                $roles = Role::where('name', '=', UserRoles::USER->value);
             }
 
             $usr->attachRoles([$roles->id]);
