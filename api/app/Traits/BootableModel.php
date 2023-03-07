@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Str;
+
 trait BootableModel
 {
     public static function boot()
@@ -9,6 +11,8 @@ trait BootableModel
         parent::boot();
 
         static::creating(function ($model) {
+            $model->ulid = Str::ulid()->toRfc4122();
+
             $user = auth()->check();
             if ($user) {
                 $model->created_by = auth()->id();
