@@ -16,7 +16,7 @@ return new class extends Migration
     {
         if (Schema::hasTable('users')) {
             Schema::table('users', function (Blueprint $table) {
-                $table->uuid()->nullable();
+                $table->ulid();
                 $table->timestamp('password_changed_at')->nullable();
             });
         }
@@ -25,7 +25,7 @@ return new class extends Migration
         $driver = config("database.connections.{$connection}.driver");
 
         if ($driver != 'sqlite') {
-            DB::statement('ALTER TABLE users CHANGE COLUMN uuid uuid CHAR(36) NULL DEFAULT NULL AFTER id');
+            DB::statement('ALTER TABLE users CHANGE COLUMN ulid ulid CHAR(36) NULL DEFAULT NULL AFTER id');
             DB::statement('ALTER TABLE users CHANGE COLUMN password_changed_at password_changed_at TIMESTAMP NULL DEFAULT NULL AFTER password');
         }
     }
