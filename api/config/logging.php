@@ -56,7 +56,7 @@ return [
             'path' => storage_path('logs/cachehits.log'),
             'level' => 'info',
         ],
-       
+
         'perfs' => [
             'driver' => 'single',
             'path' => storage_path('logs/performances.log'),
