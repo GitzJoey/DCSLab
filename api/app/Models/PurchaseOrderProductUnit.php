@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Traits\BootableModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Branch;
 use App\Models\Company;
+use App\Models\Branch;
 use App\Models\PurchaseOrder;
 use App\Models\Product;
 use App\Models\ProductUnit;
@@ -14,6 +15,7 @@ use App\Models\PurchaseOrderDiscount;
 
 class PurchaseOrderProductUnit extends Model
 {
+    use HasFactory;
     use BootableModel;
 
     protected $fillable = [

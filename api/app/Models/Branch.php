@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Models;
+
 use App\Traits\BootableModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Company;
 use App\Models\EmployeeAccess;
 use App\Models\Warehouse;
 use App\Models\AccountingJournal;
 
-use Illuminate\Database\Eloquent\Model;
-
 class Branch extends Model
 {
+    use HasFactory;
     use BootableModel;
 
     protected $fillable = [

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\BootableModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
@@ -29,6 +30,7 @@ use App\Models\CustomerAddress;
 
 class Company extends Model
 {
+    use HasFactory;
     use BootableModel;
     
     protected $fillable = [

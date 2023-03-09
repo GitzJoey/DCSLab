@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\ChartOfAccount;
 use App\Traits\BootableModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+use App\Models\ChartOfAccount;
 
 class AccountingJournal extends Model
 {
+    use HasFactory;
     use BootableModel;
     
     protected $fillable = [

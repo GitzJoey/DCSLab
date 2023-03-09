@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use App\Traits\BootableModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Company;
-use App\Models\Unit;
 use App\Models\Product;
+use App\Models\Unit;
 
 class ProductUnit extends Model
 {
+    use HasFactory;
     use BootableModel;
 
     protected $table = 'product_units';
