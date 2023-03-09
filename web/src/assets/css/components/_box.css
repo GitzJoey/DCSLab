@@ -1,0 +1,16 @@
+@layer components {
+  .box {
+    box-shadow: 0px 3px 20px #0000000b;
+    background-color: white;
+    border-color: transparent;
+    border-radius: theme("borderRadius.md");
+    position: relative;
+  }
+
+  .dark {
+    .box {
+      background-color: theme("backgroundColor.darkmode.600");
+      border-color: transparent;
+    }
+  }
+}

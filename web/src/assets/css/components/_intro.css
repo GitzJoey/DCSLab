@@ -1,0 +1,53 @@
+* {
+  @for $i from 1 to 50 {
+    > .intro-x:nth-child($i) {
+      z-index: calc(50 - $i);
+      opacity: 0;
+      position: relative;
+      transform: translateX(50px);
+      animation: 0.4s intro-x-animation ease-in-out 0.33333s;
+      animation-fill-mode: forwards;
+      animation-delay: calc($i * 0.1s);
+    }
+    > .-intro-x:nth-child($i) {
+      z-index: calc(50 - $i);
+      opacity: 0;
+      position: relative;
+      transform: translateX(-50px);
+      animation: 0.4s intro-x-animation ease-in-out 0.33333s;
+      animation-fill-mode: forwards;
+      animation-delay: calc($i * 0.1s);
+    }
+    > .intro-y:nth-child($i) {
+      z-index: calc(50 - $i);
+      opacity: 0;
+      position: relative;
+      transform: translateY(50px);
+      animation: 0.4s intro-y-animation ease-in-out 0.33333s;
+      animation-fill-mode: forwards;
+      animation-delay: calc($i * 0.1s);
+    }
+    > .-intro-y:nth-child($i) {
+      z-index: calc(50 - $i);
+      opacity: 0;
+      position: relative;
+      transform: translateY(-50px);
+      animation: 0.4s intro-y-animation ease-in-out 0.33333s;
+      animation-fill-mode: forwards;
+      animation-delay: calc($i * 0.1s);
+    }
+  }
+}
+
+@keyframes intro-x-animation {
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+@keyframes intro-y-animation {
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
