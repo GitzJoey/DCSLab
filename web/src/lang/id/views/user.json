@@ -1,0 +1,42 @@
+{
+    "page_title": "Pengguna",
+    "table": {
+        "title": "Daftar Pengguna",
+        "cols": {
+            "name": "Nama",
+            "email": "Email",
+            "roles": "Peran",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Pengguna",
+        "edit": "Ubah Pengguna",
+        "show": "Tampilkan Pengguna"
+    },
+    "fields": {
+        "name": "Nama",
+        "email": "Email",
+        "roles": "Peran",
+        "picture": "Foto",
+        "first_name": "Nama Depan",
+        "last_name": "Nama Belakang",
+        "address": "Alamat",
+        "ic_num": "Nomor KTP",
+        "country": "Negara",
+        "remarks": "Deskripsi",
+        "status": "Status",
+        "tax_id": "No NPWP",
+        "postal_code": "Kode Pos",
+        "city": "Kota",
+        "settings": {
+            "settings": "Pengaturan",
+            "theme": "Tema",
+            "dateFormat": "Format Tanggal",
+            "timeFormat": "Format Waktu",
+            "apiToken": "API Token"
+        },
+        "reset_password": "Reset Password",
+        "email_reset_password": "Kirim Email"
+    }
+}

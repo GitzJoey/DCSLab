@@ -1,0 +1,11 @@
+{
+    "title": "Login",
+    "fields": {
+        "email": "Email",
+        "password": "Password",
+        "remember_me": "Remember Me",
+        "forgot_pass": "Forgot Password",
+        "terms_and_cond": "Terms & Condition",
+        "privacy_policy": "Privacy Policy"
+    }
+}
