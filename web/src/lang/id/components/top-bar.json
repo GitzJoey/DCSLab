@@ -1,0 +1,8 @@
+{
+    "profile_ddl": {
+        "profile": "Profile",
+        "inbox": "Inbox",
+        "activity": "Activity",
+        "logout": "Logout"
+    }
+}

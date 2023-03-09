@@ -1,0 +1,17 @@
+{
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "back": "Kembali",
+    "reset": "Reset",
+    "compose": "Pesan Baru",
+    "revoke": "Revoke",
+    "activate": "Aktifkan",
+    "submit": "Kirim",
+    "send_verification_email": "Kirim Email Verifikasi",
+    "auto": "Auto",
+    "new_order": "Order Baru",
+    "login": "Login",
+    "register": "Register",
+    "create_new": "Tambah Baru"
+}

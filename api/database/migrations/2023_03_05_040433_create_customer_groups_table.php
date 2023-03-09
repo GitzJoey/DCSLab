@@ -40,7 +40,7 @@ return new class extends Migration
 
             $table->index([
                 'code',
-                'name'
+                'name',
             ]);
         });
     }

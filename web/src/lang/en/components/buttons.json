@@ -1,0 +1,17 @@
+{
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "back": "Back",
+    "reset": "Reset",
+    "compose": "Compose",
+    "revoke": "Revoke",
+    "activate": "Activate",
+    "submit": "Submit",
+    "send_verification_email": "Send Verification Email",
+    "auto": "Auto",
+    "new_order": "New Order",
+    "login": "Login",
+    "register": "Register",
+    "create_new": "Create New"
+}

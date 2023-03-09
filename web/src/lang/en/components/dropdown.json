@@ -1,0 +1,32 @@
+{
+    "placeholder": "Please Select",
+    "values": {
+        "statusDDL": {
+            "active": "Active",
+            "inactive": "Inactive",
+            "deleted": "Deleted"
+        },
+        "productGroupCategoryDDL": {
+            "product": "Product",
+            "service": "Service"
+        },
+        "unitCategoryDDL": {
+            "product": "Product",
+            "service": "Service"
+        },
+        "paymentTermTypeDDL": {
+            "pia": "Payment In Advance",
+            "net": "Payment In X Days After Invoice Date",
+            "eom": "End Of Month",
+            "cod": "Cash On Delivery",
+            "cnd": "Cash Next Delivery",
+            "cbs": "Cash Before Shipment"
+        },
+        "productTypeDDL": {
+            "raw": "Raw Material",
+            "wip": "Work In Progress",
+            "fg": "Finished Good",
+            "svc": "Service"
+        }
+    }
+}

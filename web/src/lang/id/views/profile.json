@@ -1,0 +1,36 @@
+{
+    "title": "Profil",
+    "menu": {
+        "personal_information": "Informasi Pribadi",
+        "account_settings": "Pengaturan Akun",
+        "roles": "Peran",
+        "change_password": "Ubah Password"
+    },
+    "fields": {
+        "name": "Nama",
+        "first_name": "Nama Depan",
+        "last_name": "Nama Keluarga",
+        "address": "Alamat",
+        "city": "Kota",
+        "postal_code": "Kode Pos",
+        "country": "Negara",
+        "tax_id": "NPWP",
+        "remarks": "Keterangan",
+        "email": "Email",
+        "ic_num": "KTP",
+        "settings": {
+            "theme": "Tema",
+            "dateFormat": "Format Tanggal",
+            "timeFormat": "Format Waktu",
+            "api_token": "API Token"
+        },
+        "change_password": {
+            "current_password": "Password Sekarang",
+            "new_password": "Password Baru",
+            "confirm_password": "Konfirmasi Password Baru"
+        }
+    },
+    "tooltip": {
+        "email_verified": "Email terverifikasi"
+    }
+}
