@@ -1,7 +1,7 @@
 export interface ProfileType {
-    firstName: string,
-    lastName: string,
+    first_name: string,
+    last_ame: string,
     status: string,
-    imgPath: string,
+    img_path: string,
     remarks: string,
 }
