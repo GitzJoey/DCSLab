@@ -6,9 +6,6 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\Customer;
-
 class CustomerGroup extends Model
 {
     use HasFactory;
@@ -39,7 +36,7 @@ class CustomerGroup extends Model
     {
         return $this->belongsTo(Company::class);
     }
-    
+
     public function customers()
     {
         return $this->hasMany(Customer::class);

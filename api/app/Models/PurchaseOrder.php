@@ -6,12 +6,6 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\Branch;
-use App\Models\Supplier;
-use App\Models\PurchaseOrderDiscount;
-use App\Models\PurchaseOrderProductUnit;
-
 class PurchaseOrder extends Model
 {
     use HasFactory;

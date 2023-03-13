@@ -6,14 +6,11 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\Product;
-
 class Brand extends Model
 {
     use HasFactory;
     use BootableModel;
-    
+
     protected $fillable = [
         'company_id',
         'code',

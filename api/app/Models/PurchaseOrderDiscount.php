@@ -5,15 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\Branch;
-use App\Models\PurchaseOrder;
-use App\Models\PurchaseOrderProductUnit;
-
 class PurchaseOrderDiscount extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'company_id',
         'branch_id',
