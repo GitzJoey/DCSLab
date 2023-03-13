@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Actions\RandomGenerator;
 use App\Enums\ProductGroupCategory;
 use App\Models\ProductGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;

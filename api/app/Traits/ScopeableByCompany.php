@@ -16,4 +16,17 @@ trait ScopeableByCompany
             }
         }
     }
+
+    public function scopeWhereCompany($query, $company = null)
+    {
+        if ($company != null) {
+            if (is_a($company, 'Illuminate\Support\Collection')) {
+                $query->whereIn('company_id', $company);
+            } elseif (is_array($company)) {
+                $query->whereIn('company_id', $company);
+            } else {
+                $query->where('company_id', $company);
+            }
+        }
+    }
 }

@@ -25,7 +25,35 @@ class ProductUnitFactory extends Factory
 
         return [
             'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
+            'conversion_value' => $faker->numberBetween(1, 1000),
             'remarks' => $faker->sentence(),
         ];
+    }
+
+    public function setIsBase(bool $isBase = null)
+    {
+        return $this->state(function (array $attributes) use ($isBase) {
+            return [
+                'is_base' => is_null($isBase) ? true : $isBase,
+            ];
+        });
+    }
+
+    public function setIsPrimaryUnit(bool $isPrimaryUnit = null)
+    {
+        return $this->state(function (array $attributes) use ($isPrimaryUnit) {
+            return [
+                'is_primary_unit' => is_null($isPrimaryUnit) ? true : $isPrimaryUnit,
+            ];
+        });
+    }
+
+    public function setConversionValue($val)
+    {
+        return $this->state(function (array $attributes) use ($val) {
+            return [
+                'conversion_value' => $val,
+            ];
+        });
     }
 }

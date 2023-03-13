@@ -19,22 +19,20 @@ class ProductFactory extends Factory
 
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-
-        $product_type = $faker->randomElement(ProductType::toArrayValue());
+        $product_type = $this->faker->randomElement(ProductType::toArrayValue());
 
         return [
             'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'name' => $faker->randomElement($this->productName['adjective']).' '.$faker->randomElement($this->productName['material']).' '.$faker->randomElement($this->productName['product']),
-            'taxable_supply' => $faker->boolean(),
-            'standard_rated_supply' => $faker->numberBetween(1, 10),
-            'price_include_vat' => $faker->boolean(),
-            'remarks' => $faker->word(),
-            'point' => $faker->numberBetween(0, 100),
+            'name' => $this->faker->randomElement($this->productName['adjective']).' '.$this->faker->randomElement($this->productName['material']).' '.$this->faker->randomElement($this->productName['product']),
+            'taxable_supply' => $this->faker->boolean(),
+            'standard_rated_supply' => $this->faker->numberBetween(1, 10),
+            'price_include_vat' => $this->faker->boolean(),
+            'remarks' => $this->faker->word(),
+            'point' => $this->faker->numberBetween(0, 100),
             'product_type' => $product_type,
-            'use_serial_number' => $faker->boolean(),
-            'has_expiry_date' => $faker->boolean(),
-            'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
+            'use_serial_number' => $this->faker->boolean(),
+            'has_expiry_date' => $this->faker->boolean(),
+            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -67,10 +65,30 @@ class ProductFactory extends Factory
 
     private function craftName(string $str)
     {
-        $faker = \Faker\Factory::create('id_ID');
-
-        $text = $faker->randomElement($this->productName['adjective']).' '.$faker->randomElement($this->productName['material']).' '.$faker->randomElement($this->productName['product']);
+        $text = $this->faker->randomElement($this->productName['adjective']).' '.$this->faker->randomElement($this->productName['material']).' '.$this->faker->randomElement($this->productName['product']);
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
+    }
+
+    public function setProductTypeAsProduct(ProductType $productType = null)
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'product_type' => $this->faker->randomElement(
+                    ProductType::RAW_MATERIAL->value,
+                    ProductType::WORK_IN_PROGRESS->value,
+                    ProductType::FINISHED_GOODS->value,
+                ),
+            ];
+        });
+    }
+
+    public function setProductTypeAsService()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'product_type' => ProductType::SERVICE->value,
+            ];
+        });
     }
 }
