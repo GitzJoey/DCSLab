@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Impls;
+namespace App\Actions\System;
 
 use Exception;
 use Illuminate\Database\Connection;
