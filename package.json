@@ -1,0 +1,22 @@
+{
+  "name": "dcslab",
+  "version": "0.7.0",
+  "description": "Doctor Computer SG Lab",
+  "scripts": {
+    "install": "node install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GitzJoey/DCSLab.git"
+  },
+  "author": "GitzJoey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GitzJoey/DCSLab/issues"
+  },
+  "homepage": "https://github.com/GitzJoey/DCSLab#readme",
+  "devDependencies": {
+    "@faker-js/faker": "^7.3.0",
+    "cypress": "^10.3.1"
+  }
+}
