@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
@@ -24,7 +23,7 @@ class WarehouseTableSeeder extends Seeder
 
         foreach ($companies as $company) {
             for ($i = 0; $i < $warehousePerCompanies; $i++) {
-                $branch = Branch::whereRelation('company', 'id', '=', $company)->inRandomOrder()->first();
+                $branch = $company->branches()->inRandomOrder()->first();
 
                 Warehouse::factory()->for($company)->for($branch)->create();
             }
