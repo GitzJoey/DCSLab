@@ -74,11 +74,11 @@ class ProductFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'product_type' => $this->faker->randomElement(
+                'product_type' => $this->faker->randomElement([
                     ProductType::RAW_MATERIAL->value,
                     ProductType::WORK_IN_PROGRESS->value,
                     ProductType::FINISHED_GOODS->value,
-                ),
+                ]),
             ];
         });
     }

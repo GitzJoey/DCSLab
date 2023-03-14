@@ -45,7 +45,7 @@ class ProductUnitFactory extends Factory
     {
         return $this->state(function (array $attributes) use ($isPrimaryUnit) {
             return [
-                'is_primary_unit' => is_null($isPrimaryUnit) ? true : $isPrimaryUnit,
+                'is_primary_unit' => is_null($isPrimaryUnit) ? false : $isPrimaryUnit,
             ];
         });
     }

@@ -37,7 +37,7 @@ class SupplierTableSeeder extends Seeder
                             )
                             ->create();
 
-                $productIds = Product::whereCompany($company)->get()->pluck('id');
+                $productIds = Product::whereRelation('company', 'id', $company->id)->get()->pluck('id');
 
                 $productCount = $productIds->count();
                 $productCount = $productCount > 6 ? 6 : $productCount - 1;

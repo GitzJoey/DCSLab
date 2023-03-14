@@ -32,10 +32,7 @@ class ProductTableSeeder extends Seeder
                     createService($productPerCompany, $company);
                     break;
                 default:
-                    createProduct(1, $company);
-                    createService(1, $company);
-
-                    for ($i = 0; $i < $productPerCompany - 2; $i++) {
+                    for ($i = 0; $i < $productPerCompany - 1; $i++) {
                         if (boolval(random_int(0, 1))) {
                             createProduct(1, $company);
                         } else {
@@ -51,22 +48,19 @@ class ProductTableSeeder extends Seeder
 function createProduct($productPerCompany, $company)
 {
     for ($i = 0; $i < $productPerCompany; $i++) {
-        $productGroup = ProductGroup::whereCompany($company)->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first();
+        $productGroup = ProductGroup::whereRelation('company', 'id', $company->id)->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first();
 
-        $brand = Brand::whereCompany($company)->inRandomOrder()->first();
+        $brand = Brand::whereRelation('company', 'id', $company->id)->inRandomOrder()->first();
 
         $product = Product::factory()
                     ->for($company)
                     ->for($productGroup)
                     ->for($brand)
-                    ->setProductTypeAsProduct()
-                    ->create();
+                    ->setProductTypeAsProduct();
 
-        $product->save();
-
-        $units = Unit::whereCompany($company)
-            ->where('category', '=', UnitCategory::PRODUCTS->value)
-            ->take(5)->inRandomOrder()->get();
+        $units = Unit::whereRelation('company', 'id', $company->id)
+                    ->where('category', '=', UnitCategory::PRODUCTS->value)
+                    ->inRandomOrder()->get();
         $shuffledUnits = $units->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
@@ -74,10 +68,10 @@ function createProduct($productPerCompany, $company)
 
         for ($j = 0; $j < $productUnitCount; $j++) {
             $product = $product->has(
-                            ProductUnit::factory()
-                                ->for($company)->for($shuffledUnits[$j])
-                                ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
-                                ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                ProductUnit::factory()
+                    ->for($company)->for($shuffledUnits[$j])
+                    ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                    ->setIsPrimaryUnit($j == $primaryUnitIdx)
             );
         }
 
@@ -88,15 +82,34 @@ function createProduct($productPerCompany, $company)
 function createService($productPerCompany, $company)
 {
     for ($i = 0; $i < $productPerCompany; $i++) {
-        $productGroup = ProductGroup::whereCompany($company)->where('category', '=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first();
+        $productGroup = ProductGroup::whereRelation('company', 'id', $company->id)->where('category', '=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first();
 
-        $unit = Unit::whereCompanyId($company)->where('category', '=', UnitCategory::SERVICES->value)->inRandomOrder()->first();
+        $brand = Brand::whereRelation('company', 'id', $company->id)->inRandomOrder()->first();
 
         $product = Product::factory()
                     ->for($company)
                     ->for($productGroup)
-                    ->setProductTypeAsService()
-                    ->has(ProductUnit::factory()->for($company))
-                    ->create();
+                    ->for($brand)
+                    ->setProductTypeAsService();
+
+        /*
+        $units = Unit::whereRelation('company', 'id', $company->id)
+                    ->where('category', '=', UnitCategory::SERVICES->value)
+                    ->inRandomOrder()->get();
+        $shuffledUnits = $units->shuffle();
+
+        $productUnitCount = random_int(1, $units->count());
+        $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+        for ($j = 0; $j < $productUnitCount; $j++) {
+            $product = $product->has(
+                ProductUnit::factory()
+                    ->for($company)->for($shuffledUnits[$j])
+                    ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                    ->setIsPrimaryUnit($j == $primaryUnitIdx)
+            );
+        }
+        */
+        $product->create();
     }
 }
