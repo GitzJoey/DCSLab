@@ -23,12 +23,6 @@ class EmployeeTableSeeder extends Seeder
             $companies = Company::get();
         }
 
-        if ($onlyThisBranchId != 0) {
-            $branches = Branch::where('id', '=', $onlyThisBranchId)->get();
-        } else {
-            $branches = Branch::whereIn('company_id', $companies)->get();
-        }
-
         foreach ($companies as $company) {
             for ($i = 0; $i < $employeePerPart; $i++) {
                 $employee = Employee::factory()
@@ -40,28 +34,26 @@ class EmployeeTableSeeder extends Seeder
                                     ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
                                     ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
                                     ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                            )
-                            ->create();
+                            );
 
-                $branchCount = $company->branches->count();
+                if ($onlyThisBranchId != 0) {
+                    $branches = $company->branches()->where('id', '=', $onlyThisBranchId)->get();
+                } else {
+                    $branches = $company->branches()->get();
+                }
+
+                $branchCount = $branches->count();
 
                 if ($branchCount > 0) {
-                    $arrEmployeeAccess = [];
-
                     $accessCount = random_int(1, $branchCount);
-                    $branchIds = $company->branches()->inRandomOrder()->take($accessCount)->pluck('id');
+                    $employee_branchs = $company->branches()->inRandomOrder()->take($accessCount)->get();
 
                     for ($j = 0; $j < $accessCount; $j++) {
-                        $employeeAccess = new EmployeeAccess;
-                        $employeeAccess->employee_id = $employee->id;
-                        $employeeAccess->branch_id = $branchIds[$j];
-                        $employeeAccess->save();
-
-                        array_push($arrEmployeeAccess, $employeeAccess);
+                        $employee = $employee->has(EmployeeAccess::factory()->for($company)->for($employee_branchs[$j]));
                     }
-
-                    $employee->employeeAccesses()->saveMany($arrEmployeeAccess);
                 }
+                
+                $employee->create();
             }
         }
     }
