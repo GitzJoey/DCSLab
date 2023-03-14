@@ -67,28 +67,21 @@ function createProduct($productPerCompany, $company)
         $units = Unit::whereCompany($company)
             ->where('category', '=', UnitCategory::PRODUCTS->value)
             ->take(5)->inRandomOrder()->get();
-
         $shuffledUnits = $units->shuffle();
+
         $productUnitCount = random_int(1, $units->count());
         $primaryUnitIdx = random_int(0, $productUnitCount - 1);
-        $maxConverionValue = 1;
 
         for ($j = 0; $j < $productUnitCount; $j++) {
-            $productUnit = new ProductUnit();
-
-            $productUnit->company_id = $company->id;
-            $productUnit->code = ProductUnit::factory()->make()->code;
-            $productUnit->product_id = $product->id;
-            $productUnit->unit_id = $shuffledUnits[$j]->id;
-            $productUnit->is_base = $j == 0 ? 1 : 0;
-            $productUnit->conversion_value = $j == 0 ? 1 : random_int($maxConverionValue + 1, $maxConverionValue + random_int(1, 10));
-            $productUnit->is_primary_unit = $j == $primaryUnitIdx ? 1 : 0;
-            $productUnit->remarks = '';
-
-            $product->productUnits()->save($productUnit);
-
-            $maxConverionValue = $productUnit->conversion_value;
+            $product = $product->has(
+                            ProductUnit::factory()
+                                ->for($company)->for($shuffledUnits[$j])
+                                ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                                ->setIsPrimaryUnit($j == $primaryUnitIdx)
+            );
         }
+
+        $product->create();
     }
 }
 
@@ -103,6 +96,7 @@ function createService($productPerCompany, $company)
                     ->for($company)
                     ->for($productGroup)
                     ->setProductTypeAsService()
+                    ->has(ProductUnit::factory()->for($company))
                     ->create();
     }
 }

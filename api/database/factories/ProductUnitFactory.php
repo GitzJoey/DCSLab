@@ -21,12 +21,14 @@ class ProductUnitFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
+        $locale = 'id_ID';
 
         return [
-            'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'conversion_value' => $faker->numberBetween(1, 1000),
-            'remarks' => $faker->sentence(),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'is_base' => fake()->boolean(),
+            'conversion_value' => fake()->numberBetween(1, 1000),
+            'is_primary_unit' => fake()->boolean(),
+            'remarks' => fake($locale)->sentence(),
         ];
     }
 
