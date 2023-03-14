@@ -22,11 +22,9 @@ class EmployeeFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-
         return [
             'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'join_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+            'join_date' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
             'status' => $this->faker->randomElement(RecordStatus::toArrayEnum()),
         ];
     }

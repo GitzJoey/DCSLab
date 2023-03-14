@@ -23,22 +23,20 @@ class SupplierFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-
-        $array_term = $faker->randomElement(PaymentTermType::toArrayEnum());
-        $status = $faker->randomElement(RecordStatus::toArrayEnum());
+        $array_term = $this->faker->randomElement(PaymentTermType::toArrayEnum());
+        $status = $this->faker->randomElement(RecordStatus::toArrayEnum());
 
         return [
             'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'name' => $faker->company(),
+            'name' => fake('id_ID')->company(),
             'payment_term_type' => $array_term,
-            'payment_term' => $array_term == 'NET' ? $faker->numberBetween(1, 30) : 0,
-            'contact' => $faker->e164PhoneNumber(),
-            'address' => $faker->address(),
-            'city' => $faker->city(),
-            'taxable_enterprise' => $faker->boolean(),
-            'tax_id' => $faker->creditCardNumber(),
-            'remarks' => $faker->word(),
+            'payment_term' => $array_term == 'NET' ? $this->faker->numberBetween(1, 30) : 0,
+            'contact' => $this->faker->e164PhoneNumber(),
+            'address' => fake('id_ID')->address(),
+            'city' => fake('id_ID')->city(),
+            'taxable_enterprise' => $this->faker->boolean(),
+            'tax_id' => $this->faker->creditCardNumber(),
+            'remarks' => $this->faker->word(),
             'status' => $status,
         ];
     }
@@ -46,10 +44,8 @@ class SupplierFactory extends Factory
     public function setPaymentTermTypeName()
     {
         return $this->state(function (array $attributes) {
-            $faker = \Faker\Factory::create('id_ID');
-
             return [
-                'payment_term_type' => $faker->randomElement(PaymentTermType::toArrayEnum()),
+                'payment_term_type' => fake()->randomElement(PaymentTermType::toArrayEnum()),
             ];
         });
     }
@@ -83,8 +79,7 @@ class SupplierFactory extends Factory
 
     private function craftName(string $str)
     {
-        $faker = \Faker\Factory::create('id_ID');
-        $text = $faker->company();
+        $text = fake('id_ID')->company();
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
