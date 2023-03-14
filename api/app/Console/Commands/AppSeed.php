@@ -155,7 +155,7 @@ class AppSeed extends Command
         $progressBar->advance();
         $this->runUnitTableSeeder(5, 0);
         $progressBar->advance();
-        $this->runProductTableSeeder(5, 0);
+        $this->runProductTableSeeder(5, 0, 0);
         $progressBar->advance();
         $this->runSupplierTableSeeder(5, 0);
         $progressBar->advance();
@@ -344,18 +344,19 @@ class AppSeed extends Command
         $this->info('Starting ProductTableSeeder');
         $productPerCompany = $this->ask('How many products for each companies:', 5);
         $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+        $onlyProductType = $this->ask('For which product type ([1] Product [2] Service [0] Random):', 0);
 
         $this->info('Seeding...');
 
-        $this->runProductTableSeeder($productPerCompany, $onlyThisCompanyId);
+        $this->runProductTableSeeder($productPerCompany, $onlyThisCompanyId, $onlyProductType);
 
         $this->info('ProductTableSeeder Finish.');
     }
 
-    private function runProductTableSeeder($productPerCompany, $onlyThisCompanyId)
+    private function runProductTableSeeder($productPerCompany, $onlyThisCompanyId, $onlyProductType)
     {
         $seeder = new ProductTableSeeder();
-        $seeder->callWith(ProductTableSeeder::class, [$productPerCompany, $onlyThisCompanyId]);
+        $seeder->callWith(ProductTableSeeder::class, [$productPerCompany, $onlyThisCompanyId, $onlyProductType]);
     }
 
     private function runSupplierTableSeederInteractive()

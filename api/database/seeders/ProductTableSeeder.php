@@ -92,7 +92,6 @@ function createService($productPerCompany, $company)
                     ->for($brand)
                     ->setProductTypeAsService();
 
-        /*
         $units = Unit::whereRelation('company', 'id', $company->id)
                     ->where('category', '=', UnitCategory::SERVICES->value)
                     ->inRandomOrder()->get();
@@ -109,7 +108,7 @@ function createService($productPerCompany, $company)
                     ->setIsPrimaryUnit($j == $primaryUnitIdx)
             );
         }
-        */
+
         $product->create();
     }
 }
