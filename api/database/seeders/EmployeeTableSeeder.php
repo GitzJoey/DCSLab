@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Enums\UserRoles;
-use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\EmployeeAccess;
@@ -52,7 +51,7 @@ class EmployeeTableSeeder extends Seeder
                         $employee = $employee->has(EmployeeAccess::factory()->for($company)->for($employee_branchs[$j]));
                     }
                 }
-                
+
                 $employee->create();
             }
         }

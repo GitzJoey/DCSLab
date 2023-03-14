@@ -51,95 +51,120 @@ class AppSeed extends Command
             }
         }
 
-        switch (strtolower($this->argument('args'))) {
-            case 'user':
-            case 'usertableseeder':
-                $this->runUserTableSeederInteractive();
-                break;
-            case 'role':
-            case 'roletableseeder':
-                $this->runRoleTableSeederInteractive();
-                break;
-            case 'company':
-            case 'companytableseeder':
-                $this->runCompanyTableSeederInteractive();
-                break;
-            case 'branch':
-            case 'branchtableseeder':
-                $this->runBranchTableSeederInteractive();
-                break;
-            case 'employee':
-            case 'employeetableseeder':
-                $this->runEmployeeTableSeederInteractive();
-                break;
-            case 'warehouse':
-            case 'warehousetableseeder':
-                $this->runWarehouseTableSeederInteractive();
-                break;
-            case 'productgroup':
-            case 'productgrouptableseeder':
-                $this->runProductGroupTableSeederInteractive();
-                break;
-            case 'brand':
-            case 'brandtableseeder':
-                $this->runBrandTableSeederInteractive();
-                break;
-            case 'unit':
-            case 'unittableseeder':
-                $this->runUnitTableSeederInteractive();
-                break;
-            case 'product':
-            case 'producttableseeder':
-                $this->runProductTableSeederInteractive();
-                break;
-            case 'supplier':
-            case 'suppliertableseeder':
-                $this->runSupplierTableSeederInteractive();
-                break;
-            case 'customer':
-            case 'customertableseeder':
-                $this->runCustomerTableSeederInteractive();
-                break;
-            default:
-                $total = 12;
-                $this->info('');
-                $progressBar = $this->output->createProgressBar($total);
-                $progressBar->start();
+        $argsArr = [];
 
-                $this->runUserTableSeeder(false, 5);
-                $progressBar->advance();
-                $this->runRoleTableSeeder(true, 5);
-                $progressBar->advance();
-                $this->runCompanyTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runBranchTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runEmployeeTableSeeder(5, 0, 0);
-                $progressBar->advance();
-                $this->runWarehouseTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runProductGroupTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runBrandTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runUnitTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runProductTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runSupplierTableSeeder(5, 0);
-                $progressBar->advance();
-                $this->runCustomerTableSeeder(5, 0);
-                $progressBar->advance();
-
-                $progressBar->finish();
-                $this->info('');
-                $this->info('');
-                break;
+        if (! empty($this->argument('args'))) {
+            if (str_contains($this->argument('args'), ',')) {
+                $argsArr = explode(',', $this->argument('args'));
+            } else {
+                $argsArr = [
+                    $this->argument('args'),
+                ];
+            }
+            $this->runWithArgs($argsArr);
+        } else {
+            $this->runDefault();
         }
 
         $this->info('Done!');
 
         return Command::SUCCESS;
+    }
+
+    private function runWithArgs(array $argsArr)
+    {
+        foreach ($argsArr as $args) {
+            switch (strtolower($args)) {
+                case 'user':
+                case 'usertableseeder':
+                    $this->runUserTableSeederInteractive();
+                    break;
+                case 'role':
+                case 'roletableseeder':
+                    $this->runRoleTableSeederInteractive();
+                    break;
+                case 'company':
+                case 'companytableseeder':
+                    $this->runCompanyTableSeederInteractive();
+                    break;
+                case 'branch':
+                case 'branchtableseeder':
+                    $this->runBranchTableSeederInteractive();
+                    break;
+                case 'employee':
+                case 'employeetableseeder':
+                    $this->runEmployeeTableSeederInteractive();
+                    break;
+                case 'warehouse':
+                case 'warehousetableseeder':
+                    $this->runWarehouseTableSeederInteractive();
+                    break;
+                case 'productgroup':
+                case 'productgrouptableseeder':
+                    $this->runProductGroupTableSeederInteractive();
+                    break;
+                case 'brand':
+                case 'brandtableseeder':
+                    $this->runBrandTableSeederInteractive();
+                    break;
+                case 'unit':
+                case 'unittableseeder':
+                    $this->runUnitTableSeederInteractive();
+                    break;
+                case 'product':
+                case 'producttableseeder':
+                    $this->runProductTableSeederInteractive();
+                    break;
+                case 'supplier':
+                case 'suppliertableseeder':
+                    $this->runSupplierTableSeederInteractive();
+                    break;
+                case 'customer':
+                case 'customertableseeder':
+                    $this->runCustomerTableSeederInteractive();
+                    break;
+                default:
+                    $this->info('Cannot find seeder for '.$args);
+                    break;
+            }
+        }
+    }
+
+    private function runDefault()
+    {
+        $total = 12;
+        $this->info('');
+        $progressBar = $this->output->createProgressBar($total);
+        $progressBar->start();
+
+        $this->runUserTableSeeder(false, 5);
+        $progressBar->advance();
+        $this->runRoleTableSeeder(true, 5);
+        $progressBar->advance();
+        $this->runCompanyTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runBranchTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runEmployeeTableSeeder(5, 0, 0);
+        $progressBar->advance();
+        $this->runWarehouseTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runProductGroupTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runBrandTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runUnitTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runProductTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runSupplierTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runCustomerTableSeeder(5, 0);
+        $progressBar->advance();
+
+        $progressBar->finish();
+        $this->info('');
+        $this->info('');
     }
 
     private function runUserTableSeederInteractive()
