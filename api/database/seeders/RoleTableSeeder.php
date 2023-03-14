@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\Role;
 use Exception;
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class RoleTableSeeder extends Seeder
