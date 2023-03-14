@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UserRoles;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\Setting;
@@ -24,28 +23,16 @@ class UserTableSeeder extends Seeder
             $this->truncateUsersTables();
         }
 
-        $faker = \Faker\Factory::create('id_ID');
-
         for ($i = 0; $i < $count; $i++) {
-            $name = $faker->name;
-
-            $usr = User::factory()->setCreatedAt()->setUpdatedAt()->create();
-
-            $profile = Profile::factory()->setCreatedAt()->setUpdatedAt()->setFirstName($name);
-
-            $usr->profile()->save($profile);
-
-            $setting = Setting::factory()->createDefaultSetting();
-
-            $usr->settings()->saveMany($setting);
-
-            $roles = Role::where('name', '=', $role)->first();
-
-            if (! $roles) {
-                $roles = Role::where('name', '=', UserRoles::USER->value);
-            }
-
-            $usr->attachRoles([$roles->id]);
+            User::factory()
+                ->setName(fake('id_ID')->name)
+                ->setCreatedAt()->setUpdatedAt()
+                ->has(Profile::factory()->setCreatedAt()->setUpdatedAt()->setFirstName(fake('id_ID')->firstName))
+                ->hasAttached(Role::where('name', '=', $role)->first())
+                ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                ->create();
         }
     }
 

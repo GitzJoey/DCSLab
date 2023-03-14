@@ -22,16 +22,16 @@ class WarehouseFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-        $warehouse_name = $faker->city();
+        $locale = 'id_ID';
+        $warehouse_city = fake($locale)->city();
 
         return [
-            'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'name' => 'Gudang '.$warehouse_name,
-            'address' => $faker->address(),
-            'city' => $warehouse_name,
-            'contact' => $faker->e164PhoneNumber(),
-            'remarks' => $faker->word(),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'name' => 'Gudang '.$warehouse_city,
+            'address' => fake($locale)->address(),
+            'city' => $warehouse_city,
+            'contact' => fake($locale)->e164PhoneNumber(),
+            'remarks' => fake($locale)->word(),
             'status' => RecordStatus::ACTIVE,
         ];
     }
@@ -54,6 +54,15 @@ class WarehouseFactory extends Factory
         });
     }
 
+    public function setName($name)
+    {
+        return $this->state(function (array $attributes) use ($name) {
+            return [
+                'name' => $name,
+            ];
+        });
+    }
+
     public function insertStringInName(string $str)
     {
         return $this->state(function (array $attributes) use ($str) {
@@ -65,8 +74,7 @@ class WarehouseFactory extends Factory
 
     private function craftName(string $str)
     {
-        $faker = \Faker\Factory::create('id_ID');
-        $text = 'Gudang '.$faker->city();
+        $text = 'Gudang '.fake('id_ID')->city();
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }

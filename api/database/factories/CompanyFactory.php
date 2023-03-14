@@ -22,12 +22,12 @@ class CompanyFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
+        $locale = 'id_ID';
 
         return [
-            'code' => strtoupper($faker->lexify()).$faker->numerify(),
-            'name' => $faker->company(),
-            'address' => $faker->address(),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'name' => fake($locale)->company(),
+            'address' => fake($locale)->address(),
             'default' => false,
             'status' => RecordStatus::ACTIVE,
         ];

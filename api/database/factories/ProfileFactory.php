@@ -41,26 +41,13 @@ class ProfileFactory extends Factory
         ];
     }
 
-    public function setFirstName($first_name)
+    public function setFirstName(string $name)
     {
-        $country = ['Singapore', 'Indonesia'];
-        shuffle($country);
-
-        $profile = new Profile();
-
-        $profile->first_name = $first_name;
-        $profile->last_name = $this->faker->lastName();
-        $profile->address = $this->faker->address();
-        $profile->city = $this->faker->city();
-        $profile->postal_code = $this->faker->postcode();
-        $profile->country = $country[0];
-        $profile->tax_id = $this->faker->randomDigit();
-        $profile->ic_num = $this->faker->randomDigit();
-        $profile->img_path = '';
-        $profile->status = RecordStatus::INACTIVE;
-        $profile->remarks = $this->faker->catchPhrase();
-
-        return $profile;
+        return $this->state(function (array $attributes) use ($name) {
+            return [
+                'first_name' => $name,
+            ];
+        });
     }
 
     public function setCreatedAt(Carbon $date = null)

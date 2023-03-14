@@ -229,7 +229,7 @@ class AppSeed extends Command
 
         $this->runEmployeeTableSeeder($count, $onlyThisCompanyId, $onlyThisBranchId);
 
-        $this->info('CustomerTableSeeder Finish.');
+        $this->info('EmployeeTableSeeder Finish.');
     }
 
     private function runEmployeeTableSeeder($count, $onlyThisCompanyId, $onlyThisBranchId)

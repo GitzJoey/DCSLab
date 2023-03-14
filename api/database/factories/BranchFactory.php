@@ -22,18 +22,18 @@ class BranchFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-        $branch_name = $faker->city();
+        $locale = 'id_ID';
+        $branch_city = fake($locale)->city();
 
         return [
-            'code' => strtoupper($faker->lexify()).$faker->numerify(),
-            'name' => 'Kantor Cabang '.$faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.$branch_name,
-            'address' => $faker->address(),
-            'city' => $branch_name,
-            'contact' => $faker->e164PhoneNumber(),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'name' => 'Kantor Cabang '.fake()->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.$branch_city,
+            'address' => fake($locale)->address(),
+            'city' => $branch_city,
+            'contact' => fake($locale)->e164PhoneNumber(),
             'is_main' => false,
-            'remarks' => $faker->sentence(),
-            'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
+            'remarks' => fake($locale)->sentence(),
+            'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -60,6 +60,15 @@ class BranchFactory extends Factory
         return $this->state(function (array $attributes) use ($bool) {
             return [
                 'is_main' => $bool,
+            ];
+        });
+    }
+
+    public function setName($name)
+    {
+        return $this->state(function (array $attributes) use ($name) {
+            return [
+                'name' => $name,
             ];
         });
     }
