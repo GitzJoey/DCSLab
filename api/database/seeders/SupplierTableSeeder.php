@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRoles;
 use App\Models\Company;
 use App\Models\Product;
 use App\Models\Profile;
+use App\Models\Role;
 use App\Models\Setting;
 use App\Models\Supplier;
 use App\Models\SupplierProduct;
@@ -32,31 +34,29 @@ class SupplierTableSeeder extends Seeder
                             ->for($company)
                             ->for(
                                 User::factory()
-                                ->has(Profile::factory())
-                                ->has(Setting::factory()->createDefaultSetting())
-                            )
-                            ->create();
+                                    ->has(Profile::factory())
+                                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                            );
 
-                $productIds = Product::whereRelation('company', 'id', $company->id)->get()->pluck('id');
+                $products = Product::whereRelation('company', 'id', $company->id)->get();
 
-                $productCount = $productIds->count();
-                $productCount = $productCount > 6 ? 6 : $productCount - 1;
-                $supplierProductCount = random_int(1, $productCount);
-                $ProductIds = $productIds->shuffle()->take($supplierProductCount);
+                $supplierProductCount = random_int(1, $products->count());
+                
+                $shuffledProducts = $products->shuffle()->take($supplierProductCount);
 
-                $supplierProducts = [];
+                $mainProductIdx = random_int(0, $supplierProductCount - 1);
 
-                foreach ($ProductIds as $productId) {
-                    $supplierProduct = new SupplierProduct();
-                    $supplierProduct->company_id = $company->id;
-                    $supplierProduct->supplier_id = $supplier->id;
-                    $supplierProduct->product_id = $productId;
-                    $supplierProduct->main_product = boolval(random_int(0, 1));
-
-                    array_push($supplierProducts, $supplierProduct);
+                for ($j = 0; $j < $supplierProductCount; $j++) {
+                    $supplier = $supplier->has(
+                                    SupplierProduct::factory()->for($company)->for($shuffledProducts[$j])
+                                        ->setMainProduct($j == $mainProductIdx)
+                                );
                 }
 
-                $supplier->supplierProducts()->saveMany($supplierProducts);
+                $supplier->create();
             }
         }
     }
