@@ -6,11 +6,6 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\EmployeeAccess;
-use App\Models\Warehouse;
-use App\Models\AccountingJournal;
-
 class Branch extends Model
 {
     use HasFactory;

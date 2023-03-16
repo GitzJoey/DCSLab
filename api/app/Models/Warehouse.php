@@ -6,9 +6,6 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\Branch;
-
 class Warehouse extends Model
 {
     use HasFactory;

@@ -6,13 +6,11 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\ChartOfAccount;
-
 class AccountingJournal extends Model
 {
     use HasFactory;
     use BootableModel;
-    
+
     protected $fillable = [
         'company_id',
         'branch_id',
@@ -29,7 +27,7 @@ class AccountingJournal extends Model
     {
         return $this->belongsTo(Company::class);
     }
-    
+
     public function branch()
     {
         return $this->belongsTo(Branch::class);

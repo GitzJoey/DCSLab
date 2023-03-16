@@ -6,33 +6,11 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\User;
-use App\Models\Branch;
-use App\Models\Employee;
-use App\Models\EmployeeAccess;
-use App\Models\Warehouse;
-
-use App\Models\ChartOfAccount;
-use App\Models\AccountingJournal;
-
-use App\Models\ProductGroup;
-use App\Models\Brand;
-use App\Models\Unit;
-use App\Models\Product;
-use App\Models\ProductUnit;
-
-use App\Models\Supplier;
-use App\Models\SupplierProduct;
-
-use App\Models\CustomerGroup;
-use App\Models\Customer;
-use App\Models\CustomerAddress;
-
 class Company extends Model
 {
     use HasFactory;
     use BootableModel;
-    
+
     protected $fillable = [
         'code',
         'name',
@@ -115,7 +93,7 @@ class Company extends Model
     {
         return $this->hasMany(CustomerGroup::class);
     }
-    
+
     public function customers()
     {
         return $this->hasMany(Customer::class);

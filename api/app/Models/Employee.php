@@ -6,10 +6,6 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\User;
-use App\Models\EmployeeAccess;
-
 class Employee extends Model
 {
     use HasFactory;

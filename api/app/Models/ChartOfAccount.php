@@ -6,9 +6,6 @@ use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Company;
-use App\Models\AccountingJournal;
-
 class ChartOfAccount extends Model
 {
     use HasFactory;
@@ -42,7 +39,7 @@ class ChartOfAccount extends Model
     }
 
     public function childrenRecursive()
-    {  
+    {
         return $this->hasMany(ChartOfAccount::class, 'parent_id', 'id')->with('childrenRecursive');
     }
 
