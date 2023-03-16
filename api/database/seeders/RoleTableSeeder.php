@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\Role;
 use Exception;
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class RoleTableSeeder extends Seeder
@@ -17,21 +16,22 @@ class RoleTableSeeder extends Seeder
      */
     public function run($randomPermission = true, $count = 10)
     {
-        $faker = Faker::create();
-
-        $permissions = Permission::get()->pluck('id')->toArray();
+        $permissions = Permission::get();
 
         for ($i = 0; $i < $count; $i++) {
             try {
-                $role = Role::factory()->create();
+                $role = Role::factory();
 
                 if ($randomPermission) {
-                    shuffle($permissions);
-                    $maxP = $faker->numberBetween(1, count($permissions) - 1);
+                    $maxP = random_int(1, count($permissions) - 1);
+
+                    $shuffledPermissions = $permissions->shuffle()->take($maxP);
 
                     for ($j = 0; $j < $maxP; $j++) {
-                        $role->attachPermission($permissions[$j]);
+                        $role = $role->hasAttached($shuffledPermissions[$j]);
                     }
+
+                    $role->create();
                 }
             } catch (Exception $e) {
                 dd($e->getMessage());

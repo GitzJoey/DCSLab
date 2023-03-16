@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Setting;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -32,26 +31,33 @@ class SettingFactory extends Factory
         ];
     }
 
-    public function createDefaultSetting(): array
+    public function createDefaultSetting_PREF_THEME()
     {
-        $list = [
-            new Setting([
-                'type' => 'KEY_VALUE',
+        return $this->state(function (array $attributes) {
+            return [
                 'key' => 'PREFS.THEME',
                 'value' => 'side-menu-light-full',
-            ]),
-            new Setting([
-                'type' => 'KEY_VALUE',
+            ];
+        });
+    }
+
+    public function createDefaultSetting_PREF_DATE_FORMAT()
+    {
+        return $this->state(function (array $attributes) {
+            return [
                 'key' => 'PREFS.DATE_FORMAT',
                 'value' => 'yyyy_MM_dd',
-            ]),
-            new Setting([
-                'type' => 'KEY_VALUE',
+            ];
+        });
+    }
+
+    public function createDefaultSetting_PREF_TIME_FORMAT()
+    {
+        return $this->state(function (array $attributes) {
+            return [
                 'key' => 'PREFS.TIME_FORMAT',
                 'value' => 'hh_mm_ss',
-            ]),
-        ];
-
-        return $list;
+            ];
+        });
     }
 }

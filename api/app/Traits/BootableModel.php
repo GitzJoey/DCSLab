@@ -11,7 +11,7 @@ trait BootableModel
         parent::boot();
 
         static::creating(function ($model) {
-            $model->ulid = Str::ulid()->toRfc4122();
+            $model->ulid = Str::ulid()->generate();
 
             $user = auth()->check();
             if ($user) {

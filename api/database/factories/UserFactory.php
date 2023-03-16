@@ -72,4 +72,13 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    public function setName($name)
+    {
+        return $this->state(function (array $attributes) use ($name) {
+            return [
+                'name' => strtolower(str_replace(' ', '', $name)),
+            ];
+        });
+    }
 }
