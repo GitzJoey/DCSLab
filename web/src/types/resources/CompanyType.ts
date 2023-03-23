@@ -1,7 +1,7 @@
 import { BranchType } from "./BranchType";
 
 export interface CompanyType {
-    uuid: string,
+    ulid: string,
     code: string,
     name: string,
     address: string,

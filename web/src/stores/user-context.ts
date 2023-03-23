@@ -6,10 +6,10 @@ export interface UserContextState {
   userContextValue: UserProfileType,
   selectedUserLocationValue: {
     company: {
-      uuid: string,
+      ulid: string,
     },
     branch: {
-      uuid: string,
+      ulid: string,
     }
   }
 }
@@ -18,21 +18,24 @@ export const useUserContextStore = defineStore("userContext", {
   state: (): UserContextState => ({
     isAuthenticatedValue: false,
     userContextValue: {
-      uuid: '',
+      ulid: '',
       name: '',
       email: '',
       email_verified: false,
       profile: {
         full_name: '',
+        status: '',
+        img_path: '',
+        remarks: '',
       },
       companies: [],
     },
     selectedUserLocationValue: {
       company: {
-        uuid: '',
+        ulid: '',
       },
       branch: {
-        uuid: '',
+        ulid: '',
       }
     }
   }),
@@ -50,14 +53,14 @@ export const useUserContextStore = defineStore("userContext", {
       this.isAuthenticatedValue = true;
     },
     setSelectedUserLocation(companyId: string, branchId: string) {
-      this.selectedUserLocationValue.company.uuid = companyId;
-      this.selectedUserLocationValue.branch.uuid = branchId;
+      this.selectedUserLocationValue.company.ulid = companyId;
+      this.selectedUserLocationValue.branch.ulid = branchId;
     },
-    setSelectedUserCompany(uuid: string) {
-      this.selectedUserLocationValue.company.uuid = uuid;
+    setSelectedUserCompany(ulid: string) {
+      this.selectedUserLocationValue.company.ulid = ulid;
     },
-    setSelectedUserBranch(uuid: string) {
-      this.selectedUserLocationValue.branch.uuid = uuid;
+    setSelectedUserBranch(ulid: string) {
+      this.selectedUserLocationValue.branch.ulid = ulid;
     }
   },  
 });
