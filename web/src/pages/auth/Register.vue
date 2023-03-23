@@ -8,12 +8,30 @@ import { FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import AuthService from "../../services/AuthServices";
+import LoadingOverlay from "../../base-components/LoadingOverlay";
+import { useRouter } from "vue-router";
+import { ErrorHandlerService } from "../../services/ErrorHandlerService";
+import { StatusCodes } from "../../types/enums/StatusCodes";
 
 const { t } = useI18n();
+const router = useRouter();
 
 const authService = new AuthService();
-const a = ref('esd');
+const errorHandlerService = new ErrorHandlerService();
 
+const loading = ref(false);
+
+const onSubmit = async (values: any, actions: any) => {
+  loading.value = true;
+
+  let result = await authService.doLogin(values.email, values.password, values.remember);
+
+  if (result.status === StatusCodes.OK) {
+    router.push('/dashboard/main');
+  } else {
+    errorHandlerService.handleLaravelError(result.data, actions, 'email');
+  }
+}
 </script>
 
 <template>
@@ -28,7 +46,6 @@ const a = ref('esd');
     <MainColorSwitcher />
     <div class="container relative z-10 sm:px-10">
       <div class="block grid-cols-2 gap-4 xl:grid">
-        <!-- BEGIN: Register Info -->
         <div class="flex-col hidden min-h-screen xl:flex">
           <a href="" class="flex items-center pt-5 -intro-x">
             <img
@@ -47,108 +64,112 @@ const a = ref('esd');
             <div
               class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
             >
-              A few more clicks to <br />
-              sign up to your account.
+              <span class="hidden">&nbsp;</span><br />
+              <span class="hidden">&nbsp;</span>
             </div>
             <div
               class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
             >
-              Manage all your e-commerce accounts in one place
+              <span class="hidden">&nbsp;</span>
             </div>
           </div>
         </div>
-        <!-- END: Register Info -->
-        <!-- BEGIN: Register Form -->
         <div class="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
           <div
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
           >
-            <h2
-              class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
-            >
-              Sign Up
-            </h2>
-            <div
-              class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden"
-            >
-              A few more clicks to sign in to your account. Manage all your
-              e-commerce accounts in one place
-            </div>
-            <div class="mt-8 intro-x">
-              <FormInput
-                type="text"
-                class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
-                placeholder="First Name"
-              />
-              <FormInput
-                type="text"
-                class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                placeholder="Last Name"
-              />
-              <FormInput
-                type="text"
-                class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                placeholder="Email"
-              />
-              <FormInput
-                type="text"
-                class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                placeholder="Password"
-              />
-              <div class="grid w-full h-1 grid-cols-12 gap-4 mt-3 intro-x">
-                <div class="h-full col-span-3 rounded bg-success"></div>
-                <div class="h-full col-span-3 rounded bg-success"></div>
-                <div class="h-full col-span-3 rounded bg-success"></div>
-                <div
-                  class="h-full col-span-3 rounded bg-slate-100 dark:bg-darkmode-800"
-                ></div>
+            <LoadingOverlay :visible="loading" :transparent="true">
+              <h2
+                class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
+              >
+                {{ t('views.register.title') }}
+              </h2>
+              <div
+                class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden"
+              >
+                &nbsp;
               </div>
-              <a
-                href=""
-                class="block mt-2 text-xs intro-x text-slate-500 sm:text-sm"
-              >
-                What is a secure password?
-              </a>
-              <FormInput
-                type="text"
-                class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                placeholder="Password Confirmation"
-              />
-            </div>
-            <div
-              class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-            >
-              <FormCheck.Input
-                id="remember-me"
-                type="checkbox"
-                class="mr-2 border"
-              />
-              <label class="cursor-pointer select-none" htmlFor="remember-me">
-                I agree to the Envato
-              </label>
-              <a class="ml-1 text-primary dark:text-slate-200" href="">
-                Privacy Policy
-              </a>
-              .
-            </div>
-            <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-              <Button
-                variant="primary"
-                class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
-              >
-                Register
-              </Button>
-              <Button
-                variant="outline-secondary"
-                class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
-              >
-                Sign in
-              </Button>
-              <RouterLink to="/login">sdsd</RouterLink>
-            </div>
+              <VeeForm id="loginForm" @submit="onSubmit" v-slot="{ errors }">
+                <div class="mt-8 intro-x">
+                  <VeeField name="name" v-slot="{ field }" rules="required" :label="t('views.register.fields.name')">
+                    <FormInput
+                      name="name"
+                      type="text"
+                      class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
+                      :placeholder="t('views.register.fields.name')"
+                      v-bind="field"
+                    />
+                  </VeeField>
+                  <VeeField name="email" v-slot="{ field }" rules="required|email" :label="t('views.register.fields.email')">
+                    <FormInput
+                      name="email"
+                      type="text"
+                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
+                      :placeholder="t('views.register.fields.email')"
+                      v-bind="field"
+                    />
+                  </VeeField>
+                  <VeeField name="password" v-slot="{ field }" rules="required" :label="t('views.register.fields.password')">
+                    <FormInput
+                      name="password"
+                      type="text"
+                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
+                      :placeholder="t('views.register.fields.password')"
+                      v-bind="field"
+                    />
+                  </VeeField>
+                  <div class="grid w-full h-1 grid-cols-12 gap-4 mt-3 intro-x">
+                    <div class="h-full col-span-3 rounded bg-success"></div>
+                    <div class="h-full col-span-3 rounded bg-success"></div>
+                    <div class="h-full col-span-3 rounded bg-success"></div>
+                    <div
+                      class="h-full col-span-3 rounded bg-slate-100 dark:bg-darkmode-800"
+                    ></div>
+                  </div>
+                  <VeeField name="password_confirmation" v-slot="{ field }" rules="required" :label="t('views.register.fields.password_confirmation')">
+                    <FormInput
+                      name="password_confirmation"
+                      type="text"
+                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
+                      :placeholder="t('views.register.fields.password_confirmation')"
+                      v-bind="field"
+                    />
+                  </VeeField>
+                </div>
+                <div
+                  class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
+                >
+                  <VeeField name="terms" v-slot="{ field }" rules="required" :label="t('views.register.fields.terms')">
+                    <FormCheck.Input
+                      name="terms"
+                      type="checkbox"
+                      class="mr-2 border"
+                      v-bind="field"
+                    />
+                  </VeeField>
+                  <label class="cursor-pointer select-none" htmlFor="remember-me">
+                    I agree to {{ t('views.register.fields.terms_and_cond') }}
+                  </label>
+                </div>
+                <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
+                  <Button
+                    variant="primary"
+                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
+                  >
+                    {{ t('components.buttons.register') }}
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
+                    @click="router.push({ name: 'login' })"
+                  >
+                    {{ t('components.buttons.login') }}
+                  </Button>
+                </div>
+              </VeeForm>
+            </LoadingOverlay>
           </div>
         </div>
-        <!-- END: Register Form -->
       </div>
     </div>
   </div>

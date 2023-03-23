@@ -142,6 +142,7 @@ const onSubmit = async (values: any, actions: any) => {
                     <Button
                       variant="outline-secondary"
                       class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
+                      @click="router.push({ name: 'register' })"
                     >
                       {{ t('components.buttons.register') }}
                     </Button>
