@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { UserProfileType } from "../types/UserProfileType";
+import { UserProfileType } from "../types/resources/UserProfileType";
 
 export interface UserContextState {
   isAuthenticatedValue: boolean,
@@ -21,9 +21,9 @@ export const useUserContextStore = defineStore("userContext", {
       uuid: '',
       name: '',
       email: '',
-      emailVerified: false,
+      email_verified: false,
       profile: {
-        fullName: '',
+        full_name: '',
       },
       companies: [],
     },

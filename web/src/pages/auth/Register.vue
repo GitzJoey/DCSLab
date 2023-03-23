@@ -49,7 +49,7 @@ const onSubmit = async (values: any, actions: any) => {
         <div class="flex-col hidden min-h-screen xl:flex">
           <a href="" class="flex items-center pt-5 -intro-x">
             <img
-              alt="Midone Tailwind HTML Admin Template"
+              alt="DCSLab"
               class="w-6"
               :src="logoUrl"
             />
@@ -57,7 +57,7 @@ const onSubmit = async (values: any, actions: any) => {
           </a>
           <div class="my-auto">
             <img
-              alt="Midone Tailwind HTML Admin Template"
+              alt="DCSLab"
               class="w-1/2 -mt-16 -intro-x"
               :src="illustrationUrl"
             />
@@ -144,7 +144,7 @@ const onSubmit = async (values: any, actions: any) => {
                       v-bind="field"
                     />
                     <label class="cursor-pointer select-none" htmlFor="terms">
-                      I agree to {{ t('views.register.fields.terms_and_cond') }}
+                      I agree to the {{ t('views.register.fields.terms_and_cond') }}
                     </label>
                   </VeeField>
                 </div>
