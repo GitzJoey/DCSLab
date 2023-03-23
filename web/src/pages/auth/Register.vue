@@ -24,7 +24,7 @@ const loading = ref(false);
 const onSubmit = async (values: any, actions: any) => {
   loading.value = true;
 
-  let result = await authService.doLogin(values.email, values.password, values.remember);
+  let result = await authService.register(values.name, values.email, values.password, values.terms);
 
   if (result.status === StatusCodes.OK) {
     router.push('/dashboard/main');
@@ -100,6 +100,7 @@ const onSubmit = async (values: any, actions: any) => {
                       v-bind="field"
                     />
                   </VeeField>
+                  <VeeErrorMessage name="name" as="span" class="text-danger" />
                   <VeeField name="email" v-slot="{ field }" rules="required|email" :label="t('views.register.fields.email')">
                     <FormInput
                       name="email"
@@ -109,32 +110,27 @@ const onSubmit = async (values: any, actions: any) => {
                       v-bind="field"
                     />
                   </VeeField>
-                  <VeeField name="password" v-slot="{ field }" rules="required" :label="t('views.register.fields.password')">
+                  <VeeErrorMessage name="email" as="span" class="text-danger" />
+                  <VeeField name="password" v-slot="{ field }" rules="required|alpha_num|min:6" :label="t('views.register.fields.password')">
                     <FormInput
                       name="password"
-                      type="text"
+                      type="password"
                       class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
                       :placeholder="t('views.register.fields.password')"
                       v-bind="field"
                     />
                   </VeeField>
-                  <div class="grid w-full h-1 grid-cols-12 gap-4 mt-3 intro-x">
-                    <div class="h-full col-span-3 rounded bg-success"></div>
-                    <div class="h-full col-span-3 rounded bg-success"></div>
-                    <div class="h-full col-span-3 rounded bg-success"></div>
-                    <div
-                      class="h-full col-span-3 rounded bg-slate-100 dark:bg-darkmode-800"
-                    ></div>
-                  </div>
-                  <VeeField name="password_confirmation" v-slot="{ field }" rules="required" :label="t('views.register.fields.password_confirmation')">
+                  <VeeErrorMessage name="password" as="span" class="text-danger" />
+                  <VeeField name="password_confirmation" v-slot="{ field }" rules="confirmed:@password" :label="t('views.register.fields.password_confirmation')">
                     <FormInput
                       name="password_confirmation"
-                      type="text"
+                      type="password"
                       class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
                       :placeholder="t('views.register.fields.password_confirmation')"
                       v-bind="field"
                     />
                   </VeeField>
+                  <VeeErrorMessage name="password_confirmation" as="span" class="text-danger" />
                 </div>
                 <div
                   class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
@@ -142,15 +138,17 @@ const onSubmit = async (values: any, actions: any) => {
                   <VeeField name="terms" v-slot="{ field }" rules="required" :label="t('views.register.fields.terms')">
                     <FormCheck.Input
                       name="terms"
+                      id="terms"
                       type="checkbox"
                       class="mr-2 border"
                       v-bind="field"
                     />
+                    <label class="cursor-pointer select-none" htmlFor="terms">
+                      I agree to {{ t('views.register.fields.terms_and_cond') }}
+                    </label>
                   </VeeField>
-                  <label class="cursor-pointer select-none" htmlFor="remember-me">
-                    I agree to {{ t('views.register.fields.terms_and_cond') }}
-                  </label>
                 </div>
+                <VeeErrorMessage name="terms" as="span" class="text-danger" />
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button
                     variant="primary"
