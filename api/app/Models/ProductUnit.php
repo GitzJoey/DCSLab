@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductUnit extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     use BootableModel;
 
     protected $table = 'product_units';

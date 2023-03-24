@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductGroup extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     use BootableModel;
 
     protected $fillable = [
