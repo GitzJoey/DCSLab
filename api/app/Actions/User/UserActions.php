@@ -64,13 +64,13 @@ class UserActions
 
             $usr->profile()->save($pa);
 
-            $settingPrefTheme = $this->createDefaultSetting_PREF_THEME();
+            $settingPrefTheme = $this->createDefaultSettings_PREF_THEME();
             $usr->settings()->save($settingPrefTheme);
 
-            $settingPrefDateFormat = $this->createDefaultSetting_PREF_DATE_FORMAT();
+            $settingPrefDateFormat = $this->createDefaultSettings_PREF_DATE_FORMAT();
             $usr->settings()->save($settingPrefDateFormat);
 
-            $settingPrefTimeFormat = $this->createDefaultSetting_PREF_TIME_FORMAT();
+            $settingPrefTimeFormat = $this->createDefaultSettings_PREF_TIME_FORMAT();
             $usr->settings()->save($settingPrefTimeFormat);
 
             $usr->attachRoles($rolesArr);
@@ -334,22 +334,7 @@ class UserActions
         $user->tokens()->delete();
     }
 
-    // public function createDefaultSetting_PREF_THEME(): Setting
-    // {
-    //     return Setting::factory()->createDefaultSetting_PREF_THEME()->make();
-    // }
-
-    // public function createDefaultSetting_PREF_DATE_FORMAT(): Setting
-    // {
-    //     return Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
-    // }
-
-    // public function createDefaultSetting_PREF_TIME_FORMAT(): Setting
-    // {
-    //     return Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
-    // }
-
-    public function createDefaultSetting_PREF_THEME(): Setting
+    public function createDefaultSettings_PREF_THEME(): Setting
     {
         $setting = new Setting();
         $setting->type = 'KEY_VALUE';
@@ -359,7 +344,7 @@ class UserActions
         return $setting;
     }
 
-    public function createDefaultSetting_PREF_DATE_FORMAT(): Setting
+    public function createDefaultSettings_PREF_DATE_FORMAT(): Setting
     {
         $setting = new Setting();
         $setting->type = 'KEY_VALUE';
@@ -369,7 +354,7 @@ class UserActions
         return $setting;
     }
 
-    public function createDefaultSetting_PREF_TIME_FORMAT(): Setting
+    public function createDefaultSettings_PREF_TIME_FORMAT(): Setting
     {
         $setting = new Setting();
         $setting->type = 'KEY_VALUE';
