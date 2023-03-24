@@ -334,21 +334,6 @@ class UserActions
         $user->tokens()->delete();
     }
 
-    // public function createDefaultSetting_PREF_THEME(): Setting
-    // {
-    //     return Setting::factory()->createDefaultSetting_PREF_THEME()->make();
-    // }
-
-    // public function createDefaultSetting_PREF_DATE_FORMAT(): Setting
-    // {
-    //     return Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
-    // }
-
-    // public function createDefaultSetting_PREF_TIME_FORMAT(): Setting
-    // {
-    //     return Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
-    // }
-
     public function createDefaultSetting_PREF_THEME(): Setting
     {
         $setting = new Setting();
