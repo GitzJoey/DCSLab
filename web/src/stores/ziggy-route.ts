@@ -1,15 +1,32 @@
 import { defineStore } from "pinia";
+import { env } from "process";
 import { Config } from "ziggy-js";
 
 export interface ZiggyState {
   ziggyValue: Config
 }
 
+const getDomain = () => {
+  let domain = (new URL(import.meta.env.VITE_BACKEND_URL));
+
+  if (!domain) return 'localhost';
+
+  return domain.hostname;
+}
+
+const getDomainPort = () => {
+  let domain = (new URL(import.meta.env.VITE_BACKEND_URL));
+  
+  if (!domain) return 8000; 
+  
+  return Number(domain.port);
+}
+
 export const useZiggyRouteStore = defineStore("ziggyRoute", {
   state: (): ZiggyState => ({
     ziggyValue: {
-        url: 'localhost',
-        port: 8000,
+        url: getDomain(),
+        port: getDomainPort(),
         defaults: {},
         routes: {
             'api.get.db.module.profile.read': {

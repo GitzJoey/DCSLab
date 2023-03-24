@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
-import { StatusCodes } from "../../types/StatusCodesEnum";
+import { StatusCodes } from "../../types/enums/StatusCodes";
 import { useRouter } from "vue-router";
 import { ErrorHandlerService } from "../../services/ErrorHandlerService";
 
@@ -142,6 +142,7 @@ const onSubmit = async (values: any, actions: any) => {
                     <Button
                       variant="outline-secondary"
                       class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
+                      @click="router.push({ name: 'register' })"
                     >
                       {{ t('components.buttons.register') }}
                     </Button>

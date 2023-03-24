@@ -38,7 +38,6 @@ class AppInstall extends Command
     public function handle()
     {
         $this->info('Starting App Installation...');
-        $this->info('Review this installation process in \App\Console\Commands\Install.php');
 
         sleep(3);
 
@@ -59,6 +58,8 @@ class AppInstall extends Command
 
     private function defaultInstallation(): void
     {
+        $this->info('Starting Default Installation');
+
         $passPreInstallCheck = $this->passPreInstallCheck();
         if (! $passPreInstallCheck) {
             return;

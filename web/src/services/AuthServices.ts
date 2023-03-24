@@ -14,12 +14,12 @@ export default class AuthService {
         }
     }
 
-    public async register(emailText: string, passwordText: string, rememberMeCheck: boolean): Promise<AxiosResponse> {
+    public async register(nameText: string, emailText: string, passwordText: string, termsCheck: boolean): Promise<AxiosResponse> {
         let result = {} as AxiosResponse;
 
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
-            result = await authAxiosInstance.post('login', { email: emailText, password: passwordText });
+            result = await authAxiosInstance.post('register', { name: nameText, email: emailText, password: passwordText, terms: termsCheck });
             return result;
         } catch (e: any) {
             return e.response;

@@ -1,11 +1,15 @@
 import { CompanyType } from "./CompanyType";
-import { ProfileType } from "./ProfileType";
 
 export interface UserProfileType {
-    uuid: string,
+    ulid: string,
     name: string,
     email: string,
     email_verified: boolean,
-    profile: ProfileType,
+    profile: {
+        full_name: string,
+        status: string,
+        img_path: string,
+        remarks: string,
+    },
     companies: CompanyType[],
 }
