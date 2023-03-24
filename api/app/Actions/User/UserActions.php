@@ -328,36 +328,6 @@ class UserActions
         $user->tokens()->delete();
     }
 
-    // public function createDefaultSettings_PREF_THEME(): Setting
-    // {
-    //     $setting = new Setting();
-    //     $setting->type = 'KEY_VALUE';
-    //     $setting->key = 'PREFS.THEME';
-    //     $setting->value = 'side-menu-light-full';
-
-    //     return $setting;
-    // }
-
-    // public function createDefaultSettings_PREF_DATE_FORMAT(): Setting
-    // {
-    //     $setting = new Setting();
-    //     $setting->type = 'KEY_VALUE';
-    //     $setting->key = 'PREFS.DATE_FORMAT';
-    //     $setting->value = 'yyyy_MM_dd';
-
-    //     return $setting;
-    // }
-
-    // public function createDefaultSettings_PREF_TIME_FORMAT(): Setting
-    // {
-    //     $setting = new Setting();
-    //     $setting->type = 'KEY_VALUE';
-    //     $setting->key = 'PREFS.TIME_FORMAT';
-    //     $setting->value = 'hh_mm_ss';
-
-    //     return $setting;
-    // }
-
     public function createDefaultSettings(): array
     {
         $settingPrefsTheme = new Setting();
