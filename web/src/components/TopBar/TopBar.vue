@@ -114,12 +114,22 @@ onMounted(async () => {
         <Breadcrumb.Text>PT ABC - Cabang Pusat</Breadcrumb.Text>
       </Breadcrumb>
 
+      <Menu class="mr-4 intro-x sm:mr-6">
+        <Menu.Button :as="Button" variant="primary">
+          <Lucide icon="GlobeIcon" />
+        </Menu.Button>
+        <Menu.Items class="w-48 h-32 overflow-y-auto" placement="bottom-end">
+          <Menu.Item><span class="text-primary">English</span></Menu.Item>
+          <Menu.Item><span class="text-primary">Indonesia</span></Menu.Item>
+        </Menu.Items>
+      </Menu>
+
       <Menu>
         <Menu.Button
           class="block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x"
         >
           <img
-            alt="Midone Tailwind HTML Admin Template"
+            alt="DCSLab"
             :src="defUserUrl"
             v-if="!loading"
           />
@@ -129,7 +139,7 @@ onMounted(async () => {
           class="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white"
         >
           <Menu.Header class="font-normal">
-            <div class="font-medium">{{ userContext.profile.fullName }}</div>
+            <div class="font-medium">{{ userContext.profile.full_name }}</div>
             <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">
               {{ '' }}
             </div>
