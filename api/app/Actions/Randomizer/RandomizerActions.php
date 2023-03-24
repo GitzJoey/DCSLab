@@ -5,6 +5,7 @@ namespace App\Actions\Randomizer;
 class RandomizerActions
 {
     private array $alphabet_characters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
     private array $numeric_characters = [3, 4, 7, 9];
 
     public function __construct()
