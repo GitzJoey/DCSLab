@@ -64,14 +64,8 @@ class UserActions
 
             $usr->profile()->save($pa);
 
-            $settingPrefTheme = $this->createDefaultSettings_PREF_THEME();
-            $usr->settings()->save($settingPrefTheme);
-
-            $settingPrefDateFormat = $this->createDefaultSettings_PREF_DATE_FORMAT();
-            $usr->settings()->save($settingPrefDateFormat);
-
-            $settingPrefTimeFormat = $this->createDefaultSettings_PREF_TIME_FORMAT();
-            $usr->settings()->save($settingPrefTimeFormat);
+            $settings = $this->createDefaultSettings();
+            $usr->settings()->saveMany($settings);
 
             $usr->attachRoles($rolesArr);
 
@@ -334,33 +328,57 @@ class UserActions
         $user->tokens()->delete();
     }
 
-    public function createDefaultSettings_PREF_THEME(): Setting
+    // public function createDefaultSettings_PREF_THEME(): Setting
+    // {
+    //     $setting = new Setting();
+    //     $setting->type = 'KEY_VALUE';
+    //     $setting->key = 'PREFS.THEME';
+    //     $setting->value = 'side-menu-light-full';
+
+    //     return $setting;
+    // }
+
+    // public function createDefaultSettings_PREF_DATE_FORMAT(): Setting
+    // {
+    //     $setting = new Setting();
+    //     $setting->type = 'KEY_VALUE';
+    //     $setting->key = 'PREFS.DATE_FORMAT';
+    //     $setting->value = 'yyyy_MM_dd';
+
+    //     return $setting;
+    // }
+
+    // public function createDefaultSettings_PREF_TIME_FORMAT(): Setting
+    // {
+    //     $setting = new Setting();
+    //     $setting->type = 'KEY_VALUE';
+    //     $setting->key = 'PREFS.TIME_FORMAT';
+    //     $setting->value = 'hh_mm_ss';
+
+    //     return $setting;
+    // }
+
+    public function createDefaultSettings(): array
     {
-        $setting = new Setting();
-        $setting->type = 'KEY_VALUE';
-        $setting->key = 'PREFS.THEME';
-        $setting->value = 'side-menu-light-full';
+        $settingPrefsTheme = new Setting();
+        $settingPrefsTheme->type = 'KEY_VALUE';
+        $settingPrefsTheme->key = 'PREFS.THEME';
+        $settingPrefsTheme->value = 'side-menu-light-full';
 
-        return $setting;
-    }
+        $settingPrefsDate = new Setting();
+        $settingPrefsDate->type = 'KEY_VALUE';
+        $settingPrefsDate->key = 'PREFS.DATE_FORMAT';
+        $settingPrefsDate->value = 'yyyy_MM_dd';
 
-    public function createDefaultSettings_PREF_DATE_FORMAT(): Setting
-    {
-        $setting = new Setting();
-        $setting->type = 'KEY_VALUE';
-        $setting->key = 'PREFS.DATE_FORMAT';
-        $setting->value = 'yyyy_MM_dd';
+        $settingPrefsTime = new Setting();
+        $settingPrefsTime->type = 'KEY_VALUE';
+        $settingPrefsTime->key = 'PREFS.TIME_FORMAT';
+        $settingPrefsTime->value = 'hh_mm_ss';
 
-        return $setting;
-    }
-
-    public function createDefaultSettings_PREF_TIME_FORMAT(): Setting
-    {
-        $setting = new Setting();
-        $setting->type = 'KEY_VALUE';
-        $setting->key = 'PREFS.TIME_FORMAT';
-        $setting->value = 'hh_mm_ss';
-
-        return $setting;
+        $result = [];
+        array_push($result, $settingPrefsTheme);
+        array_push($result, $settingPrefsDate);
+        array_push($result, $settingPrefsTime);
+        return $result;
     }
 }
