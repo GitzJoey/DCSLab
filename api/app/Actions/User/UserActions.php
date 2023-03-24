@@ -64,7 +64,7 @@ class UserActions
 
             $usr->profile()->save($pa);
 
-            $settings = $this->createDefaultSetting();
+            $settings = $this->createDefaultSettings();
             $usr->settings()->saveMany($settings);
 
             $usr->attachRoles($rolesArr);
@@ -328,8 +328,27 @@ class UserActions
         $user->tokens()->delete();
     }
 
-    public function createDefaultSetting(): array
+    public function createDefaultSettings(): array
     {
-        return Setting::factory()->createDefaultSetting();
+        $settingPrefsTheme = new Setting();
+        $settingPrefsTheme->type = 'KEY_VALUE';
+        $settingPrefsTheme->key = 'PREFS.THEME';
+        $settingPrefsTheme->value = 'side-menu-light-full';
+
+        $settingPrefsDate = new Setting();
+        $settingPrefsDate->type = 'KEY_VALUE';
+        $settingPrefsDate->key = 'PREFS.DATE_FORMAT';
+        $settingPrefsDate->value = 'yyyy_MM_dd';
+
+        $settingPrefsTime = new Setting();
+        $settingPrefsTime->type = 'KEY_VALUE';
+        $settingPrefsTime->key = 'PREFS.TIME_FORMAT';
+        $settingPrefsTime->value = 'hh_mm_ss';
+
+        $result = [];
+        array_push($result, $settingPrefsTheme);
+        array_push($result, $settingPrefsDate);
+        array_push($result, $settingPrefsTime);
+        return $result;
     }
 }
