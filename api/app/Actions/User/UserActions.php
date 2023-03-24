@@ -64,8 +64,14 @@ class UserActions
 
             $usr->profile()->save($pa);
 
-            $settings = $this->createDefaultSetting();
-            $usr->settings()->saveMany($settings);
+            $settingPrefTheme = $this->createDefaultSetting_PREF_THEME();
+            $usr->settings()->save($settingPrefTheme);
+
+            $settingPrefDateFormat = $this->createDefaultSetting_PREF_DATE_FORMAT();
+            $usr->settings()->save($settingPrefDateFormat);
+
+            $settingPrefTimeFormat = $this->createDefaultSetting_PREF_TIME_FORMAT();
+            $usr->settings()->save($settingPrefTimeFormat);
 
             $usr->attachRoles($rolesArr);
 
@@ -328,8 +334,48 @@ class UserActions
         $user->tokens()->delete();
     }
 
-    public function createDefaultSetting(): array
+    // public function createDefaultSetting_PREF_THEME(): Setting
+    // {
+    //     return Setting::factory()->createDefaultSetting_PREF_THEME()->make();
+    // }
+
+    // public function createDefaultSetting_PREF_DATE_FORMAT(): Setting
+    // {
+    //     return Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
+    // }
+
+    // public function createDefaultSetting_PREF_TIME_FORMAT(): Setting
+    // {
+    //     return Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
+    // }
+
+    public function createDefaultSetting_PREF_THEME(): Setting
     {
-        return Setting::factory()->createDefaultSetting();
+        $setting = new Setting();
+        $setting->type = 'KEY_VALUE';
+        $setting->key = 'PREFS.THEME';
+        $setting->value = 'side-menu-light-full';
+
+        return $setting;
+    }
+
+    public function createDefaultSetting_PREF_DATE_FORMAT(): Setting
+    {
+        $setting = new Setting();
+        $setting->type = 'KEY_VALUE';
+        $setting->key = 'PREFS.DATE_FORMAT';
+        $setting->value = 'yyyy_MM_dd';
+
+        return $setting;
+    }
+
+    public function createDefaultSetting_PREF_TIME_FORMAT(): Setting
+    {
+        $setting = new Setting();
+        $setting->type = 'KEY_VALUE';
+        $setting->key = 'PREFS.TIME_FORMAT';
+        $setting->value = 'hh_mm_ss';
+
+        return $setting;
     }
 }
