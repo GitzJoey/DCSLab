@@ -3,7 +3,7 @@
 namespace App\Actions\Company;
 
 use App\Actions\ChartOfAccount\ChartOfAccountActions;
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Models\Company;
 use App\Models\User;
 use App\Traits\CacheHelper;
@@ -290,8 +290,8 @@ class CompanyActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }

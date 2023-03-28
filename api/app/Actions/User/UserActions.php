@@ -349,6 +349,7 @@ class UserActions
         array_push($result, $settingPrefsTheme);
         array_push($result, $settingPrefsDate);
         array_push($result, $settingPrefsTime);
+
         return $result;
     }
 }
