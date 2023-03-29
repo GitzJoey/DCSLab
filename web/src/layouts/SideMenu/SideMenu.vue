@@ -45,10 +45,10 @@ onMounted(async () => {
   dashboardStore.toggleScreenMaskValue();
 
   let menu = await dashboardService.readUserMenu();
-  sideMenuStore.setUserMenu(menu as Array<sMenu>);
+  //sideMenuStore.setUserMenu(menu as Array<sMenu>);
 
   let api = await dashboardService.readUserApi();
-  ziggyRouteStore.setZiggy(api as Config)
+  //ziggyRouteStore.setZiggy(api as Config)
 
   setFormattedMenu(sideMenu.value);
   
@@ -58,10 +58,10 @@ onMounted(async () => {
 
 <template>
   <div class="py-5 md:py-0">
-    <LoadingOverlay :visible="screenMask" :transparent="false">
-      <DarkModeSwitcher />
-      <MainColorSwitcher />
-      <MobileMenu />
+    <DarkModeSwitcher />
+    <MainColorSwitcher />
+    <MobileMenu />
+    <LoadingOverlay :visible="true" :transparent="false">
       <TopBar :layout="dashboardStore.getLayoutValue" />
       <div class="flex overflow-hidden">
         <nav
