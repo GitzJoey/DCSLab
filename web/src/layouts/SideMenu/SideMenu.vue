@@ -61,7 +61,7 @@ onMounted(async () => {
     <DarkModeSwitcher />
     <MainColorSwitcher />
     <MobileMenu />
-    <LoadingOverlay :visible="true" :transparent="false">
+    <LoadingOverlay :visible="screenMask" :transparent="false">
       <TopBar :layout="dashboardStore.getLayoutValue" />
       <div class="flex overflow-hidden">
         <nav
