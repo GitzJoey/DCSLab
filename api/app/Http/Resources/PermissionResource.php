@@ -25,7 +25,7 @@ class PermissionResource extends JsonResource
             $this->mergeWhen(env('APP_DEBUG', false), [
                 'id' => $this->id,
             ]),
-            'displayName' => $this->display_name,
+            'display_name' => $this->display_name,
         ];
     }
 }

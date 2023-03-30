@@ -26,7 +26,7 @@ class BranchResource extends JsonResource
             $this->mergeWhen(env('APP_DEBUG', false), [
                 'id' => $this->id,
             ]),
-            'uuid' => $this->uuid,
+            'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
                 'company' => new CompanyResource($this->whenLoaded('company')),
             ]),
@@ -36,7 +36,7 @@ class BranchResource extends JsonResource
             'city' => $this->city,
             'contact' => $this->contact,
             'status' => $this->setStatus($this->status, $this->deleted_at),
-            'isMain' => $this->is_main,
+            'is_main' => $this->is_main,
             'remarks' => $this->remarks,
         ];
     }

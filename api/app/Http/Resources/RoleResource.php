@@ -25,7 +25,7 @@ class RoleResource extends JsonResource
             $this->mergeWhen(env('APP_DEBUG', false), [
                 'id' => $this->id,
             ]),
-            'displayName' => $this->display_name,
+            'display_name' => $this->display_name,
             $this->mergeWhen($this->relationLoaded('permissions'), [
                 'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
                 'permissionsDescription' => $this->flattenPermissions($this->whenLoaded('permissions') ? $this->permissions : null),

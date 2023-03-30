@@ -23,23 +23,23 @@ class ProfileResource extends JsonResource
     {
         if ($this->type == 'UserProfile') {
             return [
-                'fullName' => $this->first_name.' '.$this->last_name, 
+                'full_name' => $this->first_name.' '.$this->last_name, 
                 'country' => $this->country,
                 'status' => $this->status->name,
-                'imgPath' => $this->img_path,
+                'img_path' => $this->img_path,
             ];
         } else {
             return [
-                'firstName' => $this->first_name,
-                'lastName' => $this->last_name,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
                 'address' => $this->address,
                 'city' => $this->city,
-                'postalCode' => $this->postal_code,
+                'postal_code' => $this->postal_code,
                 'country' => $this->country,
                 'status' => $this->status->name,
-                'taxId' => $this->tax_id,
-                'icNum' => $this->ic_num,
-                'imgPath' => $this->img_path,
+                'tax_id' => $this->tax_id,
+                'ic_num' => $this->ic_num,
+                'img_path' => $this->img_path,
                 'remarks' => $this->remarks,
             ];
         }

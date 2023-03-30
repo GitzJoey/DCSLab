@@ -26,7 +26,7 @@ class WarehouseResource extends JsonResource
             $this->mergeWhen(env('APP_DEBUG', false), [
                 'id' => $this->id,
             ]),
-            'uuid' => $this->uuid,
+            'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
                 'company' => new CompanyResource($this->whenLoaded('company')),
             ]),
@@ -38,8 +38,8 @@ class WarehouseResource extends JsonResource
             'address' => $this->address,
             'city' => $this->city,
             'contact' => $this->contact,
-            'remarks' => $this->remarks,
             'status' => $this->setStatus($this->status, $this->deleted_at),
+            'remarks' => $this->remarks,
         ];
     }
 

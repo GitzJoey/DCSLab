@@ -27,24 +27,24 @@ class UserResource extends JsonResource
                 $this->mergeWhen(env('APP_DEBUG', false), [
                     'id' => $this->id,
                 ]),
-                'uuid' => $this->uuid,
+                'ulid' => $this->uuid,
                 'name' => $this->name,
                 'email' => $this->email,
-                'emailVerified' => ! is_null($this->email_verified_at),
-                'passwordExpiryDay' => $this->getPasswordExpiryDay($this->password_changed_at),
+                'email_verified' => ! is_null($this->email_verified_at),
+                'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
                 $this->mergeWhen($this->relationLoaded('profile'), [
                     'profile' => (new ProfileResource($this->whenLoaded('profile')))->type('UserProfile'),
                 ]),
                 $this->mergeWhen($this->relationLoaded('roles'), [
                     'roles' => RoleResource::collection($this->whenLoaded('roles')),
-                    'rolesDescription' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
-                    'selectedRoles' => $this->selectedRolesInArray($this->whenLoaded('roles') ? $this->roles : null),
+                    'roles_description' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
+                    'selected_roles' => $this->selectedRolesInArray($this->whenLoaded('roles') ? $this->roles : null),
                 ]),
                 $this->mergeWhen($this->relationLoaded('companies'), [
                     'companies' => CompanyResource::collection($this->whenLoaded('companies')),
                 ]),
                 $this->mergeWhen($this->relationLoaded('settings'), [
-                    'selectedSettings' => $this->selectedSettingsInArray($this->whenLoaded('settings') ? $this->settings : null),
+                    'selected_settings' => $this->selectedSettingsInArray($this->whenLoaded('settings') ? $this->settings : null),
                 ]),
             ];
         } else {
@@ -52,17 +52,17 @@ class UserResource extends JsonResource
                 $this->mergeWhen(env('APP_DEBUG', false), [
                     'id' => $this->id,
                 ]),
-                'uuid' => $this->uuid,
+                'ulid' => $this->ulid,
                 'name' => $this->name,
                 'email' => $this->email,
-                'emailVerified' => ! is_null($this->email_verified_at),
-                'passwordExpiryDay' => $this->getPasswordExpiryDay($this->password_changed_at),
+                'email_verified' => ! is_null($this->email_verified_at),
+                'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
                 $this->mergeWhen($this->relationLoaded('profile'), [
                     'profile' => new ProfileResource($this->whenLoaded('profile')),
                 ]),
                 $this->mergeWhen($this->relationLoaded('roles'), [
                     'roles' => RoleResource::collection($this->whenLoaded('roles')),
-                    'rolesDescription' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
+                    'roles_description' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
                 ]),
                 $this->mergeWhen($this->relationLoaded('companies'), [
                     'companies' => CompanyResource::collection($this->whenLoaded('companies')),
@@ -89,7 +89,7 @@ class UserResource extends JsonResource
             return [];
         }
 
-        return $roles->pluck('hId');
+        return $roles->pluck('display_name');
     }
 
     private function getPasswordExpiryDay($password_changed_at)

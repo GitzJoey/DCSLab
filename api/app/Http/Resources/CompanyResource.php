@@ -26,7 +26,7 @@ class CompanyResource extends JsonResource
             $this->mergeWhen(env('APP_DEBUG', false), [
                 'id' => $this->id,
             ]),
-            'uuid' => $this->uuid,
+            'ulid' => $this->uuid,
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,
