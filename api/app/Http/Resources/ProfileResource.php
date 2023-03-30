@@ -27,7 +27,7 @@ class ProfileResource extends JsonResource
             return [
                 'full_name' => $this->first_name.' '.$this->last_name,
                 'country' => $this->country,
-                'status' => $this->status,
+                'status' => $this->status->name,
                 'img_path' => $this->img_path,
             ];
         } else {
@@ -38,7 +38,7 @@ class ProfileResource extends JsonResource
                 'city' => $this->city,
                 'postal_code' => $this->postal_code,
                 'country' => $this->country,
-                'status' => $this->status,
+                'status' => $this->status->name,
                 'tax_id' => $this->tax_id,
                 'ic_num' => $this->ic_num,
                 'img_path' => $this->img_path,
