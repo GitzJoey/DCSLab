@@ -30,6 +30,10 @@ class Product extends Model
         'remarks',
     ];
 
+    protected $casts = [
+        'status' => RecordStatus::class,
+    ];
+
     public function company()
     {
         return $this->belongsTo(Company::class);

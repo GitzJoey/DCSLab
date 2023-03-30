@@ -9,8 +9,10 @@ class UserResource extends JsonResource
 {
     protected string $type;
 
-    public function type(string $value) {
+    public function type(string $value)
+    {
         $this->type = $value;
+
         return $this;
     }
 

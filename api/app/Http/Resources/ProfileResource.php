@@ -8,8 +8,10 @@ class ProfileResource extends JsonResource
 {
     protected string $type;
 
-    public function type(string $value) {
+    public function type(string $value)
+    {
         $this->type = $value;
+
         return $this;
     }
 
@@ -23,9 +25,9 @@ class ProfileResource extends JsonResource
     {
         if ($this->type == 'UserProfile') {
             return [
-                'full_name' => $this->first_name.' '.$this->last_name, 
+                'full_name' => $this->first_name.' '.$this->last_name,
                 'country' => $this->country,
-                'status' => $this->status->name,
+                'status' => $this->status,
                 'img_path' => $this->img_path,
             ];
         } else {
@@ -36,7 +38,7 @@ class ProfileResource extends JsonResource
                 'city' => $this->city,
                 'postal_code' => $this->postal_code,
                 'country' => $this->country,
-                'status' => $this->status->name,
+                'status' => $this->status,
                 'tax_id' => $this->tax_id,
                 'ic_num' => $this->ic_num,
                 'img_path' => $this->img_path,

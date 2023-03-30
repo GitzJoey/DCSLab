@@ -28,6 +28,10 @@ class Supplier extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'status' => RecordStatus::class,
+    ];
+
     public function company()
     {
         return $this->belongsTo(Company::class);

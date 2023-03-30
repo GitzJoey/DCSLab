@@ -20,6 +20,10 @@ class Employee extends Model
         'status',
     ];
 
+    protected $casts = [
+        'status' => RecordStatus::class,
+    ];
+
     public function company()
     {
         return $this->belongsTo(Company::class);

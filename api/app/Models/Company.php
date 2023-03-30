@@ -21,6 +21,10 @@ class Company extends Model
         'status',
     ];
 
+    protected $casts = [
+        'status' => RecordStatus::class,
+    ];
+
     public function users()
     {
         return $this->belongsToMany(User::class);
