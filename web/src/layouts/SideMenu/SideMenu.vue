@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { watch, reactive, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import Divider from "./Divider.vue";
 import Menu from "./Menu.vue";
@@ -10,13 +10,11 @@ import MainColorSwitcher from "../../components/MainColorSwitcher";
 import MobileMenu from "../../components/MobileMenu";
 import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
 import { FormattedMenu, nestedMenu, enter, leave } from "./side-menu";
-import { watch, reactive, computed, onMounted } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
 import { useDashboardStore } from "../../stores/dashboard";
 import DashboardService from "../../services/DashboardService";
 import { useZiggyRouteStore } from "../../stores/ziggy-route";
-import { Config } from "ziggy-js";
 
 const route = useRoute();
 
