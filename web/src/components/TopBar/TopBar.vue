@@ -111,7 +111,7 @@ onMounted(async () => {
             </Menu.Items>
           </Menu>
         </Breadcrumb.Text>
-        <Breadcrumb.Text>PT ABC - Cabang Pusat</Breadcrumb.Text>
+        <Breadcrumb.Text>[Company] - [Branch]</Breadcrumb.Text>
       </Breadcrumb>
 
       <Menu class="mr-4 intro-x sm:mr-6">
@@ -141,7 +141,7 @@ onMounted(async () => {
           <Menu.Header class="font-normal">
             <div class="font-medium">{{ userContext.profile.full_name }}</div>
             <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-              {{ '' }}
+              {{ userContext.email }}
             </div>
           </Menu.Header>
           <Menu.Divider class="bg-white/[0.08]" />
