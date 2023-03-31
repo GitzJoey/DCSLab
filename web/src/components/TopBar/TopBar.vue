@@ -15,7 +15,7 @@ import { useUserContextStore } from "../../stores/user-context";
 import { useRouter } from "vue-router";
 import Button from "../../base-components/Button";
 import DashboardService from '../../services/DashboardService';
-import { UserProfileType } from '../../types/UserProfileType';
+import { UserProfileType } from '../../types/resources/UserProfileType';
 import LoadingIcon from "../../base-components/LoadingIcon";
 
 const { t } = useI18n();
@@ -27,6 +27,20 @@ const dashboardStore = useDashboardStore();
 const userContextStore = useUserContextStore();
 
 const userContext = computed(() => userContextStore.getUserContext);
+const selectedUserCompanyName = computed(() => {
+  let companyId = userContextStore.getSelectedUserCompany.ulid;
+  
+  if (!companyId) return '';
+
+  return '';
+});
+const selectedUserBranchName = computed(() => {
+  let branchId = userContextStore.getSelectedUserBranch.ulid;
+  
+  if (!branchId) return '';
+
+  return '';
+});
 
 const props = defineProps<{
   layout?: "side-menu" | "simple-menu" | "top-menu";
@@ -53,6 +67,8 @@ onMounted(async () => {
 
   let userprofile = await dashboardService.readProfile();
   userContextStore.setUserContext(userprofile.data as UserProfileType);
+
+  
 
   loading.value = false;
 })
@@ -111,7 +127,7 @@ onMounted(async () => {
             </Menu.Items>
           </Menu>
         </Breadcrumb.Text>
-        <Breadcrumb.Text>[Company] - [Branch]</Breadcrumb.Text>
+        <Breadcrumb.Text v-if="selectedUserCompanyName != '' || selectedUserBranchName != ''">{{ selectedUserCompanyName }} - {{ selectedUserBranchName }}</Breadcrumb.Text>
       </Breadcrumb>
 
       <Menu class="mr-4 intro-x sm:mr-6">
