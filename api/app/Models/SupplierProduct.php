@@ -22,7 +22,7 @@ class SupplierProduct extends Model
     protected $casts = [
         'main_product' => 'boolean',
     ];
-    
+
     public function company()
     {
         return $this->belongsTo(Company::class);
