@@ -2,7 +2,7 @@
 
 namespace App\Actions\Brand;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Models\Brand;
 use App\Traits\CacheHelper;
 use Exception;
@@ -195,8 +195,8 @@ class BrandActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }

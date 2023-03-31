@@ -2,7 +2,7 @@
 
 namespace App\Actions\CustomerGroup;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Models\CustomerGroup;
 use App\Traits\CacheHelper;
 use Exception;
@@ -225,8 +225,8 @@ class CustomerGroupActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }
