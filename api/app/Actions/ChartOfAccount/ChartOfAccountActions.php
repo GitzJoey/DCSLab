@@ -621,10 +621,15 @@ class ChartOfAccountActions
         }
     }
 
-    public function generateUniqueCode(): string
+    public function generateUniqueCode(int $companyId, ?int $parentId): string
     {
-        $rand = new RandomizerActions();
-        $code = $rand->generateAlpha().$rand->generateNumeric();
+        $query = ChartOfAccount::wherecompanyId($companyId);
+
+        if ($parentId) {
+            $query = $query->where('parent_id', '=', $parentId);
+        }
+
+        $code = $query->count();
 
         return $code;
     }
