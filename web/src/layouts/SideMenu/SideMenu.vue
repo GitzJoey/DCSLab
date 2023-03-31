@@ -15,6 +15,7 @@ import ScrollToTop from "../../base-components/ScrollToTop";
 import { useDashboardStore } from "../../stores/dashboard";
 import DashboardService from "../../services/DashboardService";
 import { useZiggyRouteStore } from "../../stores/ziggy-route";
+import { Config } from "ziggy-js";
 
 const route = useRoute();
 
@@ -43,10 +44,10 @@ onMounted(async () => {
   dashboardStore.toggleScreenMaskValue();
 
   let menu = await dashboardService.readUserMenu();
-  //sideMenuStore.setUserMenu(menu as Array<sMenu>);
+  sideMenuStore.setUserMenu(menu as Array<sMenu>);
 
   let api = await dashboardService.readUserApi();
-  //ziggyRouteStore.setZiggy(api as Config)
+  ziggyRouteStore.setZiggy(api as Config)
 
   setFormattedMenu(sideMenu.value);
   
