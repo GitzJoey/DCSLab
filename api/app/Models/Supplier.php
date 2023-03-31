@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,10 @@ class Supplier extends Model
         'status',
         'remarks',
         'user_id',
+    ];
+
+    protected $casts = [
+        'status' => RecordStatus::class,
     ];
 
     public function company()

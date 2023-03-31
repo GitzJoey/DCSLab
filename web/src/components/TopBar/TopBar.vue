@@ -118,7 +118,7 @@ onMounted(async () => {
         <Menu.Button :as="Button" variant="primary">
           <Lucide icon="GlobeIcon" />
         </Menu.Button>
-        <Menu.Items class="w-48 h-32 overflow-y-auto" placement="bottom-end">
+        <Menu.Items class="w-48 h-24 overflow-y-auto" placement="bottom-end">
           <Menu.Item><span class="text-primary">English</span></Menu.Item>
           <Menu.Item><span class="text-primary">Indonesia</span></Menu.Item>
         </Menu.Items>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,10 @@ class Branch extends Model
         'status',
         'is_main',
         'remarks',
+    ];
+
+    protected $casts = [
+        'status' => RecordStatus::class,
     ];
 
     public function company()

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,4 +25,13 @@ class Profile extends Model
         'img_path',
         'remarks',
     ];
+
+    protected $casts = [
+        'status' => RecordStatus::class,
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
