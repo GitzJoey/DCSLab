@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentTermType;
 use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +31,7 @@ class Supplier extends Model
     ];
 
     protected $casts = [
+        'payment_term_type' => PaymentTermType::class,
         'status' => RecordStatus::class,
     ];
 

@@ -27,6 +27,7 @@ class ChartOfAccount extends Model
     ];
 
     protected $casts = [
+        'can_have_child' => 'boolean',
         'status' => RecordStatus::class,
     ];
 

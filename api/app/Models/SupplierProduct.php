@@ -19,6 +19,10 @@ class SupplierProduct extends Model
         'main_product',
     ];
 
+    protected $casts = [
+        'main_product' => 'boolean',
+    ];
+    
     public function company()
     {
         return $this->belongsTo(Company::class);

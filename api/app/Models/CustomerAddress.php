@@ -25,6 +25,10 @@ class CustomerAddress extends Model
         'remarks',
     ];
 
+    protected $casts = [
+        'is_main' => 'boolean',
+    ];
+
     public function company()
     {
         return $this->belongsTo(Company::class);

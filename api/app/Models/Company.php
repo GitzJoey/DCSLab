@@ -23,6 +23,7 @@ class Company extends Model
     ];
 
     protected $casts = [
+        'default' => 'boolean',
         'status' => RecordStatus::class,
     ];
 

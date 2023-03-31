@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentTermType;
 use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,6 +35,9 @@ class Customer extends Model
     ];
 
     protected $casts = [
+        'is_member' => 'boolean',
+        'taxable_enterprise' => 'boolean',
+        'payment_term_type' => PaymentTermType::class,
         'status' => RecordStatus::class,
     ];
 
