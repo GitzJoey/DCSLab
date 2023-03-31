@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Role\RoleActions;
 use App\Actions\User\UserActions;
 use App\Http\Requests\ProfileRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\UserProfileResource;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends BaseController
@@ -25,13 +25,12 @@ class ProfileController extends BaseController
 
     public function readProfile()
     {
-        //$result = $this->userActions->readBy('ID', Auth::id());
         $result = $this->userActions->read(Auth::user());
 
         if (is_null($result)) {
             return response()->error();
         } else {
-            $response = (new UserResource($result))->type('UserProfile');
+            $response = (new UserProfileResource($result));
 
             return $response;
         }
