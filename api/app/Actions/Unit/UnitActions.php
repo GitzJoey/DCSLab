@@ -2,7 +2,7 @@
 
 namespace App\Actions\Unit;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\UnitCategory;
 use App\Models\Unit;
 use App\Traits\CacheHelper;
@@ -210,8 +210,8 @@ class UnitActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Actions\ChartOfAccount;
 
+use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\AccountType;
 use App\Enums\RecordStatus;
 use App\Models\ChartOfAccount;
@@ -620,15 +621,10 @@ class ChartOfAccountActions
         }
     }
 
-    public function generateUniqueCode(int $companyId, ?int $parentId): string
+    public function generateUniqueCode(): string
     {
-        $query = ChartOfAccount::wherecompanyId($companyId);
-
-        if ($parentId) {
-            $query = $query->where('parent_id', '=', $parentId);
-        }
-
-        $code = $query->count();
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Actions\Supplier;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Actions\User\UserActions;
 use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
@@ -281,8 +281,8 @@ class SupplierActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }

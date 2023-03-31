@@ -2,7 +2,7 @@
 
 namespace App\Actions\ProductGroup;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\ProductGroupCategory;
 use App\Models\ProductGroup;
 use App\Traits\CacheHelper;
@@ -208,8 +208,8 @@ class ProductGroupActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }
