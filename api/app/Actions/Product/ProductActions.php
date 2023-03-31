@@ -2,7 +2,7 @@
 
 namespace App\Actions\Product;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\ProductCategory;
 use App\Enums\ProductType;
 use App\Enums\RecordStatus;
@@ -296,16 +296,16 @@ class ProductActions
 
     public function generateUniqueCodeForProduct(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }
 
     public function generateUniqueCodeForProductUnits(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }

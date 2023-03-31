@@ -2,7 +2,7 @@
 
 namespace App\Actions\Warehouse;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Models\Warehouse;
 use App\Traits\CacheHelper;
 use Exception;
@@ -182,8 +182,8 @@ class WarehouseActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomGenerator();
-        $code = $rand->generateAlphaNumeric(3).$rand->generateFixedLengthNumber(3);
+        $rand = new RandomizerActions();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }
