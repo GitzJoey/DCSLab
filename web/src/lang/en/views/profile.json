@@ -1,6 +1,6 @@
 {
     "title": "Profile",
-    "menu": {
+    "field_groups": {
         "personal_information": "Personal Information",
         "account_settings": "Account Settings",
         "roles": "Roles",
@@ -20,8 +20,8 @@
         "ic_num": "IC No.",
         "settings":  {
             "theme": "Themes",
-            "dateFormat": "Date Format",
-            "timeFormat": "Time Format",
+            "date_format": "Date Format",
+            "time_format": "Time Format",
             "api_token": "API Token"
         },
         "change_password": {

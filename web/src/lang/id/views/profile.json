@@ -1,6 +1,6 @@
 {
     "title": "Profil",
-    "menu": {
+    "field_groups": {
         "personal_information": "Informasi Pribadi",
         "account_settings": "Pengaturan Akun",
         "roles": "Peran",
@@ -20,8 +20,8 @@
         "ic_num": "KTP",
         "settings": {
             "theme": "Tema",
-            "dateFormat": "Format Tanggal",
-            "timeFormat": "Format Waktu",
+            "date_format": "Format Tanggal",
+            "time_format": "Format Waktu",
             "api_token": "API Token"
         },
         "change_password": {
