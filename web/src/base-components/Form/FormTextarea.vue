@@ -7,14 +7,7 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import {
-  computed,
-  InputHTMLAttributes,
-  useAttrs,
-  inject,
-  ref,
-  watch,
-} from "vue";
+import { computed, InputHTMLAttributes, useAttrs, inject } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 
@@ -51,11 +44,15 @@ const computedClass = computed(() =>
   ])
 );
 
-const localValue = ref(props.modelValue);
 const emit = defineEmits<FormTextareaEmit>();
 
-watch(localValue, () => {
-  emit("update:modelValue", localValue.value);
+const localValue = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(newValue) {
+    emit("update:modelValue", newValue);
+  },
 });
 </script>
 

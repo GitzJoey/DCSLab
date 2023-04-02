@@ -7,14 +7,7 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import {
-  computed,
-  SelectHTMLAttributes,
-  useAttrs,
-  inject,
-  ref,
-  watch,
-} from "vue";
+import { computed, SelectHTMLAttributes, useAttrs, inject } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 
 interface FormSelectProps extends SelectHTMLAttributes {
@@ -44,11 +37,15 @@ const computedClass = computed(() =>
   ])
 );
 
-const localValue = ref(props.modelValue);
 const emit = defineEmits<FormSelectEmit>();
 
-watch(localValue, () => {
-  emit("update:modelValue", localValue.value);
+const localValue = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(newValue) {
+    emit("update:modelValue", newValue);
+  },
 });
 </script>
 

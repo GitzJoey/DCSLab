@@ -72,6 +72,17 @@ onMounted(() => {
               readonly
             />
           </div>
+          <div class="pb-4">
+            <FormLabel htmlFor="firstName">{{ t('views.profile.fields.first_name') }}</FormLabel>
+            <FormInput
+              id="firstName"
+              name="first_name"
+              type="text"
+              class="w-full"
+              v-model="userContext.profile.full_name"
+              :placeholder="t('views.profile.fields.first_name')"
+            />
+          </div>
         </div>
       </div>
     </div>
