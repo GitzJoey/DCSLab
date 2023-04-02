@@ -46,8 +46,8 @@ onMounted(() => {
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y p-5 box">
       <div class="grid grid-cols-12">
-        <div class="col-span-4">{{ t('views.profile.field_groups.personal_information') }}</div>
-        <div class="col-span-8">
+        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">{{ t('views.profile.field_groups.personal_information') }}</div>
+        <div class="col-span-12 md:col-span-8 lg:col-span-8">
           <div class="pb-4">
             <FormLabel htmlFor="name">{{ t('views.profile.fields.name') }}</FormLabel>
             <FormInput
@@ -73,14 +73,30 @@ onMounted(() => {
             />
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="firstName">{{ t('views.profile.fields.first_name') }}</FormLabel>
+            <VeeField name="first_name" v-slot="{ field }" rules="required" :label="t('views.profile.fields.first_name')">
+              <FormLabel htmlFor="firstName" class="flex flex-col w-full sm:flex-row">
+                {{ t('views.profile.fields.first_name') }}
+              </FormLabel>
+              <FormInput
+                id="firstName"
+                name="first_name"
+                type="text"
+                class="w-full"
+                v-model="userContext.profile.first_name"
+                :placeholder="t('views.profile.fields.first_name')"
+                v-bind="field"
+              />
+            </VeeField>
+          </div>
+          <div class="pb-4">
+            <FormLabel htmlFor="lastName">{{ t('views.profile.fields.last_name') }}</FormLabel>
             <FormInput
-              id="firstName"
-              name="first_name"
+              id="lastName"
+              name="last_name"
               type="text"
               class="w-full"
-              v-model="userContext.profile.full_name"
-              :placeholder="t('views.profile.fields.first_name')"
+              v-model="userContext.profile.last_name"
+              :placeholder="t('views.profile.fields.last_name')"
             />
           </div>
         </div>
