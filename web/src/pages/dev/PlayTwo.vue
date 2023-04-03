@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, ref } from "vue";
+//import { onMounted, ref } from "vue";
 //#endregion
 
 //#region Declarations
@@ -10,16 +10,16 @@ import { onMounted, ref } from "vue";
 //#endregion
 
 //#region Data - UI
-const loading = ref(false);
+//const loading = ref(false);
 //#endregion
 
 //#region Data - Views
 //#endregion
 
 //#region onMounted
-onMounted(() => {
+//onMounted(() => {
 
-});
+//});
 //#endregion
 
 //#region Computed
@@ -30,5 +30,5 @@ onMounted(() => {
 </script>
 
 <template>
-
+    <div></div>
 </template>

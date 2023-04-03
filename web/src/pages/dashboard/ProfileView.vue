@@ -50,10 +50,10 @@ onMounted(() => {
             <FormLabel htmlFor="name">{{ t('views.profile.fields.name') }}</FormLabel>
             <FormInput
               id="name"
+              v-model="userContext.name"
               name="name"
               type="text"
               class="w-full"
-              v-model="userContext.name"
               :placeholder="t('views.profile.fields.name')"
               readonly
             />
@@ -62,25 +62,25 @@ onMounted(() => {
             <FormLabel htmlFor="email">{{ t('views.profile.fields.email') }}</FormLabel>
             <FormInput
               id="email"
+              v-model="userContext.email"
               name="email"
               type="text"
               class="w-full"
-              v-model="userContext.email"
               :placeholder="t('views.profile.fields.email')"
               readonly
             />
           </div>
           <div class="pb-4">
-            <VeeField name="first_name" v-slot="{ field }" rules="required" :label="t('views.profile.fields.first_name')">
+            <VeeField v-slot="{ field }" name="first_name" rules="required" :label="t('views.profile.fields.first_name')">
               <FormLabel htmlFor="firstName" class="flex flex-col w-full sm:flex-row">
                 {{ t('views.profile.fields.first_name') }}
               </FormLabel>
               <FormInput
                 id="firstName"
+                v-model="userContext.profile.first_name"
                 name="first_name"
                 type="text"
                 class="w-full"
-                v-model="userContext.profile.first_name"
                 :placeholder="t('views.profile.fields.first_name')"
                 v-bind="field"
               />
@@ -90,10 +90,10 @@ onMounted(() => {
             <FormLabel htmlFor="lastName">{{ t('views.profile.fields.last_name') }}</FormLabel>
             <FormInput
               id="lastName"
+              v-model="userContext.profile.last_name"
               name="last_name"
               type="text"
               class="w-full"
-              v-model="userContext.profile.last_name"
               :placeholder="t('views.profile.fields.last_name')"
             />
           </div>
