@@ -1,15 +1,15 @@
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 
-import Login from "../pages/auth/Login.vue";
-import Register from "../pages/auth/Register.vue";
+import LoginView from "../pages/auth/LoginView.vue";
+import RegisterView from "../pages/auth/RegisterView.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
-import Profile from "../pages/dashboard/Profile.vue";
+import ProfileView from "../pages/dashboard/ProfileView.vue";
 import DevTool from "../pages/dev/DevTool.vue";
-import Play1 from "../pages/dev/Play1.vue";
-import Play2 from "../pages/dev/Play2.vue";
-import Error from "../pages/dashboard/Error.vue";
+import PlayOne from "../pages/dev/PlayOne.vue";
+import PlayTwo from "../pages/dev/PlayTwo.vue";
+import ErrorView from "../pages/dashboard/ErrorView.vue";
 import ErrorPage from "../pages/error/ErrorPage.vue";
-import User from "../pages/administrator/User.vue";
+import UserView from "../pages/administrator/UserView.vue";
 
 export default [
     {
@@ -22,17 +22,17 @@ export default [
             {
                 path: "/auth/login",
                 name: "login",
-                component: Login,
+                component: LoginView,
             },
             {
                 path: "/auth/register",
                 name: 'register',
-                component: Register,
+                component: RegisterView,
             },
             {
                 path: "/auth/password-reset",
                 name: 'password-reset',
-                component: Register,
+                component: RegisterView,
             },
         ]
     },
@@ -53,7 +53,7 @@ export default [
             {
                 path: "/dashboard/profile",
                 name: "side-menu-dashboard-profile",
-                component: Profile,
+                component: ProfileView,
                 meta: { 
                     remember: true,
                     log_route: true,
@@ -67,7 +67,7 @@ export default [
                     {
                         path: "/dashboard/administrator/user",
                         name: "side-menu-administrator-user",
-                        component: User
+                        component: UserView
                     }                    
                 ]
             },
@@ -87,12 +87,12 @@ export default [
                             {
                                 path: "/dashboard/devtool/playground/p1",
                                 name: "side-menu-devtool-playground-p1",
-                                component: Play1
+                                component: PlayOne
                             },
                             {
                                 path: "/dashboard/devtool/playground/p2",
                                 name: "side-menu-devtool-playground-p2",
-                                component: Play2
+                                component: PlayTwo
                             }
                         ]
                     }
@@ -101,7 +101,7 @@ export default [
             {
                 path: "/dashboard/error" + "/:code",
                 name: "side-menu-error-code",
-                component: Error,
+                component: ErrorView,
                 meta: { 
                     remember: false,
                     log_route: false,

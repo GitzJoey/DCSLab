@@ -1,7 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, ref, computed } from "vue";
-import router from "vue-router";
+import { onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -20,7 +19,6 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#endregion
 
 //#region Data - UI
-const loading = ref(false);
 //#endregion
 
 //#region Data - Views
