@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductType;
 use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +33,9 @@ class Product extends Model
     ];
 
     protected $casts = [
+        'use_serial_number' => 'boolean',
+        'has_expiry_date' => 'datetime',
+        'product_type' => ProductType::class,
         'status' => RecordStatus::class,
     ];
 

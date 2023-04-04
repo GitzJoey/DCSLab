@@ -7,7 +7,7 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { computed, InputHTMLAttributes, useAttrs, ref, watch } from "vue";
+import { computed, InputHTMLAttributes, useAttrs } from "vue";
 
 interface InputProps extends InputHTMLAttributes {
   modelValue?: InputHTMLAttributes["value"];
@@ -49,11 +49,15 @@ const computedClass = computed(() =>
   ])
 );
 
-const localValue = ref(props.modelValue);
 const emit = defineEmits<InputEmit>();
 
-watch(localValue, () => {
-  emit("update:modelValue", localValue.value);
+const localValue = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(newValue) {
+    emit("update:modelValue", newValue);
+  },
 });
 </script>
 

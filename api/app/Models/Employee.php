@@ -23,6 +23,7 @@ class Employee extends Model
 
     protected $casts = [
         'status' => RecordStatus::class,
+        'join_date' => 'datetime',
     ];
 
     public function company()

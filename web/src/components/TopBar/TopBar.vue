@@ -4,7 +4,7 @@ import Lucide from "../../base-components/Lucide";
 import logoUrl from "../../assets/images/logo.svg";
 import Breadcrumb from "../../base-components/Breadcrumb";
 import { FormInput } from "../../base-components/Form";
-import { Menu, Popover } from "../../base-components/Headless";
+import { Menu, Slideover } from "../../base-components/Headless";
 import defUserUrl from "../../assets/images/def-user.png";
 import _ from "lodash";
 import { TransitionRoot } from "@headlessui/vue";
@@ -15,7 +15,7 @@ import { useUserContextStore } from "../../stores/user-context";
 import { useRouter } from "vue-router";
 import Button from "../../base-components/Button";
 import DashboardService from '../../services/DashboardService';
-import { UserProfileType } from '../../types/UserProfileType';
+import { UserProfileType } from '../../types/resources/UserProfileType';
 import LoadingIcon from "../../base-components/LoadingIcon";
 
 const { t } = useI18n();
@@ -27,6 +27,20 @@ const dashboardStore = useDashboardStore();
 const userContextStore = useUserContextStore();
 
 const userContext = computed(() => userContextStore.getUserContext);
+const selectedUserCompanyName = computed(() => {
+  let companyId = userContextStore.getSelectedUserCompany.ulid;
+  
+  if (!companyId) return '';
+
+  return '';
+});
+const selectedUserBranchName = computed(() => {
+  let branchId = userContextStore.getSelectedUserBranch.ulid;
+  
+  if (!branchId) return '';
+
+  return '';
+});
 
 const props = defineProps<{
   layout?: "side-menu" | "simple-menu" | "top-menu";
@@ -47,6 +61,11 @@ const logout = () => {
 }
 
 const loading = ref(false);
+
+const showSlideover = ref(false);
+const toggleSlideover = (value: boolean) => {
+  showSlideover.value = value;
+};
 
 onMounted(async () => {
   loading.value = true;
@@ -111,8 +130,38 @@ onMounted(async () => {
             </Menu.Items>
           </Menu>
         </Breadcrumb.Text>
-        <Breadcrumb.Text>[Company] - [Branch]</Breadcrumb.Text>
+        <Breadcrumb.Text v-if="selectedUserCompanyName != '' || selectedUserBranchName != ''">{{ selectedUserCompanyName }} - {{ selectedUserBranchName }}</Breadcrumb.Text>
       </Breadcrumb>
+
+      <Button
+        as="a"
+        class="mr-2 intro-x sm:mr-4"
+        href="#"
+        variant="primary"
+        @click="(event: MouseEvent) => { event.preventDefault(); toggleSlideover(true); }"
+      >
+        <Lucide icon="Archive" />
+      </Button>
+
+      <Slideover
+        :open="showSlideover"
+        @close="() => { toggleSlideover(false); }"
+      >
+        <Slideover.Panel>
+          <Slideover.Title class="p-5">
+            <h2 class="mr-auto text-base font-medium">
+              &nbsp;
+            </h2>
+          </Slideover.Title>
+          <Slideover.Description>
+            &nbsp;
+          </Slideover.Description>
+          <Slideover.Footer>
+            <strong>Copyright &copy; {{ (new Date()).getFullYear() }} <a href="https://www.github.com/GitzJoey">GitzJoey</a>&nbsp;&amp;&nbsp;<a href="https://github.com/GitzJoey/DCSLab/graphs/contributors">Contributors</a>.</strong> All rights reserved.<br/> Powered By Coffee &amp; Curiosity.
+          </Slideover.Footer>
+        </Slideover.Panel>
+      </Slideover>
+
 
       <Menu class="mr-4 intro-x sm:mr-6">
         <Menu.Button :as="Button" variant="primary">

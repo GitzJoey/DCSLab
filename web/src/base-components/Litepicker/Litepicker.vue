@@ -7,7 +7,7 @@ import { InputHTMLAttributes, onMounted, ref, watch, inject } from "vue";
 import { setValue, init, reInit } from "./litepicker";
 import LitepickerJs from "litepicker";
 import { FormInput } from "../../base-components/Form";
-import { ILPConfiguration } from "litepicker/dist/types/interfaces";
+import { ILPConfiguration } from "litepicker/dist/types/interfaces.d";
 
 export interface LitepickerElement extends HTMLInputElement {
   litePickerInstance: LitepickerJs;

@@ -26,6 +26,11 @@ class ProductUnit extends Model
         'remarks',
     ];
 
+    protected $casts = [
+        'is_base' => 'boolean',
+        'is_primary_unit' => 'boolean',
+    ];
+
     public function company()
     {
         return $this->belongsTo(Company::class);

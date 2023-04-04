@@ -27,6 +27,7 @@ class Branch extends Model
     ];
 
     protected $casts = [
+        'is_main' => 'boolean',
         'status' => RecordStatus::class,
     ];
 

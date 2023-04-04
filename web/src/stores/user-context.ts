@@ -56,11 +56,11 @@ export const useUserContextStore = defineStore("userContext", {
       this.selectedUserLocationValue.company.ulid = companyId;
       this.selectedUserLocationValue.branch.ulid = branchId;
     },
-    setSelectedUserCompany(ulid: string) {
-      this.selectedUserLocationValue.company.ulid = ulid;
+    setSelectedUserCompanyId(companyId: string) {
+      this.selectedUserLocationValue.company.ulid = companyId;
     },
-    setSelectedUserBranch(ulid: string) {
-      this.selectedUserLocationValue.branch.ulid = ulid;
+    setSelectedUserBranchId(branchId: string) {
+      this.selectedUserLocationValue.branch.ulid = branchId;
     }
   },  
 });

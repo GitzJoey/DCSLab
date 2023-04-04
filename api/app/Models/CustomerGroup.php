@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentTermType;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +33,10 @@ class CustomerGroup extends Model
         'round_on',
         'round_digit',
         'remarks',
+    ];
+
+    protected $casts = [
+        'payment_term_type' => PaymentTermType::class,
     ];
 
     public function company()

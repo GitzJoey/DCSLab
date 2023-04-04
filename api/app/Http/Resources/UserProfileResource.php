@@ -19,7 +19,7 @@ class UserProfileResource extends JsonResource
             $this->mergeWhen(env('APP_DEBUG', false), [
                 'id' => $this->id,
             ]),
-            'ulid' => $this->uuid,
+            'ulid' => $this->ulid,
             'name' => $this->name,
             'email' => $this->email,
             'email_verified' => ! is_null($this->email_verified_at),
