@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -39,33 +38,15 @@ class UserResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('roles'), [
                 'roles' => RoleResource::collection($this->whenLoaded('roles')),
                 'roles_description' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
+                'selected_roles' => $this->selectedRolesInArray($this->whenLoaded('roles') ? $this->roles : null),
             ]),
             $this->mergeWhen($this->relationLoaded('companies'), [
                 'companies' => CompanyResource::collection($this->whenLoaded('companies')),
             ]),
             $this->mergeWhen($this->relationLoaded('settings'), [
                 'settings' => SettingResource::collection($this->whenLoaded('settings')),
+                'selected_settings' => $this->selectedSettingsInArray($this->whenLoaded('settings') ? $this->settings : null),
             ]),
         ];
-    }
-
-    private function flattenRoles($roles)
-    {
-        if (is_null($roles)) {
-            return '';
-        }
-
-        return $roles->pluck('display_name')->implode(',');
-    }
-
-    private function getPasswordExpiryDay($password_changed_at)
-    {
-        if (is_null($password_changed_at)) {
-            return 0;
-        }
-
-        $diff = Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(config('dcslab.PASSWORD_EXPIRY_DAYS')), false);
-
-        return $diff <= 0 ? 0 : $diff;
     }
 }

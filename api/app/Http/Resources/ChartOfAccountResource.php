@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WarehouseResource extends JsonResource
+class ChartOfAccountResource extends JsonResource
 {
     protected string $type;
 
@@ -25,21 +25,15 @@ class WarehouseResource extends JsonResource
     public function toArray($request)
     {
         return [
-            $this->mergeWhen(env('APP_DEBUG', false), [
-                'id' => $this->id,
-            ]),
+            'hId' => $this->hId,
             'ulid' => $this->ulid,
-            $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company')),
-            ]),
-            $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->whenLoaded('branch')),
-            ]),
+            'company' => new CompanyResource($this->company),
+            'parent_account' => $this->parent_id ? new ChartOfAccountResource($this->parentAccount) : null,
+            'child_accounts' => ChartOfAccountResource::collection($this->whenLoaded('childAccounts')),
             'code' => $this->code,
             'name' => $this->name,
-            'address' => $this->address,
-            'city' => $this->city,
-            'contact' => $this->contact,
+            'account_type' => $this->account_type->name,
+            'can_have_child' => $this->can_have_child,
             'remarks' => $this->remarks,
             'status' => $this->setStatus($this->status, $this->deleted_at),
         ];
