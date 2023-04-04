@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WarehouseResource extends JsonResource
+class PurchaseOrderDiscountResource extends JsonResource
 {
     protected string $type;
 
@@ -29,28 +28,18 @@ class WarehouseResource extends JsonResource
                 'id' => $this->id,
             ]),
             'ulid' => $this->ulid,
-            $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company')),
-            ]),
+            'company' => new CompanyResource($this->company),
             $this->mergeWhen($this->relationLoaded('branch'), [
                 'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
-            'code' => $this->code,
-            'name' => $this->name,
-            'address' => $this->address,
-            'city' => $this->city,
-            'contact' => $this->contact,
-            'remarks' => $this->remarks,
-            'status' => $this->setStatus($this->status, $this->deleted_at),
+            $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
+                'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnit'), [
+                'purchase_order_product_unit' => new PurchaseOrderProductUnitResource($this->whenLoaded('purchaseOrderProductUnit')),
+            ]),
+            'discount_type' => $this->discount_type,
+            'amount' => $this->amount,
         ];
-    }
-
-    private function setStatus($status, $deleted_at)
-    {
-        if (! is_null($deleted_at)) {
-            return RecordStatus::DELETED->name;
-        } else {
-            return $status->name;
-        }
     }
 }

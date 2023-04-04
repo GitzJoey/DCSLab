@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WarehouseResource extends JsonResource
+class ProductResource extends JsonResource
 {
     protected string $type;
 
@@ -29,19 +29,26 @@ class WarehouseResource extends JsonResource
                 'id' => $this->id,
             ]),
             'ulid' => $this->ulid,
-            $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company')),
-            ]),
-            $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->whenLoaded('branch')),
-            ]),
             'code' => $this->code,
             'name' => $this->name,
-            'address' => $this->address,
-            'city' => $this->city,
-            'contact' => $this->contact,
-            'remarks' => $this->remarks,
+            'product_type' => $this->product_type->name,
+            'taxable_supply' => $this->taxable_supply,
+            'standard_rated_supply' => $this->standard_rated_supply,
+            'price_include_vat' => $this->price_include_vat,
+            'point' => $this->point,
+            'use_serial_number' => $this->use_serial_number,
+            'has_expiry_date' => $this->has_expiry_date,
             'status' => $this->setStatus($this->status, $this->deleted_at),
+            'remarks' => $this->remarks,
+            $this->mergeWhen($this->relationLoaded('productGroup'), [
+                'product_group' => new ProductGroupResource($this->whenLoaded('productGroup')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('brand'), [
+                'brand' => new BrandResource($this->whenLoaded('brand')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('productUnits'), [
+                'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits')),
+            ]),
         ];
     }
 

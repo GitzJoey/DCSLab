@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WarehouseResource extends JsonResource
+class EmployeeAccessResource extends JsonResource
 {
     protected string $type;
 
@@ -28,29 +27,12 @@ class WarehouseResource extends JsonResource
             $this->mergeWhen(env('APP_DEBUG', false), [
                 'id' => $this->id,
             ]),
-            'ulid' => $this->ulid,
-            $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company')),
+            $this->mergeWhen($this->relationLoaded('employee'), [
+                'employee' => new EmployeeResource($this->whenLoaded('employee')),
             ]),
             $this->mergeWhen($this->relationLoaded('branch'), [
                 'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
-            'code' => $this->code,
-            'name' => $this->name,
-            'address' => $this->address,
-            'city' => $this->city,
-            'contact' => $this->contact,
-            'remarks' => $this->remarks,
-            'status' => $this->setStatus($this->status, $this->deleted_at),
         ];
-    }
-
-    private function setStatus($status, $deleted_at)
-    {
-        if (! is_null($deleted_at)) {
-            return RecordStatus::DELETED->name;
-        } else {
-            return $status->name;
-        }
     }
 }
