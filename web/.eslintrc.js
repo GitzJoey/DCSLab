@@ -2,9 +2,7 @@ module.exports = {
     env: {
       node: true,
     },
-    parserOptions: {
-      ecmaVersion: 2017,
-    },
+    parser: '@typescript-eslint/parser',
     extends: [
       'eslint:recommended',
       'plugin:vue/vue3-recommended',
