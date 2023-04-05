@@ -8,7 +8,8 @@ export default class CacheService {
     public getCachedDDL(ddlname: string): any | null {
         let ddl = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
         
-        return ddl.hasOwnProperty(ddlname) ? ddl[ddlname] : null;
+        let hasDDL = Object.hasOwnProperty.call(ddl, ddlname);
+        return  hasDDL ? ddl[ddlname] : null;
     }
     
     public setCachedDDL(ddlname: string, value: any) {
