@@ -9,6 +9,7 @@ use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerGroupRequest extends FormRequest
 {
