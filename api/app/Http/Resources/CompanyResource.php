@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Enums\RecordStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CompanyResource extends JsonResource
 {
@@ -25,9 +26,7 @@ class CompanyResource extends JsonResource
     public function toArray($request)
     {
         return [
-            $this->mergeWhen(env('APP_DEBUG', false), [
-                'id' => $this->id,
-            ]),
+            'id' => Hashids::encode($this->id),
             'ulid' => $this->uuid,
             'code' => $this->code,
             'name' => $this->name,
@@ -45,7 +44,7 @@ class CompanyResource extends JsonResource
 
     private function setStatus($status, $deleted_at)
     {
-        if (! is_null($deleted_at)) {
+        if (!is_null($deleted_at)) {
             return RecordStatus::DELETED->name;
         } else {
             return $status->name;
