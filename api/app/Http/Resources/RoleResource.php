@@ -24,9 +24,7 @@ class RoleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            $this->mergeWhen(env('APP_DEBUG', false), [
-                'id' => $this->id,
-            ]),
+            'id' => Hashids::encode($this->id),
             'display_name' => $this->display_name,
             $this->mergeWhen($this->relationLoaded('permissions'), [
                 'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
