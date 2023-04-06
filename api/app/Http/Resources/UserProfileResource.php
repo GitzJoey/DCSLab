@@ -16,9 +16,7 @@ class UserProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            $this->mergeWhen(env('APP_DEBUG', false), [
-                'id' => $this->id,
-            ]),
+            'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             'name' => $this->name,
             'email' => $this->email,

@@ -25,9 +25,7 @@ class EmployeeResource extends JsonResource
     public function toArray($request)
     {
         $resource = [
-            $this->mergeWhen(env('APP_DEBUG', false), [
-                'id' => $this->id,
-            ]),
+            'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
                 'company' => new CompanyResource($this->whenLoaded('company')),

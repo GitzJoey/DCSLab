@@ -24,9 +24,7 @@ class CustomerGroupResource extends JsonResource
     public function toArray($request)
     {
         return [
-            $this->mergeWhen(env('APP_DEBUG', false), [
-                'id' => $this->id,
-            ]),
+            'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
             'code' => $this->code,

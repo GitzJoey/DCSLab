@@ -27,7 +27,7 @@ class CompanyResource extends JsonResource
     {
         return [
             'id' => Hashids::encode($this->id),
-            'ulid' => $this->uuid,
+            'ulid' => $this->ulid,
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,
@@ -44,7 +44,7 @@ class CompanyResource extends JsonResource
 
     private function setStatus($status, $deleted_at)
     {
-        if (!is_null($deleted_at)) {
+        if (! is_null($deleted_at)) {
             return RecordStatus::DELETED->name;
         } else {
             return $status->name;

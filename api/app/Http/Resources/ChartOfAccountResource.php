@@ -25,7 +25,7 @@ class ChartOfAccountResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'hId' => $this->hId,
+            'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
             'parent_account' => $this->parent_id ? new ChartOfAccountResource($this->parentAccount) : null,
