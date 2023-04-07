@@ -112,7 +112,7 @@ class ProductRequest extends FormRequest
                 $rules_update = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
-                    'name' => 'required|min:3|max:255',
+                    'name' => 'required', 'min:3', 'max:255',
                     'product_group_id' => ['required'],
                     'taxable_supply' => ['required', 'boolean'],
                     'standard_rated_supply' => ['required', 'numeric', 'min:0'],
