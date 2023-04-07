@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
+use App\Actions\Branch\BranchActions;
+use App\Http\Requests\BranchRequest;
+use App\Http\Resources\BranchResource;
 use App\Models\Branch;
 use App\Models\Company;
-use App\Http\Requests\BranchRequest;
-use App\Actions\Branch\BranchActions;
-use App\Http\Resources\BranchResource;
+use Exception;
 
 class BranchController extends Controller
 {

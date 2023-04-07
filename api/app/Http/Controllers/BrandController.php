@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Brand;
 use App\Actions\Brand\BrandActions;
 use App\Http\Requests\BrandRequest;
 use App\Http\Resources\BrandResource;
+use App\Models\Brand;
+use Exception;
 
 class BrandController extends Controller
 {
