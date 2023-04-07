@@ -1,6 +1,7 @@
 {
     "title": "Profile",
     "field_groups": {
+        "user_profile": "User Profile",
         "personal_information": "Personal Information",
         "account_settings": "Account Settings",
         "roles": "Roles",

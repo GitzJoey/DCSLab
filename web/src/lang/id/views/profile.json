@@ -1,6 +1,7 @@
 {
     "title": "Profil",
     "field_groups": {
+        "user_profile": "Profil Pengguna",
         "personal_information": "Informasi Pribadi",
         "account_settings": "Pengaturan Akun",
         "roles": "Peran",
