@@ -8,6 +8,7 @@ import {
   FormTextarea,
   FormSelect,
 } from "../../base-components/Form";
+import ThreeColsLayout from "../../base-components/FormLayout";
 import { useUserContextStore } from "../../stores/user-context";
 //#endregion
 
@@ -43,13 +44,11 @@ onMounted(() => {});
   </div>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y p-5 box">
-      <div class="grid grid-cols-12">
-        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
-          <span class="text-lg">{{
-            t("views.profile.field_groups.user_profile")
-          }}</span>
-        </div>
-        <div class="col-span-12 md:col-span-8 lg:col-span-8">
+      <ThreeColsLayout>
+        <template #title>{{
+          t("views.profile.field_groups.user_profile")
+        }}</template>
+        <template #content>
           <div class="pb-4">
             <FormLabel htmlFor="name">{{
               t("views.profile.fields.name")
@@ -78,12 +77,13 @@ onMounted(() => {});
               readonly
             />
           </div>
-        </div>
-      </div>
-      <hr class="py-2" />
+        </template>
+      </ThreeColsLayout>
       <div class="grid grid-cols-12">
         <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
-          {{ t("views.profile.field_groups.personal_information") }}
+          <span class="text-lg">{{
+            t("views.profile.field_groups.personal_information")
+          }}</span>
         </div>
         <div class="col-span-12 md:col-span-8 lg:col-span-8">
           <div class="pb-4">
