@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\RecordStatus;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChartOfAccountResource extends JsonResource

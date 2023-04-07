@@ -128,11 +128,11 @@ class PurchaseOrderRequest extends FormRequest
         return [
             'company_id' => trans('validation_attributes.purchase_order.company'),
             'branch_id' => trans('validation_attributes.purchase_order.branch'),
-            'supplier_id' => trans('validation_attributes.purchase_order.supplier'),
             'invoice_code' => trans('validation_attributes.purchase_order.invoice_code'),
             'invoice_date' => trans('validation_attributes.purchase_order.invoice_date'),
-            'shipping_address' => trans('validation_attributes.purchase_order.shipping_address'),
+            'supplier_id' => trans('validation_attributes.purchase_order.supplier'),
             'shipping_date' => trans('validation_attributes.purchase_order.shipping_date'),
+            'shipping_address' => trans('validation_attributes.purchase_order.shipping_address'),
             'status' => trans('validation_attributes.purchase_order.status'),
             'global_percent_discount' => trans('validation_attributes.purchase_order.global_percent_discount'),
             'global_nominal_discount' => trans('validation_attributes.purchase_order.global_nominal_discount'),
