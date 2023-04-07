@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
+use App\Actions\Company\CompanyActions;
+use App\Http\Requests\CompanyRequest;
+use App\Http\Resources\CompanyResource;
 use App\Models\Company;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\CompanyRequest;
-use App\Actions\Company\CompanyActions;
-use App\Http\Resources\CompanyResource;
 
 class CompanyController extends Controller
 {

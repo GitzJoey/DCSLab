@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Unit;
-use App\Enums\UnitCategory;
 use App\Actions\Unit\UnitActions;
+use App\Enums\UnitCategory;
 use App\Http\Requests\UnitRequest;
 use App\Http\Resources\UnitResource;
+use App\Models\Unit;
+use Exception;
 
 class UnitController extends Controller
 {
@@ -71,7 +71,7 @@ class UnitController extends Controller
         if (array_key_exists('category', $request)) {
             $category = $request['category'];
         }
-        
+
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;

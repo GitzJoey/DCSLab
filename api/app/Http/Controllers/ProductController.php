@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
-use App\Models\Product;
-use App\Enums\ProductType;
-use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
 use App\Actions\Product\ProductActions;
+use App\Enums\ProductType;
+use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
+use Exception;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -32,24 +32,24 @@ class ProductController extends Controller
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productActions->generateUniqueCodeForProduct();
-            } while (!$this->productActions->isUniqueCodeForProduct($code, $company_id));
+            } while (! $this->productActions->isUniqueCodeForProduct($code, $company_id));
         } else {
-            if (!$this->productActions->isUniqueCodeForProduct($code, $company_id)) {
+            if (! $this->productActions->isUniqueCodeForProduct($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
-        
+
         $useSerialNumber = false;
         if (array_key_exists('use_serial_number', $request)) {
             $useSerialNumber = $request['use_serial_number'];
-        };
+        }
 
         $hasExpiryDate = false;
         if (array_key_exists('has_expiry_date', $request)) {
             $hasExpiryDate = $request['has_expiry_date'];
-        };
+        }
 
         $productArr = [
             'company_id' => $company_id,
@@ -76,15 +76,15 @@ class ProductController extends Controller
             if ($productUnitCode == config('dcslab.KEYWORDS.AUTO')) {
                 do {
                     $productUnitCode = $this->productActions->generateUniqueCodeForProductUnits();
-                } while (!$this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id));
+                } while (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id));
             } else {
-                if (!$this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id)) {
+                if (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id)) {
                     return response()->error([
                         'code' => [trans('rules.unique_code')],
                     ], 422);
                 }
             }
-            
+
             $product_units_unit_id = $request['product_units_unit_id'][$i];
 
             $product_units_conv_value = $request['product_units_conv_value'][$i];
@@ -210,7 +210,7 @@ class ProductController extends Controller
     public function getActiveProduct(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
-        
+
         $companyId = $request['company_id'];
 
         $result = $this->productActions->getActiveProduct($companyId);
@@ -234,9 +234,9 @@ class ProductController extends Controller
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productActions->generateUniqueCodeForProduct($company_id);
-            } while (!$this->productActions->isUniqueCodeForProduct($code, $company_id, $product->id));
+            } while (! $this->productActions->isUniqueCodeForProduct($code, $company_id, $product->id));
         } else {
-            if (!$this->productActions->isUniqueCodeForProduct($code, $company_id, $product->id)) {
+            if (! $this->productActions->isUniqueCodeForProduct($code, $company_id, $product->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
@@ -246,12 +246,12 @@ class ProductController extends Controller
         $useSerialNumber = false;
         if (array_key_exists('use_serial_number', $request)) {
             $useSerialNumber = $request['use_serial_number'];
-        };
+        }
 
         $hasExpiryDate = false;
         if (array_key_exists('has_expiry_date', $request)) {
             $hasExpiryDate = $request['has_expiry_date'];
-        };
+        }
 
         $productArr = [
             'company_id' => $company_id,
@@ -274,21 +274,21 @@ class ProductController extends Controller
         $count_unit = count($request['product_units_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
             $product_unit_id = $request['product_units_id'][$i] != null ? $request['product_units_id'][$i] : null;
-            
+
             $productUnitCode = array_key_exists('product_units_code', $request) ? $request['product_units_code'][$i] : '[AUTO]';
 
             if ($productUnitCode == config('dcslab.KEYWORDS.AUTO')) {
                 do {
                     $productUnitCode = $this->productActions->generateUniqueCodeForProductUnits();
-                } while (!$this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id));
+                } while (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id));
             } else {
-                if (!$this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id)) {
+                if (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id)) {
                     return response()->error([
                         'code' => [trans('rules.unique_code')],
                     ], 422);
                 }
             }
-            
+
             $product_units_unit_id = $request['product_units_unit_id'][$i];
 
             $product_units_conv_value = $request['product_units_conv_value'][$i];
@@ -341,6 +341,6 @@ class ProductController extends Controller
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        return !$result ? response()->error($errorMsg) : response()->success();
+        return ! $result ? response()->error($errorMsg) : response()->success();
     }
 }
