@@ -2,6 +2,7 @@
 
 namespace App\Actions\PuchaseOrder;
 
+use App\Models\ProductUnit;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderProductUnit;
 use App\Traits\CacheHelper;
@@ -22,8 +23,7 @@ class PurchaseOrderActions
 
     public function create(
         array $purchaseOrderArr,
-        array $productUnitArr,
-        array $discountArr
+        array $productUnitArr
     ): PurchaseOrder {
         DB::beginTransaction();
         $timer_start = microtime(true);
@@ -34,9 +34,9 @@ class PurchaseOrderActions
             $purchaseOrder->branch_id = $purchaseOrderArr['branch_id'];
             $purchaseOrder->invoice_code = $purchaseOrderArr['invoice_code'];
             $purchaseOrder->invoice_date = $purchaseOrderArr['invoice_date'];
+            $purchaseOrder->supplier_id = $purchaseOrderArr['supplier_id'];
             $purchaseOrder->shipping_date = $purchaseOrderArr['shipping_date'];
             $purchaseOrder->shipping_address = $purchaseOrderArr['shipping_address'];
-            $purchaseOrder->supplier_id = $purchaseOrderArr['supplier_id'];
             $purchaseOrder->remarks = $purchaseOrderArr['remarks'];
             $purchaseOrder->status = $purchaseOrderArr['status'];
             $purchaseOrder->save();
@@ -47,7 +47,7 @@ class PurchaseOrderActions
                     'company_id' => $purchaseOrder->company_id,
                     'branch_id' => $purchaseOrder->branch_id,
                     'purchase_order_id' => $purchaseOrder->id,
-                    'product_id' => $productUnit['product_id'],
+                    'product_id' => ProductUnit::where('id', '=', $productUnit['product_unit_id'])->first()->product_id,
                     'product_unit_id' => $productUnit['product_unit_id'],
                     'qty' => $productUnit['qty'],
                     'product_unit_amount_per_unit' => $productUnit['product_unit_amount_per_unit'],
@@ -159,24 +159,23 @@ class PurchaseOrderActions
     public function update(
         PurchaseOrder $purchaseOrder,
         array $purchaseOrderArr,
-        array $productUnitArr,
-        array $discountArr
+        array $productUnitArr
     ): PurchaseOrder {
         DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $purchaseOrder->update([
-                'invoice_code' => $purchaseOrder->invoice_code,
-                'invoice_date' => $purchaseOrder->invoice_date,
-                'shipping_date' => $purchaseOrder->shipping_date,
-                'shipping_address' => $purchaseOrder->shipping_address,
-                'supplier_id' => $purchaseOrder->supplier_id,
-                'remarks' => $purchaseOrder->remarks,
-                'status' => $purchaseOrder->status,
+                'invoice_code' => $purchaseOrderArr['invoice_code'],
+                'invoice_date' => $purchaseOrderArr['invoice_date'],
+                'supplier_id' => $purchaseOrderArr['supplier_id'],
+                'shipping_date' => $purchaseOrderArr['shipping_date'],
+                'shipping_address' => $purchaseOrderArr['shipping_address'],
+                'remarks' => $purchaseOrderArr['remarks'],
+                'status' => $purchaseOrderArr['status'],
             ]);
 
-            $purchaseOrderProductUnits = collect($purchaseOrder->purchaseOrderProductUnits)->map(function ($productUnit) {
+            $purchaseOrderProductUnits = collect($productUnitArr)->map(function ($productUnit) {
                 return [
                     'id' => $productUnit->id,
                     'company_id' => $productUnit->company_id,
@@ -194,7 +193,7 @@ class PurchaseOrderActions
                 ];
             });
 
-            DB::table('purchase_order_product_units')->upsert($purchaseOrderProductUnits->toArray(), ['id'], [
+            PurchaseOrderProductUnit::upsert($purchaseOrderProductUnits->toArray(), ['id'], [
                 'product_id',
                 'product_unit_id',
                 'qty',
