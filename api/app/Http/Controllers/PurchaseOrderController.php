@@ -50,7 +50,7 @@ class PurchaseOrderController extends Controller
             'status' => $request['status'],
             'global_discount' => [
                 'amount' => $request['arr_global_discount'],
-                'discount_type' => $request['arr_global_discount_type']
+                'discount_type' => $request['arr_global_discount_type'],
             ],
         ];
 
@@ -65,11 +65,11 @@ class PurchaseOrderController extends Controller
                 'initial_price' => $request['arr_product_unit_initial_price'][$i],
                 'per_unit_discount' => [
                     'amount' => $request['arr_product_unit_per_unit_discount'],
-                    'discount_type' => $request['arr_product_unit_per_unit_discount_type']
+                    'discount_type' => $request['arr_product_unit_per_unit_discount_type'],
                 ],
                 'per_unit_discount' => [
                     'amount' => $request['arr_product_unit_per_unit_sub_total_discount'],
-                    'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type']
+                    'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type'],
                 ],
                 'vat_status' => $request['arr_product_unit_vat_status'][$i],
                 'vat_rate' => $request['arr_product_unit_vat_rate'][$i],
@@ -168,7 +168,7 @@ class PurchaseOrderController extends Controller
             'status' => $request['status'],
             'global_discount' => [
                 'amount' => $request['arr_global_discount'],
-                'discount_type' => $request['arr_global_discount_type']
+                'discount_type' => $request['arr_global_discount_type'],
             ],
         ];
 
@@ -183,11 +183,11 @@ class PurchaseOrderController extends Controller
                 'initial_price' => $request['arr_product_unit_initial_price'][$i],
                 'per_unit_discount' => [
                     'amount' => $request['arr_product_unit_per_unit_discount'],
-                    'discount_type' => $request['arr_product_unit_per_unit_discount_type']
+                    'discount_type' => $request['arr_product_unit_per_unit_discount_type'],
                 ],
                 'per_unit_discount' => [
                     'amount' => $request['arr_product_unit_per_unit_sub_total_discount'],
-                    'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type']
+                    'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type'],
                 ],
                 'vat_status' => $request['arr_product_unit_vat_status'][$i],
                 'vat_rate' => $request['arr_product_unit_vat_rate'][$i],

@@ -276,7 +276,7 @@ class PurchaseOrderRequest extends FormRequest
                     }
                 }
                 $this->merge(['arr_product_unit_initial_price' => $arr_product_unit_initial_price]);
-                
+
                 $arr_product_unit_per_unit_discount = [];
                 if ($this->has('arr_product_unit_per_unit_discount')) {
                     for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount); $i++) {
