@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DiscountType;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -59,8 +60,25 @@ class PurchaseOrderProductUnit extends Model
         return $this->belongsTo(ProductUnit::class);
     }
 
-    public function purchaseOrderDiscounts()
+    public function productUnitPerUnitDiscount()
     {
-        return $this->hasMany(PurchaseOrderDiscount::class);
+        $result = $this->hasMany(PurchaseOrderDiscount::class)
+        ->where(function($query) {
+            $query->where('discount_type', '=', DiscountType::PER_UNIT_PERCENT_DISCOUNT->value)
+                ->orWhere('discount_type', '=', DiscountType::PER_UNIT_NOMINAL_DISCOUNT->value);
+        });
+
+        return $result;
+    }
+
+    public function productUnitPerUnitSubTotalDiscount()
+    {
+        $result = $this->hasMany(PurchaseOrderDiscount::class)
+        ->where(function($query) {
+            $query->where('discount_type', '=', DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT->value)
+                ->orWhere('discount_type', '=', DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT->value);
+        });
+        
+        return $result;
     }
 }

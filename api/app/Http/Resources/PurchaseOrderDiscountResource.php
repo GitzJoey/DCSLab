@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PurchaseOrderDiscountResource extends JsonResource
@@ -23,21 +24,39 @@ class PurchaseOrderDiscountResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => Hashids::encode($this->id),
-            'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->whenLoaded('branch')),
-            ]),
-            $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
-                'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
-            ]),
-            $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnit'), [
-                'purchase_order_product_unit' => new PurchaseOrderProductUnitResource($this->whenLoaded('purchaseOrderProductUnit')),
-            ]),
-            'discount_type' => $this->discount_type,
-            'amount' => $this->amount,
-        ];
+        if ($this->type == 'PurchaseOrder') {
+            return [
+                'id' => Hashids::encode($this->id),
+                'ulid' => $this->ulid,
+                'company' => new CompanyResource($this->company),
+                $this->mergeWhen($this->relationLoaded('branch'), [
+                    'branch' => new BranchResource($this->whenLoaded('branch')),
+                ]),
+                $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
+                    'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
+                ]),
+                'discount_type' => $this->discount_type,
+                'amount' => $this->amount,
+            ];
+        } elseif ($this->type == 'PurchaseOrderProductUnit') {
+            return [
+                'id' => Hashids::encode($this->id),
+                'ulid' => $this->ulid,
+                'company' => new CompanyResource($this->company),
+                $this->mergeWhen($this->relationLoaded('branch'), [
+                    'branch' => new BranchResource($this->whenLoaded('branch')),
+                ]),
+                $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
+                    'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
+                ]),
+                $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnit'), [
+                    'purchase_order_product_unit' => new PurchaseOrderProductUnitResource($this->whenLoaded('purchaseOrderProductUnit')),
+                ]),
+                'discount_type' => $this->discount_type,
+                'amount' => $this->amount,
+            ];    
+        }
+
+        
     }
 }

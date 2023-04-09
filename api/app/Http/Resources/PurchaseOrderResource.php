@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PurchaseOrderDiscount;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -38,9 +39,9 @@ class PurchaseOrderResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('supplier'), [
                 'supplier' => new SupplierResource($this->whenLoaded('supplier')),
             ]),
-            // $this->mergeWhen($this->relationLoaded('purchaseOrderDiscounts'), [
-            //     'global_discounts' => new ChartOfAccountResource($this->whenLoaded('purchaseOrderDiscounts')),
-            // ]),
+            $this->mergeWhen($this->relationLoaded('purchaseOrderDiscounts'), [
+                'global_discounts' => (new PurchaseOrderDiscountResource($this->whenLoaded('purchaseOrderDiscounts')))->type('PurchaseOrder'),
+            ]),
             $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnits'), [
                 'product_units' => new PurchaseOrderProductUnitResource($this->whenLoaded('purchaseOrderProductUnits')),
             ]),
