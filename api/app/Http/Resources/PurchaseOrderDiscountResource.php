@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class PurchaseOrderDiscountResource extends JsonResource
 {
@@ -54,9 +54,7 @@ class PurchaseOrderDiscountResource extends JsonResource
                 ]),
                 'discount_type' => $this->discount_type,
                 'amount' => $this->amount,
-            ];    
+            ];
         }
-
-        
     }
 }

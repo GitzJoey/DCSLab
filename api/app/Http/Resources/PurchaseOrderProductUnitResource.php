@@ -3,8 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Enums\RecordStatus;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class PurchaseOrderProductUnitResource extends JsonResource
 {
@@ -46,7 +46,7 @@ class PurchaseOrderProductUnitResource extends JsonResource
             'qty' => $this->qty,
             'product_unit_amount_per_unit' => $this->product_unit_amount_per_unit,
             'product_unit_amount_total' => $this->product_unit_amount_total,
-            'product_unit_initial_price' => $this->product_unit_initial_price,            
+            'product_unit_initial_price' => $this->product_unit_initial_price,
             $this->mergeWhen($this->relationLoaded('productUnitPerUnitDiscount'), [
                 'product_unit_per_unit_discount' => (new PurchaseOrderDiscountResource($this->whenLoaded('productUnitPerUnitDiscount')))->type('PurchaseOrderProductUnit'),
             ]),

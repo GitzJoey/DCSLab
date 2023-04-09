@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Enums\DiscountType;
 use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PurchaseOrder extends Model
 {
@@ -47,7 +47,7 @@ class PurchaseOrder extends Model
     public function purchaseOrderDiscounts()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
-        ->where(function($query) {
+        ->where(function ($query) {
             $query->where('discount_type', '=', DiscountType::GLOBAL_PERCENT_DISCOUNT->value)
                 ->orWhere('discount_type', '=', DiscountType::GLOBAL_NOMINAL_DISCOUNT->value);
         });
