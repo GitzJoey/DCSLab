@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\PurchaseOrderDiscount;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 

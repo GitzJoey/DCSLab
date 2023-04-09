@@ -63,7 +63,7 @@ class PurchaseOrderProductUnit extends Model
     public function productUnitPerUnitDiscount()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
-        ->where(function($query) {
+        ->where(function ($query) {
             $query->where('discount_type', '=', DiscountType::PER_UNIT_PERCENT_DISCOUNT->value)
                 ->orWhere('discount_type', '=', DiscountType::PER_UNIT_NOMINAL_DISCOUNT->value);
         });
@@ -74,11 +74,11 @@ class PurchaseOrderProductUnit extends Model
     public function productUnitPerUnitSubTotalDiscount()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
-        ->where(function($query) {
+        ->where(function ($query) {
             $query->where('discount_type', '=', DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT->value)
                 ->orWhere('discount_type', '=', DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT->value);
         });
-        
+
         return $result;
     }
 }
