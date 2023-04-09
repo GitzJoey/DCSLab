@@ -17,9 +17,9 @@ class PurchaseOrder extends Model
         'branch_id',
         'invoice_code',
         'invoice_date',
+        'supplier_id',
         'shipping_date',
         'shipping_address',
-        'supplier_id',
         'remarks',
         'status',
     ];

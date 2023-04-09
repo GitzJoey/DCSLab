@@ -436,7 +436,7 @@ class ChartOfAccountActions
         }
     }
 
-    public function listFormated(
+    public function readFormated(
         int $companyId,
         ?int $branchId = null,
         string $search = '',
