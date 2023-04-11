@@ -1,3 +1,4 @@
 import ThreeColsLayout from "./ThreeColsLayout.vue";
+import ViewTitleLayout from "./ViewTitleLayout.vue";
 
-export default ThreeColsLayout;
+export { ThreeColsLayout, ViewTitleLayout };
