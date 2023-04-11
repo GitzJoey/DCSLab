@@ -109,7 +109,7 @@ class PurchaseOrderActions
 
             $result = null;
 
-            $query = count($with) != 0 ? PurchaseOrder::with($with) : PurchaseOrder::with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.purchaseOrderDiscounts');
+            $query = count($with) != 0 ? PurchaseOrder::with($with) : PurchaseOrder::with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount');
 
             if (! $companyId) {
                 return null;
