@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Actions\Role\RoleActions;
 use App\Actions\User\UserActions;
 use App\Http\Requests\UserRequest;
@@ -78,8 +79,7 @@ class UserController extends Controller
 
     public function getAllRoles()
     {
-        $excludeRole = [
-        ];
+        $excludeRole = [];
 
         $roles = null;
         $errorMsg = '';
@@ -115,7 +115,7 @@ class UserController extends Controller
 
         $request = $userRequest->validated();
 
-        $request['password'] = (new RandomGenerator())->generateAlphaNumeric(10);
+        $request['password'] = (new RandomizerActions())->generateAlphaNumeric(10);
 
         $userArr = [
             'name' => $request['name'],
@@ -138,7 +138,7 @@ class UserController extends Controller
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().'.'.$image->getClientOriginalExtension();
+            $filename = time() . '.' . $image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -199,7 +199,7 @@ class UserController extends Controller
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().'.'.$image->getClientOriginalExtension();
+            $filename = time() . '.' . $image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -229,8 +229,5 @@ class UserController extends Controller
 
     public function resetPassword($id)
     {
-        $usr = $this->userActions->readBy('ID', $id);
-
-        $this->userActions->resetPassword($usr['email']);
     }
 }

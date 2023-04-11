@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,15 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
         Route::group(['prefix' => 'module', 'as' => '.module'], function () {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function () {
                 Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');
+            });
+        });
+
+        Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
+            Route::group(['prefix' => 'users', 'as' => '.users'], function () {
+                Route::get('read', [UserController::class, 'list'])->name('.list');
+                Route::get('read/{user:ulid}', [UserController::class, 'read'])->name('.read');
+
+                Route::get('roles/read', [UserController::class, 'getAllRoles'])->name('.roles.read');
             });
         });
 
