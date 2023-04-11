@@ -1,23 +1,44 @@
 <script setup lang="ts">
+//#region Import
+import { ref } from "vue";
 import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { ViewTitleLayout } from "../../base-components/FormLayout";
+import { ViewMode } from "../../types/enums/ViewMode";
+//#endregion
 
 //#region Declarations
 const { t } = useI18n();
 //#endregion
 
+//#region Data - UI
+const mode = ref<ViewMode>(ViewMode.LIST);
+const loading = ref<boolean>(false);
+//#endregion
+
 //#region onMounted
-onMounted(() => {});
+onMounted(() => {
+  console.log("a");
+});
 //#endregion
 </script>
 
 <template>
-  <div class="flex items-center mt-8 intro-y">
-    <h2 class="mr-auto text-xl font-medium">
-      {{ t("views.company.page_title") }}
-    </h2>
-  </div>
-  <div class="grid grid-cols-12 gap-6 mt-5">
-    <div class="col-span-12 intro-y p-5 box"></div>
+  <div class="mt-8">
+    <LoadingOverlay :visible="loading">
+      <div v-if="mode == ViewMode.LIST"></div>
+      <ViewTitleLayout>
+        <template #title>{{ t("views.company.page_title") }}</template>
+        <template #optional>
+          <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
+            <Button as="a" href="#" variant="primary" class="shadow-md">
+              <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
+                t("components.buttons.create_new")
+              }}
+            </Button>
+          </div>
+        </template>
+      </ViewTitleLayout>
+    </LoadingOverlay>
   </div>
 </template>

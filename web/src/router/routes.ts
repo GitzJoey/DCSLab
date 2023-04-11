@@ -10,6 +10,7 @@ import PlayTwo from "../pages/dev/PlayTwo.vue";
 import ErrorView from "../pages/dashboard/ErrorView.vue";
 import ErrorPage from "../pages/error/ErrorPage.vue";
 import UserView from "../pages/administrator/UserView.vue";
+import CompanyView from "../pages/company/CompanyView.vue";
 
 export default [
     {
@@ -59,6 +60,16 @@ export default [
                     log_route: true,
                     skipBeforeEach: false
                 }
+            },
+            {
+                path: "/dashboard/company",
+                children: [
+                    {
+                        path: "/dashboard/company/company",
+                        name: "side-menu-company-company",
+                        component: CompanyView
+                    }                    
+                ]
             },
             {
                 path: "/dashboard/administrator",
