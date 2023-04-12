@@ -29,7 +29,7 @@ return [
             'messaging' => 'c,r,u,d',
             'setting' => 'r,u',
         ],
-        #region Extensions
+        //region Extensions
         'POS-owner' => [
             'company' => 'c,r,ra,u,d',
             'branch' => 'c,r,ra,u,d',
@@ -61,7 +61,10 @@ return [
         'POS-supplier' => [
             'supplier' => 'r,u',
         ],
-        #endregion
+        'POS-customer' => [
+            'customer' => 'r,u',
+        ],
+        //endregion
     ],
 
     'permissions_map' => [
@@ -78,5 +81,5 @@ return [
         'ad' => 'authorizeDelete',
 
         'ars' => 'authorizeRestore',
-    ]
+    ],
 ];
