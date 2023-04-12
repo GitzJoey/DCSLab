@@ -43,19 +43,17 @@ class SupplierTableSeeder extends Seeder
 
                 $products = Product::whereRelation('company', 'id', $company->id)->get();
 
-                if ($products->count() > 0) {
-                    $supplierProductCount = random_int(1, $products->count());
+                $supplierProductCount = random_int(1, $products->count());
 
-                    $shuffledProducts = $products->shuffle()->take($supplierProductCount);
+                $shuffledProducts = $products->shuffle()->take($supplierProductCount);
 
-                    $mainProductIdx = random_int(0, $supplierProductCount - 1);
+                $mainProductIdx = random_int(0, $supplierProductCount - 1);
 
-                    for ($j = 0; $j < $supplierProductCount; $j++) {
-                        $supplier = $supplier->has(
-                            SupplierProduct::factory()->for($company)->for($shuffledProducts[$j])
-                                ->setMainProduct($j == $mainProductIdx)
-                        );
-                    }
+                for ($j = 0; $j < $supplierProductCount; $j++) {
+                    $supplier = $supplier->has(
+                        SupplierProduct::factory()->for($company)->for($shuffledProducts[$j])
+                            ->setMainProduct($j == $mainProductIdx)
+                    );
                 }
 
                 $supplier->create();
