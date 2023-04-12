@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\PaymentTermType;
 use App\Enums\RoundOn;
 use App\Models\CustomerGroup;
@@ -27,9 +27,10 @@ class CustomerGroupFactory extends Factory
     public function definition()
     {
         $faker = \Faker\Factory::create('id_ID');
+        $rand = new RandomizerActions();
 
         return [
-            'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
+            'code' => $rand->generateAlpha().$rand->generateNumeric(),
             'name' => $this->faker->randomElement($this->customerGroups),
             'max_open_invoice' => $faker->numberBetween(0, 100),
             'max_outstanding_invoice' => $faker->numberBetween(0, 100000000),

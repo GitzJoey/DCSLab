@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Actions\RandomGenerator;
+use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\AccountType;
 use App\Enums\RecordStatus;
 use App\Models\ChartOfAccount;
@@ -20,9 +20,10 @@ class ChartOfAccountFactory extends Factory
     public function definition()
     {
         $faker = \Faker\Factory::create('id_ID');
+        $rand = new RandomizerActions();
 
         return [
-            'code' => (new RandomGenerator())->generateAlphaNumeric(5).(new RandomGenerator())->generateFixedLengthNumber(5),
+            'code' => $rand->generateAlpha().$rand->generateNumeric(),
             'name' => $this->faker->name(),
             'account_type' => $faker->randomElement(AccountType::toArrayEnum()),
             'can_have_child' => true,
