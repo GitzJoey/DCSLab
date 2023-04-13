@@ -9,9 +9,7 @@ import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
-import { StatusCodes } from "../../types/enums/StatusCodes";
 import { useRouter } from "vue-router";
-import ErrorHandlerService from "../../services/ErrorHandlerService";
 import { useForm } from "vee-validate";
 
 interface LoginFormValues {
@@ -25,7 +23,6 @@ const router = useRouter();
 const { handleSubmit } = useForm<LoginFormValues>();
 
 const authService = new AuthService();
-const errorHandlerService = new ErrorHandlerService();
 
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
