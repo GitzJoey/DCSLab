@@ -9,22 +9,4 @@ export default class CompanyService {
     constructor() {
         this.ziggyRoute = this.ziggyRouteStore.getZiggy;
     }
-
-    private async axiosGet(url: string): Promise<any> {
-        try {
-            let response = await axios.get(url);
-            return response.data;
-        } catch (e) {
-            return e;
-        }
-    }
-
-    private async axiosPost(url: string, data: any): Promise<any> {
-        try {
-            let response = await axios.post(url, data);
-            return response.data;
-        } catch (e) {
-            return e;
-        }
-    }
 }

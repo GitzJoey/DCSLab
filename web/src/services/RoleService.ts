@@ -2,6 +2,8 @@ import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
+import { AxiosResponse } from "axios";
+import { DropdownOptionType } from "../types/DropdownOptionType";
 
 export default class RoleService {
     private ziggyRoute: Config;
@@ -14,22 +16,21 @@ export default class RoleService {
         this.cacheService = new CacheService(); 
     }
 
-    private async axiosGet(url: string): Promise<any> {
+    public async getRolesDDL(): Promise<DropdownOptionType[] | null> {
+        const ddlName = 'rolesDDL';
         try {
-            let response = await axios.get(url);
-            return response.data;
-        } catch (e) {
-            return e;
-        }
-    }
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.admin.users.roles.read', undefined, false, this.ziggyRoute);
+                if (!url) return null;
+                    
+                const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
 
-    public async getRolesDDL() {
-        if (this.cacheService.getCachedDDL('rolesDDL') == null) {
-            let response = await this.axiosGet(route('api.get.db.admin.users.roles.read', undefined, false, this.ziggyRoute));
-            this.cacheService.setCachedDDL('rolesDDL', response.data);
-            return response.data;
-        } else {
-            return this.cacheService.getCachedDDL('rolesDDL');
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            } 
+
+            return this.cacheService.getCachedDDL(ddlName);
+        } catch (e: unknown) {
+            return null;
         }
     }
 }

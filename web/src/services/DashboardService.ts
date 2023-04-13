@@ -2,64 +2,133 @@ import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
+import { AxiosResponse, AxiosError } from "axios";
+import { ServiceResponseType } from "../types/ServiceResponseType";
+import { UserProfileType } from "../types/resources/UserProfileType";
+import { UserType } from "../types/resources/UserType";
+import ErrorHandlerService from "./ErrorHandlerService";
+import { Menu as sMenu } from "../stores/side-menu";
+import { DropdownOptionType } from "../types/DropdownOptionType";
 
 export default class DashboardService {
     private ziggyRoute: Config;
     private ziggyRouteStore = useZiggyRouteStore();
 
     private cacheService;
+    private errorHandlerService;
 
     constructor() {
         this.ziggyRoute = this.ziggyRouteStore.getZiggy;
+
         this.cacheService = new CacheService();
+        this.errorHandlerService = new ErrorHandlerService();
     }
 
-    private async axiosGet(url: string): Promise<any> {
+    public async readProfile(): Promise<ServiceResponseType<UserProfileType | null>> {
         try {
-            let response = await axios.get(url);
-            return response.data;
-        } catch (e) {
-            return e;
+            const url = route('api.get.db.module.profile.read', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<UserProfileType> = await axios.get(url);
+
+            return {
+                success: true,
+                statusCode: response.status,
+                statusDescription: response.statusText,
+                data: response.data
+            }
+        } catch (e: unknown) {
+            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
         }
     }
 
-    private async axiosPost(url: string, data: any): Promise<any> {
+    public async readUserMenu(): Promise<ServiceResponseType<Array<sMenu> | null>> {
         try {
-            return await axios.post(url, data);
-        } catch (e) {
-            return e;
+            const url = route('api.get.db.core.user.menu', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<Array<sMenu>> = await axios.get(url);
+
+            return {
+                success: true,
+                statusCode: response.status,
+                statusDescription: response.statusText,
+                data: response.data
+            }
+        } catch (e: unknown) {
+            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
         }
     }
 
-    public async readProfile() {
-        return this.axiosGet(route('api.get.db.module.profile.read', undefined, false, this.ziggyRoute));
-    }
+    public async readUserApi(): Promise<ServiceResponseType<Config | null>> {
+        try {
+            const url = route('api.get.db.core.user.api', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-    public async readUserMenu() {
-        return this.axiosGet(route('api.get.db.core.user.menu', undefined, false, this.ziggyRoute));
-    }
+            const response: AxiosResponse<Config> = await axios.get(url);
 
-    public async readUserApi() {
-        return this.axiosGet(route('api.get.db.core.user.api', undefined, false, this.ziggyRoute));
-    }
-
-    public async getStatusDDL() {
-        if (this.cacheService.getCachedDDL('statusDDL') == null) {
-            let response = await this.axiosGet(route('api.get.db.common.ddl.list.statuses', undefined, false, this.ziggyRoute));
-            this.cacheService.setCachedDDL('statusDDL', response.data);
-            return response.data;
-        } else {
-            return this.cacheService.getCachedDDL('statusDDL');
+            return {
+                success: true,
+                statusCode: response.status,
+                statusDescription: response.statusText,
+                data: response.data
+            }
+        } catch (e: unknown) {
+            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
         }
     }
 
-    public async getCountriesDDL() {
-        if (this.cacheService.getCachedDDL('countriesDDL') == null) {
-            let response = await this.axiosGet(route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute));
-            this.cacheService.setCachedDDL('countriesDDL', response.data);
-            return response.data;
-        } else {
-            return this.cacheService.getCachedDDL('countriesDDL');
+    public async read(): Promise<ServiceResponseType<UserType | null>> {
+        try {
+            const url = route('api.get.db.admin.users.read', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<UserType> = await axios.get(url);
+
+            return {
+                success: true,
+                statusCode: response.status,
+                statusDescription: response.statusText,
+                data: response.data
+            }
+        } catch (e: unknown) {
+            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+        }
+    }
+
+    public async getStatusDDL(): Promise<DropdownOptionType[] | null> {
+        const ddlName = 'statusDDL';
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.common.ddl.list.statuses', undefined, false, this.ziggyRoute);
+                if (!url) return null;
+                    
+                const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            } 
+
+            return this.cacheService.getCachedDDL(ddlName);
+        } catch (e: unknown) {
+            return null;
+        }
+    }
+
+    public async getCountriesDDL(): Promise<DropdownOptionType[] | null> {
+        const ddlName = 'countriesDDL';
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
+                if (!url) return null;
+                    
+                const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            } 
+
+            return this.cacheService.getCachedDDL(ddlName);
+        } catch (e: unknown) {
+            return null;
         }
     }
 }

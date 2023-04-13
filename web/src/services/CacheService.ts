@@ -1,3 +1,5 @@
+import { DropdownOptionType } from "../types/DropdownOptionType";
+
 export default class CacheService {
     protected dcslabSystems;
 
@@ -5,15 +7,15 @@ export default class CacheService {
         this.dcslabSystems = sessionStorage.getItem('DCSLAB_SYSTEM');
     }
 
-    public getCachedDDL(ddlname: string): any | null {
-        let ddl = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
+    public getCachedDDL(ddlname: string): DropdownOptionType[] | null {
+        const ddl = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
         
-        let hasDDL = Object.hasOwnProperty.call(ddl, ddlname);
+        const hasDDL = Object.hasOwnProperty.call(ddl, ddlname);
         return  hasDDL ? ddl[ddlname] : null;
     }
     
-    public setCachedDDL(ddlname: string, value: any) {
-        let new_dcslabSystems = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
+    public setCachedDDL(ddlname: string, value: DropdownOptionType[]) {
+        const new_dcslabSystems = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
 
         new_dcslabSystems[ddlname] = value;
     
