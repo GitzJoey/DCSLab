@@ -10,28 +10,24 @@ import { useI18n } from "vue-i18n";
 import AuthService from "../../services/AuthServices";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
-import { ErrorHandlerService } from "../../services/ErrorHandlerService";
-import { StatusCodes } from "../../types/enums/StatusCodes";
 
 const { t } = useI18n();
 const router = useRouter();
 
 const authService = new AuthService();
-const errorHandlerService = new ErrorHandlerService();
 
 const loading = ref(false);
 
 const onSubmit = async (values: any, actions: any) => {
   loading.value = true;
 
-  let result = await authService.register(values.name, values.email, values.password, values.terms);
-
-  if (result.status === StatusCodes.OK) {
-    router.push('/dashboard/main');
-  } else {
-    errorHandlerService.handleLaravelError(result.data, actions, 'email');
-  }
-}
+  let result = await authService.register(
+    values.name,
+    values.email,
+    values.password,
+    values.terms
+  );
+};
 </script>
 
 <template>
@@ -48,12 +44,10 @@ const onSubmit = async (values: any, actions: any) => {
       <div class="block grid-cols-2 gap-4 xl:grid">
         <div class="flex-col hidden min-h-screen xl:flex">
           <a href="" class="flex items-center pt-5 -intro-x">
-            <img
-              alt="DCSLab"
-              class="w-6"
-              :src="logoUrl"
-            />
-            <span class="ml-3 text-lg text-white"> {{ t('views.login.fields.email') }} </span>
+            <img alt="DCSLab" class="w-6" :src="logoUrl" />
+            <span class="ml-3 text-lg text-white">
+              {{ t("views.login.fields.email") }}
+            </span>
           </a>
           <div class="my-auto">
             <img
@@ -82,7 +76,7 @@ const onSubmit = async (values: any, actions: any) => {
               <h2
                 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
               >
-                {{ t('views.register.title') }}
+                {{ t("views.register.title") }}
               </h2>
               <div
                 class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden"
@@ -91,7 +85,12 @@ const onSubmit = async (values: any, actions: any) => {
               </div>
               <VeeForm id="loginForm" @submit="onSubmit" v-slot="{ errors }">
                 <div class="mt-8 intro-x">
-                  <VeeField name="name" v-slot="{ field }" rules="required" :label="t('views.register.fields.name')">
+                  <VeeField
+                    name="name"
+                    v-slot="{ field }"
+                    rules="required"
+                    :label="t('views.register.fields.name')"
+                  >
                     <FormInput
                       name="name"
                       type="text"
@@ -101,7 +100,12 @@ const onSubmit = async (values: any, actions: any) => {
                     />
                   </VeeField>
                   <VeeErrorMessage name="name" as="span" class="text-danger" />
-                  <VeeField name="email" v-slot="{ field }" rules="required|email" :label="t('views.register.fields.email')">
+                  <VeeField
+                    name="email"
+                    v-slot="{ field }"
+                    rules="required|email"
+                    :label="t('views.register.fields.email')"
+                  >
                     <FormInput
                       name="email"
                       type="text"
@@ -111,7 +115,12 @@ const onSubmit = async (values: any, actions: any) => {
                     />
                   </VeeField>
                   <VeeErrorMessage name="email" as="span" class="text-danger" />
-                  <VeeField name="password" v-slot="{ field }" rules="required|alpha_num|min:6" :label="t('views.register.fields.password')">
+                  <VeeField
+                    name="password"
+                    v-slot="{ field }"
+                    rules="required|alpha_num|min:6"
+                    :label="t('views.register.fields.password')"
+                  >
                     <FormInput
                       name="password"
                       type="password"
@@ -120,22 +129,42 @@ const onSubmit = async (values: any, actions: any) => {
                       v-bind="field"
                     />
                   </VeeField>
-                  <VeeErrorMessage name="password" as="span" class="text-danger" />
-                  <VeeField name="password_confirmation" v-slot="{ field }" rules="confirmed:@password" :label="t('views.register.fields.password_confirmation')">
+                  <VeeErrorMessage
+                    name="password"
+                    as="span"
+                    class="text-danger"
+                  />
+                  <VeeField
+                    name="password_confirmation"
+                    v-slot="{ field }"
+                    rules="confirmed:@password"
+                    :label="t('views.register.fields.password_confirmation')"
+                  >
                     <FormInput
                       name="password_confirmation"
                       type="password"
                       class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                      :placeholder="t('views.register.fields.password_confirmation')"
+                      :placeholder="
+                        t('views.register.fields.password_confirmation')
+                      "
                       v-bind="field"
                     />
                   </VeeField>
-                  <VeeErrorMessage name="password_confirmation" as="span" class="text-danger" />
+                  <VeeErrorMessage
+                    name="password_confirmation"
+                    as="span"
+                    class="text-danger"
+                  />
                 </div>
                 <div
                   class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
                 >
-                  <VeeField name="terms" v-slot="{ field }" rules="required" :label="t('views.register.fields.terms')">
+                  <VeeField
+                    name="terms"
+                    v-slot="{ field }"
+                    rules="required"
+                    :label="t('views.register.fields.terms')"
+                  >
                     <FormCheck.Input
                       name="terms"
                       id="terms"
@@ -144,7 +173,8 @@ const onSubmit = async (values: any, actions: any) => {
                       v-bind="field"
                     />
                     <label class="cursor-pointer select-none" htmlFor="terms">
-                      I agree to the {{ t('views.register.fields.terms_and_cond') }}
+                      I agree to the
+                      {{ t("views.register.fields.terms_and_cond") }}
                     </label>
                   </VeeField>
                 </div>
@@ -154,14 +184,14 @@ const onSubmit = async (values: any, actions: any) => {
                     variant="primary"
                     class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
                   >
-                    {{ t('components.buttons.register') }}
+                    {{ t("components.buttons.register") }}
                   </Button>
                   <Button
                     variant="outline-secondary"
                     class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
                     @click="router.push({ name: 'login' })"
                   >
-                    {{ t('components.buttons.login') }}
+                    {{ t("components.buttons.login") }}
                   </Button>
                 </div>
               </VeeForm>
