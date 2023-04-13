@@ -111,6 +111,7 @@ const onSubmit = handleSubmit(async (values) => {
                     :label="t('views.login.fields.email')"
                   >
                     <FormInput
+                      v-model="loginForm.email"
                       type="text"
                       name="email"
                       class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
@@ -127,6 +128,7 @@ const onSubmit = handleSubmit(async (values) => {
                     :label="t('views.login.fields.password')"
                   >
                     <FormInput
+                      v-model="loginForm.password"
                       type="password"
                       name="password"
                       class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
@@ -148,6 +150,7 @@ const onSubmit = handleSubmit(async (values) => {
                     <VeeField v-slot="{ field }" name="remember">
                       <FormCheck.Input
                         id="remember-me"
+                        v-model="loginForm.remember"
                         name="remember-me"
                         type="checkbox"
                         class="mr-2 border"
