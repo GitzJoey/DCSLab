@@ -16,46 +16,45 @@ class CustomerTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($customerPerCompany = 5, $onlyThisCompanyId = 0)
+    public function run($countPerCompany = 3, $onlyThisCompanyId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            $company = Company::find($onlyThisCompanyId);
-
-            if ($company) {
-                $companyIds = (new Collection())->push($company->id);
-            } else {
-                $companyIds = Company::get()->pluck('id');
-            }
+            $companies = Company::where('id', '=', $onlyThisCompanyId)->get();
         } else {
-            $companyIds = Company::get()->pluck('id');
+            $companies = Company::get();
         }
 
-        $faker = \Faker\Factory::create();
-        foreach ($companyIds as $companyId) {
-            for ($i = 0; $i < $customerPerCompany; $i++) {
-                $customerGroupId = CustomerGroup::whereCompanyId($companyId)->inRandomOrder()->first()->id;
+        foreach ($companies as $company) {           
+            $countPerCompany = $countPerCompany < 1 ? 1 : $countPerCompany;
 
-                $customer = Customer::factory()->make([
-                    'company_id' => $companyId,
-                    'customer_group_id' => $customerGroupId,
-                ]);
-
-                $customer->save();
-
-                $customerAddressCount = 5;
-                for ($j = 0; $j < $customerAddressCount; $j++) {
-                    $customerAddress = new CustomerAddress();
-
-                    $customerAddress->company_id = $companyId;
-                    $customerAddress->customer_id = $customer->id;
-                    $customerAddress->address = $faker->address();
-                    $customerAddress->city = $faker->city();
-                    $customerAddress->contact = $faker->e164PhoneNumber();
-                    $customerAddress->is_main = $j == 0 ? 1 : 0;
-                    $customerAddress->remarks = $faker->sentence();
-
-                    $customer->customerAddresses()->save($customerAddress);
+            for ($i = 0; $i < $countPerCompany; $i++) {
+                $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+            
+                $customer = Customer::factory()
+                            ->for($company)
+                            ->for($customerGroup)
+                            ->setIsMemberCustomer(boolval(random_int(0, 1)))
+                            ->setTaxableEnterprise(boolval(random_int(0, 1)));
+                                            
+                $makeItActiveStatus = boolval(random_int(0, 1));
+                if ($makeItActiveStatus) {
+                    $customer = $customer->setStatusActive();
+                } else {
+                    $customer = $customer->setStatusInactive();
                 }
+                        
+                $addressCount = random_int(1, $countPerCompany);
+                $isMainIdx = random_int(0, $addressCount - 1);
+                                
+                for ($j = 0; $j < $addressCount; $j++) {
+                    $customer = $customer->has(
+                        CustomerAddress::factory()
+                            ->for($company)
+                            ->setIsMain($j == $isMainIdx ? true : false)
+                    );
+                }
+
+                $customer->create();
             }
         }
     }
