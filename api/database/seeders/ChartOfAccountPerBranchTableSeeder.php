@@ -18,21 +18,15 @@ class ChartOfAccountPerBranchTableSeeder extends Seeder
     public function run($onlyThisCompanyId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            $company = Company::find($onlyThisCompanyId);
-
-            if ($company) {
-                $companyIds = (new Collection())->push($company->id);
-            } else {
-                $companyIds = Company::get()->pluck('id');
-            }
+            $companies = Company::where('id', '=', $onlyThisCompanyId)->get();
         } else {
-            $companyIds = Company::get()->pluck('id');
+            $companies = Company::get();
         }
 
         $chartOfAccountActions = app(ChartOfAccountActions::class);
 
-        foreach ($companyIds as $companyId) {
-            $branches = Branch::where('company_id', '=', $companyId)->get();
+        foreach ($companies as $company) {
+            $branches = $company->branches()->get();
 
             foreach ($branches as $branch) {
                 $chartOfAccountActions->createDefaultAccountPerBranch($branch->company_id, $branch->id);
