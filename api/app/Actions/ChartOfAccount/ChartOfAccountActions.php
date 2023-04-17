@@ -508,7 +508,7 @@ class ChartOfAccountActions
         foreach ($chartOfAccounts as $chartOfAccount) {
             $formattedChartOfAccount = [
                 'hId' => $chartOfAccount->hId,
-                'uuid' => $chartOfAccount->uuid,
+                'ulid' => $chartOfAccount->ulid,
                 'code' => $chartOfAccount->code,
                 'name' => $chartOfAccount->name,
                 'account_type' => $chartOfAccount->account_type->name,

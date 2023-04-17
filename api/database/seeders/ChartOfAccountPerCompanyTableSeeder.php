@@ -17,15 +17,9 @@ class ChartOfAccountPerCompanyTableSeeder extends Seeder
     public function run($onlyThisCompanyId = 0)
     {
         if ($onlyThisCompanyId != 0) {
-            $company = Company::find($onlyThisCompanyId);
-
-            if ($company) {
-                $companies = (new Collection())->push($company->id);
-            } else {
-                $companies = Company::get()->pluck('id');
-            }
+            $companies = Company::where('id', '=', $onlyThisCompanyId)->get();
         } else {
-            $companies = Company::get()->pluck('id');
+            $companies = Company::get();
         }
 
         $chartOfAccountActions = app(ChartOfAccountActions::class);
