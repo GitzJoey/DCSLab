@@ -10,7 +10,8 @@ import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
 import { useRouter } from "vue-router";
-import { useForm } from "vee-validate";
+import { FormActions } from "vee-validate";
+import { ErrorResponseType } from "../../types/ErrorResponseType";
 
 interface LoginFormValues {
   email: string;
@@ -20,7 +21,6 @@ interface LoginFormValues {
 
 const { t } = useI18n();
 const router = useRouter();
-const { handleSubmit } = useForm<LoginFormValues>();
 
 const authService = new AuthService();
 
@@ -32,7 +32,10 @@ const loginForm = ref<LoginFormValues>({
   password: "",
 });
 
-const onSubmit = handleSubmit(async (values) => {
+const onSubmit = async (
+  values: LoginFormValues,
+  formActions: FormActions<LoginFormValues>
+) => {
   loading.value = true;
 
   let result = await authService.doLogin(values.email, values.password, true);
@@ -40,10 +43,26 @@ const onSubmit = handleSubmit(async (values) => {
   if (result.success) {
     router.push("side-menu-dashboard-maindashboard");
   } else {
-    /* empty */
+    console.log(result.errors);
+    //handleError(result.errors, formActions);
   }
   loading.value = false;
-});
+};
+
+const handleError = (
+  e: ErrorResponseType,
+  actions: FormActions<LoginFormValues>
+): void => {
+  console.log(e);
+  for (let key in e) {
+    console.log(key);
+    for (let i = 0; i < Object.values(e[key]).length; i++) {
+      console.log(key);
+      console.log(e[key][i]);
+      actions.setFieldError("email", e[key][i]);
+    }
+  }
+};
 </script>
 
 <template>
@@ -95,11 +114,7 @@ const onSubmit = handleSubmit(async (values) => {
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
                 &nbsp;
               </div>
-              <VeeForm
-                id="loginForm"
-                v-slot="{ errors }"
-                @submit.prevent="onSubmit"
-              >
+              <VeeForm id="loginForm" v-slot="{ errors }" @submit="onSubmit">
                 <div class="mt-8 intro-x">
                   <VeeField
                     v-slot="{ field }"
