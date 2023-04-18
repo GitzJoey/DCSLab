@@ -11,7 +11,7 @@ export default class AuthService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async doLogin(emailText: string, passwordText: string, rememberMeCheck: boolean): Promise<ServiceResponseType<UserType | null>> {
+    public async doLogin(emailText: string, passwordText: string, rememberMeCheck: boolean | string | undefined): Promise<ServiceResponseType<UserType | null>> {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
             const response: AxiosResponse<UserType> = await authAxiosInstance.post('login', { email: emailText, password: passwordText, remember: rememberMeCheck });

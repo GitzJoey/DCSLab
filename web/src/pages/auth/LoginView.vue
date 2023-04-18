@@ -16,7 +16,7 @@ import { ErrorResponseType } from "../../types/ErrorResponseType";
 interface LoginFormValues {
   email: string;
   password: string;
-  remember?: string;
+  remember?: boolean | string | undefined;
 }
 
 const { t } = useI18n();
@@ -38,14 +38,18 @@ const onSubmit = async (
 ) => {
   loading.value = true;
 
-  let result = await authService.doLogin(values.email, values.password, true);
+  let result = await authService.doLogin(
+    values.email,
+    values.password,
+    values.remember
+  );
 
   if (result.success) {
     router.push("side-menu-dashboard-maindashboard");
   } else {
-    console.log(result.errors);
-    //handleError(result.errors, formActions);
+    if (result.errors) handleError(result.errors, formActions);
   }
+
   loading.value = false;
 };
 
@@ -53,12 +57,8 @@ const handleError = (
   e: ErrorResponseType,
   actions: FormActions<LoginFormValues>
 ): void => {
-  console.log(e);
   for (let key in e) {
-    console.log(key);
     for (let i = 0; i < Object.values(e[key]).length; i++) {
-      console.log(key);
-      console.log(e[key][i]);
       actions.setFieldError("email", e[key][i]);
     }
   }
