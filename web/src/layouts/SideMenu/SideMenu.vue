@@ -34,7 +34,7 @@ const dashboardStore = useDashboardStore();
 
 const ziggyRouteStore = useZiggyRouteStore();
 
-const screenMask = computed(() => dashboardStore.screenMaskValue );
+const screenMask = computed(() => dashboardStore.screenMaskValue);
 
 watch(sideMenu, () => {
   setFormattedMenu(sideMenu.value);
@@ -43,14 +43,14 @@ watch(sideMenu, () => {
 onMounted(async () => {
   dashboardStore.toggleScreenMaskValue();
 
-  let menu = await dashboardService.readUserMenu();
-  sideMenuStore.setUserMenu(menu as Array<sMenu>);
+  let menuResult = await dashboardService.readUserMenu();
+  sideMenuStore.setUserMenu(menuResult.data as Array<sMenu>);
 
-  let api = await dashboardService.readUserApi();
-  ziggyRouteStore.setZiggy(api as Config)
+  let apiResult = await dashboardService.readUserApi();
+  ziggyRouteStore.setZiggy(apiResult.data as Config);
 
   setFormattedMenu(sideMenu.value);
-  
+
   dashboardStore.toggleScreenMaskValue();
 });
 </script>
@@ -114,7 +114,10 @@ onMounted(async () => {
                             }`]: !subMenu.active,
                           }"
                           :menu="subMenu"
-                          :formattedMenuState="[formattedMenu, setFormattedMenu]"
+                          :formattedMenuState="[
+                            formattedMenu,
+                            setFormattedMenu,
+                          ]"
                           level="second"
                         ></SimpleMenu>
                         <Transition
@@ -211,7 +214,10 @@ onMounted(async () => {
                             }`]: !subMenu.active,
                           }"
                           :menu="subMenu"
-                          :formattedMenuState="[formattedMenu, setFormattedMenu]"
+                          :formattedMenuState="[
+                            formattedMenu,
+                            setFormattedMenu,
+                          ]"
                           level="second"
                         ></Menu>
                         <Transition
