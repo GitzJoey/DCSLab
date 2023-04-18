@@ -45,7 +45,7 @@ const onSubmit = async (
   );
 
   if (result.success) {
-    router.push("side-menu-dashboard-maindashboard");
+    router.push({ name: "side-menu-dashboard-maindashboard" });
   } else {
     if (result.errors) handleError(result.errors, formActions);
   }
