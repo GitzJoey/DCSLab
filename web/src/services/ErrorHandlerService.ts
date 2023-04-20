@@ -7,27 +7,30 @@ export default class ErrorHandlerService {
         const errorsResponse: ErrorResponseType = {};
 
         if (e.response) {
-            for (const outerErr in (e.response.data as { errors: unknown[] }).errors) {
-                console.log(outerErr);
-                for (const innerErr in (e.response.data as { errors: unknown[] }).errors[outerErr] as { [key: number]: string }) {
-                    console.log(innerErr);
+            const errorData = (e.response.data as { errors: unknown[] }).errors;
+            for (const key in errorData) {
+                if (Object.prototype.hasOwnProperty.call(errorData, key)) {
+                    const errorArray = errorData[key] as { [key:number]: string };
+
+                    errorsResponse[key] = {};
+                    (errorArray as unknown[]).forEach((errorMsg, index) => {
+                        errorsResponse[key][index] = errorMsg as string;
+                    });
                 }
-                
-                
             }
-            
+
             return {
                 success: false,
                 statusCode: e.response.status,
                 statusDescription: e.response.statusText,
                 data: null,
+                errors: errorsResponse
             };
         } else {
             return {
                 success: false,
                 statusCode: 0,
                 statusDescription: '',
-                data: null
             };
         }
     }

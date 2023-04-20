@@ -83,11 +83,11 @@ const onSubmit = async (values: any, actions: any) => {
               >
                 &nbsp;
               </div>
-              <VeeForm id="loginForm" @submit="onSubmit" v-slot="{ errors }">
+              <VeeForm id="loginForm" v-slot="{ errors }" @submit="onSubmit">
                 <div class="mt-8 intro-x">
                   <VeeField
-                    name="name"
                     v-slot="{ field }"
+                    name="name"
                     rules="required"
                     :label="t('views.register.fields.name')"
                   >
@@ -101,8 +101,8 @@ const onSubmit = async (values: any, actions: any) => {
                   </VeeField>
                   <VeeErrorMessage name="name" as="span" class="text-danger" />
                   <VeeField
-                    name="email"
                     v-slot="{ field }"
+                    name="email"
                     rules="required|email"
                     :label="t('views.register.fields.email')"
                   >
@@ -116,8 +116,8 @@ const onSubmit = async (values: any, actions: any) => {
                   </VeeField>
                   <VeeErrorMessage name="email" as="span" class="text-danger" />
                   <VeeField
-                    name="password"
                     v-slot="{ field }"
+                    name="password"
                     rules="required|alpha_num|min:6"
                     :label="t('views.register.fields.password')"
                   >
@@ -135,8 +135,8 @@ const onSubmit = async (values: any, actions: any) => {
                     class="text-danger"
                   />
                   <VeeField
-                    name="password_confirmation"
                     v-slot="{ field }"
+                    name="password_confirmation"
                     rules="confirmed:@password"
                     :label="t('views.register.fields.password_confirmation')"
                   >
@@ -160,14 +160,14 @@ const onSubmit = async (values: any, actions: any) => {
                   class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
                 >
                   <VeeField
-                    name="terms"
                     v-slot="{ field }"
+                    name="terms"
                     rules="required"
                     :label="t('views.register.fields.terms')"
                   >
                     <FormCheck.Input
-                      name="terms"
                       id="terms"
+                      name="terms"
                       type="checkbox"
                       class="mr-2 border"
                       v-bind="field"
