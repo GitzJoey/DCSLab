@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Actions\ChartOfAccount\ChartOfAccountActions;
 use App\Models\Company;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
 
 class ChartOfAccountPerCompanyTableSeeder extends Seeder

@@ -15,12 +15,6 @@ class WarehouseActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $warehouseActions;
-
-    private $companySeeder;
-
-    private $warehouseSeeder;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -28,19 +22,22 @@ class WarehouseActionsCreateTest extends TestCase
         $this->warehouseActions = app(WarehouseActions::class);
     }
 
-    public function test_warehouse_actions_call_create_expect_db_has_record()
+    public function test_warehouse_actions_call_create_expect_db_has_record_d()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(20), 'branches'), 'companies')
-                    ->create();
+                ->has(Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                )->create();
 
-        $warehouseArr = Warehouse::factory()->make([
-            'company_id' => $user->companies->first()->id,
-            'branch_id' => $user->companies()->has('branches')->first()->branches()->first()->id,
-        ]);
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
 
-        $result = $this->warehouseActions->create($warehouseArr->toArray());
+        $warehouseArr = Warehouse::factory()
+                        ->for($company)
+                        ->for($branch)
+                        ->make()->toArray();
+
+        $result = $this->warehouseActions->create($warehouseArr);
 
         $this->assertDatabaseHas('warehouses', [
             'id' => $result->id,

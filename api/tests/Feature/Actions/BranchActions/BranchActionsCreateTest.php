@@ -5,9 +5,8 @@ namespace Tests\Feature;
 use App\Actions\Branch\BranchActions;
 use App\Actions\ChartOfAccount\ChartOfAccountActions;
 use App\Models\Branch;
+use App\Models\Company;
 use App\Models\User;
-use Database\Seeders\BranchTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -16,38 +15,26 @@ class BranchActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $branchActions;
-
-    private $chartOfAccountActions;
-
-    private $companySeeder;
-
-    private $branchSeeder;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->branchActions = app(BranchActions::class);
-        $this->chartOfAccountActions = app(ChartOfAccountActions::class);
-
-        $this->companySeeder = new CompanyTableSeeder();
-        $this->branchSeeder = new BranchTableSeeder();
+        $this->branchActions = new BranchActions();
+        $this->coaActions = new ChartOfAccountActions();
     }
 
     public function test_branch_actions_call_create_expect_db_has_record()
     {
-        $user = User::factory()->create();
+        $user = User::factory()
+                ->has(Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $company = $user->companies()->inRandomOrder()->first();
 
-        $this->chartOfAccountActions->createDefaultAccountPerCompany($companyId);
+        $this->coaActions->createDefaultAccountPerCompany($company->id);
 
-        $branchArr = Branch::factory()->make([
-            'company_id' => $companyId,
-        ])->toArray();
+        $branchArr = $company->branches()->inRandomOrder()->first()->toArray();
 
         $result = $this->branchActions->create($branchArr);
 

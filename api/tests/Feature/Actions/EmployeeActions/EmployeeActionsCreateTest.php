@@ -3,13 +3,11 @@
 namespace Tests\Feature;
 
 use App\Actions\Employee\EmployeeActions;
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Profile;
 use App\Models\User;
-use Database\Seeders\BranchTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\EmployeeTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -18,51 +16,31 @@ class EmployeeActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $employeeActions;
-
-    private $companySeeder;
-
-    private $branchSeeder;
-
-    private $employeeSeeder;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->employeeActions = app(EmployeeActions::class);
-
-        $this->companySeeder = new CompanyTableSeeder();
-        $this->branchSeeder = new BranchTableSeeder();
-        $this->employeeSeeder = new EmployeeTableSeeder();
+        $this->employeeActions = new EmployeeActions();
     }
 
     public function test_employee_actions_call_create_expect_db_has_record()
     {
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(Branch::factory()->setStatusActive()->count(4))
+            )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [5, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $company = $user->companies()->inRandomOrder()->first();
 
-        $this->branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
+        $employeeArr = Employee::factory()->for($company)->for($user)->make()->toArray();
+        $employeeUserArr = User::factory()->make()->toArray();
+        $employeeUserArr['password'] = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+        $profileArr = Profile::factory()->for($user)->setStatusActive()->make()->toArray();
 
-        $employeeUser = User::factory()->make([]);
-        $employeeUser = $employeeUser->toArray();
-        $employeeUser['password'] = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
-
-        $employeeArr = Employee::factory()->make([
-            'company_id' => $companyId,
-            'user_id' => $user->id,
-        ]);
-
-        $profileArr = Profile::factory()->make([
-            'user_id' => $user->id,
-        ]);
-
-        $branchCount = Company::find($companyId)->branches->count();
+        $branchCount = $company->branches()->count();
         $accessCount = $this->faker->numberBetween(1, $branchCount);
-        $branchIds = Company::find($companyId)->branches()->inRandomOrder()->take($accessCount)->pluck('id');
+        $branchIds = $company->branches()->inRandomOrder()->take($accessCount)->pluck('id');
         $accessesArr = [];
         for ($i = 0; $i < $accessCount; $i++) {
             array_push($accessesArr, [
@@ -71,9 +49,9 @@ class EmployeeActionsCreateTest extends TestCase
         }
 
         $result = $this->employeeActions->create(
-            $employeeArr->toArray(),
-            $employeeUser,
-            $profileArr->toArray(),
+            $employeeArr,
+            $employeeUserArr,
+            $profileArr,
             $accessesArr
         );
 
@@ -86,8 +64,8 @@ class EmployeeActionsCreateTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('users', [
-            'name' => $employeeUser['name'],
-            'email' => $employeeUser['email'],
+            'name' => $employeeUserArr['name'],
+            'email' => $employeeUserArr['email'],
         ]);
 
         $this->assertDatabaseHas('profiles', [
