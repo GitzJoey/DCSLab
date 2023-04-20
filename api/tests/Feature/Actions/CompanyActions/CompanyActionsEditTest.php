@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Actions\Company\CompanyActions;
 use App\Models\Company;
 use App\Models\User;
-use Database\Seeders\CompanyTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -14,29 +13,23 @@ class CompanyActionsEditTest extends TestCase
 {
     use WithFaker;
 
-    private $companyActions;
-
-    private $companySeeder;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->companyActions = app(CompanyActions::class);
-
-        $this->companySeeder = new CompanyTableSeeder();
+        $this->companyActions = new CompanyActions();
     }
 
     public function test_company_service_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->has(Company::factory()->setStatusActive()->setIsDefault())
                     ->create();
 
         $company = $user->companies->first();
-        $companyArr = Company::factory()->make();
+        $companyArr = Company::factory()->make()->toArray();
 
-        $result = $this->companyActions->update($company, $companyArr->toArray());
+        $result = $this->companyActions->update($company, $companyArr);
 
         $this->assertInstanceOf(Company::class, $result);
         $this->assertDatabaseHas('companies', [
@@ -51,7 +44,7 @@ class CompanyActionsEditTest extends TestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
+                    ->has(Company::factory()->setStatusActive()->setIsDefault())
                     ->create();
 
         $company = $user->companies->first();

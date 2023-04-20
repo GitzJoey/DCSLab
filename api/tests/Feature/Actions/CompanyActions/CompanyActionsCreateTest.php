@@ -13,26 +13,22 @@ class CompanyActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $companyActions;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->companyActions = app(CompanyActions::class);
+        $this->companyActions = new CompanyActions();
     }
 
     public function test_company_action_call_create_expect_db_has_record()
     {
-        $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
+        $user = User::factory()->create();
 
-        $companyArr = Company::factory()->make([
+        $companyArr = Company::factory()->setStatusActive()->setIsDefault()->make([
             'user_id' => $user->id,
-        ]);
+        ])->toArray();
 
-        $result = $this->companyActions->create($companyArr->toArray());
+        $result = $this->companyActions->create($companyArr);
 
         $this->assertDatabaseHas('companies', [
             'id' => $result->id,
