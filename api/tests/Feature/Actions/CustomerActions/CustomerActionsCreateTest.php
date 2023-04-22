@@ -3,16 +3,13 @@
 namespace Tests\Feature;
 
 use App\Actions\Customer\CustomerActions;
-use App\Actions\RandomGenerator;
 use App\Enums\RecordStatus;
+use App\Models\Company;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\CustomerGroup;
 use App\Models\Profile;
 use App\Models\User;
-use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\CustomerGroupTableSeeder;
-use Database\Seeders\CustomerTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -21,55 +18,37 @@ class CustomerActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $customerActions;
-    private $customerAddressActions;
-    private $companySeeder;
-    private $customerGroupSeeder;
-    private $customerSeeder;
-    private $randomGenerator;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->customerActions = app(CustomerActions::class);
-        $this->companySeeder = new CompanyTableSeeder();
-        $this->customerGroupSeeder = new CustomerGroupTableSeeder();
-        $this->customerSeeder = new CustomerTableSeeder();
-
-        $this->randomGenerator = new RandomGenerator();
+        $this->customerActions = new CustomerActions();
     }
 
     public function test_customer_actions_call_create_customer_expect_db_has_record()
     {
-        $user = User::factory()->create();
+        $user = User::factory()
+                ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
+                )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
-        $this->customerGroupSeeder->callWith(CustomerGroupTableSeeder::class, [3, $companyId]);
+        $customerArr = Customer::factory()->for($company)->for($customerGroup)->make()->toArray();
 
-        $customerGroupId = CustomerGroup::where('company_id', '=', $companyId)->inRandomOrder()->first()->id;
+        $customerAddressArr = CustomerAddress::factory()->for($company)
+                                ->count($this->faker->numberBetween(1, 5))
+                                ->make()->toArray();
 
-        $customerArr = Customer::factory()->make([
-            'company_id' => $companyId,
-            'customer_group_id' => $customerGroupId,
-        ])->toArray();
-
-        $customerAddressArr = [];
-
-        $customerAddressesArr = CustomerAddress::factory()->make([
-            'company_id' => $companyId,
-        ])->toArray();
-
-        array_push($customerAddressArr, $customerAddressesArr);
-
-        $picArr = Profile::factory()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->randomGenerator->generateNumber(1, 999);
+        $picArr = Profile::factory()->setStatusActive()->make()->toArray();
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 999);
         $picArr['email'] = $picArr['name'].'@something.com';
-        $picArr['password'] = $user['password'];
-        $picArr['status'] = $customerArr['status'];
+        $picArr['password'] = '123456';
+        $picArr['contact'] = $customerAddressArr[0]['contact'];
+        $picArr['address'] = $customerAddressArr[0]['address'];
+        $picArr['city'] = $customerAddressArr[0]['city'];
+        $picArr['tax_id'] = $customerArr['tax_id'];
 
         $result = $this->customerActions->create(
             $customerArr,
@@ -97,7 +76,7 @@ class CustomerActionsCreateTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('customer_addresses', [
-            'company_id' => $companyId,
+            'company_id' => $company->id,
             'customer_id' => $result->id,
             'address' => $customerAddressArr[0]['address'],
             'city' => $customerAddressArr[0]['city'],
@@ -106,11 +85,11 @@ class CustomerActionsCreateTest extends TestCase
             'remarks' => $customerAddressArr[0]['remarks'],
         ]);
 
-        // $this->assertDatabaseHas('profiles', [
-        //     'first_name' => $picArr['first_name'],
-        //     'last_name' => $picArr['last_name'],
-        //     'status' => RecordStatus::ACTIVE->value,
-        // ]);
+        $this->assertDatabaseHas('profiles', [
+            'first_name' => $picArr['first_name'],
+            'last_name' => $picArr['last_name'],
+            'status' => RecordStatus::ACTIVE->value,
+        ]);
     }
 
     public function test_customer_actions_call_create_with_empty_array_parameters_expect_exception()

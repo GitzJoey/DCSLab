@@ -14,24 +14,25 @@ class UnitActionsEditTest extends TestCase
 {
     use WithFaker;
 
-    private $unitActions;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->unitActions = app(UnitActions::class);
+        $this->unitActions = new UnitActions();
     }
 
     public function test_unit_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                        ->has(Unit::factory(), 'units'), 'companies')
-                    ->create();
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Unit::factory())
+                    )->create();
 
-        $unit = $user->companies->first()->units->first();
-        $unitArr = Unit::factory()->make()->toArray();
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $unit = $company->units()->inRandomOrder()->first();
+
+        $unitArr = Unit::factory()->for($company)->make()->toArray();
 
         $result = $this->unitActions->update($unit, $unitArr);
 
@@ -49,13 +50,15 @@ class UnitActionsEditTest extends TestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                        ->has(Unit::factory(), 'units'), 'companies')
-                    ->create();
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Unit::factory())
+                    )->create();
 
-        $units = $user->companies->first()->units->first();
+        $unit = $user->companies()->inRandomOrder()->first()
+                    ->units()->inRandomOrder()->first();
+
         $unitsArr = [];
 
-        $this->unitActions->update($units, $unitsArr);
+        $this->unitActions->update($unit, $unitsArr);
     }
 }
