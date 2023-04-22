@@ -4,9 +4,8 @@ namespace Tests\Feature;
 
 use App\Actions\Brand\BrandActions;
 use App\Models\Brand;
+use App\Models\Company;
 use App\Models\User;
-use Database\Seeders\BrandTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,33 +14,24 @@ class BrandActionsEditTest extends TestCase
 {
     use WithFaker;
 
-    private $brandActions;
-
-    private $companySeeder;
-
-    private $brandSeeder;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->brandActions = app(BrandActions::class);
-
-        $this->companySeeder = new CompanyTableSeeder();
-        $this->brandSeeder = new BrandTableSeeder();
+        $this->brandActions = new BrandActions();
     }
 
     public function test_brand_actions_call_update_expect_db_updated()
     {
-        $user = User::factory()->create();
+        $user = User::factory()
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Brand::factory())
+                    )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $company = $user->companies()->inRandomOrder()->first();
 
-        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $brand = $company->brands()->inRandomOrder()->first();
 
-        $brand = $user->companies->first()->brands->first();
         $brandArr = Brand::factory()->make()->toArray();
 
         $result = $this->brandActions->update($brand, $brandArr);
@@ -59,15 +49,16 @@ class BrandActionsEditTest extends TestCase
     {
         $this->expectException(Exception::class);
 
-        $user = User::factory()->create();
+        $user = User::factory()
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Brand::factory())
+                    )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $company = $user->companies()->inRandomOrder()->first();
 
-        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
+        $brand = $company->brands()->inRandomOrder()->first();
 
-        $brand = $user->companies->first()->brands->first();
+        $brandArr = Brand::factory()->make()->toArray();
         $brandArr = [];
 
         $this->brandActions->update($brand, $brandArr);

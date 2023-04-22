@@ -34,7 +34,7 @@ class Product extends Model
 
     protected $casts = [
         'use_serial_number' => 'boolean',
-        'has_expiry_date' => 'datetime',
+        'has_expiry_date' => 'boolean',
         'product_type' => ProductType::class,
         'status' => RecordStatus::class,
     ];

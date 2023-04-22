@@ -14,10 +14,6 @@ class WarehouseActionsReadTest extends TestCase
 {
     use WithFaker;
 
-    private $companySeeder;
-
-    private $warehouseSeeder;
-
     protected function setUp(): void
     {
         parent::setUp();

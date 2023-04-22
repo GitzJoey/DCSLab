@@ -14,26 +14,24 @@ class ProductGroupActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $productGroupActions;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->productGroupActions = app(ProductGroupActions::class);
+        $this->productGroupActions = new ProductGroupActions();
     }
 
     public function test_product_group_actions_call_create_expect_db_has_record()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                    )->create();
 
-        $productGroupArr = ProductGroup::factory()->make([
-            'company_id' => $user->companies->first()->id,
-        ]);
+        $company = $user->companies()->inRandomOrder()->first();
 
-        $result = $this->productGroupActions->create($productGroupArr->toArray());
+        $productGroupArr = ProductGroup::factory()->for($company)->make()->toArray();
+
+        $result = $this->productGroupActions->create($productGroupArr);
 
         $this->assertDatabaseHas('product_groups', [
             'id' => $result->id,

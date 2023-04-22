@@ -13,23 +13,22 @@ class UnitActionsReadTest extends TestCase
 {
     use WithFaker;
 
-    private $unitActions;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->unitActions = app(UnitActions::class);
+        $this->unitActions = new UnitActions();
     }
 
     public function test_unit_actions_call_read_expect_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                        ->has(Unit::factory()->count(20), 'units'), 'companies')
-                    ->create();
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Unit::factory()->count(5))
+                    )->create();
 
-        $unit = $user->companies->first()->units()->inRandomOrder()->first();
+        $unit = $user->companies()->inRandomOrder()->first()
+                ->units()->inRandomOrder()->first();
 
         $result = $this->unitActions->read($unit);
 

@@ -39,7 +39,7 @@ class CustomerGroupFactory extends Factory
             'payment_term' => $faker->numberBetween(0, 366),
             'selling_point' => $faker->numberBetween(0, 1000),
             'selling_point_multiple' => $faker->numberBetween(0, 100000000),
-            'sell_at_cost' => false,
+            'sell_at_cost' => $this->faker->boolean(),
             'price_markup_percent' => $faker->numberBetween(0, 10),
             'price_markup_nominal' => $faker->numberBetween(0, 100000000),
             'price_markdown_percent' => $faker->numberBetween(0, 1),

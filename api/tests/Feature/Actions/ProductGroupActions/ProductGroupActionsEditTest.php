@@ -14,26 +14,27 @@ class ProductGroupActionsEditTest extends TestCase
 {
     use WithFaker;
 
-    private $productGroupActions;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->productGroupActions = app(ProductGroupActions::class);
+        $this->productGroupActions = new ProductGroupActions();
     }
 
     public function test_product_group_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                        ->has(ProductGroup::factory(), 'productGroups'), 'companies')
-                    ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(5))
+            )->create();
 
-        $productGroup = $user->companies->first()->productGroups->first();
-        $productGroupArr = ProductGroup::factory()->make();
+        $company = $user->companies()->first();
 
-        $result = $this->productGroupActions->update($productGroup, $productGroupArr->toArray());
+        $productGroup = $company->productGroups()->inRandomOrder()->first();
+
+        $productGroupArr = ProductGroup::factory()->for($company)->make()->toArray();
+
+        $result = $this->productGroupActions->update($productGroup, $productGroupArr);
 
         $this->assertInstanceOf(ProductGroup::class, $result);
         $this->assertDatabaseHas('product_groups', [
@@ -49,11 +50,13 @@ class ProductGroupActionsEditTest extends TestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                        ->has(ProductGroup::factory(), 'product_groups'), 'companies')
-                    ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory())
+            )->create();
 
-        $productGroup = $user->companies->first()->product_groups->first();
+        $productGroup = $user->companies()->inRandomOrder()->first()
+                            ->productGroups()->inRandomOrder()->first();
+
         $productGroupArr = [];
 
         $this->productGroupActions->update($productGroup, $productGroupArr);
