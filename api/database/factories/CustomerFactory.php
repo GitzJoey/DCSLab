@@ -27,7 +27,7 @@ class CustomerFactory extends Factory
 
         return [
             'code' => $rand->generateAlpha().$rand->generateNumeric(),
-            'is_member' => $faker->boolean(),
+            'is_member' => false,
             'name' => $faker->name(),
             'zone' => $faker->city(),
             'max_open_invoice' => $faker->numberBetween(0, 100),
@@ -35,7 +35,7 @@ class CustomerFactory extends Factory
             'max_invoice_age' => $faker->numberBetween(0, 366),
             'payment_term_type' => $faker->randomElement(PaymentTermType::toArrayEnum()),
             'payment_term' => $faker->numberBetween(0, 366),
-            'taxable_enterprise' => $faker->boolean(),
+            'taxable_enterprise' => false,
             'tax_id' => $faker->numberBetween(0, 100000000),
             'remarks' => $faker->sentence(),
             'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
