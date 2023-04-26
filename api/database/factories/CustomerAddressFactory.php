@@ -19,14 +19,14 @@ class CustomerAddressFactory extends Factory
 
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
+        $locale = 'id_ID';
 
         return [
-            'address' => $faker->address(),
-            'city' => $faker->city(),
-            'contact' => $faker->e164PhoneNumber(),
+            'address' => fake($locale)->address(),
+            'city' => fake($locale)->city(),
+            'contact' => fake($locale)->e164PhoneNumber(),
             'is_main' => false,
-            'remarks' => $faker->sentence(),
+            'remarks' => fake($locale)->sentence(),
         ];
     }
 
