@@ -22,23 +22,22 @@ class CustomerFactory extends Factory
 
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-        $rand = new RandomizerActions();
+        $locale = 'id_ID';
 
         return [
-            'code' => $rand->generateAlpha().$rand->generateNumeric(),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
             'is_member' => false,
-            'name' => $faker->name(),
-            'zone' => $faker->city(),
-            'max_open_invoice' => $faker->numberBetween(0, 100),
-            'max_outstanding_invoice' => $faker->numberBetween(0, 100000000),
-            'max_invoice_age' => $faker->numberBetween(0, 366),
-            'payment_term_type' => $faker->randomElement(PaymentTermType::toArrayEnum()),
-            'payment_term' => $faker->numberBetween(0, 366),
+            'name' => fake($locale)->name(),
+            'zone' => fake($locale)->city(),
+            'max_open_invoice' => fake()->numberBetween(0, 100),
+            'max_outstanding_invoice' => fake()->randomFloat(-4, 1000, 10000000),
+            'max_invoice_age' => fake()->numberBetween(0, 366),
+            'payment_term_type' => fake()->randomElement(PaymentTermType::toArrayEnum()),
+            'payment_term' => fake()->numberBetween(0, 366),
             'taxable_enterprise' => false,
-            'tax_id' => $faker->numberBetween(0, 100000000),
-            'remarks' => $faker->sentence(),
-            'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
+            'tax_id' => fake()->randomFloat(-4, 1000, 10000000),
+            'remarks' => fake($locale)->sentence(),
+            'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
