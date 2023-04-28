@@ -14,24 +14,22 @@ class UnitActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $unitActions;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->unitActions = app(UnitActions::class);
+        $this->unitActions = new UnitActions();
     }
 
     public function test_unit_actions_call_create_expect_db_has_record()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
+                    ->has(Company::factory()->setStatusActive()->setIsDefault())
+                ->create();
 
-        $unitArr = Unit::factory()->make([
-            'company_id' => $user->companies->first()->id,
-        ])->toArray();
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $unitArr = Unit::factory()->for($company)->make()->toArray();
 
         $result = $this->unitActions->create($unitArr);
 

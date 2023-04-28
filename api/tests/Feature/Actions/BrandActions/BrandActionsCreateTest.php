@@ -4,9 +4,8 @@ namespace Tests\Feature;
 
 use App\Actions\Brand\BrandActions;
 use App\Models\Brand;
+use App\Models\Company;
 use App\Models\User;
-use Database\Seeders\BrandTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,33 +14,22 @@ class BrandActionsCreateTest extends TestCase
 {
     use WithFaker;
 
-    private $brandActions;
-
-    private $companySeeder;
-
-    private $brandSeeder;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->brandActions = app(BrandActions::class);
-
-        $this->companySeeder = new CompanyTableSeeder();
-        $this->brandSeeder = new BrandTableSeeder();
+        $this->brandActions = new BrandActions();
     }
 
     public function test_brand_actions_call_create_expect_db_has_record()
     {
-        $user = User::factory()->create();
+        $user = User::factory()
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                    )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $company = $user->companies()->inRandomOrder()->first();
 
-        $brandArr = Brand::factory()->make([
-            'company_id' => $companyId,
-        ])->toArray();
+        $brandArr = Brand::factory()->for($company)->make()->toArray();
 
         $result = $this->brandActions->create($brandArr);
 

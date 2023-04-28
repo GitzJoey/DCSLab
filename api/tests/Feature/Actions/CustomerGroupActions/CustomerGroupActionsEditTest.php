@@ -6,8 +6,6 @@ use App\Actions\CustomerGroup\CustomerGroupActions;
 use App\Models\Company;
 use App\Models\CustomerGroup;
 use App\Models\User;
-use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\CustomerGroupTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,8 +13,6 @@ use Tests\TestCase;
 class CustomerGroupActionsEditTest extends TestCase
 {
     use WithFaker;
-
-    private $customerGroupActions;
 
     private $companySeeder;
 
@@ -26,26 +22,22 @@ class CustomerGroupActionsEditTest extends TestCase
     {
         parent::setUp();
 
-        $this->customerGroupActions = app(CustomerGroupActions::class);
-
-        $this->companySeeder = new CompanyTableSeeder();
-        $this->customerGroupSeeder = new CustomerGroupTableSeeder();
+        $this->customerGroupActions = new CustomerGroupActions();
     }
 
     public function test_customer_group_actions_call_update_expect_db_updated()
     {
-        $user = User::factory()->create();
+        $user = User::factory()
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(CustomerGroup::factory())
+                    )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $customerGroup = $user->companies()->inRandomOrder()->first()
+                            ->customerGroups()->inRandomOrder()->first();
 
-        $this->customerGroupSeeder->callWith(CustomerGroupTableSeeder::class, [3, $companyId]);
+        $customerGroupArr = CustomerGroup::factory()->make()->toArray();
 
-        $customerGroup = $user->companies->first()->customerGroups->first();
-        $customerGroupArr = CustomerGroup::factory()->make();
-
-        $result = $this->customerGroupActions->update($customerGroup, $customerGroupArr->toArray());
+        $result = $this->customerGroupActions->update($customerGroup, $customerGroupArr);
 
         $this->assertInstanceOf(CustomerGroup::class, $result);
         $this->assertDatabaseHas('customer_groups', [
@@ -76,11 +68,13 @@ class CustomerGroupActionsEditTest extends TestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory(2)->setIsDefault()
-                        ->has(CustomerGroup::factory(), 'customer_groups'), 'companies')
-                    ->create();
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(CustomerGroup::factory())
+                    )->create();
 
-        $customerGroup = $user->companies->first()->customer_groups->first();
+        $customerGroup = $user->companies()->inRandomOrder()->first()
+                            ->customerGroups()->inRandomOrder()->first();
+
         $customerGroupArr = [];
 
         $this->customerGroupActions->update($customerGroup, $customerGroupArr);

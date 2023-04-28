@@ -13,23 +13,22 @@ class ProductGroupActionsReadTest extends TestCase
 {
     use WithFaker;
 
-    private $productGroupActions;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->productGroupActions = app(ProductGroupActions::class);
+        $this->productGroupActions = new ProductGroupActions();
     }
 
     public function test_product_group_actions_call_read_expect_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setIsDefault()
-                        ->has(ProductGroup::factory()->count(20), 'productGroups'), 'companies')
-                    ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(5))
+            )->create();
 
-        $productGroup = $user->companies->first()->productGroups()->inRandomOrder()->first();
+        $productGroup = $user->companies()->inRandomOrder()->first()
+                            ->productGroups()->inRandomOrder()->first();
 
         $result = $this->productGroupActions->read($productGroup);
 
