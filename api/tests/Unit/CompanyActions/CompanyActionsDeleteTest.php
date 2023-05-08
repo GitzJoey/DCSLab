@@ -11,6 +11,8 @@ use Tests\TestCase;
 class CompanyActionsDeleteTest extends TestCase
 {
     use WithFaker;
+    
+    private CompanyActions $companyActions;
 
     protected function setUp(): void
     {

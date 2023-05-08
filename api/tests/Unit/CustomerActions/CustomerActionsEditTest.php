@@ -18,6 +18,8 @@ class CustomerActionsEditTest extends TestCase
 {
     use WithFaker;
 
+    private CustomerActions $customerActions;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -266,16 +268,29 @@ class CustomerActionsEditTest extends TestCase
     public function test_customer_actions_call_update_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->customerActions->create(
-            [],
-            [],
-            []
-        );
+
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(CustomerGroup::factory())
+        )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $customer = Customer::factory()
+            ->for($company)->for($customerGroup)
+            ->has(CustomerAddress::factory()->for($company)->count(3))
+        ->create();
+
+        $customerArr = [];
+        $customerAddressArr = [];
+        $picArr = [];
 
         $this->customerActions->update(
-            [],
-            [],
-            []
+            $customer,
+            $customerArr,
+            $customerAddressArr,
+            $picArr
         );
     }
 }

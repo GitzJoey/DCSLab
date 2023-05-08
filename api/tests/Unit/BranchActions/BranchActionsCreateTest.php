@@ -13,6 +13,8 @@ use Tests\TestCase;
 class BranchActionsCreateTest extends TestCase
 {
     use WithFaker;
+    
+    private BranchActions $branchActions;
 
     protected function setUp(): void
     {

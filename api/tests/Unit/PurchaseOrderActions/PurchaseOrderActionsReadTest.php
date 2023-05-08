@@ -24,6 +24,8 @@ use Tests\TestCase;
 class PurchaseOrderActionsReadTest extends TestCase
 {
     use WithFaker;
+    
+    private PurchaseOrderActions $purchaseOrderActions;
 
     protected function setUp(): void
     {

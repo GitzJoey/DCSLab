@@ -13,6 +13,8 @@ use Tests\TestCase;
 class SupplierActionsDeleteTest extends TestCase
 {
     use WithFaker;
+    
+    private SupplierActions $supplierActions;
 
     protected function setUp(): void
     {

@@ -15,6 +15,8 @@ use Tests\TestCase;
 class EmployeeActionsCreateTest extends TestCase
 {
     use WithFaker;
+    
+    private EmployeeActions $employeeActions;
 
     protected function setUp(): void
     {

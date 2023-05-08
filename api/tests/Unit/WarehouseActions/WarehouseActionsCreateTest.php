@@ -14,6 +14,8 @@ use Tests\TestCase;
 class WarehouseActionsCreateTest extends TestCase
 {
     use WithFaker;
+    
+    private WarehouseActions $warehouseActions;
 
     protected function setUp(): void
     {

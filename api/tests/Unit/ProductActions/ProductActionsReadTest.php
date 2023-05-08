@@ -22,6 +22,8 @@ class ProductActionsReadTest extends TestCase
 {
     use WithFaker;
 
+    private ProductActions $productActions;
+
     protected function setUp(): void
     {
         parent::setUp();

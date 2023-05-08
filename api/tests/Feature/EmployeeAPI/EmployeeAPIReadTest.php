@@ -26,7 +26,6 @@ class EmployeeAPIReadTest extends TestCase
 
     public function test_employee_api_call_read_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -75,7 +74,6 @@ class EmployeeAPIReadTest extends TestCase
     public function test_employee_api_call_read_without_ulid_expect_exception()
     {
         $this->expectException(Exception::class);
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -90,7 +88,6 @@ class EmployeeAPIReadTest extends TestCase
 
     public function test_employee_api_call_read_with_nonexistance_ulid_expect_not_found()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

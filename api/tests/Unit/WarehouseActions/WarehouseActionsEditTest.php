@@ -15,6 +15,8 @@ class WarehouseActionsEditTest extends TestCase
 {
     use WithFaker;
 
+    private WarehouseActions $warehouseActions;
+
     protected function setUp(): void
     {
         parent::setUp();

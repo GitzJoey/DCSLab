@@ -29,7 +29,6 @@ class SupplierAPICreateTest extends TestCase
 
     public function test_supplier_api_call_store_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -121,7 +120,6 @@ class SupplierAPICreateTest extends TestCase
 
     public function test_supplier_api_call_store_with_nonexistance_supplier_product_expect_failed()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -209,7 +207,6 @@ class SupplierAPICreateTest extends TestCase
 
     public function test_supplier_api_call_store_with_existing_code_in_same_company_expect_failed()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
@@ -245,7 +242,6 @@ class SupplierAPICreateTest extends TestCase
 
     public function test_supplier_api_call_store_with_empty_string_parameters_expect_failed()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                 ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setIsDefault(), 'companies')

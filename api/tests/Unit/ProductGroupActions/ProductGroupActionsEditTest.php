@@ -14,6 +14,8 @@ class ProductGroupActionsEditTest extends TestCase
 {
     use WithFaker;
 
+    private ProductGroupActions $productGroupActions;
+
     protected function setUp(): void
     {
         parent::setUp();
