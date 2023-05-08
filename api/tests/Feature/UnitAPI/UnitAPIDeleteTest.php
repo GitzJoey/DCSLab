@@ -22,7 +22,6 @@ class UnitAPIDeleteTest extends TestCase
 
     public function test_unit_api_call_delete_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -45,7 +44,6 @@ class UnitAPIDeleteTest extends TestCase
 
     public function test_unit_api_call_delete_of_nonexistance_ulid_expect_not_found()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()->create();
 
         $this->actingAs($user);
@@ -59,7 +57,6 @@ class UnitAPIDeleteTest extends TestCase
     public function test_unit_api_call_delete_without_parameters_expect_failed()
     {
         $this->expectException(Exception::class);
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()->create();
 
         $this->actingAs($user);

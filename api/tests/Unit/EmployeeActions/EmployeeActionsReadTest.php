@@ -21,6 +21,8 @@ class EmployeeActionsReadTest extends TestCase
 {
     use WithFaker;
 
+    private EmployeeActions $employeeActions;
+
     protected function setUp(): void
     {
         parent::setUp();

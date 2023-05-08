@@ -13,6 +13,8 @@ use Tests\TestCase;
 class WarehouseActionsDeleteTest extends TestCase
 {
     use WithFaker;
+    
+    private WarehouseActions $warehouseActions;
 
     protected function setUp(): void
     {

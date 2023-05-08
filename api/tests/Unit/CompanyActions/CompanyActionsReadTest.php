@@ -14,6 +14,8 @@ class CompanyActionsReadTest extends TestCase
 {
     use WithFaker;
 
+    private CompanyActions $companyActions;
+
     protected function setUp(): void
     {
         parent::setUp();

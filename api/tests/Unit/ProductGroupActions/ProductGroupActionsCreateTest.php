@@ -13,6 +13,8 @@ use Tests\TestCase;
 class ProductGroupActionsCreateTest extends TestCase
 {
     use WithFaker;
+    
+    private ProductGroupActions $productGroupActions;
 
     protected function setUp(): void
     {

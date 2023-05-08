@@ -32,7 +32,6 @@ class SupplierAPIEditTest extends TestCase
 
     public function test_supplier_api_call_update_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -137,7 +136,6 @@ class SupplierAPIEditTest extends TestCase
     public function test_supplier_api_call_update_with_nonexistance_supplier_product_expect_failed()
     {
         $this->markTestSkipped('Under Constructions');
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -264,7 +262,6 @@ class SupplierAPIEditTest extends TestCase
 
     public function test_supplier_api_call_update_and_use_existing_code_in_same_company_expect_failed()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -396,7 +393,6 @@ class SupplierAPIEditTest extends TestCase
 
     public function test_supplier_api_call_update_and_use_existing_code_in_different_company_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

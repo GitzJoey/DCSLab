@@ -22,7 +22,6 @@ class CompanyAPIEditTest extends TestCase
 
     public function test_company_api_call_update_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                 ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setStatusActive()->setIsDefault())
@@ -51,7 +50,6 @@ class CompanyAPIEditTest extends TestCase
 
     public function test_company_api_call_update_and_use_existing_code_in_same_user_expect_failed()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()

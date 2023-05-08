@@ -13,10 +13,8 @@ use Tests\TestCase;
 class CustomerGroupActionsEditTest extends TestCase
 {
     use WithFaker;
-
-    private $companySeeder;
-
-    private $customerGroupSeeder;
+    
+    private CustomerGroupActions $customerGroupActions;
 
     protected function setUp(): void
     {

@@ -14,6 +14,8 @@ use Tests\TestCase;
 class CustomerGroupActionsReadTest extends TestCase
 {
     use WithFaker;
+    
+    private CustomerGroupActions $customerGroupActions;
 
     protected function setUp(): void
     {

@@ -12,6 +12,8 @@ use Tests\TestCase;
 class BranchActionsDeleteTest extends TestCase
 {
     use WithFaker;
+    
+    private BranchActions $branchActions;
 
     protected function setUp(): void
     {

@@ -22,7 +22,6 @@ class UnitAPICreateTest extends TestCase
 
     public function test_unit_api_call_store_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault())
@@ -50,7 +49,6 @@ class UnitAPICreateTest extends TestCase
 
     public function test_unit_api_call_store_with_existing_code_in_same_company_expect_failed()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault())
@@ -79,7 +77,6 @@ class UnitAPICreateTest extends TestCase
 
     public function test_unit_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault())

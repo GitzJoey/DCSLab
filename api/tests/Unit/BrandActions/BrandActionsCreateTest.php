@@ -13,6 +13,8 @@ use Tests\TestCase;
 class BrandActionsCreateTest extends TestCase
 {
     use WithFaker;
+    
+    private BrandActions $brandActions;
 
     protected function setUp(): void
     {

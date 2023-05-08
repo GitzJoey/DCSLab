@@ -22,7 +22,6 @@ class UnitAPIEditTest extends TestCase
 
     public function test_unit_api_call_update_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -54,7 +53,6 @@ class UnitAPIEditTest extends TestCase
 
     public function test_unit_api_call_update_and_use_existing_code_in_same_company_expect_failed()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -84,7 +82,6 @@ class UnitAPIEditTest extends TestCase
 
     public function test_unit_api_call_update_and_use_existing_code_in_different_company_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

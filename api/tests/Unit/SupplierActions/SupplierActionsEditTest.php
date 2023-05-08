@@ -21,6 +21,8 @@ class SupplierActionsEditTest extends TestCase
 {
     use WithFaker;
 
+    private SupplierActions $supplierActions;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -39,7 +41,6 @@ class SupplierActionsEditTest extends TestCase
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
-        $companyId = $company->id;
 
         $supplier = $company->suppliers()->inRandomOrder()->first();
 
@@ -95,7 +96,7 @@ class SupplierActionsEditTest extends TestCase
 
         $this->assertDatabaseHas('suppliers', [
             'id' => $result->id,
-            'company_id' => $companyId,
+            'company_id' => $company->id,
             'code' => $result['code'],
             'name' => $result['name'],
             'contact' => $result['contact'],
@@ -117,7 +118,7 @@ class SupplierActionsEditTest extends TestCase
 
         foreach ($productsArr as $product) {
             $this->assertDatabaseHas('supplier_products', [
-                'company_id' => $companyId,
+                'company_id' => $company->id,
                 'supplier_id' => $result->id,
                 'product_id' => $product['product_id'],
                 'main_product' => $product['main_product'],
@@ -128,16 +129,28 @@ class SupplierActionsEditTest extends TestCase
     public function test_supplier_actions_call_update_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->supplierActions->create(
-            [],
-            [],
-            []
-        );
 
+        $user = User::factory()
+            ->has(Company::factory()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $supplier = $company->suppliers()->inRandomOrder()->first();
+
+        $picArr = [];
+        $supplierArr = [];
+        $productsArr = [];
+        
         $this->supplierActions->update(
-            [],
-            [],
-            []
+            supplier: $supplier,
+            picArr: $picArr,
+            supplierArr: $supplierArr,
+            productsArr: $productsArr
         );
     }
 }
