@@ -17,7 +17,7 @@ class UserProfileResource extends JsonResource
 
         return $this;
     }
-    
+
     /**
      * Transform the resource into an array.
      *

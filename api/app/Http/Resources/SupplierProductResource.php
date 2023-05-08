@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierProductResource extends JsonResource
 {
