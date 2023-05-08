@@ -12,8 +12,6 @@ use Tests\ActionsTestCase;
 class BranchActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
-    
-    private BranchActions $branchActions;
 
     private BranchActions $branchActions;
 

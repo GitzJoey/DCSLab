@@ -12,8 +12,6 @@ use Tests\ActionsTestCase;
 class BrandActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
-    
-    private BrandActions $brandActions;
 
     private BrandActions $brandActions;
 

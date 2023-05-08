@@ -13,8 +13,6 @@ use Tests\ActionsTestCase;
 class CustomerGroupActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
-    
-    private CustomerGroupActions $customerGroupActions;
 
     private CustomerGroupActions $customerGroupActions;
 

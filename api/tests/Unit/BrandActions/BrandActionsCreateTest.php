@@ -13,8 +13,6 @@ use Tests\ActionsTestCase;
 class BrandActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
-    
-    private BrandActions $brandActions;
 
     private BrandActions $brandActions;
 

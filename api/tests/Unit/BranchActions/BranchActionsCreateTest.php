@@ -13,8 +13,6 @@ use Tests\ActionsTestCase;
 class BranchActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
-    
-    private BranchActions $branchActions;
 
     private BranchActions $branchActions;
 

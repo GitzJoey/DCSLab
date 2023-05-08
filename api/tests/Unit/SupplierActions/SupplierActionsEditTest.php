@@ -145,7 +145,7 @@ class SupplierActionsEditTest extends ActionsTestCase
         $picArr = [];
         $supplierArr = [];
         $productsArr = [];
-        
+
         $this->supplierActions->update(
             supplier: $supplier,
             picArr: $picArr,
