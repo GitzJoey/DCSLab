@@ -13,6 +13,8 @@ use Tests\TestCase;
 class UnitActionsCreateTest extends TestCase
 {
     use WithFaker;
+    
+    private UnitActions $unitActions;
 
     protected function setUp(): void
     {

@@ -14,6 +14,8 @@ class BranchActionsEditTest extends TestCase
 {
     use WithFaker;
 
+    private BranchActions $branchActions;
+
     protected function setUp(): void
     {
         parent::setUp();

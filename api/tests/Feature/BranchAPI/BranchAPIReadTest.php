@@ -24,7 +24,6 @@ class BranchAPIReadTest extends TestCase
     public function test_branch_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
         $this->markTestSkipped('Under Constructions');
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -70,7 +69,6 @@ class BranchAPIReadTest extends TestCase
     public function test_branch_api_call_read_any_with_search_expect_filtered_results()
     {
         $this->markTestSkipped('Under Constructions');
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault(), 'companies')
@@ -118,7 +116,6 @@ class BranchAPIReadTest extends TestCase
     public function test_branch_api_call_read_any_without_search_querystring_expect_failed()
     {
         $this->markTestSkipped('Under Constructions');
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
@@ -140,7 +137,6 @@ class BranchAPIReadTest extends TestCase
     public function test_branch_api_call_read_any_with_special_char_in_search_expect_results()
     {
         $this->markTestSkipped('Under Constructions');
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
@@ -176,7 +172,6 @@ class BranchAPIReadTest extends TestCase
     public function test_branch_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
         $this->markTestSkipped('Under Constructions');
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
@@ -211,7 +206,6 @@ class BranchAPIReadTest extends TestCase
 
     public function test_branch_api_call_read_expect_successful()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
@@ -232,7 +226,6 @@ class BranchAPIReadTest extends TestCase
     public function test_branch_api_call_read_without_ulid_expect_exception()
     {
         $this->expectException(Exception::class);
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
@@ -246,7 +239,6 @@ class BranchAPIReadTest extends TestCase
 
     public function test_branch_api_call_read_with_nonexistance_ulid_expect_not_found()
     {
-        /** @var \Illuminate\Contracts\Auth\Authenticatable */
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()

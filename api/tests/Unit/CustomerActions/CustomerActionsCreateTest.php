@@ -17,6 +17,8 @@ use Tests\TestCase;
 class CustomerActionsCreateTest extends TestCase
 {
     use WithFaker;
+    
+    private CustomerActions $customerActions;
 
     protected function setUp(): void
     {

@@ -12,6 +12,8 @@ use Tests\TestCase;
 class ProductGroupActionsDeleteTest extends TestCase
 {
     use WithFaker;
+    
+    private ProductGroupActions $productGroupActions;
 
     protected function setUp(): void
     {

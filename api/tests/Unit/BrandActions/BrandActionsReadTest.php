@@ -15,6 +15,8 @@ class BrandActionsReadTest extends TestCase
 {
     use WithFaker;
 
+    private BrandActions $brandActions;
+
     protected function setUp(): void
     {
         parent::setUp();

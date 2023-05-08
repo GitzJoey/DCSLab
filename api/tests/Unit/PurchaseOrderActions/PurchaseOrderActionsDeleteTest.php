@@ -23,6 +23,8 @@ class PurchaseOrderActionsDeleteTest extends TestCase
 {
     use WithFaker;
 
+    private PurchaseOrderActions $purchaseOrderActions;
+
     protected function setUp(): void
     {
         parent::setUp();
