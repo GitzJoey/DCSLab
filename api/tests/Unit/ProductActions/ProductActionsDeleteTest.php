@@ -18,6 +18,8 @@ use Tests\ActionsTestCase;
 class ProductActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
+    
+    private ProductActions $productActions;
 
     private ProductActions $productActions;
 

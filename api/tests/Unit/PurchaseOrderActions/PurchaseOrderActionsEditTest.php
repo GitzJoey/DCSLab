@@ -30,6 +30,8 @@ use Tests\ActionsTestCase;
 class PurchaseOrderActionsEditTest extends ActionsTestCase
 {
     use WithFaker;
+    
+    private PurchaseOrderActions $purchaseOrderActions;
 
     private PurchaseOrderActions $purchaseOrderActions;
 

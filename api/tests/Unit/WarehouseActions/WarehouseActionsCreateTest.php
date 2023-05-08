@@ -14,6 +14,8 @@ use Tests\ActionsTestCase;
 class WarehouseActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
+    
+    private WarehouseActions $warehouseActions;
 
     private WarehouseActions $warehouseActions;
 

@@ -12,6 +12,8 @@ use Tests\ActionsTestCase;
 class CompanyActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
+    
+    private CompanyActions $companyActions;
 
     private CompanyActions $companyActions;
 

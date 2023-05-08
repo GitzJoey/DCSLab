@@ -14,6 +14,8 @@ use Tests\ActionsTestCase;
 class CustomerActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
+    
+    private CustomerActions $customerActions;
 
     private CustomerActions $customerActions;
 

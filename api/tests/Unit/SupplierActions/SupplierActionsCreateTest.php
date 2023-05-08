@@ -20,6 +20,8 @@ use Tests\ActionsTestCase;
 class SupplierActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
+    
+    private SupplierActions $supplierActions;
 
     private SupplierActions $supplierActions;
 

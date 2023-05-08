@@ -14,6 +14,8 @@ use Tests\ActionsTestCase;
 class CustomerGroupActionsReadTest extends ActionsTestCase
 {
     use WithFaker;
+    
+    private CustomerGroupActions $customerGroupActions;
 
     private CustomerGroupActions $customerGroupActions;
 
