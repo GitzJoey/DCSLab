@@ -8,10 +8,10 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
-class CompanyAPIEditTest extends TestCase
+class CompanyAPIEditTest extends APITestCase
 {
     use WithFaker;
 

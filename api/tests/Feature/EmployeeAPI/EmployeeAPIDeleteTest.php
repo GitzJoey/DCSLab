@@ -13,9 +13,9 @@ use App\Models\Setting;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class EmployeeAPIDeleteTest extends TestCase
+class EmployeeAPIDeleteTest extends APITestCase
 {
     use WithFaker;
 

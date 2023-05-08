@@ -16,9 +16,9 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class PurchaseOrderAPIDeleteTest extends TestCase
+class PurchaseOrderAPIDeleteTest extends APITestCase
 {
     use WithFaker;
 

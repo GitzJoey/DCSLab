@@ -13,12 +13,14 @@ use App\Models\ProductUnit;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class ProductActionsDeleteTest extends TestCase
+class ProductActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
     
+    private ProductActions $productActions;
+
     private ProductActions $productActions;
 
     protected function setUp(): void

@@ -8,12 +8,14 @@ use App\Models\ProductGroup;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class ProductGroupActionsCreateTest extends TestCase
+class ProductGroupActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
     
+    private ProductGroupActions $productGroupActions;
+
     private ProductGroupActions $productGroupActions;
 
     protected function setUp(): void

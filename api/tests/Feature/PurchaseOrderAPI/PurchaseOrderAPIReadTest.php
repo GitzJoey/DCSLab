@@ -24,9 +24,9 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class PurchaseOrderAPIReadTest extends TestCase
+class PurchaseOrderAPIReadTest extends APITestCase
 {
     use WithFaker;
 
@@ -38,7 +38,7 @@ class PurchaseOrderAPIReadTest extends TestCase
     public function test_purchase_order_api_call_read_expect_successful()
     {
         $this->markTestSkipped('Under Constructions');
-        
+
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()

@@ -9,10 +9,10 @@ use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
-class BranchAPIReadTest extends TestCase
+class BranchAPIReadTest extends APITestCase
 {
     use WithFaker;
 

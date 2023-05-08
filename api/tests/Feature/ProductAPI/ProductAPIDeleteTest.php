@@ -15,9 +15,9 @@ use App\Models\Unit;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class ProductAPIDeleteTest extends TestCase
+class ProductAPIDeleteTest extends APITestCase
 {
     use WithFaker;
 
@@ -93,7 +93,7 @@ class ProductAPIDeleteTest extends TestCase
     public function test_product_api_call_delete_without_parameters_expect_failed()
     {
         $this->expectException(Exception::class);
-        
+
         $user = User::factory()->create();
 
         $this->actingAs($user);

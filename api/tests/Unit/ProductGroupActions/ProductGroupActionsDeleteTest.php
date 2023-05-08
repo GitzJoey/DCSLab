@@ -7,12 +7,14 @@ use App\Models\Company;
 use App\Models\ProductGroup;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class ProductGroupActionsDeleteTest extends TestCase
+class ProductGroupActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
     
+    private ProductGroupActions $productGroupActions;
+
     private ProductGroupActions $productGroupActions;
 
     protected function setUp(): void

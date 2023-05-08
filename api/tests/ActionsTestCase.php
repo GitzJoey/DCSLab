@@ -4,7 +4,7 @@ namespace Tests;
 
 use Illuminate\Support\Facades\File;
 
-class ActionTestCase extends TestCase
+class ActionsTestCase extends TestCase
 {
     protected function setUp(): void
     {

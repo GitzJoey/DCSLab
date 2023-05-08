@@ -13,9 +13,9 @@ use App\Models\Setting;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class EmployeeAPIReadTest extends TestCase
+class EmployeeAPIReadTest extends APITestCase
 {
     use WithFaker;
 

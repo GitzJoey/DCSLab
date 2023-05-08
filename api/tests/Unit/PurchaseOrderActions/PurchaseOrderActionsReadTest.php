@@ -19,12 +19,14 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class PurchaseOrderActionsReadTest extends TestCase
+class PurchaseOrderActionsReadTest extends ActionsTestCase
 {
     use WithFaker;
     
+    private PurchaseOrderActions $purchaseOrderActions;
+
     private PurchaseOrderActions $purchaseOrderActions;
 
     protected function setUp(): void

@@ -7,12 +7,14 @@ use App\Models\Company;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class CompanyActionsCreateTest extends TestCase
+class CompanyActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
     
+    private CompanyActions $companyActions;
+
     private CompanyActions $companyActions;
 
     protected function setUp(): void

@@ -20,10 +20,10 @@ use App\Models\Unit;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
-class PurchaseOrderAPICreateTest extends TestCase
+class PurchaseOrderAPICreateTest extends APITestCase
 {
     use WithFaker;
 
@@ -35,7 +35,7 @@ class PurchaseOrderAPICreateTest extends TestCase
     public function test_purchase_order_api_call_create_expect_db_has_record()
     {
         $this->markTestSkipped('Under Constructions');
-        
+
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

@@ -17,9 +17,9 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class PurchaseOrderActionsDeleteTest extends TestCase
+class PurchaseOrderActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
 
