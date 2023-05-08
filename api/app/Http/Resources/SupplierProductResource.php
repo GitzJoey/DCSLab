@@ -2,11 +2,12 @@
 
 namespace App\Http\Resources;
 
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SupplierProductResource extends JsonResource
 {
-    protected string $type;
+    protected string $type = '';
 
     public function type(string $value)
     {
