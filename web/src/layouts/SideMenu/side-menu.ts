@@ -2,7 +2,7 @@ import { Router, RouteLocationNormalizedLoaded } from "vue-router";
 import { Menu } from "../../stores/side-menu";
 import { slideUp, slideDown } from "../../utils/helper";
 
-interface Route extends RouteLocationNormalizedLoaded {
+export interface Route extends RouteLocationNormalizedLoaded {
   forceActiveMenu?: string;
 }
 
@@ -11,6 +11,12 @@ export interface FormattedMenu extends Menu {
   activeDropdown?: boolean;
   subMenu?: FormattedMenu[];
 }
+
+export type ProvideForceActiveMenu = (pageName: string) => void;
+
+const forceActiveMenu = (route: Route, pageName: string) => {
+  route.forceActiveMenu = pageName;
+};
 
 // Setup side menu
 const findActiveMenu = (subMenu: Menu[], route: Route): boolean => {
@@ -90,4 +96,4 @@ const leave = (el: HTMLElement) => {
   slideUp(el, 300);
 };
 
-export { nestedMenu, linkTo, enter, leave };
+export { nestedMenu, linkTo, enter, leave, forceActiveMenu };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, reactive, computed, onMounted } from "vue";
+import { watch, reactive, computed, onMounted, provide } from "vue";
 import { useRoute } from "vue-router";
 import Divider from "./Divider.vue";
 import Menu from "./Menu.vue";
@@ -9,7 +9,15 @@ import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import MobileMenu from "../../components/MobileMenu";
 import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
-import { FormattedMenu, nestedMenu, enter, leave } from "./side-menu";
+import {
+  ProvideForceActiveMenu,
+  forceActiveMenu,
+  Route,
+  FormattedMenu,
+  nestedMenu,
+  enter,
+  leave,
+} from "./side-menu";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
 import { useDashboardStore } from "../../stores/dashboard";
@@ -17,7 +25,7 @@ import DashboardService from "../../services/DashboardService";
 import { useZiggyRouteStore } from "../../stores/ziggy-route";
 import { Config } from "ziggy-js";
 
-const route = useRoute();
+const route: Route = useRoute();
 
 const dashboardService = new DashboardService();
 
@@ -30,6 +38,11 @@ const setFormattedMenu = (
 const sideMenuStore = useSideMenuStore();
 const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 
+provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
+  forceActiveMenu(route, pageName);
+  setFormattedMenu(sideMenu.value);
+});
+
 const dashboardStore = useDashboardStore();
 
 const ziggyRouteStore = useZiggyRouteStore();
@@ -39,6 +52,13 @@ const screenMask = computed(() => dashboardStore.screenMaskValue);
 watch(sideMenu, () => {
   setFormattedMenu(sideMenu.value);
 });
+
+watch(
+  computed(() => route.path),
+  () => {
+    delete route.forceActiveMenu;
+  }
+);
 
 onMounted(async () => {
   dashboardStore.toggleScreenMaskValue();
