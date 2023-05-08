@@ -8,7 +8,7 @@ use App\Http\Resources\BrandResource;
 use App\Models\Brand;
 use Exception;
 
-class BrandController extends Controller
+class BrandController extends BaseController
 {
     private $brandActions;
 

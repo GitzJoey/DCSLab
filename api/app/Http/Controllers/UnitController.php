@@ -9,7 +9,7 @@ use App\Http\Resources\UnitResource;
 use App\Models\Unit;
 use Exception;
 
-class UnitController extends Controller
+class UnitController extends BaseController
 {
     private $unitActions;
 

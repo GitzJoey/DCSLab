@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Enums\DiscountType;
+use App\Enums\VatStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrderProductUnit extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     use BootableModel;
 
     protected $fillable = [
@@ -33,6 +36,10 @@ class PurchaseOrderProductUnit extends Model
         'vat_rate',
         'vat_amount',
         'remarks',
+    ];
+
+    protected $casts = [
+        'vat_status' => VatStatus::class,
     ];
 
     public function company()

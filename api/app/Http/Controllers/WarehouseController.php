@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Actions\Warehouse\WarehouseActions;
 use App\Http\Requests\WarehouseRequest;
 use App\Http\Resources\WarehouseResource;
+use App\Models\Company;
 use App\Models\Warehouse;
 use Exception;
 
-class WarehouseController extends Controller
+class WarehouseController extends BaseController
 {
     private $warehouseActions;
 
@@ -25,6 +26,13 @@ class WarehouseController extends Controller
         $request = $warehouseRequest->validated();
 
         $company_id = $request['company_id'];
+        $branch_id = $request['branch_id'];
+
+        if (! Company::find($company_id)->branches()->where('id', '=', $branch_id)->exists()) {
+            return response()->error([
+                'branch_id' => [trans('rules.valid_branch')],
+            ], 422);
+        }
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -42,8 +50,7 @@ class WarehouseController extends Controller
         $warehouseArr = [
             'company_id' => $company_id,
             'code' => $code,
-            'company_id' => $request['company_id'],
-            'branch_id' => $request['branch_id'],
+            'branch_id' => $branch_id,
             'name' => $request['name'],
             'address' => $request['address'],
             'city' => $request['city'],
@@ -128,6 +135,13 @@ class WarehouseController extends Controller
         $request = $warehouseRequest->validated();
 
         $company_id = $request['company_id'];
+        $branch_id = $request['branch_id'];
+
+        if (! Company::find($company_id)->branches()->where('id', '=', $branch_id)->exists()) {
+            return response()->error([
+                'branch_id' => [trans('rules.valid_branch')],
+            ], 422);
+        }
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {

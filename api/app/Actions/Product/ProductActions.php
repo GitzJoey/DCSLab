@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ProductActions
 {
@@ -209,6 +210,7 @@ class ProductActions
             foreach ($productUnitsArr as $product_unit) {
                 array_push($pu, [
                     'id' => $product_unit['id'],
+                    'ulid' => $product_unit['id'] == null ? Str::ulid()->generate() : ProductUnit::find($product_unit['id'])->ulid,
                     'company_id' => $product->company_id,
                     'product_id' => $product->id,
                     'code' => $product_unit['code'],
@@ -236,10 +238,11 @@ class ProductActions
             }
 
             if (! empty($pu) && $this->checkUniqueCodeInArray($pu)) {
-                ProductUnit::upsert(
+                $product->productUnits()->upsert(
                     $pu,
                     ['id'],
                     [
+                        'ulid',
                         'company_id',
                         'product_id',
                         'code',
@@ -275,8 +278,6 @@ class ProductActions
         $retval = false;
 
         try {
-            $product->productUnits()->delete();
-
             $retval = $product->delete();
 
             DB::commit();

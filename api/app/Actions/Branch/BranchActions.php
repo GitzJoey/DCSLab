@@ -58,6 +58,10 @@ class BranchActions
             $branch->save();
 
             $coaActions = app(ChartOfAccountActions::class);
+            if ($branch->company->chartOfAccounts()->count() == 0) {
+                $coaActions->createDefaultAccountPerCompany($branch->company_id);
+            }
+
             $coaActions->createDefaultAccountPerBranch(
                 $branch->company_id,
                 $branch->id

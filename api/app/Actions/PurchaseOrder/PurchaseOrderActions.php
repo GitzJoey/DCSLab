@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Actions\PuchaseOrder;
+namespace App\Actions\PurchaseOrder;
 
+use App\Enums\DiscountType;
 use App\Models\ProductUnit;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDiscount;
 use App\Models\PurchaseOrderProductUnit;
 use App\Traits\CacheHelper;
 use Exception;
@@ -12,6 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PurchaseOrderActions
 {
@@ -41,26 +44,64 @@ class PurchaseOrderActions
             $purchaseOrder->status = $purchaseOrderArr['status'];
             $purchaseOrder->save();
 
-            $productUnits = [];
-            foreach ($productUnitArr as $productUnit) {
-                array_push($productUnits, new PurchaseOrderProductUnit([
-                    'company_id' => $purchaseOrder->company_id,
-                    'branch_id' => $purchaseOrder->branch_id,
-                    'purchase_order_id' => $purchaseOrder->id,
-                    'product_id' => ProductUnit::where('id', '=', $productUnit['product_unit_id'])->first()->product_id,
-                    'product_unit_id' => $productUnit['product_unit_id'],
-                    'qty' => $productUnit['qty'],
-                    'product_unit_amount_per_unit' => $productUnit['product_unit_amount_per_unit'],
-                    'product_unit_initial_price' => $productUnit['product_unit_initial_price'],
-                    'vat_status' => $productUnit['vat_status'],
-                    'vat_rate' => $productUnit['vat_rate'],
-                    'vat_amount' => $productUnit['vat_amount'],
-                    'remarks' => $productUnit['remarks'],
-                ]));
+            foreach ($purchaseOrderArr['global_discount'] as $globalDiscount) {
+                $discountType = $globalDiscount['discount_type'];
+
+                if ($discountType == DiscountType::GLOBAL_PERCENT_DISCOUNT || $discountType == DiscountType::GLOBAL_NOMINAL_DISCOUNT) {
+                    $purchaseOrderDiscount = new PurchaseOrderDiscount();
+                    $purchaseOrderDiscount->company_id = $purchaseOrder->company_id;
+                    $purchaseOrderDiscount->branch_id = $purchaseOrder->branch_id;
+                    $purchaseOrderDiscount->purchase_order_id = $purchaseOrder->id;
+                    $purchaseOrderDiscount->discount_type = $discountType;
+                    $purchaseOrderDiscount->amount = $globalDiscount['amount'];
+                    $purchaseOrderDiscount->save();
+                }
             }
 
-            if (! empty($productUnits)) {
-                $purchaseOrder->purchaseOrderProductUnits()->saveMany($productUnits);
+            foreach ($productUnitArr as $productUnit) {
+                $purchaseOrderProductUnit = new PurchaseOrderProductUnit();
+                $purchaseOrderProductUnit->company_id = $purchaseOrder->company_id;
+                $purchaseOrderProductUnit->branch_id = $purchaseOrder->branch_id;
+                $purchaseOrderProductUnit->purchase_order_id = $purchaseOrder->id;
+                $purchaseOrderProductUnit->product_id = ProductUnit::find($productUnit['product_unit_id'])->product_id;
+                $purchaseOrderProductUnit->product_unit_id = $productUnit['product_unit_id'];
+                $purchaseOrderProductUnit->qty = $productUnit['qty'];
+                $purchaseOrderProductUnit->product_unit_amount_per_unit = $productUnit['product_unit_amount_per_unit'];
+                $purchaseOrderProductUnit->product_unit_initial_price = $productUnit['product_unit_initial_price'];
+                $purchaseOrderProductUnit->vat_status = $productUnit['vat_status'];
+                $purchaseOrderProductUnit->vat_rate = $productUnit['vat_rate'];
+                $purchaseOrderProductUnit->remarks = $productUnit['remarks'];
+                $purchaseOrderProductUnit->save();
+
+                foreach ($productUnit['per_unit_discount'] as $perUnitDiscount) {
+                    $discountType = $perUnitDiscount['discount_type'];
+
+                    if ($discountType == DiscountType::PER_UNIT_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_NOMINAL_DISCOUNT) {
+                        $purchaseOrderDiscount = new PurchaseOrderDiscount();
+                        $purchaseOrderDiscount->company_id = $purchaseOrder->company_id;
+                        $purchaseOrderDiscount->branch_id = $purchaseOrder->branch_id;
+                        $purchaseOrderDiscount->purchase_order_id = $purchaseOrder->id;
+                        $purchaseOrderDiscount->purchase_order_product_unit_id = $purchaseOrderProductUnit->id;
+                        $purchaseOrderDiscount->discount_type = $discountType;
+                        $purchaseOrderDiscount->amount = $perUnitDiscount['amount'];
+                        $purchaseOrderDiscount->save();
+                    }
+                }
+
+                foreach ($productUnit['per_unit_sub_total_discount'] as $perUnitSubTotalDiscount) {
+                    $discountType = $perUnitSubTotalDiscount['discount_type'];
+
+                    if ($discountType == DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT) {
+                        $purchaseOrderDiscount = new PurchaseOrderDiscount();
+                        $purchaseOrderDiscount->company_id = $purchaseOrder->company_id;
+                        $purchaseOrderDiscount->branch_id = $purchaseOrder->branch_id;
+                        $purchaseOrderDiscount->purchase_order_id = $purchaseOrder->id;
+                        $purchaseOrderDiscount->purchase_order_product_unit_id = $purchaseOrderProductUnit->id;
+                        $purchaseOrderDiscount->discount_type = $discountType;
+                        $purchaseOrderDiscount->amount = $perUnitSubTotalDiscount['amount'];
+                        $purchaseOrderDiscount->save();
+                    }
+                }
             }
 
             DB::commit();
@@ -132,7 +173,7 @@ class PurchaseOrderActions
 
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $query->paginate($perPage, ['*'], 'page', $page);
+                $result = $query->paginate(perPage: abs($perPage), page: abs($page));
             } else {
                 $result = $query->get();
             }
@@ -153,7 +194,7 @@ class PurchaseOrderActions
 
     public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
     {
-        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderProductUnits.purchaseOrderDiscounts', 'purchaseOrderDiscounts')->where('id', '=', $purchaseOrder->id)->first();
+        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount')->where('id', '=', $purchaseOrder->id)->first();
     }
 
     public function update(
@@ -175,35 +216,56 @@ class PurchaseOrderActions
                 'status' => $purchaseOrderArr['status'],
             ]);
 
-            $purchaseOrderProductUnits = collect($productUnitArr)->map(function ($productUnit) {
+            $purchaseOrderProductUnitArr = collect($productUnitArr)->map(function ($productUnit) {
                 return [
-                    'id' => $productUnit->id,
-                    'company_id' => $productUnit->company_id,
-                    'branch_id' => $productUnit->branch_id,
-                    'purchase_order_id' => $productUnit->purchase_order_id,
-                    'product_id' => $productUnit->product_id,
-                    'product_unit_id' => $productUnit->product_unit_id,
-                    'qty' => $productUnit->qty,
-                    'product_unit_amount_per_unit' => $productUnit->product_unit_amount_per_unit,
-                    'product_unit_initial_price' => $productUnit->product_unit_initial_price,
-                    'vat_status' => $productUnit->vat_status,
-                    'vat_rate' => $productUnit->vat_rate,
-                    'vat_amount' => $productUnit->vat_amount,
-                    'remarks' => $productUnit->remarks,
+                    'id' => $productUnit['id'],
+                    'ulid' => $productUnit['id'] == null ? Str::ulid()->generate() : PurchaseOrderProductUnit::find($productUnit['id'])->ulid,
+                    'company_id' => $productUnit['company_id'],
+                    'branch_id' => $productUnit['branch_id'],
+                    'purchase_order_id' => $productUnit['purchase_order_id'],
+                    'product_id' => $productUnit['product_id'],
+                    'product_unit_id' => $productUnit['product_unit_id'],
+                    'qty' => $productUnit['qty'],
+                    'product_unit_amount_per_unit' => $productUnit['product_unit_amount_per_unit'],
+                    'product_unit_initial_price' => $productUnit['product_unit_initial_price'],
+                    'vat_status' => $productUnit['vat_status'],
+                    'vat_rate' => $productUnit['vat_rate'],
+                    'vat_amount' => $productUnit['vat_amount'],
+                    'remarks' => $productUnit['remarks'],
                 ];
-            });
+            })->toArray();
 
-            PurchaseOrderProductUnit::upsert($purchaseOrderProductUnits->toArray(), ['id'], [
-                'product_id',
-                'product_unit_id',
-                'qty',
-                'product_unit_amount_per_unit',
-                'product_unit_initial_price',
-                'vat_status',
-                'vat_rate',
-                'vat_amount',
-                'remarks',
-            ]);
+            $purchaseOrderProductUnitNewIds = [];
+            foreach ($purchaseOrderProductUnitArr as $purchaseOrderProductUnit) {
+                array_push($purchaseOrderProductUnitNewIds, $purchaseOrderProductUnit['id']);
+            }
+
+            $purchaseOrderProductUnitOldIds = $purchaseOrder->purchaseOrderProductUnits()->pluck('id')->toArray();
+
+            $deletedPurchaseOrderProductUnitIds = [];
+            $deletedPurchaseOrderProductUnitIds = array_diff($purchaseOrderProductUnitOldIds, $purchaseOrderProductUnitNewIds);
+
+            foreach ($deletedPurchaseOrderProductUnitIds as $deletedPurchaseOrderProductUnitId) {
+                $purchaseOrderProductUnit = $purchaseOrder->purchaseOrderProductUnits()->where('id', '=', $deletedPurchaseOrderProductUnitId);
+                $purchaseOrderProductUnit->delete();
+            }
+
+            $purchaseOrder->purchaseOrderProductUnits()->upsert(
+                $purchaseOrderProductUnitArr,
+                ['id'],
+                [
+                    'ulid',
+                    'product_id',
+                    'product_unit_id',
+                    'qty',
+                    'product_unit_amount_per_unit',
+                    'product_unit_initial_price',
+                    'vat_status',
+                    'vat_rate',
+                    'vat_amount',
+                    'remarks',
+                ]
+            );
 
             DB::commit();
 

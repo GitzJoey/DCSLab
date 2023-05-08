@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Actions\Customer\CustomerActions;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Resources\CustomerResource;
+use App\Models\Company;
 use App\Models\Customer;
 use Exception;
 
-class CustomerController extends Controller
+class CustomerController extends BaseController
 {
     private $customerActions;
 
@@ -25,6 +26,7 @@ class CustomerController extends Controller
         $request = $customerRequest->validated();
 
         $company_id = $request['company_id'];
+        $customer_group_id = $request['customer_group_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -37,6 +39,12 @@ class CustomerController extends Controller
                     'code' => [trans('rules.unique_code')],
                 ], 422);
             }
+        }
+
+        if (! Company::find($company_id)->customerGroups()->where('id', '=', $customer_group_id)->exists()) {
+            return response()->error([
+                'customer_group_id' => [trans('rules.valid_customer_group')],
+            ], 422);
         }
 
         $customerArr = [
@@ -181,6 +189,7 @@ class CustomerController extends Controller
         $request = $customerRequest->validated();
 
         $company_id = $request['company_id'];
+        $customer_group_id = $request['customer_group_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -195,12 +204,18 @@ class CustomerController extends Controller
             }
         }
 
+        if (! Company::find($company_id)->customerGroups()->where('id', '=', $customer_group_id)->exists()) {
+            return response()->error([
+                'customer_group_id' => [trans('rules.valid_customer_group')],
+            ], 422);
+        }
+
         $customerArr = [
             'company_id' => $company_id,
             'code' => $code,
             'name' => $request['name'],
             'is_member' => $request['is_member'],
-            'customer_group_id' => $request['customer_group_id'],
+            'customer_group_id' => $customer_group_id,
             'zone' => $request['zone'],
             'max_open_invoice' => $request['max_open_invoice'],
             'max_outstanding_invoice' => $request['max_outstanding_invoice'],
