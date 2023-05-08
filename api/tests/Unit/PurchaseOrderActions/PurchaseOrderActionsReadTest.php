@@ -24,8 +24,6 @@ use Tests\ActionsTestCase;
 class PurchaseOrderActionsReadTest extends ActionsTestCase
 {
     use WithFaker;
-    
-    private PurchaseOrderActions $purchaseOrderActions;
 
     private PurchaseOrderActions $purchaseOrderActions;
 

@@ -19,8 +19,6 @@ use Tests\ActionsTestCase;
 class ProductActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
-    
-    private ProductActions $productActions;
 
     private ProductActions $productActions;
 

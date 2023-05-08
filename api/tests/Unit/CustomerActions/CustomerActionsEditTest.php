@@ -272,7 +272,7 @@ class CustomerActionsEditTest extends ActionsTestCase
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
             ->has(CustomerGroup::factory())
-        )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
