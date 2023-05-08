@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\PaymentTermType;
 use App\Enums\RecordStatus;
 use App\Models\Customer;
@@ -88,7 +87,7 @@ class CustomerFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->customer();
+        $text = fake()->name();
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }

@@ -172,8 +172,13 @@ class PurchaseOrderActions
             }
 
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $query->paginate(perPage: abs($perPage), page: abs($page));
+                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
+                $page = is_numeric($page) ? abs($page) : 1;
+
+                $result = $query->paginate(
+                    perPage: $perPage,
+                    page: $page
+                );
             } else {
                 $result = $query->get();
             }

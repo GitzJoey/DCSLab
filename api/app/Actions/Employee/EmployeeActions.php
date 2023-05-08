@@ -111,9 +111,7 @@ class EmployeeActions
                 return null;
             }
 
-            $relationship = ['company', 'user.profile', 'employeeAccesses.branch'];
-
-            $employee = count($with) != 0 ? Employee::with($with) : Employee::with($relationship);
+            $employee = count($with) != 0 ? Employee::with($with) : Employee::with('company', 'user.profile', 'employeeAccesses.branch');
             $employee = $employee->whereCompanyId($companyId);
 
             if ($withTrashed) {
@@ -123,17 +121,19 @@ class EmployeeActions
             if (empty($search)) {
                 $employee = $employee->latest();
             } else {
-                $employee = Employee::with($relationship)
-                                ->whereHas('user', function ($query) use ($search) {
-                                    $query->where('name', 'like', '%'.$search.'%');
-                                })
-                                ->whereCompanyId($companyId)
-                                ->latest();
+                $employee = $employee->whereHas('user', function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%');
+                })->latest();
             }
 
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $employee->paginate(perPage: abs($perPage), page: abs($page));
+                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
+                $page = is_numeric($page) ? abs($page) : 1;
+
+                $result = $employee->paginate(
+                    perPage: $perPage,
+                    page: $page
+                );
             } else {
                 $result = $employee->get();
             }
@@ -241,7 +241,7 @@ class EmployeeActions
         }
     }
 
-    public function generateUniqueCode(): string
+    public function generateUniqueCodeForProduct(): string
     {
         $rand = new RandomizerActions();
         $code = $rand->generateAlpha().$rand->generateNumeric();

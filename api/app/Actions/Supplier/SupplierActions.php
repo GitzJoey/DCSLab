@@ -145,8 +145,13 @@ class SupplierActions
             }
 
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $supplier->paginate(abs($perPage));
+                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
+                $page = is_numeric($page) ? abs($page) : 1;
+
+                $result = $supplier->paginate(
+                    perPage: $perPage,
+                    page: $page
+                );
             } else {
                 $result = $supplier->get();
             }
@@ -255,14 +260,11 @@ class SupplierActions
         $retval = false;
 
         try {
-            $supplier->supplierProducts()->delete();
-            $supplier->delete();
-
             $supplier->user()->with('profile')->first()->profile()->update([
                 'status' => 0,
             ]);
 
-            $retval = true;
+            $retval = $supplier->delete();
 
             DB::commit();
 

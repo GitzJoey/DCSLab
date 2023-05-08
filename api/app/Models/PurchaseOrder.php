@@ -7,10 +7,12 @@ use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrder extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     use BootableModel;
 
     protected $fillable = [
@@ -47,10 +49,10 @@ class PurchaseOrder extends Model
     public function purchaseOrderDiscounts()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
-        ->where(function ($query) {
-            $query->where('discount_type', '=', DiscountType::GLOBAL_PERCENT_DISCOUNT->value)
-                ->orWhere('discount_type', '=', DiscountType::GLOBAL_NOMINAL_DISCOUNT->value);
-        });
+            ->where(function ($query) {
+                $query->where('discount_type', '=', DiscountType::GLOBAL_PERCENT_DISCOUNT->value)
+                    ->orWhere('discount_type', '=', DiscountType::GLOBAL_NOMINAL_DISCOUNT->value);
+            });
 
         return $result;
     }

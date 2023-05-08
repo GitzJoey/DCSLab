@@ -20,7 +20,11 @@ return new class extends Migration
             $table->foreignId('purchase_order_product_unit_id')->nullable()->references('id')->on('purchase_order_product_units');
             $table->string('discount_type');
             $table->decimal('amount', 19, 8)->default(0);
+            $table->unsignedBigInteger('created_by')->default(0);
+            $table->unsignedBigInteger('updated_by')->default(0);
+            $table->unsignedBigInteger('deleted_by')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

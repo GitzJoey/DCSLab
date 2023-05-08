@@ -8,7 +8,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerResource extends JsonResource
 {
-    protected string $type;
+    protected string $type = '';
 
     public function type(string $value)
     {

@@ -7,7 +7,7 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeAccessResource extends JsonResource
 {
-    protected string $type;
+    protected string $type = '';
 
     public function type(string $value)
     {

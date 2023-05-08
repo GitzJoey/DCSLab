@@ -3,10 +3,11 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierProductResource extends JsonResource
 {
-    protected string $type;
+    protected string $type = '';
 
     public function type(string $value)
     {
