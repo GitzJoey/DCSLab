@@ -97,8 +97,13 @@ class WarehouseActions
             }
 
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $warehouse->paginate(perPage: abs($perPage), page: abs($page));
+                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
+                $page = is_numeric($page) ? abs($page) : 1;
+
+                $result = $warehouse->paginate(
+                    perPage: $perPage,
+                    page: $page
+                );
             } else {
                 $result = $warehouse->get();
             }

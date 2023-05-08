@@ -106,8 +106,13 @@ class UnitActions
             }
 
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $unit->paginate(perPage: abs($perPage), page: abs($page));
+                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
+                $page = is_numeric($page) ? abs($page) : 1;
+
+                $result = $unit->paginate(
+                    perPage: $perPage,
+                    page: $page
+                );
             } else {
                 $result = $unit->get();
             }

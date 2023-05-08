@@ -32,7 +32,7 @@ return new class extends Migration
             $table->decimal('product_unit_final_price', 19, 8)->default(0);
             $table->integer('vat_status');
             $table->decimal('vat_rate', 19, 8);
-            $table->decimal('vat_amount', 19, 8);
+            $table->decimal('vat_amount', 19, 8)->default(0);
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
