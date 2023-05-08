@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Actions\Employee\EmployeeActions;
 use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
+use App\Models\Company;
 use App\Models\Employee;
 use Exception;
 
-class EmployeeController extends Controller
+class EmployeeController extends BaseController
 {
     private $employeeActions;
 
@@ -72,11 +73,18 @@ class EmployeeController extends Controller
             'tax_id' => $request['tax_id'],
             'ic_num' => $request['ic_num'],
             'remarks' => $request['remarks'],
+            'status' => $request['status'],
         ];
 
         $accessBranchArr = [];
         if (! empty($request['arr_access_branch_id'])) {
             for ($i = 0; $i < count($request['arr_access_branch_id']); $i++) {
+                if (! Company::find($company_id)->branches()->where('id', '=', $request['arr_access_branch_id'][$i])->exists()) {
+                    return response()->error([
+                        'arr_access_branch_id' => [trans('rules.valid_branch')],
+                    ], 422);
+                }
+
                 array_push($accessBranchArr, [
                     'branch_id' => $request['arr_access_branch_id'][$i],
                 ]);
@@ -212,6 +220,12 @@ class EmployeeController extends Controller
         $accessBranchArr = [];
         if (! empty($request['arr_access_branch_id'])) {
             for ($i = 0; $i < count($request['arr_access_branch_id']); $i++) {
+                if (! Company::find($company_id)->branches()->where('id', '=', $request['arr_access_branch_id'][$i])->exists()) {
+                    return response()->error([
+                        'arr_access_branch_id' => [trans('rules.valid_branch')],
+                    ], 422);
+                }
+
                 array_push($accessBranchArr, [
                     'branch_id' => $request['arr_access_branch_id'][$i],
                 ]);

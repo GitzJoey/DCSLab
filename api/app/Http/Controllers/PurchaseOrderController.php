@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\PuchaseOrder\PurchaseOrderActions;
+use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Http\Requests\PurchaseOrderRequest;
 use App\Http\Resources\PurchaseOrderResource;
 use App\Models\PurchaseOrder;
 use Exception;
 
-class PurchaseOrderController extends Controller
+class PurchaseOrderController extends BaseController
 {
     private $purchaseOrderActions;
 
@@ -39,6 +39,17 @@ class PurchaseOrderController extends Controller
             }
         }
 
+        $globalDiscounts = [];
+        if (array_key_exists('arr_global_discount_type', $request)) {
+            for ($i = 0; $i < count($request['arr_global_discount_type']); $i++) {
+                $globalDiscount = [
+                    'discount_type' => $request['arr_global_discount_type'][$i],
+                    'amount' => $request['arr_global_discount'][$i],
+                ];
+                array_push($globalDiscounts, $globalDiscount);
+            }
+        }
+
         $purchaseOrderArr = [
             'company_id' => $company_id,
             'branch_id' => $request['branch_id'],
@@ -48,29 +59,43 @@ class PurchaseOrderController extends Controller
             'shipping_date' => $request['shipping_date'],
             'shipping_address' => $request['shipping_address'],
             'status' => $request['status'],
-            'global_discount' => [
-                'amount' => $request['arr_global_discount'],
-                'discount_type' => $request['arr_global_discount_type'],
-            ],
+            'remarks' => $request['remarks'],
+            'global_discount' => $globalDiscounts,
         ];
 
         $productUnitArr = [];
         $productUnitCount = count($request['arr_product_unit_id']);
         for ($i = 0; $i < $productUnitCount; $i++) {
+            $perUnitDiscounts = [];
+            if (array_key_exists('arr_product_unit_per_unit_discount_type', $request)) {
+                for ($i = 0; $i < count($request['arr_product_unit_per_unit_discount_type']); $i++) {
+                    $perUnitDiscount = [
+                        'discount_type' => $request['arr_product_unit_per_unit_discount_type'][$i],
+                        'amount' => $request['arr_product_unit_per_unit_discount'][$i],
+                    ];
+                    array_push($perUnitDiscounts, $perUnitDiscount);
+                }
+            }
+
+            $perUnitSubTotalDiscounts = [];
+            if (array_key_exists('arr_product_unit_per_unit_sub_total_discount_type', $request)) {
+                for ($i = 0; $i < count($request['arr_product_unit_per_unit_sub_total_discount_type']); $i++) {
+                    $perUnitSubTotalDiscount = [
+                        'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type'][$i],
+                        'amount' => $request['arr_product_unit_per_unit_sub_total_discount'][$i],
+                    ];
+                    array_push($perUnitSubTotalDiscounts, $perUnitSubTotalDiscount);
+                }
+            }
+
             array_push($productUnitArr, [
                 'id' => $request['arr_product_unit_id'][$i],
                 'product_unit_id' => $request['arr_product_unit_product_unit_id'][$i],
                 'qty' => $request['arr_product_unit_qty'][$i],
-                'amount_per_unit' => $request['arr_product_unit_amount_per_unit'][$i],
-                'initial_price' => $request['arr_product_unit_initial_price'][$i],
-                'per_unit_discount' => [
-                    'amount' => $request['arr_product_unit_per_unit_discount'],
-                    'discount_type' => $request['arr_product_unit_per_unit_discount_type'],
-                ],
-                'per_unit_discount' => [
-                    'amount' => $request['arr_product_unit_per_unit_sub_total_discount'],
-                    'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type'],
-                ],
+                'product_unit_amount_per_unit' => $request['arr_product_unit_amount_per_unit'][$i],
+                'product_unit_initial_price' => $request['arr_product_unit_initial_price'][$i],
+                'per_unit_discount' => $perUnitDiscounts,
+                'per_unit_sub_total_discount' => $perUnitSubTotalDiscounts,
                 'vat_status' => $request['arr_product_unit_vat_status'][$i],
                 'vat_rate' => $request['arr_product_unit_vat_rate'][$i],
                 'remarks' => $request['arr_product_unit_remarks'][$i],
@@ -81,7 +106,10 @@ class PurchaseOrderController extends Controller
         $errorMsg = '';
 
         try {
-            $result = $this->purchaseOrderActions->create($purchaseOrderArr, $productUnitArr);
+            $result = $this->purchaseOrderActions->create(
+                $purchaseOrderArr,
+                $productUnitArr
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

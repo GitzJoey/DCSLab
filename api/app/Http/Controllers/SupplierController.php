@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Actions\Supplier\SupplierActions;
 use App\Http\Requests\SupplierRequest;
 use App\Http\Resources\SupplierResource;
+use App\Models\Company;
 use App\Models\Supplier;
 use Exception;
 
-class SupplierController extends Controller
+class SupplierController extends BaseController
 {
     private $supplierActions;
 
@@ -78,13 +79,20 @@ class SupplierController extends Controller
         $productsArr = [];
         if (array_key_exists('arr_product_id', $request) && ! empty($request['arr_product_id'])) {
             for ($i = 0; $i < count($request['arr_product_id']); $i++) {
-                $mainProduct = 0;
-                if (array_key_exists('mainProducts', $request)) {
-                    $mainProduct = in_array($request['arr_product_id'][$i], $request['mainProducts']) ? 1 : 0;
+                $product_id = $request['arr_product_id'][$i];
+                if (! Company::find($company_id)->products()->where('id', '=', $product_id)->exists()) {
+                    return response()->error([
+                        'arr_product_id' => [trans('rules.valid_product')],
+                    ], 422);
                 }
+
+                $mainProduct = 0;
+                if (array_key_exists('arr_main_product_id', $request)) {
+                    $mainProduct = in_array($product_id, $request['arr_main_product_id']) ? 1 : 0;
+                }
+
                 array_push($productsArr, [
-                    'company_id' => $company_id,
-                    'product_id' => $request['arr_product_id'][$i],
+                    'product_id' => $product_id,
                     'main_product' => $mainProduct,
                 ]);
             }
@@ -223,12 +231,18 @@ class SupplierController extends Controller
         $productsArr = [];
         if (array_key_exists('arr_product_id', $request) && ! empty($request['arr_product_id'])) {
             for ($i = 0; $i < count($request['arr_product_id']); $i++) {
+                $product_id = $request['arr_product_id'][$i];
+                if (! Company::find($company_id)->products()->where('id', '=', $product_id)->exists()) {
+                    return response()->error([
+                        'arr_product_id' => [trans('rules.valid_product')],
+                    ], 422);
+                }
+
                 $mainProduct = 0;
                 if (array_key_exists('arr_main_product_id', $request)) {
-                    $mainProduct = in_array($request['arr_product_id'][$i], $request['arr_main_product_id']) ? 1 : 0;
+                    $mainProduct = in_array($product_id, $request['arr_main_product_id']) ? 1 : 0;
                 }
                 array_push($productsArr, [
-                    'company_id' => $company_id,
                     'product_id' => $request['arr_product_id'][$i],
                     'main_product' => $mainProduct,
                 ]);

@@ -9,7 +9,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use Exception;
 
-class BranchController extends Controller
+class BranchController extends BaseController
 {
     private $branchActions;
 
