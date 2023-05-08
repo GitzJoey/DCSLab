@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\DiscountType;
+use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrderDiscount extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+    use BootableModel;
 
     protected $fillable = [
         'company_id',
@@ -16,6 +21,10 @@ class PurchaseOrderDiscount extends Model
         'purchase_order_product_unit_id',
         'discount_type',
         'amount',
+    ];
+
+    protected $casts = [
+        'discount_type' => DiscountType::class,
     ];
 
     public function company()

@@ -9,7 +9,7 @@ use App\Http\Resources\ProductGroupResource;
 use App\Models\ProductGroup;
 use Exception;
 
-class ProductGroupController extends Controller
+class ProductGroupController extends BaseController
 {
     private $productGroupActions;
 

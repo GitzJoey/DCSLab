@@ -102,7 +102,7 @@ class ProductRequest extends FormRequest
                     'product_type' => [new Enum(ProductType::class)],
                     'arr_product_unit_code.*' => ['required', 'max:255'],
                     'arr_product_unit_unit_id.*' => ['required'],
-                    'arr_product_unit_conv_value.*' => ['numeric', 'min:1'],
+                    'arr_product_unit_conversion_value.*' => ['numeric', 'min:1'],
                     'arr_product_unit_is_base.*' => ['required', 'boolean'],
                     'arr_product_unit_is_primary_unit.*' => ['required', 'boolean'],
                 ];
@@ -124,7 +124,7 @@ class ProductRequest extends FormRequest
                     'product_type' => [new Enum(ProductType::class)],
                     'arr_product_unit_code.*' => ['required', 'max:255'],
                     'arr_product_unit_unit_id.*' => ['required'],
-                    'arr_product_unit_conv_value.*' => ['numeric', 'min:1'],
+                    'arr_product_unit_conversion_value.*' => ['numeric', 'min:1'],
                     'arr_product_unit_is_base.*' => ['required', 'boolean'],
                     'arr_product_unit_is_primary_unit.*' => ['required', 'boolean'],
                 ];
@@ -157,7 +157,7 @@ class ProductRequest extends FormRequest
             'arr_product_unit_id.*' => trans('validation_attributes.product.product_units.product_unit'),
             'arr_product_unit_code.*' => trans('validation_attributes.product.product_units.code'),
             'arr_product_unit_unit_id.*' => trans('validation_attributes.product.product_units.unit'),
-            'arr_product_unit_conv_value.*' => trans('validation_attributes.product.product_units.conv_value'),
+            'arr_product_unit_conversion_value.*' => trans('validation_attributes.product.product_units.conv_value'),
             'arr_product_unit_is_base.*' => trans('validation_attributes.product.product_units.base'),
             'arr_product_unit_is_primary_unit.*' => trans('validation_attributes.product.product_units.primary'),
             'arr_product_unit_remarks.*' => trans('validation_attributes.product.product_units.remarks'),
@@ -194,10 +194,17 @@ class ProductRequest extends FormRequest
                 break;
             case 'store':
             case 'update':
+                $brand_id = null;
+                if ($this->has('brand_id')) {
+                    if ($this->brand_id) {
+                        $brand_id = Hashids::decode($this['brand_id'])[0];
+                    }
+                }
+
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'product_group_id' => $this->has('product_group_id') ? Hashids::decode($this['product_group_id'])[0] : '',
-                    'brand_id' => $this->has('brand_id') ? Hashids::decode($this['brand_id'])[0] : null,
+                    'brand_id' => $brand_id,
                     'taxable_supply' => $this->has('taxable_supply') ? filter_var($this->taxable_supply, FILTER_VALIDATE_BOOLEAN) : false,
                     'use_serial_number' => $this->has('use_serial_number') ? filter_var($this->use_serial_number, FILTER_VALIDATE_BOOLEAN) : false,
                     'price_include_vat' => $this->has('price_include_vat') ? filter_var($this->price_include_vat, FILTER_VALIDATE_BOOLEAN) : false,

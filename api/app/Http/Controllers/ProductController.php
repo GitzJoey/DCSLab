@@ -6,11 +6,12 @@ use App\Actions\Product\ProductActions;
 use App\Enums\ProductType;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Company;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductController extends BaseController
 {
     private $productActions;
 
@@ -27,6 +28,8 @@ class ProductController extends Controller
         $request = $productRequest->validated();
 
         $company_id = $request['company_id'];
+        $product_group_id = $request['product_group_id'];
+        $brand_id = $request['brand_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -37,6 +40,20 @@ class ProductController extends Controller
             if (! $this->productActions->isUniqueCodeForProduct($code, $company_id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        if (! Company::find($company_id)->productGroups()->where('id', '=', $product_group_id)->exists()) {
+            return response()->error([
+                'product_group_id' => [trans('rules.valid_product_group')],
+            ], 422);
+        }
+
+        if ($request['product_type'] !== ProductType::SERVICE->value) {
+            if (! Company::find($company_id)->brands()->where('id', '=', $brand_id)->exists()) {
+                return response()->error([
+                    'brand_id' => [trans('rules.valid_brand')],
                 ], 422);
             }
         }
@@ -54,7 +71,7 @@ class ProductController extends Controller
         $productArr = [
             'company_id' => $company_id,
             'code' => $code,
-            'product_group_id' => $request['product_group_id'],
+            'product_group_id' => $product_group_id,
             'brand_id' => $request['brand_id'],
             'name' => $request['name'],
             'product_type' => $request['product_type'],
@@ -68,10 +85,10 @@ class ProductController extends Controller
             'status' => $request['status'],
         ];
 
-        $productUnitsArr = [];
-        $count_unit = count($request['product_units_unit_id']);
+        $productUnitArr = [];
+        $count_unit = count($request['arr_product_unit_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $productUnitCode = array_key_exists('product_units_code', $request) ? $request['product_units_code'][$i] : '[AUTO]';
+            $productUnitCode = array_key_exists('arr_product_unit_code', $request) ? $request['arr_product_unit_code'][$i] : '[AUTO]';
 
             if ($productUnitCode == config('dcslab.KEYWORDS.AUTO')) {
                 do {
@@ -80,24 +97,29 @@ class ProductController extends Controller
             } else {
                 if (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id)) {
                     return response()->error([
-                        'code' => [trans('rules.unique_code')],
+                        'arr_product_unit_code' => [trans('rules.unique_code')],
                     ], 422);
                 }
             }
 
-            $product_units_unit_id = $request['product_units_unit_id'][$i];
+            $product_units_unit_id = $request['arr_product_unit_unit_id'][$i];
+            if (! Company::find($company_id)->Units()->where('id', '=', $product_units_unit_id)->exists()) {
+                return response()->error([
+                    'arr_product_unit_unit_id' => [trans('rules.valid_unit')],
+                ], 422);
+            }
 
-            $product_units_conv_value = $request['product_units_conv_value'][$i];
+            $product_units_conv_value = $request['arr_product_unit_conversion_value'][$i];
 
-            $product_units_is_base = filter_var($request['product_units_is_base'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_base = filter_var($request['arr_product_unit_is_base'][$i], FILTER_VALIDATE_BOOLEAN);
             $product_units_is_base = $product_units_is_base == true ? 1 : 0;
 
-            $product_units_is_primary_unit = filter_var($request['product_units_is_primary_unit'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_primary_unit = filter_var($request['arr_product_unit_is_primary_unit'][$i], FILTER_VALIDATE_BOOLEAN);
             $product_units_is_primary_unit = $product_units_is_primary_unit == true ? 1 : 0;
 
-            $product_units_remarks = $request['product_units_remarks'][$i];
+            $product_units_remarks = $request['arr_product_unit_remarks'][$i];
 
-            array_push($productUnitsArr, [
+            array_push($productUnitArr, [
                 'company_id' => $company_id,
                 'code' => $productUnitCode,
                 'unit_id' => $product_units_unit_id,
@@ -114,7 +136,7 @@ class ProductController extends Controller
         try {
             $result = $this->productActions->create(
                 $productArr,
-                $productUnitsArr
+                $productUnitArr
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -229,6 +251,8 @@ class ProductController extends Controller
         $request = $productRequest->validated();
 
         $company_id = $request['company_id'];
+        $product_group_id = $request['product_group_id'];
+        $brand_id = $request['brand_id'];
 
         $code = $request['code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
@@ -239,6 +263,20 @@ class ProductController extends Controller
             if (! $this->productActions->isUniqueCodeForProduct($code, $company_id, $product->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
+                ], 422);
+            }
+        }
+
+        if (! Company::find($company_id)->productGroups()->where('id', '=', $product_group_id)->exists()) {
+            return response()->error([
+                'product_group_id' => [trans('rules.valid_product_group')],
+            ], 422);
+        }
+
+        if ($request['product_type'] !== ProductType::SERVICE->value) {
+            if (! Company::find($company_id)->brands()->where('id', '=', $brand_id)->exists()) {
+                return response()->error([
+                    'brand_id' => [trans('rules.valid_brand')],
                 ], 422);
             }
         }
@@ -270,39 +308,44 @@ class ProductController extends Controller
             'status' => $request['status'],
         ];
 
-        $productUnitsArr = [];
-        $count_unit = count($request['product_units_unit_id']);
+        $productUnitArr = [];
+        $count_unit = count($request['arr_product_unit_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $product_unit_id = $request['product_units_id'][$i] != null ? $request['product_units_id'][$i] : null;
+            $arr_product_unit_id = $request['arr_product_unit_id'][$i] != null ? $request['arr_product_unit_id'][$i] : null;
 
-            $productUnitCode = array_key_exists('product_units_code', $request) ? $request['product_units_code'][$i] : '[AUTO]';
+            $productUnitCode = array_key_exists('arr_product_unit_code', $request) ? $request['arr_product_unit_code'][$i] : '[AUTO]';
 
             if ($productUnitCode == config('dcslab.KEYWORDS.AUTO')) {
                 do {
                     $productUnitCode = $this->productActions->generateUniqueCodeForProductUnits();
-                } while (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id));
+                } while (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $arr_product_unit_id));
             } else {
-                if (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $product_unit_id)) {
+                if (! $this->productActions->isUniqueCodeForProductUnits($productUnitCode, $company_id, $arr_product_unit_id)) {
                     return response()->error([
                         'code' => [trans('rules.unique_code')],
                     ], 422);
                 }
             }
 
-            $product_units_unit_id = $request['product_units_unit_id'][$i];
+            $product_units_unit_id = $request['arr_product_unit_unit_id'][$i];
+            if (! Company::find($company_id)->Units()->where('id', '=', $product_units_unit_id)->exists()) {
+                return response()->error([
+                    'arr_product_unit_unit_id' => [trans('rules.valid_unit')],
+                ], 422);
+            }
 
-            $product_units_conv_value = $request['product_units_conv_value'][$i];
+            $product_units_conv_value = $request['arr_product_unit_conversion_value'][$i];
 
-            $product_units_is_base = filter_var($request['product_units_is_base'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_base = filter_var($request['arr_product_unit_is_base'][$i], FILTER_VALIDATE_BOOLEAN);
             $product_units_is_base = $product_units_is_base == true ? 1 : 0;
 
-            $product_units_is_primary_unit = filter_var($request['product_units_is_primary_unit'][$i], FILTER_VALIDATE_BOOLEAN);
+            $product_units_is_primary_unit = filter_var($request['arr_product_unit_is_primary_unit'][$i], FILTER_VALIDATE_BOOLEAN);
             $product_units_is_primary_unit = $product_units_is_primary_unit == true ? 1 : 0;
 
-            $product_units_remarks = $request['product_units_remarks'][$i];
+            $product_units_remarks = $request['arr_product_unit_remarks'][$i];
 
-            array_push($productUnitsArr, [
-                'id' => $product_unit_id,
+            array_push($productUnitArr, [
+                'id' => $arr_product_unit_id,
                 'company_id' => $company_id,
                 'product_id' => $product->id,
                 'code' => $productUnitCode,
@@ -321,7 +364,7 @@ class ProductController extends Controller
             $result = $this->productActions->update(
                 $product,
                 $productArr,
-                $productUnitsArr
+                $productUnitArr
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();

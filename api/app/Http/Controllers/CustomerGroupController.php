@@ -8,7 +8,7 @@ use App\Http\Resources\CustomerGroupResource;
 use App\Models\CustomerGroup;
 use Exception;
 
-class CustomerGroupController extends Controller
+class CustomerGroupController extends BaseController
 {
     private $customerGroupActions;
 

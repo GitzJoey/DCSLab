@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PaymentTermType;
+use App\Enums\RoundOn;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,7 @@ class CustomerGroup extends Model
 
     protected $casts = [
         'payment_term_type' => PaymentTermType::class,
+        'round_on' => RoundOn::class,
     ];
 
     public function company()

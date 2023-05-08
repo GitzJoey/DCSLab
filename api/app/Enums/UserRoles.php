@@ -16,5 +16,6 @@ enum UserRoles: string
     case POS_OWNER = 'POS-owner';
     case POS_EMPLOYEE = 'POS-employee';
     case POS_SUPPLIER = 'POS-supplier';
+    case POS_CUSTOMER = 'POS-customer';
     //endregion
 }
