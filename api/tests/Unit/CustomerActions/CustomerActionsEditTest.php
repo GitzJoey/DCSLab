@@ -12,9 +12,9 @@ use App\Models\Profile;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class CustomerActionsEditTest extends TestCase
+class CustomerActionsEditTest extends ActionsTestCase
 {
     use WithFaker;
 
@@ -272,7 +272,7 @@ class CustomerActionsEditTest extends TestCase
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
             ->has(CustomerGroup::factory())
-        )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();

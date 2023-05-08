@@ -9,9 +9,9 @@ use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class CustomerGroupAPIReadTest extends TestCase
+class CustomerGroupAPIReadTest extends APITestCase
 {
     use WithFaker;
 

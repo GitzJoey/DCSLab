@@ -7,12 +7,12 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class BranchActionsDeleteTest extends TestCase
+class BranchActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
-    
+
     private BranchActions $branchActions;
 
     protected function setUp(): void

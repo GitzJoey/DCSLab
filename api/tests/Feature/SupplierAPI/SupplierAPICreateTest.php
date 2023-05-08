@@ -15,10 +15,10 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SupplierAPICreateTest extends TestCase
+class SupplierAPICreateTest extends APITestCase
 {
     use WithFaker;
 

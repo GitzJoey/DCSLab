@@ -8,12 +8,12 @@ use App\Models\CustomerGroup;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class CustomerGroupActionsCreateTest extends TestCase
+class CustomerGroupActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
-    
+
     private CustomerGroupActions $customerGroupActions;
 
     protected function setUp(): void

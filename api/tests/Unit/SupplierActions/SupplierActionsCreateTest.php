@@ -15,12 +15,12 @@ use App\Models\Unit;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class SupplierActionsCreateTest extends TestCase
+class SupplierActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
-    
+
     private SupplierActions $supplierActions;
 
     protected function setUp(): void

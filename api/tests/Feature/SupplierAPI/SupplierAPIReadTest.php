@@ -19,10 +19,10 @@ use App\Models\Unit;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
-class SupplierAPIReadTest extends TestCase
+class SupplierAPIReadTest extends APITestCase
 {
     use WithFaker;
 

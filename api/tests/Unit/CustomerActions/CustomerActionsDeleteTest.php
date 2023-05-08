@@ -9,12 +9,12 @@ use App\Models\CustomerAddress;
 use App\Models\CustomerGroup;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class CustomerActionsDeleteTest extends TestCase
+class CustomerActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
-    
+
     private CustomerActions $customerActions;
 
     protected function setUp(): void

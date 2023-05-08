@@ -9,12 +9,12 @@ use App\Models\User;
 use App\Models\Warehouse;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class WarehouseActionsCreateTest extends TestCase
+class WarehouseActionsCreateTest extends ActionsTestCase
 {
     use WithFaker;
-    
+
     private WarehouseActions $warehouseActions;
 
     protected function setUp(): void
