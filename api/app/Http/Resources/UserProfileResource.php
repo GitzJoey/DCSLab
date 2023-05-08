@@ -9,6 +9,15 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class UserProfileResource extends JsonResource
 {
+    protected string $type = '';
+
+    public function type(string $value)
+    {
+        $this->type = $value;
+
+        return $this;
+    }
+
     /**
      * Transform the resource into an array.
      *

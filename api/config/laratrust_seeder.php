@@ -42,6 +42,7 @@ return [
             'service' => 'c,r,ra,u,d',
             'supplier' => 'c,r,ra,u,d',
             'purchaseorder' => 'c,r,ra,u,d',
+            'customer' => 'c,r,ra,u,d',
             'salesorder' => 'c,r,ra,u,d',
         ],
         'POS-employee' => [
@@ -56,10 +57,14 @@ return [
             'service' => 'c,u',
             'supplier' => 'c,u',
             'purchaseorder' => 'c,u',
+            'customer' => 'c,u',
             'salesorder' => 'c,u',
         ],
         'POS-supplier' => [
             'supplier' => 'r,u',
+        ],
+        'POS-customer' => [
+            'customer' => 'r,u',
         ],
         /* #endregion */
     ],

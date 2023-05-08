@@ -151,8 +151,13 @@ class CustomerActions
             }
 
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $customer->paginate(perPage: abs($perPage), page: abs($page));
+                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
+                $page = is_numeric($page) ? abs($page) : 1;
+
+                $result = $customer->paginate(
+                    perPage: $perPage,
+                    page: $page
+                );
             } else {
                 $result = $customer->get();
             }
@@ -223,7 +228,6 @@ class CustomerActions
 
             $caIdsOld = $customer->customerAddresses()->pluck('id')->toArray();
 
-            $deletedCustomerAddressIds = [];
             $deletedCustomerAddressIds = array_diff($caIdsOld, $caIds);
 
             foreach ($deletedCustomerAddressIds as $deletedCustomerAddressId) {
@@ -294,8 +298,6 @@ class CustomerActions
         $retval = false;
 
         try {
-            $customer->customerAddresses()->delete();
-
             $retval = $customer->delete();
 
             DB::commit();
