@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\CustomerGroupTableSeeder;
+use Database\Seeders\CustomerTableSeeder;
 use Database\Seeders\EmployeeTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\ProductTableSeeder;
@@ -119,6 +121,10 @@ class AppSeed extends Command
                 case 'suppliertableseeder':
                     $this->runSupplierTableSeederInteractive();
                     break;
+                case 'customergroup':
+                case 'customergrouptableseeder':
+                    $this->runCustomerGroupTableSeederInteractive();
+                    break;
                 case 'customer':
                 case 'customertableseeder':
                     $this->runCustomerTableSeederInteractive();
@@ -132,7 +138,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 12;
+        $total = 13;
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
         $progressBar->start();
@@ -158,6 +164,8 @@ class AppSeed extends Command
         $this->runProductTableSeeder(5, 0, 0);
         $progressBar->advance();
         $this->runSupplierTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runCustomerGroupTableSeeder(5, 0);
         $progressBar->advance();
         $this->runCustomerTableSeeder(5, 0);
         $progressBar->advance();
@@ -391,7 +399,24 @@ class AppSeed extends Command
 
     private function runCustomerTableSeeder($count, $onlyThisCompanyId)
     {
-        //$seeder = new CustomerTableSeeder();
-        //$seeder->callWith(CustomerTableSeeder::class, [$count, $onlyThisCompanyId]);
+        $seeder = new CustomerTableSeeder();
+        $seeder->callWith(CustomerTableSeeder::class, [$count, $onlyThisCompanyId]);
+    }
+
+    private function runCustomerGroupTableSeederInteractive()
+    {
+        $this->info('Starting CustomerGroupTableSeeder');
+        $count = $this->ask('How many customer group for each companies:', 5);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+
+        $this->runCustomerGroupTableSeeder($count, $onlyThisCompanyId);
+
+        $this->info('CustomerGroupTableSeeder Finish.');
+    }
+
+    private function runCustomerGroupTableSeeder($count, $onlyThisCompanyId)
+    {
+        $seeder = new CustomerGroupTableSeeder();
+        $seeder->callWith(CustomerGroupTableSeeder::class, [$count, $onlyThisCompanyId]);
     }
 }
