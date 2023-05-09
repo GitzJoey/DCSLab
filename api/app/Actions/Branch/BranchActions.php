@@ -57,7 +57,7 @@ class BranchActions
             $branch->status = $status;
             $branch->save();
 
-            $coaActions = app(ChartOfAccountActions::class);
+            $coaActions = new ChartOfAccountActions();
             if ($branch->company->chartOfAccounts()->count() == 0) {
                 $coaActions->createDefaultAccountPerCompany($branch->company_id);
             }
@@ -74,11 +74,11 @@ class BranchActions
             return $branch;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
@@ -97,17 +97,17 @@ class BranchActions
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_' . $companyId . '-' . (empty($search) ? '[empty]' : $search) . '-' . $paginate . '-' . $page . '-' . $perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (! is_null($cacheResult)) {
+                if (!is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
 
             $result = null;
 
-            if (! $companyId) {
+            if (!$companyId) {
                 return null;
             }
 
@@ -121,7 +121,7 @@ class BranchActions
             if (empty($search)) {
                 $branch = $branch->latest();
             } else {
-                $branch = $branch->where('name', 'like', '%'.$search.'%')->latest();
+                $branch = $branch->where('name', 'like', '%' . $search . '%')->latest();
             }
 
             if ($paginate) {
@@ -142,11 +142,11 @@ class BranchActions
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)' . ($useCache ? ' (C)' : ' (DB)'));
         }
     }
 
@@ -157,7 +157,7 @@ class BranchActions
 
     public function getBranchByCompany(int $companyId = 0, Company $company = null): Collection
     {
-        if (! is_null($company)) {
+        if (!is_null($company)) {
             return $company->branches;
         }
 
@@ -170,7 +170,7 @@ class BranchActions
 
     public function getMainBranchByCompany(int $companyId = 0, Company $company = null): Branch
     {
-        if (! is_null($company)) {
+        if (!is_null($company)) {
             return $company->branches()->where('is_main', '=', true)->first();
         }
 
@@ -216,11 +216,11 @@ class BranchActions
             return $branch->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
@@ -232,7 +232,7 @@ class BranchActions
         try {
             if ($companyId != 0) {
                 $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => false]);
-            } elseif (! is_null($company)) {
+            } elseif (!is_null($company)) {
                 $retval = $company->branches()->update(['is_main' => false]);
             } else {
                 $retval = 0;
@@ -243,11 +243,11 @@ class BranchActions
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
@@ -267,18 +267,18 @@ class BranchActions
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
     public function generateUniqueCode(): string
     {
         $rand = new RandomizerActions();
-        $code = $rand->generateAlpha().$rand->generateNumeric();
+        $code = $rand->generateAlpha() . $rand->generateNumeric();
 
         return $code;
     }
