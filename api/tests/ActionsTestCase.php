@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\File;
 
 class ActionsTestCase extends TestCase
 {
