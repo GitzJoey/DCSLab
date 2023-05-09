@@ -21,7 +21,7 @@ class ChartOfAccountPerBranchTableSeeder extends Seeder
             $companies = Company::get();
         }
 
-        $chartOfAccountActions = app(ChartOfAccountActions::class);
+        $chartOfAccountActions = new ChartOfAccountActions();
 
         foreach ($companies as $company) {
             $branches = $company->branches()->get();

@@ -21,7 +21,7 @@ class WarehouseActionsCreateTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->warehouseActions = app(WarehouseActions::class);
+        $this->warehouseActions = new WarehouseActions();
     }
 
     public function test_warehouse_actions_call_create_expect_db_has_record_d()
