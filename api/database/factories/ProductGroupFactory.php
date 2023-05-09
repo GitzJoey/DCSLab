@@ -22,9 +22,9 @@ class ProductGroupFactory extends Factory
         $productGroupCategory = ProductGroupCategory::toArrayValue();
 
         return [
-            'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'name' => $this->faker->randomElement($this->productGroups),
-            'category' => $this->faker->randomElement($productGroupCategory),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'name' => fake()->randomElement($this->productGroups),
+            'category' => fake()->randomElement($productGroupCategory),
         ];
     }
 
@@ -57,7 +57,7 @@ class ProductGroupFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->randomElement($this->productGroups);
+        $text = fake()->randomElement($this->productGroups);
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }

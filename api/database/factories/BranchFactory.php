@@ -84,7 +84,7 @@ class BranchFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = 'Kantor Cabang '.$this->faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.$this->faker->city();
+        $text = 'Kantor Cabang '.fake()->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.fake()->city();
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }

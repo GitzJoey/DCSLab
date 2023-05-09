@@ -16,12 +16,12 @@ class SettingFactory extends Factory
      */
     public function definition()
     {
-        $type = $this->faker->randomElement(['PREFS.THEME', 'PREFS.DATE_FORMAT', 'PREFS.TIME_FORMAT']);
+        $type = fake()->randomElement(['PREFS.THEME', 'PREFS.DATE_FORMAT', 'PREFS.TIME_FORMAT']);
 
         $val = match ($type) {
-            'PREFS.THEME' => $this->faker->randomElement(['side-menu-light-full', 'side-menu-light-mini', 'side-menu-dark-full', 'side-menu-dark-mini']),
-            'PREFS.DATE_FORMAT' => $this->faker->randomElement(['yyyy_MM_dd', 'dd_MMM_yyyy']),
-            'PREFS.TIME_FORMAT' => $this->faker->randomElement(['hh_mm_ss', 'h_m_A']),
+            'PREFS.THEME' => fake()->randomElement(['side-menu-light-full', 'side-menu-light-mini', 'side-menu-dark-full', 'side-menu-dark-mini']),
+            'PREFS.DATE_FORMAT' => fake()->randomElement(['yyyy_MM_dd', 'dd_MMM_yyyy']),
+            'PREFS.TIME_FORMAT' => fake()->randomElement(['hh_mm_ss', 'h_m_A']),
         };
 
         return [

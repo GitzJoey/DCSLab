@@ -19,16 +19,15 @@ class ChartOfAccountFactory extends Factory
 
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-        $rand = new RandomizerActions();
+        $locale = 'id_ID';
 
         return [
-            'code' => $rand->generateAlpha().$rand->generateNumeric(),
-            'name' => $this->faker->name(),
-            'account_type' => $faker->randomElement(AccountType::toArrayEnum()),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'name' => fake()->name(),
+            'account_type' => fake($locale)->randomElement(AccountType::toArrayEnum()),
             'can_have_child' => true,
-            'remarks' => $faker->word(),
-            'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
+            'remarks' => fake($locale)->word(),
+            'status' => fake($locale)->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -61,7 +60,7 @@ class ChartOfAccountFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->chartOfAccount();
+        $text = fake()->chartOfAccount();
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }

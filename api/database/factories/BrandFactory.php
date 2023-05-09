@@ -21,8 +21,8 @@ class BrandFactory extends Factory
     public function definition()
     {
         return [
-            'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'name' => $this->faker->randomElement($this->brands),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'name' => fake()->randomElement($this->brands),
         ];
     }
 
@@ -37,7 +37,7 @@ class BrandFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->randomElement($this->brands);
+        $text = fake()->randomElement($this->brands);
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
