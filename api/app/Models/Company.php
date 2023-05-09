@@ -54,7 +54,7 @@ class Company extends Model
 
     public function chartOfAccounts()
     {
-        return $this->hasMany(chartOfAccount::class);
+        return $this->hasMany(ChartOfAccount::class);
     }
 
     public function accountingJournals()
