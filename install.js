@@ -22,3 +22,7 @@ console.log(outputNPMInstall.toString());
 
 let outputCopyEnvWEB = os.type() === 'Windows_NT' ? execSync('copy .env.example .env') : execSync('cp .env.example .env');
 console.log(outputCopyEnvWEB.toString());
+
+process.chdir(rootDir + '/api/database');
+let createTestingDB = os.type() === 'Windows_NT' ? execSync('type nul > database.sqlite') : execSync('touch database.sqlite');
+console.log(createTestingDB.toString());
