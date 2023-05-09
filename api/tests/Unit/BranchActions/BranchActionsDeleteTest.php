@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Branch\BranchActions;
 use App\Models\Branch;
@@ -25,12 +25,13 @@ class BranchActionsDeleteTest extends ActionsTestCase
     public function test_branch_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                )->create();
+            )->create();
 
         $branch = $user->companies()->inRandomOrder()->first()
-                    ->branches()->inRandomOrder()->first();
+            ->branches()->inRandomOrder()->first();
 
         $result = $this->branchActions->delete($branch);
 

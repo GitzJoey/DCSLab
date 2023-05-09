@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Customer\CustomerActions;
 use App\Enums\RecordStatus;
@@ -30,22 +30,24 @@ class CustomerActionsEditTest extends ActionsTestCase
     public function test_customer_actions_call_update_customer_and_insert_customer_address_expect_db_updated()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(CustomerGroup::factory())
-                )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         $customer = Customer::factory()->for($company)->for($customerGroup)
-                        ->has(CustomerAddress::factory()->for($company)->count(3))
-                        ->create();
+            ->has(CustomerAddress::factory()->for($company)->count(3))
+            ->create();
 
         $customerArr = Customer::factory()->for($company)->for($customerGroup)
-                        ->setStatusActive()->make()->toArray();
+            ->setStatusActive()->make()->toArray();
 
         $customerAddressArr = $customer->customerAddresses()->get()->toArray();
-        array_push($customerAddressArr,
+        array_push(
+            $customerAddressArr,
             CustomerAddress::factory()->make(['id' => ''])->toArray()
         );
 
@@ -108,9 +110,10 @@ class CustomerActionsEditTest extends ActionsTestCase
     public function test_customer_actions_call_update_customer_and_edit_customer_address_expect_db_updated()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(CustomerGroup::factory())
-                )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
@@ -121,8 +124,8 @@ class CustomerActionsEditTest extends ActionsTestCase
             ->create();
 
         $customerArr = Customer::factory()
-                        ->for($company)->for($customerGroup)
-                        ->setStatusActive()->make()->toArray();
+            ->for($company)->for($customerGroup)
+            ->setStatusActive()->make()->toArray();
 
         $customerAddressArr = $customer->customerAddresses->toArray();
 
@@ -191,9 +194,10 @@ class CustomerActionsEditTest extends ActionsTestCase
     public function test_customer_actions_call_update_customer_and_delete_customer_address_expect_db_updated()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(CustomerGroup::factory())
-                )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
@@ -204,8 +208,8 @@ class CustomerActionsEditTest extends ActionsTestCase
             ->create();
 
         $customerArr = Customer::factory()
-                        ->for($company)->for($customerGroup)
-                        ->make()->toArray();
+            ->for($company)->for($customerGroup)
+            ->make()->toArray();
 
         $customerAddressArr = $customer->customerAddresses->toArray();
 
@@ -270,8 +274,9 @@ class CustomerActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-            ->has(CustomerGroup::factory())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -280,7 +285,7 @@ class CustomerActionsEditTest extends ActionsTestCase
         $customer = Customer::factory()
             ->for($company)->for($customerGroup)
             ->has(CustomerAddress::factory()->for($company)->count(3))
-        ->create();
+            ->create();
 
         $customerArr = [];
         $customerAddressArr = [];

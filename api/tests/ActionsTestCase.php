@@ -2,19 +2,11 @@
 
 namespace Tests;
 
-use Illuminate\Support\Facades\File;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ActionsTestCase extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
+    use RefreshDatabase;
 
-        if (! file_exists(database_path('database.sqlite'))) {
-            File::put(database_path('database.sqlite'), null);
-
-            $this->artisan('migrate');
-            $this->artisan('db:seed');
-        }
-    }
+    protected $seed = true;
 }

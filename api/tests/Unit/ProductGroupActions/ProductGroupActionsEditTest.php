@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\ProductGroup\ProductGroupActions;
 use App\Models\Company;
@@ -26,8 +26,9 @@ class ProductGroupActionsEditTest extends ActionsTestCase
     public function test_product_group_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->count(5))
             )->create();
 
         $company = $user->companies()->first();
@@ -52,12 +53,13 @@ class ProductGroupActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory())
             )->create();
 
         $productGroup = $user->companies()->inRandomOrder()->first()
-                            ->productGroups()->inRandomOrder()->first();
+            ->productGroups()->inRandomOrder()->first();
 
         $productGroupArr = [];
 

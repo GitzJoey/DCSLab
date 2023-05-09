@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Brand\BrandActions;
 use App\Models\Brand;
@@ -25,12 +25,13 @@ class BrandActionsDeleteTest extends ActionsTestCase
     public function test_brand_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Brand::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Brand::factory())
+            )->create();
 
         $brand = $user->companies()->inRandomOrder()->first()
-                    ->brands()->inRandomOrder()->first();
+            ->brands()->inRandomOrder()->first();
 
         $result = $this->brandActions->delete($brand);
 

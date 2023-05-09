@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Branch\BranchActions;
 use App\Models\Branch;
@@ -26,14 +26,14 @@ class BranchActionsCreateTest extends ActionsTestCase
     public function test_branch_actions_call_create_expect_db_has_record()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault())
-                ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $branchArr = Branch::factory()->for($company)
-                        ->setStatusActive()->setIsMainBranch()
-                        ->make()->toArray();
+            ->setStatusActive()->setIsMainBranch()
+            ->make()->toArray();
 
         $result = $this->branchActions->create($branchArr);
 

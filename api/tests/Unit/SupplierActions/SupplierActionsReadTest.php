@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Supplier\SupplierActions;
 use App\Models\Company;
@@ -25,12 +25,13 @@ class SupplierActionsReadTest extends ActionsTestCase
     public function test_supplier_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setIsDefault()
-                ->has(Supplier::factory())
+            ->has(
+                Company::factory()->setIsDefault()
+                    ->has(Supplier::factory())
             )->create();
 
         $supplier = $user->companies()->inRandomOrder()->first()
-                    ->suppliers()->inRandomOrder()->first();
+            ->suppliers()->inRandomOrder()->first();
 
         $result = $this->supplierActions->read($supplier);
 

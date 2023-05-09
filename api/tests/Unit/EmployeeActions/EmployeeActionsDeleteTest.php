@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Employee\EmployeeActions;
 use App\Models\Branch;
@@ -28,11 +28,12 @@ class EmployeeActionsDeleteTest extends ActionsTestCase
     public function test_employee_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-                ->has(Profile::factory()->setStatusActive())
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(Profile::factory()->setStatusActive())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(Branch::factory()->setStatusActive()->count(4))
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -44,7 +45,7 @@ class EmployeeActionsDeleteTest extends ActionsTestCase
         for ($i = 0; $i < $accessCount; $i++) {
             EmployeeAccess::factory()
                 ->for($company)->for($employee)->for($branches[$i])
-            ->create();
+                ->create();
         }
 
         $result = $this->employeeActions->delete($employee);

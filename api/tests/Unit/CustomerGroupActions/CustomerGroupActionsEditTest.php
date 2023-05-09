@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\CustomerGroup\CustomerGroupActions;
 use App\Models\Company;
@@ -26,12 +26,13 @@ class CustomerGroupActionsEditTest extends ActionsTestCase
     public function test_customer_group_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $customerGroup = $user->companies()->inRandomOrder()->first()
-                            ->customerGroups()->inRandomOrder()->first();
+            ->customerGroups()->inRandomOrder()->first();
 
         $customerGroupArr = CustomerGroup::factory()->make()->toArray();
 
@@ -66,12 +67,13 @@ class CustomerGroupActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $customerGroup = $user->companies()->inRandomOrder()->first()
-                            ->customerGroups()->inRandomOrder()->first();
+            ->customerGroups()->inRandomOrder()->first();
 
         $customerGroupArr = [];
 

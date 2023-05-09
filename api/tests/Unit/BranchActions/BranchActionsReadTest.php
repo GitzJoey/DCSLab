@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Branch\BranchActions;
 use App\Models\Branch;
@@ -27,9 +27,10 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -47,9 +48,10 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -78,11 +80,12 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(Branch::factory()->setStatusActive()->count(2))
                     ->has(Branch::factory()->setStatusActive()->insertStringInName('testing')->count(3))
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -101,10 +104,11 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(Branch::factory()->setStatusActive()->count(2))
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -123,10 +127,11 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(Branch::factory()->setStatusActive()->count(2))
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -145,12 +150,13 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_expect_object()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                )->create();
+            )->create();
 
         $branch = $user->companies()->inRandomOrder()->first()
-                    ->branches()->inRandomOrder()->first();
+            ->branches()->inRandomOrder()->first();
 
         $result = $this->branchActions->read($branch);
 

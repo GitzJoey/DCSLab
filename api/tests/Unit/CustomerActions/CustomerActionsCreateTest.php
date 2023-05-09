@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Customer\CustomerActions;
 use App\Enums\RecordStatus;
@@ -30,9 +30,10 @@ class CustomerActionsCreateTest extends ActionsTestCase
     public function test_customer_actions_call_create_customer_expect_db_has_record()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(CustomerGroup::factory()->count(5))
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
@@ -40,8 +41,8 @@ class CustomerActionsCreateTest extends ActionsTestCase
         $customerArr = Customer::factory()->for($company)->for($customerGroup)->make()->toArray();
 
         $customerAddressArr = CustomerAddress::factory()->for($company)
-                                ->count($this->faker->numberBetween(1, 5))
-                                ->make()->toArray();
+            ->count($this->faker->numberBetween(1, 5))
+            ->make()->toArray();
 
         $picArr = Profile::factory()->setStatusActive()->for($user)->make()->toArray();
         $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 999);

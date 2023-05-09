@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Warehouse\WarehouseActions;
 use App\Models\Branch;
@@ -28,9 +28,10 @@ class WarehouseActionsReadTest extends ActionsTestCase
     public function test_warehouse_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -51,9 +52,10 @@ class WarehouseActionsReadTest extends ActionsTestCase
     public function test_warehouse_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -85,19 +87,20 @@ class WarehouseActionsReadTest extends ActionsTestCase
     public function test_warehouse_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
 
         Warehouse::factory()->for($company)->for($branch)
-                    ->count(2)->create();
+            ->count(2)->create();
 
         Warehouse::factory()->for($company)->for($branch)
-                    ->insertStringInName('testing')
-                    ->count(3)->create();
+            ->insertStringInName('testing')
+            ->count(3)->create();
 
         $result = $this->warehouseActions->readAny(
             companyId: $company->id,
@@ -114,9 +117,10 @@ class WarehouseActionsReadTest extends ActionsTestCase
     public function test_warehouse_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -138,9 +142,10 @@ class WarehouseActionsReadTest extends ActionsTestCase
     public function test_warehouse_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -162,9 +167,10 @@ class WarehouseActionsReadTest extends ActionsTestCase
     public function test_warehouse_actions_call_read_expect_object()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
