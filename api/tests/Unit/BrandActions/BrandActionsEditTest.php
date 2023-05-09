@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Brand\BrandActions;
 use App\Models\Brand;
@@ -26,9 +26,10 @@ class BrandActionsEditTest extends ActionsTestCase
     public function test_brand_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Brand::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Brand::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -52,9 +53,10 @@ class BrandActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Brand::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Brand::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 

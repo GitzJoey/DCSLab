@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\CustomerGroup\CustomerGroupActions;
 use App\Models\Company;
@@ -25,12 +25,13 @@ class CustomerGroupActionsDeleteTest extends ActionsTestCase
     public function test_customer_group_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $customerGroup = $user->companies()->inRandomOrder()->first()
-                            ->customerGroups()->inRandomOrder()->first();
+            ->customerGroups()->inRandomOrder()->first();
 
         $result = $this->customerGroupActions->delete($customerGroup);
 

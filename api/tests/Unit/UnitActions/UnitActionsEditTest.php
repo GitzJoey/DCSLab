@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Unit\UnitActions;
 use App\Models\Company;
@@ -26,9 +26,10 @@ class UnitActionsEditTest extends ActionsTestCase
     public function test_unit_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Unit::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Unit::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -52,12 +53,13 @@ class UnitActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Unit::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Unit::factory())
+            )->create();
 
         $unit = $user->companies()->inRandomOrder()->first()
-                    ->units()->inRandomOrder()->first();
+            ->units()->inRandomOrder()->first();
 
         $unitsArr = [];
 

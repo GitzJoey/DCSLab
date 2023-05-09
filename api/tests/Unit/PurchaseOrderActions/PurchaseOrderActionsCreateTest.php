@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Enums\ProductGroupCategory;
@@ -37,12 +37,13 @@ class PurchaseOrderActionsCreateTest extends ActionsTestCase
     public function test_purchase_order_actions_call_create_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                ->has(Supplier::factory())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                    ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -52,18 +53,18 @@ class PurchaseOrderActionsCreateTest extends ActionsTestCase
         $productSeedCount = random_int(1, 10);
         for ($i = 0; $i < $productSeedCount; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -81,28 +82,30 @@ class PurchaseOrderActionsCreateTest extends ActionsTestCase
         }
 
         $globalDiscountArr = [];
-        array_push($globalDiscountArr,
+        array_push(
+            $globalDiscountArr,
             PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make()->toArray()
         );
 
         $purchaseOrderArr = PurchaseOrder::factory()
-                                ->for($company)
-                                ->for($branch)
-                                ->for($supplier)
-                                ->make(['global_discount' => $globalDiscountArr])
-                                ->toArray();
+            ->for($company)
+            ->for($branch)
+            ->for($supplier)
+            ->make(['global_discount' => $globalDiscountArr])
+            ->toArray();
 
         $ProductUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()
-                            ->inRandomOrder()->take($ProductUnitCount)
-                            ->get();
+            ->inRandomOrder()->take($ProductUnitCount)
+            ->get();
 
         $purchaseOrderProductUnitArr = [];
         foreach ($productUnits as $productUnit) {
             $perUnitDiscount = [];
             $perUnitSubTotalDiscount = [];
 
-            array_push($purchaseOrderProductUnitArr,
+            array_push(
+                $purchaseOrderProductUnitArr,
                 PurchaseOrderProductUnit::factory()->for($productUnit)->make([
                     'per_unit_discount' => $perUnitDiscount,
                     'per_unit_sub_total_discount' => $perUnitSubTotalDiscount,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Company\CompanyActions;
 use App\Models\Company;
@@ -24,8 +24,8 @@ class CompanyActionsDeleteTest extends ActionsTestCase
     public function test_company_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault())
-                ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 

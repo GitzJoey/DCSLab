@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Product\ProductActions;
 use App\Enums\ProductGroupCategory;
@@ -32,36 +32,38 @@ class ProductActionsCreateTest extends ActionsTestCase
     public function test_product_actions_call_create_product_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $productGroup = $company->productGroups()
-                            ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                            ->inRandomOrder()->first();
+            ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+            ->inRandomOrder()->first();
 
         $brand = $company->brands()->inRandomOrder()->first();
 
         $productArr = Product::factory()
-                        ->for($company)->for($productGroup)->for($brand)
-                        ->setProductTypeAsProduct()
-                        ->setStatusActive()
-                        ->make()->toArray();
+            ->for($company)->for($productGroup)->for($brand)
+            ->setProductTypeAsProduct()
+            ->setStatusActive()
+            ->make()->toArray();
 
         $productUnitArr = [];
 
         $units = $company->units()
-                    ->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get()->shuffle();
+            ->where('category', '=', UnitCategory::PRODUCTS->value)
+            ->inRandomOrder()->get()->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
         $primaryUnitIdx = random_int(0, $productUnitCount - 1);
         for ($j = 0; $j < $productUnitCount; $j++) {
-            array_push($productUnitArr,
+            array_push(
+                $productUnitArr,
                 ProductUnit::factory()
                     ->for($company)->for($units[$j])
                     ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
@@ -110,30 +112,32 @@ class ProductActionsCreateTest extends ActionsTestCase
     public function test_product_actions_call_create_service_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToService()->count(5))
-                ->has(Unit::factory()->setCategoryToService()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToService()->count(5))
+                    ->has(Unit::factory()->setCategoryToService()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $productGroup = $company->productGroups()
-                            ->where('category', '=', ProductGroupCategory::SERVICES->value)
-                            ->inRandomOrder()->first();
+            ->where('category', '=', ProductGroupCategory::SERVICES->value)
+            ->inRandomOrder()->first();
 
         $productArr = Product::factory()
-                        ->for($company)->for($productGroup)
-                        ->setProductTypeAsService()
-                        ->setStatusActive()
-                        ->make(['brand_id' => null])
-                        ->toArray();
+            ->for($company)->for($productGroup)
+            ->setProductTypeAsService()
+            ->setStatusActive()
+            ->make(['brand_id' => null])
+            ->toArray();
 
         $unit = $company->units()
-                    ->where('category', '=', UnitCategory::SERVICES->value)
-                    ->inRandomOrder()->first();
+            ->where('category', '=', UnitCategory::SERVICES->value)
+            ->inRandomOrder()->first();
 
         $productUnitArr = [];
-        array_push($productUnitArr,
+        array_push(
+            $productUnitArr,
             ProductUnit::factory()
                 ->for($unit)
                 ->setIsBase(true)

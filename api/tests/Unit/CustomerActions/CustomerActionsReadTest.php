@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Customer\CustomerActions;
 use App\Models\Company;
@@ -29,9 +29,10 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_expect_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(CustomerGroup::factory())
-                    )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
@@ -46,19 +47,21 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count($this->faker->numberBetween(1, 5))
-                    )->create();
+            ->for($company)->for($customerGroup)
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count($this->faker->numberBetween(1, 5))
+            )->create();
 
         $result = $this->customerActions->readAny(
             companyId: $company->id,
@@ -74,19 +77,21 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(CustomerGroup::factory())
-                    )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count($this->faker->numberBetween(1, 5))
-                    )->create();
+            ->for($company)->for($customerGroup)
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count($this->faker->numberBetween(1, 5))
+            )->create();
 
         $result = $this->customerActions->readAny(
             companyId: $company->id,
@@ -115,27 +120,30 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(CustomerGroup::factory())
-                    )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count($this->faker->numberBetween(1, 5))
-                    )->count(2)->create();
+            ->for($company)->for($customerGroup)
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count($this->faker->numberBetween(1, 5))
+            )->count(2)->create();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->insertStringInName('testing')
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count($this->faker->numberBetween(1, 5))
-                    )->count(3)->create();
+            ->for($company)->for($customerGroup)
+            ->insertStringInName('testing')
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count($this->faker->numberBetween(1, 5))
+            )->count(3)->create();
 
         $result = $this->customerActions->readAny(
             companyId: $company->id,
@@ -152,19 +160,21 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count($this->faker->numberBetween(1, 5))
-                    )->count(3)->create();
+            ->for($company)->for($customerGroup)
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count($this->faker->numberBetween(1, 5))
+            )->count(3)->create();
 
         $result = $this->customerActions->readAny(
             companyId: $company->id,
@@ -181,19 +191,21 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(CustomerGroup::factory())
-                    )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count($this->faker->numberBetween(1, 5))
-                    )->count(3)->create();
+            ->for($company)->for($customerGroup)
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count($this->faker->numberBetween(1, 5))
+            )->count(3)->create();
 
         $result = $this->customerActions->readAny(
             companyId: $company->id,

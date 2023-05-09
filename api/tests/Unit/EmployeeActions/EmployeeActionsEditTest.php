@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Employee\EmployeeActions;
 use App\Enums\UserRoles;
@@ -32,24 +32,25 @@ class EmployeeActionsEditTest extends ActionsTestCase
     public function test_employee_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-                ->has(Profile::factory()->setStatusActive())
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(Profile::factory()->setStatusActive())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(Branch::factory()->setStatusActive()->count(4))
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $employee = Employee::factory()
-                        ->for($company)
-                        ->for(
-                            User::factory()
-                                ->has(Profile::factory())
-                                ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                        );
+            ->for($company)
+            ->for(
+                User::factory()
+                    ->has(Profile::factory())
+                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+            );
 
         $branches = $company->branches();
         $branchCount = $branches->count();
@@ -124,24 +125,25 @@ class EmployeeActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                ->has(Profile::factory()->setStatusActive())
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(Profile::factory()->setStatusActive())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(Branch::factory()->setStatusActive()->count(4))
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $employee = Employee::factory()
-        ->for($company)
-        ->for(
-            User::factory()
-                ->has(Profile::factory())
-                ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-        );
+            ->for($company)
+            ->for(
+                User::factory()
+                    ->has(Profile::factory())
+                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+            );
 
         $branches = $company->branches();
         $branchCount = $branches->count();

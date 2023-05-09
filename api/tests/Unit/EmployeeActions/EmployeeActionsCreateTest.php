@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Employee\EmployeeActions;
 use App\Models\Branch;
@@ -28,9 +28,10 @@ class EmployeeActionsCreateTest extends ActionsTestCase
     public function test_employee_actions_call_create_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->setStatusActive()->count(4))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive()->count(4))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

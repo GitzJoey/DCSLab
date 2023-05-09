@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Employee\EmployeeActions;
 use App\Enums\UserRoles;
@@ -33,23 +33,24 @@ class EmployeeActionsReadTest extends ActionsTestCase
     public function test_employee_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                        ->has(Branch::factory()->setStatusActive()->count(4))
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive()->count(4))
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $employee = Employee::factory()
-                        ->for($company)
-                        ->for(
-                            User::factory()
-                                ->has(Profile::factory())
-                                ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                        );
+            ->for($company)
+            ->for(
+                User::factory()
+                    ->has(Profile::factory())
+                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+            );
 
         $branches = $company->branches();
         $branchCount = $branches->count();
@@ -79,23 +80,24 @@ class EmployeeActionsReadTest extends ActionsTestCase
     public function test_employee_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->setStatusActive()->count(4))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive()->count(4))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $employee = Employee::factory()
-                        ->for($company)
-                        ->for(
-                            User::factory()
-                                ->has(Profile::factory())
-                                ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                        );
+            ->for($company)
+            ->for(
+                User::factory()
+                    ->has(Profile::factory())
+                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+            );
 
         $branches = $company->branches();
         $branchCount = $branches->count();
@@ -136,24 +138,25 @@ class EmployeeActionsReadTest extends ActionsTestCase
     public function test_employee_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                        ->has(Branch::factory()->setStatusActive()->count(4))
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive()->count(4))
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 3; $i++) {
             $employee = Employee::factory()
-                        ->for($company)
-                        ->for(
-                            User::factory()
-                                ->has(Profile::factory())
-                                ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                        );
+                ->for($company)
+                ->for(
+                    User::factory()
+                        ->has(Profile::factory())
+                        ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                );
 
             $branches = $company->branches();
             $branchCount = $branches->count();
@@ -172,15 +175,15 @@ class EmployeeActionsReadTest extends ActionsTestCase
 
         for ($i = 0; $i < 2; $i++) {
             $employee = Employee::factory()
-                        ->for($company)
-                        ->for(
-                            User::factory()->setName('testing'.$i)
-                                ->has(Profile::factory())
-                                ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                                ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                        );
+                ->for($company)
+                ->for(
+                    User::factory()->setName('testing'.$i)
+                        ->has(Profile::factory())
+                        ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                );
 
             $branches = $company->branches();
             $branchCount = $branches->count();
@@ -212,24 +215,25 @@ class EmployeeActionsReadTest extends ActionsTestCase
     public function test_employee_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                        ->has(Branch::factory()->setStatusActive()->count(4))
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive()->count(4))
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 5; $i++) {
             $employee = Employee::factory()
-            ->for($company)
-            ->for(
-                User::factory()
-                    ->has(Profile::factory())
-                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-            );
+                ->for($company)
+                ->for(
+                    User::factory()
+                        ->has(Profile::factory())
+                        ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                );
 
             $branches = $company->branches();
             $branchCount = $branches->count();
@@ -261,23 +265,24 @@ class EmployeeActionsReadTest extends ActionsTestCase
     public function test_employee_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    )->create();
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 3; $i++) {
             $employee = Employee::factory()
-            ->for($company)
-            ->for(
-                User::factory()
-                    ->has(Profile::factory())
-                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-            );
+                ->for($company)
+                ->for(
+                    User::factory()
+                        ->has(Profile::factory())
+                        ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                );
 
             $branches = $company->branches();
             $branchCount = $branches->count();
@@ -309,17 +314,19 @@ class EmployeeActionsReadTest extends ActionsTestCase
     public function test_employee_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->setStatusActive()->count(4))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive()->count(4))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $employee = Employee::factory()->for($company)->for($user)
-                    ->has(User::factory()
-                    ->has(Profile::factory()->for($user)->setStatusActive()
-                    ))->create();
+            ->has(User::factory()
+                ->has(
+                    Profile::factory()->for($user)->setStatusActive()
+                ))->create();
 
         $branchCount = $company->branches()->count();
         $accessCount = $this->faker->numberBetween(1, $branchCount);
@@ -327,7 +334,7 @@ class EmployeeActionsReadTest extends ActionsTestCase
         for ($i = 0; $i < $accessCount; $i++) {
             EmployeeAccess::factory()
                 ->for($company)->for($employee)->for($branches[$i])
-            ->create();
+                ->create();
         }
 
         $result = $this->employeeActions->read($employee);

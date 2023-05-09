@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Enums\ProductGroupCategory;
@@ -35,13 +35,14 @@ class PurchaseOrderActionsDeleteTest extends ActionsTestCase
     public function test_purchase_order_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
                     ->has(Brand::factory()->count(5))
                     ->has(Unit::factory()->setCategoryToProduct()->count(5))
                     ->has(Supplier::factory())
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -50,18 +51,18 @@ class PurchaseOrderActionsDeleteTest extends ActionsTestCase
         $productSeedCount = random_int(1, 10);
         for ($i = 0; $i < $productSeedCount; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -79,18 +80,19 @@ class PurchaseOrderActionsDeleteTest extends ActionsTestCase
         }
 
         $purchaseOrder = PurchaseOrder::factory()
-                            ->for($company)
-                            ->for($branch)
-                            ->for($supplier);
+            ->for($company)
+            ->for($branch)
+            ->for($supplier);
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
 
         foreach ($productUnits as $productUnit) {
-            $purchaseOrder = $purchaseOrder->has(PurchaseOrderProductUnit::factory()
-                                ->for($company)->for($branch)
-                                ->for($productUnit->product)
-                                ->for($productUnit)
+            $purchaseOrder = $purchaseOrder->has(
+                PurchaseOrderProductUnit::factory()
+                    ->for($company)->for($branch)
+                    ->for($productUnit->product)
+                    ->for($productUnit)
             );
         }
 

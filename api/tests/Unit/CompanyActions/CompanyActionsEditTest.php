@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Company\CompanyActions;
 use App\Models\Company;
@@ -25,8 +25,8 @@ class CompanyActionsEditTest extends ActionsTestCase
     public function test_company_service_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault())
-                    ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
 
         $company = $user->companies->first();
         $companyArr = Company::factory()->make()->toArray();
@@ -46,8 +46,8 @@ class CompanyActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault())
-                    ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
 
         $company = $user->companies->first();
         $companyArr = [];

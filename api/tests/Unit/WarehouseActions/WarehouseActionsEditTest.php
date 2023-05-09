@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Warehouse\WarehouseActions;
 use App\Models\Branch;
@@ -27,9 +27,10 @@ class WarehouseActionsEditTest extends ActionsTestCase
     public function test_warehouse_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch()
-                        ))->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(
+                    Branch::factory()->setStatusActive()->setIsMainBranch()
+                ))->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -58,9 +59,10 @@ class WarehouseActionsEditTest extends ActionsTestCase
     {
         $this->expectException(Exception::class);
         $user = User::factory()
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch()
-                        ))->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(
+                    Branch::factory()->setStatusActive()->setIsMainBranch()
+                ))->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();

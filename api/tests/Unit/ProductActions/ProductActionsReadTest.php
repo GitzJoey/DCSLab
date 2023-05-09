@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Product\ProductActions;
 use App\Enums\ProductCategory;
@@ -34,10 +34,11 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_product_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -45,18 +46,18 @@ class ProductActionsReadTest extends ActionsTestCase
         $productSeedCount = random_int(1, 5);
         for ($i = 0; $i < $productSeedCount; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -88,9 +89,10 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_service_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToService()->count(5))
-                ->has(Unit::factory()->setCategoryToService()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToService()->count(5))
+                    ->has(Unit::factory()->setCategoryToService()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -98,10 +100,10 @@ class ProductActionsReadTest extends ActionsTestCase
         $serviceSeedCount = random_int(1, 5);
         for ($i = 0; $i < $serviceSeedCount; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $unit = $company->units()->where('category', '=', UnitCategory::SERVICES->value)
-                        ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             Product::factory()
                 ->for($company)
@@ -125,10 +127,11 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_product_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -136,18 +139,18 @@ class ProductActionsReadTest extends ActionsTestCase
         $productSeedCount = random_int(1, 5);
         for ($i = 0; $i < $productSeedCount; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -179,9 +182,10 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_service_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToService()->count(5))
-                ->has(Unit::factory()->setCategoryToService()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToService()->count(5))
+                    ->has(Unit::factory()->setCategoryToService()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -189,10 +193,10 @@ class ProductActionsReadTest extends ActionsTestCase
         $serviceSeedCount = random_int(1, 5);
         for ($i = 0; $i < $serviceSeedCount; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $unit = $company->units()->where('category', '=', UnitCategory::SERVICES->value)
-                                    ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             Product::factory()
                 ->for($company)
@@ -229,28 +233,29 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_product_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 2; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -269,19 +274,19 @@ class ProductActionsReadTest extends ActionsTestCase
 
         for ($i = 0; $i < 3; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->insertStringInName('testing')
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->insertStringInName('testing')
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -314,40 +319,41 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_service_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToService()->count(5))
-                ->has(Unit::factory()->setCategoryToService()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToService()->count(5))
+                    ->has(Unit::factory()->setCategoryToService()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 2; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)
-                            ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $unit = $company->units()->where('category', '=', UnitCategory::SERVICES->value)
-                    ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             Product::factory()
-                        ->for($company)
-                        ->for($productGroup)
-                        ->has(ProductUnit::factory()->for($company)->for($unit)->setConversionValue(1)->setIsPrimaryUnit(true))
-                        ->setProductTypeAsService()->create();
+                ->for($company)
+                ->for($productGroup)
+                ->has(ProductUnit::factory()->for($company)->for($unit)->setConversionValue(1)->setIsPrimaryUnit(true))
+                ->setProductTypeAsService()->create();
         }
 
         for ($i = 0; $i < 3; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $unit = $company->units()->where('category', '=', UnitCategory::SERVICES->value)
-                                    ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->has(ProductUnit::factory()->for($company)->for($unit)->setConversionValue(1)->setIsPrimaryUnit(true))
-                    ->insertStringInName('testing')
-                    ->setProductTypeAsService()->create();
+                ->for($company)
+                ->for($productGroup)
+                ->has(ProductUnit::factory()->for($company)->for($unit)->setConversionValue(1)->setIsPrimaryUnit(true))
+                ->insertStringInName('testing')
+                ->setProductTypeAsService()->create();
         }
 
         $result = $this->productActions->readAny(
@@ -366,28 +372,29 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_product_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 5; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -420,19 +427,20 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_service_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToService()->count(5))
-                ->has(Unit::factory()->setCategoryToService()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToService()->count(5))
+                    ->has(Unit::factory()->setCategoryToService()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 3; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $unit = $company->units()->where('category', '=', UnitCategory::SERVICES->value)
-                                    ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             Product::factory()
                 ->for($company)
@@ -457,28 +465,29 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_product_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 3; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $brand = $company->brands()->inRandomOrder()->first();
 
             $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
 
             $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                        ->inRandomOrder()->get()->shuffle();
+                ->inRandomOrder()->get()->shuffle();
 
             $productUnitCount = random_int(1, $units->count());
             $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -511,19 +520,20 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_any_service_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToService()->count(5))
-                ->has(Unit::factory()->setCategoryToService()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToService()->count(5))
+                    ->has(Unit::factory()->setCategoryToService()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         for ($i = 0; $i < 3; $i++) {
             $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)
-                                ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             $unit = $company->units()->where('category', '=', UnitCategory::SERVICES->value)
-                                    ->inRandomOrder()->first();
+                ->inRandomOrder()->first();
 
             Product::factory()
                 ->for($company)
@@ -548,27 +558,28 @@ class ProductActionsReadTest extends ActionsTestCase
     public function test_product_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                            ->inRandomOrder()->first();
+            ->inRandomOrder()->first();
 
         $brand = $company->brands()->inRandomOrder()->first();
 
         $product = Product::factory()
-                ->for($company)
-                ->for($productGroup)
-                ->for($brand)
-                ->setProductTypeAsProduct();
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
 
         $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get()->shuffle();
+            ->inRandomOrder()->get()->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
         $primaryUnitIdx = random_int(0, $productUnitCount - 1);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Supplier\SupplierActions;
 use App\Models\Company;
@@ -26,16 +26,16 @@ class SupplierActionsDeleteTest extends ActionsTestCase
     public function test_supplier_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-                    ->has(Profile::factory()->setStatusActive())
-                    ->has(Company::factory()->setIsDefault())
-                    ->create();
+            ->has(Profile::factory()->setStatusActive())
+            ->has(Company::factory()->setIsDefault())
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         Supplier::factory()->for($user)->for($company)->setStatusActive()->create();
 
         $supplier = $user->companies()->inRandomOrder()->first()
-                    ->suppliers()->inRandomOrder()->first();
+            ->suppliers()->inRandomOrder()->first();
 
         $result = $this->supplierActions->delete($supplier);
 

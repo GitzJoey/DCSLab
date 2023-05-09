@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Warehouse\WarehouseActions;
 use App\Models\Branch;
@@ -27,17 +27,18 @@ class WarehouseActionsCreateTest extends ActionsTestCase
     public function test_warehouse_actions_call_create_expect_db_has_record_d()
     {
         $user = User::factory()
-                ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                )->create();
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
 
         $warehouseArr = Warehouse::factory()
-                        ->for($company)
-                        ->for($branch)
-                        ->make()->toArray();
+            ->for($company)
+            ->for($branch)
+            ->make()->toArray();
 
         $result = $this->warehouseActions->create($warehouseArr);
 

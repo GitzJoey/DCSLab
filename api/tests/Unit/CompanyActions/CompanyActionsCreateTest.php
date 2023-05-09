@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Company\CompanyActions;
 use App\Models\Company;
@@ -27,9 +27,9 @@ class CompanyActionsCreateTest extends ActionsTestCase
         $user = User::factory()->create();
 
         $companyArr = Company::factory()
-                        ->setStatusActive()->setIsDefault()->make([
-                            'user_id' => $user->id,
-                        ])->toArray();
+            ->setStatusActive()->setIsDefault()->make([
+                'user_id' => $user->id,
+            ])->toArray();
 
         $result = $this->companyActions->create($companyArr);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Product\ProductActions;
 use App\Enums\ProductCategory;
@@ -33,27 +33,28 @@ class ProductActionsEditTest extends ActionsTestCase
     public function test_product_actions_call_update_product_and_insert_product_units_expect_db_updated()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                            ->inRandomOrder()->first();
+            ->inRandomOrder()->first();
 
         $brand = $company->brands()->inRandomOrder()->first();
 
         $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
 
         $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get()->shuffle();
+            ->inRandomOrder()->get()->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
         $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -72,7 +73,8 @@ class ProductActionsEditTest extends ActionsTestCase
         $productArr = $product->toArray();
 
         $productUnitsArr = $product->productUnits->toArray();
-        array_push($productUnitsArr,
+        array_push(
+            $productUnitsArr,
             ProductUnit::factory()
                 ->for($company->units()->where('category', '=', UnitCategory::PRODUCTS->value)->inRandomOrder()->first())
                 ->setConversionValue($productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2)
@@ -124,27 +126,28 @@ class ProductActionsEditTest extends ActionsTestCase
     public function test_product_actions_call_update_product_and_edit_product_units_expect_db_updated()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                            ->inRandomOrder()->first();
+            ->inRandomOrder()->first();
 
         $brand = $company->brands()->inRandomOrder()->first();
 
         $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
 
         $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get()->shuffle();
+            ->inRandomOrder()->get()->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
         $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -163,7 +166,8 @@ class ProductActionsEditTest extends ActionsTestCase
         $productArr = $product->toArray();
 
         $productUnitsArr = $product->productUnits->toArray();
-        array_push($productUnitsArr,
+        array_push(
+            $productUnitsArr,
             ProductUnit::factory()
                 ->for($company->units()->where('category', '=', UnitCategory::PRODUCTS->value)->inRandomOrder()->first())
                 ->setConversionValue($productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2)
@@ -224,27 +228,28 @@ class ProductActionsEditTest extends ActionsTestCase
     public function test_product_actions_call_update_product_and_delete_product_units_expect_db_updated()
     {
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                            ->inRandomOrder()->first();
+            ->inRandomOrder()->first();
 
         $brand = $company->brands()->inRandomOrder()->first();
 
         $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
 
         $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get()->shuffle();
+            ->inRandomOrder()->get()->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
         $primaryUnitIdx = random_int(0, $productUnitCount - 1);
@@ -311,27 +316,28 @@ class ProductActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
         $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                            ->inRandomOrder()->first();
+            ->inRandomOrder()->first();
 
         $brand = $company->brands()->inRandomOrder()->first();
 
         $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
 
         $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get()->shuffle();
+            ->inRandomOrder()->get()->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
         $primaryUnitIdx = random_int(0, $productUnitCount - 1);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use App\Actions\Supplier\SupplierActions;
 use App\Enums\ProductGroupCategory;
@@ -33,10 +33,11 @@ class SupplierActionsCreateTest extends ActionsTestCase
     public function test_supplier_actions_call_create_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(Company::factory()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -120,10 +121,11 @@ class SupplierActionsCreateTest extends ActionsTestCase
     public function test_supplier_actions_call_create_user_pic_expect_success()
     {
         $user = User::factory()
-            ->has(Company::factory()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(
+                Company::factory()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -148,12 +150,12 @@ class SupplierActionsCreateTest extends ActionsTestCase
             $brand = Brand::whereRelation('company', 'id', $company->id)->inRandomOrder()->first();
 
             $product = Product::factory()
-                        ->for($company)
-                        ->for($productGroup)
-                        ->for($brand)
-                        ->setProductTypeAsProduct()
-                        ->setStatusActive()
-                        ->create();
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct()
+                ->setStatusActive()
+                ->create();
         }
 
         $supplierProductsCount = $this->faker->numberBetween(0, $company->products()->count());
