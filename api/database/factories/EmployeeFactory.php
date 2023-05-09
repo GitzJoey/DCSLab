@@ -23,9 +23,9 @@ class EmployeeFactory extends Factory
     public function definition()
     {
         return [
-            'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'join_date' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
-            'status' => $this->faker->randomElement(RecordStatus::toArrayEnum()),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'join_date' => fake()->date($format = 'Y-m-d', $max = 'now'),
+            'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 
@@ -58,7 +58,7 @@ class EmployeeFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->name;
+        $text = fake()->name;
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }

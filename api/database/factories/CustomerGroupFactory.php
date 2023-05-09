@@ -68,7 +68,7 @@ class CustomerGroupFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->randomElement($this->customerGroups);
+        $text = fake()->randomElement($this->customerGroups);
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }
