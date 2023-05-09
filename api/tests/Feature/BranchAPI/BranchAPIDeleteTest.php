@@ -9,9 +9,9 @@ use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class BranchAPIDeleteTest extends TestCase
+class BranchAPIDeleteTest extends APITestCase
 {
     use WithFaker;
 

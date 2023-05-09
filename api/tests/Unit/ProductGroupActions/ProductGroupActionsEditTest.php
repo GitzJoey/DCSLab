@@ -8,9 +8,9 @@ use App\Models\ProductGroup;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class ProductGroupActionsEditTest extends TestCase
+class ProductGroupActionsEditTest extends ActionsTestCase
 {
     use WithFaker;
 

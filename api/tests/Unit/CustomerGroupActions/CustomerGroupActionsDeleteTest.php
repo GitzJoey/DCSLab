@@ -7,9 +7,9 @@ use App\Models\Company;
 use App\Models\CustomerGroup;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class CustomerGroupActionsDeleteTest extends TestCase
+class CustomerGroupActionsDeleteTest extends ActionsTestCase
 {
     use WithFaker;
 

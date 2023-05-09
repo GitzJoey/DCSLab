@@ -15,9 +15,9 @@ use App\Models\Unit;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class SupplierActionsEditTest extends TestCase
+class SupplierActionsEditTest extends ActionsTestCase
 {
     use WithFaker;
 
@@ -145,7 +145,7 @@ class SupplierActionsEditTest extends TestCase
         $picArr = [];
         $supplierArr = [];
         $productsArr = [];
-        
+
         $this->supplierActions->update(
             supplier: $supplier,
             picArr: $picArr,

@@ -7,9 +7,9 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class CompanyAPICreateTest extends TestCase
+class CompanyAPICreateTest extends APITestCase
 {
     use WithFaker;
 

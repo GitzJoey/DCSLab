@@ -10,10 +10,10 @@ use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
-class CustomerAPIEditTest extends TestCase
+class CustomerAPIEditTest extends APITestCase
 {
     use WithFaker;
 

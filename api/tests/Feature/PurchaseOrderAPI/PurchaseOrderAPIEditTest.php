@@ -24,9 +24,9 @@ use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\UnitTableSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class PurchaseOrderAPIEditTest extends TestCase
+class PurchaseOrderAPIEditTest extends APITestCase
 {
     use WithFaker;
 

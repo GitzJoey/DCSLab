@@ -14,9 +14,9 @@ use App\Models\Setting;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class EmployeeActionsEditTest extends TestCase
+class EmployeeActionsEditTest extends ActionsTestCase
 {
     use WithFaker;
 

@@ -9,9 +9,9 @@ use App\Models\User;
 use App\Models\Warehouse;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class WarehouseActionsEditTest extends TestCase
+class WarehouseActionsEditTest extends ActionsTestCase
 {
     use WithFaker;
 

@@ -10,9 +10,9 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class UnitActionsReadTest extends TestCase
+class UnitActionsReadTest extends ActionsTestCase
 {
     use WithFaker;
 

@@ -8,9 +8,9 @@ use App\Models\Company;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class BranchActionsEditTest extends TestCase
+class BranchActionsEditTest extends ActionsTestCase
 {
     use WithFaker;
 

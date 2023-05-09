@@ -7,9 +7,9 @@ use App\Models\Company;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\ActionsTestCase;
 
-class SupplierActionsReadTest extends TestCase
+class SupplierActionsReadTest extends ActionsTestCase
 {
     use WithFaker;
 

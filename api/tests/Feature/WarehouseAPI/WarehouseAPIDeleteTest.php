@@ -10,9 +10,9 @@ use App\Models\User;
 use App\Models\Warehouse;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\APITestCase;
 
-class WarehouseAPIDeleteTest extends TestCase
+class WarehouseAPIDeleteTest extends APITestCase
 {
     use WithFaker;
 
