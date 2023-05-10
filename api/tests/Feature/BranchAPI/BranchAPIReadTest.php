@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\BranchAPI;
 
 use App\Enums\UserRoles;
 use App\Models\Branch;
@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -23,11 +24,11 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
                         ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                        ->has(Branch::factory()->setStatusActive())
                     )->create();
 
         $this->actingAs($user);
@@ -39,7 +40,7 @@ class BranchAPIReadTest extends APITestCase
             'search' => '',
             'paginate' => true,
             'page' => 1,
-            'perPage' => 10,
+            'per_page' => 10,
             'refresh' => true,
         ]));
 
@@ -59,7 +60,7 @@ class BranchAPIReadTest extends APITestCase
             'search' => '',
             'paginate' => false,
             'page' => 1,
-            'perPage' => 10,
+            'per_page' => 10,
             'refresh' => true,
         ]));
 
@@ -68,32 +69,24 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_search_expect_filtered_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault(), 'companies')
-                    ->create();
-
-        $company = $user->companies->first();
-        $companyId = $company->id;
-
-        Branch::factory()->count(10)->create([
-            'company_id' => $companyId,
-            'name' => 'Kantor Cabang '.$this->faker->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.'testing',
-        ]);
-
-        Branch::factory()->count(10)->create([
-            'company_id' => $companyId,
-        ]);
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                        ->has(Branch::factory()->setStatusActive()->count(2))
+                        ->has(Branch::factory()->setStatusActive()->insertStringInName('testing')->count(3))
+                    )->create();
 
         $this->actingAs($user);
 
+        $company = $user->companies()->inRandomOrder()->first();
+
         $api = $this->getJson(route('api.get.db.company.branch.read_any', [
-            'companyId' => Hashids::encode($companyId),
+            'company_id' => Hashids::encode($company->id),
             'search' => 'testing',
             'paginate' => true,
             'page' => 1,
-            'perPage' => 10,
+            'per_page' => 10,
             'refresh' => true,
         ]));
 
@@ -109,26 +102,25 @@ class BranchAPIReadTest extends APITestCase
         ]);
 
         $api->assertJsonFragment([
-            'total' => 10,
+            'total' => 3,
         ]);
     }
 
     public function test_branch_api_call_read_any_without_search_querystring_expect_failed()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(2), 'branches'), 'companies')
-                    ->create();
-
-        $company = $user->companies->first();
-        $companyId = $company->id;
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                        ->has(Branch::factory()->setStatusActive())
+                    )->create();
 
         $this->actingAs($user);
 
+        $company = $user->companies()->inRandomOrder()->first();
+
         $api = $this->getJson(route('api.get.db.company.branch.read_any', [
-            'companyId' => Hashids::encode($companyId),
+            'company_id' => Hashids::encode($company->id),
         ]));
 
         $api->assertStatus(422);
@@ -136,24 +128,22 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_special_char_in_search_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
                             ->has(Branch::factory()->count(5), 'branches'), 'companies')
                     ->create();
 
-        $company = $user->companies->first();
-        $companyId = $company->id;
-
         $this->actingAs($user);
 
+        $company = $user->companies()->inRandomOrder()->first();
+
         $api = $this->getJson(route('api.get.db.company.branch.read_any', [
-            'companyId' => Hashids::encode($companyId),
+            'company_id' => Hashids::encode($company->id),
             'search' => " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~",
             'paginate' => true,
             'page' => 1,
-            'perPage' => 10,
+            'per_page' => 10,
             'refresh' => false,
         ]));
 
@@ -171,24 +161,23 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
-
-        $company = $user->companies->first();
-        $companyId = $company->id;
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                        ->has(Branch::factory()->setStatusActive())
+                    )->create();
 
         $this->actingAs($user);
 
+        $company = $user->companies()->inRandomOrder()->first();
+
         $api = $this->getJson(route('api.get.db.company.branch.read_any', [
-            'companyId' => Hashids::encode($companyId),
+            'company_id' => Hashids::encode($company->id),
             'search' => '',
             'paginate' => true,
             'page' => -1,
-            'perPage' => -10,
+            'per_page' => -10,
             'refresh' => false,
         ]));
 
@@ -247,7 +236,7 @@ class BranchAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = $this->faker->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
 
