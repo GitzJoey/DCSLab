@@ -481,7 +481,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.supplier.supplier.read', $ulid));
 

@@ -2,15 +2,15 @@
 
 namespace Tests\Feature\CustomerGroupAPI;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Company;
+use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-use App\Models\CustomerGroup;
-use Vinkla\Hashids\Facades\Hashids;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerGroupAPIReadTest extends APITestCase
 {
@@ -187,7 +187,7 @@ class CustomerGroupAPIReadTest extends APITestCase
             ],
         ]);
     }
-    
+
     public function test_customer_group_api_call_read_expect_successful()
     {
         $user = User::factory()
@@ -230,7 +230,7 @@ class CustomerGroupAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.customer.customer_group.read', $ulid));
 

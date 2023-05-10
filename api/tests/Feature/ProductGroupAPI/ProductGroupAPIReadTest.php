@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\ProductGroupAPI;
 
-use Exception;
+use App\Enums\ProductGroupCategory;
+use App\Enums\UserRoles;
+use App\Models\Company;
+use App\Models\ProductGroup;
 use App\Models\Role;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-use App\Models\ProductGroup;
-use App\Enums\ProductGroupCategory;
-use Vinkla\Hashids\Facades\Hashids;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProductGroupAPIReadTest extends APITestCase
 {
@@ -238,7 +238,7 @@ class ProductGroupAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.product.product_group.read', $ulid));
 

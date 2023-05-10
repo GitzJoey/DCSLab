@@ -2,14 +2,13 @@
 
 namespace Tests\Feature\CompanyAPI;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
-use Hashids\Hashids;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
 
 class CompanyAPIReadTest extends APITestCase
 {
@@ -208,7 +207,7 @@ class CompanyAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.company.company.read', $ulid));
 

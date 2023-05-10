@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\UnitAPI;
 
-use Exception;
+use App\Enums\UnitCategory;
+use App\Enums\UserRoles;
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-use App\Enums\UnitCategory;
-use Vinkla\Hashids\Facades\Hashids;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class UnitAPIReadTest extends APITestCase
 {
@@ -237,7 +237,7 @@ class UnitAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.product.unit.read', $ulid));
 

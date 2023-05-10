@@ -2,17 +2,17 @@
 
 namespace Tests\Feature\CustomerAPI;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Company;
+use App\Models\Customer;
+use App\Models\CustomerAddress;
+use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-use App\Models\Customer;
-use App\Models\CustomerGroup;
-use App\Models\CustomerAddress;
-use Vinkla\Hashids\Facades\Hashids;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerAPIReadTest extends APITestCase
 {
@@ -272,7 +272,7 @@ class CustomerAPIReadTest extends APITestCase
         }
         $customer->create();
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.customer.customer.read', $ulid));
 

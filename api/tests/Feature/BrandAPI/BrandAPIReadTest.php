@@ -2,15 +2,16 @@
 
 namespace Tests\Feature\BrandAPI;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Brand;
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Brand;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-use Vinkla\Hashids\Facades\Hashids;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BrandAPIReadTest extends APITestCase
 {
@@ -231,7 +232,7 @@ class BrandAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.product.brand.read', $ulid));
 

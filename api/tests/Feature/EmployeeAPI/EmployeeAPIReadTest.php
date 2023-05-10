@@ -2,19 +2,19 @@
 
 namespace Tests\Feature\EmployeeAPI;
 
-use Exception;
-use App\Models\Role;
-use App\Models\User;
-use App\Models\Branch;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Models\Profile;
-use App\Models\Setting;
 use App\Enums\UserRoles;
+use App\Models\Branch;
+use App\Models\Company;
 use App\Models\Employee;
 use App\Models\EmployeeAccess;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Models\Profile;
+use App\Models\Role;
+use App\Models\Setting;
+use App\Models\User;
+use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeAPIReadTest extends APITestCase
 {
@@ -350,7 +350,7 @@ class EmployeeAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = fake()->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->getJson(route('api.get.db.company.employee.read', $ulid));
 
