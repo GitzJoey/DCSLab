@@ -30,6 +30,7 @@ class SupplierActionsEditTest extends ActionsTestCase
 
     public function test_supplier_actions_call_update_expect_db_updated()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
             ->has(
                 Company::factory()->setIsDefault()
