@@ -21,12 +21,12 @@ class RoleFactory extends Factory
      */
     public function definition()
     {
-        $text = str_replace(' ', '-', $this->faker->jobTitle()).'-'.$this->faker->randomLetter().$this->faker->randomDigit();
+        $text = str_replace(' ', '-', fake()->jobTitle()).'-'.fake()->randomLetter().fake()->randomDigit();
 
         return [
             'name' => strtolower($text),
             'display_name' => $text,
-            'description' => $this->faker->catchPhrase(),
+            'description' => fake()->catchPhrase(),
         ];
     }
 }

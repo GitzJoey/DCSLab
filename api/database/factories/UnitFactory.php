@@ -20,10 +20,10 @@ class UnitFactory extends Factory
         unset($unitCategory[2]);
 
         return [
-            'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
-            'name' => $this->faker->randomElement($this->units),
-            'description' => $this->faker->sentence(),
-            'category' => $this->faker->randomElement($unitCategory),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'name' => fake()->randomElement($this->units),
+            'description' => fake()->sentence(),
+            'category' => fake()->randomElement($unitCategory),
         ];
     }
 
@@ -56,7 +56,7 @@ class UnitFactory extends Factory
 
     private function craftName(string $str)
     {
-        $text = $this->faker->randomElement($this->units);
+        $text = fake()->randomElement($this->units);
 
         return substr_replace($text, $str, random_int(0, strlen($text) - 1), 0);
     }

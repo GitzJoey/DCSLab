@@ -2,21 +2,19 @@
 
 namespace Tests\Feature;
 
-use App\Enums\UserRoles;
+use Exception;
+use App\Models\Role;
+use App\Models\User;
+use Tests\APITestCase;
 use App\Models\Company;
 use App\Models\Profile;
-use App\Models\Role;
 use App\Models\Setting;
+use App\Enums\UserRoles;
 use App\Models\Supplier;
-use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\APITestCase;
+use Illuminate\Support\Str;
 
 class SupplierAPIDeleteTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,7 +52,8 @@ class SupplierAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        $ulid = $this->faker->uuid();
+        
+        $ulid = Str::ulid()->generate();
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.delete', $ulid));
 

@@ -11,13 +11,11 @@ use App\Models\CustomerGroup;
 use App\Models\Profile;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class CustomerActionsCreateTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private CustomerActions $customerActions;
 
     protected function setUp(): void
@@ -41,11 +39,11 @@ class CustomerActionsCreateTest extends ActionsTestCase
         $customerArr = Customer::factory()->for($company)->for($customerGroup)->make()->toArray();
 
         $customerAddressArr = CustomerAddress::factory()->for($company)
-            ->count($this->faker->numberBetween(1, 5))
+            ->count(random_int(1, 5))
             ->make()->toArray();
 
         $picArr = Profile::factory()->setStatusActive()->for($user)->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 999);
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 999);
         $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];

@@ -27,17 +27,17 @@ class ProfileFactory extends Factory
         shuffle($country);
 
         return [
-            'first_name' => $this->faker->firstName(),
-            'last_name' => $this->faker->lastName(),
-            'address' => $this->faker->address(),
-            'city' => $this->faker->city(),
-            'postal_code' => $this->faker->postcode(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'address' => fake()->address(),
+            'city' => fake()->city(),
+            'postal_code' => fake()->postcode(),
             'country' => $country[0],
-            'tax_id' => $this->faker->numberBetween(100000000000, 999999999999),
-            'ic_num' => $this->faker->numberBetween(100000000000, 999999999999),
+            'tax_id' => fake()->numberBetween(100000000000, 999999999999),
+            'ic_num' => fake()->numberBetween(100000000000, 999999999999),
             'img_path' => '',
             'status' => RecordStatus::INACTIVE,
-            'remarks' => $this->faker->catchPhrase(),
+            'remarks' => fake()->catchPhrase(),
         ];
     }
 

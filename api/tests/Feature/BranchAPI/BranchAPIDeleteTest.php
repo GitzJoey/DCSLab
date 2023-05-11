@@ -2,19 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Enums\UserRoles;
-use App\Models\Branch;
-use App\Models\Company;
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Branch;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Enums\UserRoles;
+use Illuminate\Support\Str;
 
 class BranchAPIDeleteTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,7 +44,7 @@ class BranchAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        $ulid = $this->faker->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->json('POST', route('api.post.db.company.branch.delete', $ulid));
 

@@ -17,13 +17,13 @@ class PurchaseOrderProductUnitFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
+        $locale = 'id_ID';
 
         return [
-            'qty' => $faker->numberBetween(1, 100),
+            'qty' => fake()->numberBetween(1, 100),
             'product_unit_amount_per_unit' => 1,
             'product_unit_amount_total' => 0,
-            'product_unit_initial_price' => $faker->randomFloat(-4, 1000, 10000000),
+            'product_unit_initial_price' => fake()->randomFloat(-4, 1000, 10000000),
             'product_unit_per_unit_discount' => 0,
             'product_unit_sub_total' => 0,
             'product_unit_per_unit_sub_total_discount' => 0,
@@ -31,10 +31,10 @@ class PurchaseOrderProductUnitFactory extends Factory
             'product_unit_global_discount_percent' => 0,
             'product_unit_global_discount_nominal' => 0,
             'product_unit_final_price' => 0,
-            'vat_status' => $faker->randomElement(VatStatus::toArrayEnum()),
+            'vat_status' => fake()->randomElement(VatStatus::toArrayEnum()),
             'vat_rate' => random_int(1, 99) / 100,
-            'vat_amount' => $faker->randomFloat(-4, 1000, 10000000),
-            'remarks' => $faker->sentence(),
+            'vat_amount' => fake()->randomFloat(-4, 1000, 10000000),
+            'remarks' => fake($locale)->sentence(),
         ];
     }
 

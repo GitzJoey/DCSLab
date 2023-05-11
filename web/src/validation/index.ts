@@ -1,3 +1,4 @@
+import { App } from "vue";
 import {
     Form as VeeForm,
     Field as VeeField,
@@ -20,7 +21,7 @@ configure({
 setLocale(getLang());
 
 export default {
-    install(app: any) {
+    install: (app: App): void => {
         app.component("VeeForm", VeeForm);
         app.component("VeeField", VeeField);
         app.component("VeeErrorMessage", ErrorMessage);

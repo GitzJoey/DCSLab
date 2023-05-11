@@ -17,15 +17,15 @@ class PurchaseOrderDiscountFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
+        $locale = 'id_ID';
 
-        $discountType = $faker->randomElement(DiscountType::toArrayValue());
+        $discountType = fake()->randomElement(DiscountType::toArrayValue());
 
         $amount = 0;
         if ($discountType == DiscountType::GLOBAL_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT) {
             $amount = random_int(1, 99) / 100;
         } elseif ($discountType == DiscountType::GLOBAL_NOMINAL_DISCOUNT || $discountType == DiscountType::PER_UNIT_NOMINAL_DISCOUNT || $discountType == DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT) {
-            $amount = $faker->randomFloat(-4, 1000, 10000000);
+            $amount = fake()->randomFloat(-4, 1000, 10000000);
         }
 
         return [
@@ -49,7 +49,7 @@ class PurchaseOrderDiscountFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'discount_type' => DiscountType::GLOBAL_NOMINAL_DISCOUNT,
-                'amount' => $this->faker->randomFloat(-4, 1000, 10000000),
+                'amount' => fake()->randomFloat(-4, 1000, 10000000),
             ];
         });
     }
@@ -62,13 +62,13 @@ class PurchaseOrderDiscountFactory extends Factory
         unset($discountTypeArr[2]);
         unset($discountTypeArr[3]);
 
-        $discountType = $this->faker->randomElement($discountTypeArr);
+        $discountType = fake()->randomElement($discountTypeArr);
 
         $amount = 0;
         if ($discountType == DiscountType::GLOBAL_PERCENT_DISCOUNT) {
             $amount = mt_rand(1, 99) / 100;
         } elseif ($discountType == DiscountType::GLOBAL_NOMINAL_DISCOUNT) {
-            $amount = $this->faker->randomFloat(4, 0, 10000000);
+            $amount = fake()->randomFloat(4, 0, 10000000);
         }
 
         return $this->state(function (array $attributes) use ($discountType, $amount) {
@@ -94,7 +94,7 @@ class PurchaseOrderDiscountFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'discount_type' => DiscountType::PER_UNIT_NOMINAL_DISCOUNT,
-                'amount' => $this->faker->randomFloat(-4, 1000, 10000000),
+                'amount' => fake()->randomFloat(-4, 1000, 10000000),
             ];
         });
     }
@@ -114,7 +114,7 @@ class PurchaseOrderDiscountFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'discount_type' => DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT,
-                'amount' => $this->faker->randomFloat(-4, 1000, 10000000),
+                'amount' => fake()->randomFloat(-4, 1000, 10000000),
             ];
         });
     }

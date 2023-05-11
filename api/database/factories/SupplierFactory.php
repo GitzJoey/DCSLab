@@ -23,20 +23,20 @@ class SupplierFactory extends Factory
      */
     public function definition()
     {
-        $array_term = $this->faker->randomElement(PaymentTermType::toArrayEnum());
-        $status = $this->faker->randomElement(RecordStatus::toArrayEnum());
+        $array_term = fake()->randomElement(PaymentTermType::toArrayEnum());
+        $status = fake()->randomElement(RecordStatus::toArrayEnum());
 
         return [
-            'code' => strtoupper($this->faker->lexify()).$this->faker->numerify(),
+            'code' => strtoupper(fake()->lexify()).fake()->numerify(),
             'name' => fake('id_ID')->company(),
             'payment_term_type' => $array_term,
-            'payment_term' => $array_term == 'NET' ? $this->faker->numberBetween(1, 30) : 0,
-            'contact' => $this->faker->e164PhoneNumber(),
+            'payment_term' => $array_term == 'NET' ? fake()->numberBetween(1, 30) : 0,
+            'contact' => fake()->e164PhoneNumber(),
             'address' => fake('id_ID')->address(),
             'city' => fake('id_ID')->city(),
-            'taxable_enterprise' => $this->faker->boolean(),
-            'tax_id' => $this->faker->creditCardNumber(),
-            'remarks' => $this->faker->word(),
+            'taxable_enterprise' => fake()->boolean(),
+            'tax_id' => fake()->creditCardNumber(),
+            'remarks' => fake()->word(),
             'status' => $status,
         ];
     }

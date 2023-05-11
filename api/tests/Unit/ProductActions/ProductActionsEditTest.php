@@ -14,13 +14,11 @@ use App\Models\ProductUnit;
 use App\Models\Unit;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class ProductActionsEditTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private ProductActions $productActions;
 
     protected function setUp(): void
@@ -183,7 +181,7 @@ class ProductActionsEditTest extends ActionsTestCase
         $productUnitsArr[$lastRow]['conversion_value'] = $productUnitsArr[$lastRow]['conversion_value'] * 2;
         $productUnitsArr[$lastRow]['is_base'] = false;
         $productUnitsArr[$lastRow]['is_primary_unit'] = false;
-        $productUnitsArr[$lastRow]['remarks'] = $this->faker->sentence();
+        $productUnitsArr[$lastRow]['remarks'] = ProductUnit::factory()->make()->remarks;
 
         $result = $this->productActions->update(
             $product,

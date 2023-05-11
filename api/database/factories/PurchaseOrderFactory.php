@@ -18,16 +18,15 @@ class PurchaseOrderFactory extends Factory
      */
     public function definition()
     {
-        $faker = \Faker\Factory::create('id_ID');
-        $rand = new RandomizerActions();
+        $locale = 'id_ID';
 
         return [
-            'invoice_code' => $rand->generateAlpha().$rand->generateNumeric(),
-            'invoice_date' => $faker->date(),
-            'shipping_date' => $faker->date(),
-            'shipping_address' => $faker->address(),
-            'remarks' => $faker->sentence(),
-            'status' => $faker->randomElement(RecordStatus::toArrayEnum()),
+            'invoice_code' => strtoupper(fake()->lexify()).fake()->numerify(),
+            'invoice_date' => fake()->date(),
+            'shipping_date' => fake()->date(),
+            'shipping_address' => fake($locale)->address(),
+            'remarks' => fake($locale)->sentence(),
+            'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 

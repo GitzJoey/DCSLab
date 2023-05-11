@@ -7,13 +7,11 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\Warehouse;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class WarehouseActionsDeleteTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private WarehouseActions $warehouseActions;
 
     protected function setUp(): void

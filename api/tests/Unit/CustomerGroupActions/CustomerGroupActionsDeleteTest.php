@@ -6,13 +6,11 @@ use App\Actions\CustomerGroup\CustomerGroupActions;
 use App\Models\Company;
 use App\Models\CustomerGroup;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class CustomerGroupActionsDeleteTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private CustomerGroupActions $customerGroupActions;
 
     protected function setUp(): void

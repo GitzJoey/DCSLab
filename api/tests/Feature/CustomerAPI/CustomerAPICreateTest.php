@@ -9,14 +9,11 @@ use App\Models\CustomerAddress;
 use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerAPICreateTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -42,8 +39,8 @@ class CustomerAPICreateTest extends APITestCase
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $addressCount = $this->faker->numberBetween(1, 5);
-        $mainAddressIdx = $this->faker->numberBetween(0, $addressCount - 1);
+        $addressCount = random_int(1, 5);
+        $mainAddressIdx = random_int(0, $addressCount - 1);
         for ($i = 0; $i < 3; $i++) {
             $customerAddress = CustomerAddress::factory()->make();
 
@@ -65,11 +62,12 @@ class CustomerAPICreateTest extends APITestCase
             'arr_customer_address_is_main' => $arr_customer_address_is_main,
             'arr_customer_address_remarks' => $arr_customer_address_remarks,
         ])->toArray();
-
+        
+        $userFactory = User::factory()->make();
         $customerArr['pic_create_user'] = random_int(0, 1);
         if ($customerArr['pic_create_user'] == 1) {
-            $customerArr['pic_contact_person_name'] = $this->faker->name();
-            $customerArr['pic_email'] = $this->faker->email();
+            $customerArr['pic_contact_person_name'] = $userFactory->name;
+            $customerArr['pic_email'] = $userFactory->email;
             $customerArr['pic_password'] = '123456';
         }
 
@@ -108,7 +106,6 @@ class CustomerAPICreateTest extends APITestCase
 
     public function test_customer_api_call_store_with_nonexistance_customer_group_id_expect_failed()
     {
-        // bikin user, role yang namanya developer di tambahin ke user, bikin company, customer
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -117,10 +114,8 @@ class CustomerAPICreateTest extends APITestCase
 
         $this->actingAs($user);
 
-        // ambil data company
         $company = $user->companies()->inRandomOrder()->first();
 
-        // bikin array kosong
         $arr_customer_address_id = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
@@ -128,10 +123,7 @@ class CustomerAPICreateTest extends APITestCase
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        // looping sebanyak 0 sampe kurang dari 3
         for ($i = 0; $i < 3; $i++) {
-            // masukin data di bawah ke array kosong di atas
-            // data di ambil dari $customerAddress yang bikin factory
             $customerAddress = CustomerAddress::factory()->make();
             array_push($arr_customer_address_id, '');
             array_push($arr_customer_address_address, $customerAddress->address);
@@ -141,7 +133,6 @@ class CustomerAPICreateTest extends APITestCase
             array_push($arr_customer_address_remarks, $customerAddress->remarks);
         }
 
-        // bikin customer pake factiry yang statusnya dibikin aktif di tambahin data di bawah trs jadiin array
         $customerArr = Customer::factory()->setStatusActive()->make([
             'company_id' => Hashids::encode($company->id),
             'customer_group_id' => Hashids::encode(CustomerGroup::max('id') + 1),
@@ -153,15 +144,11 @@ class CustomerAPICreateTest extends APITestCase
             'arr_customer_address_remarks' => $arr_customer_address_remarks,
         ])->toArray();
 
-        // pic_create_user datanya dari random integer 0 -1
+        $userFactory = User::factory()->make();
         $customerArr['pic_create_user'] = random_int(0, 1);
-        // jika pic_create_user hasilnya 1 maka
-        // pic_contact_person_name diisi hasil faker nama
-        // pic_email diisi hasil faker email
-        // pic_password diisi 123456
         if ($customerArr['pic_create_user'] == 1) {
-            $customerArr['pic_contact_person_name'] = $this->faker->name();
-            $customerArr['pic_email'] = $this->faker->email();
+            $customerArr['pic_contact_person_name'] = $userFactory->name;
+            $customerArr['pic_email'] = $userFactory->email;
             $customerArr['pic_password'] = '123456';
         }
 
@@ -276,8 +263,8 @@ class CustomerAPICreateTest extends APITestCase
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $addressCount = $this->faker->numberBetween(1, 5);
-        $mainAddressIdx = $this->faker->numberBetween(0, $addressCount - 1);
+        $addressCount = random_int(1, 5);
+        $mainAddressIdx = random_int(0, $addressCount - 1);
         for ($i = 0; $i < $addressCount; $i++) {
             $customerAddress = CustomerAddress::factory()->make();
 

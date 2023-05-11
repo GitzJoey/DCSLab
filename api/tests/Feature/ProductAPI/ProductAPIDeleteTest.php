@@ -2,25 +2,23 @@
 
 namespace Tests\Feature;
 
-use App\Enums\ProductGroupCategory;
-use App\Enums\UnitCategory;
-use App\Enums\UserRoles;
-use App\Models\Brand;
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\ProductGroup;
-use App\Models\ProductUnit;
+use Exception;
 use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Brand;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Product;
+use App\Enums\UserRoles;
+use App\Enums\UnitCategory;
+use App\Models\ProductUnit;
+use Illuminate\Support\Str;
+use App\Models\ProductGroup;
+use App\Enums\ProductGroupCategory;
 
 class ProductAPIDeleteTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -83,7 +81,7 @@ class ProductAPIDeleteTest extends APITestCase
 
         $this->actingAs($user);
 
-        $ulid = $this->faker->uuid();
+        $ulid = Str::ulid()->generate();
 
         $api = $this->json('POST', route('api.post.db.product.product.delete', $ulid));
 
