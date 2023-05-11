@@ -4,65 +4,30 @@ import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
 import illustrationUrl from "../../assets/images/illustration.svg";
-import { FormInput, FormCheck } from "../../base-components/Form";
+import { FormInput } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
-import AuthService from "../../services/AuthServices";
 import { useRouter } from "vue-router";
-import { FormActions } from "vee-validate";
-import { ErrorResponseType } from "../../types/ErrorResponseType";
 
-interface LoginFormValues {
+interface ResetPasswordFormValues {
   email: string;
-  password: string;
-  remember?: boolean | string | undefined;
 }
 
 const { t } = useI18n();
 const router = useRouter();
 
-const authService = new AuthService();
-
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
 
-const loginForm = ref<LoginFormValues>({
-  email: "",
-  password: "",
+const resetPasswordForm = ref<ResetPasswordFormValues>({
+  email: ''
 });
 
-const onSubmit = async (
-  values: LoginFormValues,
-  formActions: FormActions<LoginFormValues>
-) => {
-  loading.value = true;
+const submitForm = async (values: ResetPasswordFormValues) => {
+  console.log(values);
+}
 
-  let result = await authService.doLogin(
-    values.email,
-    values.password,
-    values.remember
-  );
-
-  if (result.success) {
-    router.push({ name: "side-menu-dashboard-maindashboard" });
-  } else {
-    if (result.errors) handleError(result.errors, formActions);
-  }
-
-  loading.value = false;
-};
-
-const handleError = (
-  e: ErrorResponseType,
-  actions: FormActions<LoginFormValues>
-): void => {
-  for (let key in e) {
-    for (let i = 0; i < Object.values(e[key]).length; i++) {
-      actions.setFieldError("email", e[key][i]);
-    }
-  }
-};
 </script>
 
 <template>
@@ -109,105 +74,49 @@ const handleError = (
               <h2
                 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
               >
-                {{ t("views.login.title") }}
+                {{ t("views.reset_password.email.title") }}
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
                 &nbsp;
               </div>
-              <VeeForm id="loginForm" v-slot="{ errors }" @submit="onSubmit">
+              <VeeForm v-slot="{ errors }" @submit="submitForm">
                 <div class="mt-8 intro-x">
                   <VeeField
                     v-slot="{ field }"
                     name="email"
                     rules="required|email"
-                    :label="t('views.login.fields.email')"
+                    :label="t('views.reset_password.email.fields.email')"
                   >
                     <FormInput
-                      v-model="loginForm.email"
+                      v-model="resetPasswordForm.email"
                       type="text"
                       name="email"
                       class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['email'] }"
-                      :placeholder="t('views.login.fields.email')"
+                      :placeholder="t('views.reset_password.email.fields.email')"
                       v-bind="field"
                     />
                   </VeeField>
                   <VeeErrorMessage name="email" as="span" class="text-danger" />
-                  <VeeField
-                    v-slot="{ field }"
-                    name="password"
-                    rules="required"
-                    :label="t('views.login.fields.password')"
-                  >
-                    <FormInput
-                      v-model="loginForm.password"
-                      type="password"
-                      name="password"
-                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                      :class="{ 'border-danger': errors['password'] }"
-                      :placeholder="t('views.login.fields.password')"
-                      v-bind="field"
-                    />
-                  </VeeField>
-                  <VeeErrorMessage
-                    name="password"
-                    as="span"
-                    class="text-danger"
-                  />
-                </div>
-                <div
-                  class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-                >
-                  <div class="flex items-center mr-auto">
-                    <VeeField v-slot="{ field }" name="remember">
-                      <FormCheck.Input
-                        id="remember-me"
-                        v-model="loginForm.remember"
-                        name="remember-me"
-                        type="checkbox"
-                        class="mr-2 border"
-                        v-bind="field"
-                      />
-                      <label
-                        class="cursor-pointer select-none"
-                        htmlFor="remember-me"
-                      >
-                        {{ t("views.login.fields.remember_me") }}
-                      </label>
-                    </VeeField>
-                  </div>
-                  <RouterLink to="/auth/reset-password">{{
-                    t("views.login.fields.forgot_pass")
-                  }}</RouterLink>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button
+                  <Button 
+                    type="submit"
                     variant="primary"
                     class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
                   >
-                    {{ t("components.buttons.login") }}
+                    {{ t("components.buttons.submit") }}
                   </Button>
                   <Button
+                    type="button"
                     variant="outline-secondary"
                     class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
-                    @click="router.push({ name: 'register' })"
+                    @click="router.push({ name: 'login' })"
                   >
-                    {{ t("components.buttons.register") }}
+                    {{ t("components.buttons.login") }}
                   </Button>
                 </div>
               </VeeForm>
-              <div
-                class="mt-10 text-center intro-x xl:mt-24 text-slate-600 dark:text-slate-500 xl:text-left"
-              >
-                By signin up, you agree to our
-                <a class="text-primary dark:text-slate-200" href="">
-                  {{ t("views.login.fields.terms_and_cond") }}
-                </a>
-                &
-                <a class="text-primary dark:text-slate-200" href="">
-                  {{ t("views.login.fields.privacy_policy") }}
-                </a>
-              </div>
             </LoadingOverlay>
           </div>
         </div>
