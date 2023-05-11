@@ -7,13 +7,11 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class CompanyActionsReadTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private CompanyActions $companyActions;
 
     protected function setUp(): void

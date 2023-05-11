@@ -9,13 +9,11 @@ use App\Models\Employee;
 use App\Models\Profile;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class EmployeeActionsCreateTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private EmployeeActions $employeeActions;
 
     protected function setUp(): void
@@ -42,7 +40,7 @@ class EmployeeActionsCreateTest extends ActionsTestCase
         $profileArr = Profile::factory()->for($user)->setStatusActive()->make()->toArray();
 
         $branchCount = $company->branches()->count();
-        $accessCount = $this->faker->numberBetween(1, $branchCount);
+        $accessCount = random_int(1, $branchCount);
         $branchIds = $company->branches()->inRandomOrder()->take($accessCount)->pluck('id');
         $accessesArr = [];
         for ($i = 0; $i < $accessCount; $i++) {

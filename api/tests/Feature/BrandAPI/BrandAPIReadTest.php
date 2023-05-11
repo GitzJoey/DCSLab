@@ -8,15 +8,12 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class BrandAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

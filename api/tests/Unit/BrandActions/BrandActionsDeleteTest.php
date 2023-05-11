@@ -6,13 +6,11 @@ use App\Actions\Brand\BrandActions;
 use App\Models\Brand;
 use App\Models\Company;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class BrandActionsDeleteTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private BrandActions $brandActions;
 
     protected function setUp(): void

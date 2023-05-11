@@ -8,13 +8,11 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class BranchActionsReadTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private BranchActions $branchActions;
 
     protected function setUp(): void

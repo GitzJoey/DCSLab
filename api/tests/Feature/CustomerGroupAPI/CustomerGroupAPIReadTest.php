@@ -2,20 +2,18 @@
 
 namespace Tests\Feature\CustomerGroupAPI;
 
-use App\Enums\UserRoles;
-use App\Models\Company;
-use App\Models\CustomerGroup;
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Enums\UserRoles;
+use Illuminate\Support\Str;
+use App\Models\CustomerGroup;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerGroupAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

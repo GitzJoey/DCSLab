@@ -2,21 +2,20 @@
 
 namespace Tests\Feature\WarehouseAPI;
 
-use App\Enums\UserRoles;
-use App\Models\Branch;
-use App\Models\Company;
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Warehouse;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Branch;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Enums\UserRoles;
+
+use App\Models\Warehouse;
+use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

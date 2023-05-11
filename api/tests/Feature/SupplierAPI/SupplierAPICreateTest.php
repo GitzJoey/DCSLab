@@ -14,14 +14,11 @@ use App\Models\Role;
 use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SupplierAPICreateTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -89,10 +86,11 @@ class SupplierAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
+        $userFactory = User::factory()->make();
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = $this->faker->name();
-            $supplierArr['pic_email'] = $this->faker->email();
+            $supplierArr['pic_contact_person_name'] = $userFactory->name;
+            $supplierArr['pic_email'] = $userFactory->email;
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -187,10 +185,11 @@ class SupplierAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
+        $userFactory = User::factory()->make();
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = $this->faker->name();
-            $supplierArr['pic_email'] = $this->faker->email();
+            $supplierArr['pic_contact_person_name'] = $userFactory->name;
+            $supplierArr['pic_email'] = $userFactory->email;
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -222,10 +221,11 @@ class SupplierAPICreateTest extends APITestCase
             'code' => $company->suppliers()->inRandomOrder()->first()->code,
         ])->toArray();
 
+        $userFactory = User::factory()->make();
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = $this->faker->name();
-            $supplierArr['pic_email'] = $this->faker->email();
+            $supplierArr['pic_contact_person_name'] = $userFactory->name;
+            $supplierArr['pic_email'] = $userFactory->email;
             $supplierArr['pic_password'] = '123456';
         }
 

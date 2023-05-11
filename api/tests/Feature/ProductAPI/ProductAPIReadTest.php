@@ -2,26 +2,24 @@
 
 namespace Tests\Feature\ProductAPI;
 
-use App\Enums\ProductGroupCategory;
-use App\Enums\UnitCategory;
-use App\Enums\UserRoles;
-use App\Models\Brand;
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\ProductGroup;
-use App\Models\ProductUnit;
+use Exception;
 use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Brand;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Product;
+use App\Enums\UserRoles;
+use App\Enums\UnitCategory;
+use App\Models\ProductUnit;
+use Illuminate\Support\Str;
+use App\Models\ProductGroup;
+use App\Enums\ProductGroupCategory;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

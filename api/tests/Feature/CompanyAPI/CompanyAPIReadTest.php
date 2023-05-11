@@ -2,18 +2,16 @@
 
 namespace Tests\Feature\CompanyAPI;
 
-use App\Enums\UserRoles;
-use App\Models\Company;
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Enums\UserRoles;
+use Illuminate\Support\Str;
 
 class CompanyAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

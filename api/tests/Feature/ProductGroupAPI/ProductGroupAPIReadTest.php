@@ -2,21 +2,18 @@
 
 namespace Tests\Feature\ProductGroupAPI;
 
-use App\Enums\ProductGroupCategory;
-use App\Enums\UserRoles;
-use App\Models\Company;
-use App\Models\ProductGroup;
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Enums\UserRoles;
+use Illuminate\Support\Str;
+use App\Models\ProductGroup;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductGroupAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -34,9 +31,10 @@ class ProductGroupAPIReadTest extends APITestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
+        $productGroupFactory = ProductGroup::factory()->make();
         $api = $this->getJson(route('api.get.db.product.product_group.read_any', [
             'company_id' => Hashids::encode($company->id),
-            'category' => fake()->randomElement(ProductGroupCategory::toArrayEnum())->value,
+            'category' => $productGroupFactory->category->value,
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -57,7 +55,7 @@ class ProductGroupAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.product.product_group.read_any', [
             'company_id' => Hashids::encode($company->id),
-            'category' => $this->faker->randomElement(ProductGroupCategory::toArrayEnum())->name,
+            'category' => $productGroupFactory->category->value,
             'search' => '',
             'paginate' => false,
             'page' => 1,

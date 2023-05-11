@@ -13,13 +13,11 @@ use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class EmployeeActionsEditTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private EmployeeActions $employeeActions;
 
     protected function setUp(): void
@@ -71,7 +69,7 @@ class EmployeeActionsEditTest extends ActionsTestCase
         $newProfileArr = Profile::factory()->for($user)->setStatusActive()->make()->toArray();
 
         $newBranchCount = $company->branches()->count();
-        $newAccessCount = $this->faker->numberBetween(1, $newBranchCount);
+        $newAccessCount = random_int(1, $newBranchCount);
         $newBranchIds = $company->branches()->inRandomOrder()->take($newAccessCount)->pluck('id');
         $newAccessesArr = [];
         for ($i = 0; $i < $newAccessCount; $i++) {

@@ -24,10 +24,10 @@ class ChartOfAccountFactory extends Factory
         return [
             'code' => strtoupper(fake()->lexify()).fake()->numerify(),
             'name' => fake()->name(),
-            'account_type' => fake($locale)->randomElement(AccountType::toArrayEnum()),
+            'account_type' => fake()->randomElement(AccountType::toArrayEnum()),
             'can_have_child' => true,
             'remarks' => fake($locale)->word(),
-            'status' => fake($locale)->randomElement(RecordStatus::toArrayEnum()),
+            'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 

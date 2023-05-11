@@ -8,13 +8,11 @@ use App\Models\Company;
 use App\Models\User;
 use App\Models\Warehouse;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class WarehouseActionsCreateTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private WarehouseActions $warehouseActions;
 
     protected function setUp(): void

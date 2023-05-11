@@ -19,13 +19,13 @@ class PurchaseOrderDiscountFactory extends Factory
     {
         $locale = 'id_ID';
 
-        $discountType = fake($locale)->randomElement(DiscountType::toArrayValue());
+        $discountType = fake()->randomElement(DiscountType::toArrayValue());
 
         $amount = 0;
         if ($discountType == DiscountType::GLOBAL_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT) {
             $amount = random_int(1, 99) / 100;
         } elseif ($discountType == DiscountType::GLOBAL_NOMINAL_DISCOUNT || $discountType == DiscountType::PER_UNIT_NOMINAL_DISCOUNT || $discountType == DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT) {
-            $amount = fake($locale)->randomFloat(-4, 1000, 10000000);
+            $amount = fake()->randomFloat(-4, 1000, 10000000);
         }
 
         return [

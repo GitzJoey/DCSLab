@@ -9,13 +9,11 @@ use App\Models\Employee;
 use App\Models\EmployeeAccess;
 use App\Models\Profile;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class EmployeeActionsDeleteTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private EmployeeActions $employeeActions;
 
     protected function setUp(): void
@@ -40,7 +38,7 @@ class EmployeeActionsDeleteTest extends ActionsTestCase
         $employee = Employee::factory()->for($company)->for($user)->create();
 
         $branchCount = $company->branches()->count();
-        $accessCount = $this->faker->numberBetween(1, $branchCount);
+        $accessCount = random_int(1, $branchCount);
         $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
         for ($i = 0; $i < $accessCount; $i++) {
             EmployeeAccess::factory()

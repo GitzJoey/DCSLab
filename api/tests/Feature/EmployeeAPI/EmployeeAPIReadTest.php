@@ -2,24 +2,22 @@
 
 namespace Tests\Feature\EmployeeAPI;
 
-use App\Enums\UserRoles;
-use App\Models\Branch;
-use App\Models\Company;
-use App\Models\Employee;
-use App\Models\EmployeeAccess;
-use App\Models\Profile;
-use App\Models\Role;
-use App\Models\Setting;
-use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Branch;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Profile;
+use App\Models\Setting;
+use App\Enums\UserRoles;
+use App\Models\Employee;
+use Illuminate\Support\Str;
+use App\Models\EmployeeAccess;
 use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
