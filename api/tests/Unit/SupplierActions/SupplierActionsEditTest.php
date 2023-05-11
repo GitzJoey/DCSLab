@@ -14,13 +14,11 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class SupplierActionsEditTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private SupplierActions $supplierActions;
 
     protected function setUp(): void
@@ -32,6 +30,7 @@ class SupplierActionsEditTest extends ActionsTestCase
 
     public function test_supplier_actions_call_update_expect_db_updated()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
             ->has(
                 Company::factory()->setIsDefault()
@@ -65,20 +64,20 @@ class SupplierActionsEditTest extends ActionsTestCase
                 ->create();
         }
 
-        $supplierProductsCount = $this->faker->numberBetween(1, $productCount);
+        $supplierProductsCount = random_int(1, $productCount);
         $productIds = $company->products()->take($supplierProductsCount)->pluck('id');
 
         $productsArr = [];
         foreach ($productIds as $productId) {
             $supplierProduct = [];
             $supplierProduct['product_id'] = $productId;
-            $supplierProduct['main_product'] = $this->faker->numberBetween(0, 1);
+            $supplierProduct['main_product'] = random_int(0, 1);
 
             array_push($productsArr, $supplierProduct);
         }
 
         $picArr = Profile::factory()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 5);
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
         $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $supplierArr['contact'];

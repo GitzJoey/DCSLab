@@ -11,13 +11,11 @@ use App\Models\CustomerGroup;
 use App\Models\Profile;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class CustomerActionsEditTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private CustomerActions $customerActions;
 
     protected function setUp(): void
@@ -52,7 +50,7 @@ class CustomerActionsEditTest extends ActionsTestCase
         );
 
         $picArr = Profile::factory()->setStatusActive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 5);
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
         $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];
@@ -130,15 +128,16 @@ class CustomerActionsEditTest extends ActionsTestCase
         $customerAddressArr = $customer->customerAddresses->toArray();
 
         $lastRow = count($customerAddressArr) - 1;
+        $customerAddressFactory = CustomerAddress::factory()->make();
         $customerAddressArr[$lastRow]['id'] = null;
-        $customerAddressArr[$lastRow]['address'] = $this->faker->address();
-        $customerAddressArr[$lastRow]['city'] = $this->faker->city();
-        $customerAddressArr[$lastRow]['contact'] = $this->faker->e164PhoneNumber();
-        $customerAddressArr[$lastRow]['is_base'] = false;
-        $customerAddressArr[$lastRow]['remarks'] = $this->faker->sentence();
+        $customerAddressArr[$lastRow]['address'] = $customerAddressFactory->address;
+        $customerAddressArr[$lastRow]['city'] = $customerAddressFactory->city;
+        $customerAddressArr[$lastRow]['contact'] = $customerAddressFactory->contact;
+        $customerAddressArr[$lastRow]['is_main'] = $customerAddressFactory->is_main;
+        $customerAddressArr[$lastRow]['remarks'] = $customerAddressFactory->sentence;
 
         $picArr = Profile::factory()->setStatusActive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 5);
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
         $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];
@@ -216,7 +215,7 @@ class CustomerActionsEditTest extends ActionsTestCase
         array_pop($customerAddressArr);
 
         $picArr = Profile::factory()->setStatusActive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 5);
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
         $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];

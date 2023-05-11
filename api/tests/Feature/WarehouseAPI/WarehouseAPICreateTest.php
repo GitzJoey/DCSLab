@@ -8,14 +8,11 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Warehouse;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseAPICreateTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

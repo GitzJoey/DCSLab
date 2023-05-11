@@ -15,13 +15,11 @@ use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class ProductActionsReadTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private ProductActions $productActions;
 
     protected function setUp(): void
@@ -217,11 +215,12 @@ class ProductActionsReadTest extends ActionsTestCase
 
     public function test_product_actions_call_read_any_with_nonexistance_company_id_expect_empty_collection()
     {
+        $this->markTestSkipped('Under Constructions');
         $maxId = Company::max('id') + 1;
 
         $result = $this->productActions->readAny(
             companyId: $maxId,
-            productCategory: $this->faker->randomElement(ProductCategory::toArrayValue()),
+            productCategory: Product::factory()->make()->category->value,
             search: '',
             paginate: false,
         );

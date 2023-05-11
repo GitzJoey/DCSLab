@@ -2,6 +2,7 @@ import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 
 import LoginView from "../pages/auth/LoginView.vue";
 import RegisterView from "../pages/auth/RegisterView.vue";
+import ResetPasswordView from "../pages/auth/ResetPasswordView.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 import ProfileView from "../pages/dashboard/ProfileView.vue";
 import DevTool from "../pages/dev/DevTool.vue";
@@ -31,9 +32,9 @@ export default [
                 component: RegisterView,
             },
             {
-                path: "/auth/password-reset",
-                name: 'password-reset',
-                component: RegisterView,
+                path: "/auth/reset-password",
+                name: 'reset-password',
+                component: ResetPasswordView,
             },
         ]
     },
@@ -45,7 +46,7 @@ export default [
                 path: "/dashboard/main",
                 name: "side-menu-dashboard-maindashboard",
                 component: MainDashboard,
-                meta: { 
+                meta: {
                     remember: true,
                     log_route: true,
                     skipBeforeEach: false
@@ -55,7 +56,7 @@ export default [
                 path: "/dashboard/profile",
                 name: "side-menu-dashboard-profile",
                 component: ProfileView,
-                meta: { 
+                meta: {
                     remember: true,
                     log_route: true,
                     skipBeforeEach: false
@@ -68,7 +69,7 @@ export default [
                         path: "/dashboard/company/company",
                         name: "side-menu-company-company",
                         component: CompanyView
-                    }                    
+                    }
                 ]
             },
             {
@@ -79,7 +80,7 @@ export default [
                         path: "/dashboard/administrator/user",
                         name: "side-menu-administrator-user",
                         component: UserView
-                    }                    
+                    }
                 ]
             },
             {
@@ -113,7 +114,7 @@ export default [
                 path: "/dashboard/error" + "/:code",
                 name: "side-menu-error-code",
                 component: ErrorView,
-                meta: { 
+                meta: {
                     remember: false,
                     log_route: false,
                     skipBeforeEach: true
@@ -131,4 +132,3 @@ export default [
         component: ErrorPage
     }
 ];
-  

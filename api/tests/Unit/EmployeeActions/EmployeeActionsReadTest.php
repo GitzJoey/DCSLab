@@ -14,13 +14,11 @@ use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class EmployeeActionsReadTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private EmployeeActions $employeeActions;
 
     protected function setUp(): void
@@ -329,7 +327,7 @@ class EmployeeActionsReadTest extends ActionsTestCase
                 ))->create();
 
         $branchCount = $company->branches()->count();
-        $accessCount = $this->faker->numberBetween(1, $branchCount);
+        $accessCount = random_int(1, $branchCount);
         $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
         for ($i = 0; $i < $accessCount; $i++) {
             EmployeeAccess::factory()

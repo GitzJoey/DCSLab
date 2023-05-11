@@ -22,11 +22,11 @@ class PurchaseOrderFactory extends Factory
 
         return [
             'invoice_code' => strtoupper(fake()->lexify()).fake()->numerify(),
-            'invoice_date' => fake($locale)->date(),
-            'shipping_date' => fake($locale)->date(),
+            'invoice_date' => fake()->date(),
+            'shipping_date' => fake()->date(),
             'shipping_address' => fake($locale)->address(),
             'remarks' => fake($locale)->sentence(),
-            'status' => fake($locale)->randomElement(RecordStatus::toArrayEnum()),
+            'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
         ];
     }
 

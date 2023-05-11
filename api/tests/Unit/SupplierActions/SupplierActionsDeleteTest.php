@@ -7,13 +7,11 @@ use App\Models\Company;
 use App\Models\Profile;
 use App\Models\Supplier;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class SupplierActionsDeleteTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private SupplierActions $supplierActions;
 
     protected function setUp(): void

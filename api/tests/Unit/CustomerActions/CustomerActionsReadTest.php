@@ -10,13 +10,11 @@ use App\Models\CustomerGroup;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class CustomerActionsReadTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private CustomerActions $customerActions;
 
     protected function setUp(): void
@@ -60,7 +58,7 @@ class CustomerActionsReadTest extends ActionsTestCase
             ->has(
                 CustomerAddress::factory()
                     ->for($company)
-                    ->count($this->faker->numberBetween(1, 5))
+                    ->count(random_int(1, 5))
             )->create();
 
         $result = $this->customerActions->readAny(
@@ -90,7 +88,7 @@ class CustomerActionsReadTest extends ActionsTestCase
             ->has(
                 CustomerAddress::factory()
                     ->for($company)
-                    ->count($this->faker->numberBetween(1, 5))
+                    ->count(random_int(1, 5))
             )->create();
 
         $result = $this->customerActions->readAny(
@@ -133,7 +131,7 @@ class CustomerActionsReadTest extends ActionsTestCase
             ->has(
                 CustomerAddress::factory()
                     ->for($company)
-                    ->count($this->faker->numberBetween(1, 5))
+                    ->count(random_int(1, 5))
             )->count(2)->create();
 
         Customer::factory()
@@ -142,7 +140,7 @@ class CustomerActionsReadTest extends ActionsTestCase
             ->has(
                 CustomerAddress::factory()
                     ->for($company)
-                    ->count($this->faker->numberBetween(1, 5))
+                    ->count(random_int(1, 5))
             )->count(3)->create();
 
         $result = $this->customerActions->readAny(
@@ -173,7 +171,7 @@ class CustomerActionsReadTest extends ActionsTestCase
             ->has(
                 CustomerAddress::factory()
                     ->for($company)
-                    ->count($this->faker->numberBetween(1, 5))
+                    ->count(random_int(1, 5))
             )->count(3)->create();
 
         $result = $this->customerActions->readAny(
@@ -204,7 +202,7 @@ class CustomerActionsReadTest extends ActionsTestCase
             ->has(
                 CustomerAddress::factory()
                     ->for($company)
-                    ->count($this->faker->numberBetween(1, 5))
+                    ->count(random_int(1, 5))
             )->count(3)->create();
 
         $result = $this->customerActions->readAny(

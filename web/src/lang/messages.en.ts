@@ -6,6 +6,7 @@ import top_bar from "./en/components/top-bar.json";
 
 import login from "./en/views/login.json";
 import register from "./en/views/register.json";
+import reset_password from "./en/views/reset_password.json";
 import profile from "./en/views/profile.json";
 import user from "./en/views/user.json";
 
@@ -20,6 +21,7 @@ export default {
     "views": {
         "login": login,
         "register": register,
+        "reset_password": reset_password,
         "profile": profile,
         "user": user
     }

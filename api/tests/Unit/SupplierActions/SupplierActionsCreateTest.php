@@ -14,13 +14,11 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class SupplierActionsCreateTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private SupplierActions $supplierActions;
 
     protected function setUp(): void
@@ -61,7 +59,7 @@ class SupplierActionsCreateTest extends ActionsTestCase
         $supplierArr = Supplier::factory()->for($company)->make()->toArray();
 
         $picArr = Profile::factory()->setStatusInactive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 5);
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
         $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $supplierArr['contact'];
@@ -69,14 +67,14 @@ class SupplierActionsCreateTest extends ActionsTestCase
         $picArr['city'] = $supplierArr['city'];
         $picArr['tax_id'] = $supplierArr['tax_id'];
 
-        $supplierProductsCount = $this->faker->numberBetween(0, $company->products()->count());
+        $supplierProductsCount = random_int(0, $company->products()->count());
         $productIds = $company->products()->take($supplierProductsCount)->pluck('id');
 
         $productsArr = [];
         foreach ($productIds as $productId) {
             $supplierProduct = [];
             $supplierProduct['product_id'] = $productId;
-            $supplierProduct['main_product'] = $this->faker->numberBetween(0, 1);
+            $supplierProduct['main_product'] = random_int(0, 1);
 
             array_push($productsArr, $supplierProduct);
         }
@@ -134,7 +132,7 @@ class SupplierActionsCreateTest extends ActionsTestCase
         $supplierArr = Supplier::factory()->for($company)->make()->toArray();
 
         $picArr = Profile::factory()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).$this->faker->numberBetween(1, 5);
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
         $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $supplierArr['contact'];
@@ -158,14 +156,14 @@ class SupplierActionsCreateTest extends ActionsTestCase
                 ->create();
         }
 
-        $supplierProductsCount = $this->faker->numberBetween(0, $company->products()->count());
+        $supplierProductsCount = random_int(0, $company->products()->count());
         $productIds = $company->products()->take($supplierProductsCount)->pluck('id');
 
         $productsArr = [];
         foreach ($productIds as $productId) {
             $supplierProduct = [];
             $supplierProduct['product_id'] = $productId;
-            $supplierProduct['main_product'] = $this->faker->numberBetween(0, 1);
+            $supplierProduct['main_product'] = random_int(0, 1);
 
             array_push($productsArr, $supplierProduct);
         }

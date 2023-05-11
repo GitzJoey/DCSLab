@@ -2,21 +2,19 @@
 
 namespace Tests\Feature;
 
-use App\Enums\UserRoles;
-use App\Models\Company;
-use App\Models\Customer;
-use App\Models\CustomerAddress;
-use App\Models\CustomerGroup;
+use Exception;
 use App\Models\Role;
 use App\Models\User;
-use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Enums\UserRoles;
+use App\Models\Customer;
+use Illuminate\Support\Str;
+use App\Models\CustomerGroup;
+use App\Models\CustomerAddress;
 
 class CustomerAPIDeleteTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -54,7 +52,8 @@ class CustomerAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        $ulid = $this->faker->uuid();
+        
+        $ulid = Str::ulid()->generate();
 
         $api = $this->json('POST', route('api.post.db.customer.customer.delete', $ulid));
 
