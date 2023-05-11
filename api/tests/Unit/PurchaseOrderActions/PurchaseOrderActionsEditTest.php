@@ -24,13 +24,11 @@ use Database\Seeders\ProductTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\UnitTableSeeder;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class PurchaseOrderActionsEditTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private PurchaseOrderActions $purchaseOrderActions;
 
     protected function setUp(): void

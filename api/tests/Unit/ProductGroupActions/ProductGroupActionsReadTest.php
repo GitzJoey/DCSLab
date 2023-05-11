@@ -9,13 +9,11 @@ use App\Models\ProductGroup;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class ProductGroupActionsReadTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private ProductGroupActions $productGroupActions;
 
     protected function setUp(): void
@@ -37,7 +35,7 @@ class ProductGroupActionsReadTest extends ActionsTestCase
 
         $result = $this->productGroupActions->readAny(
             companyId: $company->id,
-            category: $this->faker->randomElement(ProductGroupCategory::toArrayEnum())->value,
+            category: ProductGroup::factory()->make()->category->value,
             search: '',
             paginate: false
         );
@@ -51,7 +49,7 @@ class ProductGroupActionsReadTest extends ActionsTestCase
 
         $result = $this->productGroupActions->readAny(
             companyId: $maxId,
-            category: $this->faker->randomElement(ProductGroupCategory::toArrayEnum())->value,
+            category: ProductGroup::factory()->make()->category->value,
             search: '',
             paginate: false
         );
@@ -142,7 +140,7 @@ class ProductGroupActionsReadTest extends ActionsTestCase
 
         $result = $this->productGroupActions->readAny(
             companyId: $company->id,
-            category: $this->faker->randomElement(ProductGroupCategory::toArrayEnum())->value,
+            category: ProductGroup::factory()->make()->category->value,
             search: '',
             paginate: true,
             page: 1,

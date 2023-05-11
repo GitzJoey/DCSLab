@@ -15,14 +15,11 @@ use App\Models\ProductUnit;
 use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class ProductAPIEditTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

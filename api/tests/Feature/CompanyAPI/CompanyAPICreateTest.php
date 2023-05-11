@@ -6,13 +6,10 @@ use App\Enums\UserRoles;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 
 class CompanyAPICreateTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

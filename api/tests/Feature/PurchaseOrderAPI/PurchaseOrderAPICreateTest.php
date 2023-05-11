@@ -19,14 +19,11 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class PurchaseOrderAPICreateTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

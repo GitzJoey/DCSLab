@@ -15,13 +15,10 @@ use App\Models\PurchaseOrderProductUnit;
 use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 
 class PurchaseOrderAPIDeleteTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();

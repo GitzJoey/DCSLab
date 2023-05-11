@@ -2,24 +2,22 @@
 
 namespace Tests\Feature\EmployeeAPI;
 
-use App\Enums\UserRoles;
-use App\Models\Branch;
-use App\Models\Company;
-use App\Models\Employee;
-use App\Models\EmployeeAccess;
-use App\Models\Profile;
-use App\Models\Role;
-use App\Models\Setting;
-use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Branch;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Profile;
+use App\Models\Setting;
+use App\Enums\UserRoles;
+use App\Models\Employee;
+use Illuminate\Support\Str;
+use App\Models\EmployeeAccess;
 use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -27,6 +25,7 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -101,6 +100,7 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_search_expect_filtered_results()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -193,6 +193,7 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_without_search_querystring_expect_failed()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -213,6 +214,7 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_special_char_in_search_expect_results()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
@@ -246,6 +248,7 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()

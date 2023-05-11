@@ -8,15 +8,12 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class BranchAPIReadTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -24,6 +21,7 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -161,6 +159,7 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

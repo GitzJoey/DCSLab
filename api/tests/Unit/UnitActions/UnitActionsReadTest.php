@@ -3,19 +3,16 @@
 namespace Tests\Unit;
 
 use App\Actions\Unit\UnitActions;
-use App\Enums\UnitCategory;
 use App\Models\Company;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class UnitActionsReadTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private UnitActions $unitActions;
 
     protected function setUp(): void
@@ -37,7 +34,7 @@ class UnitActionsReadTest extends ActionsTestCase
 
         $result = $this->unitActions->readAny(
             companyId: $company->id,
-            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
+            category: Unit::factory()->make()->category->value,
             search: '',
             paginate: true,
             page: 1,
@@ -59,7 +56,7 @@ class UnitActionsReadTest extends ActionsTestCase
 
         $result = $this->unitActions->readAny(
             companyId: $company->id,
-            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
+            category: Unit::factory()->make()->category->value,
             search: '',
             paginate: false
         );
@@ -73,7 +70,7 @@ class UnitActionsReadTest extends ActionsTestCase
 
         $result = $this->unitActions->readAny(
             companyId: $maxId,
-            category: $this->faker->randomElement(UnitCategory::toArrayValue()),
+            category: Unit::factory()->make()->category->value,
             search: '',
             paginate: false
         );

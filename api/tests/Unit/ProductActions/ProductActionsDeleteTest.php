@@ -12,13 +12,11 @@ use App\Models\ProductGroup;
 use App\Models\ProductUnit;
 use App\Models\Unit;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
+
 use Tests\ActionsTestCase;
 
 class ProductActionsDeleteTest extends ActionsTestCase
 {
-    use WithFaker;
-
     private ProductActions $productActions;
 
     protected function setUp(): void

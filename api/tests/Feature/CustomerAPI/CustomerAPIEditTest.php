@@ -9,14 +9,11 @@ use App\Models\CustomerAddress;
 use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerAPIEditTest extends APITestCase
 {
-    use WithFaker;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,8 +45,8 @@ class CustomerAPIEditTest extends APITestCase
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $addressCount = $this->faker->numberBetween(1, 5);
-        $mainAddressIdx = $this->faker->numberBetween(0, $addressCount - 1);
+        $addressCount = random_int(1, 5);
+        $mainAddressIdx = random_int(0, $addressCount - 1);
         for ($i = 0; $i < 3; $i++) {
             $customerAddress = CustomerAddress::factory()->make();
 
