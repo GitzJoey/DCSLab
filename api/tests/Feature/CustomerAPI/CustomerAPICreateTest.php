@@ -2,18 +2,21 @@
 
 namespace Tests\Feature;
 
-use App\Enums\UserRoles;
-use App\Models\Company;
-use App\Models\Customer;
-use App\Models\CustomerAddress;
-use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Enums\UserRoles;
+use App\Models\Customer;
+use App\Models\CustomerGroup;
+use App\Models\CustomerAddress;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class CustomerAPICreateTest extends APITestCase
 {
+    use WithFaker;
+    
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,11 +66,10 @@ class CustomerAPICreateTest extends APITestCase
             'arr_customer_address_remarks' => $arr_customer_address_remarks,
         ])->toArray();
 
-        $userFactory = User::factory()->make();
         $customerArr['pic_create_user'] = random_int(0, 1);
         if ($customerArr['pic_create_user'] == 1) {
-            $customerArr['pic_contact_person_name'] = $userFactory->name;
-            $customerArr['pic_email'] = $userFactory->email;
+            $customerArr['pic_contact_person_name'] = $this->faker->name();
+            $customerArr['pic_email'] = $this->faker->email();
             $customerArr['pic_password'] = '123456';
         }
 
@@ -144,11 +146,10 @@ class CustomerAPICreateTest extends APITestCase
             'arr_customer_address_remarks' => $arr_customer_address_remarks,
         ])->toArray();
 
-        $userFactory = User::factory()->make();
         $customerArr['pic_create_user'] = random_int(0, 1);
         if ($customerArr['pic_create_user'] == 1) {
-            $customerArr['pic_contact_person_name'] = $userFactory->name;
-            $customerArr['pic_email'] = $userFactory->email;
+            $customerArr['pic_contact_person_name'] = $this->faker->name();
+            $customerArr['pic_email'] = $this->faker->email();
             $customerArr['pic_password'] = '123456';
         }
 

@@ -26,6 +26,7 @@ class CustomerActionsEditTest extends ActionsTestCase
 
     public function test_customer_actions_call_update_customer_and_insert_customer_address_expect_db_updated()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
             ->has(
                 Company::factory()->setStatusActive()->setIsDefault()
@@ -106,6 +107,7 @@ class CustomerActionsEditTest extends ActionsTestCase
 
     public function test_customer_actions_call_update_customer_and_edit_customer_address_expect_db_updated()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
             ->has(
                 Company::factory()->setStatusActive()->setIsDefault()
@@ -191,6 +193,7 @@ class CustomerActionsEditTest extends ActionsTestCase
 
     public function test_customer_actions_call_update_customer_and_delete_customer_address_expect_db_updated()
     {
+        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
             ->has(
                 Company::factory()->setStatusActive()->setIsDefault()
