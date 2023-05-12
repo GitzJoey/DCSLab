@@ -6,7 +6,6 @@ use App\Actions\Supplier\SupplierActions;
 use App\Models\Company;
 use App\Models\Supplier;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class SupplierActionsReadTest extends ActionsTestCase

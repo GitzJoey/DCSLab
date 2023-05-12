@@ -7,7 +7,6 @@ use App\Models\Company;
 use App\Models\Profile;
 use App\Models\Supplier;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class SupplierActionsDeleteTest extends ActionsTestCase

@@ -12,7 +12,6 @@ use App\Models\ProductGroup;
 use App\Models\ProductUnit;
 use App\Models\Unit;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class ProductActionsDeleteTest extends ActionsTestCase

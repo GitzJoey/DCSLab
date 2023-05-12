@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Models\Warehouse;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-
 use Tests\ActionsTestCase;
 
 class WarehouseActionsReadTest extends ActionsTestCase

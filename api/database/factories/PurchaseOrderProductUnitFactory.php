@@ -20,7 +20,7 @@ class PurchaseOrderProductUnitFactory extends Factory
         $locale = 'id_ID';
 
         return [
-            'qty' => fake($locale)->numberBetween(1, 100),
+            'qty' => fake()->numberBetween(1, 100),
             'product_unit_amount_per_unit' => 1,
             'product_unit_amount_total' => 0,
             'product_unit_initial_price' => fake()->randomFloat(-4, 1000, 10000000),

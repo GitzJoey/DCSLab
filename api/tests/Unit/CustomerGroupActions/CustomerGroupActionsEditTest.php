@@ -7,7 +7,6 @@ use App\Models\Company;
 use App\Models\CustomerGroup;
 use App\Models\User;
 use Exception;
-
 use Tests\ActionsTestCase;
 
 class CustomerGroupActionsEditTest extends ActionsTestCase

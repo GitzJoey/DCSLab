@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\CompanyAPI;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
+use Exception;
 use Illuminate\Support\Str;
+use Tests\APITestCase;
 
 class CompanyAPIReadTest extends APITestCase
 {

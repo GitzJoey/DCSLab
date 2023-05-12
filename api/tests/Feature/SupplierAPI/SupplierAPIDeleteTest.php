@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\SupplierAPI;
 
-use Exception;
-use App\Models\Role;
-use App\Models\User;
-use Tests\APITestCase;
+use App\Enums\UserRoles;
 use App\Models\Company;
 use App\Models\Profile;
+use App\Models\Role;
 use App\Models\Setting;
-use App\Enums\UserRoles;
 use App\Models\Supplier;
+use App\Models\User;
+use Exception;
 use Illuminate\Support\Str;
+use Tests\APITestCase;
 
 class SupplierAPIDeleteTest extends APITestCase
 {
@@ -52,7 +52,7 @@ class SupplierAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        
+
         $ulid = Str::ulid()->generate();
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.delete', $ulid));
