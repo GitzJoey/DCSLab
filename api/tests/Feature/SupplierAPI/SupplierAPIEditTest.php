@@ -100,11 +100,10 @@ class SupplierAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $userFactory = User::factory()->make();
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = $userFactory->name;
-            $supplierArr['pic_email'] = $userFactory->email;
+            $supplierArr['pic_contact_person_name'] = fake()->name;
+            $supplierArr['pic_email'] = fake()->email;
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -240,11 +239,10 @@ class SupplierAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $userFactory = User::factory()->make();
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = $userFactory->name;
-            $supplierArr['pic_email'] = $userFactory->email;
+            $supplierArr['pic_contact_person_name'] = fake()->name;
+            $supplierArr['pic_email'] = fake()->email;
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -372,11 +370,10 @@ class SupplierAPIEditTest extends APITestCase
             'code' => $company->suppliers()->where('id', '!=', $supplier->id)->first()->code,
         ])->toArray();
 
-        $userFactory = User::factory()->make();
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = $userFactory->name;
-            $supplierArr['pic_email'] = $userFactory->email;
+            $supplierArr['pic_contact_person_name'] = fake()->name;
+            $supplierArr['pic_email'] = fake()->email;
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -578,11 +575,10 @@ class SupplierAPIEditTest extends APITestCase
             'code' => $company_2->suppliers()->inRandomOrder()->first()->code,
         ])->toArray();
 
-        $userFactory = User::factory()->make();
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = $userFactory->name;
-            $supplierArr['pic_email'] = $userFactory->email;
+            $supplierArr['pic_contact_person_name'] = fake()->name;
+            $supplierArr['pic_email'] = fake()->email;
             $supplierArr['pic_password'] = '123456';
         }
 
