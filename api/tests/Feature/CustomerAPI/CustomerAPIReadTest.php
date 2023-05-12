@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\CustomerAPI;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Company;
+use App\Models\Customer;
+use App\Models\CustomerAddress;
+use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-use App\Models\Customer;
+use Exception;
 use Illuminate\Support\Str;
-use App\Models\CustomerGroup;
-use App\Models\CustomerAddress;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerAPIReadTest extends APITestCase

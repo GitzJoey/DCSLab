@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use App\Actions\Company\CompanyActions;
 use App\Models\Company;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class CompanyActionsDeleteTest extends ActionsTestCase

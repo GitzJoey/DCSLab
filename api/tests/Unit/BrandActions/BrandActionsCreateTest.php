@@ -7,7 +7,6 @@ use App\Models\Brand;
 use App\Models\Company;
 use App\Models\User;
 use Exception;
-
 use Tests\ActionsTestCase;
 
 class BrandActionsCreateTest extends ActionsTestCase

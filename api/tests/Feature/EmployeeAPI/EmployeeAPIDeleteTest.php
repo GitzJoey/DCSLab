@@ -2,18 +2,18 @@
 
 namespace Tests\Feature\API;
 
-use Exception;
-use App\Models\Role;
-use App\Models\User;
-use App\Models\Branch;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Models\Profile;
-use App\Models\Setting;
 use App\Enums\UserRoles;
+use App\Models\Branch;
+use App\Models\Company;
 use App\Models\Employee;
-use Illuminate\Support\Str;
 use App\Models\EmployeeAccess;
+use App\Models\Profile;
+use App\Models\Role;
+use App\Models\Setting;
+use App\Models\User;
+use Exception;
+use Illuminate\Support\Str;
+use Tests\APITestCase;
 
 class EmployeeAPIDeleteTest extends APITestCase
 {
@@ -77,7 +77,7 @@ class EmployeeAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        
+
         $ulid = Str::ulid()->generate();
 
         $api = $this->json('POST', route('api.post.db.company.employee.delete', $ulid));

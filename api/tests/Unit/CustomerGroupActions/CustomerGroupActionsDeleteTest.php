@@ -6,7 +6,6 @@ use App\Actions\CustomerGroup\CustomerGroupActions;
 use App\Models\Company;
 use App\Models\CustomerGroup;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class CustomerGroupActionsDeleteTest extends ActionsTestCase

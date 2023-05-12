@@ -24,7 +24,6 @@ use Database\Seeders\ProductTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\UnitTableSeeder;
 use Exception;
-
 use Tests\ActionsTestCase;
 
 class PurchaseOrderActionsEditTest extends ActionsTestCase

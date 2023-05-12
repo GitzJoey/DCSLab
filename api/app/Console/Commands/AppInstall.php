@@ -71,7 +71,7 @@ class AppInstall extends Command
         }
 
         $this->generateAppKey();
-        $this->seedingData();
+        $this->migrateAndSeed();
         $this->storageLinking();
         $this->createAdminOrDevAccount('admin');
     }
@@ -113,16 +113,16 @@ class AppInstall extends Command
         $this->info(Artisan::output());
     }
 
-    private function seedingData(): void
+    private function migrateAndSeed(): void
     {
         if (App::environment('prod', 'production')) {
-            $this->info('[PROD] Seeding ...');
-            Artisan::call('db:seed', [
-                '--force' => true,
+            $this->info('[PROD] Migrating & Seeding ...');
+            Artisan::call('migrate', [
+                '--seed' => true,
             ]);
         } else {
-            $this->info('Seeding ...');
-            Artisan::call('db:seed');
+            $this->info('Migrating & Seeding ...');
+            Artisan::call('migrate', ['--seed' => true]);
         }
 
         $this->info(Artisan::output());

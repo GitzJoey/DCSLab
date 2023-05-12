@@ -8,7 +8,6 @@ use App\Models\CustomerGroup;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-
 use Tests\ActionsTestCase;
 
 class CustomerGroupActionsReadTest extends ActionsTestCase
