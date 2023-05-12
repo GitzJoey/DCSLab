@@ -25,10 +25,11 @@ class CustomerAPIReadTest extends APITestCase
     {
         $this->markTestSkipped('Under Constructions');
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
@@ -62,10 +63,11 @@ class CustomerAPIReadTest extends APITestCase
     {
         $this->markTestSkipped('Under Constructions');
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
@@ -73,19 +75,21 @@ class CustomerAPIReadTest extends APITestCase
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count(fake()->numberBetween(1, 5))
-                    )->count(2)->create();
+            ->for($company)->for($customerGroup)
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count(random_int(1, 5))
+            )->count(2)->create();
 
         Customer::factory()
-                    ->for($company)->for($customerGroup)
-                    ->insertStringInName('testing')
-                    ->has(CustomerAddress::factory()
-                        ->for($company)
-                        ->count(fake()->numberBetween(1, 5))
-                    )->count(3)->create();
+            ->for($company)->for($customerGroup)
+            ->insertStringInName('testing')
+            ->has(
+                CustomerAddress::factory()
+                    ->for($company)
+                    ->count(random_int(1, 5))
+            )->count(3)->create();
 
         $api = $this->getJson(route('api.get.db.customer.customer.read_any', [
             'company_id' => Hashids::encode($company->id),
@@ -116,10 +120,11 @@ class CustomerAPIReadTest extends APITestCase
     {
         $this->markTestSkipped('Under Constructions');
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
@@ -139,10 +144,11 @@ class CustomerAPIReadTest extends APITestCase
     {
         $this->markTestSkipped('Under Constructions');
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
@@ -176,10 +182,11 @@ class CustomerAPIReadTest extends APITestCase
     {
         $this->markTestSkipped('Under Constructions');
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
@@ -212,10 +219,11 @@ class CustomerAPIReadTest extends APITestCase
     public function test_customer_api_call_read_expect_successful()
     {
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
@@ -237,10 +245,11 @@ class CustomerAPIReadTest extends APITestCase
     {
         $this->expectException(Exception::class);
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
@@ -259,10 +268,11 @@ class CustomerAPIReadTest extends APITestCase
     public function test_customer_api_call_read_with_nonexistance_ulid_expect_not_found()
     {
         $user = User::factory()
-                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                    ->has(Company::factory()->setStatusActive()->setIsDefault()
-                        ->has(CustomerGroup::factory()->count(3))
-                    )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
 
         $this->actingAs($user);
 
