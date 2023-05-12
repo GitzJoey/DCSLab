@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\BrandAPI;
 
 use App\Enums\UserRoles;
 use App\Models\Brand;

@@ -25,9 +25,8 @@ class UserTableSeeder extends Seeder
 
         for ($i = 0; $i < $count; $i++) {
             User::factory()
-                ->setName(fake('id_ID')->name)
                 ->setCreatedAt()->setUpdatedAt()
-                ->has(Profile::factory()->setCreatedAt()->setUpdatedAt()->setFirstName(fake('id_ID')->firstName))
+                ->has(Profile::factory()->setCreatedAt()->setUpdatedAt())
                 ->hasAttached(Role::where('name', '=', $role)->first())
                 ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
                 ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())

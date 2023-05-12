@@ -1,22 +1,22 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\CustomerAPI;
 
+use App\Enums\UserRoles;
+use App\Models\Company;
+use App\Models\Customer;
+use App\Models\CustomerAddress;
+use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-use App\Models\Customer;
-use App\Models\CustomerGroup;
-use App\Models\CustomerAddress;
-use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerAPICreateTest extends APITestCase
 {
     use WithFaker;
-    
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\ProductAPI;
 
 use App\Enums\ProductCategory;
 use App\Enums\ProductGroupCategory;

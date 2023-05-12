@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\CompanyActions;
 
 use App\Actions\Company\CompanyActions;
 use App\Models\Company;
