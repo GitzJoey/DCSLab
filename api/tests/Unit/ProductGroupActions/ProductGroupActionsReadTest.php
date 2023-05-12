@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\ProductGroupActions;
 
 use App\Actions\ProductGroup\ProductGroupActions;
-use App\Enums\ProductGroupCategory;
 use App\Models\Company;
 use App\Models\ProductGroup;
 use App\Models\User;

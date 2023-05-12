@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\CustomerAPI;
 
 use App\Enums\UserRoles;
 use App\Models\Company;

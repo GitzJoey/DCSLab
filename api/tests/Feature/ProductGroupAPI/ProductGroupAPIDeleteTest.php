@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\ProductGroupAPI;
 
 use Exception;
 use App\Models\Role;

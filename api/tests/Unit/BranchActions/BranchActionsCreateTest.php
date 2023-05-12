@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\BranchActions;
 
 use App\Actions\Branch\BranchActions;
 use App\Models\Branch;

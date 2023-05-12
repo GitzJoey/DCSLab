@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API;
+namespace Tests\Feature\WarehouseAPI;
 
 use Exception;
 use App\Models\Role;
