@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Company;
+use App\Models\ProductGroup;
 use App\Models\Role;
 use App\Models\User;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
+use Exception;
 use Illuminate\Support\Str;
-use App\Models\ProductGroup;
+use Tests\APITestCase;
 
 class ProductGroupAPIDeleteTest extends APITestCase
 {
@@ -45,7 +45,7 @@ class ProductGroupAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        
+
         $ulid = Str::ulid()->generate();
 
         $api = $this->json('POST', route('api.post.db.product.product_group.delete', $ulid));

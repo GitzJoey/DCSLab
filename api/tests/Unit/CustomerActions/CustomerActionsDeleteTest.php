@@ -8,7 +8,6 @@ use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\CustomerGroup;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class CustomerActionsDeleteTest extends ActionsTestCase

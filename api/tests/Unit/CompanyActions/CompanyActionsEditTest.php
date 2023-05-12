@@ -6,7 +6,6 @@ use App\Actions\Company\CompanyActions;
 use App\Models\Company;
 use App\Models\User;
 use Exception;
-
 use Tests\ActionsTestCase;
 
 class CompanyActionsEditTest extends ActionsTestCase

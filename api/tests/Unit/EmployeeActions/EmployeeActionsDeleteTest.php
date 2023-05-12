@@ -9,7 +9,6 @@ use App\Models\Employee;
 use App\Models\EmployeeAccess;
 use App\Models\Profile;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class EmployeeActionsDeleteTest extends ActionsTestCase

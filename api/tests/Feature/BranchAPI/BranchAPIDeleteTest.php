@@ -2,14 +2,14 @@
 
 namespace Tests\Feature;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Branch;
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Branch;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
+use Exception;
 use Illuminate\Support\Str;
+use Tests\APITestCase;
 
 class BranchAPIDeleteTest extends APITestCase
 {

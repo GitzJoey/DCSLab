@@ -7,7 +7,6 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\Warehouse;
-
 use Tests\ActionsTestCase;
 
 class WarehouseActionsDeleteTest extends ActionsTestCase

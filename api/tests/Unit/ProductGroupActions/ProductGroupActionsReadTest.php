@@ -3,13 +3,11 @@
 namespace Tests\Unit;
 
 use App\Actions\ProductGroup\ProductGroupActions;
-use App\Enums\ProductGroupCategory;
 use App\Models\Company;
 use App\Models\ProductGroup;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
-
 use Tests\ActionsTestCase;
 
 class ProductGroupActionsReadTest extends ActionsTestCase
