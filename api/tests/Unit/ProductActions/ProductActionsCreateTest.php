@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\ProductActions;
 
 use App\Actions\Product\ProductActions;
 use App\Enums\ProductGroupCategory;

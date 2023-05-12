@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\SupplierAPI;
 
 use App\Models\Role;
 use App\Models\Unit;

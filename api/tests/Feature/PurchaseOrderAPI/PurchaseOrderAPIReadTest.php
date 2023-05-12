@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\PurchaseOrderAPI;
 
 use App\Enums\ProductGroupCategory;
 use App\Enums\UnitCategory;

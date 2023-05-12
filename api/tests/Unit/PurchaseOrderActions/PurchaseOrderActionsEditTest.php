@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\PurchaseOrderActions;
 
 use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Enums\ProductGroupCategory;

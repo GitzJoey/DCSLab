@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\API;
+namespace Tests\Feature\WarehouseAPI;
 
 use App\Enums\UserRoles;
 use App\Models\Branch;
