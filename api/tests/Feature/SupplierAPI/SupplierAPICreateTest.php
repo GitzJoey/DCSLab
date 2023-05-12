@@ -91,8 +91,8 @@ class SupplierAPICreateTest extends APITestCase
 
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = fake()->name;
-            $supplierArr['pic_email'] = fake()->email;
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -189,8 +189,8 @@ class SupplierAPICreateTest extends APITestCase
 
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = fake()->name;
-            $supplierArr['pic_email'] = fake()->email;
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -224,8 +224,8 @@ class SupplierAPICreateTest extends APITestCase
 
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = fake()->name;
-            $supplierArr['pic_email'] = fake()->email;
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
             $supplierArr['pic_password'] = '123456';
         }
 

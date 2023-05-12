@@ -2,26 +2,29 @@
 
 namespace Tests\Feature;
 
-use App\Enums\ProductGroupCategory;
-use App\Enums\UnitCategory;
-use App\Enums\UserRoles;
-use App\Models\Brand;
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\ProductGroup;
-use App\Models\ProductUnit;
-use App\Models\Profile;
 use App\Models\Role;
-use App\Models\Setting;
-use App\Models\Supplier;
-use App\Models\SupplierProduct;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Brand;
 use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Product;
+use App\Models\Profile;
+use App\Models\Setting;
+use App\Enums\UserRoles;
+use App\Models\Supplier;
+use App\Enums\UnitCategory;
+use App\Models\ProductUnit;
+use App\Models\ProductGroup;
+use App\Models\SupplierProduct;
+use App\Enums\ProductGroupCategory;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class SupplierAPIEditTest extends APITestCase
 {
+    use WithFaker;
+    
     protected function setUp(): void
     {
         parent::setUp();
@@ -102,8 +105,8 @@ class SupplierAPIEditTest extends APITestCase
 
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = fake()->name;
-            $supplierArr['pic_email'] = fake()->email;
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -241,8 +244,8 @@ class SupplierAPIEditTest extends APITestCase
 
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = fake()->name;
-            $supplierArr['pic_email'] = fake()->email;
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -372,8 +375,8 @@ class SupplierAPIEditTest extends APITestCase
 
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = fake()->name;
-            $supplierArr['pic_email'] = fake()->email;
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
             $supplierArr['pic_password'] = '123456';
         }
 
@@ -577,8 +580,8 @@ class SupplierAPIEditTest extends APITestCase
 
         $supplierArr['pic_create_user'] = random_int(0, 1);
         if ($supplierArr['pic_create_user'] == 1) {
-            $supplierArr['pic_contact_person_name'] = fake()->name;
-            $supplierArr['pic_email'] = fake()->email;
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
             $supplierArr['pic_password'] = '123456';
         }
 

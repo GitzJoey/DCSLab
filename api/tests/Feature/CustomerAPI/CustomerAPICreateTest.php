@@ -68,8 +68,8 @@ class CustomerAPICreateTest extends APITestCase
 
         $customerArr['pic_create_user'] = random_int(0, 1);
         if ($customerArr['pic_create_user'] == 1) {
-            $customerArr['pic_contact_person_name'] = fake()->name;
-            $customerArr['pic_email'] = fake()->email;
+            $customerArr['pic_contact_person_name'] = $this->faker->name();
+            $customerArr['pic_email'] = $this->faker->email();
             $customerArr['pic_password'] = '123456';
         }
 
@@ -148,8 +148,8 @@ class CustomerAPICreateTest extends APITestCase
 
         $customerArr['pic_create_user'] = random_int(0, 1);
         if ($customerArr['pic_create_user'] == 1) {
-            $customerArr['pic_contact_person_name'] = fake()->name;
-            $customerArr['pic_email'] = fake()->email;
+            $customerArr['pic_contact_person_name'] = $this->faker->name();
+            $customerArr['pic_email'] = $this->faker->email();
             $customerArr['pic_password'] = '123456';
         }
 
