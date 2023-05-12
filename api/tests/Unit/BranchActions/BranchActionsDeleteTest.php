@@ -6,7 +6,6 @@ use App\Actions\Branch\BranchActions;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class BranchActionsDeleteTest extends ActionsTestCase

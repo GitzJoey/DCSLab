@@ -8,7 +8,6 @@ use App\Models\Company;
 use App\Models\User;
 use App\Models\Warehouse;
 use Exception;
-
 use Tests\ActionsTestCase;
 
 class WarehouseActionsCreateTest extends ActionsTestCase

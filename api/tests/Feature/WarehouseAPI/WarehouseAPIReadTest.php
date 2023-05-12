@@ -2,16 +2,15 @@
 
 namespace Tests\Feature\WarehouseAPI;
 
-use Exception;
+use App\Enums\UserRoles;
+use App\Models\Branch;
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\Branch;
-use Tests\APITestCase;
-use App\Models\Company;
-use App\Enums\UserRoles;
-
 use App\Models\Warehouse;
+use Exception;
 use Illuminate\Support\Str;
+use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
 class WarehouseAPIReadTest extends APITestCase

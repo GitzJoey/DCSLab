@@ -6,7 +6,6 @@ use App\Actions\Brand\BrandActions;
 use App\Models\Brand;
 use App\Models\Company;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class BrandActionsDeleteTest extends ActionsTestCase

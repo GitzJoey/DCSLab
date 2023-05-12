@@ -62,7 +62,7 @@ class CustomerAPICreateTest extends APITestCase
             'arr_customer_address_is_main' => $arr_customer_address_is_main,
             'arr_customer_address_remarks' => $arr_customer_address_remarks,
         ])->toArray();
-        
+
         $userFactory = User::factory()->make();
         $customerArr['pic_create_user'] = random_int(0, 1);
         if ($customerArr['pic_create_user'] == 1) {

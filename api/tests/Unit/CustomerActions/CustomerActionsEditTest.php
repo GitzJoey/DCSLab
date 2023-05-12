@@ -11,7 +11,6 @@ use App\Models\CustomerGroup;
 use App\Models\Profile;
 use App\Models\User;
 use Exception;
-
 use Tests\ActionsTestCase;
 
 class CustomerActionsEditTest extends ActionsTestCase

@@ -36,7 +36,7 @@ class CompanyActions
             $userId = $companyArr['user_id'];
 
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -65,11 +65,11 @@ class CompanyActions
             return $company;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -88,10 +88,10 @@ class CompanyActions
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_' . $userId . '-' . (empty($search) ? '[empty]' : $search) . '-' . $paginate . '-' . $page . '-' . $perPage;
+                $cacheKey = 'read_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (!is_null($cacheResult)) {
+                if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -99,7 +99,7 @@ class CompanyActions
             $result = null;
 
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -118,7 +118,7 @@ class CompanyActions
             if (empty($search)) {
                 $companies = $companies->latest();
             } else {
-                $companies = $companies->where('name', 'like', '%' . $search . '%')->latest();
+                $companies = $companies->where('name', 'like', '%'.$search.'%')->latest();
             }
 
             if ($paginate) {
@@ -139,11 +139,11 @@ class CompanyActions
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)' . ($useCache ? ' (C)' : ' (DB)'));
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
         }
     }
 
@@ -177,7 +177,7 @@ class CompanyActions
 
         try {
             $usr = User::find($userId);
-            if (!$usr) {
+            if (! $usr) {
                 return null;
             }
 
@@ -205,11 +205,11 @@ class CompanyActions
 
             return $companies->get();
         } catch (Exception $e) {
-            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -236,11 +236,11 @@ class CompanyActions
             return $company->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -260,11 +260,11 @@ class CompanyActions
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
@@ -285,18 +285,18 @@ class CompanyActions
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
+            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
+            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
         }
     }
 
     public function generateUniqueCode(): string
     {
         $rand = new RandomizerActions();
-        $code = $rand->generateAlpha() . $rand->generateNumeric();
+        $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
     }

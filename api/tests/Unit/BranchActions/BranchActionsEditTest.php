@@ -7,7 +7,6 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\User;
 use Exception;
-
 use Tests\ActionsTestCase;
 
 class BranchActionsEditTest extends ActionsTestCase

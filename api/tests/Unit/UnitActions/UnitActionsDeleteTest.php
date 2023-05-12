@@ -6,7 +6,6 @@ use App\Actions\Unit\UnitActions;
 use App\Models\Company;
 use App\Models\Unit;
 use App\Models\User;
-
 use Tests\ActionsTestCase;
 
 class UnitActionsDeleteTest extends ActionsTestCase

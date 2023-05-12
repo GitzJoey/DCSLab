@@ -13,7 +13,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class BranchAPIEditTest extends APITestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();
