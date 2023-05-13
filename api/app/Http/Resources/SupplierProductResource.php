@@ -27,6 +27,10 @@ class SupplierProductResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
+            'company' => new CompanyResource($this->company),
+            $this->mergeWhen($this->relationLoaded('supplier'), [
+                'supplier' => new SupplierResource($this->whenLoaded('supplier')),
+            ]),
             $this->mergeWhen($this->relationLoaded('product'), [
                 'product' => new ProductResource($this->whenLoaded('product')),
             ]),

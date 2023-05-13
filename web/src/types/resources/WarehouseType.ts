@@ -2,6 +2,7 @@ import { CompanyType } from "./CompanyType"
 import { BranchType } from "./BranchType"
 
 export interface WarehouseType {
+    id: string,
     ulid: string,
     company: CompanyType,
     branch: BranchType,
