@@ -147,13 +147,18 @@ class PurchaseOrderAPIEditTest extends APITestCase
         ]);
     }
 
-    public function test_purchase_order_api_call_update_with_empty_array_parameters_expect_exception()
+    public function test_purchase_order_api_call_update_with_empty_array_parameters_expect_failed()
     {
         $this->markTestSkipped('Under Constructions');
-
-        $this->expectException(Exception::class);
-
-        $user = User::factory()->create();
+        
+        $user = User::factory()
+                ->has(Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                    ->has(Supplier::factory())
+                )->create();
 
         $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
         $company = $user->companies->first();
