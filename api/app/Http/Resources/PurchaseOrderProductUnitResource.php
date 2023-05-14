@@ -34,14 +34,14 @@ class PurchaseOrderProductUnitResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('branch'), [
                 'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
+            $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
+                'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
+            ]),
             $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnits'), [
                 'product_unit' => new ProductUnitResource($this->whenLoaded('purchaseOrderProductUnits')),
             ]),
             $this->mergeWhen($this->relationLoaded('product'), [
                 'product' => new ProductResource($this->whenLoaded('product')),
-            ]),
-            $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
-                'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
             ]),
             'qty' => $this->qty,
             'product_unit_amount_per_unit' => $this->product_unit_amount_per_unit,

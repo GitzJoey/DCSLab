@@ -27,6 +27,7 @@ class UnitResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
+            'company' => new CompanyResource($this->company),
             'code' => $this->code,
             'name' => $this->name,
             'description' => $this->description,

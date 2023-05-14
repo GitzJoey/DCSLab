@@ -27,12 +27,12 @@ class ProductFactory extends Factory
             'taxable_supply' => fake()->boolean(),
             'standard_rated_supply' => fake()->numberBetween(1, 10),
             'price_include_vat' => fake()->boolean(),
-            'remarks' => fake()->word(),
             'point' => fake()->numberBetween(0, 100),
             'product_type' => $product_type,
             'use_serial_number' => fake()->boolean(),
             'has_expiry_date' => fake()->boolean(),
             'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
+            'remarks' => fake()->word(),
         ];
     }
 
