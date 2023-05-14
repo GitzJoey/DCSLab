@@ -25,7 +25,6 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -100,7 +99,6 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_search_expect_filtered_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -193,7 +191,6 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_without_search_querystring_expect_failed()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -214,12 +211,11 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_special_char_in_search_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+                        ->has(Branch::factory()->count(5))
+                    )->create();
 
         $this->actingAs($user);
 
@@ -248,12 +244,11 @@ class EmployeeAPIReadTest extends APITestCase
 
     public function test_employee_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+                        ->has(Branch::factory()->count(5))
+                    )->create();
 
         $this->actingAs($user);
 

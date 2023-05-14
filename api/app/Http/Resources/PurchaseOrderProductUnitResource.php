@@ -48,11 +48,11 @@ class PurchaseOrderProductUnitResource extends JsonResource
             'product_unit_amount_total' => $this->product_unit_amount_total,
             'product_unit_initial_price' => $this->product_unit_initial_price,
             $this->mergeWhen($this->relationLoaded('productUnitPerUnitDiscount'), [
-                'product_unit_per_unit_discount' => (new PurchaseOrderDiscountResource($this->whenLoaded('productUnitPerUnitDiscount')))->type('PurchaseOrderProductUnit'),
+                'product_unit_per_unit_discount' => PurchaseOrderDiscountResource::collection($this->whenLoaded('productUnitPerUnitDiscount')),
             ]),
             'product_unit_sub_total' => $this->product_unit_sub_total,
             $this->mergeWhen($this->relationLoaded('productUnitPerUnitSubTotalDiscount'), [
-                'product_unit_per_unit_sub_total_discount' => (new PurchaseOrderDiscountResource($this->whenLoaded('productUnitPerUnitSubTotalDiscount')))->type('PurchaseOrderProductUnit'),
+                'product_unit_per_unit_sub_total_discount' => PurchaseOrderDiscountResource::collection($this->whenLoaded('productUnitPerUnitSubTotalDiscount')),
             ]),
             'product_unit_total' => $this->product_unit_total,
             'product_unit_global_discount_percent' => $this->product_unit_global_discount_percent,

@@ -18,7 +18,6 @@ use App\Models\Role;
 use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
-use Exception;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -32,7 +31,6 @@ class PurchaseOrderAPICreateTest extends APITestCase
     public function test_purchase_order_api_call_create_expect_db_has_record()
     {
         $this->markTestSkipped('Under Constructions');
-
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -95,6 +93,10 @@ class PurchaseOrderAPICreateTest extends APITestCase
         $arr_product_unit_vat_rate = [];
         $arr_product_unit_remarks = [];
 
+        $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
+        array_push($arr_global_discount_type, $purchaseOrderDiscount->discount_type);
+        array_push($arr_global_discount, $purchaseOrderDiscount->amount);
+
         $ProductUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()
                             ->take($ProductUnitCount)->get();
@@ -102,8 +104,6 @@ class PurchaseOrderAPICreateTest extends APITestCase
         foreach ($productUnits as $productUnit) {
             $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
             array_push($arr_product_unit_id, '');
-            // array_push($arr_global_discount, );
-            // array_push($arr_global_discount_type, );
             array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->id));
             array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
             array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
@@ -117,30 +117,25 @@ class PurchaseOrderAPICreateTest extends APITestCase
             array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
         }
 
-        $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
-        array_push($arr_global_discount_type, $purchaseOrderDiscount->discount_type);
-        array_push($arr_global_discount, $purchaseOrderDiscount->amount);
-
-        $purchaseOrderArr =
-            PurchaseOrder::factory()->make([
-                'company_id' => Hashids::encode($company->id),
-                'branch_id' => Hashids::encode($branch->id),
-                'supplier_id' => Hashids::encode($supplier->id),
-                'arr_product_unit_id' => $arr_product_unit_id,
-                'arr_global_discount' => $arr_global_discount,
-                'arr_global_discount_type' => $arr_global_discount_type,
-                'arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id,
-                'arr_product_unit_qty' => $arr_product_unit_qty,
-                'arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit,
-                'arr_product_unit_initial_price' => $arr_product_unit_initial_price,
-                'arr_product_unit_per_unit_discount' => $arr_product_unit_per_unit_discount,
-                'arr_product_unit_per_unit_discount_type' => $arr_product_unit_per_unit_discount_type,
-                'arr_product_unit_per_unit_sub_total_discount' => $arr_product_unit_per_unit_sub_total_discount,
-                'arr_product_unit_per_unit_sub_total_discount_type' => $arr_product_unit_per_unit_sub_total_discount_type,
-                'arr_product_unit_vat_status' => $arr_product_unit_vat_status,
-                'arr_product_unit_vat_rate' => $arr_product_unit_vat_rate,
-                'arr_product_unit_remarks' => $arr_product_unit_remarks,
-            ])->toArray();
+        $purchaseOrderArr = PurchaseOrder::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'branch_id' => Hashids::encode($branch->id),
+            'supplier_id' => Hashids::encode($supplier->id),
+            'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_global_discount' => $arr_global_discount,
+            'arr_global_discount_type' => $arr_global_discount_type,
+            'arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id,
+            'arr_product_unit_qty' => $arr_product_unit_qty,
+            'arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit,
+            'arr_product_unit_initial_price' => $arr_product_unit_initial_price,
+            'arr_product_unit_per_unit_discount' => $arr_product_unit_per_unit_discount,
+            'arr_product_unit_per_unit_discount_type' => $arr_product_unit_per_unit_discount_type,
+            'arr_product_unit_per_unit_sub_total_discount' => $arr_product_unit_per_unit_sub_total_discount,
+            'arr_product_unit_per_unit_sub_total_discount_type' => $arr_product_unit_per_unit_sub_total_discount_type,
+            'arr_product_unit_vat_status' => $arr_product_unit_vat_status,
+            'arr_product_unit_vat_rate' => $arr_product_unit_vat_rate,
+            'arr_product_unit_remarks' => $arr_product_unit_remarks,
+        ])->toArray();
 
         $api = $this->json('POST', route('api.post.db.purchase_order.purchase_order.save'), $purchaseOrderArr);
 
@@ -195,11 +190,17 @@ class PurchaseOrderAPICreateTest extends APITestCase
 
     public function test_purchase_order_api_call_create_with_empty_array_parameters_expect_exception()
     {
-        $this->expectException(Exception::class);
-        $this->purchaseOrderActions->create(
-            [],
-            [],
-            []
-        );
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setStatusActive()->setIsDefault())
+                    ->create();
+
+        $this->actingAs($user);
+
+        $purchaseOrderArr = [];
+
+        $api = $this->json('POST', route('api.post.db.purchase_order.purchase_order.save'), $purchaseOrderArr);
+
+        $api->assertStatus(422);
     }
 }

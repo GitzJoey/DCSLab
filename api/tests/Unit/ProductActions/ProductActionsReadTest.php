@@ -214,12 +214,11 @@ class ProductActionsReadTest extends ActionsTestCase
 
     public function test_product_actions_call_read_any_with_nonexistance_company_id_expect_empty_collection()
     {
-        $this->markTestSkipped('Under Constructions');
         $maxId = Company::max('id') + 1;
 
         $result = $this->productActions->readAny(
             companyId: $maxId,
-            productCategory: Product::factory()->make()->category->value,
+            productCategory: null,
             search: '',
             paginate: false,
         );

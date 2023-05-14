@@ -26,7 +26,6 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
 
     public function test_purchase_order_api_call_delete_expect_bool()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                 ->has(Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
@@ -35,6 +34,8 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
                     ->has(Unit::factory()->setCategoryToProduct()->count(5))
                     ->has(Supplier::factory())
                 )->create();
+
+        $this->actingAs($user);
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -88,10 +89,10 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
 
         $purchaseOrder = $purchaseOrder->create();
 
-        $result = $this->purchaseOrderActions->delete($purchaseOrder);
+        $api = $this->json('POST', route('api.post.db.purchase_order.purchase_order.delete', $purchaseOrder->ulid));
 
-        $this->assertIsBool($result);
-        $this->assertTrue($result);
+        $api->assertSuccessful();
+
         $this->assertSoftDeleted('purchase_orders', [
             'id' => $purchaseOrder->id,
         ]);
