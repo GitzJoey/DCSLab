@@ -2,27 +2,31 @@
 
 namespace Tests\Feature\PurchaseOrderAPI;
 
-use App\Enums\ProductGroupCategory;
-use App\Enums\UnitCategory;
-use App\Models\Branch;
-use App\Models\Brand;
-use App\Models\Company;
-use App\Models\Product;
-use App\Models\ProductGroup;
-use App\Models\ProductUnit;
-use App\Models\PurchaseOrder;
-use App\Models\PurchaseOrderProductUnit;
-use App\Models\Supplier;
+use App\Models\Role;
 use App\Models\Unit;
 use App\Models\User;
-use Database\Seeders\BranchTableSeeder;
+use App\Models\Brand;
+use App\Models\Branch;
+use Tests\APITestCase;
+use App\Models\Company;
+use App\Models\Product;
+use App\Enums\UserRoles;
+use App\Models\Supplier;
+use App\Enums\UnitCategory;
+use App\Models\ProductUnit;
+use App\Models\ProductGroup;
+use App\Models\PurchaseOrder;
+use App\Enums\ProductGroupCategory;
+use Vinkla\Hashids\Facades\Hashids;
+use App\Models\PurchaseOrderDiscount;
+use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\BrandTableSeeder;
+use Database\Seeders\BranchTableSeeder;
+use App\Models\PurchaseOrderProductUnit;
 use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\ProductTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
-use Database\Seeders\UnitTableSeeder;
-use Tests\APITestCase;
+use Database\Seeders\ProductGroupTableSeeder;
 
 class PurchaseOrderAPIEditTest extends APITestCase
 {
@@ -34,8 +38,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
     public function test_purchase_order_api_call_update_and_insert_product_units_expect_db_updated()
     {
         $this->markTestSkipped('Under Constructions');
-
         $user = User::factory()
+                ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                 ->has(Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
                     ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
@@ -43,6 +47,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
                     ->has(Unit::factory()->setCategoryToProduct()->count(5))
                     ->has(Supplier::factory())
                 )->create();
+
+        $this->actingAs($user);
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -81,7 +87,12 @@ class PurchaseOrderAPIEditTest extends APITestCase
         $purchaseOrder = PurchaseOrder::factory()
                             ->for($company)
                             ->for($branch)
-                            ->for($supplier);
+                            ->for($supplier)
+                            ->has(PurchaseOrderDiscount::factory()
+                                ->for($company)
+                                ->for($branch)
+                                ->setGlobalDiscountRandom()
+                            );
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -96,54 +107,114 @@ class PurchaseOrderAPIEditTest extends APITestCase
 
         $purchaseOrder = $purchaseOrder->create();
 
-        $purchaseOrderArr = $purchaseOrder->toArray();
+        $arr_product_unit_id = [];
+        $arr_global_discount_type = [];
+        $arr_global_discount = [];
+        $arr_product_unit_product_unit_id = [];
+        $arr_product_unit_qty = [];
+        $arr_product_unit_amount_per_unit = [];
+        $arr_product_unit_initial_price = [];
+        $arr_product_unit_per_unit_discount_type = [];
+        $arr_product_unit_per_unit_discount = [];
+        $arr_product_unit_per_unit_sub_total_discount_type = [];
+        $arr_product_unit_per_unit_sub_total_discount = [];
+        $arr_product_unit_vat_status = [];
+        $arr_product_unit_vat_rate = [];
+        $arr_product_unit_remarks = [];
 
-        $purchaseOrderProductUnitArr = $purchaseOrder->purchaseOrderProductUnits->toArray();
-        array_push($purchaseOrderProductUnitArr,
-            PurchaseOrderProductUnit::factory()
-                ->for($company)->for($branch)->for($purchaseOrder)
-                ->for($productUnit->product)
-                ->for($productUnit)->make(['id' => null])->toArray()
-        );
+        $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
+        array_push($arr_global_discount_type, $purchaseOrderDiscount->discount_type);
+        array_push($arr_global_discount, $purchaseOrderDiscount->amount);
 
-        $discountArr = [];
+        $ProductUnitCount = random_int(1, $company->productUnits()->count());
+        $productUnits = $company->productUnits()->inRandomOrder()
+                            ->take($ProductUnitCount)->get();
 
-        $result = $this->purchaseOrderActions->update(
-            $purchaseOrder,
-            $purchaseOrderArr,
-            $purchaseOrderProductUnitArr,
-            $discountArr,
-        );
+        foreach ($productUnits as $productUnit) {
+            $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
+            array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
+            array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
+            array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
+            // array_push($arr_product_unit_per_unit_discount, );
+            // array_push($arr_product_unit_per_unit_discount_type, );
+            // array_push($arr_product_unit_per_unit_sub_total_discount, );
+            // array_push($arr_product_unit_per_unit_sub_total_discount_type, );
+            array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
+            array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
+            array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
+        }
 
-        $this->assertInstanceOf(PurchaseOrder::class, $result);
+        $purchaseOrderArr = PurchaseOrder::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'branch_id' => Hashids::encode($branch->id),
+            'supplier_id' => Hashids::encode($supplier->id),
+            'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_global_discount' => $arr_global_discount,
+            'arr_global_discount_type' => $arr_global_discount_type,
+            'arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id,
+            'arr_product_unit_qty' => $arr_product_unit_qty,
+            'arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit,
+            'arr_product_unit_initial_price' => $arr_product_unit_initial_price,
+            'arr_product_unit_per_unit_discount' => $arr_product_unit_per_unit_discount,
+            'arr_product_unit_per_unit_discount_type' => $arr_product_unit_per_unit_discount_type,
+            'arr_product_unit_per_unit_sub_total_discount' => $arr_product_unit_per_unit_sub_total_discount,
+            'arr_product_unit_per_unit_sub_total_discount_type' => $arr_product_unit_per_unit_sub_total_discount_type,
+            'arr_product_unit_vat_status' => $arr_product_unit_vat_status,
+            'arr_product_unit_vat_rate' => $arr_product_unit_vat_rate,
+            'arr_product_unit_remarks' => $arr_product_unit_remarks,
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.purchase_order.purchase_order.edit', $purchaseOrder->ulid), $purchaseOrderArr);
+
+        $api->assertSuccessful();
+
+        $purchaseOrder = PurchaseOrder::where([
+            ['company_id', '=', $company->id],
+            ['branch_id', '=', $branch->id],
+            ['invoice_code', '=', $purchaseOrderArr['invoice_code']],
+        ])->first();
 
         $this->assertDatabaseHas('purchase_orders', [
+            'company_id' => Hashids::decode($purchaseOrderArr['company_id'])[0],
+            'branch_id' => Hashids::decode($purchaseOrderArr['branch_id'])[0],
             'id' => $purchaseOrder->id,
-            'company_id' => $purchaseOrderArr['company_id'],
-            'branch_id' => $purchaseOrderArr['branch_id'],
             'invoice_code' => $purchaseOrderArr['invoice_code'],
             'invoice_date' => $purchaseOrderArr['invoice_date'],
             'shipping_date' => $purchaseOrderArr['shipping_date'],
             'shipping_address' => $purchaseOrderArr['shipping_address'],
-            'supplier_id' => $purchaseOrderArr['supplier_id'],
+            'supplier_id' => Hashids::decode($purchaseOrderArr['supplier_id'])[0],
             'remarks' => $purchaseOrderArr['remarks'],
             'status' => $purchaseOrderArr['status'],
         ]);
 
-        $this->assertDatabaseHas('purchase_order_product_units', [
-            'company_id' => $company->id,
-            'branch_id' => $branch->id,
-            'purchase_order_id' => $result->id,
-            'product_id' => $purchaseOrderProductUnitArr[0]['product_id'],
-            'product_unit_id' => $purchaseOrderProductUnitArr[0]['product_unit_id'],
-            'qty' => $purchaseOrderProductUnitArr[0]['qty'],
-            'product_unit_amount_per_unit' => $purchaseOrderProductUnitArr[0]['product_unit_amount_per_unit'],
-            'product_unit_initial_price' => $purchaseOrderProductUnitArr[0]['product_unit_initial_price'],
-            'vat_status' => $purchaseOrderProductUnitArr[0]['vat_status'],
-            'vat_rate' => $purchaseOrderProductUnitArr[0]['vat_rate'],
-            'vat_amount' => $purchaseOrderProductUnitArr[0]['vat_amount'],
-            'remarks' => $purchaseOrderProductUnitArr[0]['remarks'],
-        ]);
+        for ($i = 0; $i < count($productUnits); $i++) {
+            $this->assertDatabaseHas('purchase_order_product_units', [
+                'company_id' => $company->id,
+                'branch_id' => $branch->id,
+                'purchase_order_id' => $purchaseOrder->id,
+                'product_id' => $productUnits[$i]->product_id,
+                'product_unit_id' => Hashids::decode($arr_product_unit_product_unit_id[$i])[0],
+                'qty' => $arr_product_unit_qty[$i],
+                'product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit[$i],
+                'product_unit_initial_price' => $arr_product_unit_initial_price[$i],
+                'vat_status' => $arr_product_unit_vat_status[$i],
+                'vat_rate' => $arr_product_unit_vat_rate[$i],
+                'remarks' => $arr_product_unit_remarks[$i],
+            ]);
+        }
+
+        for ($i = 0; $i < count($arr_global_discount_type); $i++) {
+            $this->assertDatabaseHas('purchase_order_discounts', [
+                'company_id' => $company->id,
+                'branch_id' => $branch->id,
+                'purchase_order_id' => $purchaseOrder->id,
+                'purchase_order_product_unit_id' => null,
+                'discount_type' => $arr_global_discount_type[$i]->value,
+                'amount' => $arr_global_discount[$i],
+            ]);
+        }
     }
 
     public function test_purchase_order_api_call_update_with_empty_array_parameters_expect_failed()

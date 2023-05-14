@@ -34,7 +34,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
 
     public function test_purchase_order_api_call_read_expect_successful()
     {
-        $this->markTestSkipped('Under Constructions, oh aku mumet resource soal kie oh');
+        // $this->markTestSkipped('Under Constructions, oh aku mumet resource soal kie oh');
 
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
@@ -115,11 +115,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                             ->for($company)
                             ->for($branch)
                             ->for($supplier)
-                            ->has(PurchaseOrderDiscount::factory()
-                                ->for($company)
-                                ->for($branch)
-                                ->setGlobalDiscountRandom()
-                            );
+                            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom())
+                        ;
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();

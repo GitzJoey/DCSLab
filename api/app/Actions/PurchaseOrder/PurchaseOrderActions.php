@@ -199,7 +199,7 @@ class PurchaseOrderActions
 
     public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
     {
-        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount')->where('id', '=', $purchaseOrder->id)->first();
+        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount')->where('id', '=', $purchaseOrder->id)->first();  
     }
 
     public function update(
@@ -221,21 +221,25 @@ class PurchaseOrderActions
                 'status' => $purchaseOrderArr['status'],
             ]);
 
-            $purchaseOrderProductUnitArr = collect($productUnitArr)->map(function ($productUnit) {
+            // $purchaseOrderGlobalDiscountNewIds = [];
+            // foreach ($purchaseOrderArr['global_discount'] as $globalDiscount) {
+            //     array_push($purchaseOrderProductUnitNewIds, $purchaseOrderProductUnit['id']);
+            // }
+
+            $purchaseOrderProductUnitArr = collect($productUnitArr)->map(function ($productUnit) use ($purchaseOrder) {
                 return [
                     'id' => $productUnit['id'],
                     'ulid' => $productUnit['id'] == null ? Str::ulid()->generate() : PurchaseOrderProductUnit::find($productUnit['id'])->ulid,
-                    'company_id' => $productUnit['company_id'],
-                    'branch_id' => $productUnit['branch_id'],
-                    'purchase_order_id' => $productUnit['purchase_order_id'],
-                    'product_id' => $productUnit['product_id'],
+                    'company_id' => $purchaseOrder->company_id,
+                    'branch_id' => $purchaseOrder->branch_id,
+                    'purchase_order_id' => $purchaseOrder->id,
+                    'product_id' => ProductUnit::find($productUnit['product_unit_id'])->product_id,
                     'product_unit_id' => $productUnit['product_unit_id'],
                     'qty' => $productUnit['qty'],
                     'product_unit_amount_per_unit' => $productUnit['product_unit_amount_per_unit'],
                     'product_unit_initial_price' => $productUnit['product_unit_initial_price'],
                     'vat_status' => $productUnit['vat_status'],
                     'vat_rate' => $productUnit['vat_rate'],
-                    'vat_amount' => $productUnit['vat_amount'],
                     'remarks' => $productUnit['remarks'],
                 ];
             })->toArray();
@@ -260,6 +264,9 @@ class PurchaseOrderActions
                 ['id'],
                 [
                     'ulid',
+                    'company_id',
+                    'branch_id',
+                    'purchase_order_id',
                     'product_id',
                     'product_unit_id',
                     'qty',
@@ -267,7 +274,6 @@ class PurchaseOrderActions
                     'product_unit_initial_price',
                     'vat_status',
                     'vat_rate',
-                    'vat_amount',
                     'remarks',
                 ]
             );
