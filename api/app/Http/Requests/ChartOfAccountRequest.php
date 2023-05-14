@@ -30,8 +30,8 @@ class ChartOfAccountRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
-            case 'listFormated':
+            case 'readAny':
+            case 'readAnyFormated':
                 return $user->can('viewAny', ChartOfAccount::class) ? true : false;
             case 'read':
                 return $user->can('view', ChartOfAccount::class, $chartofaccount) ? true : false;
@@ -59,8 +59,8 @@ class ChartOfAccountRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
-                $rules_list = [
+            case 'readAny':
+                $rules_read_any = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                     'branch_id' => ['required'],
                     'search' => ['present', 'string'],
@@ -70,8 +70,8 @@ class ChartOfAccountRequest extends FormRequest
                     'refresh' => ['nullable', 'boolean'],
                 ];
 
-                return $rules_list;
-            case 'listFormated':
+                return $rules_read_any;
+            case 'readAnyFormated':
                 $rules = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                     'branch_id' => ['required'],
@@ -141,11 +141,12 @@ class ChartOfAccountRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
-            case 'listFormated':
+            case 'readAny':
+            case 'readAnyFormated':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'branch_id' => $this->has('branch_id') ? Hashids::decode($this['branch_id'])[0] : '',
+                    'search' => $this->has('search') && ! is_null($this->search) ? $this->search : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
 

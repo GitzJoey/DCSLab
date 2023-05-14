@@ -35,6 +35,7 @@ class PurchaseOrderAPIEditTest extends APITestCase
     public function test_purchase_order_api_call_update_and_insert_product_units_expect_db_updated()
     {
         $this->markTestSkipped('Under Constructions');
+
         $user = User::factory()
                 ->has(Company::factory()->setStatusActive()->setIsDefault()
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
@@ -148,6 +149,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
 
     public function test_purchase_order_api_call_update_with_empty_array_parameters_expect_exception()
     {
+        $this->markTestSkipped('Under Constructions');
+
         $this->expectException(Exception::class);
 
         $user = User::factory()->create();

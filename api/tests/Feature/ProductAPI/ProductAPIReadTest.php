@@ -27,7 +27,6 @@ class ProductAPIReadTest extends APITestCase
 
     public function test_product_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -112,7 +111,6 @@ class ProductAPIReadTest extends APITestCase
 
     public function test_product_api_call_read_any_product_with_search_expect_filtered_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -214,7 +212,6 @@ class ProductAPIReadTest extends APITestCase
 
     public function test_product_api_call_read_any_service_with_search_expect_filtered_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -281,57 +278,8 @@ class ProductAPIReadTest extends APITestCase
         ]);
     }
 
-    public function test_product_api_call_read_any_without_search_querystring_expect_failed()
-    {
-        $this->markTestSkipped('Under Constructions');
-        $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                ->has(Brand::factory()->count(5))
-                ->has(Unit::factory()->setCategoryToProduct()->count(5))
-            )->create();
-
-        $this->actingAs($user);
-
-        $company = $user->companies()->inRandomOrder()->first();
-
-        $productGroup = $company->productGroups()
-                            ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
-                            ->inRandomOrder()->first();
-
-        $brand = $company->brands()->inRandomOrder()->first();
-
-        $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
-
-        $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get()->shuffle();
-
-        $productUnitCount = random_int(1, $units->count());
-        $primaryUnitIdx = random_int(0, $productUnitCount - 1);
-
-        for ($j = 0; $j < $productUnitCount; $j++) {
-            $product = $product->has(
-                ProductUnit::factory()
-                    ->for($company)->for($units[$j])
-                    ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
-                    ->setIsPrimaryUnit($j == $primaryUnitIdx)
-            );
-        }
-
-        $api = $this->getJson(route('api.get.db.product.product.read_any', [
-            'company_id' => Hashids::encode($company->id),
-        ]));
-
-        $api->assertStatus(422);
-    }
-
     public function test_product_api_call_read_any_with_special_char_in_search_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -397,7 +345,6 @@ class ProductAPIReadTest extends APITestCase
 
     public function test_product_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

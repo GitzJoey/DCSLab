@@ -30,7 +30,7 @@ class PurchaseOrderRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
                 return $user->can('viewAny', PurchaseOrder::class) ? true : false;
             case 'read':
                 return $user->can('view', PurchaseOrder::class, $purchaseOrder) ? true : false;
@@ -69,8 +69,8 @@ class PurchaseOrderRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
-                $rules_list = [
+            case 'readAny':
+                $rules_read_any = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
@@ -79,7 +79,7 @@ class PurchaseOrderRequest extends FormRequest
                     'refresh' => ['nullable', 'boolean'],
                 ];
 
-                return $rules_list;
+                return $rules_read_any;
             case 'read':
                 $rules_read = [
                 ];
@@ -166,10 +166,11 @@ class PurchaseOrderRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'branch_id' => $this->has('branch_id') ? Hashids::decode($this['branch_id'])[0] : '',
+                    'search' => $this->has('search') && ! is_null($this->search) ? $this->search : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
 

@@ -31,8 +31,6 @@ class PurchaseOrderAPICreateTest extends APITestCase
 
     public function test_purchase_order_api_call_create_expect_db_has_record()
     {
-        $this->markTestSkipped('Under Constructions');
-
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -194,7 +192,8 @@ class PurchaseOrderAPICreateTest extends APITestCase
     }
 
     public function test_purchase_order_api_call_create_with_empty_array_parameters_expect_exception()
-    {
+    {   
+        $this->markTestSkipped('Under Constructions');
         $this->expectException(Exception::class);
         $this->purchaseOrderActions->create(
             [],

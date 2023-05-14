@@ -135,7 +135,6 @@ class SupplierAPIEditTest extends APITestCase
 
     public function test_supplier_api_call_update_with_nonexistance_supplier_product_expect_failed()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
