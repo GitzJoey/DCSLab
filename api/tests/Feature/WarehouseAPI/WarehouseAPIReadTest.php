@@ -72,8 +72,8 @@ class WarehouseAPIReadTest extends APITestCase
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory(), 'branches'), 'companies')
-                    ->create();
+                        ->has(Branch::factory())
+                    )->create();
 
         $this->actingAs($user);
 

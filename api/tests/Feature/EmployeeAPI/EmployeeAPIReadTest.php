@@ -214,8 +214,8 @@ class EmployeeAPIReadTest extends APITestCase
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+                        ->has(Branch::factory()->count(5))
+                    )->create();
 
         $this->actingAs($user);
 
@@ -247,8 +247,8 @@ class EmployeeAPIReadTest extends APITestCase
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+                        ->has(Branch::factory()->count(5))
+                    )->create();
 
         $this->actingAs($user);
 

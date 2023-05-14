@@ -18,7 +18,6 @@ use App\Models\Role;
 use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
-use Exception;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -192,13 +191,18 @@ class PurchaseOrderAPICreateTest extends APITestCase
     }
 
     public function test_purchase_order_api_call_create_with_empty_array_parameters_expect_exception()
-    {   
-        $this->markTestSkipped('Under Constructions');
-        $this->expectException(Exception::class);
-        $this->purchaseOrderActions->create(
-            [],
-            [],
-            []
-        );
+    {
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setStatusActive()->setIsDefault())
+                    ->create();
+
+        $this->actingAs($user);
+
+        $purchaseOrderArr = [];
+
+        $api = $this->json('POST', route('api.post.db.purchase_order.purchase_order.save'), $purchaseOrderArr);
+
+        $api->assertStatus(422);
     }
 }

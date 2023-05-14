@@ -34,7 +34,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
 
     public function test_purchase_order_api_call_read_expect_successful()
     {
-        $this->markTestSkipped('Under Constructions');
+        $this->markTestSkipped('Under Constructions, oh aku mumet resource soal kie oh');
+
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()

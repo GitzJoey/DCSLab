@@ -110,8 +110,8 @@ class ProductGroupAPIReadTest extends APITestCase
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
-                            ->has(ProductGroup::factory()->count(2), 'productGroups'), 'companies')
-                    ->create();
+                        ->has(ProductGroup::factory()->count(2))
+                    )->create();
 
         $this->actingAs($user);
 
