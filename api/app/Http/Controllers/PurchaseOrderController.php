@@ -235,7 +235,7 @@ class PurchaseOrderController extends BaseController
                     array_push($perUnitSubTotalDiscounts, $perUnitSubTotalDiscount);
                 }
             }
-            
+
             array_push($productUnitArr, [
                 'id' => $request['arr_product_unit_id'][$i],
                 'product_unit_id' => $request['arr_product_unit_product_unit_id'][$i],

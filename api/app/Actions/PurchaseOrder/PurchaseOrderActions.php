@@ -199,7 +199,7 @@ class PurchaseOrderActions
 
     public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
     {
-        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount')->where('id', '=', $purchaseOrder->id)->first();  
+        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount')->where('id', '=', $purchaseOrder->id)->first();
     }
 
     public function update(

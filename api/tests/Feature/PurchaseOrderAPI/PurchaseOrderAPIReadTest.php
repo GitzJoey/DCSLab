@@ -115,8 +115,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
                             ->for($company)
                             ->for($branch)
                             ->for($supplier)
-                            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom())
-                        ;
+                            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
