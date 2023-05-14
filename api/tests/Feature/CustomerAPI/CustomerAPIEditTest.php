@@ -21,7 +21,6 @@ class CustomerAPIEditTest extends APITestCase
 
     public function test_customer_api_call_update_and_insert_customer_address_expect_db_updated()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -169,7 +168,6 @@ class CustomerAPIEditTest extends APITestCase
 
     public function test_customer_api_call_update_and_edit_customer_address_expect_db_updated()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -258,7 +256,6 @@ class CustomerAPIEditTest extends APITestCase
 
     public function test_customer_api_call_update_and_delete_customer_address_expect_db_updated()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -408,7 +405,6 @@ class CustomerAPIEditTest extends APITestCase
 
     public function test_customer_api_call_update_customer_and_use_existing_code_in_different_company_expect_successful()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

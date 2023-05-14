@@ -244,7 +244,7 @@ class SupplierAPICreateTest extends APITestCase
     {
         $user = User::factory()
                 ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-                ->has(Company::factory()->setIsDefault(), 'companies')
+                ->has(Company::factory()->setIsDefault())
                 ->create();
 
         $this->actingAs($user);

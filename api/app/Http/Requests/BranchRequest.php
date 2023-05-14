@@ -133,6 +133,7 @@ class BranchRequest extends FormRequest
             case 'readAny':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
+                    'search' => $this->has('search') && ! is_null($this->search) ? $this->search : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;

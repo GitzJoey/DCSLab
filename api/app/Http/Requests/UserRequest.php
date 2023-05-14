@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
                 return $authUser->can('viewAny', User::class) ? true : false;
             case 'read':
                 return $authUser->can('view', User::class, $user) ? true : false;
@@ -65,8 +65,8 @@ class UserRequest extends FormRequest
             'time_format' => 'nullable',
         ];
 
-        if ($this->route()->getActionMethod() == 'list') {
-            $rules_list = [
+        if ($this->route()->getActionMethod() == 'readAny') {
+            $rules_read_any = [
                 'search' => ['present', 'string'],
                 'paginate' => ['required', 'boolean'],
                 'page' => ['required_if:paginate,true', 'numeric'],
@@ -74,7 +74,7 @@ class UserRequest extends FormRequest
                 'refresh' => ['nullable', 'boolean'],
             ];
 
-            return $rules_list;
+            return $rules_read_any;
         } elseif ($this->route()->getActionMethod() == 'read') {
             $rules_read = [
 
@@ -137,7 +137,7 @@ class UserRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
                 $this->merge([
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);

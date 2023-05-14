@@ -31,7 +31,7 @@ class ProductRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
             case 'getActiveProduct':
                 return $user->can('viewAny', Product::class) ? true : false;
             case 'read':
@@ -63,8 +63,8 @@ class ProductRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
-                $rules_list = [
+            case 'readAny':
+                $rules_read_any = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                     'product_category' => ['exclude_if:product_category,-1', new Enum(ProductCategory::class)],
                     'search' => ['present', 'string'],
@@ -74,13 +74,13 @@ class ProductRequest extends FormRequest
                     'refresh' => ['nullable', 'boolean'],
                 ];
 
-                return $rules_list;
+                return $rules_read_any;
             case 'getActiveProduct':
-                $rules_list = [
+                $rules_read_any = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                 ];
 
-                return $rules_list;
+                return $rules_read_any;
             case 'read':
                 $rules_read = [
                 ];
@@ -175,9 +175,10 @@ class ProductRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
+                    'search' => $this->has('search') && ! is_null($this->search) ? $this->search : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                     'product_category' => ProductCategory::isValid($this->product_category) ? ProductCategory::resolveToEnum($this->product_category)->value : -1,
                 ]);

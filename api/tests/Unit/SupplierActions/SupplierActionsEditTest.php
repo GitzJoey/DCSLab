@@ -29,7 +29,6 @@ class SupplierActionsEditTest extends ActionsTestCase
 
     public function test_supplier_actions_call_update_expect_db_updated()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
             ->has(
                 Company::factory()->setIsDefault()
@@ -44,8 +43,6 @@ class SupplierActionsEditTest extends ActionsTestCase
         $supplier = $company->suppliers()->inRandomOrder()->first();
 
         $supplierArr = Supplier::factory()->for($company)->make()->toArray();
-
-        $productCount = $company->products()->where('brand_id', '!=', null)->count();
 
         for ($i = 0; $i < 3; $i++) {
             $productGroup = ProductGroup::whereRelation('company', 'id', $company->id)
@@ -63,7 +60,10 @@ class SupplierActionsEditTest extends ActionsTestCase
                 ->create();
         }
 
+        $productCount = $company->products()->where('brand_id', '!=', null)->count();
+
         $supplierProductsCount = random_int(1, $productCount);
+
         $productIds = $company->products()->take($supplierProductsCount)->pluck('id');
 
         $productsArr = [];
