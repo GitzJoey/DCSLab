@@ -59,7 +59,7 @@ class PurchaseOrderRequest extends FormRequest
 
             'arr_product_unit_id.*' => ['nullable'],
             'arr_global_discount_id.*' => ['nullable'],
-            'arr_global_discount_amount.*' => ['nullable','numeric', 'min:0'],
+            'arr_global_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
             'arr_global_discount_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
             'arr_product_unit_per_unit_discount_id.*' => ['nullable'],
             'arr_product_unit_per_unit_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
