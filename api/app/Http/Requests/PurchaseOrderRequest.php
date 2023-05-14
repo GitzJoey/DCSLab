@@ -58,12 +58,15 @@ class PurchaseOrderRequest extends FormRequest
             'remarks' => ['nullable', 'max:255'],
 
             'arr_product_unit_id.*' => ['nullable'],
-            'arr_global_discount.*' => ['numeric', 'min:0'],
-            'arr_global_discount_type.*' => [new Enum(DiscountType::class)],
-            'arr_product_unit_per_unit_discount.*' => ['nullable', 'numeric', 'min:0'],
-            'arr_product_unit_per_unit_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
-            'arr_product_unit_per_unit_sub_total_discount.*' => ['nullable', 'numeric', 'min:0'],
-            'arr_product_unit_per_unit_sub_total_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
+            'arr_global_discount_id.*' => ['nullable'],
+            'arr_global_discount_amount.*' => ['nullable','numeric', 'min:0'],
+            'arr_global_discount_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
+            'arr_product_unit_per_unit_discount_id.*' => ['nullable'],
+            'arr_product_unit_per_unit_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
+            'arr_product_unit_per_unit_discount_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
+            'arr_product_unit_per_unit_sub_total_discount_id.*' => ['nullable'],
+            'arr_product_unit_per_unit_sub_total_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
+            'arr_product_unit_per_unit_sub_total_discount_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
             'arr_product_unit_remarks.*' => ['nullable', 'max:255'],
         ];
 
