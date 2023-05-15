@@ -30,7 +30,6 @@ class PurchaseOrderAPICreateTest extends APITestCase
 
     public function test_purchase_order_api_call_create_expect_db_has_record()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -79,27 +78,32 @@ class PurchaseOrderAPICreateTest extends APITestCase
         }
 
         $arr_product_unit_id = [];
-        $arr_global_discount_type = [];
-        $arr_global_discount = [];
+        $arr_global_discount_discount_id = [];
+        $arr_global_discount_discount_type = [];
+        $arr_global_discount_amount = [];
         $arr_product_unit_product_unit_id = [];
         $arr_product_unit_qty = [];
         $arr_product_unit_amount_per_unit = [];
         $arr_product_unit_initial_price = [];
-        $arr_product_unit_per_unit_discount_type = [];
-        $arr_product_unit_per_unit_discount = [];
-        $arr_product_unit_per_unit_sub_total_discount_type = [];
-        $arr_product_unit_per_unit_sub_total_discount = [];
+        $arr_product_unit_per_unit_discount_id = [];
+        $arr_product_unit_per_unit_discount_discount_type = [];
+        $arr_product_unit_per_unit_discount_amount = [];
+        $arr_product_unit_per_unit_sub_total_discount_id = [];
+        $arr_product_unit_per_unit_sub_total_discount_discount_type = [];
+        $arr_product_unit_per_unit_sub_total_discount_amount = [];
         $arr_product_unit_vat_status = [];
         $arr_product_unit_vat_rate = [];
         $arr_product_unit_remarks = [];
 
-        $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
-        array_push($arr_global_discount_type, $purchaseOrderDiscount->discount_type);
-        array_push($arr_global_discount, $purchaseOrderDiscount->amount);
+        for ($i = 0; $i < 1; $i++) {
+            $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
+            array_push($arr_global_discount_discount_id, '');
+            array_push($arr_global_discount_discount_type, $purchaseOrderDiscount->discount_type);
+            array_push($arr_global_discount_amount, $purchaseOrderDiscount->amount);
+        }
 
         $ProductUnitCount = random_int(1, $company->productUnits()->count());
-        $productUnits = $company->productUnits()->inRandomOrder()
-                            ->take($ProductUnitCount)->get();
+        $productUnits = $company->productUnits()->inRandomOrder()->take($ProductUnitCount)->get();
 
         foreach ($productUnits as $productUnit) {
             $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
@@ -108,10 +112,12 @@ class PurchaseOrderAPICreateTest extends APITestCase
             array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
             array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
             array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
-            // array_push($arr_product_unit_per_unit_discount, );
-            // array_push($arr_product_unit_per_unit_discount_type, );
-            // array_push($arr_product_unit_per_unit_sub_total_discount, );
-            // array_push($arr_product_unit_per_unit_sub_total_discount_type, );
+            // array_push($arr_product_unit_per_unit_discount_id, );
+            // array_push($arr_product_unit_per_unit_discount_discount_type, );
+            // array_push($arr_product_unit_per_unit_discount_amount, );
+            // array_push($arr_product_unit_per_unit_sub_total_discount_id, );
+            // array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, );
+            // array_push($arr_product_unit_per_unit_sub_total_discount_amount, );
             array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
             array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
             array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
@@ -121,17 +127,20 @@ class PurchaseOrderAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
             'branch_id' => Hashids::encode($branch->id),
             'supplier_id' => Hashids::encode($supplier->id),
+            'arr_global_discount_discount_id' => $arr_global_discount_discount_id,
+            'arr_global_discount_discount_type' => $arr_global_discount_discount_type,
+            'arr_global_discount_amount' => $arr_global_discount_amount,
             'arr_product_unit_id' => $arr_product_unit_id,
-            'arr_global_discount' => $arr_global_discount,
-            'arr_global_discount_type' => $arr_global_discount_type,
             'arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id,
             'arr_product_unit_qty' => $arr_product_unit_qty,
             'arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit,
             'arr_product_unit_initial_price' => $arr_product_unit_initial_price,
-            'arr_product_unit_per_unit_discount' => $arr_product_unit_per_unit_discount,
-            'arr_product_unit_per_unit_discount_type' => $arr_product_unit_per_unit_discount_type,
-            'arr_product_unit_per_unit_sub_total_discount' => $arr_product_unit_per_unit_sub_total_discount,
-            'arr_product_unit_per_unit_sub_total_discount_type' => $arr_product_unit_per_unit_sub_total_discount_type,
+            'arr_product_unit_per_unit_discount_id' => $arr_product_unit_per_unit_discount_id,
+            'arr_product_unit_per_unit_discount_discount_type' => $arr_product_unit_per_unit_discount_discount_type,
+            'arr_product_unit_per_unit_discount_amount' => $arr_product_unit_per_unit_discount_amount,
+            'arr_product_unit_per_unit_sub_total_discount_id' => $arr_product_unit_per_unit_sub_total_discount_id,
+            'arr_product_unit_per_unit_sub_total_discount_discount_type' => $arr_product_unit_per_unit_sub_total_discount_discount_type,
+            'arr_product_unit_per_unit_sub_total_discount_amount' => $arr_product_unit_per_unit_sub_total_discount_amount,
             'arr_product_unit_vat_status' => $arr_product_unit_vat_status,
             'arr_product_unit_vat_rate' => $arr_product_unit_vat_rate,
             'arr_product_unit_remarks' => $arr_product_unit_remarks,
@@ -176,14 +185,14 @@ class PurchaseOrderAPICreateTest extends APITestCase
             ]);
         }
 
-        for ($i = 0; $i < count($arr_global_discount_type); $i++) {
+        for ($i = 0; $i < count($arr_global_discount_discount_type); $i++) {
             $this->assertDatabaseHas('purchase_order_discounts', [
                 'company_id' => $company->id,
                 'branch_id' => $branch->id,
                 'purchase_order_id' => $purchaseOrder->id,
                 'purchase_order_product_unit_id' => null,
-                'discount_type' => $arr_global_discount_type[$i],
-                'amount' => $arr_global_discount[$i],
+                'discount_type' => $arr_global_discount_discount_type[$i],
+                'amount' => $arr_global_discount_amount[$i],
             ]);
         }
     }
