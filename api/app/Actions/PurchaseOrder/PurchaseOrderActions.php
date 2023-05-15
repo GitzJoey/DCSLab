@@ -221,12 +221,44 @@ class PurchaseOrderActions
                 'status' => $purchaseOrderArr['status'],
             ]);
 
-            // $purchaseOrderGlobalDiscountNewIds = [];
-            // foreach ($purchaseOrderArr['global_discount'] as $globalDiscount) {
-            //     array_push($purchaseOrderProductUnitNewIds, $purchaseOrderProductUnit['id']);
-            // }
+            $globalDiscountArr = collect($purchaseOrderArr['global_discount'])->map(function ($globalDiscount) use ($purchaseOrder) {
+                return [
+                    'id' => $globalDiscount['id'],
+                    'ulid' => $globalDiscount['id'] == null ? Str::ulid()->generate() : PurchaseOrderDiscount::find($globalDiscount['id'])->ulid,
+                    'company_id' => $purchaseOrder->company_id,
+                    'branch_id' => $purchaseOrder->branch_id,
+                    'purchase_order_id' => $purchaseOrder->id,
+                    'discount_type' => $globalDiscount['discount_type'],
+                    'amount' => $globalDiscount['amount'],
+                ];
+            })->toArray();
 
-            $purchaseOrderProductUnitArr = collect($productUnitArr)->map(function ($productUnit) use ($purchaseOrder) {
+            $globalDiscountNewIds = [];
+            foreach ($globalDiscountArr as $globalDiscount) {
+                array_push($globalDiscountNewIds, $globalDiscount['id']);
+            }
+
+            $globalDiscountOldIds = $purchaseOrder->purchaseOrderDiscounts()->pluck('id')->toArray();
+
+            $deletedGlobalDiscountIds = array_diff($globalDiscountOldIds, $globalDiscountNewIds);
+            foreach ($deletedGlobalDiscountIds as $deletedGlobalDiscountId) {
+                $purchaseOrder->purchaseOrderDiscounts()->where('id', '=', $deletedGlobalDiscountId)->delete();
+            }
+
+            $purchaseOrder->purchaseOrderDiscounts()->upsert(
+                $globalDiscountArr,
+                ['id'],
+                [
+                    'ulid',
+                    'company_id',
+                    'branch_id',
+                    'purchase_order_id',
+                    'discount_type',
+                    'amount',
+                ]
+            );
+
+            $productUnitArr = collect($productUnitArr)->map(function ($productUnit) use ($purchaseOrder) {
                 return [
                     'id' => $productUnit['id'],
                     'ulid' => $productUnit['id'] == null ? Str::ulid()->generate() : PurchaseOrderProductUnit::find($productUnit['id'])->ulid,
@@ -244,23 +276,20 @@ class PurchaseOrderActions
                 ];
             })->toArray();
 
-            $purchaseOrderProductUnitNewIds = [];
-            foreach ($purchaseOrderProductUnitArr as $purchaseOrderProductUnit) {
-                array_push($purchaseOrderProductUnitNewIds, $purchaseOrderProductUnit['id']);
+            $productUnitNewIds = [];
+            foreach ($productUnitArr as $purchaseOrderProductUnit) {
+                array_push($productUnitNewIds, $purchaseOrderProductUnit['id']);
             }
 
-            $purchaseOrderProductUnitOldIds = $purchaseOrder->purchaseOrderProductUnits()->pluck('id')->toArray();
+            $productUnitOldIds = $purchaseOrder->purchaseOrderProductUnits()->pluck('id')->toArray();
 
-            $deletedPurchaseOrderProductUnitIds = [];
-            $deletedPurchaseOrderProductUnitIds = array_diff($purchaseOrderProductUnitOldIds, $purchaseOrderProductUnitNewIds);
-
-            foreach ($deletedPurchaseOrderProductUnitIds as $deletedPurchaseOrderProductUnitId) {
-                $purchaseOrderProductUnit = $purchaseOrder->purchaseOrderProductUnits()->where('id', '=', $deletedPurchaseOrderProductUnitId);
-                $purchaseOrderProductUnit->delete();
+            $deletedProductUnitIds = array_diff($productUnitOldIds, $productUnitNewIds);
+            foreach ($deletedProductUnitIds as $deletedProductUnitId) {
+                $purchaseOrder->purchaseOrderProductUnits()->where('id', '=', $deletedProductUnitId)->delete();
             }
 
             $purchaseOrder->purchaseOrderProductUnits()->upsert(
-                $purchaseOrderProductUnitArr,
+                $productUnitArr,
                 ['id'],
                 [
                     'ulid',

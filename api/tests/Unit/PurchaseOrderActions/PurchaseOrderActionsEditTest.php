@@ -12,17 +12,11 @@ use App\Models\Product;
 use App\Models\ProductGroup;
 use App\Models\ProductUnit;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDiscount;
 use App\Models\PurchaseOrderProductUnit;
 use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
-use Database\Seeders\BranchTableSeeder;
-use Database\Seeders\BrandTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\ProductGroupTableSeeder;
-use Database\Seeders\ProductTableSeeder;
-use Database\Seeders\SupplierTableSeeder;
-use Database\Seeders\UnitTableSeeder;
 use Exception;
 use Tests\ActionsTestCase;
 
@@ -87,7 +81,8 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
         $purchaseOrder = PurchaseOrder::factory()
             ->for($company)
             ->for($branch)
-            ->for($supplier);
+            ->for($supplier)
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -104,6 +99,13 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
         $purchaseOrder = $purchaseOrder->create();
 
         $purchaseOrderArr = $purchaseOrder->toArray();
+        $purchaseOrderArr['global_discount'] = [];
+        array_push(
+            $purchaseOrderArr['global_discount'],
+            PurchaseOrderDiscount::factory()
+                ->for($company)->for($branch)
+                ->setGlobalDiscountRandom()->make(['id' => null])->toArray()
+        );
 
         $purchaseOrderProductUnitArr = $purchaseOrder->purchaseOrderProductUnits->toArray();
         array_push(
@@ -114,13 +116,10 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
                 ->for($productUnit)->make(['id' => null])->toArray()
         );
 
-        $discountArr = [];
-
         $result = $this->purchaseOrderActions->update(
             $purchaseOrder,
             $purchaseOrderArr,
             $purchaseOrderProductUnitArr,
-            $discountArr,
         );
 
         $this->assertInstanceOf(PurchaseOrder::class, $result);
@@ -158,31 +157,78 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
     {
         $this->expectException(Exception::class);
 
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                    ->has(Supplier::factory())
+            )->create();
 
-        $this->companySeeder->callWith(CompanyTableSeeder::class, [1, $user->id]);
-        $company = $user->companies->first();
-        $companyId = $company->id;
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+        $supplier = $company->suppliers()->inRandomOrder()->first();
 
-        $this->branchSeeder->callWith(BranchTableSeeder::class, [3, $companyId]);
-        $this->supplierSeeder->callWith(SupplierTableSeeder::class, [3, $companyId]);
-        $this->productUnitSeeder->callWith(UnitTableSeeder::class, [3, $companyId]);
-        $this->productGroupSeeder->callWith(ProductGroupTableSeeder::class, [3, $companyId]);
-        $this->brandSeeder->callWith(BrandTableSeeder::class, [3, $companyId]);
-        $this->productSeeder->callWith(ProductTableSeeder::class, [3, $companyId]);
-        $this->purchaseOrderSeeder->callWith(PurchaseOrderTableSeeder::class, [3, $companyId]);
+        $productSeedCount = random_int(1, 10);
+        for ($i = 0; $i < $productSeedCount; $i++) {
+            $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+                ->inRandomOrder()->first();
 
-        $purchaseOrder = $company->purchaseOrders()->inRandomOrder()->first();
+            $brand = $company->brands()->inRandomOrder()->first();
 
-        $newPurchaseOrderArr = [];
+            $product = Product::factory()
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
+
+            $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+                ->inRandomOrder()->get()->shuffle();
+
+            $productUnitCount = random_int(1, $units->count());
+            $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+            for ($j = 0; $j < $productUnitCount; $j++) {
+                $product = $product->has(
+                    ProductUnit::factory()
+                        ->for($company)->for($units[$j])
+                        ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                );
+            }
+
+            $product->create();
+        }
+
+        $purchaseOrder = PurchaseOrder::factory()
+            ->for($company)
+            ->for($branch)
+            ->for($supplier)
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+
+        $productUnitCount = random_int(1, $company->productUnits()->count());
+        $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
+
+        foreach ($productUnits as $productUnit) {
+            $purchaseOrder = $purchaseOrder->has(
+                PurchaseOrderProductUnit::factory()
+                    ->for($company)->for($branch)
+                    ->for($productUnit->product)
+                    ->for($productUnit)
+            );
+        }
+
+        $purchaseOrder = $purchaseOrder->create();
+
+        $PurchaseOrderArr = [];
         $productUnitArr = [];
-        $discountArr = [];
 
         $this->purchaseOrderActions->update(
             $purchaseOrder,
-            $newPurchaseOrderArr,
+            $PurchaseOrderArr,
             $productUnitArr,
-            $discountArr,
         );
     }
 }
