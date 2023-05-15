@@ -142,9 +142,9 @@ class CustomerRequest extends FormRequest
         return [
             'company_id' => trans('validation_attributes.customer.company'),
             'code' => trans('validation_attributes.customer.code'),
-            'customer_group_id' => trans('validation_attributes.customer.customer_group'),
-            'name' => trans('validation_attributes.customer.name'),
             'is_member' => trans('validation_attributes.customer.is_member'),
+            'name' => trans('validation_attributes.customer.name'),
+            'customer_group_id' => trans('validation_attributes.customer.customer_group'),
             'zone' => trans('validation_attributes.customer.zone'),
             'max_open_invoice' => trans('validation_attributes.customer.max_open_invoice'),
             'max_outstanding_invoice' => trans('validation_attributes.customer.max_outstanding_invoice'),
