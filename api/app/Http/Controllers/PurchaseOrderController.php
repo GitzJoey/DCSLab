@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Http\Requests\PurchaseOrderRequest;
 use App\Http\Resources\PurchaseOrderResource;
+use App\Models\Company;
 use App\Models\PurchaseOrder;
 use Exception;
 
@@ -26,6 +27,15 @@ class PurchaseOrderController extends BaseController
 
         $company_id = $request['company_id'];
 
+        $branch_id = $request['branch_id'];
+        if ($branch_id) {
+            if (! Company::find($company_id)->branches()->where('id', '=', $branch_id)->exists()) {
+                return response()->error([
+                    'branch_id' => [trans('rules.valid_branch')],
+                ], 422);
+            }
+        }
+
         $code = $request['invoice_code'];
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
@@ -40,11 +50,11 @@ class PurchaseOrderController extends BaseController
         }
 
         $globalDiscounts = [];
-        if (array_key_exists('arr_global_discount_type', $request)) {
-            for ($i = 0; $i < count($request['arr_global_discount_type']); $i++) {
+        if (array_key_exists('arr_global_discount_discount_type', $request)) {
+            for ($i = 0; $i < count($request['arr_global_discount_discount_type']); $i++) {
                 $globalDiscount = [
-                    'discount_type' => $request['arr_global_discount_type'][$i],
-                    'amount' => $request['arr_global_discount'][$i],
+                    'discount_type' => $request['arr_global_discount_discount_type'][$i],
+                    'amount' => $request['arr_global_discount_amount'][$i],
                 ];
                 array_push($globalDiscounts, $globalDiscount);
             }
@@ -52,7 +62,7 @@ class PurchaseOrderController extends BaseController
 
         $purchaseOrderArr = [
             'company_id' => $company_id,
-            'branch_id' => $request['branch_id'],
+            'branch_id' => $branch_id,
             'invoice_code' => $code,
             'invoice_date' => $request['invoice_date'],
             'supplier_id' => $request['supplier_id'],
@@ -67,22 +77,22 @@ class PurchaseOrderController extends BaseController
         $productUnitCount = count($request['arr_product_unit_id']);
         for ($i = 0; $i < $productUnitCount; $i++) {
             $perUnitDiscounts = [];
-            if (array_key_exists('arr_product_unit_per_unit_discount_type', $request)) {
-                for ($i = 0; $i < count($request['arr_product_unit_per_unit_discount_type']); $i++) {
+            if (array_key_exists('arr_product_unit_per_unit_discount_discount_type', $request)) {
+                for ($i = 0; $i < count($request['arr_product_unit_per_unit_discount_discount_type']); $i++) {
                     $perUnitDiscount = [
-                        'discount_type' => $request['arr_product_unit_per_unit_discount_type'][$i],
-                        'amount' => $request['arr_product_unit_per_unit_discount'][$i],
+                        'discount_type' => $request['arr_product_unit_per_unit_discount_discount_type'][$i],
+                        'amount' => $request['arr_product_unit_per_unit_discount_amount'][$i],
                     ];
                     array_push($perUnitDiscounts, $perUnitDiscount);
                 }
             }
 
             $perUnitSubTotalDiscounts = [];
-            if (array_key_exists('arr_product_unit_per_unit_sub_total_discount_type', $request)) {
-                for ($i = 0; $i < count($request['arr_product_unit_per_unit_sub_total_discount_type']); $i++) {
+            if (array_key_exists('arr_product_unit_per_unit_sub_total_discount_discount_type', $request)) {
+                for ($i = 0; $i < count($request['arr_product_unit_per_unit_sub_total_discount_discount_type']); $i++) {
                     $perUnitSubTotalDiscount = [
-                        'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type'][$i],
-                        'amount' => $request['arr_product_unit_per_unit_sub_total_discount'][$i],
+                        'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_discount_type'][$i],
+                        'amount' => $request['arr_product_unit_per_unit_sub_total_discount_amount'][$i],
                     ];
                     array_push($perUnitSubTotalDiscounts, $perUnitSubTotalDiscount);
                 }
@@ -119,22 +129,32 @@ class PurchaseOrderController extends BaseController
 
     public function readAny(PurchaseOrderRequest $request)
     {
-        $validated = $request->validated();
-        $companyId = $validated['company_id'];
-        $branchId = $validated['branch_id'];
-        $search = $validated['search'] ?? '';
-        $paginate = $validated['paginate'] ?? false;
-        $page = abs($validated['page'] ?? 1);
-        $perPage = abs($validated['per_page'] ?? 10);
-        $useCache = boolval($validated['use_cache'] ?? true);
+        $request = $request->validated();
+
+        $company_id = $request['company_id'];
+
+        $branch_id = $request['branch_id'];
+        if ($branch_id) {
+            if (! Company::find($company_id)->branches()->where('id', '=', $branch_id)->exists()) {
+                return response()->error([
+                    'branch_id' => [trans('rules.valid_branch')],
+                ], 422);
+            }
+        }
+
+        $search = $request['search'] ?? '';
+        $paginate = $request['paginate'] ?? false;
+        $page = abs($request['page'] ?? 1);
+        $perPage = abs($request['per_page'] ?? 10);
+        $useCache = boolval($request['use_cache'] ?? true);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->purchaseOrderActions->readAny(
-                companyId: $companyId,
-                branchId: $branchId,
+                companyId: $company_id,
+                branchId: $branch_id,
                 search: $search,
                 paginate: $paginate,
                 page: $page,
@@ -182,6 +202,21 @@ class PurchaseOrderController extends BaseController
 
         $company_id = $request['company_id'];
 
+        $branch_id = $request['branch_id'];
+        if ($branch_id) {
+            if (! Company::find($company_id)->branches()->where('id', '=', $branch_id)->exists()) {
+                return response()->error([
+                    'branch_id' => [trans('rules.valid_branch')],
+                ], 422);
+            }
+        }
+
+        if ($branch_id !== $purchaseOrder->branch_id) {
+            return response()->error([
+                'branch_id' => [trans('rules.valid_branch')],
+            ], 422);
+        }
+
         $invoice_code = $request['invoice_code'];
         if (! $this->purchaseOrderActions->isUniqueCode($invoice_code, $company_id, $purchaseOrder->id)) {
             return response()->error([
@@ -190,11 +225,12 @@ class PurchaseOrderController extends BaseController
         }
 
         $globalDiscounts = [];
-        if (array_key_exists('arr_global_discount_type', $request)) {
-            for ($i = 0; $i < count($request['arr_global_discount_type']); $i++) {
+        if (array_key_exists('arr_global_discount_discount_type', $request)) {
+            for ($i = 0; $i < count($request['arr_global_discount_discount_type']); $i++) {
                 $globalDiscount = [
-                    'discount_type' => $request['arr_global_discount_type'][$i],
-                    'amount' => $request['arr_global_discount'][$i],
+                    'id' => $request['arr_global_discount_id'][$i],
+                    'discount_type' => $request['arr_global_discount_discount_type'][$i],
+                    'amount' => $request['arr_global_discount_amount'][$i],
                 ];
                 array_push($globalDiscounts, $globalDiscount);
             }
@@ -215,22 +251,24 @@ class PurchaseOrderController extends BaseController
         $productUnitCount = count($request['arr_product_unit_id']);
         for ($i = 0; $i < $productUnitCount; $i++) {
             $perUnitDiscounts = [];
-            if (array_key_exists('arr_product_unit_per_unit_discount_type', $request)) {
-                for ($i = 0; $i < count($request['arr_product_unit_per_unit_discount_type']); $i++) {
+            if (array_key_exists('arr_product_unit_per_unit_discount_discount_type', $request)) {
+                for ($i = 0; $i < count($request['arr_product_unit_per_unit_discount_discount_type']); $i++) {
                     $perUnitDiscount = [
-                        'discount_type' => $request['arr_product_unit_per_unit_discount_type'][$i],
-                        'amount' => $request['arr_product_unit_per_unit_discount'][$i],
+                        'id' => $request['arr_product_unit_per_unit_discount_id'][$i],
+                        'discount_type' => $request['arr_product_unit_per_unit_discount_discount_type'][$i],
+                        'amount' => $request['arr_product_unit_per_unit_discount_amount'][$i],
                     ];
                     array_push($perUnitDiscounts, $perUnitDiscount);
                 }
             }
 
             $perUnitSubTotalDiscounts = [];
-            if (array_key_exists('arr_product_unit_per_unit_sub_total_discount_type', $request)) {
-                for ($i = 0; $i < count($request['arr_product_unit_per_unit_sub_total_discount_type']); $i++) {
+            if (array_key_exists('arr_product_unit_per_unit_sub_total_discount_discount_type', $request)) {
+                for ($i = 0; $i < count($request['arr_product_unit_per_unit_sub_total_discount_discount_type']); $i++) {
                     $perUnitSubTotalDiscount = [
-                        'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_type'][$i],
-                        'amount' => $request['arr_product_unit_per_unit_sub_total_discount'][$i],
+                        'id' => $request['arr_product_unit_per_unit_sub_total_discount_id'][$i],
+                        'discount_type' => $request['arr_product_unit_per_unit_sub_total_discount_discount_type'][$i],
+                        'amount' => $request['arr_product_unit_per_unit_sub_total_discount_amount'][$i],
                     ];
                     array_push($perUnitSubTotalDiscounts, $perUnitSubTotalDiscount);
                 }
