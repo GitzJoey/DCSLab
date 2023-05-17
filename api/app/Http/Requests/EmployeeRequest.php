@@ -129,7 +129,7 @@ class EmployeeRequest extends FormRequest
             'join_date' => trans('validation_attributes.employee.join_date'),
             'remarks' => trans('validation_attributes.employee.remarks'),
             'status' => trans('validation_attributes.employee.status'),
-            'arr_access_branch_id.*' => trans('validation_attributes.employee.branch'),
+            'arr_access_branch_id.*' => trans('validation_attributes.employee.access_branch.branch'),
         ];
     }
 
