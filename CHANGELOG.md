@@ -3,7 +3,7 @@
     * Upgrade Laravel to version 10
     * Moving Logics From Services To Actions
     * Dropping Breeze, use Fortify solely
-    * Dropping Hashids
+    * ~~Dropping Hashids~~ (Cancelled)
     * Embracing TypeScript
     * Change UUID to ULID
 

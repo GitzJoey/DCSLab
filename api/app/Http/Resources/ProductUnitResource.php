@@ -27,6 +27,10 @@ class ProductUnitResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
+            'company' => new CompanyResource($this->company),
+            $this->mergeWhen($this->relationLoaded('product'), [
+                'product' => new ProductResource($this->whenLoaded('product')),
+            ]),
             'code' => $this->code,
             $this->mergeWhen($this->relationLoaded('unit'), [
                 'unit' => new UnitResource($this->whenLoaded('unit')),

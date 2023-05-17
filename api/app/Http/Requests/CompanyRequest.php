@@ -30,7 +30,7 @@ class CompanyRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
                 return $user->can('viewAny', Company::class) ? true : false;
             case 'read':
                 return $user->can('view', Company::class, $company) ? true : false;
@@ -58,8 +58,8 @@ class CompanyRequest extends FormRequest
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
-                $rules_list = [
+            case 'readAny':
+                $rules_read_any = [
                     'search' => ['present', 'string'],
                     'paginate' => ['required', 'boolean'],
                     'page' => ['required_if:paginate,true', 'numeric'],
@@ -67,7 +67,7 @@ class CompanyRequest extends FormRequest
                     'refresh' => ['nullable', 'boolean'],
                 ];
 
-                return $rules_list;
+                return $rules_read_any;
             case 'read':
                 $rules_read = [
                 ];
@@ -122,8 +122,9 @@ class CompanyRequest extends FormRequest
     {
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'list':
+            case 'readAny':
                 $this->merge([
+                    'search' => $this->has('search') && ! is_null($this->search) ? $this->search : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;

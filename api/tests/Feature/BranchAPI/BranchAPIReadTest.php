@@ -21,7 +21,6 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -129,8 +128,8 @@ class BranchAPIReadTest extends APITestCase
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setIsDefault()
-                            ->has(Branch::factory()->count(5), 'branches'), 'companies')
-                    ->create();
+                        ->has(Branch::factory()->count(5))
+                    )->create();
 
         $this->actingAs($user);
 
@@ -159,7 +158,6 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
-        $this->markTestSkipped('Under Constructions');
         $user = User::factory()
                     ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
                     ->has(Company::factory()->setStatusActive()->setIsDefault()

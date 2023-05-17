@@ -1,15 +1,13 @@
 import { CompanyType } from "./CompanyType"
+import { CustomerType } from "./CustomerType"
 
-export interface BranchType {
-    id: string,
+export interface CustomerAddressType {
     ulid: string,
     company: CompanyType,
-    code: string,
-    name: string,
+    customer: CustomerType,
     address: string,
     city: string,
     contact: string,
-    status: string,
     is_main: boolean,
     remarks: string,
 }
