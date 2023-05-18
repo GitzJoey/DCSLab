@@ -44,7 +44,7 @@ return [
         'remarks' => 'Remarks',
         'status' => 'Status',
         'access_branch' => [
-            'branch' => 'Branch'
+            'branch' => 'Branch',
         ],
     ],
     'warehouse' => [

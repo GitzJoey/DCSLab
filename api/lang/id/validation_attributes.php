@@ -44,7 +44,7 @@ return [
         'remarks' => 'Catatan',
         'status' => 'Status',
         'access_branch' => [
-            'branch' => 'Cabang'
+            'branch' => 'Cabang',
         ],
     ],
     'warehouse' => [
