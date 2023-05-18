@@ -77,18 +77,18 @@ class SupplierController extends BaseController
         }
 
         $productsArr = [];
-        if (array_key_exists('arr_product_id', $request) && ! empty($request['arr_product_id'])) {
-            for ($i = 0; $i < count($request['arr_product_id']); $i++) {
-                $product_id = $request['arr_product_id'][$i];
+        if (array_key_exists('arr_supplier_product_product_id', $request) && ! empty($request['arr_supplier_product_product_id'])) {
+            for ($i = 0; $i < count($request['arr_supplier_product_product_id']); $i++) {
+                $product_id = $request['arr_supplier_product_product_id'][$i];
                 if (! Company::find($company_id)->products()->where('id', '=', $product_id)->exists()) {
                     return response()->error([
-                        'arr_product_id' => [trans('rules.valid_product')],
+                        'arr_supplier_product_product_id' => [trans('rules.valid_product')],
                     ], 422);
                 }
 
                 $mainProduct = 0;
-                if (array_key_exists('arr_main_product_id', $request)) {
-                    $mainProduct = in_array($product_id, $request['arr_main_product_id']) ? 1 : 0;
+                if (array_key_exists('arr_supplier_product_main_product_id', $request)) {
+                    $mainProduct = in_array($product_id, $request['arr_supplier_product_main_product_id']) ? 1 : 0;
                 }
 
                 array_push($productsArr, [
@@ -229,21 +229,21 @@ class SupplierController extends BaseController
         }
 
         $productsArr = [];
-        if (array_key_exists('arr_product_id', $request) && ! empty($request['arr_product_id'])) {
-            for ($i = 0; $i < count($request['arr_product_id']); $i++) {
-                $product_id = $request['arr_product_id'][$i];
+        if (array_key_exists('arr_supplier_product_product_id', $request) && ! empty($request['arr_supplier_product_product_id'])) {
+            for ($i = 0; $i < count($request['arr_supplier_product_product_id']); $i++) {
+                $product_id = $request['arr_supplier_product_product_id'][$i];
                 if (! Company::find($company_id)->products()->where('id', '=', $product_id)->exists()) {
                     return response()->error([
-                        'arr_product_id' => [trans('rules.valid_product')],
+                        'arr_supplier_product_product_id' => [trans('rules.valid_product')],
                     ], 422);
                 }
 
                 $mainProduct = 0;
-                if (array_key_exists('arr_main_product_id', $request)) {
-                    $mainProduct = in_array($product_id, $request['arr_main_product_id']) ? 1 : 0;
+                if (array_key_exists('arr_supplier_product_main_product_id', $request)) {
+                    $mainProduct = in_array($product_id, $request['arr_supplier_product_main_product_id']) ? 1 : 0;
                 }
                 array_push($productsArr, [
-                    'product_id' => $request['arr_product_id'][$i],
+                    'product_id' => $request['arr_supplier_product_product_id'][$i],
                     'main_product' => $mainProduct,
                 ]);
             }

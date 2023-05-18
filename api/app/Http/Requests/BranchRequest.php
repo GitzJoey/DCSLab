@@ -113,7 +113,7 @@ class BranchRequest extends FormRequest
             'address' => trans('validation_attributes.branch.address'),
             'city' => trans('validation_attributes.branch.city'),
             'contact' => trans('validation_attributes.branch.contact'),
-            'is_main' => trans('validation_attributes.branch.main'),
+            'is_main' => trans('validation_attributes.branch.is_main'),
             'remarks' => trans('validation_attributes.branch.remarks'),
             'status' => trans('validation_attributes.branch.status'),
         ];
