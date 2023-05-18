@@ -90,12 +90,12 @@ class SupplierAPIEditTest extends APITestCase
         $products = $company->products()->where('brand_id', '!=', null)
                         ->take($productCount)->get();
 
-        $arr_product_id = [];
-        $arr_main_product_id = [];
+        $arr_supplier_product_product_id = [];
+        $arr_supplier_product_main_product_id = [];
         foreach ($products as $product) {
-            array_push($arr_product_id, Hashids::encode($product->id));
+            array_push($arr_supplier_product_product_id, Hashids::encode($product->id));
             if (random_int(0, 1) == 1) {
-                array_push($arr_main_product_id, Hashids::encode($product->id));
+                array_push($arr_supplier_product_main_product_id, Hashids::encode($product->id));
             }
         }
 
@@ -110,8 +110,8 @@ class SupplierAPIEditTest extends APITestCase
             $supplierArr['pic_password'] = '123456';
         }
 
-        $supplierArr['arr_product_id'] = $arr_product_id;
-        $supplierArr['arr_main_product_id'] = $arr_main_product_id;
+        $supplierArr['arr_supplier_product_product_id'] = $arr_supplier_product_product_id;
+        $supplierArr['arr_supplier_product_main_product_id'] = $arr_supplier_product_main_product_id;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->ulid), $supplierArr);
 
@@ -182,12 +182,12 @@ class SupplierAPIEditTest extends APITestCase
         $products = $company->products()->where('brand_id', '!=', null)
                         ->take($productCount)->get();
 
-        $arr_product_id = [];
-        $arr_main_product_id = [];
+        $arr_supplier_product_product_id = [];
+        $arr_supplier_product_main_product_id = [];
         foreach ($products as $product) {
-            array_push($arr_product_id, Hashids::encode($product->id));
+            array_push($arr_supplier_product_product_id, Hashids::encode($product->id));
             if (random_int(0, 1) == 1) {
-                array_push($arr_main_product_id, Hashids::encode($product->id));
+                array_push($arr_supplier_product_main_product_id, Hashids::encode($product->id));
             }
         }
 
@@ -219,21 +219,21 @@ class SupplierAPIEditTest extends APITestCase
 
         $supplierProductsCount = random_int(1, $company->products()->count());
 
-        $arr_product_id = [];
+        $arr_supplier_product_product_id = [];
         $productIds = $company->products()->inRandomOrder()->take($supplierProductsCount)->pluck('id');
         for ($i = 0; $i < count($productIds); $i++) {
             if ($i == 0) {
-                array_push($arr_product_id, Hashids::encode(Product::max('id') + 1));
+                array_push($arr_supplier_product_product_id, Hashids::encode(Product::max('id') + 1));
             } else {
-                array_push($arr_product_id, Hashids::encode($productIds[$i]));
+                array_push($arr_supplier_product_product_id, Hashids::encode($productIds[$i]));
             }
         }
 
-        $arr_main_product_id = [];
-        foreach ($arr_product_id as $product_id) {
+        $arr_supplier_product_main_product_id = [];
+        foreach ($arr_supplier_product_product_id as $product_id) {
             $isMainProduct = random_int(0, 1);
             if ($isMainProduct == 1) {
-                array_push($arr_main_product_id, $product_id);
+                array_push($arr_supplier_product_main_product_id, $product_id);
             }
         }
 
@@ -248,8 +248,8 @@ class SupplierAPIEditTest extends APITestCase
             $supplierArr['pic_password'] = '123456';
         }
 
-        $supplierArr['arr_product_id'] = $arr_product_id;
-        $supplierArr['arr_main_product_id'] = $arr_main_product_id;
+        $supplierArr['arr_supplier_product_product_id'] = $arr_supplier_product_product_id;
+        $supplierArr['arr_supplier_product_main_product_id'] = $arr_supplier_product_main_product_id;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->ulid), $supplierArr);
 
@@ -309,12 +309,12 @@ class SupplierAPIEditTest extends APITestCase
             $products = $company->products()->where('brand_id', '!=', null)
                             ->take($productCount)->get();
 
-            $arr_product_id = [];
-            $arr_main_product_id = [];
+            $arr_supplier_product_product_id = [];
+            $arr_supplier_product_main_product_id = [];
             foreach ($products as $product) {
-                array_push($arr_product_id, Hashids::encode($product->id));
+                array_push($arr_supplier_product_product_id, Hashids::encode($product->id));
                 if (random_int(0, 1) == 1) {
-                    array_push($arr_main_product_id, Hashids::encode($product->id));
+                    array_push($arr_supplier_product_main_product_id, Hashids::encode($product->id));
                 }
             }
 
@@ -349,21 +349,21 @@ class SupplierAPIEditTest extends APITestCase
 
         $supplierProductsCount = random_int(1, $company->products()->count());
 
-        $arr_product_id = [];
+        $arr_supplier_product_product_id = [];
         $productIds = $company->products()->inRandomOrder()->take($supplierProductsCount)->pluck('id');
         for ($i = 0; $i < count($productIds); $i++) {
             if ($i == 0) {
-                array_push($arr_product_id, Hashids::encode(Product::max('id') + 1));
+                array_push($arr_supplier_product_product_id, Hashids::encode(Product::max('id') + 1));
             } else {
-                array_push($arr_product_id, Hashids::encode($productIds[$i]));
+                array_push($arr_supplier_product_product_id, Hashids::encode($productIds[$i]));
             }
         }
 
-        $arr_main_product_id = [];
-        foreach ($arr_product_id as $product_id) {
+        $arr_supplier_product_main_product_id = [];
+        foreach ($arr_supplier_product_product_id as $product_id) {
             $isMainProduct = random_int(0, 1);
             if ($isMainProduct == 1) {
-                array_push($arr_main_product_id, $product_id);
+                array_push($arr_supplier_product_main_product_id, $product_id);
             }
         }
 
@@ -379,8 +379,8 @@ class SupplierAPIEditTest extends APITestCase
             $supplierArr['pic_password'] = '123456';
         }
 
-        $supplierArr['arr_product_id'] = $arr_product_id;
-        $supplierArr['arr_main_product_id'] = $arr_main_product_id;
+        $supplierArr['arr_supplier_product_product_id'] = $arr_supplier_product_product_id;
+        $supplierArr['arr_supplier_product_main_product_id'] = $arr_supplier_product_main_product_id;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->ulid), $supplierArr);
 
@@ -444,12 +444,12 @@ class SupplierAPIEditTest extends APITestCase
             $products = $company_1->products()->where('brand_id', '!=', null)
                             ->take($productCount)->get();
 
-            $arr_product_id = [];
-            $arr_main_product_id = [];
+            $arr_supplier_product_product_id = [];
+            $arr_supplier_product_main_product_id = [];
             foreach ($products as $product) {
-                array_push($arr_product_id, Hashids::encode($product->id));
+                array_push($arr_supplier_product_product_id, Hashids::encode($product->id));
                 if (random_int(0, 1) == 1) {
-                    array_push($arr_main_product_id, Hashids::encode($product->id));
+                    array_push($arr_supplier_product_main_product_id, Hashids::encode($product->id));
                 }
             }
 
@@ -518,12 +518,12 @@ class SupplierAPIEditTest extends APITestCase
             $products = $company_2->products()->where('brand_id', '!=', null)
                             ->take($productCount)->get();
 
-            $arr_product_id = [];
-            $arr_main_product_id = [];
+            $arr_supplier_product_product_id = [];
+            $arr_supplier_product_main_product_id = [];
             foreach ($products as $product) {
-                array_push($arr_product_id, Hashids::encode($product->id));
+                array_push($arr_supplier_product_product_id, Hashids::encode($product->id));
                 if (random_int(0, 1) == 1) {
-                    array_push($arr_main_product_id, Hashids::encode($product->id));
+                    array_push($arr_supplier_product_main_product_id, Hashids::encode($product->id));
                 }
             }
 
@@ -558,17 +558,17 @@ class SupplierAPIEditTest extends APITestCase
 
         $supplierProductsCount = random_int(1, $company_1->products()->count());
 
-        $arr_product_id = [];
+        $arr_supplier_product_product_id = [];
         $productIds = $company_1->products()->inRandomOrder()->take($supplierProductsCount)->pluck('id');
         for ($i = 0; $i < count($productIds); $i++) {
-            array_push($arr_product_id, Hashids::encode($productIds[$i]));
+            array_push($arr_supplier_product_product_id, Hashids::encode($productIds[$i]));
         }
 
-        $arr_main_product_id = [];
-        foreach ($arr_product_id as $product_id) {
+        $arr_supplier_product_main_product_id = [];
+        foreach ($arr_supplier_product_product_id as $product_id) {
             $isMainProduct = random_int(0, 1);
             if ($isMainProduct == 1) {
-                array_push($arr_main_product_id, $product_id);
+                array_push($arr_supplier_product_main_product_id, $product_id);
             }
         }
 
@@ -584,8 +584,8 @@ class SupplierAPIEditTest extends APITestCase
             $supplierArr['pic_password'] = '123456';
         }
 
-        $supplierArr['arr_product_id'] = $arr_product_id;
-        $supplierArr['arr_main_product_id'] = $arr_main_product_id;
+        $supplierArr['arr_supplier_product_product_id'] = $arr_supplier_product_product_id;
+        $supplierArr['arr_supplier_product_main_product_id'] = $arr_supplier_product_main_product_id;
 
         $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->ulid), $supplierArr);
 

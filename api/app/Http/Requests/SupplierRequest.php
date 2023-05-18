@@ -59,8 +59,8 @@ class SupplierRequest extends FormRequest
             'tax_id' => ['nullable', 'max:255'],
             'remarks' => ['nullable', 'max:255'],
 
-            'arr_product_id.*' => ['nullable'],
-            'arr_main_product_id.*' => ['nullable'],
+            'arr_supplier_product_product_id.*' => ['nullable'],
+            'arr_supplier_product_main_product_id.*' => ['nullable'],
         ];
 
         $currentRouteMethod = $this->route()->getActionMethod();
@@ -127,6 +127,7 @@ class SupplierRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.supplier.company'),
+
             'code' => trans('validation_attributes.supplier.code'),
             'name' => trans('validation_attributes.supplier.name'),
             'address' => trans('validation_attributes.supplier.address'),
@@ -136,12 +137,16 @@ class SupplierRequest extends FormRequest
             'tax_id' => trans('validation_attributes.supplier.tax_id'),
             'payment_term_type' => trans('validation_attributes.supplier.payment_term_type'),
             'payment_term' => trans('validation_attributes.supplier.payment_term'),
-            'status' => trans('validation_attributes.supplier.status'),
             'remarks' => trans('validation_attributes.supplier.remarks'),
-            'pic_name' => trans('validation_attributes.supplier.name'),
-            'email' => trans('validation_attributes.supplier.email'),
-            'arr_product_id.*' => trans('validation_attributes.supplier.product'),
-            'arr_main_product_id.*' => trans('validation_attributes.supplier.product'),
+            'status' => trans('validation_attributes.supplier.status'),
+            
+            'pic_create_user' => trans('validation_attributes.supplier.pic.create_user'),
+            'pic_contact_person_name' => trans('validation_attributes.supplier.pic.name'),
+            'pic_email' => trans('validation_attributes.supplier.pic.email'),
+            'pic_password' => trans('validation_attributes.supplier.pic.password'),
+            
+            'arr_supplier_product_product_id.*' => trans('validation_attributes.supplier.supplier_product.product'),
+            'arr_supplier_product_main_product_id.*' => trans('validation_attributes.supplier.supplier_product.main_product'),  
         ];
     }
 
@@ -177,21 +182,21 @@ class SupplierRequest extends FormRequest
                     'pic_create_user' => $this->has('pic_create_user') ? filter_var($this->pic_create_user, FILTER_VALIDATE_BOOLEAN) : false,
                 ]);
 
-                $arr_product_id = [];
-                if ($this->has('arr_product_id')) {
-                    for ($i = 0; $i < count($this->arr_product_id); $i++) {
-                        array_push($arr_product_id, Hashids::decode($this['arr_product_id'][$i])[0]);
+                $arr_supplier_product_product_id = [];
+                if ($this->has('arr_supplier_product_product_id')) {
+                    for ($i = 0; $i < count($this->arr_supplier_product_product_id); $i++) {
+                        array_push($arr_supplier_product_product_id, Hashids::decode($this['arr_supplier_product_product_id'][$i])[0]);
                     }
                 }
-                $this->merge(['arr_product_id' => $arr_product_id]);
+                $this->merge(['arr_supplier_product_product_id' => $arr_supplier_product_product_id]);
 
-                $arr_main_product_id = [];
-                if ($this->has('arr_main_product_id')) {
-                    for ($i = 0; $i < count($this->arr_main_product_id); $i++) {
-                        array_push($arr_main_product_id, Hashids::decode($this['arr_main_product_id'][$i])[0]);
+                $arr_supplier_product_main_product_id = [];
+                if ($this->has('arr_supplier_product_main_product_id')) {
+                    for ($i = 0; $i < count($this->arr_supplier_product_main_product_id); $i++) {
+                        array_push($arr_supplier_product_main_product_id, Hashids::decode($this['arr_supplier_product_main_product_id'][$i])[0]);
                     }
                 }
-                $this->merge(['arr_main_product_id' => $arr_main_product_id]);
+                $this->merge(['arr_supplier_product_main_product_id' => $arr_supplier_product_main_product_id]);
 
                 break;
             default:
