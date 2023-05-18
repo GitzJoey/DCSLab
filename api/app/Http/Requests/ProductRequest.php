@@ -141,11 +141,11 @@ class ProductRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.product.company'),
-            'product_group_id' => trans('validation_attributes.product.product_group'),
-            'brand_id' => trans('validation_attributes.product.brand'),
             'code' => trans('validation_attributes.product.code'),
             'name' => trans('validation_attributes.product.name'),
-            'product_type' => trans('validation_attributes.product.type'),
+            'product_group_id' => trans('validation_attributes.product.product_group'),
+            'brand_id' => trans('validation_attributes.product.brand'),
+            'product_type' => trans('validation_attributes.product.product_type'),
             'taxable_supply' => trans('validation_attributes.product.taxable_supply'),
             'price_include_vat' => trans('validation_attributes.product.price_include_vat'),
             'standard_rated_supply' => trans('validation_attributes.product.standard_rated_supply'),
@@ -158,7 +158,7 @@ class ProductRequest extends FormRequest
             'arr_product_unit_code.*' => trans('validation_attributes.product.product_units.code'),
             'arr_product_unit_unit_id.*' => trans('validation_attributes.product.product_units.unit'),
             'arr_product_unit_conversion_value.*' => trans('validation_attributes.product.product_units.conv_value'),
-            'arr_product_unit_is_base.*' => trans('validation_attributes.product.product_units.base'),
+            'arr_product_unit_is_base.*' => trans('validation_attributes.product.product_units.is_base'),
             'arr_product_unit_is_primary_unit.*' => trans('validation_attributes.product.product_units.primary'),
             'arr_product_unit_remarks.*' => trans('validation_attributes.product.product_units.remarks'),
         ];

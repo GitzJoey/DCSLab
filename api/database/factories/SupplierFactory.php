@@ -29,13 +29,13 @@ class SupplierFactory extends Factory
         return [
             'code' => strtoupper(fake()->lexify()).fake()->numerify(),
             'name' => fake('id_ID')->company(),
-            'payment_term_type' => $array_term,
-            'payment_term' => $array_term == 'NET' ? fake()->numberBetween(1, 30) : 0,
-            'contact' => fake()->e164PhoneNumber(),
             'address' => fake('id_ID')->address(),
             'city' => fake('id_ID')->city(),
+            'contact' => fake()->e164PhoneNumber(),
             'taxable_enterprise' => fake()->boolean(),
             'tax_id' => fake()->creditCardNumber(),
+            'payment_term_type' => $array_term,
+            'payment_term' => $array_term == 'NET' ? fake()->numberBetween(1, 30) : 0,
             'remarks' => fake()->word(),
             'status' => $status,
         ];
