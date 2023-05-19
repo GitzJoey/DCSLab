@@ -121,6 +121,7 @@ class ChartOfAccountRequest extends FormRequest
         return [
             'company_id' => trans('validation_attributes.chart_of_account.company'),
             'branch_id' => trans('validation_attributes.chart_of_account.branch'),
+            'parent_id' => trans('validation_attributes.chart_of_account.parent'),
             'code' => trans('validation_attributes.chart_of_account.code'),
             'name' => trans('validation_attributes.chart_of_account.name'),
             'account_type' => trans('validation_attributes.chart_of_account.account_type'),
