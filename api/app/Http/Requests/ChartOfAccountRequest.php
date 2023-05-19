@@ -119,14 +119,14 @@ class ChartOfAccountRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.company'),
-            'branch_id' => trans('validation_attributes.company'),
-            'code' => trans('validation_attributes.code'),
-            'name' => trans('validation_attributes.name'),
-            'account_type' => trans('validation_attributes.account_type'),
-            'can_have_child' => trans('validation_attributes.can_have_child'),
-            'status' => trans('validation_attributes.status'),
-            'remarks' => trans('validation_attributes.remarks'),
+            'company_id' => trans('validation_attributes.chart_of_account.company'),
+            'branch_id' => trans('validation_attributes.chart_of_account.branch'),
+            'code' => trans('validation_attributes.chart_of_account.code'),
+            'name' => trans('validation_attributes.chart_of_account.name'),
+            'account_type' => trans('validation_attributes.chart_of_account.account_type'),
+            'can_have_child' => trans('validation_attributes.chart_of_account.can_have_child'),
+            'status' => trans('validation_attributes.chart_of_account.status'),
+            'remarks' => trans('validation_attributes.chart_of_account.remarks'),
         ];
     }
 
