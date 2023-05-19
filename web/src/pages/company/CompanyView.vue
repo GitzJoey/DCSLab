@@ -5,6 +5,9 @@ import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { ViewTitleLayout } from "../../base-components/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
+import DataList from "../../base-components/DataList/DataList.vue";
+import Table from "../../base-components/Table";
+import { CheckCircleIcon } from "lucide-vue-next";
 //#endregion
 
 //#region Declarations
@@ -18,7 +21,7 @@ const loading = ref<boolean>(false);
 
 //#region onMounted
 onMounted(() => {
-  console.log("a");
+  // console.log("a");
 });
 //#endregion
 </script>
@@ -28,17 +31,55 @@ onMounted(() => {
     <LoadingOverlay :visible="loading">
       <div v-if="mode == ViewMode.LIST"></div>
       <ViewTitleLayout>
-        <template #title>{{ t("views.company.page_title") }}</template>
-        <template #optional>
-          <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-            <Button as="a" href="#" variant="primary" class="shadow-md">
-              <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
-                t("components.buttons.create_new")
-              }}
-            </Button>
+        <template #title>
+          <div>
+              <h1>Company List</h1>
           </div>
         </template>
       </ViewTitleLayout>
+      <DataList>
+        <template #table="tableProps" >
+          <Table class="mt-5" :hover="true" >
+              <Table.Thead variant="light" >
+                <Table.Tr>
+                  <Table.Th class="whitespace-nowrap" >
+                    Name
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap" >
+                    Email
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap" >
+                    Roles
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap" >
+                    Status
+                  </Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td>
+                    1234
+                  </Table.Td>
+                  <Table.Td>
+                    <a class="hover:animate-pulse" >
+                      test@mail.com
+                    </a>
+                  </Table.Td>
+                  <Table.Td>
+                    <CheckCircleIcon/>
+                  </Table.Td>
+                  <Table.Td>
+                    ACTIVE
+                  </Table.Td>
+                </Table.Tr>
+              </Table.Tbody>
+          </Table>
+
+        </template>
+      </DataList>
     </LoadingOverlay>
+    
   </div>
 </template>
