@@ -71,6 +71,50 @@ const last = computed(() => {
   return data.value.meta.last_page;
 });
 
+const generatePaginationArray = (currentPage: number, totalPages: number): number[] => {
+  const paginationArray: number[] = [];
+
+  if (totalPages <= 10) {
+    for (let i = 1; i <= totalPages; i++) {
+      paginationArray.push(i);
+    }
+  } else {
+    let startPage = currentPage - 1;
+    let endPage = currentPage + 1;
+
+    if (startPage < 1) {
+      endPage += Math.abs(startPage) + 1;
+      startPage = 1;
+    }
+
+    if (endPage > totalPages) {
+      startPage -= endPage - totalPages;
+      endPage = totalPages;
+    }
+
+    if (startPage > 1) {
+      paginationArray.push(1);
+      if (startPage > 2) {
+        paginationArray.push(-1);
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      paginationArray.push(i);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        paginationArray.push(-1);
+      }
+      paginationArray.push(totalPages);
+    }
+  }
+
+  return paginationArray;
+};
+
+
 const paginate = (current: number, total: number, delta = 2, gap = "...") => {
   if (total <= 1) return [1];
 
@@ -81,7 +125,8 @@ const paginate = (current: number, total: number, delta = 2, gap = "...") => {
     center.push(current + i);
   }
 
-  const filteredCenter = center.filter((page) => +page > 1 && +page < +total);
+  //const filteredCenter = center.filter((page) => +page > 1 && +page < +total);
+  const filteredCenter = center.filter((page: number) => page > 1 && page < +total);
 
   const includeLeftGap = current > 3 + delta;
   const includeLeftPages = current === 3 + delta;
