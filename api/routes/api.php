@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest', 'throttle:3,1']])->name('api.auth');
 
-Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
+Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
         //region Extensions
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
@@ -138,7 +138,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth', 'auth:sanctum', 'throt
     });
 });
 
-Route::group(['prefix' => 'post', 'middleware' => ['auth', 'auth:sanctum', 'throttle:50,1'], 'as' => 'api.post'], function () {
+Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
         //region Extensions
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
