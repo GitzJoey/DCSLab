@@ -9,7 +9,7 @@ export interface BranchType {
     address: string,
     city: string,
     contact: string,
-    status: string,
     is_main: boolean,
     remarks: string,
+    status: string,
 }

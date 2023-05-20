@@ -2,6 +2,7 @@ import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { ProductGroupType } from "../types/resources/ProductGroupType";
+import { authAxiosInstance } from "../axios";
 import { ServiceResponseType } from "../types/ServiceResponseType";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
@@ -16,6 +17,34 @@ export default class ProductGroupService {
         this.ziggyRoute = this.ziggyRouteStore.getZiggy;
 
         this.errorHandlerService = new ErrorHandlerService();
+    }
+    
+    public async create(
+        companyIdText: string, 
+        codeText: string, 
+        nameText: string,
+        categoryDropDown: string,
+    ): Promise<ServiceResponseType<ProductGroupType | null>> {
+        try {
+            await authAxiosInstance.get('/sanctum/csrf-cookie');
+            const response: AxiosResponse<ProductGroupType> = await authAxiosInstance.post(
+                'store', { 
+                    company_id: companyIdText, 
+                    code: codeText, 
+                    name: nameText, 
+                    category: categoryDropDown
+                }
+            );
+
+            return {
+                success: true,
+                statusCode: response.status,
+                statusDescription: response.statusText,
+                data: response.data
+            }
+        } catch (e: unknown) {
+            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+        }
     }
 
     public async readAny(): Promise<ServiceResponseType<ProductGroupType[] | null>> {
