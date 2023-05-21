@@ -12,7 +12,7 @@ use App\Models\User;
 use Exception;
 use Vinkla\Hashids\Facades\Hashids;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     private $userActions;
 
@@ -137,7 +137,7 @@ class UserController extends Controller
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().'.'.$image->getClientOriginalExtension();
+            $filename = time() . '.' . $image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -198,7 +198,7 @@ class UserController extends Controller
 
         if (array_key_exists('img_path', $request)) {
             $image = $request['img_path'];
-            $filename = time().'.'.$image->getClientOriginalExtension();
+            $filename = time() . '.' . $image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
