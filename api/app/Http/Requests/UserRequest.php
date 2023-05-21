@@ -139,6 +139,7 @@ class UserRequest extends FormRequest
         switch ($currentRouteMethod) {
             case 'readAny':
                 $this->merge([
+                    'search' => $this->has('search') && ! is_null($this->search) ? $this->search : '',
                     'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
                 ]);
                 break;
