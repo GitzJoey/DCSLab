@@ -127,7 +127,6 @@ class SupplierRequest extends FormRequest
     {
         return [
             'company_id' => trans('validation_attributes.supplier.company'),
-
             'code' => trans('validation_attributes.supplier.code'),
             'name' => trans('validation_attributes.supplier.name'),
             'address' => trans('validation_attributes.supplier.address'),
@@ -139,14 +138,12 @@ class SupplierRequest extends FormRequest
             'payment_term' => trans('validation_attributes.supplier.payment_term'),
             'remarks' => trans('validation_attributes.supplier.remarks'),
             'status' => trans('validation_attributes.supplier.status'),
-            
             'pic_create_user' => trans('validation_attributes.supplier.pic.create_user'),
             'pic_contact_person_name' => trans('validation_attributes.supplier.pic.name'),
             'pic_email' => trans('validation_attributes.supplier.pic.email'),
             'pic_password' => trans('validation_attributes.supplier.pic.password'),
-            
             'arr_supplier_product_product_id.*' => trans('validation_attributes.supplier.supplier_product.product'),
-            'arr_supplier_product_main_product_id.*' => trans('validation_attributes.supplier.supplier_product.main_product'),  
+            'arr_supplier_product_main_product_id.*' => trans('validation_attributes.supplier.supplier_product.main_product'),
         ];
     }
 

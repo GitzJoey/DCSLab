@@ -37,6 +37,7 @@ return [
         'address' => 'Address',
         'city' => 'City',
         'postal_code' => 'Postal Code',
+        'img_path' => 'Img Path',
         'country' => 'Country',
         'tax_id' => 'Tax ID',
         'ic_num' => 'IC Num',
@@ -44,7 +45,7 @@ return [
         'remarks' => 'Remarks',
         'status' => 'Status',
         'access_branch' => [
-            'branch' => 'Branch'
+            'branch' => 'Branch',
         ],
     ],
     'warehouse' => [
@@ -61,6 +62,7 @@ return [
     'chart_of_account' => [
         'company' => 'Company',
         'branch' => 'Branch',
+        'parent' => 'Parent',
         'code' => 'Code',
         'name' => 'Name',
         'account_type' => 'Account Type',
@@ -178,6 +180,12 @@ return [
             'contact' => 'Contact',
             'is_main' => 'Is Main',
             'remarks' => 'Remarks',
+        ],
+        'pic' => [
+            'create_user' => 'Create User',
+            'name' => 'PIC Name',
+            'email' => 'PIC Email',
+            'password' => 'PIC Password',
         ],
     ],
     'purchase_order' => [
