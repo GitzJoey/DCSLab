@@ -37,6 +37,7 @@ return [
         'address' => 'Alamat',
         'city' => 'Kota',
         'postal_code' => 'Kode POS',
+        'img_path' => 'Gambar',
         'country' => 'Negara',
         'tax_id' => 'No. NPWP',
         'ic_num' => 'No. KTP',
@@ -44,7 +45,7 @@ return [
         'remarks' => 'Catatan',
         'status' => 'Status',
         'access_branch' => [
-            'branch' => 'Cabang'
+            'branch' => 'Cabang',
         ],
     ],
     'warehouse' => [
@@ -61,6 +62,7 @@ return [
     'chart_of_account' => [
         'company' => 'Perusahaan',
         'branch' => 'Cabang',
+        'parent' => 'Induk',
         'code' => 'Kode',
         'name' => 'Nama',
         'account_type' => 'Tipe Akun',
@@ -178,6 +180,12 @@ return [
             'contact' => 'Kontak',
             'is_main' => 'Alamat Utama',
             'remarks' => 'Keterangan',
+        ],
+        'pic' => [
+            'create_user' => 'Membuat Akun Login',
+            'name' => 'Nama Penanggung Jawab',
+            'email' => 'Email Penanggung Jawab',
+            'password' => 'Sandi',
         ],
     ],
     'purchase_order' => [

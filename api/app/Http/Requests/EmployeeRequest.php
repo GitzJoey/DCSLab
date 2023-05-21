@@ -123,6 +123,7 @@ class EmployeeRequest extends FormRequest
             'address' => trans('validation_attributes.employee.address'),
             'city' => trans('validation_attributes.employee.city'),
             'postal_code' => trans('validation_attributes.employee.postal_code'),
+            'img_path' => trans('validation_attributes.employee.img_path'),
             'country' => trans('validation_attributes.employee.country'),
             'tax_id' => trans('validation_attributes.employee.tax_id'),
             'ic_num' => trans('validation_attributes.employee.ic_num'),

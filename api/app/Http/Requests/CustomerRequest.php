@@ -161,6 +161,10 @@ class CustomerRequest extends FormRequest
             'arr_customer_address_contact' => trans('validation_attributes.customer.customer_address.contact'),
             'arr_customer_address_is_main' => trans('validation_attributes.customer.customer_address.is_main'),
             'arr_customer_address_remarks' => trans('validation_attributes.customer.customer_address.remarks'),
+            'pic_create_user' => trans('validation_attributes.customer.pic.create_user'),
+            'pic_contact_person_name' => trans('validation_attributes.customer.pic.name'),
+            'pic_email' => trans('validation_attributes.customer.pic.email'),
+            'pic_password' => trans('validation_attributes.customer.pic.password'),
         ];
     }
 
