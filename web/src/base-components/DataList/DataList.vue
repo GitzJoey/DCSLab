@@ -81,7 +81,7 @@ const paginate = (current: number, total: number, delta = 2, gap = "...") => {
     center.push(current + i);
   }
 
-  const filteredCenter = center.filter((page) => +page > 1 && +page < +total);
+  const filteredCenter = center.filter((page) => +page > 1 && +page < total);
 
   const includeLeftGap = current > 3 + delta;
   const includeLeftPages = current === 3 + delta;

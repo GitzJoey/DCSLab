@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Import
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { ViewTitleLayout } from "../../base-components/FormLayout";
@@ -8,22 +8,54 @@ import { ViewMode } from "../../types/enums/ViewMode";
 import DataList from "../../base-components/DataList/DataList.vue";
 import Table from "../../base-components/Table";
 import { CheckCircleIcon } from "lucide-vue-next";
+import { CompanyType } from "../../types/resources/CompanyType";
+import { ServiceResponseType } from "../../types/ServiceResponseType";
+import CompanyService from "../../services/CompanyService";
+import { XIcon } from "lucide-vue-next";
+
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
+const companyService = new CompanyService();
 //#endregion
 
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
+const companyList = ref({});
+const expandDetail = ref(null);
+
 //#endregion
 
 //#region onMounted
 onMounted(() => {
+  getCompanyList();
+
   // console.log("a");
 });
 //#endregion
+
+// # Region method
+async function getCompanyList() {
+  try {
+    companyList.value = {};
+    let data = await companyService.read();
+    console.log(data.data, "<< ini data");
+    companyList.value = data;
+  } catch (e) {
+    throw e;
+  }
+}
+
+const toggleDetail = (idx: any) => {
+  if (expandDetail.value === idx) {
+    expandDetail.value = null;
+  } else {
+    expandDetail.value = idx;
+  }
+};
+// # End Region method
 </script>
 
 <template>
@@ -33,53 +65,64 @@ onMounted(() => {
       <ViewTitleLayout>
         <template #title>
           <div>
-              <h1>Company List</h1>
+            <h1>Company List</h1>
           </div>
         </template>
       </ViewTitleLayout>
-      <DataList>
-        <template #table="tableProps" >
-          <Table class="mt-5" :hover="true" >
-              <Table.Thead variant="light" >
-                <Table.Tr>
-                  <Table.Th class="whitespace-nowrap" >
-                    Name
-                  </Table.Th>
-                  <Table.Th class="whitespace-nowrap" >
-                    Email
-                  </Table.Th>
-                  <Table.Th class="whitespace-nowrap" >
-                    Roles
-                  </Table.Th>
-                  <Table.Th class="whitespace-nowrap" >
-                    Status
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
+      <DataList :data="companyList">
+        <template #table="tableProps">
+          <Table class="mt-5" :hover="true">
+            <Table.Thead variant="light">
+              <Table.Tr>
+                <Table.Th class="whitespace-nowrap">
+                  {{ t("Kode") }}
+                </Table.Th>
+                <Table.Th class="whitespace-nowrap"> Name </Table.Th>
+                <Table.Th class="whitespace-nowrap"> Default </Table.Th>
+                <Table.Th class="whitespace-nowrap"> Status </Table.Th>
+              </Table.Tr>
+            </Table.Thead>
 
-              <Table.Tbody>
-                <Table.Tr>
-                  <Table.Td>
-                    1234
-                  </Table.Td>
-                  <Table.Td>
-                    <a class="hover:animate-pulse" >
-                      test@mail.com
+            <Table.Tbody>
+              <template
+                v-if="tableProps.dataList !== undefined"
+                v-for="(item, index) in tableProps.dataList.data"
+              >
+                <tr
+                  :class="{
+                    'intro-x': true,
+                    'line-through': item.status === 'DELETED',
+                  }"
+                >
+                  <td>
+                    {{ item.code }}
+                  </td>
+                  <td>
+                    <a
+                      href=""
+                      @click.prevent="toggleDetail(index)"
+                      class="hover:animate-pulse"
+                    >
+                      {{ item.name }}
                     </a>
-                  </Table.Td>
-                  <Table.Td>
-                    <CheckCircleIcon/>
-                  </Table.Td>
-                  <Table.Td>
-                    ACTIVE
-                  </Table.Td>
-                </Table.Tr>
-              </Table.Tbody>
-          </Table>
+                  </td>
 
+                  <td>
+                    <CheckCircleIcon v-if="item.default" />
+                    <XIcon v-else />
+                  </td>
+
+                  <td>
+                    <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
+                    <!-- <XIcon v-if="item.status === 'INACTIVE'" /> -->
+                    <!-- <XIcon v-if="item.status === 'DELETED'" /> -->
+                  </td>
+                </tr>
+              </template>
+            </Table.Tbody>
+          </Table>
         </template>
       </DataList>
     </LoadingOverlay>
-    
   </div>
 </template>

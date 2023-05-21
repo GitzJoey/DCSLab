@@ -13,10 +13,12 @@ import {
   ThreeColsLayout,
 } from "../../base-components/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
+import UserService from "../../services/UserService";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
+const userServices = new UserService()
 //#endregion
 
 //#region Data - Pinia
@@ -53,7 +55,9 @@ const countriesDDL = ref([]);
 //#endregion
 
 //#region onMounted
-onMounted(() => {});
+onMounted(() => {
+  getUser()
+});
 
 onUnmounted(() => {});
 //#endregion
@@ -69,6 +73,15 @@ const toggleDetail = (idx: number) => {
     expandDetail.value = idx;
   }
 };
+
+async function getUser() {
+  try {
+    // let data = await userServices.readAny()
+    // console.log(data)
+  } catch (error) {
+    throw error
+  }
+}
 //#endregion
 
 //#region Watcher
@@ -113,9 +126,9 @@ const toggleDetail = (idx: number) => {
                   <Table.Th class="whitespace-nowrap"></Table.Th>
                 </Table.Tr>
               </Table.Thead>
-              <Table.Tbody v-if="tableProps.dataList !== undefined">
+              <Table.Tbody v-if="tableProps?.dataList !== undefined">
                 <template
-                  v-for="(item, itemIdx) in tableProps.dataList.data"
+                  v-for="(item, itemIdx) in tableProps?.dataList?.data"
                   :key="item.ulid"
                 >
                   <Table.Tr class="intro-x">
