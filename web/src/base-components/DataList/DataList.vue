@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRef } from "vue";
+import { computed, onMounted, ref, toRef, watch } from "vue";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { Menu } from "../../base-components/Headless";
@@ -139,6 +139,17 @@ const paginate = (current: number, total: number, delta = 2, gap = "...") => {
 
   return [1, ...filteredCenter, total];
 };
+
+
+// Watch region
+watch(search , (newSearch:string) => {
+  if(newSearch.length > 3 || newSearch === '') {
+    emit('dataListChange', { page : 1, per_page : 10 , search : newSearch})  
+  }
+})
+// End Watch Region
+
+
 </script>
 
 <template>
@@ -146,7 +157,12 @@ const paginate = (current: number, total: number, delta = 2, gap = "...") => {
     <div class="grid justify-items-end">
       <div class="flex flex-row gap-2">
         <div class="relative w-56 text-slate-500">
-          <FormInput type="text" class="w-56 pr-10" placeholder="Search..." />
+          <FormInput 
+            type="text" 
+            class="w-56 pr-10" 
+            placeholder="Search..." 
+            v-model="search"
+            />
           <Lucide
             icon="Search"
             class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"

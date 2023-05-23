@@ -14,6 +14,9 @@ import {
 } from "../../base-components/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
+import { CheckCircleIcon } from "lucide-vue-next";
+import { XIcon } from "lucide-vue-next";
+
 //#endregion
 
 //#region Declarations
@@ -56,7 +59,7 @@ const countriesDDL = ref([]);
 
 //#region onMounted
 onMounted(() => {
-  getUser()
+  getUser({})
 });
 
 onUnmounted(() => {});
@@ -74,13 +77,23 @@ const toggleDetail = (idx: number) => {
   }
 };
 
-async function getUser() {
+async function getUser(args : { page?: number, per_page ? : number, search ? : string  }) {
   try {
-    // let data = await userServices.readAny()
-    // console.log(data)
+    userList.value = {}
+    if (args.page === undefined) args.page  = 1
+    if (args.per_page === undefined) args.per_page = 10;
+    if (args.search === undefined) args.search = "";
+
+    
+    let data = await userServices.readAny(args)
+    userList.value = data
   } catch (error) {
     throw error
   }
+}
+
+const onDataListChange = ({page , per_page, search} : {page : number , per_page: number , search : string}) => {
+    getUser({page, per_page, search});
 }
 //#endregion
 
@@ -106,7 +119,7 @@ async function getUser() {
         </ViewTitleLayout>
 
         <AlertPlaceholder />
-        <DataList>
+        <DataList v-on:dataListChange="onDataListChange" :title="t('views.user.table.title')" :data="userList" :enableSearch="true" >
           <template #table="tableProps">
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
@@ -128,9 +141,10 @@ async function getUser() {
               </Table.Thead>
               <Table.Tbody v-if="tableProps?.dataList !== undefined">
                 <template
-                  v-for="(item, itemIdx) in tableProps?.dataList?.data"
+                  v-for="(item, itemIdx) in tableProps?.dataList?.data?.data"
                   :key="item.ulid"
                 >
+                
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td
@@ -142,12 +156,16 @@ async function getUser() {
                       ></Table.Td
                     >
                     <Table.Td>
-                      <CheckCircleIcon
-                        v-if="item.profile.status === 'ACTIVE'"
-                      />
-                      <XIcon v-if="item.profile.status === 'INACTIVE'" />
+                      <span v-for="(r, idx) in item?.roles" >{{ r.display_name }} </span>
                     </Table.Td>
-                    <Table.Td>@angelinajolie</Table.Td>
+                    <Table.Td>
+                      <!-- <p>{{ item?.profile?.status === 'INACTIVE' }}</p> -->
+                      <CheckCircleIcon
+                        v-if="item?.profile?.status === 'ACTIVE'"
+                      />
+                      <XIcon v-if="item?.profile?.status === 'INACTIVE'" />
+                    </Table.Td>
+                    <!-- <Table.Td>@angelinajolie</Table.Td> -->
                   </Table.Tr>
                   <Table.Tr
                     :class="{
