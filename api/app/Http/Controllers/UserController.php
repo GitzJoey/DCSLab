@@ -135,9 +135,9 @@ class UserController extends BaseController
             'remarks' => $request['remarks'],
         ];
 
-        if (array_key_exists('img_path', $request)) {
+        if (array_key_exists('img_path', $request) && $request['img_path']) {
             $image = $request['img_path'];
-            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $filename = time().'.'.$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
@@ -145,7 +145,7 @@ class UserController extends BaseController
 
         $rolesArr = [];
         foreach ($request['roles'] as $r) {
-            array_push($rolesId, Hashids::decode($r)[0]);
+            array_push($rolesArr, Hashids::decode($r)[0]);
         }
 
         $result = null;
@@ -192,13 +192,13 @@ class UserController extends BaseController
 
         $settingsArr = [
             'PREFS.THEME' => $request['theme'],
-            'PREFS.DATE_FORMAT' => $request['dateFormat'],
-            'PREFS.TIME_FORMAT' => $request['timeFormat'],
+            'PREFS.DATE_FORMAT' => $request['date_format'],
+            'PREFS.TIME_FORMAT' => $request['time_format'],
         ];
 
-        if (array_key_exists('img_path', $request)) {
+        if (array_key_exists('img_path', $request) && $request['img_path']) {
             $image = $request['img_path'];
-            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $filename = time().'.'.$image->getClientOriginalExtension();
 
             $file = $image->storePubliclyAs('usr', $filename, 'public');
             $profileArr['img_path'] = $file;
