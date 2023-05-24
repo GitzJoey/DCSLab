@@ -16,7 +16,7 @@ import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { CheckCircleIcon } from "lucide-vue-next";
 import { XIcon } from "lucide-vue-next";
-
+import { UserType } from '../../types/resources/UserType'
 //#endregion
 
 //#region Declarations
@@ -51,15 +51,16 @@ const user = ref({
     time_format: "",
   },
 });
-const userList = ref({});
+const userList = ref<UserType[] | null | undefined>([]);
 const rolesDDL = ref([]);
 const statusDDL = ref([]);
 const countriesDDL = ref([]);
+const current_page = ref(1)
 //#endregion
 
 //#region onMounted
 onMounted(() => {
-  getUser({})
+  getUser({ page : current_page.value})
 });
 
 onUnmounted(() => {});
@@ -79,14 +80,16 @@ const toggleDetail = (idx: number) => {
 
 async function getUser(args : { page?: number, per_page ? : number, search ? : string  }) {
   try {
-    userList.value = {}
+    userList.value = []
     if (args.page === undefined) args.page  = 1
     if (args.per_page === undefined) args.per_page = 10;
     if (args.search === undefined) args.search = "";
 
+
     
     let data = await userServices.readAny(args)
-    userList.value = data
+    console.log(data.data)
+    userList.value = data?.data
   } catch (error) {
     throw error
   }
@@ -141,7 +144,7 @@ const onDataListChange = ({page , per_page, search} : {page : number , per_page:
               </Table.Thead>
               <Table.Tbody v-if="tableProps?.dataList !== undefined">
                 <template
-                  v-for="(item, itemIdx) in tableProps?.dataList?.data?.data"
+                  v-for="(item, itemIdx) in tableProps?.dataList?.data"
                   :key="item.ulid"
                 >
                 
@@ -159,24 +162,11 @@ const onDataListChange = ({page , per_page, search} : {page : number , per_page:
                       <span v-for="(r, idx) in item?.roles" >{{ r.display_name }} </span>
                     </Table.Td>
                     <Table.Td>
-                      <!-- <p>{{ item?.profile?.status === 'INACTIVE' }}</p> -->
                       <CheckCircleIcon
                         v-if="item?.profile?.status === 'ACTIVE'"
                       />
                       <XIcon v-if="item?.profile?.status === 'INACTIVE'" />
                     </Table.Td>
-                    <!-- <Table.Td>@angelinajolie</Table.Td> -->
-                  </Table.Tr>
-                  <Table.Tr
-                    :class="{
-                      'intro-x': true,
-                      'hidden transition-all': expandDetail !== itemIdx,
-                    }"
-                  >
-                    <Table.Td>2</Table.Td>
-                    <Table.Td>Brad</Table.Td>
-                    <Table.Td>Pitt</Table.Td>
-                    <Table.Td>@bradpitt</Table.Td>
                   </Table.Tr>
                 </template>
               </Table.Tbody>

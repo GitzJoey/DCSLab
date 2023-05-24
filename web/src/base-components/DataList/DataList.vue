@@ -23,7 +23,7 @@ const visible = toRef(props, "visible");
 const canPrint = toRef(props, "canPrint");
 const canExport = toRef(props, "canExport");
 const enableSearch = toRef(props, "enableSearch");
-const data = toRef(props, "data");
+const data = toRef<any, any>(props, "data");
 
 const search = ref("");
 const pageSize = ref(10);
@@ -36,15 +36,13 @@ const dataNotFound = computed(() => {
 
 const pages = computed(() => {
   if (
-    data.value.meta.current_page !== undefined &&
-    data.value.meta.last_page !== undefined
+    data.value?.meta?.current_page !== undefined &&
+    data.value?.meta?.last_page !== undefined
   ) {
-    return paginate(
-      data.value.meta.current_page,
-      data.value.meta.total,
-      2,
-      "..."
-    );
+    return generatePaginationArray(
+      data.value?.meta?.current_page,
+      data.value?.meta?.total,
+    )
   } else {
     return [];
   }
@@ -205,11 +203,9 @@ watch(search , (newSearch:string) => {
         <Pagination.Link>
           <Lucide icon="ChevronLeft" class="w-4 h-4" />
         </Pagination.Link>
-        <Pagination.Link>...</Pagination.Link>
-        <Pagination.Link>1</Pagination.Link>
-        <Pagination.Link active>2</Pagination.Link>
-        <Pagination.Link>3</Pagination.Link>
-        <Pagination.Link>...</Pagination.Link>
+        <Pagination.Link v-for="(n, nIdx) in pages" >
+          {{ n }}
+        </Pagination.Link>
         <Pagination.Link>
           <Lucide icon="ChevronRight" class="w-4 h-4" />
         </Pagination.Link>
