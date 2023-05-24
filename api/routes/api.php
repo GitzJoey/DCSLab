@@ -226,5 +226,12 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
             });
         });
         //endregion
+
+        Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
+            Route::group(['prefix' => 'users', 'as' => '.users'], function () {
+                Route::post('save', [UserController::class, 'store'])->name('.save');
+                Route::post('edit/{user:ulid}', [UserController::class, 'update'])->name('.edit');
+            });
+        });
     });
 });
