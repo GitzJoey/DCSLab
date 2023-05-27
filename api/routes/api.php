@@ -82,10 +82,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function () {
-                Route::get('readAny/productgroupcategory', [ProductGroupController::class, 'getProductGroupCategory'])->name('.read_any.productgroupcategories');
-                Route::get('readAny/unitcategory', [UnitController::class, 'getUnitCategory'])->name('.read_any.unitcategories');
-                Route::get('readAny/product_type', [ProductController::class, 'getProductType'])->name('.read_any.product_type');
-                Route::get('readAny/active_product', [ProductController::class, 'getActiveProduct'])->name('.read_any.active_product');
+                Route::get('read_any/productgroupcategory', [ProductGroupController::class, 'getProductGroupCategory'])->name('.read_any.productgroupcategories');
+                Route::get('read_any/unitcategory', [UnitController::class, 'getUnitCategory'])->name('.read_any.unitcategories');
+                Route::get('read_any/product_type', [ProductController::class, 'getProductType'])->name('.read_any.product_type');
+                Route::get('read_any/active_product', [ProductController::class, 'getActiveProduct'])->name('.read_any.active_product');
             });
         });
 
