@@ -62,9 +62,7 @@ const toggleDetail = (idx: any) => {
       <div v-if="mode == ViewMode.LIST"></div>
       <ViewTitleLayout>
         <template #title>
-          <div>
-            <h1>Company List</h1>
-          </div>
+          {{ t("views.company.page_title") }}
         </template>
       </ViewTitleLayout>
       <DataList :data="companyList"  :title="t('views.company.table.title')" >
