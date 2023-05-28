@@ -32,7 +32,6 @@ const expandDetail = ref(null);
 onMounted(() => {
   getCompanyList();
 
-  // console.log("a");
 });
 //#endregion
 
@@ -41,7 +40,6 @@ async function getCompanyList() {
   try {
     companyList.value = {};
     let data = await companyService.read();
-    console.log(data.data, "<< ini data");
     companyList.value = data;
   } catch (e) {
     throw e;
@@ -69,17 +67,23 @@ const toggleDetail = (idx: any) => {
           </div>
         </template>
       </ViewTitleLayout>
-      <DataList :data="companyList">
+      <DataList :data="companyList"  :title="t('views.company.table.title')" >
         <template #table="tableProps">
           <Table class="mt-5" :hover="true">
             <Table.Thead variant="light">
               <Table.Tr>
                 <Table.Th class="whitespace-nowrap">
-                  {{ t("Kode") }}
+                  {{ t("views.company.table.cols.code") }}
                 </Table.Th>
-                <Table.Th class="whitespace-nowrap"> Name </Table.Th>
-                <Table.Th class="whitespace-nowrap"> Default </Table.Th>
-                <Table.Th class="whitespace-nowrap"> Status </Table.Th>
+                <Table.Th class="whitespace-nowrap">
+                  {{ t("views.company.table.cols.name") }}
+                </Table.Th>
+                <Table.Th class="whitespace-nowrap">
+                  {{ t("views.company.table.cols.default") }}
+                </Table.Th>
+                <Table.Th class="whitespace-nowrap">
+                  {{ t("views.company.table.cols.status") }}
+                </Table.Th>
               </Table.Tr>
             </Table.Thead>
 

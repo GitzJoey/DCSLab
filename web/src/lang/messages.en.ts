@@ -9,7 +9,7 @@ import register from "./en/views/register.json";
 import reset_password from "./en/views/reset_password.json";
 import profile from "./en/views/profile.json";
 import user from "./en/views/user.json";
-
+import company from './en/views/company.json'
 export default {
     "components": {
         "menu": menu,
@@ -23,6 +23,7 @@ export default {
         "register": register,
         "reset_password": reset_password,
         "profile": profile,
-        "user": user
+        "user": user,
+        "company" : company
     }
 }

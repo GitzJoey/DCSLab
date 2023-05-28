@@ -14,7 +14,7 @@ const props = defineProps({
   canPrint: { type: Boolean, default: false },
   canExport: { type: Boolean, default: false },
   enableSearch: { type: Boolean, default: false },
-  data: { type: Array as PropType<any[] | null>, default: null },
+  data: { type: Object as PropType<any>, default: null },
 });
 
 const emit = defineEmits(["dataListChange", "print", "export"]);
