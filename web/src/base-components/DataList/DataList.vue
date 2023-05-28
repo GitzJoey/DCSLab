@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, toRef, watch } from "vue";
+import { PropType, computed, onMounted, ref, toRef, watch } from "vue";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { Menu } from "../../base-components/Headless";
@@ -14,7 +14,7 @@ const props = defineProps({
   canPrint: { type: Boolean, default: false },
   canExport: { type: Boolean, default: false },
   enableSearch: { type: Boolean, default: false },
-  data: { type: Object, default: null },
+  data: { type: Array as PropType<any[] | null>, default: null },
 });
 
 const emit = defineEmits(["dataListChange", "print", "export"]);
@@ -53,20 +53,20 @@ const first = computed(() => {
 });
 
 let previous = computed(() => {
-  if (data.value.meta.current_page === undefined) return 1;
-  if (data.value.meta.current_page === 1) return 1;
-  return data.value.meta.current_page - 1;
+  if (data.value?.meta.current_page === undefined) return 1;
+  if (data.value?.meta.current_page === 1) return 1;
+  return data.value?.meta.current_page - 1;
 });
 
 const next = computed(() => {
-  if (data.value.meta.current_page === undefined) return 1;
-  if (data.value.meta.current_page === data.value.meta.last_page)
-    return data.value.meta.last_page;
-  return data.value.meta.current_page + 1;
+  if (data.value?.meta.current_page === undefined) return 1;
+  if (data.value?.meta.current_page === data.value?.meta.last_page)
+    return data.value?.meta.last_page;
+  return data.value?.meta.current_page + 1;
 });
 
 const last = computed(() => {
-  return data.value.meta.last_page;
+  return data.value?.meta.last_page;
 });
 
 const generatePaginationArray = (currentPage: number, totalPages: number): number[] => {
@@ -142,7 +142,7 @@ const paginate = (current: number, total: number, delta = 2, gap = "...") => {
 // Watch region
 watch(search , (newSearch:string) => {
   if(newSearch.length > 3 || newSearch === '') {
-    emit('dataListChange', { page : 1, per_page : 10 , search : newSearch})  
+    emit('dataListChange', { page : 1, per_page : pageSize , search : newSearch})  
   }
 })
 // End Watch Region
@@ -166,7 +166,10 @@ watch(search , (newSearch:string) => {
             class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
           />
         </div>
-        <Button>
+        <Button
+       @click="$emit('dataListChange', {page : data?.meta?.current_page ? data?.meta?.current_page : 1, per_page : pageSize, search : search})"
+        
+        >
           <Lucide icon="RefreshCw" class="w-4 h-4" />
         </Button>
         <Menu>
@@ -197,27 +200,36 @@ watch(search , (newSearch:string) => {
     </div>
     <div class="flex flex-wrap intro-y sm:flex-row sm:flex-nowrap">
       <Pagination class="w-full sm:w-auto sm:mr-auto">
-        <Pagination.Link>
+        <Pagination.Link @click="$emit('dataListChange', { page : first, per_page : pageSize, search : search })">
           <Lucide icon="ChevronsLeft" class="w-4 h-4" />
         </Pagination.Link>
-        <Pagination.Link>
+        <Pagination.Link @click="$emit('dataListChange', { page : previous, per_page : pageSize, search : search})">
           <Lucide icon="ChevronLeft" class="w-4 h-4" />
         </Pagination.Link>
         <Pagination.Link v-for="(n, nIdx) in pages" >
-          {{ n }}
+          {{ n > 0? n  : '...' }}
         </Pagination.Link>
-        <Pagination.Link>
+        <Pagination.Link 
+          @click="$emit('dataListChange', {page : next, per_page : pageSize, search : search})"
+        >
           <Lucide icon="ChevronRight" class="w-4 h-4" />
         </Pagination.Link>
-        <Pagination.Link>
+        <Pagination.Link
+        @click="$emit('dataListChange', {page : last, per_page : pageSize, search : search})"
+        >
           <Lucide icon="ChevronsRight" class="w-4 h-4" />
         </Pagination.Link>
       </Pagination>
-      <FormSelect v-model="pageSize" class="w-20 mt-3 sm:mt-0">
-        <option>10</option>
-        <option>25</option>
-        <option>35</option>
-        <option>50</option>
+      <FormSelect
+       v-model="pageSize" 
+       class="w-20 mt-3 sm:mt-0"
+       @change="$emit('dataListChange', {page : data?.meta?.current_page ? data?.meta?.current_page : 1, per_page : pageSize, search : search})"
+
+       >
+        <option value="10" >10</option>
+        <option value="25" >25</option>
+        <option value="35">35</option>
+        <option value="50">50</option>
       </FormSelect>
     </div>
   </div>

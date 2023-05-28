@@ -85,10 +85,9 @@ async function getUser(args : { page?: number, per_page ? : number, search ? : s
     if (args.per_page === undefined) args.per_page = 10;
     if (args.search === undefined) args.search = "";
 
-
+    
     
     let data = await userServices.readAny(args)
-    console.log(data.data)
     userList.value = data?.data
   } catch (error) {
     throw error
