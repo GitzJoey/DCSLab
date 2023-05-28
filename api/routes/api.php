@@ -39,7 +39,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [CompanyController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{company:ulid}', [CompanyController::class, 'read'])->name('.read');
 
-                Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('.read.all_active');
+                Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('.read.all.active');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
                 Route::get('read', [BranchController::class, 'readAny'])->name('.read_any');
@@ -82,10 +82,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function () {
-                Route::get('read/productgroupcategory', [ProductGroupController::class, 'getProductGroupCategory'])->name('.read.productgroupcategories');
-                Route::get('read/unitcategory', [UnitController::class, 'getUnitCategory'])->name('.read.unitcategories');
-                Route::get('read/product_type', [ProductController::class, 'getProductType'])->name('.read.product_type');
-                Route::get('read/active_product', [ProductController::class, 'getActiveProduct'])->name('.read.active_product');
+                Route::get('read/productgroup/category', [ProductGroupController::class, 'getProductGroupCategory'])->name('.read.productgroup.categories');
+                Route::get('read/unit/category', [UnitController::class, 'getUnitCategory'])->name('.read.unit.categories');
+                Route::get('read/product/type', [ProductController::class, 'getProductType'])->name('.read.product.type');
+                Route::get('read/product/all/active', [ProductController::class, 'getAllActiveProduct'])->name('.read.product.all.active');
             });
         });
 
