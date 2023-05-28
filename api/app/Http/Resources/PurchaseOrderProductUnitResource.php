@@ -47,15 +47,16 @@ class PurchaseOrderProductUnitResource extends JsonResource
             'product_unit_amount_per_unit' => $this->product_unit_amount_per_unit,
             'product_unit_amount_total' => $this->product_unit_amount_total,
             'product_unit_initial_price' => $this->product_unit_initial_price,
-            $this->mergeWhen($this->relationLoaded('productUnitPerUnitDiscounts'), [
-                'product_unit_per_unit_discount' => PurchaseOrderDiscountResource::collection($this->whenLoaded('productUnitPerUnitDiscounts')),
+            $this->mergeWhen($this->relationLoaded('productUnitPerUnitDiscount'), [
+                'product_unit_per_unit_discount' => PurchaseOrderDiscountResource::collection($this->whenLoaded('productUnitPerUnitDiscount')),
             ]),
             'product_unit_sub_total' => $this->product_unit_sub_total,
-            $this->mergeWhen($this->relationLoaded('productUnitPerUnitSubTotalDiscounts'), [
-                'product_unit_per_unit_sub_total_discount' => PurchaseOrderDiscountResource::collection($this->whenLoaded('productUnitPerUnitSubTotalDiscounts')),
+            $this->mergeWhen($this->relationLoaded('productUnitPerUnitSubTotalDiscount'), [
+                'product_unit_per_unit_sub_total_discount' => PurchaseOrderDiscountResource::collection($this->whenLoaded('productUnitPerUnitSubTotalDiscount')),
             ]),
             'product_unit_total' => $this->product_unit_total,
-            'product_unit_global_discount' => $this->product_unit_global_discount,
+            'product_unit_global_discount_percent' => $this->product_unit_global_discount_percent,
+            'product_unit_global_discount_nominal' => $this->product_unit_global_discount_nominal,
             'product_unit_final_price' => $this->product_unit_final_price,
             'vat_status' => $this->setVatStatus($this->vat_status, $this->deleted_at),
             'vat_rate' => $this->vat_rate,

@@ -23,8 +23,6 @@ class PurchaseOrder extends Model
         'supplier_id',
         'shipping_date',
         'shipping_address',
-        'total',
-        'grand_total',
         'remarks',
         'status',
     ];

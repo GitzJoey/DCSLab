@@ -21,8 +21,6 @@ return new class extends Migration
             $table->dateTime('invoice_date', $precision = 0);
             $table->dateTime('shipping_date', $precision = 0)->nullable();
             $table->string('shipping_address')->nullable();
-            $table->decimal('total', 19, 8)->default(0);
-            $table->decimal('grand_total', 19, 8)->default(0);
             $table->string('remarks')->nullable();
             $table->integer('status');
             $table->unsignedBigInteger('created_by')->default(0);

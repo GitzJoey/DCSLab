@@ -3,7 +3,6 @@
 namespace App\Actions\PurchaseOrder;
 
 use App\Enums\DiscountType;
-use App\Enums\VatStatus;
 use App\Models\ProductUnit;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderDiscount;
@@ -77,7 +76,7 @@ class PurchaseOrderActions
                 foreach ($productUnit['per_unit_discount'] as $perUnitDiscount) {
                     $discountType = $perUnitDiscount['discount_type'];
 
-                    if ($discountType == DiscountType::PER_UNIT_PERCENT_DISCOUNT->value || $discountType == DiscountType::PER_UNIT_NOMINAL_DISCOUNT->value) {
+                    if ($discountType == DiscountType::PER_UNIT_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_NOMINAL_DISCOUNT) {
                         $purchaseOrderDiscount = new PurchaseOrderDiscount();
                         $purchaseOrderDiscount->company_id = $purchaseOrder->company_id;
                         $purchaseOrderDiscount->branch_id = $purchaseOrder->branch_id;
@@ -92,7 +91,7 @@ class PurchaseOrderActions
                 foreach ($productUnit['per_unit_sub_total_discount'] as $perUnitSubTotalDiscount) {
                     $discountType = $perUnitSubTotalDiscount['discount_type'];
 
-                    if ($discountType == DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT->value || $discountType == DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT->value) {
+                    if ($discountType == DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT || $discountType == DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT) {
                         $purchaseOrderDiscount = new PurchaseOrderDiscount();
                         $purchaseOrderDiscount->company_id = $purchaseOrder->company_id;
                         $purchaseOrderDiscount->branch_id = $purchaseOrder->branch_id;
@@ -104,8 +103,6 @@ class PurchaseOrderActions
                     }
                 }
             }
-
-            $this->updateSummary($purchaseOrder, false);
 
             DB::commit();
 
@@ -153,7 +150,7 @@ class PurchaseOrderActions
 
             $result = null;
 
-            $query = count($with) != 0 ? PurchaseOrder::with($with) : PurchaseOrder::with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscounts');
+            $query = count($with) != 0 ? PurchaseOrder::with($with) : PurchaseOrder::with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount');
 
             if (! $companyId) {
                 return null;
@@ -202,7 +199,7 @@ class PurchaseOrderActions
 
     public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
     {
-        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscounts')->where('id', '=', $purchaseOrder->id)->first();
+        return $purchaseOrder->with('company', 'branch', 'supplier', 'purchaseOrderDiscounts', 'purchaseOrderProductUnits.productUnitPerUnitDiscount', 'purchaseOrderProductUnits.productUnitPerUnitSubTotalDiscount')->where('id', '=', $purchaseOrder->id)->first();
     }
 
     public function update(
@@ -310,8 +307,6 @@ class PurchaseOrderActions
                 ]
             );
 
-            $this->updateSummary($purchaseOrder, false);
-
             DB::commit();
 
             $this->flushCache();
@@ -365,102 +360,5 @@ class PurchaseOrderActions
         }
 
         return $query->doesntExist();
-    }
-
-    public function updateSummary(PurchaseOrder $purchaseOrder, bool $useTransactions = true): bool
-    {
-        ! $useTransactions ?: DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $purchaseOrderProductUnits = $purchaseOrder->purchaseOrderProductUnits;
-            foreach ($purchaseOrderProductUnits as $purchaseOrderProductUnit) {
-                $purchaseOrderProductUnit->product_unit_amount_total = $purchaseOrderProductUnit->qty * $purchaseOrderProductUnit->product_unit_amount_per_unit;
-
-                $priceWithPerUnitDiscount = $purchaseOrderProductUnit->product_unit_initial_price;
-                foreach ($purchaseOrderProductUnit->productUnitPerUnitDiscounts as $productUnitPerUnitDiscount) {
-                    if ($productUnitPerUnitDiscount->discount_type == DiscountType::PER_UNIT_PERCENT_DISCOUNT) {
-                        $priceWithPerUnitDiscount = $priceWithPerUnitDiscount * (1 - $productUnitPerUnitDiscount->amount);
-                    }
-
-                    if ($productUnitPerUnitDiscount->discount_type == DiscountType::PER_UNIT_NOMINAL_DISCOUNT) {
-                        $priceWithPerUnitDiscount = $priceWithPerUnitDiscount - $productUnitPerUnitDiscount->amount;
-                    }
-                }
-
-                $purchaseOrderProductUnit->product_unit_per_unit_discount = $purchaseOrderProductUnit->product_unit_initial_price - $priceWithPerUnitDiscount;
-                $purchaseOrderProductUnit->product_unit_sub_total = $purchaseOrderProductUnit->qty * ($purchaseOrderProductUnit->product_unit_initial_price - $purchaseOrderProductUnit->product_unit_per_unit_discount);
-
-                $subTotalWithPerUnitSubTotalDiscount = $purchaseOrderProductUnit->product_unit_sub_total;
-                foreach ($purchaseOrderProductUnit->productUnitPerUnitSubTotalDiscounts as $productUnitPerUnitSubTotalDiscount) {
-                    if ($productUnitPerUnitSubTotalDiscount->discount_type == DiscountType::PER_UNIT_SUBTOTAL_PERCENT_DISCOUNT) {
-                        $subTotalWithPerUnitSubTotalDiscount = $subTotalWithPerUnitSubTotalDiscount * (1 - $productUnitPerUnitSubTotalDiscount->amount);
-                    }
-
-                    if ($productUnitPerUnitSubTotalDiscount->discount_type == DiscountType::PER_UNIT_SUBTOTAL_NOMINAL_DISCOUNT) {
-                        $subTotalWithPerUnitSubTotalDiscount = $subTotalWithPerUnitSubTotalDiscount - $productUnitPerUnitSubTotalDiscount->amount;
-                    }
-                }
-
-                $purchaseOrderProductUnit->product_unit_per_unit_sub_total_discount = $purchaseOrderProductUnit->product_unit_sub_total - $subTotalWithPerUnitSubTotalDiscount;
-                $purchaseOrderProductUnit->product_unit_total = $purchaseOrderProductUnit->product_unit_sub_total - $purchaseOrderProductUnit->product_unit_per_unit_sub_total_discount;
-
-                $purchaseOrderProductUnit->save();
-            }
-
-            $purchaseOrder->total = $purchaseOrderProductUnits->sum('product_unit_sub_total');
-            $purchaseOrder->grand_total = $purchaseOrderProductUnits->sum('product_unit_total');
-            $purchaseOrder->save();
-
-            $purchaseOrderProductUnits = $purchaseOrder->purchaseOrderProductUnits;
-            foreach ($purchaseOrderProductUnits as $purchaseOrderProductUnit) {
-                $purchaseOrderProductUnit->product_unit_sub_total = $purchaseOrderProductUnit->qty * $purchaseOrderProductUnit->product_unit_initial_price;
-
-                $totalWithGlobalDiscount = $purchaseOrderProductUnit->product_unit_total;
-                foreach ($purchaseOrder->purchaseOrderDiscounts as $purchaseOrderDiscount) {
-                    if ($purchaseOrderDiscount->discount_type == DiscountType::GLOBAL_PERCENT_DISCOUNT) {
-                        $totalWithGlobalDiscount = $totalWithGlobalDiscount * (1 - $purchaseOrderDiscount->amount);
-                    }
-
-                    if ($purchaseOrderDiscount->discount_type == DiscountType::GLOBAL_NOMINAL_DISCOUNT) {
-                        $totalWithGlobalDiscount = $totalWithGlobalDiscount - ($purchaseOrderDiscount->amount / $purchaseOrder->grand_total);
-                    }
-                }
-
-                $purchaseOrderProductUnit->product_unit_global_discount = $purchaseOrderProductUnit->product_unit_total - $totalWithGlobalDiscount;
-
-                $grandTotal = $purchaseOrderProductUnit->product_unit_total - $purchaseOrderProductUnit->product_unit_global_discount;
-
-                $purchaseOrderProductUnit->product_unit_final_price = $grandTotal / $purchaseOrderProductUnit->qty;
-
-                if ($purchaseOrderProductUnit->vat_status == VatStatus::NON_VAT) {
-                    $purchaseOrderProductUnit->tax_base = $grandTotal;
-                    $purchaseOrderProductUnit->vat_amount = 0;
-                }
-
-                if ($purchaseOrderProductUnit->vat_status == VatStatus::INCLUDE_VAT) {
-                    $purchaseOrderProductUnit->tax_base = $grandTotal / $purchaseOrderProductUnit->vat_rate;
-                    $purchaseOrderProductUnit->vat_amount = $grandTotal - $purchaseOrderProductUnit->tax_base;
-                }
-
-                if ($purchaseOrderProductUnit->vat_status == VatStatus::EXCLUDE_VAT) {
-                    $purchaseOrderProductUnit->tax_base = $grandTotal;
-                    $purchaseOrderProductUnit->vat_amount = $grandTotal * $purchaseOrderProductUnit->vat_rate;
-                }
-
-                $purchaseOrderProductUnit->save();
-            }
-
-            ! $useTransactions ?: DB::commit();
-
-            return true;
-        } catch (Exception $e) {
-            ! $useTransactions ?: DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
     }
 }

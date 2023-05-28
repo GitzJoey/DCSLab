@@ -141,14 +141,15 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
             'company_id' => $company->id,
             'branch_id' => $branch->id,
             'purchase_order_id' => $result->id,
-            'product_id' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_id'],
-            'product_unit_id' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_unit_id'],
-            'qty' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['qty'],
-            'product_unit_amount_per_unit' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_unit_amount_per_unit'],
-            'product_unit_initial_price' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_unit_initial_price'],
-            'vat_status' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['vat_status'],
-            'vat_rate' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['vat_rate'],
-            'remarks' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['remarks'],
+            'product_id' => $purchaseOrderProductUnitArr[0]['product_id'],
+            'product_unit_id' => $purchaseOrderProductUnitArr[0]['product_unit_id'],
+            'qty' => $purchaseOrderProductUnitArr[0]['qty'],
+            'product_unit_amount_per_unit' => $purchaseOrderProductUnitArr[0]['product_unit_amount_per_unit'],
+            'product_unit_initial_price' => $purchaseOrderProductUnitArr[0]['product_unit_initial_price'],
+            'vat_status' => $purchaseOrderProductUnitArr[0]['vat_status'],
+            'vat_rate' => $purchaseOrderProductUnitArr[0]['vat_rate'],
+            'vat_amount' => $purchaseOrderProductUnitArr[0]['vat_amount'],
+            'remarks' => $purchaseOrderProductUnitArr[0]['remarks'],
         ]);
     }
 

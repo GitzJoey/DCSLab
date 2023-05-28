@@ -61,21 +61,12 @@ class PurchaseOrderRequest extends FormRequest
             'arr_global_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
 
             'arr_product_unit_id.*' => ['nullable'],
-
-            'arr_product_unit_per_unit_discount_id' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_discount_id.*.*' => ['nullable'],
-            'arr_product_unit_per_unit_discount_discount_type' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_discount_discount_type.*.*' => ['nullable', new Enum(DiscountType::class)],
-            'arr_product_unit_per_unit_discount_amount' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_discount_amount.*.*' => ['nullable', 'numeric', 'min:0'],
-
-            'arr_product_unit_per_unit_sub_total_discount_id' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_sub_total_discount_id.*.*' => ['nullable'],
-            'arr_product_unit_per_unit_sub_total_discount_discount_type' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_sub_total_discount_discount_type.*.*' => ['nullable', new Enum(DiscountType::class)],
-            'arr_product_unit_per_unit_sub_total_discount_amount' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_sub_total_discount_amount.*.*' => ['nullable', 'numeric', 'min:0'],
-
+            'arr_product_unit_per_unit_discount_id.*' => ['nullable'],
+            'arr_product_unit_per_unit_discount_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
+            'arr_product_unit_per_unit_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
+            'arr_product_unit_per_unit_sub_total_discount_id.*' => ['nullable'],
+            'arr_product_unit_per_unit_sub_total_discount_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
+            'arr_product_unit_per_unit_sub_total_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
             'arr_product_unit_remarks.*' => ['nullable', 'max:255'],
         ];
 
@@ -302,13 +293,11 @@ class PurchaseOrderRequest extends FormRequest
 
                 $arr_product_unit_per_unit_discount_id = [];
                 if ($this->has('arr_product_unit_per_unit_discount_id')) {
-                    foreach ($this->arr_product_unit_per_unit_discount_id as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_discount_id[$parentIdx][$idx] = Hashids::decode($result)[0];
-                            } else {
-                                $arr_product_unit_per_unit_discount_id[$parentIdx][$idx] = null;
-                            }
+                    for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_id); $i++) {
+                        if ($this->arr_product_unit_per_unit_discount_id[$i] != '') {
+                            array_push($arr_product_unit_per_unit_discount_id, Hashids::decode($this->arr_product_unit_per_unit_discount_id[$i])[0]);
+                        } else {
+                            array_push($arr_product_unit_per_unit_discount_id, null);
                         }
                     }
                 }
@@ -316,13 +305,12 @@ class PurchaseOrderRequest extends FormRequest
 
                 $arr_product_unit_per_unit_discount_discount_type = [];
                 if ($this->has('arr_product_unit_per_unit_discount_discount_type')) {
-                    foreach ($this->arr_product_unit_per_unit_discount_discount_type as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_discount_discount_type[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_discount_discount_type[$parentIdx][$idx] = -1;
-                            }
+                    for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_discount_type); $i++) {
+                        if ($this->arr_product_unit_per_unit_discount_discount_type[$i] != '') {
+                            $result = DiscountType::isValid($this->arr_product_unit_per_unit_discount_discount_type[$i]) ? DiscountType::resolveToEnum($this->arr_product_unit_per_unit_discount_discount_type[$i]) : -1;
+                            array_push($arr_product_unit_per_unit_discount_discount_type, $result);
+                        } else {
+                            array_push($arr_product_unit_per_unit_discount_discount_type, -1);
                         }
                     }
                 }
@@ -330,13 +318,11 @@ class PurchaseOrderRequest extends FormRequest
 
                 $arr_product_unit_per_unit_discount_amount = [];
                 if ($this->has('arr_product_unit_per_unit_discount_amount')) {
-                    foreach ($this->arr_product_unit_per_unit_discount_amount as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_discount_amount[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_discount_amount[$parentIdx][$idx] = 0;
-                            }
+                    for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_amount); $i++) {
+                        if ($this->arr_product_unit_per_unit_discount_amount[$i] != '') {
+                            array_push($arr_product_unit_per_unit_discount_amount, $this->arr_product_unit_per_unit_discount_amount[$i]);
+                        } else {
+                            array_push($arr_product_unit_per_unit_discount_amount, 0);
                         }
                     }
                 }
@@ -344,13 +330,11 @@ class PurchaseOrderRequest extends FormRequest
 
                 $arr_product_unit_per_unit_sub_total_discount_id = [];
                 if ($this->has('arr_product_unit_per_unit_sub_total_discount_id')) {
-                    foreach ($this->arr_product_unit_per_unit_sub_total_discount_id as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_sub_total_discount_id[$parentIdx][$idx] = Hashids::decode($result)[0];
-                            } else {
-                                $arr_product_unit_per_unit_sub_total_discount_id[$parentIdx][$idx] = null;
-                            }
+                    for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_id); $i++) {
+                        if ($this->arr_product_unit_per_unit_sub_total_discount_id[$i] != '') {
+                            array_push($arr_product_unit_per_unit_sub_total_discount_id, Hashids::decode($this->arr_product_unit_per_unit_sub_total_discount_id[$i])[0]);
+                        } else {
+                            array_push($arr_product_unit_per_unit_sub_total_discount_id, null);
                         }
                     }
                 }
@@ -358,13 +342,12 @@ class PurchaseOrderRequest extends FormRequest
 
                 $arr_product_unit_per_unit_sub_total_discount_discount_type = [];
                 if ($this->has('arr_product_unit_per_unit_sub_total_discount_discount_type')) {
-                    foreach ($this->arr_product_unit_per_unit_sub_total_discount_discount_type as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_sub_total_discount_discount_type[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_sub_total_discount_discount_type[$parentIdx][$idx] = -1;
-                            }
+                    for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_discount_type); $i++) {
+                        if ($this->arr_product_unit_per_unit_sub_total_discount_discount_type[$i] != '') {
+                            $result = DiscountType::isValid($this->arr_product_unit_per_unit_sub_total_discount_discount_type[$i]) ? DiscountType::resolveToEnum($this->arr_product_unit_per_unit_sub_total_discount_discount_type[$i]) : -1;
+                            array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, $result);
+                        } else {
+                            array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, -1);
                         }
                     }
                 }
@@ -372,13 +355,11 @@ class PurchaseOrderRequest extends FormRequest
 
                 $arr_product_unit_per_unit_sub_total_discount_amount = [];
                 if ($this->has('arr_product_unit_per_unit_sub_total_discount_amount')) {
-                    foreach ($this->arr_product_unit_per_unit_sub_total_discount_amount as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_sub_total_discount_amount[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_sub_total_discount_amount[$parentIdx][$idx] = 0;
-                            }
+                    for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_amount); $i++) {
+                        if ($this->arr_product_unit_per_unit_sub_total_discount_amount[$i] != '') {
+                            array_push($arr_product_unit_per_unit_sub_total_discount_amount, $this->arr_product_unit_per_unit_sub_total_discount_amount[$i]);
+                        } else {
+                            array_push($arr_product_unit_per_unit_sub_total_discount_amount, 0);
                         }
                     }
                 }

@@ -50,9 +50,4 @@ class Branch extends Model
     {
         return $this->hasMany(AccountingJournal::class);
     }
-
-    public function purchaseOrders()
-    {
-        return $this->hasMany(PurchaseOrder::class);
-    }
 }

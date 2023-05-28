@@ -164,7 +164,7 @@ class ProductActions
         }
     }
 
-    public function getAllActiveProduct(
+    public function getActiveProduct(
         int $companyId
     ): Collection {
         return Product::with('company', 'productGroup', 'brand', 'productUnits.unit')

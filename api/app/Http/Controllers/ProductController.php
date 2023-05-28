@@ -229,13 +229,13 @@ class ProductController extends BaseController
         }
     }
 
-    public function getAllActiveProduct(ProductRequest $productRequest)
+    public function getActiveProduct(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
 
         $companyId = $request['company_id'];
 
-        $result = $this->productActions->getAllActiveProduct($companyId);
+        $result = $this->productActions->getActiveProduct($companyId);
 
         if (is_null($result)) {
             return response()->error();
