@@ -229,13 +229,13 @@ class ProductController extends BaseController
         }
     }
 
-    public function getActiveProduct(ProductRequest $productRequest)
+    public function getAllActiveProduct(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
 
-        $companyId = $request['company_id'];
+        $company_ulid = Company::where('id', '=', $request['company_id'])->first()->ulid;
 
-        $result = $this->productActions->getActiveProduct($companyId);
+        $result = $this->productActions->getAllActiveProduct($company_ulid);
 
         if (is_null($result)) {
             return response()->error();
