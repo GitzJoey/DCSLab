@@ -7,11 +7,11 @@ import { ViewTitleLayout } from "../../base-components/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import DataList from "../../base-components/DataList/DataList.vue";
 import Table from "../../base-components/Table";
-import { CheckCircleIcon } from "lucide-vue-next";
 import { CompanyType } from "../../types/resources/CompanyType";
 import { ServiceResponseType } from "../../types/ServiceResponseType";
 import CompanyService from "../../services/CompanyService";
-import { XIcon } from "lucide-vue-next";
+import Lucide from "../../base-components/Lucide";
+
 
 //#endregion
 
@@ -110,12 +110,12 @@ const toggleDetail = (idx: any) => {
                   </td>
 
                   <td>
-                    <CheckCircleIcon v-if="item.default" />
-                    <XIcon v-else />
+                    <Lucide icon="CheckCircleIcon"  v-if="item.default" />
+                    <Lucide icon="XIcon" v-else />
                   </td>
 
                   <td>
-                    <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
+                    <Lucide icon="CheckCircleIcon" v-if="item.status === 'ACTIVE'" />
                   </td>
                 </tr>
               </template>

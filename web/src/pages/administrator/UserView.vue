@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -14,7 +14,6 @@ import {
 } from "../../base-components/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
-import { CheckCircleIcon } from "lucide-vue-next";
 import { UserType } from '../../types/resources/UserType'
 //#endregion
 
