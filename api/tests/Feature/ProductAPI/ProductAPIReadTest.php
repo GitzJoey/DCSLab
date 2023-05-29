@@ -3,6 +3,7 @@
 namespace Tests\Feature\ProductAPI;
 
 use App\Enums\ProductGroupCategory;
+use App\Enums\RecordStatus;
 use App\Enums\UnitCategory;
 use App\Enums\UserRoles;
 use App\Models\Brand;
@@ -529,5 +530,69 @@ class ProductAPIReadTest extends APITestCase
         $api = $this->getJson(route('api.get.db.product.product.read', $ulid));
 
         $api->assertStatus(404);
+    }
+
+    public function test_product_api_call_get_all_active_product_expect_found_active_product()
+    {
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(ProductGroup::factory()->setCategoryToProduct()->count(10))
+                        ->has(Brand::factory()->count(10))
+                        ->has(Unit::factory()->setCategoryToProduct()->count(10))
+                    )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        for ($i = 0; $i < 5; $i++) {
+            $productGroup = $company->productGroups()
+                                ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+                                ->inRandomOrder()->first();
+
+            $brand = $company->brands()->inRandomOrder()->first();
+
+            $product = Product::factory()
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
+
+            if ($i == 0) {
+                $product = $product->setStatusActive();
+            }
+
+            $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+                ->inRandomOrder()->get()->shuffle();
+
+            $productUnitCount = random_int(1, $units->count());
+            $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+            for ($j = 0; $j < $productUnitCount; $j++) {
+                $product = $product->has(
+                    ProductUnit::factory()
+                        ->for($company)->for($units[$j])
+                        ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                );
+            }
+
+            $product->create();
+        }
+
+        $api = $this->getJson(route('api.get.db.product.common.read.product.all.active', [
+            'company_id' => Hashids::encode($company->id),
+        ]));
+
+        $api->assertSuccessful();
+
+        $countActiveProducts = $company->products()->where('status', '=', RecordStatus::ACTIVE->value)->count();
+        $api->assertJsonCount($countActiveProducts, $key = null);
+
+        $resultArr = json_decode($api->getContent(), true);
+        foreach ($resultArr as $result) {
+            $this->assertTrue($result['status'] == RecordStatus::ACTIVE->name);
+        }
     }
 }

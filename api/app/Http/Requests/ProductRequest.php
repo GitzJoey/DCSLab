@@ -32,7 +32,7 @@ class ProductRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
             case 'readAny':
-            case 'getActiveProduct':
+            case 'getAllActiveProduct':
                 return $user->can('viewAny', Product::class) ? true : false;
             case 'read':
                 return $user->can('view', Product::class, $product) ? true : false;
@@ -75,7 +75,7 @@ class ProductRequest extends FormRequest
                 ];
 
                 return $rules_read_any;
-            case 'getActiveProduct':
+            case 'getAllActiveProduct':
                 $rules_read_any = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                 ];
@@ -187,7 +187,7 @@ class ProductRequest extends FormRequest
             case 'read':
                 $this->merge([]);
                 break;
-            case 'getActiveProduct':
+            case 'getAllActiveProduct':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                 ]);
