@@ -1,19 +1,3 @@
-<template>
-  <div class="mt-8">
-    <LoadingOverlay :visible="loading">
-      <div v-if="mode == ViewMode.LIST"></div>
-      <ViewTitleLayout>
-        <template #title>
-          <div>
-              <h1>Branch List</h1>
-          </div>
-        </template>
-      </ViewTitleLayout>
-    </LoadingOverlay>
-    
-  </div>
-</template>
-
 <script setup lang="ts">
 //#region Import
 import { ref } from "vue";
@@ -23,7 +7,7 @@ import { ViewTitleLayout } from "../../base-components/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import DataList from "../../base-components/DataList/DataList.vue";
 import Table from "../../base-components/Table";
-import { CheckCircleIcon } from "lucide-vue-next";
+import Lucide from "../../base-components/Lucide";
 //#endregion
 
 //#region Declarations
@@ -37,7 +21,19 @@ const loading = ref<boolean>(false);
 
 //#region onMounted
 onMounted(() => {
-  // console.log("a");
+
 });
 //#endregion
 </script>
+
+<template>
+  <div class="mt-8">
+    <LoadingOverlay :visible="loading">
+      <div v-if="mode == ViewMode.LIST"></div>
+      <ViewTitleLayout>
+        <template #title>{{ t("views.branch.page_title") }}</template>
+      </ViewTitleLayout>
+    </LoadingOverlay>
+    
+  </div>
+</template>
