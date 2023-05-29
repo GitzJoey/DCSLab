@@ -233,9 +233,9 @@ class ProductController extends BaseController
     {
         $request = $productRequest->validated();
 
-        $companyId = $request['company_id'];
+        $company_ulid = Company::where('id', '=', $request['company_id'])->first()->ulid;
 
-        $result = $this->productActions->getAllActiveProduct($companyId);
+        $result = $this->productActions->getAllActiveProduct($company_ulid);
 
         if (is_null($result)) {
             return response()->error();

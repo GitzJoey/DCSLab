@@ -6,6 +6,7 @@ use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\ProductCategory;
 use App\Enums\ProductType;
 use App\Enums\RecordStatus;
+use App\Models\Company;
 use App\Models\Product;
 use App\Models\ProductUnit;
 use App\Traits\CacheHelper;
@@ -165,10 +166,10 @@ class ProductActions
     }
 
     public function getAllActiveProduct(
-        int $companyId
+        string $company_ulid
     ): Collection {
         return Product::with('company', 'productGroup', 'brand', 'productUnits.unit')
-                ->whereCompanyId($companyId)
+                ->where('company_id', '=', Company::where('ulid', '=', $company_ulid)->first()->id)
                 ->where('product_type', '!=', ProductType::SERVICE->value)
                 ->where('status', '=', RecordStatus::ACTIVE->value)
                 ->orderBy('name', 'ASC')
