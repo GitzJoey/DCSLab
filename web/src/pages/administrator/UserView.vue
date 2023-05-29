@@ -15,7 +15,6 @@ import {
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { CheckCircleIcon } from "lucide-vue-next";
-import { XIcon } from "lucide-vue-next";
 import { UserType } from '../../types/resources/UserType'
 //#endregion
 
@@ -161,10 +160,10 @@ const onDataListChange = ({page , per_page, search} : {page : number , per_page:
                       <span v-for="(r, idx) in item?.roles" >{{ r.display_name }} </span>
                     </Table.Td>
                     <Table.Td>
-                      <CheckCircleIcon
+                      <Lucide icon="CheckCircleIcon"
                         v-if="item?.profile?.status === 'ACTIVE'"
                       />
-                      <XIcon v-if="item?.profile?.status === 'INACTIVE'" />
+                      <Lucide v-if="item?.profile?.status === 'INACTIVE'"  icon="XIcon" />
                     </Table.Td>
                   </Table.Tr>
                 </template>

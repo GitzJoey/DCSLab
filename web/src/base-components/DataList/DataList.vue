@@ -6,7 +6,7 @@ import { Menu } from "../../base-components/Headless";
 import Lucide from "../../base-components/Lucide";
 import Pagination from "../../base-components/Pagination";
 import { useI18n } from "vue-i18n";
-
+import Table from '../../base-components/Table'
 const { t } = useI18n();
 
 const props = defineProps({
@@ -113,32 +113,6 @@ const generatePaginationArray = (currentPage: number, totalPages: number): numbe
 };
 
 
-const paginate = (current: number, total: number, delta = 2, gap = "...") => {
-  if (total <= 1) return [1];
-
-  const center = [current] as (number | typeof gap)[];
-
-  for (let i = 1; i <= delta; i++) {
-    center.unshift(current - i);
-    center.push(current + i);
-  }
-
-  const filteredCenter = center.filter((page) => +page > 1 && +page < total);
-
-  const includeLeftGap = current > 3 + delta;
-  const includeLeftPages = current === 3 + delta;
-  const includeRightGap = current < total - (2 + delta);
-  const includeRightPages = current === total - (2 + delta);
-
-  if (includeLeftPages) filteredCenter.unshift(2);
-  if (includeRightPages) filteredCenter.push(total - 1);
-  if (includeLeftGap) filteredCenter.unshift(gap);
-  if (includeRightGap) filteredCenter.push(gap);
-
-  return [1, ...filteredCenter, total];
-};
-
-
 // Watch region
 watch(search , (newSearch:string) => {
   if(newSearch.length > 3 || newSearch === '') {
@@ -151,10 +125,10 @@ watch(search , (newSearch:string) => {
 </script>
 
 <template>
-  <div class="intro-y box p-5 mt-5">
+  <div class="intro-y box p-5 mt-5" v-if="visible">
     <div class="grid justify-items-end">
       <div class="flex flex-row gap-2">
-        <div class="relative w-56 text-slate-500">
+        <div class="relative w-56 text-slate-500" v-if="enableSearch">
           <FormInput 
             type="text" 
             class="w-56 pr-10" 
@@ -173,21 +147,21 @@ watch(search , (newSearch:string) => {
           <Lucide icon="RefreshCw" class="w-4 h-4" />
         </Button>
         <Menu>
-          <Menu.Button :as="Button" class="px-2">
+          <Menu.Button :as="Button" v-if="canPrint" class="px-2">
             <span class="flex items-center justify-center w-5 h-5">
               <Lucide icon="Printer" class="w-4 h-4" />
             </span>
           </Menu.Button>
-          <Menu.Items class="w-40" placement="bottom-end">
-            <Menu.Item>
+          <Menu.Items v-if="canPrint || canExport" class="w-40" placement="bottom-end">
+            <Menu.Item v-if="canPrint" >
               <Lucide icon="Printer" class="w-4 h-4 mr-2" />
               {{ t("components.data-list.print") }}
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item v-if="canExport" >
               <Lucide icon="FileText" class="w-4 h-4 mr-2" />
               {{ t("components.data-list.export_to_excel") }}
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item v-if="canExport" >
               <Lucide icon="FileText" class="w-4 h-4 mr-2" />
               {{ t("components.data-list.export_to_pdf") }}
             </Menu.Item>
@@ -196,7 +170,16 @@ watch(search , (newSearch:string) => {
       </div>
     </div>
     <div class="overflow-x-auto mb-4">
-      <slot name="table" :data-list="data"></slot>
+      <slot v-if="!dataNotFound" name="table" :data-list="data"></slot>
+      <Table v-if="dataNotFound" class="mt-5" >
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Td>
+              {{ t('components.data-list.data_not_found')}}
+            </Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
+      </Table>
     </div>
     <div class="flex flex-wrap intro-y sm:flex-row sm:flex-nowrap">
       <Pagination class="w-full sm:w-auto sm:mr-auto">

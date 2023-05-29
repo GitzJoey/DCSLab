@@ -116,8 +116,6 @@ const toggleDetail = (idx: any) => {
 
                   <td>
                     <CheckCircleIcon v-if="item.status === 'ACTIVE'" />
-                    <!-- <XIcon v-if="item.status === 'INACTIVE'" /> -->
-                    <!-- <XIcon v-if="item.status === 'DELETED'" /> -->
                   </td>
                 </tr>
               </template>

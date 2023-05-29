@@ -3,6 +3,7 @@ import buttons from "./en/components/buttons.json";
 import alert_placeholder from "./en/components/alert-placeholder.json";
 import dropdown from "./en/components/dropdown.json";
 import top_bar from "./en/components/top-bar.json";
+import data_list from "./en/components/data-list.json"
 
 import login from "./en/views/login.json";
 import register from "./en/views/register.json";
@@ -16,7 +17,8 @@ export default {
         "alert-placeholder": alert_placeholder,
         "buttons": buttons,
         "dropdown": dropdown,
-        "top-bar": top_bar
+        "top-bar": top_bar,
+        "data-list" : data_list
     },
     "views": {
         "login": login,
