@@ -28,4 +28,7 @@ module.exports = {
             },
         },
     ],
+    ignorePatterns: [
+        '/src/base-components/Alert/**'
+    ]
 };
