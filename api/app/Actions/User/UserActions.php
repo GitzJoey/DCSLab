@@ -67,7 +67,7 @@ class UserActions
             $settings = $this->createDefaultSettings();
             $usr->settings()->saveMany($settings);
 
-            $usr->attachRoles($rolesArr);
+            $usr->addRoles($rolesArr);
 
             if (env('DCSLAB_AUTO_VERIFY_EMAIL', true)) {
                 $usr->markEmailAsVerified();
@@ -78,11 +78,11 @@ class UserActions
             return $usr;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.' '.'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . ' ' . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . ' ' . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
@@ -92,10 +92,10 @@ class UserActions
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'read_' . (empty($search) ? '[empty]' : $search) . '-' . $paginate . '-' . $page . '-' . $perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
-                if (! is_null($cacheResult)) {
+                if (!is_null($cacheResult)) {
                     return $cacheResult;
                 }
             }
@@ -107,11 +107,11 @@ class UserActions
                 $usr = User::with($relationship)->latest();
             } else {
                 $usr = User::with($relationship)
-                    ->where('email', 'like', '%'.$search.'%')
-                    ->orWhere('name', 'like', '%'.$search.'%')
+                    ->where('email', 'like', '%' . $search . '%')
+                    ->orWhere('name', 'like', '%' . $search . '%')
                     ->orWhereHas('profile', function ($query) use ($search) {
-                        $query->where('first_name', 'like', '%'.$search.'%')
-                            ->orWhere('last_name', 'like', '%'.$search.'%');
+                        $query->where('first_name', 'like', '%' . $search . '%')
+                            ->orWhere('last_name', 'like', '%' . $search . '%');
                     })->latest();
             }
 
@@ -128,11 +128,11 @@ class UserActions
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)' . ($useCache ? ' (C)' : ' (DB)'));
         }
     }
 
@@ -155,11 +155,11 @@ class UserActions
                     return null;
             }
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
@@ -169,19 +169,19 @@ class UserActions
         $timer_start = microtime(true);
 
         try {
-            if (! is_null($userArr)) {
+            if (!is_null($userArr)) {
                 $this->updateUser($user, $userArr, false);
             }
 
-            if (! is_null($profileArr)) {
+            if (!is_null($profileArr)) {
                 $this->updateProfile($user, $profileArr, false);
             }
 
-            if (! is_null($rolesArr)) {
+            if (!is_null($rolesArr)) {
                 $this->updateRoles($user, $rolesArr, false);
             }
 
-            if (! is_null($settingsArr)) {
+            if (!is_null($settingsArr)) {
                 $this->updateSettings($user, $settingsArr, false);
             }
 
@@ -192,17 +192,17 @@ class UserActions
             return $user->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
     public function updateUser(User $user, array $userArr, bool $useTransactions = true): bool
     {
-        ! $useTransactions ?: DB::beginTransaction();
+        !$useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -214,22 +214,22 @@ class UserActions
 
             //$queryLog = DB::getQueryLog();
 
-            ! $useTransactions ?: DB::commit();
+            !$useTransactions ?: DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            ! $useTransactions ?: DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            !$useTransactions ?: DB::rollBack();
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
     public function updateProfile(User $user, array $profileArr, bool $useTransactions = true): bool
     {
-        ! $useTransactions ?: DB::beginTransaction();
+        !$useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -251,50 +251,50 @@ class UserActions
                 ]);
             }
 
-            ! $useTransactions ?: DB::commit();
+            !$useTransactions ?: DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            ! $useTransactions ?: DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            !$useTransactions ?: DB::rollBack();
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
     public function updateRoles(User $user, array $rolesArr, bool $useTransactions = true): User
     {
-        ! $useTransactions ?: DB::beginTransaction();
+        !$useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $updated_usr = $user->syncRoles($rolesArr);
 
-            ! $useTransactions ?: DB::commit();
+            !$useTransactions ?: DB::commit();
 
             return $updated_usr->refresh();
         } catch (Exception $e) {
-            ! $useTransactions ?: DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            !$useTransactions ?: DB::rollBack();
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
     public function updateSettings(User $user, array $settingsArr, bool $useTransactions = true): bool
     {
-        ! $useTransactions ?: DB::beginTransaction();
+        !$useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $retval = 0;
             foreach ($settingsArr as $key => $value) {
                 $setting = $user->settings()->where('key', $key)->first();
-                if (! $setting || $value == null) {
+                if (!$setting || $value == null) {
                     continue;
                 }
                 if ($setting->value != $value) {
@@ -304,16 +304,16 @@ class UserActions
                 }
             }
 
-            ! $useTransactions ?: DB::commit();
+            !$useTransactions ?: DB::commit();
 
             return $retval;
         } catch (Exception $e) {
-            ! $useTransactions ?: DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            !$useTransactions ?: DB::rollBack();
+            Log::debug('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            Log::channel('perfs')->info('[' . session()->getId() . '-' . (is_null(auth()->user()) ? '' : auth()->id()) . '] ' . __METHOD__ . ' (' . number_format($execution_time, 1) . 's)');
         }
     }
 
