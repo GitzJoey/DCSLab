@@ -57,7 +57,7 @@ class CustomerAPIReadTest extends APITestCase
             ],
         ]);
     }
-    
+
     public function test_customer_api_call_read_any_with_pagination_expect_several_per_page()
     {
         $user = User::factory()
