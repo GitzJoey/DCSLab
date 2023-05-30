@@ -47,7 +47,6 @@
 /src/components/TopBar/**
 
 /src/layouts/SideMenu/**
-
 /src/layouts/SimpleMenu/**
 
 /src/stores/color-scheme.ts
