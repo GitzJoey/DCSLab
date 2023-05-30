@@ -75,7 +75,7 @@ class UnitController extends BaseController
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
-        $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
+        $perPage = array_key_exists('per_page', $request) ? abs($request['per_page']) : 10;
         $useCache = array_key_exists('refresh', $request) ? boolval($request['refresh']) : true;
 
         $result = null;

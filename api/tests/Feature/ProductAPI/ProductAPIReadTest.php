@@ -110,6 +110,73 @@ class ProductAPIReadTest extends APITestCase
         ]);
     }
 
+    public function test_product_api_call_read_any_with_pagination_expect_several_per_page()
+    {
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                        ->has(Brand::factory()->count(5))
+                        ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                    )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $productGroup = $company->productGroups()
+                            ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+                            ->inRandomOrder()->first();
+
+        $brand = $company->brands()->inRandomOrder()->first();
+
+        $product = Product::factory()
+                    ->for($company)
+                    ->for($productGroup)
+                    ->for($brand)
+                    ->setProductTypeAsProduct();
+
+        $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+                    ->inRandomOrder()->get()->shuffle();
+
+        $productUnitCount = random_int(1, $units->count());
+        $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+        for ($j = 0; $j < $productUnitCount; $j++) {
+            $product = $product->has(
+                ProductUnit::factory()
+                    ->for($company)->for($units[$j])
+                    ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                    ->setIsPrimaryUnit($j == $primaryUnitIdx)
+            );
+        }
+
+        $api = $this->getJson(route('api.get.db.product.product.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 25,
+            'refresh' => true,
+        ]));
+
+        $api->assertSuccessful();
+
+        $api->assertJsonFragment([
+            'per_page' => 25,
+        ]);
+
+        $api->assertJsonStructure([
+            'data',
+            'links' => [
+                'first', 'last', 'prev', 'next',
+            ],
+            'meta' => [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
+            ],
+        ]);
+    }
+
     public function test_product_api_call_read_any_product_with_search_expect_filtered_results()
     {
         $user = User::factory()
