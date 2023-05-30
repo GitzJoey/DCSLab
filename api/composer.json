@@ -1,15 +1,25 @@
 {
-    "name": "laravel/laravel",
+    "name": "gitzjoey/dcslab",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "DCSLab - Laravel Always Updated ERP System",
+    "keywords": [
+        "ERP",
+        "framework",
+        "laravel",
+        "gitzjoey"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^7.2",
+        "laravel/fortify": "^1.17",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+        "predis/predis": "^2.1",
+        "pusher/pusher-php-server": "^7.2",
+        "santigarcor/laratrust": "^8.2",
+        "tightenco/ziggy": "^1.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -29,7 +39,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Tests\\Unit\\Actions\\": "tests/Unit/Actions/",
+            "Tests\\Feature\\API\\": "tests/Feature/API/"
         }
     },
     "scripts": {
