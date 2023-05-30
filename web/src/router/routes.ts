@@ -12,6 +12,17 @@ import ErrorView from "../pages/dashboard/ErrorView.vue";
 import ErrorPage from "../pages/error/ErrorPage.vue";
 import UserView from "../pages/administrator/UserView.vue";
 import CompanyView from "../pages/company/CompanyView.vue";
+import BranchView from "../pages/branch/BranchView.vue";
+import EmployeeView from "../pages/employee/EmployeeView.vue";
+import WarehouseView from "../pages/warehouse/WarehouseView.vue";
+import ProductGroupView from "../pages/product_group/ProductGroupView.vue";
+import BrandView from "../pages/brand/BrandView.vue";
+import UnitView from "../pages/unit/UnitView.vue";
+import ProductView from "../pages/product/ProductView.vue";
+import SupplierView from "../pages/supplier/SupplierView.vue";
+import CustomerGroupView from "../pages/customer_group/CustomerGroupView.vue";
+import CustomerView from "../pages/customer/CustomerView.vue";
+import PurchaseOrderView from "../pages/purchase_order/PurchaseOrderView.vue";
 
 export default [
     {
@@ -69,6 +80,81 @@ export default [
                         path: "/dashboard/company/company",
                         name: "side-menu-company-company",
                         component: CompanyView
+                    },
+                    {
+                        path: "/dashboard/company/branch",
+                        name: "side-menu-company-branch",
+                        component: BranchView
+                    },
+                    {
+                        path: "/dashboard/company/employee",
+                        name: "side-menu-company-employee",
+                        component: EmployeeView
+                    },
+                    {
+                        path: "/dashboard/company/warehouse",
+                        name: "side-menu-company-warehouse",
+                        component: WarehouseView
+                    }
+                ]
+            },
+            {
+                path: "/dashboard/product",
+                children: [
+                    {
+                        path: "/dashboard/product/product_group",
+                        name: "side-menu-product-product_group",
+                        component: ProductGroupView
+                    },
+                    {
+                        path: "/dashboard/product/brand",
+                        name: "side-menu-product-brand",
+                        component: BrandView
+                    },
+                    {
+                        path: "/dashboard/product/unit",
+                        name: "side-menu-product-unit",
+                        component: UnitView
+                    },
+                    {
+                        path: "/dashboard/product/product",
+                        name: "side-menu-product-product",
+                        component: ProductView
+                    }
+                ]
+            },
+            {
+                path: "/dashboard/supplier",
+                children: [
+                    {
+                        path: "/dashboard/supplier/supplier",
+                        name: "side-menu-supplier-supplier",
+                        component: SupplierView
+                    }
+                ]
+            },
+            {
+                path: "/dashboard/customer",
+                children: [
+                    {
+                        path: "/dashboard/customer/customer_group",
+                        name: "side-menu-customer-customer_group",
+                        component: CustomerGroupView
+                    },
+                    {
+                        path: "/dashboard/customer/customer",
+                        name: "side-menu-customer-customer",
+                        component: CustomerView
+                    }
+                ]
+            },
+            {
+                path: "/dashboard/purchase_order",
+                children: [
+                    {
+                        path: "/dashboard/purchase_order/purchase_order",
+                        name: "side-menu-purchase_order-purchase_order",
+                        component: PurchaseOrderView
                     }
                 ]
             },
