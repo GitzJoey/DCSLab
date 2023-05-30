@@ -1,0 +1,173 @@
+.tom-select {
+  &.ts-wrapper,
+  &.plugin-dropdown_input.focus.dropdown-active {
+    border-width: 1px;
+    border-style: solid;
+    box-shadow: theme("boxShadow.sm");
+    border-radius: theme("borderRadius.DEFAULT");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgb(74 85 104)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-size: 18px;
+    background-position: center right 0.6rem;
+    background-repeat: no-repeat;
+    .ts-control {
+      border: 0;
+      display: flex;
+      outline: none;
+      min-height: 36px;
+      align-items: center;
+      background-color: transparent;
+      font-size: inherit;
+      padding: theme("spacing.2") theme("spacing.3");
+      input {
+        font-size: inherit;
+      }
+    }
+  }
+  &.ts-wrapper.disabled {
+    background-color: theme("colors.slate.100");
+  }
+  &.ts-wrapper.single.input-active .ts-control {
+    background-color: transparent;
+  }
+  &.ts-wrapper.multi {
+    &.has-items .ts-control {
+      column-gap: theme("spacing.[2.5]");
+      row-gap: theme("spacing.1");
+      padding: theme("spacing.1") theme("spacing.[2.5]");
+    }
+    .ts-control > div {
+      padding: 0 theme("spacing.2");
+      margin: 0 0 0 calc(theme("spacing.[1.5]") * -1);
+      border-radius: theme("borderRadius.DEFAULT");
+      background-color: theme("colors.slate.200");
+    }
+  }
+  &.ts-wrapper.plugin-remove_button .item .remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-color: theme("colors.slate.300");
+    padding: theme("spacing.1") theme("spacing.2");
+  }
+  &.ts-wrapper.plugin-remove_button:not(.rtl) .item .remove {
+    margin-left: theme("spacing.2");
+  }
+  &.ts-wrapper .dropdown-header {
+    border-color: theme("colors.slate.200");
+    background-color: theme("colors.slate.100");
+    padding: theme("spacing.[2.5]");
+    font-weight: theme("fontWeight.medium");
+  }
+  &.plugin-dropdown_input.focus.dropdown-active {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' transform='rotate(180)' fill='none' stroke='rgb(74 85 104)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  }
+  &.plugin-dropdown_input .dropdown-input-wrap .dropdown-input {
+    outline: none;
+  }
+  .ts-dropdown {
+    left: -1px;
+    right: -1px;
+    width: auto;
+    z-index: 50;
+    margin-top: 1px;
+    font-size: inherit;
+    box-shadow: theme("boxShadow.sm");
+    border-radius: theme("borderRadius.DEFAULT");
+    border: 1px solid theme("colors.slate.200");
+    .dropdown-input-wrap {
+      padding: theme("spacing.2");
+      .dropdown-input {
+        border-radius: theme("borderRadius.DEFAULT");
+        border: 1px solid theme("colors.slate.200");
+      }
+    }
+    .optgroup-header {
+      padding: theme("spacing.[2.5]") theme("spacing.3");
+      font-weight: theme("fontWeight.medium");
+      background-color: theme("colors.slate.100");
+    }
+    .option {
+      padding: theme("spacing.[2.5]") theme("spacing.3");
+      &[data-selectable] {
+        &.active:not(.selected) {
+          color: inherit;
+          background-color: transparent;
+          background-color: theme("colors.slate.100");
+        }
+        &:hover:not(.selected) {
+          color: inherit;
+          background-color: theme("colors.slate.100");
+        }
+      }
+    }
+    .selected {
+      color: white;
+      background-color: theme("colors.primary");
+    }
+    [data-selectable] .highlight {
+      color: white;
+      background-color: theme("colors.danger");
+    }
+  }
+}
+
+.dark {
+  .tom-select {
+    &.ts-wrapper,
+    &.plugin-dropdown_input.focus.dropdown-active {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgb(255 255 255)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      .ts-control {
+        color: theme("colors.slate.300");
+      }
+    }
+    &.ts-wrapper.disabled {
+      border-color: transparent;
+      background-color: theme("colors.darkmode.800" / 50%);
+    }
+    &.ts-wrapper.multi {
+      .ts-control > div {
+        color: theme("colors.slate.300");
+        background-color: theme("colors.darkmode.600");
+      }
+    }
+    &.ts-wrapper.plugin-remove_button .item .remove {
+      border-color: theme("colors.darkmode.400");
+    }
+    &.ts-wrapper .dropdown-header {
+      border-color: theme("colors.darkmode.800");
+      background-color: theme("colors.darkmode.800");
+    }
+    &.plugin-dropdown_input.focus.dropdown-active {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' transform='rotate(180)' fill='none' stroke='rgb(255 255 255)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevron-down'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    }
+    .ts-dropdown {
+      color: theme("colors.slate.300");
+      border-color: theme("colors.darkmode.800");
+      background-color: theme("colors.darkmode.700");
+      .dropdown-input-wrap {
+        .dropdown-input {
+          border-color: theme("colors.darkmode.800");
+          background-color: theme("colors.darkmode.600");
+        }
+      }
+      .optgroup-header {
+        color: theme("colors.slate.300");
+        background-color: theme("colors.darkmode.800");
+      }
+      .option {
+        &[data-selectable] {
+          &.active:not(.selected) {
+            background-color: theme("colors.darkmode.600");
+          }
+          &:hover:not(.selected) {
+            background-color: theme("colors.darkmode.600");
+          }
+        }
+      }
+    }
+  }
+  .ts-wrapper {
+    border-color: theme("colors.darkmode.800");
+    background-color: theme("colors.darkmode.800");
+  }
+}

@@ -1,0 +1,22 @@
+@layer components {
+  .typing-dots {
+    span {
+      @apply opacity-0;
+      &:nth-child(1) {
+        animation: 1s type-animation infinite 0.33333s;
+      }
+      &:nth-child(2) {
+        animation: 1s type-animation infinite 0.66666s;
+      }
+      &:nth-child(3) {
+        animation: 1s type-animation infinite 0.99999s;
+      }
+    }
+  }
+
+  @keyframes type-animation {
+    50% {
+      @apply opacity-100;
+    }
+  }
+}
