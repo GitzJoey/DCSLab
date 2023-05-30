@@ -1,0 +1,29 @@
+{
+    "page_title": "Gudang",
+    "table": {
+        "title": "Daftar Gudang",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "remarks": "Keterangan",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Gudang",
+        "edit": "Ubah Gudang",
+        "show": "Tampilkan Gudang",
+        "delete": "Hapus Gudang"
+    },
+    "fields": {
+        "company": "Nama Perusahaan",
+        "branch": "Cabang",
+        "code": "Kode",
+        "name": "Nama",
+        "address": "Alamat",
+        "city": "Kota",
+        "contact": "Kontak",
+        "remarks": "Keterangan",
+        "status": "Status"
+    }
+}
