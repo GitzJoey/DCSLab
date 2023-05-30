@@ -1,0 +1,24 @@
+{
+    "page_title": "Perusahaan",
+    "table": {
+        "title": "Daftar Perusahaan",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "default": "Default",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Perusahaan",
+        "edit": "Ubah Perusahaan",
+        "show": "Tampilkan Perusahaan",
+        "delete": "Hapus Perusahaan"
+    },
+    "fields": {
+        "code": "Kode",
+        "name": "Name",
+        "default": "Default",
+        "status": "Status"
+    }
+}

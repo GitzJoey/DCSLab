@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -13,10 +13,13 @@ import {
   ThreeColsLayout,
 } from "../../base-components/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
+import UserService from "../../services/UserService";
+import { UserType } from '../../types/resources/UserType'
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
+const userServices = new UserService()
 //#endregion
 
 //#region Data - Pinia
@@ -46,14 +49,17 @@ const user = ref({
     time_format: "",
   },
 });
-const userList = ref({});
+const userList = ref<UserType[] | null | undefined>([]);
 const rolesDDL = ref([]);
 const statusDDL = ref([]);
 const countriesDDL = ref([]);
+const current_page = ref(1)
 //#endregion
 
 //#region onMounted
-onMounted(() => {});
+onMounted(() => {
+  getUser({ page : current_page.value})
+});
 
 onUnmounted(() => {});
 //#endregion
@@ -69,6 +75,26 @@ const toggleDetail = (idx: number) => {
     expandDetail.value = idx;
   }
 };
+
+async function getUser(args : { page?: number, per_page ? : number, search ? : string  }) {
+  try {
+    userList.value = []
+    if (args.page === undefined) args.page  = 1
+    if (args.per_page === undefined) args.per_page = 10;
+    if (args.search === undefined) args.search = "";
+
+    
+    
+    let data = await userServices.readAny(args)
+    userList.value = data?.data
+  } catch (error) {
+    throw error
+  }
+}
+
+const onDataListChange = ({page , per_page, search} : {page : number , per_page: number , search : string}) => {
+    getUser({page, per_page, search});
+}
 //#endregion
 
 //#region Watcher
@@ -93,7 +119,7 @@ const toggleDetail = (idx: number) => {
         </ViewTitleLayout>
 
         <AlertPlaceholder />
-        <DataList>
+        <DataList v-on:dataListChange="onDataListChange" :title="t('views.user.table.title')" :data="userList" :enableSearch="true" >
           <template #table="tableProps">
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
@@ -113,11 +139,12 @@ const toggleDetail = (idx: number) => {
                   <Table.Th class="whitespace-nowrap"></Table.Th>
                 </Table.Tr>
               </Table.Thead>
-              <Table.Tbody v-if="tableProps.dataList !== undefined">
+              <Table.Tbody v-if="tableProps?.dataList !== undefined">
                 <template
-                  v-for="(item, itemIdx) in tableProps.dataList.data"
+                  v-for="(item, itemIdx) in tableProps?.dataList?.data"
                   :key="item.ulid"
                 >
+                
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td
@@ -129,23 +156,14 @@ const toggleDetail = (idx: number) => {
                       ></Table.Td
                     >
                     <Table.Td>
-                      <CheckCircleIcon
-                        v-if="item.profile.status === 'ACTIVE'"
-                      />
-                      <XIcon v-if="item.profile.status === 'INACTIVE'" />
+                      <span v-for="(r, idx) in item?.roles" >{{ r.display_name }} </span>
                     </Table.Td>
-                    <Table.Td>@angelinajolie</Table.Td>
-                  </Table.Tr>
-                  <Table.Tr
-                    :class="{
-                      'intro-x': true,
-                      'hidden transition-all': expandDetail !== itemIdx,
-                    }"
-                  >
-                    <Table.Td>2</Table.Td>
-                    <Table.Td>Brad</Table.Td>
-                    <Table.Td>Pitt</Table.Td>
-                    <Table.Td>@bradpitt</Table.Td>
+                    <Table.Td>
+                      <Lucide icon="CheckCircleIcon"
+                        v-if="item?.profile?.status === 'ACTIVE'"
+                      />
+                      <Lucide v-if="item?.profile?.status === 'INACTIVE'"  icon="XIcon" />
+                    </Table.Td>
                   </Table.Tr>
                 </template>
               </Table.Tbody>

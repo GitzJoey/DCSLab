@@ -20,25 +20,44 @@ export default class CompanyService {
     }
 
     public async create(
-        companyIdText: string, 
-        codeText: string, 
-        nameText: string, 
-        addressText: string, 
-        defaultCheck: boolean, 
+        companyIdText: string,
+        codeText: string,
+        nameText: string,
+        addressText: string,
+        defaultCheck: boolean,
         statusCheck: boolean
     ): Promise<ServiceResponseType<CompanyType | null>> {
         try {
-            await authAxiosInstance.get('/sanctum/csrf-cookie');
+            const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
             const response: AxiosResponse<CompanyType> = await authAxiosInstance.post(
-                'store', { 
-                    company_id: companyIdText, 
-                    code: codeText, 
-                    name: nameText, 
-                    address: addressText, 
-                    default: defaultCheck, 
-                    status: statusCheck 
-                }
-            );
+                url, {
+                company_id: companyIdText,
+                code: codeText,
+                name: nameText,
+                address: addressText,
+                default: defaultCheck,
+                status: statusCheck
+            });
+
+            return {
+                success: true,
+                statusCode: response.status,
+                statusDescription: response.statusText,
+                data: response.data
+            }
+        } catch (e: unknown) {
+            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+        }
+    }
+
+    public async read(): Promise<ServiceResponseType<CompanyType | null>> {
+        try {
+            const url = route('api.get.db.company.company.read', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<CompanyType> = await axios.get(url);
 
             return {
                 success: true,
@@ -69,18 +88,36 @@ export default class CompanyService {
         }
     }
 
-    public async read(): Promise<ServiceResponseType<CompanyType | null>> {
+    public async update(): Promise<ServiceResponseType<CompanyType | null>> {
         try {
-            const url = route('api.get.db.company.company.read', undefined, false, this.ziggyRoute);
+            const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<CompanyType> = await axios.get(url);
+            const response: AxiosResponse<CompanyType> = await authAxiosInstance.post(url);
 
             return {
                 success: true,
                 statusCode: response.status,
                 statusDescription: response.statusText,
                 data: response.data
+            }
+        } catch (e: unknown) {
+            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+        }
+    }
+
+    public async delete(ulid: string): Promise<ServiceResponseType<boolean | null>> {
+        try {
+            const url = route('api.post.db.company.company.delete', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<CompanyType> = await authAxiosInstance.post(url, { ulid: ulid });
+
+            return {
+                success: true,
+                statusCode: response.status,
+                statusDescription: response.statusText,
+                data: null
             }
         } catch (e: unknown) {
             return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);

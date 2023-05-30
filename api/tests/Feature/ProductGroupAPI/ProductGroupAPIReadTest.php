@@ -66,6 +66,46 @@ class ProductGroupAPIReadTest extends APITestCase
         $api->assertSuccessful();
     }
 
+    public function test_product_group_api_call_read_any_with_pagination_expect_several_per_page()
+    {
+        $user = User::factory()
+                    ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+                    ->has(Company::factory()->setStatusActive()->setIsDefault()
+                        ->has(ProductGroup::factory())
+                    )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $productGroupFactory = ProductGroup::factory()->make();
+        $api = $this->getJson(route('api.get.db.product.product_group.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'category' => $productGroupFactory->category->value,
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 25,
+            'refresh' => true,
+        ]));
+
+        $api->assertSuccessful();
+
+        $api->assertJsonFragment([
+            'per_page' => 25,
+        ]);
+
+        $api->assertJsonStructure([
+            'data',
+            'links' => [
+                'first', 'last', 'prev', 'next',
+            ],
+            'meta' => [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
+            ],
+        ]);
+    }
+
     public function test_product_group_api_call_read_any_with_search_expect_filtered_results()
     {
         $user = User::factory()
