@@ -29,11 +29,11 @@ class PurchaseOrderProductUnit extends Model
         'product_unit_sub_total',
         'product_unit_per_unit_sub_total_discount',
         'product_unit_total',
-        'product_unit_global_discount_percent',
-        'product_unit_global_discount_nominal',
+        'product_unit_global_discount',
         'product_unit_final_price',
         'vat_status',
         'vat_rate',
+        'tax_base',
         'vat_amount',
         'remarks',
     ];
@@ -67,7 +67,7 @@ class PurchaseOrderProductUnit extends Model
         return $this->belongsTo(ProductUnit::class);
     }
 
-    public function productUnitPerUnitDiscount()
+    public function productUnitPerUnitDiscounts()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
         ->where(function ($query) {
@@ -78,7 +78,7 @@ class PurchaseOrderProductUnit extends Model
         return $result;
     }
 
-    public function productUnitPerUnitSubTotalDiscount()
+    public function productUnitPerUnitSubTotalDiscounts()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
         ->where(function ($query) {
