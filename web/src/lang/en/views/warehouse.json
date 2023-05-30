@@ -1,0 +1,29 @@
+{
+    "page_title": "Warehouse",
+    "table": {
+        "title": "Warehouse Lists",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "remarks": "Remarks",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Warehouse",
+        "edit": "Edit Warehouse",
+        "show": "Show Warehouse",
+        "delete": "Delete Warehouse"
+    },
+    "fields": {
+        "company": "Company",
+        "branch": "Branch",
+        "code": "Code",
+        "name": "Name",
+        "address": "Address",
+        "city": "City",
+        "contact": "Contact",
+        "remarks": "Remarks",
+        "status": "Status"
+    }
+}

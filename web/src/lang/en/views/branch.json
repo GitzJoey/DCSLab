@@ -1,0 +1,31 @@
+{
+    "page_title": "Branch",
+    "table": {
+        "title": "Branch List",
+        "cols": {
+            "company": "Company",
+            "code": "Code",
+            "name": "Name",
+            "is_main": "Main Branch",
+            "remarks": "Remarks",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Branch",
+        "edit": "Edit Branch",
+        "show": "Show Branch",
+        "delete": "Delete Branch"
+    },
+    "fields": {
+        "company": "Company",
+        "code": "Code",
+        "name": "Name",
+        "address": "Address",
+        "city": "City",
+        "contact": "Contact",
+        "is_main" : "Main Branch",
+        "remarks": "Remarks",
+        "status": "Status"
+    }
+}

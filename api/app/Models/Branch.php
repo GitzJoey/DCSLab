@@ -21,9 +21,9 @@ class Branch extends Model
         'address',
         'city',
         'contact',
-        'status',
         'is_main',
         'remarks',
+        'status',
     ];
 
     protected $casts = [
