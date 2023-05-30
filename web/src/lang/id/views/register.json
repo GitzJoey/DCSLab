@@ -1,0 +1,12 @@
+{
+    "title": "Daftar Baru",
+    "name": "Nama",
+    "email": "Email",
+    "password": "Password",
+    "password_confirmation": "Konfirmasi Password",
+    "terms": "Terms",
+    "agree_1": "I agree to the ",
+    "agree_2": "terms",
+    "already_member": "I already have a membership",
+    "terms_and_cond": "Terms & Condition"
+}

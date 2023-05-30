@@ -1,0 +1,9 @@
+{
+    "title": "Login",
+    "fields": {
+        "email": "Email",
+        "password": "Password",
+        "remember_me": "Ingat Aku",
+        "forgot_pass": "Lupa Password"
+    }
+}

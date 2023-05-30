@@ -1,0 +1,21 @@
+{
+    "page_title": "Merk",
+    "table": {
+        "title": "Daftar Merk",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama"
+        }
+    },
+    "actions": {
+        "create": "Tambah Merk",
+        "edit": "Ubah Merk",
+        "show": "Tampilkan Merk",
+        "delete": "Hapus Merk"
+    },
+    "fields": {
+        "company": "Nama Perusahaan",
+        "code": "Kode",
+        "name": "Name"
+    }
+}

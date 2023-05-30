@@ -1,0 +1,25 @@
+{
+    "page_title": "Unit",
+    "table": {
+        "title": "Unit Lists",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "description": "Description",
+            "category": "Category"
+        }
+    },
+    "actions": {
+        "create": "Create Unit",
+        "edit": "Edit Unit",
+        "show": "Show Unit",
+        "delete": "Delete Unit"
+    },
+    "fields": {
+        "company": "Company",
+        "code": "Code",
+        "name": "Name",
+        "description": "Description",
+        "category": "Category"
+    }
+}
