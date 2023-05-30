@@ -1,0 +1,12 @@
+{
+    "page_title" : "Perusahaan",
+    "table" : {
+        "title" : "Daftar Perusahaan",
+        "cols" : {
+            "code" : "Kode",
+            "name" : "Nama",
+            "default" : "Default",
+            "status" : "Status"
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "page_title" : "Company",
+    "table" : {
+        "title" : "Company List",
+        "cols" : {
+            "code" : "Code",
+            "name" : "Name",
+            "default" : "Default",
+            "status" : "Status"
+        }
+    }
+}

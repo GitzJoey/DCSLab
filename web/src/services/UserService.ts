@@ -18,12 +18,12 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async readAny(): Promise<ServiceResponseType<UserType[] | null>> {
+    public async readAny(args : { page?: number, per_page ? : number, search ? : string  }): Promise<ServiceResponseType<UserType[] | null>> {
         try {
-            const url = route('api.get.db.admin.users.read_any', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.admin.users.read_any', args, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
             const response: AxiosResponse<UserType[]> = await axios.get(url);
+
 
             return {
                 success: true,
