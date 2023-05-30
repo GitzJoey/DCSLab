@@ -14,8 +14,6 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:vue/vue3-recommended',
         'prettier',
-        'prettier/@typescript-eslint',
-        'prettier/vue',
     ],
     rules: {
 
@@ -29,6 +27,6 @@ module.exports = {
         },
     ],
     ignorePatterns: [
-        '/src/base-components/Alert/**'
+
     ]
 };
