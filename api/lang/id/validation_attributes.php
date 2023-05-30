@@ -160,7 +160,7 @@ return [
     'customer' => [
         'company' => 'Perusahaan',
         'code' => 'Kode',
-        'is_member' => 'Is Member',
+        'is_member' => 'Member',
         'name' => 'Nama',
         'customer_group' => 'Kelompok Pelanggan',
         'zone' => 'Wilayah',
