@@ -169,11 +169,11 @@ class ProductActions
         string $company_ulid
     ): Collection {
         return Product::with('company', 'productGroup', 'brand', 'productUnits.unit')
-                ->where('company_id', '=', Company::where('ulid', '=', $company_ulid)->first()->id)
-                ->where('product_type', '!=', ProductType::SERVICE->value)
-                ->where('status', '=', RecordStatus::ACTIVE->value)
-                ->orderBy('name', 'ASC')
-                ->get();
+            ->where('company_id', '=', Company::where('ulid', '=', $company_ulid)->first()->id)
+            ->where('product_type', '!=', ProductType::SERVICE->value)
+            ->where('status', '=', RecordStatus::ACTIVE->value)
+            ->orderBy('name', 'ASC')
+            ->get();
     }
 
     public function read(Product $product): Product

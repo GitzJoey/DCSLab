@@ -174,7 +174,7 @@ class EmployeeActionsReadTest extends ActionsTestCase
             $employee = Employee::factory()
                 ->for($company)
                 ->for(
-                    User::factory()->setName('testing' . $i)
+                    User::factory()->setName('testing'.$i)
                         ->has(Profile::factory())
                         ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
                         ->has(Setting::factory()->createDefaultSetting_PREF_THEME())

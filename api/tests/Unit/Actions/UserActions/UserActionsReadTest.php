@@ -58,13 +58,13 @@ class UserActionsReadTest extends ActionsTestCase
                 $wName = random_int(0, 1);
 
                 if ($wName == 0) {
-                    $profileArr['first_name'] = $iMode == 1 ? $profileArr['first_name'] . $uniqueIdentifier : $profileArr['first_name'];
+                    $profileArr['first_name'] = $iMode == 1 ? $profileArr['first_name'].$uniqueIdentifier : $profileArr['first_name'];
                 } elseif ($wName == 1) {
-                    $profileArr['last_name'] = $iMode == 1 ? $profileArr['last_name'] . $uniqueIdentifier : $profileArr['last_name'];
+                    $profileArr['last_name'] = $iMode == 1 ? $profileArr['last_name'].$uniqueIdentifier : $profileArr['last_name'];
                 }
 
                 $userArr = User::factory()->make([
-                    'name' => strtolower($profileArr['first_name'] . $profileArr['last_name']) . random_int(1, 999),
+                    'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).random_int(1, 999),
                 ])->toArray();
                 $userArr['password'] = 'test123';
 
@@ -99,12 +99,12 @@ class UserActionsReadTest extends ActionsTestCase
             $wName = random_int(0, 1);
 
             if ($wName == 0) {
-                $profileArr['first_name'] = $profileArr['first_name'] . $uniqueIdentifier;
+                $profileArr['first_name'] = $profileArr['first_name'].$uniqueIdentifier;
             } elseif ($wName == 1) {
-                $profileArr['last_name'] = $profileArr['last_name'] . $uniqueIdentifier;
+                $profileArr['last_name'] = $profileArr['last_name'].$uniqueIdentifier;
             }
             $userArr = User::factory()->make([
-                'name' => strtolower($profileArr['first_name'] . $profileArr['last_name']) . random_int(1, 999),
+                'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).random_int(1, 999),
             ])->toArray();
             $userArr['password'] = 'test123';
 
@@ -138,12 +138,12 @@ class UserActionsReadTest extends ActionsTestCase
             $wName = random_int(0, 1);
 
             if ($wName == 0) {
-                $profileArr['first_name'] = $profileArr['first_name'] . $uniqueIdentifier;
+                $profileArr['first_name'] = $profileArr['first_name'].$uniqueIdentifier;
             } elseif ($wName == 1) {
-                $profileArr['last_name'] = $profileArr['last_name'] . $uniqueIdentifier;
+                $profileArr['last_name'] = $profileArr['last_name'].$uniqueIdentifier;
             }
             $userArr = User::factory()->make([
-                'name' => strtolower($profileArr['first_name'] . $profileArr['last_name']) . random_int(1, 999),
+                'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).random_int(1, 999),
             ])->toArray();
             $userArr['password'] = 'test123';
 
@@ -173,7 +173,7 @@ class UserActionsReadTest extends ActionsTestCase
         $profileArr = Profile::factory()->setStatusActive()->make()->toArray();
 
         $userArr = User::factory()->make([
-            'name' => strtolower($profileArr['first_name'] . $profileArr['last_name']) . random_int(1, 999),
+            'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).random_int(1, 999),
         ])->toArray();
         $userArr['password'] = 'test123';
 

@@ -49,8 +49,8 @@ class CustomerActionsEditTest extends ActionsTestCase
         );
 
         $picArr = Profile::factory()->setStatusActive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . random_int(1, 5);
-        $picArr['email'] = $picArr['name'] . '@something.com';
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
+        $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];
         $picArr['address'] = $customerAddressArr[0]['address'];
@@ -136,8 +136,8 @@ class CustomerActionsEditTest extends ActionsTestCase
         $customerAddressArr[$lastRow]['remarks'] = $customerAddressFactory->sentence;
 
         $picArr = Profile::factory()->setStatusActive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . random_int(1, 5);
-        $picArr['email'] = $picArr['name'] . '@something.com';
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
+        $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];
         $picArr['address'] = $customerAddressArr[0]['address'];
@@ -214,8 +214,8 @@ class CustomerActionsEditTest extends ActionsTestCase
         array_pop($customerAddressArr);
 
         $picArr = Profile::factory()->setStatusActive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . random_int(1, 5);
-        $picArr['email'] = $picArr['name'] . '@something.com';
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
+        $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];
         $picArr['address'] = $customerAddressArr[0]['address'];

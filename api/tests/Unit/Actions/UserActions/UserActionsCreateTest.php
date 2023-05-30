@@ -26,7 +26,7 @@ class UserActionsCreateTest extends ActionsTestCase
         $profileArr = Profile::factory()->setStatusActive()->make()->toArray();
 
         $userArr = User::factory()->make([
-            'name' => strtolower($profileArr['first_name'] . $profileArr['last_name']) . random_int(1, 999),
+            'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).random_int(1, 999),
         ])->toArray();
         $userArr['password'] = 'test123';
 

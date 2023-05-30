@@ -53,14 +53,14 @@ function createProduct($productPerCompany, $company)
         $brand = Brand::whereRelation('company', 'id', $company->id)->inRandomOrder()->first();
 
         $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsProduct();
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
 
         $units = Unit::whereRelation('company', 'id', $company->id)
-                    ->where('category', '=', UnitCategory::PRODUCTS->value)
-                    ->inRandomOrder()->get();
+            ->where('category', '=', UnitCategory::PRODUCTS->value)
+            ->inRandomOrder()->get();
         $shuffledUnits = $units->shuffle();
 
         $productUnitCount = random_int(1, $units->count());
@@ -87,14 +87,14 @@ function createService($productPerCompany, $company)
         $brand = Brand::whereRelation('company', 'id', $company->id)->inRandomOrder()->first();
 
         $product = Product::factory()
-                    ->for($company)
-                    ->for($productGroup)
-                    ->for($brand)
-                    ->setProductTypeAsService();
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsService();
 
         $units = Unit::whereRelation('company', 'id', $company->id)
-                    ->where('category', '=', UnitCategory::SERVICES->value)
-                    ->inRandomOrder()->get();
+            ->where('category', '=', UnitCategory::SERVICES->value)
+            ->inRandomOrder()->get();
         $shuffledUnits = $units->shuffle();
 
         $productUnitCount = random_int(1, $units->count());

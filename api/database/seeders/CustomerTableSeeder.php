@@ -29,10 +29,10 @@ class CustomerTableSeeder extends Seeder
                 $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
                 $customer = Customer::factory()
-                            ->for($company)
-                            ->for($customerGroup)
-                            ->setIsMemberCustomer(boolval(random_int(0, 1)))
-                            ->setTaxableEnterprise(boolval(random_int(0, 1)));
+                    ->for($company)
+                    ->for($customerGroup)
+                    ->setIsMemberCustomer(boolval(random_int(0, 1)))
+                    ->setTaxableEnterprise(boolval(random_int(0, 1)));
 
                 $makeItActiveStatus = boolval(random_int(0, 1));
                 if ($makeItActiveStatus) {

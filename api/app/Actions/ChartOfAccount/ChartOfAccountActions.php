@@ -655,9 +655,9 @@ class ChartOfAccountActions
         ?int $includingId = null
     ): Collection {
         $chartOfAccounts = ChartOfAccount::whereCompanyId($companyId)
-                                         ->whereBranchId($branchId)
-                                         ->where('can_have_child', '=', 0)
-                                         ->where('status', '=', RecordStatus::ACTIVE->value);
+            ->whereBranchId($branchId)
+            ->where('can_have_child', '=', 0)
+            ->where('status', '=', RecordStatus::ACTIVE->value);
 
         $chartOfAccounts = $chartOfAccounts->where(function ($query) use ($accountTypes) {
             for ($i = 0; $i < count($accountTypes); $i++) {

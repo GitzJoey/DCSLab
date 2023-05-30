@@ -26,7 +26,7 @@ class UserActionsEditTest extends ActionsTestCase
         $profileArr = Profile::factory()->setStatusActive()->make()->toArray();
 
         $userArr = User::factory()->make([
-            'name' => strtolower($profileArr['first_name'] . $profileArr['last_name']) . random_int(1, 999),
+            'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).random_int(1, 999),
         ])->toArray();
         $userArr['password'] = 'test123';
 
@@ -42,7 +42,7 @@ class UserActionsEditTest extends ActionsTestCase
         $newProfileArr = Profile::factory()->setStatusActive()->make()->toArray();
 
         $newUserArr = User::factory()->make([
-            'name' => strtolower($newProfileArr['first_name'] . $newProfileArr['last_name']) . random_int(1, 999),
+            'name' => strtolower($newProfileArr['first_name'].$newProfileArr['last_name']).random_int(1, 999),
         ])->toArray();
         $newUserArr['password'] = 'test123';
 
@@ -81,7 +81,7 @@ class UserActionsEditTest extends ActionsTestCase
         $profileArr = Profile::factory()->setStatusActive()->make()->toArray();
 
         $userArr = User::factory()->make([
-            'name' => strtolower($profileArr['first_name'] . $profileArr['last_name']) . random_int(1, 999),
+            'name' => strtolower($profileArr['first_name'].$profileArr['last_name']).random_int(1, 999),
         ])->toArray();
         $userArr['password'] = 'test123';
 

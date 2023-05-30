@@ -42,8 +42,8 @@ class CustomerActionsCreateTest extends ActionsTestCase
             ->make()->toArray();
 
         $picArr = Profile::factory()->setStatusActive()->for($user)->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . random_int(1, 999);
-        $picArr['email'] = $picArr['name'] . '@something.com';
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 999);
+        $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $customerAddressArr[0]['contact'];
         $picArr['address'] = $customerAddressArr[0]['address'];

@@ -58,8 +58,8 @@ class SupplierActionsCreateTest extends ActionsTestCase
         $supplierArr = Supplier::factory()->for($company)->make()->toArray();
 
         $picArr = Profile::factory()->setStatusInactive()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . random_int(1, 5);
-        $picArr['email'] = $picArr['name'] . '@something.com';
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
+        $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $supplierArr['contact'];
         $picArr['address'] = $supplierArr['address'];
@@ -131,8 +131,8 @@ class SupplierActionsCreateTest extends ActionsTestCase
         $supplierArr = Supplier::factory()->for($company)->make()->toArray();
 
         $picArr = Profile::factory()->make()->toArray();
-        $picArr['name'] = strtolower($picArr['first_name'] . $picArr['last_name']) . random_int(1, 5);
-        $picArr['email'] = $picArr['name'] . '@something.com';
+        $picArr['name'] = strtolower($picArr['first_name'].$picArr['last_name']).random_int(1, 5);
+        $picArr['email'] = $picArr['name'].'@something.com';
         $picArr['password'] = '123456';
         $picArr['contact'] = $supplierArr['contact'];
         $picArr['address'] = $supplierArr['address'];

@@ -107,12 +107,12 @@ class UserActions
                 $usr = User::with($relationship)->latest();
             } else {
                 $usr = User::with($relationship)
-                        ->where('email', 'like', '%'.$search.'%')
-                        ->orWhere('name', 'like', '%'.$search.'%')
-                        ->orWhereHas('profile', function ($query) use ($search) {
-                            $query->where('first_name', 'like', '%'.$search.'%')
-                                    ->orWhere('last_name', 'like', '%'.$search.'%');
-                        })->latest();
+                    ->where('email', 'like', '%'.$search.'%')
+                    ->orWhere('name', 'like', '%'.$search.'%')
+                    ->orWhereHas('profile', function ($query) use ($search) {
+                        $query->where('first_name', 'like', '%'.$search.'%')
+                            ->orWhere('last_name', 'like', '%'.$search.'%');
+                    })->latest();
             }
 
             if ($paginate) {

@@ -31,15 +31,15 @@ class SupplierTableSeeder extends Seeder
         foreach ($companies as $company) {
             for ($i = 0; $i < $supplierPerCompany; $i++) {
                 $supplier = Supplier::factory()
-                            ->for($company)
-                            ->for(
-                                User::factory()
-                                    ->has(Profile::factory())
-                                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                            );
+                    ->for($company)
+                    ->for(
+                        User::factory()
+                            ->has(Profile::factory())
+                            ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                            ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                            ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                            ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                    );
 
                 $products = Product::whereRelation('company', 'id', $company->id)->get();
 

@@ -25,15 +25,15 @@ class EmployeeTableSeeder extends Seeder
         foreach ($companies as $company) {
             for ($i = 0; $i < $employeePerPart; $i++) {
                 $employee = Employee::factory()
-                            ->for($company)
-                            ->for(
-                                User::factory()
-                                    ->has(Profile::factory())
-                                    ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
-                                    ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-                                    ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-                                    ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-                            );
+                    ->for($company)
+                    ->for(
+                        User::factory()
+                            ->has(Profile::factory())
+                            ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                            ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                            ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                            ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                    );
 
                 if ($onlyThisBranchId != 0) {
                     $branches = $company->branches()->where('id', '=', $onlyThisBranchId)->get();
