@@ -4,7 +4,7 @@ import id from "./messages.id";
 import { setLocale } from "@vee-validate/i18n";
 import { Ref } from "vue";
 
-let language = document.documentElement.lang;
+const language = document.documentElement.lang;
 
 const i18n = createI18n({
     legacy: false,
