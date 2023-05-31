@@ -1,6 +1,6 @@
 {
   "name": "dcslab",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Doctor Computer SG Lab",
   "scripts": {
     "install": "node install.js"
@@ -15,6 +15,5 @@
     "url": "https://github.com/GitzJoey/DCSLab/issues"
   },
   "homepage": "https://github.com/GitzJoey/DCSLab#readme",
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
