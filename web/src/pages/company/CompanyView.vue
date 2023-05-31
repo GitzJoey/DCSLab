@@ -3,7 +3,7 @@
 import { ref, reactive } from "vue";
 import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { ViewTitleLayout } from "../../base-components/FormLayout";
+import { TitleLayout } from "../../base-components/Form/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import DataList from "../../base-components/DataList/DataList.vue";
 import Table from "../../base-components/Table";
@@ -60,11 +60,11 @@ const toggleDetail = (idx: any) => {
   <div class="mt-8">
     <LoadingOverlay :visible="loading">
       <div v-if="mode == ViewMode.LIST"></div>
-      <ViewTitleLayout>
+      <TitleLayout>
         <template #title>
           {{ t("views.company.page_title") }}
         </template>
-      </ViewTitleLayout>
+      </TitleLayout>
       <DataList :data="companyList"  :title="t('views.company.table.title')" >
         <template #table="tableProps">
           <Table class="mt-5" :hover="true">

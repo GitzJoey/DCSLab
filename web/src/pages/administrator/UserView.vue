@@ -9,9 +9,9 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import {
-  ViewTitleLayout,
+  TitleLayout,
   ThreeColsLayout,
-} from "../../base-components/FormLayout";
+} from "../../base-components/Form/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { UserType } from '../../types/resources/UserType'
@@ -105,7 +105,7 @@ const onDataListChange = ({page , per_page, search} : {page : number , per_page:
   <div class="mt-8">
     <LoadingOverlay :visible="loading">
       <div v-if="mode == ViewMode.LIST">
-        <ViewTitleLayout>
+        <TitleLayout>
           <template #title>{{ t("views.user.page_title") }}</template>
           <template #optional>
             <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
@@ -116,7 +116,7 @@ const onDataListChange = ({page , per_page, search} : {page : number , per_page:
               </Button>
             </div>
           </template>
-        </ViewTitleLayout>
+        </TitleLayout>
 
         <AlertPlaceholder />
         <DataList v-on:dataListChange="onDataListChange" :title="t('views.user.table.title')" :data="userList" :enableSearch="true" >

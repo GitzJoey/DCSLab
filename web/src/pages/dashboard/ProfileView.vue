@@ -8,7 +8,7 @@ import {
   FormTextarea,
   FormSelect,
 } from "../../base-components/Form";
-import { ThreeColsLayout } from "../../base-components/FormLayout";
+import { ThreeColsLayout } from "../../base-components/Form/FormLayout";
 import { useUserContextStore } from "../../stores/user-context";
 //#endregion
 
