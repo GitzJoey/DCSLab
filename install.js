@@ -1,7 +1,8 @@
-var os = require('os');
-var process = require('process');
-var execSync = require('child_process').execSync;
-const { dirname } = require('path');
+const os = require('os');
+const fs = require('fs');
+const process = require('process');
+const execSync = require('child_process').execSync;
+const { path, dirname } = require('path');
 
 const rootDir = dirname(require.main.filename);
 
@@ -26,3 +27,16 @@ console.log(outputCopyEnvWEB.toString());
 process.chdir(rootDir + '/api/database');
 let createTestingDB = os.type() === 'Windows_NT' ? execSync('type nul > database.sqlite') : execSync('touch database.sqlite');
 console.log(createTestingDB.toString());
+
+if (!fs.existsSync(path.join(rootDir, '.vscode'))) {
+    fs.mkdirSync(path.join(rootDir, '.vscode'));
+    console.log('.vscode folder created.');
+
+    const settingsData = {
+        'eslint.workingDirectories': ['./web']
+    };
+    const settingsJson = JSON.stringify(settingsData, null, 2);
+
+    fs.writeFileSync(settingsFile, settingsJson);
+    console.log('settings.json file created.');
+}
