@@ -1,10 +1,10 @@
 const os = require('os');
 const fs = require('fs');
+const path = require('path');
 const process = require('process');
 const execSync = require('child_process').execSync;
-const { path, dirname } = require('path');
 
-const rootDir = dirname(require.main.filename);
+const rootDir = path.dirname(require.main.filename);
 
 process.chdir(rootDir + '/api');
 let outputComposer = execSync('composer install');
@@ -37,6 +37,6 @@ if (!fs.existsSync(path.join(rootDir, '.vscode'))) {
     };
     const settingsJson = JSON.stringify(settingsData, null, 2);
 
-    fs.writeFileSync(settingsFile, settingsJson);
+    fs.writeFileSync(path.join(rootDir, '.vscode/settings.json'), settingsJson);
     console.log('settings.json file created.');
 }
