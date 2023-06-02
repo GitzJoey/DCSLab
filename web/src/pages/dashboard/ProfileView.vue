@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, computed } from "vue";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -8,7 +8,6 @@ import {
   FormTextarea,
   FormSelect,
 } from "../../base-components/Form";
-import { ThreeColsLayout } from "../../base-components/Form/FormLayout";
 import { useUserContextStore } from "../../stores/user-context";
 //#endregion
 
@@ -28,7 +27,6 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#endregion
 
 //#region onMounted
-onMounted(() => {});
 //#endregion
 
 //#region Computed
@@ -44,13 +42,15 @@ onMounted(() => {});
   </div>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y p-5 box">
-      <ThreeColsLayout>
-        <template #title>{{
-          t("views.profile.field_groups.user_profile")
-        }}</template>
-        <template #content>
+      <div class="grid grid-cols-12">
+        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
+          <span class="text-lg">
+            {{ t("views.profile.field_groups.user_profile") }}
+          </span>
+        </div>
+        <div class="col-span-12 md:col-span-8 lg:col-span-8">
           <div class="pb-4">
-            <FormLabel htmlFor="name">{{
+            <FormLabel html-for="name">{{
               t("views.profile.fields.name")
             }}</FormLabel>
             <FormInput
@@ -64,7 +64,7 @@ onMounted(() => {});
             />
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="email">{{
+            <FormLabel html-for="email">{{
               t("views.profile.fields.email")
             }}</FormLabel>
             <FormInput
@@ -77,8 +77,8 @@ onMounted(() => {});
               readonly
             />
           </div>
-        </template>
-      </ThreeColsLayout>
+        </div>
+      </div>
       <div class="grid grid-cols-12">
         <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
           <span class="text-lg">{{
@@ -94,7 +94,7 @@ onMounted(() => {});
               :label="t('views.profile.fields.first_name')"
             >
               <FormLabel
-                htmlFor="first_name"
+                html-for="first_name"
                 class="flex flex-col w-full sm:flex-row"
               >
                 {{ t("views.profile.fields.first_name") }}
@@ -111,7 +111,7 @@ onMounted(() => {});
             </VeeField>
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="last_name">{{
+            <FormLabel html-for="last_name">{{
               t("views.profile.fields.last_name")
             }}</FormLabel>
             <FormInput
@@ -124,7 +124,7 @@ onMounted(() => {});
             />
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="address">{{
+            <FormLabel html-for="address">{{
               t("views.profile.fields.address")
             }}</FormLabel>
             <FormTextarea
@@ -138,7 +138,7 @@ onMounted(() => {});
           </div>
           <div class="flex gap-2">
             <div class="pb-4 w-full">
-              <FormLabel htmlFor="city">{{
+              <FormLabel html-for="city">{{
                 t("views.profile.fields.city")
               }}</FormLabel>
               <FormInput
@@ -151,7 +151,7 @@ onMounted(() => {});
               />
             </div>
             <div class="pb-4">
-              <FormLabel htmlFor="postal_code">{{
+              <FormLabel html-for="postal_code">{{
                 t("views.profile.fields.postal_code")
               }}</FormLabel>
               <FormInput
@@ -165,7 +165,7 @@ onMounted(() => {});
             </div>
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="country">{{
+            <FormLabel html-for="country">{{
               t("views.profile.fields.country")
             }}</FormLabel>
             <FormSelect
@@ -180,7 +180,7 @@ onMounted(() => {});
             </FormSelect>
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="tax_id">{{
+            <FormLabel html-for="tax_id">{{
               t("views.profile.fields.tax_id")
             }}</FormLabel>
             <FormInput
@@ -193,7 +193,7 @@ onMounted(() => {});
             />
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="ic_num">{{
+            <FormLabel html-for="ic_num">{{
               t("views.profile.fields.ic_num")
             }}</FormLabel>
             <FormInput
@@ -206,7 +206,7 @@ onMounted(() => {});
             />
           </div>
           <div class="pb-4">
-            <FormLabel htmlFor="remarks">{{
+            <FormLabel html-for="remarks">{{
               t("views.profile.fields.remarks")
             }}</FormLabel>
             <FormTextarea
