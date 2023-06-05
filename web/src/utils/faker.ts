@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 
 interface Users {
   name: string;
-  gender: string;
   email: string;
 }
 
@@ -38,48 +37,27 @@ interface Foods {
 
 const imageAssets = import.meta.glob<{
   default: string;
-}>("/src/assets/images/fakers/*.{jpg,jpeg,png,svg}", { eager: true });
+}>("/src/assets/images/*.{jpg,jpeg,png,svg}", { eager: true });
 
 const fakers = {
   fakeUsers() {
     const users: Array<Omit<Users, "email">> = [
-      { name: "Johnny Depp", gender: "male" },
-      { name: "Al Pacino", gender: "male" },
-      { name: "Robert De Niro", gender: "male" },
-      { name: "Kevin Spacey", gender: "male" },
-      { name: "Denzel Washington", gender: "male" },
-      { name: "Russell Crowe", gender: "male" },
-      { name: "Brad Pitt", gender: "male" },
-      { name: "Angelina Jolie", gender: "female" },
-      { name: "Leonardo DiCaprio", gender: "male" },
-      { name: "Tom Cruise", gender: "male" },
-      { name: "John Travolta", gender: "male" },
-      { name: "Arnold Schwarzenegger", gender: "male" },
-      { name: "Sylvester Stallone", gender: "male" },
-      { name: "Kate Winslet", gender: "female" },
-      { name: "Christian Bale", gender: "male" },
-      { name: "Morgan Freeman", gender: "male" },
-      { name: "Keanu Reeves", gender: "male" },
-      { name: "Nicolas Cage", gender: "male" },
-      { name: "Hugh Jackman", gender: "male" },
-      { name: "Edward Norton", gender: "male" },
-      { name: "Bruce Willis", gender: "male" },
-      { name: "Tom Hanks", gender: "male" },
-      { name: "Charlize Theron", gender: "female" },
-      { name: "Will Smith", gender: "male" },
-      { name: "Sean Connery", gender: "male" },
-      { name: "Keira Knightley", gender: "female" },
-      { name: "Vin Diesel", gender: "male" },
-      { name: "Matt Damon", gender: "male" },
-      { name: "Richard Gere", gender: "male" },
-      { name: "Catherine Zeta-Jones", gender: "female" },
+      { name: "Emily Johnson" },
+      { name: "Benjamin Thompson" },
+      { name: "Sophia Rodriguez" },
+      { name: "William Anderson" },
+      { name: "Olivia Smith" },
+      { name: "Ethan Martin" },
+      { name: "Ava Lee" },
+      { name: "James Brown" },
+      { name: "Mia Campbell" },
+      { name: "Alexander Ramirez" }
     ];
 
     return _.sampleSize(users, 3).map((user) => {
       return {
         name: user.name,
-        gender: user.gender,
-        email: _.toLower(_.replace(user.name, / /g, "") + "@left4code.com"),
+        email: _.toLower(_.replace(user.name, / /g, "") + "@" + import.meta.env.VITE_APP_NAME.toLowerCase() + ".com"),
       };
     });
   },
@@ -88,7 +66,7 @@ const fakers = {
     for (let i = 0; i < 15; i++) {
       photos[photos.length] =
         imageAssets[
-          "/src/assets/images/fakers/profile-" + _.random(1, 15) + ".jpg"
+          "/src/assets/images/200x200" + ".jpg"
         ].default;
     }
     return _.sampleSize(photos, 10);
@@ -98,7 +76,7 @@ const fakers = {
     for (let i = 0; i < 15; i++) {
       images[images.length] =
         imageAssets[
-          "/src/assets/images/fakers/preview-" + _.random(1, 15) + ".jpg"
+          "/src/assets/images/800x800" + ".jpg"
         ].default;
     }
     return _.sampleSize(images, 10);
@@ -307,97 +285,97 @@ const fakers = {
       {
         name: "Vanilla Latte",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-1.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Milkshake",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-2.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Soft Drink",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-3.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Root Beer",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-4.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Pocari",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-5.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Ultimate Burger",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-6.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Hotdog",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-7.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Avocado Burger",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-8.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Spaghetti Fettucine Aglio with Beef Bacon",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-9.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Spaghetti Fettucine Aglio with Smoked Salmon",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-10.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Curry Penne and Cheese",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-11.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "French Fries",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-12.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Virginia Cheese Fries",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-13.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Virginia Cheese Wedges",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-14.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Fried/Grilled Banana",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-15.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Crispy Mushroom",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-16.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Fried Calamari",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-17.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Chicken Wings",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-18.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
       {
         name: "Snack Platter",
         image:
-          imageAssets["/src/assets/images/fakers/food-beverage-19.jpg"].default,
+          imageAssets["/src/assets/images/200x200.jpg"].default,
       },
     ];
     return _.shuffle(foods);
