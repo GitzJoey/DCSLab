@@ -1,0 +1,37 @@
+{
+    "title": "Profile",
+    "field_groups": {
+        "user_profile": "User Profile",
+        "personal_information": "Personal Information",
+        "account_settings": "Account Settings",
+        "roles": "Roles",
+        "change_password": "Change Password"
+    },
+    "fields": {
+        "name": "Name",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "address": "Address",
+        "city": "City",
+        "postal_code": "Postal Code",
+        "country": "Country",
+        "tax_id": "Tax ID",
+        "remarks": "Remarks",
+        "email": "Email",
+        "ic_num": "IC No.",
+        "settings":  {
+            "theme": "Themes",
+            "date_format": "Date Format",
+            "time_format": "Time Format",
+            "api_token": "API Token"
+        },
+        "change_password": {
+            "current_password": "Current Password",
+            "new_password": "New Password",
+            "confirm_password": "Confirm Password"
+        }
+    },
+    "tooltip": {
+        "email_verified": "Email Verified"
+    }
+}

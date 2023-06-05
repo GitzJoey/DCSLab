@@ -1,0 +1,12 @@
+@layer components {
+  .image-fit {
+    position: relative;
+    & > img {
+      position: absolute;
+      object-fit: cover;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

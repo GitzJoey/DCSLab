@@ -1,0 +1,24 @@
+{
+    "page_title": "Company",
+    "table": {
+        "title": "Company List",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "default": "Default",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Company",
+        "edit": "Edit Company",
+        "show": "Show Company",
+        "delete": "Delete Company"
+    },
+    "fields": {
+        "code": "Code",
+        "name": "Name",
+        "default": "Default",
+        "status": "Status"
+    }
+}

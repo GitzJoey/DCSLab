@@ -1,0 +1,32 @@
+{
+    "placeholder": "Silahkan Pilih",
+    "values": {
+        "statusDDL": {
+            "active": "Aktif",
+            "inactive": "Tidak Aktif",
+            "deleted": "Dihapus"
+        },
+        "productGroupCategoryDDL": {
+            "product": "Produk",
+            "service": "Jasa"
+        },
+        "unitCategoryDDL": {
+            "product": "Produk",
+            "service": "Jasa"
+        },
+        "paymentTermTypeDDL": {
+            "pia": "Pembayaran Dimuka",
+            "net": "Pembayaran X Hari Setelah Tgl Invoice",
+            "eom": "Akhir Bulan",
+            "cod": "Cash On Delivery",
+            "cnd": "Cash Di Pengiriman Selanjutnya",
+            "cbs": "Cash Sebelum Pengiriman"
+        },
+        "productTypeDDL": {
+            "raw": "Bahan Baku",
+            "wip": "Barang Setengah Jadi",
+            "fg": "Barang Jadi",
+            "svc": "Jasa"
+        }
+    }
+}
