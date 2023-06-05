@@ -42,28 +42,65 @@ onMounted(() => {});
   <div class="flex items-center mt-8 intro-y">
     <h2 class="mr-auto text-xl font-medium">{{ t("views.profile.title") }}</h2>
   </div>
+
   <div class="grid grid-cols-12 gap-6 mt-5">
-    <div class="col-span-12 intro-y p-5 box">
-      <ThreeColsLayout>
-        <template #title>{{
-          t("views.profile.field_groups.user_profile")
-        }}</template>
-        <template #content>
-          <div class="pb-4">
-            <FormLabel htmlFor="name">{{
-              t("views.profile.fields.name")
-            }}</FormLabel>
-            <FormInput
-              id="name"
-              v-model="userContext.name"
-              name="name"
-              type="text"
-              class="w-full"
-              :placeholder="t('views.profile.fields.name')"
-              readonly
-            />
+    <!-- Begin Profile Menu -->
+    <div
+      class="col-span-12 lg:col-span-4 2xl:col-span-3 flex lg:block flex-col-reverse"
+    >
+      <div class="intro-y box mt-5 lg:mt-0">
+        <div class="relative flex items-center p-5">
+          <div class="ml-4 mr-auto">
+            <div class="font-medium text-base">
+              {{ userContext.name }}
+            </div>
+
           </div>
-          <div class="pb-4">
+        </div>
+        <div class="p-5 border-t border-slate-200/60 dark:border-darkmode-400">
+          <a href="" class="flex items-center text-primary font-medium">
+            <i data-lucide="activity" class="w-4 h-4 mr-2"></i>
+            User Profile
+          </a>
+          <a class="flex items-center mt-5" href="">
+            <i data-lucide="box" class="w-4 h-4 mr-2"></i> Account Settings
+          </a>
+          <a class="flex items-center mt-5" href="">
+            <i data-lucide="lock" class="w-4 h-4 mr-2"></i> Change Password
+          </a>
+          <a class="flex items-center mt-5" href="">
+            <i data-lucide="settings" class="w-4 h-4 mr-2"></i> User Settings
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- End Profile Menu -->
+    <div class="col-span-12 lg:col-span-8 2xl:col-span-9">
+      <div class="grid grid-cols-12 gap-6">
+        <!-- Begin Personal Informations -->
+        <div class="intro-y box col-span-12 2xl:col-span-12">
+          <div
+            class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
+          >
+            <h2 class="font-medium text-base mr-auto">User Profile</h2>
+          </div>
+          <div class="p-5">
+            <!-- Start Body dari Card -->
+            <div class="pb-4">
+              <FormLabel htmlFor="name">
+                {{ t("views.profile.fields.name") }}
+              </FormLabel>
+              <FormInput 
+                id="name"
+                v-model="userContext.name"
+                name="name"
+                type="text"
+                class="w-full"
+                :placeholder="t('views.profile.fields.name')"
+                readonly
+              />
+            </div>
+            <div class="pb-4">
             <FormLabel htmlFor="email">{{
               t("views.profile.fields.email")
             }}</FormLabel>
@@ -76,17 +113,21 @@ onMounted(() => {});
               :placeholder="t('views.profile.fields.email')"
               readonly
             />
+          </div>            
           </div>
-        </template>
-      </ThreeColsLayout>
-      <div class="grid grid-cols-12">
-        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
-          <span class="text-lg">{{
-            t("views.profile.field_groups.personal_information")
-          }}</span>
         </div>
-        <div class="col-span-12 md:col-span-8 lg:col-span-8">
-          <div class="pb-4">
+        <!-- End Personal Informations -->
+
+        <!-- Begin Account Settings -->
+        <div class="intro-y box col-span-12 2xl:col-span-12">
+          <div
+            class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
+          >
+            <h2 class="font-medium text-base mr-auto">Personal Informations</h2>
+          </div>
+          <div class="p-5">
+            <!-- Body dari Card -->
+            <div class="pb-4">
             <VeeField
               v-slot="{ field }"
               name="first_name"
@@ -110,6 +151,7 @@ onMounted(() => {});
               />
             </VeeField>
           </div>
+
           <div class="pb-4">
             <FormLabel htmlFor="last_name">{{
               t("views.profile.fields.last_name")
@@ -123,6 +165,7 @@ onMounted(() => {});
               :placeholder="t('views.profile.fields.last_name')"
             />
           </div>
+
           <div class="pb-4">
             <FormLabel htmlFor="address">{{
               t("views.profile.fields.address")
@@ -136,6 +179,7 @@ onMounted(() => {});
               :placeholder="t('views.profile.fields.address')"
             />
           </div>
+          
           <div class="flex gap-2">
             <div class="pb-4 w-full">
               <FormLabel htmlFor="city">{{
@@ -164,6 +208,7 @@ onMounted(() => {});
               />
             </div>
           </div>
+
           <div class="pb-4">
             <FormLabel htmlFor="country">{{
               t("views.profile.fields.country")
@@ -179,6 +224,7 @@ onMounted(() => {});
               <option>Indonesia</option>
             </FormSelect>
           </div>
+
           <div class="pb-4">
             <FormLabel htmlFor="tax_id">{{
               t("views.profile.fields.tax_id")
@@ -192,6 +238,7 @@ onMounted(() => {});
               :placeholder="t('views.profile.fields.tax_id')"
             />
           </div>
+
           <div class="pb-4">
             <FormLabel htmlFor="ic_num">{{
               t("views.profile.fields.ic_num")
@@ -218,15 +265,41 @@ onMounted(() => {});
               :placeholder="t('views.profile.fields.remarks')"
             />
           </div>
+
+          </div>
         </div>
-      </div>
-      <hr class="py-2" />
-      <div class="grid grid-cols-12">
-        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
-          {{ t("views.profile.field_groups.account_settings") }}
+        <!-- End Account Settings -->
+
+
+        <!-- Begin Change  Password -->
+        <div class="intro-y box col-span-12 2xl:col-span-12">
+          <div
+            class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
+          >
+            <h2 class="font-medium text-base mr-auto">Change Password</h2>
+          </div>
+          <div class="p-5">
+            <!-- Body dari Card -->            
+          </div>
         </div>
-        <div class="col-span-12 md:col-span-8 lg:col-span-8"></div>
+        <!-- End Change  Password -->
+
+        <!-- Begin User Setting -->
+        <div class="intro-y box col-span-12 2xl:col-span-12">
+          <div
+            class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
+          >
+            <h2 class="font-medium text-base mr-auto">User Setting</h2>
+          </div>
+          <div class="p-5">
+            <!--Start Body dari Card -->            
+            <!--End Body dari Card -->            
+          </div>
+        </div>
+        <!-- End User Setting -->
       </div>
     </div>
   </div>
+
+
 </template>
