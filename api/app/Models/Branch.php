@@ -21,9 +21,9 @@ class Branch extends Model
         'address',
         'city',
         'contact',
-        'status',
         'is_main',
         'remarks',
+        'status',
     ];
 
     protected $casts = [
@@ -49,5 +49,10 @@ class Branch extends Model
     public function accountingJournals()
     {
         return $this->hasMany(AccountingJournal::class);
+    }
+
+    public function purchaseOrders()
+    {
+        return $this->hasMany(PurchaseOrder::class);
     }
 }

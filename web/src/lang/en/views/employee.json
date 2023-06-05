@@ -1,0 +1,44 @@
+{
+    "page_title": "Employee",
+    "table": {
+        "title": "Employee List",
+        "cols": {
+            "company": "Company",
+            "code": "Code",
+            "name": "Name",
+            "email": "Email",
+            "join_date": "Join Date",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Employee",
+        "edit": "Edit Employee",
+        "show": "Show Employee",
+        "delete": "Delete Employee"
+    },
+    "fields": {
+        "company": "Company Name",
+        "code": "Code",
+        "name": "Name",
+        "email": "Email",
+        "address": "Address",
+        "city": "City",
+        "postal_code": "Postal Code",
+        "img_path": "Image Path",
+        "country": "Country",
+        "tax_id": "Tax ID",
+        "ic_num": "Ic Num",
+        "join_date": "Join Date",
+        "remarks": "Remarks",
+        "status": "Status",
+        "access": {
+            "access_lists": "Access Lists",
+            "table": {
+                "cols": {
+                    "branch": "Branch"
+                }
+            }
+        }
+    }
+}

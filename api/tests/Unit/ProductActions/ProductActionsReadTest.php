@@ -5,6 +5,7 @@ namespace Tests\Unit\ProductActions;
 use App\Actions\Product\ProductActions;
 use App\Enums\ProductCategory;
 use App\Enums\ProductGroupCategory;
+use App\Enums\RecordStatus;
 use App\Enums\UnitCategory;
 use App\Models\Brand;
 use App\Models\Company;
@@ -595,5 +596,62 @@ class ProductActionsReadTest extends ActionsTestCase
         $result = $this->productActions->read($product);
 
         $this->assertInstanceOf(Product::class, $result);
+    }
+
+    public function test_product_actions_call_get_all_active_product_expect_collections_and_found_active_product()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(10))
+                    ->has(Brand::factory()->count(10))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(10))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        for ($i = 0; $i < 5; $i++) {
+            $productGroup = $company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+                                ->inRandomOrder()->first();
+
+            $brand = $company->brands()->inRandomOrder()->first();
+
+            $product = Product::factory()
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
+
+            if ($i == 0) {
+                $product = $product->setStatusActive();
+            }
+
+            $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+                ->inRandomOrder()->get()->shuffle();
+
+            $productUnitCount = random_int(1, $units->count());
+            $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+            for ($j = 0; $j < $productUnitCount; $j++) {
+                $product = $product->has(
+                    ProductUnit::factory()
+                        ->for($company)->for($units[$j])
+                        ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                );
+            }
+
+            $product->create();
+        }
+
+        $result = $this->productActions->getAllActiveProduct(
+            company_ulid: $company->ulid,
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);
+
+        foreach ($result as $item) {
+            $this->assertTrue($item['status'] == RecordStatus::ACTIVE);
+        }
     }
 }

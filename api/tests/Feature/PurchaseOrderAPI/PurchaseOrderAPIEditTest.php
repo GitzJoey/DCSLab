@@ -133,12 +133,6 @@ class PurchaseOrderAPIEditTest extends APITestCase
             array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
             array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
             array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
-            // array_push($arr_product_unit_per_unit_discount_id, );
-            // array_push($arr_product_unit_per_unit_discount_discount_type, );
-            // array_push($arr_product_unit_per_unit_discount_amount, );
-            // array_push($arr_product_unit_per_unit_sub_total_discount_id, );
-            // array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, );
-            // array_push($arr_product_unit_per_unit_sub_total_discount_amount, );
             array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
             array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
             array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
@@ -150,15 +144,31 @@ class PurchaseOrderAPIEditTest extends APITestCase
         array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
         array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
         array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
-        // array_push($arr_product_unit_per_unit_discount_id, );
-        // array_push($arr_product_unit_per_unit_discount_discount_type, );
-        // array_push($arr_product_unit_per_unit_discount_amount, );
-        // array_push($arr_product_unit_per_unit_sub_total_discount_id, );
-        // array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, );
-        // array_push($arr_product_unit_per_unit_sub_total_discount_amount, );
         array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
         array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
         array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
+
+        for ($i = 0; $i < count($arr_product_unit_product_unit_id); $i++) {
+            for ($j = 0; $j < 3; $j++) {
+                if (random_int(0, 1) == 1) {
+                    $purchasePerUnitDiscount = PurchaseOrderDiscount::factory()->setPerUnitDiscountRandom()->make();
+
+                    $arr_product_unit_per_unit_discount_id[$i][$j] = '';
+                    $arr_product_unit_per_unit_discount_discount_type[$i][$j] = $purchasePerUnitDiscount->discount_type;
+                    $arr_product_unit_per_unit_discount_amount[$i][$j] = $purchasePerUnitDiscount->amount;
+                }
+            }
+
+            for ($j = 0; $j < 3; $j++) {
+                if (random_int(0, 1) == 1) {
+                    $purchasePerUnitSubTotalDiscount = PurchaseOrderDiscount::factory()->setPerUnitSubTotalDiscountRandom()->make();
+
+                    $arr_product_unit_per_unit_sub_total_discount_id[$i][$j] = '';
+                    $arr_product_unit_per_unit_sub_total_discount_discount_type[$i][$j] = $purchasePerUnitSubTotalDiscount->discount_type;
+                    $arr_product_unit_per_unit_sub_total_discount_amount[$i][$j] = $purchasePerUnitSubTotalDiscount->amount;
+                }
+            }
+        }
 
         $purchaseOrderArr = PurchaseOrder::factory()->make([
             'company_id' => Hashids::encode($company->id),

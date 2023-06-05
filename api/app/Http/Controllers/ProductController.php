@@ -153,7 +153,7 @@ class ProductController extends BaseController
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
-        $perPage = array_key_exists('perPage', $request) ? abs($request['perPage']) : 10;
+        $perPage = array_key_exists('per_page', $request) ? abs($request['per_page']) : 10;
         $useCache = array_key_exists('refresh', $request) ? boolval($request['refresh']) : true;
 
         $companyId = $request['company_id'];
@@ -229,13 +229,13 @@ class ProductController extends BaseController
         }
     }
 
-    public function getActiveProduct(ProductRequest $productRequest)
+    public function getAllActiveProduct(ProductRequest $productRequest)
     {
         $request = $productRequest->validated();
 
-        $companyId = $request['company_id'];
+        $company_ulid = Company::where('id', '=', $request['company_id'])->first()->ulid;
 
-        $result = $this->productActions->getActiveProduct($companyId);
+        $result = $this->productActions->getAllActiveProduct($company_ulid);
 
         if (is_null($result)) {
             return response()->error();
