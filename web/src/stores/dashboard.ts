@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export interface DashboardState {
     screenMaskValue: boolean,
-    layoutValue: 'side-menu' | 'simple-menu' | 'top-menu' | undefined
+    layoutValue: 'side-menu' | 'simple-menu' | undefined
 }
 
 export const useDashboardStore = defineStore("dashboardStore", {
@@ -25,5 +25,5 @@ export const useDashboardStore = defineStore("dashboardStore", {
         toggleScreenMaskValue() {
             this.screenMaskValue = !this.screenMaskValue;
         }
-    } 
+    }
 });
