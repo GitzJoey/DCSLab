@@ -60,8 +60,8 @@ onMounted(() => {
   <div>
     <LoadingOverlay :visible="screenMask" :transparent="false">
       <div class="py-5 md:py-0">
-        <DarkModeSwitcher v-if="false" />
-        <MainColorSwitcher v-if="false" />
+        <DarkModeSwitcher />
+        <MainColorSwitcher />
         <MobileMenu />
         <TopBar :layout="dashboardStore.getLayoutValue" />
         <div class="flex overflow-hidden">

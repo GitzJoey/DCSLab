@@ -1,26 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import SideMenu from "../layouts/SideMenu/SideMenu.vue";
-import Page1 from "../pages/Page1.vue";
-import Page2 from "../pages/Page2.vue";
+import r from "./routes";
 
-const routes = [
-  {
-    path: "/",
-    component: SideMenu,
-    children: [
-      {
-        path: "/",
-        name: "side-menu-page-1",
-        component: Page1,
-      },
-      {
-        path: "page-2",
-        name: "side-menu-page-2",
-        component: Page2,
-      },
-    ],
-  },
-];
+const routes = r;
 
 const router = createRouter({
   history: createWebHistory(),
