@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType, computed, onMounted, ref, toRef, watch } from "vue";
+import { PropType, computed, ref, toRef, watch } from "vue";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { Menu } from "../../base-components/Headless";
@@ -17,7 +17,7 @@ const props = defineProps({
   data: { type: Object as PropType<any>, default: null },
 });
 
-const emit = defineEmits(["dataListChange", "print", "export"]);
+const emit = defineEmits(["data-list-changed", "print", "export"]);
 
 const visible = toRef(props, "visible");
 const canPrint = toRef(props, "canPrint");
@@ -114,9 +114,9 @@ const generatePaginationArray = (currentPage: number, totalPages: number): numbe
 
 
 // Watch region
-watch(search , (newSearch:string) => {
-  if(newSearch.length > 3 || newSearch === '') {
-    emit('dataListChange', { page : 1, per_page : pageSize , search : newSearch})  
+watch(search, (newSearch: string) => {
+  if (newSearch.length > 3 || newSearch === '') {
+    emit('data-list-changed', { page: 1, per_page: pageSize, search: newSearch })
   }
 })
 // End Watch Region
@@ -125,43 +125,33 @@ watch(search , (newSearch:string) => {
 </script>
 
 <template>
-  <div class="intro-y box p-5 mt-5" v-if="visible">
+  <div v-if="visible" class="intro-y box p-5 mt-5">
     <div class="grid justify-items-end">
       <div class="flex flex-row gap-2">
-        <div class="relative w-56 text-slate-500" v-if="enableSearch">
-          <FormInput 
-            type="text" 
-            class="w-56 pr-10" 
-            placeholder="Search..." 
-            v-model="search"
-            />
-          <Lucide
-            icon="Search"
-            class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-          />
+        <div v-if="enableSearch" class="relative w-56 text-slate-500">
+          <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..." />
+          <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
         <Button
-       @click="$emit('dataListChange', {page : data?.meta?.current_page ? data?.meta?.current_page : 1, per_page : pageSize, search : search})"
-        
-        >
+          @click="$emit('data-list-changed', { page: data?.meta?.current_page ? data?.meta?.current_page : 1, per_page: pageSize, search: search })">
           <Lucide icon="RefreshCw" class="w-4 h-4" />
         </Button>
         <Menu>
-          <Menu.Button :as="Button" v-if="canPrint" class="px-2">
+          <Menu.Button v-if="canPrint" :as="Button" class="px-2">
             <span class="flex items-center justify-center w-5 h-5">
               <Lucide icon="Printer" class="w-4 h-4" />
             </span>
           </Menu.Button>
           <Menu.Items v-if="canPrint || canExport" class="w-40" placement="bottom-end">
-            <Menu.Item v-if="canPrint" >
+            <Menu.Item v-if="canPrint">
               <Lucide icon="Printer" class="w-4 h-4 mr-2" />
               {{ t("components.data-list.print") }}
             </Menu.Item>
-            <Menu.Item v-if="canExport" >
+            <Menu.Item v-if="canExport">
               <Lucide icon="FileText" class="w-4 h-4 mr-2" />
               {{ t("components.data-list.export_to_excel") }}
             </Menu.Item>
-            <Menu.Item v-if="canExport" >
+            <Menu.Item v-if="canExport">
               <Lucide icon="FileText" class="w-4 h-4 mr-2" />
               {{ t("components.data-list.export_to_pdf") }}
             </Menu.Item>
@@ -171,11 +161,11 @@ watch(search , (newSearch:string) => {
     </div>
     <div class="overflow-x-auto mb-4">
       <slot v-if="!dataNotFound" name="table" :data-list="data"></slot>
-      <Table v-if="dataNotFound" class="mt-5" >
+      <Table v-if="dataNotFound" class="mt-5">
         <Table.Tbody>
           <Table.Tr>
             <Table.Td>
-              {{ t('components.data-list.data_not_found')}}
+              {{ t('components.data-list.data_not_found') }}
             </Table.Td>
           </Table.Tr>
         </Table.Tbody>
@@ -183,34 +173,26 @@ watch(search , (newSearch:string) => {
     </div>
     <div class="flex flex-wrap intro-y sm:flex-row sm:flex-nowrap">
       <Pagination class="w-full sm:w-auto sm:mr-auto">
-        <Pagination.Link @click="$emit('dataListChange', { page : first, per_page : pageSize, search : search })">
+        <Pagination.Link @click="$emit('data-list-changed', { page: first, per_page: pageSize, search: search })">
           <Lucide icon="ChevronsLeft" class="w-4 h-4" />
         </Pagination.Link>
-        <Pagination.Link @click="$emit('dataListChange', { page : previous, per_page : pageSize, search : search})">
+        <Pagination.Link @click="$emit('data-list-changed', { page: previous, per_page: pageSize, search: search })">
           <Lucide icon="ChevronLeft" class="w-4 h-4" />
         </Pagination.Link>
-        <Pagination.Link v-for="(n, nIdx) in pages" >
-          {{ n > 0? n  : '...' }}
+        <Pagination.Link v-for="n in pages" :key="n">
+          {{ n > 0 ? n : '...' }}
         </Pagination.Link>
-        <Pagination.Link 
-          @click="$emit('dataListChange', {page : next, per_page : pageSize, search : search})"
-        >
+        <Pagination.Link @click="$emit('data-list-changed', { page: next, per_page: pageSize, search: search })">
           <Lucide icon="ChevronRight" class="w-4 h-4" />
         </Pagination.Link>
-        <Pagination.Link
-        @click="$emit('dataListChange', {page : last, per_page : pageSize, search : search})"
-        >
+        <Pagination.Link @click="$emit('data-list-changed', { page: last, per_page: pageSize, search: search })">
           <Lucide icon="ChevronsRight" class="w-4 h-4" />
         </Pagination.Link>
       </Pagination>
-      <FormSelect
-       v-model="pageSize" 
-       class="w-20 mt-3 sm:mt-0"
-       @change="$emit('dataListChange', {page : data?.meta?.current_page ? data?.meta?.current_page : 1, per_page : pageSize, search : search})"
-
-       >
-        <option value="10" >10</option>
-        <option value="25" >25</option>
+      <FormSelect v-model="pageSize" class="w-20 mt-3 sm:mt-0"
+        @change="$emit('data-list-changed', { page: data?.meta?.current_page ? data?.meta?.current_page : 1, per_page: pageSize, search: search })">
+        <option value="10">10</option>
+        <option value="25">25</option>
         <option value="35">35</option>
         <option value="50">50</option>
       </FormSelect>

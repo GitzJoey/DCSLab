@@ -56,11 +56,10 @@ const current_page = ref(1)
 //#endregion
 
 //#region onMounted
-onMounted(() => {
-  getUser({ page: current_page.value })
+onMounted(async () => {
+  await getUser({ page: 1 });
 });
 
-onUnmounted(() => { });
 //#endregion
 
 //#region Computed
@@ -112,8 +111,8 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
         </TitleLayout>
 
         <AlertPlaceholder />
-        <DataList v-on:dataListChange="onDataListChange" :title="t('views.user.table.title')" :data="userList"
-          :enableSearch="true">
+        <DataList :title="t('views.user.table.title')" :data="userList" :enable-search="true"
+          @dataListChange="onDataListChange">
           <template #table="tableProps">
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
@@ -141,11 +140,11 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
                     <Table.Td><a href="" class="hover:animate-pulse" @click.prevent="toggleDetail(itemIdx)">{{ item.email
                     }}</a></Table.Td>
                     <Table.Td>
-                      <span v-for="(r, idx) in item?.roles">{{ r.display_name }} </span>
+                      <span v-for="r in item?.roles" :key="r.id">{{ r.display_name }} </span>
                     </Table.Td>
                     <Table.Td>
-                      <Lucide icon="CheckCircleIcon" v-if="item?.profile?.status === 'ACTIVE'" />
-                      <Lucide v-if="item?.profile?.status === 'INACTIVE'" icon="XIcon" />
+                      <Lucide v-if="item?.profile?.status === 'ACTIVE'" icon="CheckCircle" />
+                      <Lucide v-if="item?.profile?.status === 'INACTIVE'" icon="X" />
                     </Table.Td>
                   </Table.Tr>
                 </template>
