@@ -9,8 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import {
-  TitleLayout,
-  ThreeColsLayout,
+  TitleLayout
 } from "../../base-components/Form/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
@@ -58,10 +57,10 @@ const current_page = ref(1)
 
 //#region onMounted
 onMounted(() => {
-  getUser({ page : current_page.value})
+  getUser({ page: current_page.value })
 });
 
-onUnmounted(() => {});
+onUnmounted(() => { });
 //#endregion
 
 //#region Computed
@@ -76,24 +75,18 @@ const toggleDetail = (idx: number) => {
   }
 };
 
-async function getUser(args : { page?: number, per_page ? : number, search ? : string  }) {
-  try {
-    userList.value = []
-    if (args.page === undefined) args.page  = 1
-    if (args.per_page === undefined) args.per_page = 10;
-    if (args.search === undefined) args.search = "";
+const getUser = async (args: { page?: number, per_page?: number, search?: string }) => {
+  userList.value = []
+  if (args.page === undefined) args.page = 1
+  if (args.per_page === undefined) args.per_page = 10;
+  if (args.search === undefined) args.search = "";
 
-    
-    
-    let data = await userServices.readAny(args)
-    userList.value = data?.data
-  } catch (error) {
-    throw error
-  }
+  let data = await userServices.readAny(args)
+  userList.value = data?.data
 }
 
-const onDataListChange = ({page , per_page, search} : {page : number , per_page: number , search : string}) => {
-    getUser({page, per_page, search});
+const onDataListChange = ({ page, per_page, search }: { page: number, per_page: number, search: string }) => {
+  getUser({ page, per_page, search });
 }
 //#endregion
 
@@ -119,7 +112,8 @@ const onDataListChange = ({page , per_page, search} : {page : number , per_page:
         </TitleLayout>
 
         <AlertPlaceholder />
-        <DataList v-on:dataListChange="onDataListChange" :title="t('views.user.table.title')" :data="userList" :enableSearch="true" >
+        <DataList v-on:dataListChange="onDataListChange" :title="t('views.user.table.title')" :data="userList"
+          :enableSearch="true">
           <template #table="tableProps">
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
@@ -140,29 +134,18 @@ const onDataListChange = ({page , per_page, search} : {page : number , per_page:
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody v-if="tableProps?.dataList !== undefined">
-                <template
-                  v-for="(item, itemIdx) in tableProps?.dataList?.data"
-                  :key="item.ulid"
-                >
-                
+                <template v-for="(item, itemIdx) in tableProps?.dataList?.data" :key="item.ulid">
+
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
-                    <Table.Td
-                      ><a
-                        href=""
-                        class="hover:animate-pulse"
-                        @click.prevent="toggleDetail(itemIdx)"
-                        >{{ item.email }}</a
-                      ></Table.Td
-                    >
+                    <Table.Td><a href="" class="hover:animate-pulse" @click.prevent="toggleDetail(itemIdx)">{{ item.email
+                    }}</a></Table.Td>
                     <Table.Td>
-                      <span v-for="(r, idx) in item?.roles" >{{ r.display_name }} </span>
+                      <span v-for="(r, idx) in item?.roles">{{ r.display_name }} </span>
                     </Table.Td>
                     <Table.Td>
-                      <Lucide icon="CheckCircleIcon"
-                        v-if="item?.profile?.status === 'ACTIVE'"
-                      />
-                      <Lucide v-if="item?.profile?.status === 'INACTIVE'"  icon="XIcon" />
+                      <Lucide icon="CheckCircleIcon" v-if="item?.profile?.status === 'ACTIVE'" />
+                      <Lucide v-if="item?.profile?.status === 'INACTIVE'" icon="XIcon" />
                     </Table.Td>
                   </Table.Tr>
                 </template>
