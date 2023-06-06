@@ -14,7 +14,7 @@ class RandomizerActions
 
     public function generateRandomTimer(): string
     {
-        return random_int(0, 23).':'.str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT).':'.str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT);
+        return random_int(0, 23) . ':' . str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT) . ':' . str_pad(random_int(0, 59), 2, '0', STR_PAD_LEFT);
     }
 
     public function generateNumeric(int $length = 3): int
