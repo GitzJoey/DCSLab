@@ -3,7 +3,7 @@ import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { SupplierType } from "../types/resources/SupplierType";
 import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
@@ -18,11 +18,11 @@ export default class SupplierService {
 
         this.errorHandlerService = new ErrorHandlerService();
     }
-    
+
     public async create(
-        companyIdText: string, 
-        codeText: string, 
-        nameText: string, 
+        companyIdText: string,
+        codeText: string,
+        nameText: string,
         addressText: string,
         cityText: string,
         contactText: string,
@@ -42,26 +42,26 @@ export default class SupplierService {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
             const response: AxiosResponse<SupplierType> = await authAxiosInstance.post(
-                'store', { 
-                    company_id: companyIdText, 
-                    code: codeText, 
-                    name: nameText, 
-                    address: addressText,
-                    city: cityText,
-                    contact: contactText,
-                    taxable_enterprise: taxableEnterpriseText,
-                    tax_id: taxIdText,
-                    payment_term_type: paymentTermTypeText,
-                    payment_term: paymentTermText,
-                    remarks: remarksText,
-                    status: statusText,
-                    pic_create_use: picCreateUserText,
-                    pic_contact_person_name: picContactPersonNameText,
-                    pic_email: picEmailText,
-                    pic_password: picPasswordText,
-                    arr_supplier_product_product_id: supplierProductProductIdText,
-                    arr_supplier_product_main_product_id: supplierProductMainProductIdCheck,
-                }
+                'store', {
+                company_id: companyIdText,
+                code: codeText,
+                name: nameText,
+                address: addressText,
+                city: cityText,
+                contact: contactText,
+                taxable_enterprise: taxableEnterpriseText,
+                tax_id: taxIdText,
+                payment_term_type: paymentTermTypeText,
+                payment_term: paymentTermText,
+                remarks: remarksText,
+                status: statusText,
+                pic_create_use: picCreateUserText,
+                pic_contact_person_name: picContactPersonNameText,
+                pic_email: picEmailText,
+                pic_password: picPasswordText,
+                arr_supplier_product_product_id: supplierProductProductIdText,
+                arr_supplier_product_main_product_id: supplierProductMainProductIdCheck,
+            }
             );
 
             return {

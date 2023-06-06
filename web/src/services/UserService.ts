@@ -2,7 +2,7 @@ import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { UserType } from "../types/resources/UserType";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
@@ -18,7 +18,7 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async readAny(args : { page?: number, per_page ? : number, search ? : string  }): Promise<ServiceResponseType<UserType[] | null>> {
+    public async readAny(args: { page?: number, per_page?: number, search?: string }): Promise<ServiceResponseType<UserType[] | null>> {
         try {
             const url = route('api.get.db.admin.users.read_any', args, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();

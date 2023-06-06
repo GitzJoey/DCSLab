@@ -3,7 +3,7 @@ import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
 import { AxiosResponse, AxiosError } from "axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { UserProfileType } from "../types/resources/UserProfileType";
 import { UserType } from "../types/resources/UserType";
 import ErrorHandlerService from "./ErrorHandlerService";
@@ -102,11 +102,11 @@ export default class DashboardService {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.statuses', undefined, false, this.ziggyRoute);
                 if (!url) return null;
-                    
+
                 const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
 
                 this.cacheService.setCachedDDL(ddlName, response.data);
-            } 
+            }
 
             return this.cacheService.getCachedDDL(ddlName);
         } catch (e: unknown) {
@@ -120,11 +120,11 @@ export default class DashboardService {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
                 if (!url) return null;
-                    
+
                 const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
 
                 this.cacheService.setCachedDDL(ddlName, response.data);
-            } 
+            }
 
             return this.cacheService.getCachedDDL(ddlName);
         } catch (e: unknown) {

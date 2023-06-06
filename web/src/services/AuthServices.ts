@@ -1,12 +1,12 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { UserType } from "../types/resources/UserType";
 import ErrorHandlerService from "./ErrorHandlerService";
 
 export default class AuthService {
     private errorHandlerService;
-    
+
     constructor() {
         this.errorHandlerService = new ErrorHandlerService();
     }

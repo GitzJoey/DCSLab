@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { ErrorResponseType } from "../types/ErrorResponseType";
 
 export default class ErrorHandlerService {
@@ -10,7 +10,7 @@ export default class ErrorHandlerService {
             const errorData = (e.response.data as { errors: unknown[] }).errors;
             for (const key in errorData) {
                 if (Object.prototype.hasOwnProperty.call(errorData, key)) {
-                    const errorArray = errorData[key] as { [key:number]: string };
+                    const errorArray = errorData[key] as { [key: number]: string };
 
                     errorsResponse[key] = {};
                     (errorArray as unknown[]).forEach((errorMsg, index) => {

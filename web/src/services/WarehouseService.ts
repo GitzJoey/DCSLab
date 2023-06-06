@@ -3,7 +3,7 @@ import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { WarehouseType } from "../types/resources/WarehouseType";
 import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
@@ -18,7 +18,7 @@ export default class WarehouseService {
 
         this.errorHandlerService = new ErrorHandlerService();
     }
-    
+
     public async create(
         companyIdText: string,
         branchIdText: string,
@@ -33,17 +33,17 @@ export default class WarehouseService {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
             const response: AxiosResponse<WarehouseType> = await authAxiosInstance.post(
-                'store', { 
-                    company_id: companyIdText,
-                    branch_id: branchIdText,
-                    code: codeText,
-                    name: nameText,
-                    address: addressText,
-                    city: cityText,
-                    contact: contactText,
-                    remarks: remarksText,
-                    status: statusCheck,
-                }
+                'store', {
+                company_id: companyIdText,
+                branch_id: branchIdText,
+                code: codeText,
+                name: nameText,
+                address: addressText,
+                city: cityText,
+                contact: contactText,
+                remarks: remarksText,
+                status: statusCheck,
+            }
             );
 
             return {

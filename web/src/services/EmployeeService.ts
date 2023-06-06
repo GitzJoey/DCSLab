@@ -3,7 +3,7 @@ import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { EmployeeType } from "../types/resources/EmployeeType";
 import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
@@ -18,9 +18,9 @@ export default class EmployeeService {
 
         this.errorHandlerService = new ErrorHandlerService();
     }
-    
+
     public async create(
-        companyIdText: string, 
+        companyIdText: string,
         codeText: string,
         nameText: string,
         emailText: string,
@@ -39,23 +39,23 @@ export default class EmployeeService {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
             const response: AxiosResponse<EmployeeType> = await authAxiosInstance.post(
-                'store', { 
-                    company_id: companyIdText, 
-                    code: codeText,
-                    name: nameText,
-                    email: emailText,
-                    address: addressText,
-                    city: cityText,
-                    postal_code: postalCodeText,
-                    img_path: imgPathText,
-                    country: countryText,
-                    tax_id: taxIdText,
-                    ic_num: icNumText,
-                    join_date: joinDateText,
-                    remarks: remarksText,
-                    status: statusCheck,
-                    arr_access_branch_id: accessBranchIdCheck,
-                }
+                'store', {
+                company_id: companyIdText,
+                code: codeText,
+                name: nameText,
+                email: emailText,
+                address: addressText,
+                city: cityText,
+                postal_code: postalCodeText,
+                img_path: imgPathText,
+                country: countryText,
+                tax_id: taxIdText,
+                ic_num: icNumText,
+                join_date: joinDateText,
+                remarks: remarksText,
+                status: statusCheck,
+                arr_access_branch_id: accessBranchIdCheck,
+            }
             );
 
             return {

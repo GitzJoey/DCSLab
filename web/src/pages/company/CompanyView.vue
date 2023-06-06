@@ -8,7 +8,7 @@ import { ViewMode } from "../../types/enums/ViewMode";
 import DataList from "../../base-components/DataList/DataList.vue";
 import Table from "../../base-components/Table";
 import { CompanyType } from "../../types/resources/CompanyType";
-import { ServiceResponseType } from "../../types/ServiceResponseType";
+import { ServiceResponseType } from "../../types/systems/ServiceResponseType";
 import CompanyService from "../../services/CompanyService";
 import Lucide from "../../base-components/Lucide";
 
@@ -65,7 +65,7 @@ const toggleDetail = (idx: any) => {
           {{ t("views.company.page_title") }}
         </template>
       </TitleLayout>
-      <DataList :data="companyList"  :title="t('views.company.table.title')" >
+      <DataList :data="companyList" :title="t('views.company.table.title')">
         <template #table="tableProps">
           <Table class="mt-5" :hover="true">
             <Table.Thead variant="light">
@@ -86,31 +86,22 @@ const toggleDetail = (idx: any) => {
             </Table.Thead>
 
             <Table.Tbody>
-              <template
-                v-if="tableProps.dataList !== undefined"
-                v-for="(item, index) in tableProps.dataList.data"
-              >
-                <tr
-                  :class="{
-                    'intro-x': true,
-                    'line-through': item.status === 'DELETED',
-                  }"
-                >
+              <template v-if="tableProps.dataList !== undefined" v-for="(item, index) in tableProps.dataList.data">
+                <tr :class="{
+                  'intro-x': true,
+                  'line-through': item.status === 'DELETED',
+                }">
                   <td>
                     {{ item.code }}
                   </td>
                   <td>
-                    <a
-                      href=""
-                      @click.prevent="toggleDetail(index)"
-                      class="hover:animate-pulse"
-                    >
+                    <a href="" @click.prevent="toggleDetail(index)" class="hover:animate-pulse">
                       {{ item.name }}
                     </a>
                   </td>
 
                   <td>
-                    <Lucide icon="CheckCircleIcon"  v-if="item.default" />
+                    <Lucide icon="CheckCircleIcon" v-if="item.default" />
                     <Lucide icon="XIcon" v-else />
                   </td>
 

@@ -3,7 +3,7 @@ import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { BrandType } from "../types/resources/BrandType";
 import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
@@ -18,20 +18,20 @@ export default class BrandService {
 
         this.errorHandlerService = new ErrorHandlerService();
     }
-    
+
     public async create(
-        companyIdText: string, 
-        codeText: string, 
-        nameText: string, 
+        companyIdText: string,
+        codeText: string,
+        nameText: string,
     ): Promise<ServiceResponseType<BrandType | null>> {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
             const response: AxiosResponse<BrandType> = await authAxiosInstance.post(
-                'store', { 
-                    company_id: companyIdText, 
-                    code: codeText, 
-                    name: nameText
-                }
+                'store', {
+                company_id: companyIdText,
+                code: codeText,
+                name: nameText
+            }
             );
 
             return {

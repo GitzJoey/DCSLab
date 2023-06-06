@@ -3,7 +3,7 @@ import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { CustomerType } from "../types/resources/CustomerType";
 import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/ServiceResponseType";
+import { ServiceResponseType } from "../types/systems/ServiceResponseType";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
@@ -18,12 +18,12 @@ export default class CustomerService {
 
         this.errorHandlerService = new ErrorHandlerService();
     }
-    
+
     public async create(
-        companyIdText: string, 
-        codeText: string, 
+        companyIdText: string,
+        codeText: string,
         isMemberText: boolean,
-        nameText: string, 
+        nameText: string,
         customerGroupIdText: string,
         zoneText: string,
         customerAddressIdText: string[],
@@ -49,33 +49,33 @@ export default class CustomerService {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
             const response: AxiosResponse<CustomerType> = await authAxiosInstance.post(
-                'store', { 
-                    company_id: companyIdText, 
-                    code: codeText, 
-                    is_member: isMemberText,
-                    name: nameText, 
-                    customer_group_id: customerGroupIdText,
-                    zone: zoneText,
-                    arr_customer_address_id: customerAddressIdText,
-                    arr_customer_address_address: customerAddressAddressText,
-                    arr_customer_address_city: customerAddressCityText,
-                    arr_customer_address_contact: customerAddressContactText,
-                    arr_customer_address_is_main: customerAddressIsMainCheck,
-                    arr_customer_address_remarks: customerAddressRemarksText,
-                    max_open_invoice: maxOpenInvoiceText,
-                    max_outstanding_invoice: maxOutstandingInvoiceText,
-                    max_invoice_age: maxInvoiceAgeText,
-                    payment_term_type: paymentTermTypeText,
-                    payment_term: paymentTermText,
-                    taxable_enterprise: taxableEnterpriseText,
-                    tax_id: taxIdText,
-                    remarks: remarksText,
-                    status: statusText,
-                    pic_create_use: picCreateUserText,
-                    pic_contact_person_name: picContactPersonNameText,
-                    pic_email: picEmailText,
-                    pic_password: picPasswordText
-                }
+                'store', {
+                company_id: companyIdText,
+                code: codeText,
+                is_member: isMemberText,
+                name: nameText,
+                customer_group_id: customerGroupIdText,
+                zone: zoneText,
+                arr_customer_address_id: customerAddressIdText,
+                arr_customer_address_address: customerAddressAddressText,
+                arr_customer_address_city: customerAddressCityText,
+                arr_customer_address_contact: customerAddressContactText,
+                arr_customer_address_is_main: customerAddressIsMainCheck,
+                arr_customer_address_remarks: customerAddressRemarksText,
+                max_open_invoice: maxOpenInvoiceText,
+                max_outstanding_invoice: maxOutstandingInvoiceText,
+                max_invoice_age: maxInvoiceAgeText,
+                payment_term_type: paymentTermTypeText,
+                payment_term: paymentTermText,
+                taxable_enterprise: taxableEnterpriseText,
+                tax_id: taxIdText,
+                remarks: remarksText,
+                status: statusText,
+                pic_create_use: picCreateUserText,
+                pic_contact_person_name: picContactPersonNameText,
+                pic_email: picEmailText,
+                pic_password: picPasswordText
+            }
             );
 
             return {
