@@ -21,6 +21,10 @@ import {
 import { watch, reactive, computed, onMounted, provide } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
+import DashboardService from "../../services/DashboardService";
+import { useZiggyRouteStore } from "../../stores/ziggy-route";
+
+const dashboardService = new DashboardService();
 
 const route: Route = useRoute();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
@@ -34,6 +38,8 @@ const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 
 const dashboardStore = useDashboardStore();
 const screenMask = computed(() => dashboardStore.screenMaskValue);
+
+const ziggyRouteStore = useZiggyRouteStore();
 
 provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
   forceActiveMenu(route, pageName);
@@ -51,8 +57,18 @@ watch(
   }
 );
 
-onMounted(() => {
+onMounted(async () => {
+  dashboardStore.toggleScreenMaskValue();
+
+  let menuResult = await dashboardService.readUserMenu();
+  sideMenuStore.setUserMenu(menuResult.data);
+
+  let apiResult = await dashboardService.readUserApi();
+  ziggyRouteStore.setZiggy(apiResult.data);
+
   setFormattedMenu(sideMenu.value);
+
+  dashboardStore.toggleScreenMaskValue();
 });
 </script>
 

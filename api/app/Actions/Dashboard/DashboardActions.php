@@ -18,10 +18,10 @@ class DashboardActions
     {
         $cacheKey = '';
         if ($useCache) {
-            $cacheKey = 'menu_'.Auth::id();
+            $cacheKey = 'menu_' . Auth::id();
             $cacheResult = $this->readFromCache($cacheKey);
 
-            if (! is_null($cacheResult)) {
+            if (!is_null($cacheResult)) {
                 return $cacheResult;
             }
         }
@@ -76,11 +76,10 @@ class DashboardActions
         ];
 
         $root_array = [
-            'icon' => 'HomeIcon',
+            'icon' => 'Home',
             'pageName' => 'side-menu-dashboard',
             'title' => 'components.menu.dashboard',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         if ($showDemo) {
@@ -125,11 +124,10 @@ class DashboardActions
         ];
 
         $root_array = [
-            'icon' => 'UmbrellaIcon',
+            'icon' => 'Umbrella',
             'pageName' => 'side-menu-company',
             'title' => 'components.menu.company',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         if ($hasCompany || $hasDevRole) {
@@ -176,11 +174,10 @@ class DashboardActions
         ];
 
         $root_array = [
-            'icon' => 'PackageIcon',
+            'icon' => 'Package',
             'pageName' => 'side-menu-product',
             'title' => 'components.menu.product',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         array_push($root_array['subMenu'], $product_group);
@@ -205,11 +202,10 @@ class DashboardActions
         ];
 
         $root_array = [
-            'icon' => 'TruckIcon',
+            'icon' => 'Truck',
             'pageName' => 'side-menu-supplier',
             'title' => 'components.menu.supplier',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         array_push($root_array['subMenu'], $supplier);
@@ -235,11 +231,10 @@ class DashboardActions
         ];
 
         $root_array = [
-            'icon' => 'FilePlusIcon',
+            'icon' => 'FilePlus',
             'pageName' => 'side-menu-purchase_order',
             'title' => 'components.menu.purchase_order',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         array_push($root_array['subMenu'], $po);
@@ -265,11 +260,10 @@ class DashboardActions
         ];
 
         $root_array = [
-            'icon' => 'CpuIcon',
+            'icon' => 'Cpu',
             'pageName' => 'side-menu-administrator',
             'title' => 'components.menu.administrator',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         array_push($root_array['subMenu'], $user);
@@ -293,8 +287,7 @@ class DashboardActions
             'icon' => '',
             'pageName' => 'side-menu-devtool-playground',
             'title' => 'components.menu.devtool-playground',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         $playground_ex1 = [
@@ -313,11 +306,10 @@ class DashboardActions
         array_push($playground['subMenu'], $playground_ex2);
 
         $root_array = [
-            'icon' => 'GithubIcon',
+            'icon' => 'Github',
             'pageName' => 'side-menu-devtool',
             'title' => 'components.menu.devtool',
-            'subMenu' => [
-            ],
+            'subMenu' => [],
         ];
 
         array_push($root_array['subMenu'], $devtool);
