@@ -29,20 +29,6 @@ const ziggyRouteStore = useZiggyRouteStore();
 const userContextStore = useUserContextStore();
 
 const userContext = computed(() => userContextStore.getUserContext);
-const selectedUserCompanyName = computed(() => {
-  let companyId = userContextStore.getSelectedUserCompany.ulid;
-
-  if (!companyId) return '';
-
-  return '';
-});
-const selectedUserBranchName = computed(() => {
-  let branchId = userContextStore.getSelectedUserBranch.ulid;
-
-  if (!branchId) return '';
-
-  return '';
-});
 
 const props = defineProps<{
   layout?: "side-menu" | "simple-menu";
@@ -81,7 +67,6 @@ onMounted(async () => {
 
   let apiResult = await dashboardService.readUserApi();
   ziggyRouteStore.setZiggy(apiResult.data as Config);
-
 
   loading.value = false;
 })

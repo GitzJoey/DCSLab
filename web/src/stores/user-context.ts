@@ -6,10 +6,14 @@ export interface UserContextState {
   userContextValue: UserProfileType,
   selectedUserLocationValue: {
     company: {
+      id: string,
       ulid: string,
+      name: string
     },
     branch: {
+      id: string,
       ulid: string,
+      name: string
     }
   }
 }
@@ -18,13 +22,22 @@ export const useUserContextStore = defineStore("userContext", {
   state: (): UserContextState => ({
     isAuthenticatedValue: false,
     userContextValue: {
+      id: '',
       ulid: '',
       name: '',
       email: '',
       email_verified: false,
       profile: {
         full_name: '',
+        first_name: '',
+        last_name: '',
+        address: '',
+        city: '',
+        postal_code: '',
+        country: '',
         status: '',
+        tax_id: 0,
+        ic_num: 0,
         img_path: '',
         remarks: '',
       },
@@ -32,10 +45,14 @@ export const useUserContextStore = defineStore("userContext", {
     },
     selectedUserLocationValue: {
       company: {
+        id: '',
         ulid: '',
+        name: ''
       },
       branch: {
+        id: '',
         ulid: '',
+        name: ''
       }
     }
   }),
@@ -52,15 +69,23 @@ export const useUserContextStore = defineStore("userContext", {
 
       this.isAuthenticatedValue = true;
     },
-    setSelectedUserLocation(companyId: string, branchId: string) {
-      this.selectedUserLocationValue.company.ulid = companyId;
-      this.selectedUserLocationValue.branch.ulid = branchId;
+    clearSelectedUserLocation() {
+      this.selectedUserLocationValue.company = { id: '', ulid: '', name: '' };
+      this.selectedUserLocationValue.branch = { id: '', ulid: '', name: '' };
     },
-    setSelectedUserCompanyId(companyId: string) {
-      this.selectedUserLocationValue.company.ulid = companyId;
+    setSelectedUserLocationCompany(companyId: string, companyUlid: string, companyName: string) {
+      this.clearSelectedUserLocation();
+
+      this.selectedUserLocationValue.company.id = companyId;
+      this.selectedUserLocationValue.company.ulid = companyUlid;
+      this.selectedUserLocationValue.company.name = companyName;
     },
-    setSelectedUserBranchId(branchId: string) {
-      this.selectedUserLocationValue.branch.ulid = branchId;
+    setSelectedUserLocationBranch(branchId: string, branchUlid: string, branchName: string) {
+      this.clearSelectedUserLocation();
+
+      this.selectedUserLocationValue.branch.id = branchId;
+      this.selectedUserLocationValue.branch.ulid = branchUlid;
+      this.selectedUserLocationValue.branch.name = branchName;
     }
-  },  
+  },
 });

@@ -1,6 +1,7 @@
 import { CompanyType } from "./CompanyType";
 
 export interface UserProfileType {
+    id: string,
     ulid: string,
     name: string,
     email: string,

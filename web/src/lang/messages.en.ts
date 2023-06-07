@@ -4,6 +4,7 @@ import alert_placeholder from "./en/components/alert-placeholder.json";
 import dropdown from "./en/components/dropdown.json";
 import top_bar from "./en/components/top-bar.json";
 import data_list from "./en/components/data-list.json"
+import user_location from "./en/components/user-location.json";
 
 import login from "./en/views/login.json";
 import register from "./en/views/register.json";
@@ -29,7 +30,8 @@ export default {
         "buttons": buttons,
         "dropdown": dropdown,
         "top-bar": top_bar,
-        "data-list" : data_list
+        "data-list": data_list,
+        "user-location": user_location,
     },
     "views": {
         "login": login,
@@ -37,17 +39,17 @@ export default {
         "reset_password": reset_password,
         "profile": profile,
         "user": user,
-        "company" : company,
-        "branch" : branch,
-        "employee" : employee,
-        "warehouse" : warehouse,
-        "product_group" : product_group,
-        "brand" : brand,
-        "unit" : unit,
-        "product" : product,
-        "supplier" : supplier,
-        "customer_group" : customer_group,
-        "customer" : customer,
-        "purchase_order" : purchase_order
+        "company": company,
+        "branch": branch,
+        "employee": employee,
+        "warehouse": warehouse,
+        "product_group": product_group,
+        "brand": brand,
+        "unit": unit,
+        "product": product,
+        "supplier": supplier,
+        "customer_group": customer_group,
+        "customer": customer,
+        "purchase_order": purchase_order
     }
 }
