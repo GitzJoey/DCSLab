@@ -134,7 +134,6 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
               </Table.Thead>
               <Table.Tbody v-if="tableProps?.dataList !== undefined">
                 <template v-for="(item, itemIdx) in tableProps?.dataList?.data" :key="item.ulid">
-
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td><a href="" class="hover:animate-pulse" @click.prevent="toggleDetail(itemIdx)">{{ item.email
@@ -145,6 +144,19 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
                     <Table.Td>
                       <Lucide v-if="item?.profile?.status === 'ACTIVE'" icon="CheckCircle" />
                       <Lucide v-if="item?.profile?.status === 'INACTIVE'" icon="X" />
+                    </Table.Td>
+                    <Table.Td>
+                      <div class="flex justify-end gap-1">
+                        <Button variant="outline-secondary">
+                          <Lucide icon="Info" class="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline-secondary">
+                          <Lucide icon="CheckSquare" class="w-4 h-4" />
+                        </Button>
+                        <Button variant="outline-secondary">
+                          <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                        </Button>
+                      </div>
                     </Table.Td>
                   </Table.Tr>
                 </template>
