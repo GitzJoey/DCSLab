@@ -54,8 +54,6 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
         !props.menu.active &&
         !props.menu.activeDropdown &&
         props.level == 'first',
-
-      // Animation
       'after:-mr-[47px] after:opacity-0 after:animate-[0.4s_ease-in-out_0.1s_active-side-menu-chevron] after:animate-fill-mode-forwards':
         props.menu.active && props.level == 'first',
     },

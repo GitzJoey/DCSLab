@@ -59,6 +59,10 @@ const logout = () => {
   });
 }
 
+const toggleMenu = () => {
+  dashboardStore.toggleLayoutValue();
+}
+
 const loading = ref(false);
 
 const showSlideover = ref(false);
@@ -90,20 +94,22 @@ onMounted(async () => {
     'after:content-[\'\'] after:absolute after:inset-0 after:h-[65px] after:mx-3 after:bg-primary after:mt-5 after:rounded-xl after:shadow-md after:hidden after:md:block after:dark:bg-darkmode-600',
   ]">
     <div class="flex items-center h-full">
-      <RouterLink :to="{ name: 'side-menu-dashboard-maindashboard' }" :class="[
+      <div :class="[
         '-intro-x hidden md:flex',
         props.layout == 'side-menu' && 'xl:w-[180px]',
         props.layout == 'simple-menu' && 'xl:w-auto',
       ]">
-        <img alt="DCSLab" class="w-6" :src="logoUrl" />
+        <img alt="DCSLab" class="w-6" :src="logoUrl" @click="toggleMenu" />
         <span :class="[
           'ml-3 text-lg text-white',
           props.layout == 'side-menu' && 'hidden xl:block',
           props.layout == 'simple-menu' && 'hidden',
         ]">
-          {{ appName }}
+          <RouterLink :to="{ name: 'side-menu-dashboard-maindashboard' }">
+            {{ appName }}
+          </RouterLink>
         </span>
-      </RouterLink>
+      </div>
 
       <UserLocation />
 
@@ -130,7 +136,6 @@ onMounted(async () => {
           </Slideover.Footer>
         </Slideover.Panel>
       </Slideover>
-
 
       <Menu class="mr-4 intro-x sm:mr-6">
         <Menu.Button :as="Button" variant="primary">
