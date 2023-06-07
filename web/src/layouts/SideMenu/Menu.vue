@@ -70,7 +70,8 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
         props.menu.active && props.level != 'first',
       'dark:text-slate-400': !props.menu.active,
     }">
-      <Lucide :icon="props.menu.icon" />
+      <Lucide v-if="props.menu.icon != ''" :icon="props.menu.icon" />
+      <Lucide v-else :icon="props.level == 'second' ? 'ChevronRight' : 'ChevronsRight'" />
     </div>
     <div :class="[
       'w-full ml-3 hidden xl:flex items-center',

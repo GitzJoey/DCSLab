@@ -2,6 +2,7 @@
 import { useRoute } from "vue-router";
 import Divider from "./Divider.vue";
 import Menu from "./Menu.vue";
+import SimpleMenu from "../SimpleMenu/Menu.vue";
 import TopBar from "../../components/TopBar";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
