@@ -5,6 +5,7 @@ import Lucide from "../../base-components/Lucide";
 import { Menu } from "../../base-components/Headless";
 import { useUserContextStore } from "../../stores/user-context";
 import { useI18n } from "vue-i18n";
+import _ from "lodash";
 
 const { t } = useI18n();
 
@@ -26,32 +27,56 @@ const userLocationText = computed(() => {
   return result;
 });
 
-const userLocationLists = computed(() => {
-  if (userContext.value.companies !== undefined && userContext.value.companies.length > 0) {
-    return userContext.value.companies;
-  } else {
-    return [];
-  }
+const userLocationLength = computed((): number => {
+  let result = 0;
+
+  userContext.value.companies.forEach(c => {
+    result += 1;
+    if (c.branches) {
+      result += c.branches.length;
+    }
+  });
+
+  return result;
 });
+
+const setNewUserLocation = (companyId: string, branchId: string) => {
+  let company = _.find(userContext.value.companies, { id: companyId });
+
+  if (!company) return;
+
+  let branch = branchId == '' ? _.find(company.branches, { is_main: true }) : _.find(company.branches, { id: branchId });
+
+  if (branch) {
+    userContextStore.setSelectedUserLocation(company.id, company.ulid, company.name, branch.id, branch.ulid, branch.name);
+  }
+}
 </script>
 
 <template>
   <Breadcrumb light :class="[
-    'h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x md:pl-6'
-  ]">
+    'h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x md:pl-6']">
     <Breadcrumb.Text>
       <Menu>
-        <Menu.Button variant="primary">
+        <Menu.Button var iant="primary">
           <Lucide icon="Umbrella" />
         </Menu.Button>
         <Menu.Items :class="{
-          'w-96 h-12': userLocationLists.length == 0,
-          'w-96 h-48': userLocationLists.length >= 1 && userLocationLists.length <= 10,
-          'w-96 h-96': userLocationLists.length > 10,
+          'w-96 h-12': userLocationLength == 0,
+          'w-96 h-48': userLocationLength >= 1 && userLocationLength <= 10,
+          'w-96 h-96': userLocationLength && userLocationLength > 10,
           'overflow-y-auto': true
         }" placement="bottom-start">
-          <template v-if="userLocationLists.length != 0">
-
+          <template v-if="userContext.companies && userContext.companies.length != 0">
+            <template v-for="(c, cIdx) in  userContext.companies" :key="cIdx">
+              <Menu.Item @click="setNewUserLocation(c.id, '')">
+                <span :class="{ 'text-primary font-bold': true, 'underline': c.default }">{{ c.name }}</span>
+              </Menu.Item>
+              <Menu.Item v-for="(b, bIdx) in c.branches" :key="bIdx" @click="setNewUserLocation(c.id, b.id)">
+                <span :class="{ 'text-primary': true, 'underline': b.is_main }">{{ b.name }}</span>
+              </Menu.Item>
+              <Menu.Divider v-if="userContext.companies.length - 1 != cIdx" />
+            </template>
           </template>
           <template v-else>
             <Menu.Item><span class="text-primary">{{ t('components.user-location.data_not_found') }}</span></Menu.Item>

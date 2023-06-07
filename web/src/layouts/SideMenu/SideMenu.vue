@@ -177,6 +177,7 @@ onMounted(() => {
             'before:content-[\'\'] before:w-full before:h-px before:block',
           ]">
             <RouterView />
+            <br v-for="i in 3" :key="i" />
             <ScrollToTop />
           </div>
         </div>

@@ -138,7 +138,7 @@ class UserActions
 
     public function read(User $user): User
     {
-        return $user->with('roles', 'profile', 'settings')->first();
+        return $user->with('profile', 'roles', 'settings', 'companies.branches')->first();
     }
 
     public function readBy(string $key, string $value)

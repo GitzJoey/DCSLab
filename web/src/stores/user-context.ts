@@ -73,15 +73,12 @@ export const useUserContextStore = defineStore("userContext", {
       this.selectedUserLocationValue.company = { id: '', ulid: '', name: '' };
       this.selectedUserLocationValue.branch = { id: '', ulid: '', name: '' };
     },
-    setSelectedUserLocationCompany(companyId: string, companyUlid: string, companyName: string) {
+    setSelectedUserLocation(companyId: string, companyUlid: string, companyName: string, branchId: string, branchUlid: string, branchName: string) {
       this.clearSelectedUserLocation();
 
       this.selectedUserLocationValue.company.id = companyId;
       this.selectedUserLocationValue.company.ulid = companyUlid;
       this.selectedUserLocationValue.company.name = companyName;
-    },
-    setSelectedUserLocationBranch(branchId: string, branchUlid: string, branchName: string) {
-      this.clearSelectedUserLocation();
 
       this.selectedUserLocationValue.branch.id = branchId;
       this.selectedUserLocationValue.branch.ulid = branchUlid;
