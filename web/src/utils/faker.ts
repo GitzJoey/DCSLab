@@ -380,6 +380,36 @@ const fakers = {
     ];
     return _.shuffle(foods);
   },
+  fakeCompanies() {
+    const companies = [
+      "TechSolutions Inc.",
+      "GreenLeaf Corp Pte. Ltd.",
+      "PT. EkspresLogistik Solusindo",
+      "PT. Inovasi Gemilang",
+      "PT. Chandra Jaya",
+    ];
+    return _.shuffle(companies);
+  },
+  fakeBranches() {
+    const branches = [
+      "Main Branch",
+      "Singapore Branch",
+      "Cabang Utama",
+      "Cabang Jakarta",
+      "Cabang Surabaya",
+    ];
+    return _.shuffle(branches);
+  },
+  fakeWarehouses() {
+    const warehouses = [
+      "Main Warehouse",
+      "Gudang Utama",
+      "Singapore Warehouse",
+      "Gudang Jakarta",
+      "Gudang Semarang",
+    ];
+    return _.shuffle(warehouses);
+  },
 };
 
 const fakerData: Array<{
@@ -399,6 +429,9 @@ const fakerData: Array<{
   jobs: string[];
   notificationCount: number;
   foods: Foods[];
+  companies: string[];
+  branches: string[];
+  warehouses: string[];
 }> = [];
 for (let i = 0; i < 20; i++) {
   fakerData[fakerData.length] = {
@@ -418,6 +451,9 @@ for (let i = 0; i < 20; i++) {
     jobs: fakers.fakeJobs(),
     notificationCount: fakers.fakeNotificationCount(),
     foods: fakers.fakeFoods(),
+    companies: fakers.fakeCompanies(),
+    branches: fakers.fakeBranches(),
+    warehouses: fakers.fakeWarehouses(),
   };
 }
 

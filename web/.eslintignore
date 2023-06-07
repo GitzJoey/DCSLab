@@ -1,7 +1,5 @@
 /src/base-components/Alert/**
 
-/src/base-components/Breadcrumb/**
-
 /src/base-components/Button/Button.vue
 /src/base-components/Button/index.ts
 

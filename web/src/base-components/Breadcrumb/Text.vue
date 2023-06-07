@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { RouterLinkProps } from "vue-router";
 import { computed, LiHTMLAttributes, inject } from "vue";
 import { ProvideBreadcrumb } from "./Breadcrumb.vue";
 
 interface LinkProps extends /* @vue-ignore */ LiHTMLAttributes {
-  to?: RouterLinkProps["to"];
   active?: boolean;
   index?: number;
 }
@@ -38,8 +36,6 @@ const computedClass = computed(() => [
 
 <template>
   <li :class="computedClass">
-    <RouterLink :to="to">
-      <slot></slot>
-    </RouterLink>
+    <slot></slot>
   </li>
 </template>
