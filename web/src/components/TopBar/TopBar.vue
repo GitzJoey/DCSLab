@@ -3,11 +3,8 @@ import { onMounted, computed, ref } from "vue";
 import Lucide from "../../base-components/Lucide";
 import logoUrl from "../../assets/images/logo.svg";
 import Breadcrumb from "../../base-components/Breadcrumb";
-import { FormInput } from "../../base-components/Form";
 import { Menu, Slideover } from "../../base-components/Headless";
 import defUserUrl from "../../assets/images/def-user.png";
-import _ from "lodash";
-import { TransitionRoot } from "@headlessui/vue";
 import { useI18n } from "vue-i18n";
 import axios from "../../axios";
 import { useDashboardStore } from "../../stores/dashboard";
@@ -17,6 +14,9 @@ import Button from "../../base-components/Button";
 import DashboardService from '../../services/DashboardService';
 import { UserProfileType } from '../../types/resources/UserProfileType';
 import LoadingIcon from "../../base-components/LoadingIcon";
+import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
+import { useZiggyRouteStore } from "../../stores/ziggy-route";
+import { Config } from "ziggy-js";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -24,6 +24,8 @@ const router = useRouter();
 const dashboardService = new DashboardService();
 
 const dashboardStore = useDashboardStore();
+const sideMenuStore = useSideMenuStore();
+const ziggyRouteStore = useZiggyRouteStore();
 const userContextStore = useUserContextStore();
 
 const userContext = computed(() => userContextStore.getUserContext);
@@ -69,6 +71,13 @@ onMounted(async () => {
 
   let userprofile = await dashboardService.readProfile();
   userContextStore.setUserContext(userprofile.data as UserProfileType);
+
+  let menuResult = await dashboardService.readUserMenu();
+  sideMenuStore.setUserMenu(menuResult.data as Array<sMenu>);
+
+  let apiResult = await dashboardService.readUserApi();
+  ziggyRouteStore.setZiggy(apiResult.data as Config);
+
 
   loading.value = false;
 })

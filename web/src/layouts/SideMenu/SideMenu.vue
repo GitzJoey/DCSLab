@@ -2,13 +2,11 @@
 import { useRoute } from "vue-router";
 import Divider from "./Divider.vue";
 import Menu from "./Menu.vue";
-import SimpleMenu from "../SimpleMenu/Menu.vue";
 import TopBar from "../../components/TopBar";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import MobileMenu from "../../components/MobileMenu";
 import { useSideMenuStore } from "../../stores/side-menu";
-import { useDashboardStore } from "../../stores/dashboard";
 import {
   ProvideForceActiveMenu,
   forceActiveMenu,
@@ -19,12 +17,9 @@ import {
   leave,
 } from "./side-menu";
 import { watch, reactive, computed, onMounted, provide } from "vue";
+import { useDashboardStore } from "../../stores/dashboard";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
-import DashboardService from "../../services/DashboardService";
-import { useZiggyRouteStore } from "../../stores/ziggy-route";
-
-const dashboardService = new DashboardService();
 
 const route: Route = useRoute();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
@@ -38,8 +33,6 @@ const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 
 const dashboardStore = useDashboardStore();
 const screenMask = computed(() => dashboardStore.screenMaskValue);
-
-const ziggyRouteStore = useZiggyRouteStore();
 
 provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
   forceActiveMenu(route, pageName);
@@ -57,18 +50,8 @@ watch(
   }
 );
 
-onMounted(async () => {
-  dashboardStore.toggleScreenMaskValue();
-
-  let menuResult = await dashboardService.readUserMenu();
-  sideMenuStore.setUserMenu(menuResult.data);
-
-  let apiResult = await dashboardService.readUserApi();
-  ziggyRouteStore.setZiggy(apiResult.data);
-
+onMounted(() => {
   setFormattedMenu(sideMenu.value);
-
-  dashboardStore.toggleScreenMaskValue();
 });
 </script>
 
@@ -121,8 +104,9 @@ onMounted(async () => {
                               <SimpleMenu :class="{
                                 [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(lastSubMenuKey + 1) * 10
                                   }`]: !lastSubMenu.active,
-                              }" :menu="lastSubMenu" :formattedMenuState="[formattedMenu, setFormattedMenu,]"
-                                level="third"></SimpleMenu>
+                              }" :menu="lastSubMenu" :formattedMenuState="[formattedMenu, setFormattedMenu]"
+                                level="third">
+                              </SimpleMenu>
                             </li>
                           </ul>
                         </Transition>
@@ -173,8 +157,9 @@ onMounted(async () => {
                               <Menu :class="{
                                 [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(lastSubMenuKey + 1) * 10
                                   }`]: !lastSubMenu.active,
-                              }" :menu="lastSubMenu" :formattedMenuState="[formattedMenu, setFormattedMenu,]"
-                                level="third"></Menu>
+                              }" :menu="lastSubMenu" :formattedMenuState="[formattedMenu, setFormattedMenu]"
+                                level="third">
+                              </Menu>
                             </li>
                           </ul>
                         </Transition>

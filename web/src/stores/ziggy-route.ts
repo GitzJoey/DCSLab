@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { env } from "process";
 import { Config } from "ziggy-js";
 
 export interface ZiggyState {
@@ -7,7 +6,7 @@ export interface ZiggyState {
 }
 
 const getDomain = () => {
-  let domain = (new URL(import.meta.env.VITE_BACKEND_URL));
+  const domain = (new URL(import.meta.env.VITE_BACKEND_URL));
 
   if (!domain) return 'localhost';
 
@@ -15,42 +14,48 @@ const getDomain = () => {
 }
 
 const getDomainPort = () => {
-  let domain = (new URL(import.meta.env.VITE_BACKEND_URL));
-  
-  if (!domain) return 8000; 
-  
+  const domain = (new URL(import.meta.env.VITE_BACKEND_URL));
+
+  if (!domain) return 8000;
+
   return Number(domain.port);
 }
 
 export const useZiggyRouteStore = defineStore("ziggyRoute", {
   state: (): ZiggyState => ({
     ziggyValue: {
-        url: getDomain(),
-        port: getDomainPort(),
-        defaults: {},
-        routes: {
-            'api.get.db.module.profile.read': {
-                uri: 'api/get/dashboard/module/profile/read',
-                methods: ['GET', 'HEAD']
-            },
-            'api.get.db.core.user.menu': {
-                uri: 'api/get/dashboard/core/user/menu',
-                methods: ['GET', 'HEAD']
-            },
-            'api.get.db.core.user.api': {
-                uri: 'api/get/dashboard/core/user/api',
-                methods: ['GET', 'HEAD']
-            }
+      url: getDomain(),
+      port: getDomainPort(),
+      defaults: {},
+      routes: {
+        'api.get.db.module.profile.read': {
+          uri: 'api/get/dashboard/module/profile/read',
+          methods: ['GET', 'HEAD']
+        },
+        'api.get.db.core.user.menu': {
+          uri: 'api/get/dashboard/core/user/menu',
+          methods: ['GET', 'HEAD']
+        },
+        'api.get.db.core.user.api': {
+          uri: 'api/get/dashboard/core/user/api',
+          methods: ['GET', 'HEAD']
         }
+      }
     }
   }),
   getters: {
     getZiggy(state): Config {
+      const serializedZiggy = sessionStorage.getItem('ziggyRoute');
+      if (serializedZiggy) {
+        const deserializedZiggy: Config = JSON.parse(serializedZiggy);
+        this.ziggyValue = deserializedZiggy;
+      }
       return state.ziggyValue;
     },
   },
   actions: {
     setZiggy(ziggy: Config) {
+      sessionStorage.setItem('ziggyRoute', JSON.stringify(ziggy));
       this.ziggyValue = ziggy;
     },
   },
