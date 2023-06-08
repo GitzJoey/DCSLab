@@ -27,7 +27,9 @@ class BrandResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->company),
+            ]),
             'code' => $this->code,
             'name' => $this->name,
         ];

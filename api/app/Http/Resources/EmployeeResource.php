@@ -29,15 +29,15 @@ class EmployeeResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company')),
+                'company' => new CompanyResource($this->company),
             ]),
             $this->mergeWhen($this->relationLoaded('user'), [
-                'user' => new UserResource($this->whenLoaded('user')),
+                'user' => new UserResource($this->user),
             ]),
             $this->mergeWhen($this->relationLoaded('employeeAccesses'), [
-                'employee_accesses' => EmployeeAccessResource::collection($this->whenLoaded('employeeAccesses')),
-                'selected_companies' => $this->getSelectedCompanies($this->whenLoaded('employeeAccesses') ? $this->employeeAccesses : null),
-                'selected_accesses' => $this->getSelectedAcsesses($this->whenLoaded('employeeAccesses') ? $this->employeeAccesses : null),
+                'employee_accesses' => EmployeeAccessResource::collection($this->employeeAccesses),
+                'selected_companies' => $this->getSelectedCompanies($this->employeeAccesses ? $this->employeeAccesses : null),
+                'selected_accesses' => $this->getSelectedAcsesses($this->employeeAccesses ? $this->employeeAccesses : null),
             ]),
             'code' => $this->code,
             'join_date' => $this->join_date,

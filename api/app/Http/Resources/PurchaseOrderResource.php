@@ -27,22 +27,24 @@ class PurchaseOrderResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->company),
+            ]),
             $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->whenLoaded('branch')),
+                'branch' => new BranchResource($this->branch),
             ]),
             'invoice_code' => $this->invoice_code,
             'invoice_date' => $this->invoice_date,
             'shipping_date' => $this->shipping_date,
             'shipping_address' => $this->shipping_address,
             $this->mergeWhen($this->relationLoaded('supplier'), [
-                'supplier' => new SupplierResource($this->whenLoaded('supplier')),
+                'supplier' => new SupplierResource($this->supplier),
             ]),
             $this->mergeWhen($this->relationLoaded('purchaseOrderDiscounts'), [
-                'global_discounts' => PurchaseOrderDiscountResource::collection($this->whenLoaded('purchaseOrderDiscounts')),
+                'global_discounts' => PurchaseOrderDiscountResource::collection($this->purchaseOrderDiscounts),
             ]),
             $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnits'), [
-                'product_units' => PurchaseOrderProductUnitResource::collection($this->whenLoaded('purchaseOrderProductUnits')),
+                'product_units' => PurchaseOrderProductUnitResource::collection($this->purchaseOrderProductUnits),
             ]),
             'remarks' => $this->remarks,
             'status' => $this->status,

@@ -29,7 +29,7 @@ class BranchResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->whenLoaded('company')),
+                'company' => new CompanyResource($this->company),
             ]),
             'code' => $this->code,
             'name' => $this->name,
