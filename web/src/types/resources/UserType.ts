@@ -1,5 +1,6 @@
 import { CompanyType } from "./CompanyType";
 import { ProfileType } from "./ProfileType";
+import { RoleType } from "./RoleType";
 
 export interface UserType {
     id: string,
@@ -8,5 +9,6 @@ export interface UserType {
     email: string,
     email_verified: boolean,
     profile: ProfileType,
+    roles: RoleType[],
     companies: CompanyType[],
 }

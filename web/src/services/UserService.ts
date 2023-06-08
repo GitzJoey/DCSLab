@@ -24,7 +24,6 @@ export default class UserService {
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
             const response: AxiosResponse<UserType[]> = await axios.get(url);
 
-
             return {
                 success: true,
                 statusCode: response.status,

@@ -37,7 +37,7 @@ class UserProfileResource extends JsonResource
             ]),
             $this->mergeWhen($this->relationLoaded('roles'), [
                 'roles' => RoleResource::collection($this->whenLoaded('roles')),
-                'roles_description' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
+                'role_descriptions' => $this->flattenRoles($this->whenLoaded('roles') ? $this->roles : null),
                 'selected_roles' => $this->selectedRolesInArray($this->whenLoaded('roles') ? $this->roles : null),
             ]),
             $this->mergeWhen($this->relationLoaded('companies'), [

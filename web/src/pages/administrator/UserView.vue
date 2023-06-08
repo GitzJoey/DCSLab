@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -48,7 +48,7 @@ const user = ref({
     time_format: "",
   },
 });
-const userList = ref<UserType[] | null | undefined>([]);
+const userLists = ref<UserType[] | null | undefined>([]);
 const rolesDDL = ref([]);
 const statusDDL = ref([]);
 const countriesDDL = ref([]);
@@ -75,13 +75,14 @@ const toggleDetail = (idx: number) => {
 };
 
 const getUser = async (args: { page?: number, per_page?: number, search?: string }) => {
-  userList.value = []
+  userLists.value = []
   if (args.page === undefined) args.page = 1
   if (args.per_page === undefined) args.per_page = 10;
   if (args.search === undefined) args.search = "";
 
-  let data = await userServices.readAny(args)
-  userList.value = data?.data
+  let result = await userServices.readAny(args);
+
+  userLists.value = result.data;
 }
 
 const onDataListChange = ({ page, per_page, search }: { page: number, per_page: number, search: string }) => {
@@ -111,9 +112,8 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
         </TitleLayout>
 
         <AlertPlaceholder />
-        <DataList :title="t('views.user.table.title')" :data="userList" :enable-search="true"
-          @dataListChange="onDataListChange">
-          <template #table="tableProps">
+        <DataList :title="t('views.user.table.title')" :enable-search="true" @dataListChange="onDataListChange">
+          <template #table>
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
                 <Table.Tr>
@@ -132,22 +132,25 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
                   <Table.Th class="whitespace-nowrap"></Table.Th>
                 </Table.Tr>
               </Table.Thead>
-              <Table.Tbody v-if="tableProps?.dataList !== undefined">
-                <template v-for="(item, itemIdx) in tableProps?.dataList?.data" :key="item.ulid">
+              <Table.Tbody v-if="userLists !== null">
+                <template v-for="(item, itemIdx) in userLists" :key="item.ulid">
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
-                    <Table.Td><a href="" class="hover:animate-pulse" @click.prevent="toggleDetail(itemIdx)">{{ item.email
-                    }}</a></Table.Td>
                     <Table.Td>
-                      <span v-for="r in item?.roles" :key="r.id">{{ r.display_name }} </span>
+                      <a href="" class="hover:animate-pulse" @click.prevent="toggleDetail(itemIdx)">
+                        {{ item.email }}
+                      </a>
                     </Table.Td>
                     <Table.Td>
-                      <Lucide v-if="item?.profile?.status === 'ACTIVE'" icon="CheckCircle" />
-                      <Lucide v-if="item?.profile?.status === 'INACTIVE'" icon="X" />
+                      <span v-for="r in item.roles" :key="r.id">{{ r.display_name }} </span>
+                    </Table.Td>
+                    <Table.Td>
+                      <Lucide v-if="item.profile.status === 'ACTIVE'" icon="CheckCircle" />
+                      <Lucide v-if="item.profile.status === 'INACTIVE'" icon="X" />
                     </Table.Td>
                     <Table.Td>
                       <div class="flex justify-end gap-1">
-                        <Button variant="outline-secondary">
+                        <Button variant="outline-secondary" @click="expandDetail = itemIdx">
                           <Lucide icon="Info" class="w-4 h-4" />
                         </Button>
                         <Button variant="outline-secondary">
@@ -157,6 +160,11 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
                           <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                         </Button>
                       </div>
+                    </Table.Td>
+                  </Table.Tr>
+                  <Table.Tr :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
+                    <Table.Td>
+                      testing
                     </Table.Td>
                   </Table.Tr>
                 </template>
