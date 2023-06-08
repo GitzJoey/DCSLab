@@ -28,15 +28,18 @@ class CustomerResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->company),
+            ]),
             'code' => $this->code,
             'name' => $this->name,
             'is_member' => $this->is_member,
             $this->mergeWhen($this->relationLoaded('customerGroup'), [
-                'customer_group' => new CustomerGroupResource($this->whenLoaded('customerGroup')),
+                'customer_group' => new CustomerGroupResource($this->customerGroup),
             ]),
             'zone' => $this->zone,
             $this->mergeWhen($this->relationLoaded('customerAddresses'), [
-                'customer_addresses' => CustomerAddressResource::collection($this->whenLoaded('customerAddresses')),
+                'customer_addresses' => CustomerAddressResource::collection($this->customerAddresses),
             ]),
             'max_open_invoice' => $this->max_open_invoice,
             'max_outstanding_invoice' => $this->max_outstanding_invoice,
@@ -48,7 +51,7 @@ class CustomerResource extends JsonResource
             'remarks' => $this->remarks,
             'status' => $this->setStatus($this->status, $this->deleted_at),
             $this->mergeWhen($this->relationLoaded('user'), [
-                'customer_pic' => new UserResource($this->whenLoaded('user')),
+                'customer_pic' => new UserResource($this->user),
             ]),
         ];
     }

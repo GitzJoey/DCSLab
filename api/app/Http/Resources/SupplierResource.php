@@ -28,6 +28,9 @@ class SupplierResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->company),
+            ]),
             'code' => $this->code,
             'name' => $this->name,
             'contact' => $this->contact,
@@ -40,12 +43,12 @@ class SupplierResource extends JsonResource
             'remarks' => $this->remarks,
             'status' => $this->setStatus($this->status, $this->deleted_at),
             $this->mergeWhen($this->relationLoaded('user'), [
-                'supplier_pic' => new UserResource($this->whenLoaded('user')),
+                'supplier_pic' => new UserResource($this->user),
             ]),
             $this->mergeWhen($this->relationLoaded('supplierProducts'), [
-                'supplier_products' => SupplierProductResource::collection($this->whenLoaded('supplierProducts')),
-                'selected_products' => $this->getSelectedProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
-                'main_products' => $this->getMainProducts($this->whenLoaded('supplierProducts') ? $this->supplierProducts : null),
+                'supplier_products' => SupplierProductResource::collection($this->supplierProducts),
+                'selected_products' => $this->getSelectedProducts($this->supplierProducts ? $this->supplierProducts : null),
+                'main_products' => $this->getMainProducts($this->supplierProducts ? $this->supplierProducts : null),
             ]),
         ];
     }
