@@ -1,6 +1,5 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -10,6 +9,9 @@ import {
 } from "../../base-components/Form";
 import { ThreeColsLayout } from "../../base-components/FormLayout";
 import { useUserContextStore } from "../../stores/user-context";
+import Card from "../../components/Card";
+import { PropType, computed, onMounted, ref, toRef, watch } from "vue";
+
 //#endregion
 
 //#region Declarations
@@ -22,6 +24,7 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#endregion
 
 //#region Data - UI
+const tabs=ref(['User Profile', 'Account Settings', 'Change Password', 'User Setting'])
 //#endregion
 
 //#region Data - Views
@@ -39,17 +42,13 @@ onMounted(() => {});
 </script>
 
 <template>
-  <div class="flex items-center mt-8 intro-y">
-    <h2 class="mr-auto text-xl font-medium">{{ t("views.profile.title") }}</h2>
-  </div>
+  <Card :cards="tabs"  >
+    <template #title>
+      <h2 class="mr-auto text-xl font-medium">{{ t("views.profile.title") }}</h2>
+    </template>
 
-  <div class="grid grid-cols-12 gap-6 mt-5">
-    <!-- Begin Profile Menu -->
-    <div
-      class="col-span-12 lg:col-span-4 2xl:col-span-3 flex lg:block flex-col-reverse"
-    >
-      <div class="intro-y box mt-5 lg:mt-0">
-        <div class="relative flex items-center p-5">
+    <template #side-menu-title >
+      <div class="relative flex items-center p-5">
           <div class="ml-4 mr-auto">
             <div class="font-medium text-base">
               {{ userContext.name }}
@@ -57,35 +56,20 @@ onMounted(() => {});
 
           </div>
         </div>
-        <div class="p-5 border-t border-slate-200/60 dark:border-darkmode-400">
-          <a href="" class="flex items-center text-primary font-medium">
-            <i data-lucide="activity" class="w-4 h-4 mr-2"></i>
-            User Profile
-          </a>
-          <a class="flex items-center mt-5" href="">
-            <i data-lucide="box" class="w-4 h-4 mr-2"></i> Account Settings
-          </a>
-          <a class="flex items-center mt-5" href="">
-            <i data-lucide="lock" class="w-4 h-4 mr-2"></i> Change Password
-          </a>
-          <a class="flex items-center mt-5" href="">
-            <i data-lucide="settings" class="w-4 h-4 mr-2"></i> User Settings
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- End Profile Menu -->
-    <div class="col-span-12 lg:col-span-8 2xl:col-span-9">
-      <div class="grid grid-cols-12 gap-6">
-        <!-- Begin Personal Informations -->
-        <div class="intro-y box col-span-12 2xl:col-span-12">
+    </template>
+
+    <template #side-menu-link="linkProps" >  
+      {{ linkProps.link }}
+    </template>
+
+    <template #card-items-0="cardProps" >
           <div
             class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
           >
-            <h2 class="font-medium text-base mr-auto">User Profile</h2>
+            <h2 class="font-medium text-base mr-auto">{{ cardProps.card }}</h2>
           </div>
+
           <div class="p-5">
-            <!-- Start Body dari Card -->
             <div class="pb-4">
               <FormLabel htmlFor="name">
                 {{ t("views.profile.fields.name") }}
@@ -115,18 +99,16 @@ onMounted(() => {});
             />
           </div>            
           </div>
-        </div>
-        <!-- End Personal Informations -->
+    </template>
 
-        <!-- Begin Account Settings -->
-        <div class="intro-y box col-span-12 2xl:col-span-12">
-          <div
+    <template #card-items-1="cardProps" >
+      
+      <div
             class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
           >
-            <h2 class="font-medium text-base mr-auto">Personal Informations</h2>
+            <h2 class="font-medium text-base mr-auto">{{ cardProps.card }}</h2>
           </div>
           <div class="p-5">
-            <!-- Body dari Card -->
             <div class="pb-4">
             <VeeField
               v-slot="{ field }"
@@ -267,39 +249,28 @@ onMounted(() => {});
           </div>
 
           </div>
-        </div>
-        <!-- End Account Settings -->
+      
+    </template>
 
-
-        <!-- Begin Change  Password -->
-        <div class="intro-y box col-span-12 2xl:col-span-12">
-          <div
+    <template #card-items-2="cardProps" >
+      <div
             class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
           >
-            <h2 class="font-medium text-base mr-auto">Change Password</h2>
+            <h2 class="font-medium text-base mr-auto">{{ cardProps.card }}</h2>
           </div>
           <div class="p-5">
-            <!-- Body dari Card -->            
           </div>
-        </div>
-        <!-- End Change  Password -->
+    </template>
 
-        <!-- Begin User Setting -->
-        <div class="intro-y box col-span-12 2xl:col-span-12">
-          <div
+    <template #card-items-3="cardProps" >
+      <div  
             class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
           >
-            <h2 class="font-medium text-base mr-auto">User Setting</h2>
+            <h2 class="font-medium text-base mr-auto">{{ cardProps.card }}</h2>
           </div>
           <div class="p-5">
-            <!--Start Body dari Card -->            
-            <!--End Body dari Card -->            
           </div>
-        </div>
-        <!-- End User Setting -->
-      </div>
-    </div>
-  </div>
-
+    </template>
+  </Card>
 
 </template>

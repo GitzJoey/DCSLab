@@ -4,7 +4,6 @@ import alert_placeholder from "./en/components/alert-placeholder.json";
 import dropdown from "./en/components/dropdown.json";
 import top_bar from "./en/components/top-bar.json";
 import data_list from "./en/components/data-list.json"
-import data_list from "./en/components/data-list.json"
 
 import login from "./en/views/login.json";
 import register from "./en/views/register.json";
