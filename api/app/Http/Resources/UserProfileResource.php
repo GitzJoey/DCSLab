@@ -33,10 +33,10 @@ class UserProfileResource extends JsonResource
             'email_verified' => ! is_null($this->email_verified_at),
             'password_expiry_day' => $this->getPasswordExpiryDay($this->password_changed_at),
             $this->mergeWhen($this->relationLoaded('profile'), [
-                'profile' => (new ProfileResource($this->profile))->type('UserProfile'),
+                'profile' => (new ProfileResource($this->profile)),
             ]),
             $this->mergeWhen($this->relationLoaded('roles'), [
-                'roles' => RoleResource::collection($this->whenLoaded('roles')),
+                'roles' => RoleResource::collection($this->roles),
                 'role_descriptions' => $this->flattenRoles($this->roles ? $this->roles : null),
                 'selected_roles' => $this->selectedRolesInArray($this->roles ? $this->roles : null),
             ]),
