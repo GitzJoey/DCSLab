@@ -1,9 +1,9 @@
-import { CompanyType } from "./CompanyType"
+import { Company } from "./Company"
 
-export interface BranchType {
+export interface Branch {
     id: string,
     ulid: string,
-    company: CompanyType,
+    company: Company,
     code: string,
     name: string,
     address: string,

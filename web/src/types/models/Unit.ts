@@ -1,9 +1,9 @@
-import { CompanyType } from "./CompanyType"
+import { Company } from "./Company"
 
-export interface UnitType {
+export interface Unit {
     id: string,
     ulid: string,
-    company: CompanyType,
+    company: Company,
     code: string,
     name: string,
     description: string,

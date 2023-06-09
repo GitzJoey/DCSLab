@@ -1,6 +1,6 @@
-import { BranchType } from "./BranchType";
+import { Branch } from "./Branch";
 
-export interface CompanyType {
+export interface Company {
     id: string,
     ulid: string,
     code: string,
@@ -8,5 +8,5 @@ export interface CompanyType {
     address: string,
     default: boolean,
     status: string,
-    branches: BranchType[],
+    branches: Branch[],
 }

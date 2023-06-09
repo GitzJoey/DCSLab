@@ -1,11 +1,11 @@
-import { CompanyType } from "./CompanyType"
-import { UserType } from "./UserType"
-import { SupplierProductType } from "./SupplierProductType"
+import { Company } from "./Company"
+import { User } from "./User"
+import { SupplierProduct } from "./SupplierProduct"
 
-export interface SupplierType {
+export interface Supplier {
     id: string,
     ulid: string,
-    company: CompanyType,
+    company: Company,
     code: string,
     name: string,
     contact: string,
@@ -17,8 +17,8 @@ export interface SupplierType {
     tax_id: string,
     remarks: string,
     status: string,
-    supplier_pic: UserType,
-    supplier_products: SupplierProductType[],
+    supplier_pic: User,
+    supplier_products: SupplierProduct[],
     selected_products: string[],
     main_products: string[],
 }

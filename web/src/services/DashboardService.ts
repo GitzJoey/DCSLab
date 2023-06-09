@@ -3,12 +3,11 @@ import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
 import { AxiosResponse, AxiosError } from "axios";
-import { ServiceResponseType } from "../types/systems/ServiceResponseType";
-import { UserProfileType } from "../types/resources/UserProfileType";
-import { UserType } from "../types/resources/UserType";
-import ErrorHandlerService from "./ErrorHandlerService";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { UserProfile } from "../types/models/UserProfile";
 import { Menu as sMenu } from "../stores/side-menu";
-import { DropdownOptionType } from "../types/DropdownOptionType";
+import ErrorHandlerService from "./ErrorHandlerService";
+import { Resource } from "../types/resources/Resource";
 
 export default class DashboardService {
     private ziggyRoute: Config;
@@ -24,25 +23,26 @@ export default class DashboardService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async readProfile(): Promise<ServiceResponseType<UserProfileType | null>> {
+    public async readProfile(): Promise<ServiceResponse<UserProfile | null>> {
         try {
             const url = route('api.get.db.module.profile.read', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<UserProfileType> = await axios.get(url);
+            const response: AxiosResponse<Resource<UserProfile>> = await axios.get(url);
 
             return {
                 success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+                data: response.data.data
             }
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            return {
+                success: false,
+                error: e as AxiosError
+            }
         }
     }
 
-    public async readUserMenu(): Promise<ServiceResponseType<Array<sMenu> | null>> {
+    public async readUserMenu(): Promise<ServiceResponse<Array<sMenu> | null>> {
         try {
             const url = route('api.get.db.core.user.menu', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
@@ -51,16 +51,17 @@ export default class DashboardService {
 
             return {
                 success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
                 data: response.data
             }
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            return {
+                success: false,
+                error: e as AxiosError
+            }
         }
     }
 
-    public async readUserApi(): Promise<ServiceResponseType<Config | null>> {
+    public async readUserApi(): Promise<ServiceResponse<Config | null>> {
         try {
             const url = route('api.get.db.core.user.api', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
@@ -69,41 +70,24 @@ export default class DashboardService {
 
             return {
                 success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
                 data: response.data
             }
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
-        }
-    }
-
-    public async read(): Promise<ServiceResponseType<UserType | null>> {
-        try {
-            const url = route('api.get.db.admin.users.read', undefined, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
-            const response: AxiosResponse<UserType> = await axios.get(url);
-
             return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+                success: false,
+                error: e as AxiosError
             }
-        } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
         }
     }
 
-    public async getStatusDDL(): Promise<DropdownOptionType[] | null> {
+    public async getStatusDDL(): Promise<Record<string, string>[] | null> {
         const ddlName = 'statusDDL';
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.statuses', undefined, false, this.ziggyRoute);
                 if (!url) return null;
 
-                const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
+                const response: AxiosResponse<Record<string, string>[]> = await axios.get(url);
 
                 this.cacheService.setCachedDDL(ddlName, response.data);
             }
@@ -114,14 +98,14 @@ export default class DashboardService {
         }
     }
 
-    public async getCountriesDDL(): Promise<DropdownOptionType[] | null> {
+    public async getCountriesDDL(): Promise<Record<string, string>[] | null> {
         const ddlName = 'countriesDDL';
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
                 if (!url) return null;
 
-                const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
+                const response: AxiosResponse<Record<string, string>[]> = await axios.get(url);
 
                 this.cacheService.setCachedDDL(ddlName, response.data);
             }

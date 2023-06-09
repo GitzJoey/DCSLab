@@ -1,11 +1,11 @@
-import { CompanyType } from "./CompanyType"
-import { BranchType } from "./BranchType"
+import { Company } from "./Company"
+import { Branch } from "./Branch"
 
-export interface WarehouseType {
+export interface Warehouse {
     id: string,
     ulid: string,
-    company: CompanyType,
-    branch: BranchType,
+    company: Company,
+    branch: Branch,
     code: string,
     name: string,
     address: string,

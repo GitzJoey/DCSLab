@@ -1,45 +1,51 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/systems/ServiceResponseType";
-import { UserType } from "../types/resources/UserType";
-import ErrorHandlerService from "./ErrorHandlerService";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { Resource } from "../types/resources/Resource";
+import { UserProfile } from "../types/models/UserProfile";
+import { LoginRequest, RegisterRequest } from "../types/requests/AuthRequests";
 
 export default class AuthService {
-    private errorHandlerService;
-
-    constructor() {
-        this.errorHandlerService = new ErrorHandlerService();
-    }
-
-    public async doLogin(emailText: string, passwordText: string, rememberMeCheck: boolean | string | undefined): Promise<ServiceResponseType<UserType | null>> {
+    public async doLogin(request: LoginRequest): Promise<ServiceResponse<UserProfile | null>> {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
-            const response: AxiosResponse<UserType> = await authAxiosInstance.post('login', { email: emailText, password: passwordText, remember: rememberMeCheck });
+            const response: AxiosResponse<Resource<UserProfile>> = await authAxiosInstance.post('login', {
+                email: request.email,
+                password: request.password,
+                remember: request.remember
+            });
 
             return {
                 success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+                data: response.data.data,
             }
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            return {
+                success: false,
+                error: e as AxiosError,
+            };
         }
     }
 
-    public async register(nameText: string, emailText: string, passwordText: string, termsCheck: boolean): Promise<ServiceResponseType<UserType | null>> {
+    public async register(request: RegisterRequest): Promise<ServiceResponse<UserProfile | null>> {
         try {
             await authAxiosInstance.get('/sanctum/csrf-cookie');
-            const response: AxiosResponse<UserType> = await authAxiosInstance.post('register', { name: nameText, email: emailText, password: passwordText, terms: termsCheck });
+            const response: AxiosResponse<Resource<UserProfile>> = await authAxiosInstance.post('register', {
+                name: request.name,
+                email: request.email,
+                password: request.password,
+                terms: request.terms
+            });
 
             return {
                 success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+                data: response.data.data
             }
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            return {
+                success: false,
+                error: e as AxiosError
+            }
         }
     }
 }

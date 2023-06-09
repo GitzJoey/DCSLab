@@ -1,9 +1,9 @@
-import { CompanyType } from "./CompanyType"
+import { Company } from "./Company"
 
-export interface CustomerGroupType {
+export interface CustomerGroup {
     id: string,
     ulid: string,
-    company: CompanyType,
+    company: Company,
     code: string,
     name: string,
     max_open_invoice: number,

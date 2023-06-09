@@ -10,14 +10,9 @@ import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
 import { useRouter } from "vue-router";
-import { FormActions } from "vee-validate";
-import { ErrorResponseType } from "../../types/systems/ErrorResponseType";
-
-interface LoginFormValues {
-  email: string;
-  password: string;
-  remember?: boolean | string | undefined;
-}
+import { LoginRequest } from "../../types/requests/AuthRequests";
+import { ServiceResponse } from "../../types/services/ServiceResponse";
+import { UserProfile } from "../../types/models/UserProfile";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -25,43 +20,28 @@ const router = useRouter();
 const authService = new AuthService();
 
 const appName = import.meta.env.VITE_APP_NAME;
-const loading = ref(false);
+const loading = ref<boolean>(false);
 
-const loginForm = ref<LoginFormValues>({
+const loginForm = ref<LoginRequest>({
   email: "",
   password: "",
+  remember: false
 });
 
-const onSubmit = async (
-  values: LoginFormValues,
-  formActions: FormActions<LoginFormValues>
-) => {
+const onSubmit = async () => {
   loading.value = true;
 
-  let result = await authService.doLogin(
-    values.email,
-    values.password,
-    values.remember
+  let result: ServiceResponse<UserProfile | null> = await authService.doLogin(
+    loginForm.value
   );
 
-  if (result.success) {
+  if (result && result.success) {
     router.push({ name: "side-menu-dashboard-maindashboard" });
   } else {
-    if (result.errors) handleError(result.errors, formActions);
+    console.log(result);
   }
 
   loading.value = false;
-};
-
-const handleError = (
-  e: ErrorResponseType,
-  actions: FormActions<LoginFormValues>
-): void => {
-  for (let key in e) {
-    for (let i = 0; i < Object.values(e[key]).length; i++) {
-      actions.setFieldError("email", e[key][i]);
-    }
-  }
 };
 </script>
 
