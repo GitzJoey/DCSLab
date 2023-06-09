@@ -29,10 +29,10 @@ class SupplierProductResource extends JsonResource
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
             $this->mergeWhen($this->relationLoaded('supplier'), [
-                'supplier' => new SupplierResource($this->whenLoaded('supplier')),
+                'supplier' => new SupplierResource($this->supplier),
             ]),
             $this->mergeWhen($this->relationLoaded('product'), [
-                'product' => new ProductResource($this->whenLoaded('product')),
+                'product' => new ProductResource($this->product),
             ]),
             'main_product' => $this->main_product,
         ];

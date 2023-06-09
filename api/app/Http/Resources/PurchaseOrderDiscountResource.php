@@ -29,13 +29,13 @@ class PurchaseOrderDiscountResource extends JsonResource
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
             $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->whenLoaded('branch')),
+                'branch' => new BranchResource($this->branch),
             ]),
             $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
-                'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
+                'purchase_order' => new PurchaseOrderResource($this->purchaseOrder),
             ]),
             $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnit' && $this->purchaseOrderProductUnit), [
-                'purchase_order_product_unit' => new PurchaseOrderProductUnitResource($this->whenLoaded('purchaseOrderProductUnit')),
+                'purchase_order_product_unit' => new PurchaseOrderProductUnitResource($this->purchaseOrderProductUnit),
             ]),
             'discount_type' => $this->discount_type,
             'amount' => $this->amount,

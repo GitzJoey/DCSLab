@@ -29,11 +29,11 @@ class ProductUnitResource extends JsonResource
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
             $this->mergeWhen($this->relationLoaded('product'), [
-                'product' => new ProductResource($this->whenLoaded('product')),
+                'product' => new ProductResource($this->product),
             ]),
             'code' => $this->code,
             $this->mergeWhen($this->relationLoaded('unit'), [
-                'unit' => new UnitResource($this->whenLoaded('unit')),
+                'unit' => new UnitResource($this->unit),
             ]),
             'is_base' => $this->is_base,
             'conversion_value' => $this->conversion_value,
