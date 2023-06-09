@@ -1,8 +1,8 @@
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 
-import LoginView from "../pages/auth/LoginView.vue";
-import RegisterView from "../pages/auth/RegisterView.vue";
-import ResetPasswordView from "../pages/auth/ResetPasswordView.vue";
+import LoginPage from "../pages/auth/LoginPage.vue";
+import RegisterPage from "../pages/auth/RegisterPage.vue";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 import ProfileView from "../pages/dashboard/ProfileView.vue";
 import DevTool from "../pages/dev/DevTool.vue";
@@ -35,17 +35,17 @@ export default [
             {
                 path: "/auth/login",
                 name: "login",
-                component: LoginView,
+                component: LoginPage,
             },
             {
                 path: "/auth/register",
                 name: 'register',
-                component: RegisterView,
+                component: RegisterPage,
             },
             {
                 path: "/auth/reset-password",
                 name: 'reset-password',
-                component: ResetPasswordView,
+                component: ResetPasswordPage,
             },
         ]
     },

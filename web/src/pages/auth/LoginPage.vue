@@ -13,6 +13,7 @@ import { useRouter } from "vue-router";
 import { LoginRequest } from "../../types/requests/AuthRequests";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { UserProfile } from "../../types/models/UserProfile";
+import { FormActions } from "vee-validate";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -28,17 +29,15 @@ const loginForm = ref<LoginRequest>({
   remember: false
 });
 
-const onSubmit = async () => {
+const onSubmit = async (values: LoginRequest, actions: FormActions<LoginRequest>) => {
   loading.value = true;
 
-  let result: ServiceResponse<UserProfile | null> = await authService.doLogin(
-    loginForm.value
-  );
+  let result: ServiceResponse<UserProfile | null> = await authService.doLogin(values);
 
-  if (result && result.success) {
+  if (result.success) {
     router.push({ name: "side-menu-dashboard-maindashboard" });
   } else {
-    console.log(result);
+    actions.setErrors({ email: 'Invalid email and password' });
   }
 
   loading.value = false;
