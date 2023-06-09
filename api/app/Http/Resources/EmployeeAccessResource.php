@@ -28,10 +28,10 @@ class EmployeeAccessResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('employee'), [
-                'employee' => new EmployeeResource($this->whenLoaded('employee')),
+                'employee' => new EmployeeResource($this->employee),
             ]),
             $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->whenLoaded('branch')),
+                'branch' => new BranchResource($this->branch),
             ]),
         ];
     }

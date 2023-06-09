@@ -30,7 +30,7 @@ class ChartOfAccountResource extends JsonResource
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
             'parent_account' => $this->parent_id ? new ChartOfAccountResource($this->parentAccount) : null,
-            'child_accounts' => ChartOfAccountResource::collection($this->whenLoaded('childAccounts')),
+            'child_accounts' => ChartOfAccountResource::collection($this->childAccounts),
             'code' => $this->code,
             'name' => $this->name,
             'account_type' => $this->account_type->name,

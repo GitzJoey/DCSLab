@@ -28,8 +28,8 @@ class RoleResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'display_name' => $this->display_name,
             $this->mergeWhen($this->relationLoaded('permissions'), [
-                'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
-                'permission_descriptions' => $this->flattenPermissions($this->whenLoaded('permissions') ? $this->permissions : null),
+                'permissions' => PermissionResource::collection($this->permissions),
+                'permission_descriptions' => $this->flattenPermissions($this->permissions ? $this->permissions : null),
             ]),
         ];
     }
