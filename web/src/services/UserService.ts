@@ -1,8 +1,10 @@
 import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
-import { UserType } from "../types/resources/UserType";
-import { ServiceResponseType } from "../types/systems/ServiceResponseType";
+import { User } from "../types/models/User";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { Resource } from "../types/resources/Resource";
+import { Collection } from "../types/resources/Collection";
 import { AxiosError, AxiosResponse } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
@@ -18,38 +20,40 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async readAny(args: { page?: number, per_page?: number, search?: string }): Promise<ServiceResponseType<UserType[] | null>> {
+    public async readAny(args: { page?: number, per_page?: number, search?: string }): Promise<ServiceResponse<Collection<User[]> | null>> {
         try {
             const url = route('api.get.db.admin.users.read_any', args, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-            const response: AxiosResponse<UserType[]> = await axios.get(url);
+            const response: AxiosResponse<Collection<User[]>> = await axios.get(url);
 
             return {
                 success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
                 data: response.data
             }
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            return {
+                success: false,
+                error: e as AxiosError
+            }
         }
     }
 
-    public async read(): Promise<ServiceResponseType<UserType | null>> {
+    public async read(): Promise<ServiceResponse<User | null>> {
         try {
             const url = route('api.get.db.admin.users.read', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<UserType> = await axios.get(url);
+            const response: AxiosResponse<Resource<User>> = await axios.get(url);
 
             return {
                 success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+                data: response.data.data
             }
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            return {
+                success: false,
+                error: e as AxiosError
+            }
         }
     }
 }

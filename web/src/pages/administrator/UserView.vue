@@ -13,7 +13,10 @@ import {
 } from "../../base-components/Form/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
-import { UserType } from '../../types/resources/UserType'
+import { User } from "../../types/models/User";
+import { UserRequest } from "../../types/requests/UserRequests";
+import { Collection } from "../../types/resources/Collection";
+import { ServiceResponse } from "../../types/services/ServiceResponse";
 //#endregion
 
 //#region Declarations
@@ -34,21 +37,28 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const user = ref({
-  roles: [],
-  selected_roles: [],
-  profile: {
-    country: "",
-    status: "ACTIVE",
-    img_path: "",
-  },
-  selected_settings: {
-    theme: "side-menu-light-full",
-    date_Format: "",
-    time_format: "",
-  },
+const user = ref<UserRequest>({
+  id: '',
+  ulid: '',
 });
-const userLists = ref<UserType[] | null | undefined>([]);
+const userLists = ref<Collection<User[]> | null>({
+  data: [],
+  meta: {
+    current_page: 0,
+    from: 0,
+    last_page: 0,
+    path: '',
+    per_page: 0,
+    to: 0,
+    total: 0,
+  },
+  links: {
+    first: '',
+    last: '',
+    prev: null,
+    next: '',
+  }
+});
 const rolesDDL = ref([]);
 const statusDDL = ref([]);
 const countriesDDL = ref([]);
@@ -75,14 +85,15 @@ const toggleDetail = (idx: number) => {
 };
 
 const getUser = async (args: { page?: number, per_page?: number, search?: string }) => {
-  userLists.value = []
   if (args.page === undefined) args.page = 1
   if (args.per_page === undefined) args.per_page = 10;
   if (args.search === undefined) args.search = "";
 
-  let result = await userServices.readAny(args);
+  let result: ServiceResponse<Collection<User[]> | null> = await userServices.readAny(args);
 
-  userLists.value = result.data;
+  if (result.success && result.data) {
+    userLists.value = result.data;
+  }
 }
 
 const onDataListChange = ({ page, per_page, search }: { page: number, per_page: number, search: string }) => {
@@ -133,7 +144,7 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody v-if="userLists !== null">
-                <template v-for="(item, itemIdx) in userLists" :key="item.ulid">
+                <template v-for="(item, itemIdx) in userLists.data" :key="item.ulid">
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td>
