@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { UserProfileType } from "../types/resources/UserProfileType";
+import { UserProfile } from "../types/models/UserProfile";
 
 export interface UserContextState {
   isAuthenticatedValue: boolean,
-  userContextValue: UserProfileType,
+  userContextValue: UserProfile,
   selectedUserLocationValue: {
     company: {
       id: string,
@@ -28,7 +28,6 @@ export const useUserContextStore = defineStore("userContext", {
       email: '',
       email_verified: false,
       profile: {
-        full_name: '',
         first_name: '',
         last_name: '',
         address: '',
@@ -41,6 +40,7 @@ export const useUserContextStore = defineStore("userContext", {
         img_path: '',
         remarks: '',
       },
+      roles: [],
       companies: [],
     },
     selectedUserLocationValue: {
@@ -64,7 +64,7 @@ export const useUserContextStore = defineStore("userContext", {
     getSelectedUserBranch: state => state.selectedUserLocationValue.branch,
   },
   actions: {
-    setUserContext(userContext: UserProfileType) {
+    setUserContext(userContext: UserProfile) {
       this.userContextValue = userContext;
 
       this.isAuthenticatedValue = true;

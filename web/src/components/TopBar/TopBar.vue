@@ -11,7 +11,7 @@ import { useUserContextStore } from "../../stores/user-context";
 import { useRouter } from "vue-router";
 import Button from "../../base-components/Button";
 import DashboardService from '../../services/DashboardService';
-import { UserProfileType } from '../../types/resources/UserProfileType';
+import { UserProfile } from '../../types/models/UserProfile';
 import LoadingIcon from "../../base-components/LoadingIcon";
 import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
 import { useZiggyRouteStore } from "../../stores/ziggy-route";
@@ -35,6 +35,10 @@ const props = defineProps<{
 }>();
 
 const appName = import.meta.env.VITE_APP_NAME;
+
+const fullName = computed(() => {
+  return userContext.value.profile.first_name + ' ' + userContext.value.profile.last_name;
+});
 
 const logout = () => {
   dashboardStore.toggleScreenMaskValue();
@@ -60,7 +64,7 @@ onMounted(async () => {
   loading.value = true;
 
   let userprofile = await dashboardService.readProfile();
-  userContextStore.setUserContext(userprofile.data as UserProfileType);
+  userContextStore.setUserContext(userprofile.data as UserProfile);
 
   let menuResult = await dashboardService.readUserMenu();
   sideMenuStore.setUserMenu(menuResult.data as Array<sMenu>);
@@ -114,10 +118,14 @@ onMounted(async () => {
             &nbsp;
           </Slideover.Description>
           <Slideover.Footer>
-            <strong>Copyright &copy; {{ (new Date()).getFullYear() }} <a
-                href="https://www.github.com/GitzJoey">GitzJoey</a>&nbsp;&amp;&nbsp;<a
-                href="https://github.com/GitzJoey/DCSLab/graphs/contributors">Contributors</a>.</strong> All rights
-            reserved.<br /> Powered By Coffee &amp; Curiosity.
+            <strong>{{ t('components.top-bar.slide_over.footer.copyright') }} &copy; {{ (new Date()).getFullYear() }}
+              <a href="https://www.github.com/GitzJoey">{{ t('components.top-bar.slide_over.footer.copyright_name') }}</a>
+              &nbsp;&amp;&nbsp;
+              <a href="https://github.com/GitzJoey/DCSLab/graphs/contributors">{{
+                t('components.top-bar.slide_over.footer.contributors') }}</a>.
+            </strong>
+            {{ t('components.top-bar.slide_over.footer.rights') }} <br /> {{
+              t('components.top-bar.slide_over.footer.powered_by') }}
           </Slideover.Footer>
         </Slideover.Panel>
       </Slideover>
@@ -127,8 +135,8 @@ onMounted(async () => {
           <Lucide icon="Globe" />
         </Menu.Button>
         <Menu.Items class="w-48 h-24 overflow-y-auto" placement="bottom-end">
-          <Menu.Item><span class="text-primary">English</span></Menu.Item>
-          <Menu.Item><span class="text-primary">Indonesia</span></Menu.Item>
+          <Menu.Item><span class="text-primary">{{ t('components.top-bar.language.english') }}</span></Menu.Item>
+          <Menu.Item><span class="text-primary">{{ t('components.top-bar.language.indonesia') }}</span></Menu.Item>
         </Menu.Items>
       </Menu>
 
@@ -140,7 +148,7 @@ onMounted(async () => {
         <Menu.Items
           class="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
           <Menu.Header class="font-normal">
-            <div class="font-medium">{{ userContext.profile.full_name }}</div>
+            <div class="font-medium">{{ fullName }}</div>
             <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">
               {{ userContext.email }}
             </div>
