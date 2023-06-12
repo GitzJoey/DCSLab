@@ -17,6 +17,8 @@ import { User } from "../../types/models/User";
 import { UserRequest } from "../../types/requests/UserRequests";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
+import { Resource } from "../../types/resources/Resource";
+import { DataListData } from "../../base-components/DataList/DataList.vue";
 //#endregion
 
 //#region Declarations
@@ -67,7 +69,7 @@ const current_page = ref(1)
 
 //#region onMounted
 onMounted(async () => {
-  await getUser({ page: 1 });
+  await getUsers('', true, true, 1, 10);
 });
 
 //#endregion
@@ -84,20 +86,22 @@ const toggleDetail = (idx: number) => {
   }
 };
 
-const getUser = async (args: { page?: number, per_page?: number, search?: string }) => {
-  if (args.page === undefined) args.page = 1
-  if (args.per_page === undefined) args.per_page = 10;
-  if (args.search === undefined) args.search = "";
-
-  let result: ServiceResponse<Collection<User[]> | null> = await userServices.readAny(args);
+const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(
+    search,
+    refresh,
+    paginate,
+    page,
+    per_page
+  );
 
   if (result.success && result.data) {
-    userLists.value = result.data;
+    userLists.value = result.data as Collection<User[]>;
   }
 }
 
-const onDataListChange = ({ page, per_page, search }: { page: number, per_page: number, search: string }) => {
-  getUser({ page, per_page, search });
+const onDataListChange = (data: DataListData) => {
+  console.log(data);
 }
 //#endregion
 
@@ -124,7 +128,7 @@ const onDataListChange = ({ page, per_page, search }: { page: number, per_page: 
 
         <AlertPlaceholder />
         <DataList :title="t('views.user.table.title')" :enable-search="true" @dataListChange="onDataListChange">
-          <template #table>
+          <template #content>
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
                 <Table.Tr>

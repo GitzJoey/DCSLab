@@ -20,10 +20,21 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async readAny(args: { page?: number, per_page?: number, search?: string }): Promise<ServiceResponse<Collection<User[]> | null>> {
+    public async readAny(search: string, refresh: boolean, paginate: boolean, page?: number, per_page?: number): Promise<ServiceResponse<Collection<User[]> | Resource<User[]> | null>> {
         try {
-            const url = route('api.get.db.admin.users.read_any', args, false, this.ziggyRoute);
+            const queryParams: Record<string, string | number | boolean> = {};
+            queryParams['search'] = search;
+            queryParams['refresh'] = refresh;
+            queryParams['paginate'] = paginate;
+            if (page) queryParams['page'] = page;
+            if (per_page) queryParams['per_page'] = per_page;
+
+            const url = route('api.get.db.admin.users.read_any', {
+                _query: queryParams
+            }, false, this.ziggyRoute);
+
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
             const response: AxiosResponse<Collection<User[]>> = await axios.get(url);
 
             return {
@@ -38,9 +49,12 @@ export default class UserService {
         }
     }
 
-    public async read(): Promise<ServiceResponse<User | null>> {
+    public async read(ulid: string): Promise<ServiceResponse<User | null>> {
         try {
-            const url = route('api.get.db.admin.users.read', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.admin.users.read', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Resource<User>> = await axios.get(url);
