@@ -101,7 +101,8 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
-const onDataListChange = (data: DataListData) => {
+const onDataListChanged = (data: DataListData) => {
+  alert('a');
   console.log(data);
 }
 
@@ -138,7 +139,7 @@ const deleteSelected = (itemIdx: number) => {
       <div v-if="mode == ViewMode.LIST">
         <AlertPlaceholder />
         <DataList :title="t('views.user.table.title')" :enable-search="true" :can-print="true" :can-export="true"
-          :data="userLists ? userLists.meta : null" @dataListChange="onDataListChange">
+          :data="userLists ? userLists.meta : null" @dataListChanged="onDataListChanged">
           <template #content>
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">

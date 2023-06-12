@@ -44,7 +44,11 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["dataListChanged", "print", "export"]);
+const emits = defineEmits<{
+  (e: 'dataListChanged', data: DataListData): void,
+  (e: 'print'): void,
+  (e: 'export', exportType: string): void
+}>();
 
 const visible = toRef(props, "visible");
 const canPrint = toRef(props, "canPrint");
@@ -105,8 +109,28 @@ const generatePaginationArray = (currentPage: number, totalPages: number): numbe
   return paginationArray;
 };
 
+const createDataEmittedPayload = (): DataListData => {
+  let result: DataListData = {
+    search: {
+      text: '',
+    },
+    pagination: {
+      current_page: 1,
+      from: 1,
+      last_page: 0,
+      path: '',
+      per_page: 10,
+      to: 0,
+      total: 0,
+    }
+  };
+
+  return result;
+}
+
 const refreshButtonClicked = () => {
-  emits('dataListChanged', data);
+  let dataEmitted = createDataEmittedPayload();
+  emits('dataListChanged', dataEmitted);
 }
 
 const printButtonClicked = () => {
@@ -118,27 +142,33 @@ const exportButtonClicked = (type: string) => {
 }
 
 const paginationFirstButtonClicked = () => {
-  emits('dataListChanged', data);
+  let dataEmitted = createDataEmittedPayload();
+  emits('dataListChanged', dataEmitted);
 }
 
 const paginationPreviousButtonClicked = () => {
-  emits('dataListChanged', data);
+  let dataEmitted = createDataEmittedPayload();
+  emits('dataListChanged', dataEmitted);
 }
 
 const paginationNumberButtonClicked = (n: number) => {
-  emits('dataListChanged', data);
+  let dataEmitted = createDataEmittedPayload();
+  emits('dataListChanged', dataEmitted);
 }
 
 const paginationNextButtonClicked = () => {
-  emits('dataListChanged', data);
+  let dataEmitted = createDataEmittedPayload();
+  emits('dataListChanged', dataEmitted);
 }
 
 const paginationLastButtonClicked = () => {
-  emits('dataListChanged', data);
+  let dataEmitted = createDataEmittedPayload();
+  emits('dataListChanged', dataEmitted);
 }
 
 const pageSizeChanged = () => {
-  emits('dataListChanged', data);
+  let dataEmitted = createDataEmittedPayload();
+  emits('dataListChanged', dataEmitted);
 }
 </script>
 
@@ -150,27 +180,7 @@ const pageSizeChanged = () => {
           <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..." />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
-        <Menu>
-          <Menu.Button v-if="canPrint" :as="Button" class="px-2">
-            <span class="flex items-center justify-center w-5 h-5">
-              <Lucide icon="Printer" class="w-4 h-4" />
-            </span>
-          </Menu.Button>
-          <Menu.Items v-if="canPrint || canExport" class="w-40" placement="bottom-end">
-            <Menu.Item v-if="canPrint">
-              <Lucide icon="Printer" class="w-4 h-4 mr-2" @click="printButtonClicked" />
-              {{ t("components.data-list.print") }}
-            </Menu.Item>
-            <Menu.Item v-if="canExport">
-              <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('XLS')" />
-              {{ t("components.data-list.export_to_excel") }}
-            </Menu.Item>
-            <Menu.Item v-if="canExport">
-              <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('PDF')" />
-              {{ t("components.data-list.export_to_pdf") }}
-            </Menu.Item>
-          </Menu.Items>
-        </Menu>
+
         <Button @click="refreshButtonClicked">
           <Lucide icon="RefreshCw" class="w-4 h-4" />
         </Button>
@@ -179,35 +189,66 @@ const pageSizeChanged = () => {
     <div class="overflow-x-auto mb-4">
       <slot name="content"></slot>
     </div>
-    <div class="flex flex-wrap intro-y sm:flex-row sm:flex-nowrap">
-      <Pagination class="w-full sm:w-auto sm:mr-auto">
-        <Pagination.Link @click="paginationFirstButtonClicked">
-          <Lucide icon="ChevronsLeft" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link @click="paginationPreviousButtonClicked">
-          <Lucide icon="ChevronLeft" class="w-4 h-4" />
-        </Pagination.Link>
-        <template v-for="n in pages" :key="n">
-          <Pagination.Link v-if="n > 0" @click="paginationNumberButtonClicked(n)">
-            {{ n }}
+    <div class="flex flex-wrap justify-center intro-y sm:flex-row sm:flex-nowrap">
+      <div class="border-b">
+        <Pagination class="w-full sm:w-auto sm:mr-auto">
+          <Pagination.Link @click="paginationFirstButtonClicked">
+            <Lucide icon="ChevronsLeft" class="w-4 h-4" />
           </Pagination.Link>
-          <Pagination.Link v-else>
-            {{ '...' }}
+          <Pagination.Link @click="paginationPreviousButtonClicked">
+            <Lucide icon="ChevronLeft" class="w-4 h-4" />
           </Pagination.Link>
-        </template>
-        <Pagination.Link @click="paginationNextButtonClicked">
-          <Lucide icon="ChevronRight" class="w-4 h-4" />
-        </Pagination.Link>
-        <Pagination.Link @click="paginationLastButtonClicked">
-          <Lucide icon="ChevronsRight" class="w-4 h-4" />
-        </Pagination.Link>
-      </Pagination>
-      <FormSelect v-model="perPage" class="w-20 mt-3 sm:mt-0" @change="pageSizeChanged">
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-      </FormSelect>
+          <template v-for="n in pages" :key="n">
+            <Pagination.Link v-if="n > 0" @click="paginationNumberButtonClicked(n)">
+              {{ n }}
+            </Pagination.Link>
+            <Pagination.Link v-else>
+              {{ '...' }}
+            </Pagination.Link>
+          </template>
+          <Pagination.Link @click="paginationNextButtonClicked">
+            <Lucide icon="ChevronRight" class="w-4 h-4" />
+          </Pagination.Link>
+          <Pagination.Link @click="paginationLastButtonClicked">
+            <Lucide icon="ChevronsRight" class="w-4 h-4" />
+          </Pagination.Link>
+        </Pagination>
+      </div>
+    </div>
+    <div class="flex">
+      <div class="w-1/2 flex justify-start">
+        <div>
+          <Menu>
+            <Menu.Button v-if="canPrint" :as="Button" class="px-2">
+              <span class="flex items-center justify-center w-5 h-5">
+                <Lucide icon="Printer" class="w-4 h-4" />
+              </span>
+            </Menu.Button>
+            <Menu.Items v-if="canPrint || canExport" class="w-40" placement="right-start">
+              <Menu.Item v-if="canPrint">
+                <Lucide icon="Printer" class="w-4 h-4 mr-2" @click="printButtonClicked" />
+                {{ t("components.data-list.print") }}
+              </Menu.Item>
+              <Menu.Item v-if="canExport">
+                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('XLS')" />
+                {{ t("components.data-list.export_to_excel") }}
+              </Menu.Item>
+              <Menu.Item v-if="canExport">
+                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('PDF')" />
+                {{ t("components.data-list.export_to_pdf") }}
+              </Menu.Item>
+            </Menu.Items>
+          </Menu>
+        </div>
+      </div>
+      <div class="w-1/2 flex justify-end">
+        <FormSelect v-model="perPage" class="w-20 mt-3 sm:mt-0" @change="pageSizeChanged">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </FormSelect>
+      </div>
     </div>
   </div>
 </template>

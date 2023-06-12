@@ -1,7 +1,6 @@
 {
-    "print": "",
-    "export_to_excel": "",
-    "export_to_pdf": "",
-    "data_not_found" : "Data Tidak Ditemukan"
-
+    "print": "Print",
+    "export_to_excel": "Export To Excel",
+    "export_to_pdf": "Export To PDF",
+    "data_not_found": "Data Tidak Ditemukan"
 }
