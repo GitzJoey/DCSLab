@@ -19,6 +19,7 @@ import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { DataListData } from "../../base-components/DataList/DataList.vue";
+import { Dialog } from "../../base-components/Headless";
 //#endregion
 
 //#region Declarations
@@ -69,7 +70,7 @@ const current_page = ref(1)
 
 //#region onMounted
 onMounted(async () => {
-  await getUsers('katongl', true, true, 1, 10);
+  await getUsers('', true, true, 1, 10);
 });
 
 //#endregion
@@ -109,6 +110,7 @@ const editSelected = (itemIdx: number) => {
 }
 
 const deleteSelected = (itemIdx: number) => {
+  deleteModalShow.value = true;
   console.log(itemIdx);
 }
 //#endregion
@@ -221,6 +223,28 @@ const deleteSelected = (itemIdx: number) => {
                 </template>
               </Table.Tbody>
             </Table>
+            <Dialog :open="deleteModalShow" @close="() => { deleteModalShow = false; }">
+              <Dialog.Panel>
+                <div class="p-5 text-center">
+                  <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
+                  <div class="mt-5 text-3xl">{{ t('components.delete-modal.title') }}</div>
+                  <div class="mt-2 text-slate-500">
+                    {{ t('components.delete-modal.desc_1') }}
+                    <br />
+                    {{ t('components.delete-modal.desc_2') }}
+                  </div>
+                </div>
+                <div class="px-5 pb-8 text-center">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
+                    @click="() => { deleteModalShow = false; }">
+                    {{ t('components.buttons.cancel') }}
+                  </Button>
+                  <Button type="button" variant="danger" class="w-24">
+                    {{ t('components.buttons.delete') }}
+                  </Button>
+                </div>
+              </Dialog.Panel>
+            </Dialog>
           </template>
         </DataList>
       </div>
