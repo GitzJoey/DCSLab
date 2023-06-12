@@ -611,6 +611,8 @@ class ProductAPIReadTest extends APITestCase
 
     public function test_product_api_call_get_all_active_product_expect_found_active_product()
     {
+        // $this->markTestSkipped('$api->assertJsonCount hasilnya beda');
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(
@@ -665,11 +667,12 @@ class ProductAPIReadTest extends APITestCase
 
         $api->assertSuccessful();
 
-        $countActiveProducts = $company->products()->where('status', '=', RecordStatus::ACTIVE->value)->count();
-        $api->assertJsonCount($countActiveProducts, $key = null);
-
         $resultArr = json_decode($api->getContent(), true);
-        foreach ($resultArr as $result) {
+
+        $countActiveProducts = $company->products()->where('status', '=', RecordStatus::ACTIVE->value)->count();
+        $this->assertTrue(count($resultArr['data']) == $countActiveProducts);
+
+        foreach ($resultArr['data'] as $result) {
             $this->assertTrue($result['status'] == RecordStatus::ACTIVE->name);
         }
     }
