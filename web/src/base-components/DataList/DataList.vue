@@ -7,19 +7,21 @@ import Lucide from "../../base-components/Lucide";
 import Pagination from "../../base-components/Pagination";
 import { useI18n } from "vue-i18n";
 
+export interface DataListPaginationData {
+  current_page: number,
+  from: number | null,
+  last_page: number,
+  path: string,
+  per_page: number,
+  to: number | null,
+  total: number,
+}
+
 export interface DataListData {
   search: {
     text: string,
   },
-  pagination: {
-    current_page: number,
-    from: number,
-    last_page: number,
-    path: string,
-    per_page: number,
-    to: number,
-    total: number,
-  }
+  pagination: DataListPaginationData
 }
 
 const { t } = useI18n();
@@ -30,19 +32,14 @@ const props = defineProps({
   canExport: { type: Boolean, default: false },
   enableSearch: { type: Boolean, default: false },
   data: {
-    type: Object as () => DataListData, default: () => ({
-      search: {
-        text: '',
-      },
-      pagination: {
-        current_page: 1,
-        from: 1,
-        last_page: 0,
-        path: '',
-        per_page: 10,
-        to: 0,
-        total: 0,
-      }
+    type: Object as () => DataListPaginationData | null, default: () => ({
+      current_page: 1,
+      from: 1,
+      last_page: 0,
+      path: '',
+      per_page: 10,
+      to: 0,
+      total: 0,
     })
   },
 });
@@ -56,9 +53,13 @@ const enableSearch = toRef(props, "enableSearch");
 const data = toRef(props, "data");
 
 const search = ref<string>('');
+const perPage = computed(() => {
+  return data.value != null ? data.value.per_page : 10;
+});
 
 const pages = computed(() => {
-  return generatePaginationArray(data.value.pagination.current_page, data.value.pagination.total);
+  if (data.value == null) return [];
+  return generatePaginationArray(data.value.current_page, data.value.total);
 });
 
 const generatePaginationArray = (currentPage: number, totalPages: number): number[] => {
@@ -149,9 +150,6 @@ const pageSizeChanged = () => {
           <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..." />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
-        <Button @click="refreshButtonClicked">
-          <Lucide icon="RefreshCw" class="w-4 h-4" />
-        </Button>
         <Menu>
           <Menu.Button v-if="canPrint" :as="Button" class="px-2">
             <span class="flex items-center justify-center w-5 h-5">
@@ -173,6 +171,9 @@ const pageSizeChanged = () => {
             </Menu.Item>
           </Menu.Items>
         </Menu>
+        <Button @click="refreshButtonClicked">
+          <Lucide icon="RefreshCw" class="w-4 h-4" />
+        </Button>
       </div>
     </div>
     <div class="overflow-x-auto mb-4">
@@ -201,7 +202,7 @@ const pageSizeChanged = () => {
           <Lucide icon="ChevronsRight" class="w-4 h-4" />
         </Pagination.Link>
       </Pagination>
-      <FormSelect v-model="data.pagination.per_page" class="w-20 mt-3 sm:mt-0" @change="pageSizeChanged">
+      <FormSelect v-model="perPage" class="w-20 mt-3 sm:mt-0" @change="pageSizeChanged">
         <option value="10">10</option>
         <option value="25">25</option>
         <option value="50">50</option>

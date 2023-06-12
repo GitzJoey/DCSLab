@@ -47,18 +47,18 @@ const userLists = ref<Collection<User[]> | null>({
   data: [],
   meta: {
     current_page: 0,
-    from: 0,
+    from: null,
     last_page: 0,
     path: '',
     per_page: 0,
-    to: 0,
+    to: null,
     total: 0,
   },
   links: {
     first: '',
     last: '',
     prev: null,
-    next: '',
+    next: null,
   }
 });
 const rolesDDL = ref([]);
@@ -69,7 +69,7 @@ const current_page = ref(1)
 
 //#region onMounted
 onMounted(async () => {
-  await getUsers('', true, true, 1, 10);
+  await getUsers('katongl', true, true, 1, 10);
 });
 
 //#endregion
@@ -103,6 +103,14 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
 const onDataListChange = (data: DataListData) => {
   console.log(data);
 }
+
+const editSelected = (itemIdx: number) => {
+  console.log(itemIdx);
+}
+
+const deleteSelected = (itemIdx: number) => {
+  console.log(itemIdx);
+}
 //#endregion
 
 //#region Watcher
@@ -112,22 +120,23 @@ const onDataListChange = (data: DataListData) => {
 <template>
   <div class="mt-8">
     <LoadingOverlay :visible="loading">
-      <div v-if="mode == ViewMode.LIST">
-        <TitleLayout>
-          <template #title>{{ t("views.user.page_title") }}</template>
-          <template #optional>
-            <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-              <Button as="a" href="#" variant="primary" class="shadow-md">
-                <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
-                  t("components.buttons.create_new")
-                }}
-              </Button>
-            </div>
-          </template>
-        </TitleLayout>
+      <TitleLayout>
+        <template #title>{{ t("views.user.page_title") }}</template>
+        <template #optional>
+          <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
+            <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md">
+              <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
+                t("components.buttons.create_new")
+              }}
+            </Button>
+          </div>
+        </template>
+      </TitleLayout>
 
+      <div v-if="mode == ViewMode.LIST">
         <AlertPlaceholder />
-        <DataList :title="t('views.user.table.title')" :enable-search="true" @dataListChange="onDataListChange">
+        <DataList :title="t('views.user.table.title')" :enable-search="true" :can-print="true" :can-export="true"
+          :data="userLists ? userLists.meta : null" @dataListChange="onDataListChange">
           <template #content>
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
@@ -148,7 +157,14 @@ const onDataListChange = (data: DataListData) => {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody v-if="userLists !== null">
-                <template v-for="(item, itemIdx) in userLists.data" :key="item.ulid">
+                <template v-if="userLists.data.length == 0">
+                  <Table.Tr class="intro-x">
+                    <Table.Td colspan="5">
+                      <div class="flex justify-center italic">{{ t('components.data-list.data_not_found') }}</div>
+                    </Table.Td>
+                  </Table.Tr>
+                </template>
+                <template v-for="( item, itemIdx ) in userLists.data" :key="item.ulid">
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td>
@@ -157,7 +173,7 @@ const onDataListChange = (data: DataListData) => {
                       </a>
                     </Table.Td>
                     <Table.Td>
-                      <span v-for="r in item.roles" :key="r.id">{{ r.display_name }} </span>
+                      <span v-for=" r  in  item.roles " :key="r.id">{{ r.display_name }} </span>
                     </Table.Td>
                     <Table.Td>
                       <Lucide v-if="item.profile.status === 'ACTIVE'" icon="CheckCircle" />
@@ -165,21 +181,41 @@ const onDataListChange = (data: DataListData) => {
                     </Table.Td>
                     <Table.Td>
                       <div class="flex justify-end gap-1">
-                        <Button variant="outline-secondary" @click="expandDetail = itemIdx">
+                        <Button variant="outline-secondary" @click="toggleDetail(itemIdx)">
                           <Lucide icon="Info" class="w-4 h-4" />
                         </Button>
-                        <Button variant="outline-secondary">
+                        <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                           <Lucide icon="CheckSquare" class="w-4 h-4" />
                         </Button>
-                        <Button variant="outline-secondary">
+                        <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                           <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                         </Button>
                       </div>
                     </Table.Td>
                   </Table.Tr>
                   <Table.Tr :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
-                    <Table.Td>
-                      testing
+                    <Table.Td colspan="5">
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.name') }}</div>
+                        <div class="flex-1">{{ item.name }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.email') }}</div>
+                        <div class="flex-1">{{ item.email }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}</div>
+                        <div class="flex-1">{{ '' }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
+                        <div class="flex-1">
+                          <span v-if="item.profile.status === 'ACTIVE'">{{
+                            t('components.dropdown.values.statusDDL.active') }}</span>
+                          <span v-if="item.profile.status === 'INACTIVE'">{{
+                            t('components.dropdown.values.statusDDL.inactive') }}</span>
+                        </div>
+                      </div>
                     </Table.Td>
                   </Table.Tr>
                 </template>
