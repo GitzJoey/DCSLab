@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CustomerActions
 {
@@ -211,6 +212,7 @@ class CustomerActions
             foreach ($customerAddressesArr as $customer_address) {
                 array_push($ca, [
                     'id' => $customer_address['id'],
+                    'ulid' => $customer_address['id'] == null ? Str::ulid()->generate() : CustomerAddress::find($customer_address['id'])->ulid,
                     'company_id' => $customer->company_id,
                     'customer_id' => $customer->id,
                     'address' => $customer_address['address'],
