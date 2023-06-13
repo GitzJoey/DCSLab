@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -9,6 +9,7 @@ import {
   FormSelect,
 } from "../../base-components/Form";
 import { useUserContextStore } from "../../stores/user-context";
+import TwoLayoutColumns from "../../base-components/TwoLayoutColumns";
 //#endregion
 
 //#region Declarations
@@ -21,6 +22,24 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#endregion
 
 //#region Data - UI
+const tabs = ref([
+  {
+    title: "User Profile",
+    active: true,
+  },
+  {
+    title: "Account Settings",
+    active: false,
+  },
+  {
+    title: "Change Password",
+    active: false,
+  },
+  {
+    title: "User Setting",
+    active: false,
+  },
+]);
 //#endregion
 
 //#region Data - Views
@@ -32,6 +51,12 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#region Computed
 //#endregion
 
+// Region Method
+function handleExpandCard(index: number) {
+  tabs.value[index].active = !tabs.value[index].active;
+}
+// End Region Method
+
 //#region Watcher
 //#endregion
 </script>
@@ -40,31 +65,32 @@ const userContext = computed(() => userContextStore.getUserContext);
   <div class="flex items-center mt-8 intro-y">
     <h2 class="mr-auto text-xl font-medium">{{ t("views.profile.title") }}</h2>
   </div>
-  <div class="grid grid-cols-12 gap-6 mt-5">
-    <div class="col-span-12 intro-y p-5 box">
-      <div class="grid grid-cols-12">
-        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
-          <span class="text-lg">
-            {{ t("views.profile.field_groups.user_profile") }}
-          </span>
-        </div>
-        <div class="col-span-12 md:col-span-8 lg:col-span-8">
-          <div class="pb-4">
-            <FormLabel html-for="name">{{
-              t("views.profile.fields.name")
-            }}</FormLabel>
-            <FormInput
-              id="name"
-              v-model="userContext.name"
-              name="name"
-              type="text"
-              class="w-full"
-              :placeholder="t('views.profile.fields.name')"
-              readonly
-            />
-          </div>
-          <div class="pb-4">
-            <FormLabel html-for="email">{{
+  <TwoLayoutColumns :cards="tabs" @handleExpandCard="handleExpandCard">
+    <template #side-menu-title >
+      {{ userContext.name }}
+    </template>
+    <template #side-menu-link="linkProps" >  
+      {{ linkProps.link.title }}
+    </template>
+
+    <template #card-items-0 >
+          <div class="p-5">
+            <div class="pb-4">
+              <FormLabel htmlFor="name">
+                {{ t("views.profile.fields.name") }}
+              </FormLabel>
+              <FormInput 
+                id="name"
+                v-model="userContext.name"
+                name="name"
+                type="text"
+                class="w-full"
+                :placeholder="t('views.profile.fields.name')"
+                readonly
+              />
+            </div>
+            <div class="pb-4">
+            <FormLabel htmlFor="email">{{
               t("views.profile.fields.email")
             }}</FormLabel>
             <FormInput
@@ -76,17 +102,13 @@ const userContext = computed(() => userContextStore.getUserContext);
               :placeholder="t('views.profile.fields.email')"
               readonly
             />
+          </div>            
           </div>
-        </div>
-      </div>
-      <div class="grid grid-cols-12">
-        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
-          <span class="text-lg">{{
-            t("views.profile.field_groups.personal_information")
-          }}</span>
-        </div>
-        <div class="col-span-12 md:col-span-8 lg:col-span-8">
-          <div class="pb-4">
+    </template>
+
+    <template #card-items-1="cardProps" >
+          <div class="p-5">
+            <div class="pb-4">
             <VeeField
               v-slot="{ field }"
               name="first_name"
@@ -94,7 +116,7 @@ const userContext = computed(() => userContextStore.getUserContext);
               :label="t('views.profile.fields.first_name')"
             >
               <FormLabel
-                html-for="first_name"
+                htmlFor="first_name"
                 class="flex flex-col w-full sm:flex-row"
               >
                 {{ t("views.profile.fields.first_name") }}
@@ -110,8 +132,9 @@ const userContext = computed(() => userContextStore.getUserContext);
               />
             </VeeField>
           </div>
+
           <div class="pb-4">
-            <FormLabel html-for="last_name">{{
+            <FormLabel htmlFor="last_name">{{
               t("views.profile.fields.last_name")
             }}</FormLabel>
             <FormInput
@@ -123,8 +146,9 @@ const userContext = computed(() => userContextStore.getUserContext);
               :placeholder="t('views.profile.fields.last_name')"
             />
           </div>
+
           <div class="pb-4">
-            <FormLabel html-for="address">{{
+            <FormLabel htmlFor="address">{{
               t("views.profile.fields.address")
             }}</FormLabel>
             <FormTextarea
@@ -136,9 +160,10 @@ const userContext = computed(() => userContextStore.getUserContext);
               :placeholder="t('views.profile.fields.address')"
             />
           </div>
+          
           <div class="flex gap-2">
             <div class="pb-4 w-full">
-              <FormLabel html-for="city">{{
+              <FormLabel htmlFor="city">{{
                 t("views.profile.fields.city")
               }}</FormLabel>
               <FormInput
@@ -151,7 +176,7 @@ const userContext = computed(() => userContextStore.getUserContext);
               />
             </div>
             <div class="pb-4">
-              <FormLabel html-for="postal_code">{{
+              <FormLabel htmlFor="postal_code">{{
                 t("views.profile.fields.postal_code")
               }}</FormLabel>
               <FormInput
@@ -164,8 +189,9 @@ const userContext = computed(() => userContextStore.getUserContext);
               />
             </div>
           </div>
+
           <div class="pb-4">
-            <FormLabel html-for="country">{{
+            <FormLabel htmlFor="country">{{
               t("views.profile.fields.country")
             }}</FormLabel>
             <FormSelect
@@ -179,8 +205,9 @@ const userContext = computed(() => userContextStore.getUserContext);
               <option>Indonesia</option>
             </FormSelect>
           </div>
+
           <div class="pb-4">
-            <FormLabel html-for="tax_id">{{
+            <FormLabel htmlFor="tax_id">{{
               t("views.profile.fields.tax_id")
             }}</FormLabel>
             <FormInput
@@ -192,8 +219,9 @@ const userContext = computed(() => userContextStore.getUserContext);
               :placeholder="t('views.profile.fields.tax_id')"
             />
           </div>
+
           <div class="pb-4">
-            <FormLabel html-for="ic_num">{{
+            <FormLabel htmlFor="ic_num">{{
               t("views.profile.fields.ic_num")
             }}</FormLabel>
             <FormInput
@@ -206,7 +234,7 @@ const userContext = computed(() => userContextStore.getUserContext);
             />
           </div>
           <div class="pb-4">
-            <FormLabel html-for="remarks">{{
+            <FormLabel htmlFor="remarks">{{
               t("views.profile.fields.remarks")
             }}</FormLabel>
             <FormTextarea
@@ -218,15 +246,29 @@ const userContext = computed(() => userContextStore.getUserContext);
               :placeholder="t('views.profile.fields.remarks')"
             />
           </div>
-        </div>
-      </div>
-      <hr class="py-2" />
-      <div class="grid grid-cols-12">
-        <div class="hidden block md:block lg:block md:col-span-4 lg:col-span-4">
-          {{ t("views.profile.field_groups.account_settings") }}
-        </div>
-        <div class="col-span-12 md:col-span-8 lg:col-span-8"></div>
-      </div>
-    </div>
-  </div>
+
+          </div>
+    </template>
+
+    <template #card-items-2="cardProps" >
+      <div
+            class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
+          >
+            <h2 class="font-medium text-base mr-auto">{{ cardProps.card.title }}</h2>
+          </div>
+          <div class="p-5">
+          </div>
+    </template>
+
+    <template #card-items-3="cardProps" >
+      <div  
+            class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400"
+          >
+            <h2 class="font-medium text-base mr-auto">{{ cardProps.card.title }}</h2>
+          </div>
+          <div class="p-5">
+          </div>
+    </template>
+
+  </TwoLayoutColumns>
 </template>
