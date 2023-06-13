@@ -8,7 +8,6 @@
 /src/base-components/Form/InputGroup/**
 /src/base-components/Form/FormHelp.vue
 /src/base-components/Form/FormInline.vue
-/src/base-components/Form/FormInput.vue
 /src/base-components/Form/FormLabel.vue
 /src/base-components/Form/FormSelect.vue
 /src/base-components/Form/FormTextarea.vue
