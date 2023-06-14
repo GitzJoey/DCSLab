@@ -189,7 +189,7 @@ const deleteSelected = (itemUlid: string) => {
                         <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                           <Lucide icon="CheckSquare" class="w-4 h-4" />
                         </Button>
-                        <Button variant="outline-secondary" @click="deleteSelected(item.ulid)">
+                        <Button variant="outline-secondary" disabled @click="deleteSelected(item.ulid)">
                           <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                         </Button>
                       </div>
