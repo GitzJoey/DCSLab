@@ -214,7 +214,7 @@ class ProductGroupActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;

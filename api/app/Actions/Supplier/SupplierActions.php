@@ -12,7 +12,6 @@ use App\Models\SupplierProduct;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -52,8 +51,7 @@ class SupplierActions
             $supplier->save();
 
             if (! empty($picArr)) {
-                $container = Container::getInstance();
-                $userActions = $container->make(UserActions::class);
+                $userActions = app(UserActions::class);
 
                 $userArr = [
                     'name' => $picArr['name'],
@@ -201,8 +199,7 @@ class SupplierActions
             ]);
 
             if (! empty($picArr)) {
-                $container = Container::getInstance();
-                $userActions = $container->make(UserActions::class);
+                $userActions = app(UserActions::class);
 
                 $userArr = [
                     'name' => $picArr['name'],
@@ -284,7 +281,7 @@ class SupplierActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
