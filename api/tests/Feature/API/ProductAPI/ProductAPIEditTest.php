@@ -217,16 +217,6 @@ class ProductAPIEditTest extends APITestCase
             array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
-        $productUnit = ProductUnit::factory()->make();
-        array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_ulid, '');
-        array_push($arr_product_unit_code, $productUnit->code);
-        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
-        array_push($arr_product_unit_is_base, false);
-        array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, $productUnit->remarks);
-
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
             'product_group_id' => Hashids::encode(ProductGroup::max('id') + 1),
@@ -316,16 +306,6 @@ class ProductAPIEditTest extends APITestCase
             array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
-        $productUnit = ProductUnit::factory()->make();
-        array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_ulid, '');
-        array_push($arr_product_unit_code, $productUnit->code);
-        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
-        array_push($arr_product_unit_is_base, false);
-        array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, $productUnit->remarks);
-
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
@@ -408,22 +388,22 @@ class ProductAPIEditTest extends APITestCase
             array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
             array_push($arr_product_unit_ulid, $productUnit->ulid);
             array_push($arr_product_unit_code, $productUnit->code);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id + 1));
+            array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
             array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
             array_push($arr_product_unit_is_base, $productUnit->is_base);
             array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
             array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
-        $productUnit = ProductUnit::factory()->make();
-        array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_ulid, '');
-        array_push($arr_product_unit_code, $productUnit->code);
-        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
-        array_push($arr_product_unit_is_base, false);
-        array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, $productUnit->remarks);
+        $lastRow = count($arr_product_unit_id) - 1;
+        $arr_product_unit_id[$lastRow] = '';
+        $arr_product_unit_ulid[$lastRow] = '';
+        $arr_product_unit_code[$lastRow] = ProductUnit::factory()->make()->code;
+        $arr_product_unit_unit_id[$lastRow] = Hashids::encode(Unit::max('id') + 1);
+        $arr_product_unit_conversion_value[$lastRow] = $productUnits[count($productUnits) - 1]['conversion_value'] * 2;
+        $arr_product_unit_is_base[$lastRow] = false;
+        $arr_product_unit_is_primary_unit[$lastRow] = false;
+        $arr_product_unit_remarks[$lastRow] = ProductUnit::factory()->make()->remarks;
 
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
