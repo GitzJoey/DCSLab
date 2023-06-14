@@ -37,6 +37,7 @@ class CustomerAPICreateTest extends APITestCase
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
@@ -49,6 +50,7 @@ class CustomerAPICreateTest extends APITestCase
             $customerAddress = CustomerAddress::factory()->make();
 
             array_push($arr_customer_address_id, '');
+            array_push($arr_customer_address_ulid, '');
             array_push($arr_customer_address_address, $customerAddress->address);
             array_push($arr_customer_address_city, $customerAddress->city);
             array_push($arr_customer_address_contact, $customerAddress->contact);
@@ -60,6 +62,7 @@ class CustomerAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
             'customer_group_id' => Hashids::encode($customerGroup->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -121,6 +124,7 @@ class CustomerAPICreateTest extends APITestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
@@ -130,6 +134,7 @@ class CustomerAPICreateTest extends APITestCase
         for ($i = 0; $i < 3; $i++) {
             $customerAddress = CustomerAddress::factory()->make();
             array_push($arr_customer_address_id, '');
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
             array_push($arr_customer_address_address, $customerAddress->address);
             array_push($arr_customer_address_city, $customerAddress->city);
             array_push($arr_customer_address_contact, $customerAddress->contact);
@@ -141,6 +146,7 @@ class CustomerAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
             'customer_group_id' => Hashids::encode(CustomerGroup::max('id') + 1),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -187,6 +193,7 @@ class CustomerAPICreateTest extends APITestCase
         }
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
@@ -196,6 +203,7 @@ class CustomerAPICreateTest extends APITestCase
         for ($i = 0; $i < 3; $i++) {
             $customerAddress = CustomerAddress::factory()->make();
             array_push($arr_customer_address_id, '');
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
             array_push($arr_customer_address_address, $customerAddress->address);
             array_push($arr_customer_address_city, $customerAddress->city);
             array_push($arr_customer_address_contact, $customerAddress->contact);
@@ -209,6 +217,7 @@ class CustomerAPICreateTest extends APITestCase
             'code' => $company->customers()->inRandomOrder()->first()->code,
             'customer_group_id' => Hashids::encode(CustomerGroup::where('company_id', '=', $company->id)->inRandomOrder()->first()->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -261,6 +270,7 @@ class CustomerAPICreateTest extends APITestCase
         }
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
@@ -273,6 +283,7 @@ class CustomerAPICreateTest extends APITestCase
             $customerAddress = CustomerAddress::factory()->make();
 
             array_push($arr_customer_address_id, '');
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
             array_push($arr_customer_address_address, $customerAddress->address);
             array_push($arr_customer_address_city, $customerAddress->city);
             array_push($arr_customer_address_contact, $customerAddress->contact);
@@ -286,6 +297,7 @@ class CustomerAPICreateTest extends APITestCase
             'code' => $company_2->customers()->inRandomOrder()->first()->code,
             'customer_group_id' => Hashids::encode($company_1->customerGroups()->inRandomOrder()->first()->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
