@@ -12,7 +12,6 @@ use App\Models\Role;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -70,8 +69,7 @@ class CustomerActions
             $customer->customerAddresses()->saveMany($ca);
 
             if (! empty($picArr)) {
-                $container = Container::getInstance();
-                $userActions = $container->make(UserActions::class);
+                $userActions = app(UserActions::class);
 
                 $userArr = [
                     'name' => $picArr['name'],
@@ -253,8 +251,7 @@ class CustomerActions
             );
 
             if (! empty($picArr)) {
-                $container = Container::getInstance();
-                $userActions = $container->make(UserActions::class);
+                $userActions = app(UserActions::class);
 
                 $userArr = [
                     'name' => $picArr['name'],
@@ -319,7 +316,7 @@ class CustomerActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;

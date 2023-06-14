@@ -58,7 +58,7 @@ class BranchActions
             $branch->status = $status;
             $branch->save();
 
-            $coaActions = new ChartOfAccountActions();
+            $coaActions = app(ChartOfAccountActions::class);
             if ($branch->company->chartOfAccounts()->count() == 0) {
                 $coaActions->createDefaultAccountPerCompany($branch->company_id);
             }
@@ -278,7 +278,7 @@ class BranchActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;

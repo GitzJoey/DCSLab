@@ -56,7 +56,7 @@ class CompanyActions
 
             $usr->companies()->attach([$company->id]);
 
-            $coaAction = new ChartOfAccountActions();
+            $coaAction = app(ChartOfAccountActions::class);
             $coaAction->createDefaultAccountPerCompany($company->id);
 
             DB::commit();
@@ -296,7 +296,7 @@ class CompanyActions
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;

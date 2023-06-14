@@ -304,7 +304,7 @@ class ProductActions
 
     public function generateUniqueCodeForProduct(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
@@ -312,7 +312,7 @@ class ProductActions
 
     public function generateUniqueCodeForProductUnits(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;

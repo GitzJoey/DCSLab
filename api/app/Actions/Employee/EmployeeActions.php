@@ -40,7 +40,7 @@ class EmployeeActions
             $rolesArr = [];
             array_push($rolesArr, Role::where('name', '=', UserRoles::POS_EMPLOYEE->value)->first()->id);
 
-            $userActions = new UserActions();
+            $userActions = app(UserActions::class);
 
             $user = $userActions->create(
                 $userArr,
@@ -169,7 +169,7 @@ class EmployeeActions
         $timer_start = microtime(true);
 
         try {
-            $userActions = new UserActions();
+            $userActions = app(UserActions::class);
             $userActions->update(
                 user: $employee->user,
                 userArr: $userArr,
@@ -244,7 +244,7 @@ class EmployeeActions
 
     public function generateUniqueCodeForProduct(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
