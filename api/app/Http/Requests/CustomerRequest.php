@@ -57,7 +57,7 @@ class CustomerRequest extends FormRequest
             'tax_id' => ['nullable', 'max:255'],
             'remarks' => ['nullable', 'max:255'],
             'arr_customer_address_id.*' => ['nullable'],
-            'arr_customer_address_ulid.*' => ['nullable'],
+            'arr_customer_address_ulid.*' => ['nullable', 'ulid'],
             'arr_customer_address_city.*' => ['nullable', 'max:255'],
             'arr_customer_address_contact.*' => ['nullable', 'max:255'],
             'arr_customer_address_remarks.*' => ['nullable', 'max:255'],
