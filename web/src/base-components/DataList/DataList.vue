@@ -7,7 +7,7 @@ import Lucide from "../../base-components/Lucide";
 import Pagination from "../../base-components/Pagination";
 import { useI18n } from "vue-i18n";
 
-export interface DataListPaginationData {
+export interface PaginationData {
   current_page: number,
   from: number | null,
   last_page: number,
@@ -17,11 +17,14 @@ export interface DataListPaginationData {
   total: number,
 }
 
-export interface DataListData {
+export interface DataListEmittedData {
   search: {
     text: string,
   },
-  pagination: DataListPaginationData
+  pagination: {
+    page: number,
+    per_page: number,
+  }
 }
 
 const { t } = useI18n();
@@ -31,8 +34,8 @@ const props = defineProps({
   canPrint: { type: Boolean, default: false },
   canExport: { type: Boolean, default: false },
   enableSearch: { type: Boolean, default: false },
-  data: {
-    type: Object as () => DataListPaginationData | null, default: () => ({
+  pagination: {
+    type: Object as () => PaginationData | null, default: () => ({
       current_page: 1,
       from: 1,
       last_page: 0,
@@ -45,7 +48,7 @@ const props = defineProps({
 });
 
 const emits = defineEmits<{
-  (e: 'dataListChanged', data: DataListData): void,
+  (e: 'dataListChanged', data: DataListEmittedData): void,
   (e: 'print'): void,
   (e: 'export', exportType: string): void
 }>();
@@ -54,16 +57,16 @@ const visible = toRef(props, "visible");
 const canPrint = toRef(props, "canPrint");
 const canExport = toRef(props, "canExport");
 const enableSearch = toRef(props, "enableSearch");
-const data = toRef(props, "data");
+const pagination = toRef(props, "pagination");
 
 const search = ref<string>('');
 const perPage = computed(() => {
-  return data.value != null ? data.value.per_page : 10;
+  return pagination.value != null ? pagination.value.per_page : 10;
 });
 
 const pages = computed(() => {
-  if (data.value == null) return [];
-  return generatePaginationArray(data.value.current_page, data.value.total);
+  if (pagination.value == null) return [];
+  return generatePaginationArray(pagination.value.current_page, pagination.value.total);
 });
 
 const generatePaginationArray = (currentPage: number, totalPages: number): number[] => {
@@ -109,28 +112,28 @@ const generatePaginationArray = (currentPage: number, totalPages: number): numbe
   return paginationArray;
 };
 
-const createDataEmittedPayload = (): DataListData => {
-  let result: DataListData = {
+const createDataEmittedPayload = (search: string, page: number, per_page: number): DataListEmittedData => {
+  let result: DataListEmittedData = {
     search: {
-      text: '',
+      text: search,
     },
     pagination: {
-      current_page: 1,
-      from: 1,
-      last_page: 0,
-      path: '',
-      per_page: 10,
-      to: 0,
-      total: 0,
+      page: page,
+      per_page: per_page,
     }
   };
 
   return result;
 }
 
+const searchTextboxChanged = () => {
+  if (pagination.value != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
+}
+
 const refreshButtonClicked = () => {
-  let dataEmitted = createDataEmittedPayload();
-  emits('dataListChanged', dataEmitted);
+  if (pagination.value != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
 }
 
 const printButtonClicked = () => {
@@ -142,33 +145,37 @@ const exportButtonClicked = (type: string) => {
 }
 
 const paginationFirstButtonClicked = () => {
-  let dataEmitted = createDataEmittedPayload();
-  emits('dataListChanged', dataEmitted);
+  if (pagination.value != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, 1, pagination.value.per_page));
 }
 
 const paginationPreviousButtonClicked = () => {
-  let dataEmitted = createDataEmittedPayload();
-  emits('dataListChanged', dataEmitted);
+  if (pagination.value != null) {
+    if (pagination.value.current_page > 1)
+      emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page - 1, pagination.value.per_page));
+  }
 }
 
 const paginationNumberButtonClicked = (n: number) => {
-  let dataEmitted = createDataEmittedPayload();
-  emits('dataListChanged', dataEmitted);
+  if (pagination.value != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, n, pagination.value.per_page));
 }
 
 const paginationNextButtonClicked = () => {
-  let dataEmitted = createDataEmittedPayload();
-  emits('dataListChanged', dataEmitted);
+  if (pagination.value != null) {
+    if (pagination.value.current_page != pagination.value.last_page)
+      emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page + 1, pagination.value.per_page));
+  }
 }
 
 const paginationLastButtonClicked = () => {
-  let dataEmitted = createDataEmittedPayload();
-  emits('dataListChanged', dataEmitted);
+  if (pagination.value != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.last_page, pagination.value.per_page));
 }
 
 const pageSizeChanged = () => {
-  let dataEmitted = createDataEmittedPayload();
-  emits('dataListChanged', dataEmitted);
+  if (pagination.value != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
 }
 </script>
 
@@ -177,7 +184,8 @@ const pageSizeChanged = () => {
     <div class="grid justify-items-end">
       <div class="flex flex-row gap-2">
         <div v-if="enableSearch" class="relative w-56 text-slate-500">
-          <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..." />
+          <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..."
+            @change="searchTextboxChanged" />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
 
@@ -190,7 +198,7 @@ const pageSizeChanged = () => {
       <slot name="content"></slot>
     </div>
     <div class="flex flex-wrap justify-center intro-y sm:flex-row sm:flex-nowrap">
-      <div class="border-b">
+      <div v-if="pages.length > 0" class="border-b">
         <Pagination class="w-full sm:w-auto sm:mr-auto">
           <Pagination.Link @click="paginationFirstButtonClicked">
             <Lucide icon="ChevronsLeft" class="w-4 h-4" />
@@ -199,7 +207,8 @@ const pageSizeChanged = () => {
             <Lucide icon="ChevronLeft" class="w-4 h-4" />
           </Pagination.Link>
           <template v-for="n in pages" :key="n">
-            <Pagination.Link v-if="n > 0" @click="paginationNumberButtonClicked(n)">
+            <Pagination.Link v-if="n > 0" :active="n == pagination?.current_page"
+              @click="paginationNumberButtonClicked(n)">
               {{ n }}
             </Pagination.Link>
             <Pagination.Link v-else>
@@ -215,7 +224,7 @@ const pageSizeChanged = () => {
         </Pagination>
       </div>
     </div>
-    <div class="flex">
+    <div v-if="pages.length > 0" class="flex">
       <div class="w-1/2 flex justify-start">
         <div>
           <Menu>

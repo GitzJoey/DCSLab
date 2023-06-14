@@ -6,16 +6,17 @@ use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\ProductGroupCategory;
 use App\Models\ProductGroup;
 use App\Traits\CacheHelper;
+use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ProductGroupActions
 {
     use CacheHelper;
+    use LoggerHelper;
 
     public function __construct()
     {
@@ -42,11 +43,11 @@ class ProductGroupActions
             return $productGroup;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -65,11 +66,11 @@ class ProductGroupActions
                     break;
             }
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -144,11 +145,11 @@ class ProductGroupActions
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -178,11 +179,11 @@ class ProductGroupActions
             return $productgroup->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -203,17 +204,17 @@ class ProductGroupActions
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
     public function generateUniqueCode(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;
