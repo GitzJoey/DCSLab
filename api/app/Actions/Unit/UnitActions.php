@@ -6,16 +6,17 @@ use App\Actions\Randomizer\RandomizerActions;
 use App\Enums\UnitCategory;
 use App\Models\Unit;
 use App\Traits\CacheHelper;
+use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class UnitActions
 {
     use CacheHelper;
+    use LoggerHelper;
 
     public function __construct()
     {
@@ -44,11 +45,11 @@ class UnitActions
             return $unit;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -123,11 +124,11 @@ class UnitActions
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -150,11 +151,11 @@ class UnitActions
                     return null;
             }
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -180,11 +181,11 @@ class UnitActions
             return $unit->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -205,11 +206,11 @@ class UnitActions
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
