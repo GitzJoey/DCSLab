@@ -198,7 +198,7 @@ const pageSizeChanged = () => {
       <slot name="content"></slot>
     </div>
     <div class="flex flex-wrap justify-center intro-y sm:flex-row sm:flex-nowrap">
-      <div class="border-b">
+      <div v-if="pages.length > 0" class="border-b">
         <Pagination class="w-full sm:w-auto sm:mr-auto">
           <Pagination.Link @click="paginationFirstButtonClicked">
             <Lucide icon="ChevronsLeft" class="w-4 h-4" />
@@ -224,7 +224,7 @@ const pageSizeChanged = () => {
         </Pagination>
       </div>
     </div>
-    <div class="flex">
+    <div v-if="pages.length > 0" class="flex">
       <div class="w-1/2 flex justify-start">
         <div>
           <Menu>
