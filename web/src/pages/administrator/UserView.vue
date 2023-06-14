@@ -18,7 +18,7 @@ import { UserRequest } from "../../types/requests/UserRequests";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
-import { DataListData } from "../../base-components/DataList/DataList.vue";
+import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
 //#endregion
 
@@ -101,18 +101,17 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
-const onDataListChanged = (data: DataListData) => {
-  alert('a');
-  console.log(data);
+const onDataListChanged = (data: DataListEmittedData) => {
+  getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
 }
 
 const editSelected = (itemIdx: number) => {
   console.log(itemIdx);
 }
 
-const deleteSelected = (itemIdx: number) => {
+const deleteSelected = (itemUlid: string) => {
+  deleteId.value = itemUlid;
   deleteModalShow.value = true;
-  console.log(itemIdx);
 }
 //#endregion
 
@@ -139,7 +138,7 @@ const deleteSelected = (itemIdx: number) => {
       <div v-if="mode == ViewMode.LIST">
         <AlertPlaceholder />
         <DataList :title="t('views.user.table.title')" :enable-search="true" :can-print="true" :can-export="true"
-          :data="userLists ? userLists.meta : null" @dataListChanged="onDataListChanged">
+          :pagination="userLists ? userLists.meta : null" @dataListChanged="onDataListChanged">
           <template #content>
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
@@ -190,7 +189,7 @@ const deleteSelected = (itemIdx: number) => {
                         <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                           <Lucide icon="CheckSquare" class="w-4 h-4" />
                         </Button>
-                        <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
+                        <Button variant="outline-secondary" @click="deleteSelected(item.ulid)">
                           <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                         </Button>
                       </div>
