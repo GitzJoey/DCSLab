@@ -77,7 +77,10 @@ class ProductActionsEditTest extends ActionsTestCase
                 ->setConversionValue($productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2)
                 ->setIsBase(false)
                 ->setIsPrimaryUnit(false)
-                ->make(['id' => null])->toArray()
+                ->make([
+                    'id' => 0,
+                    'ulid' => '',
+                ])->toArray()
         );
 
         $result = $this->productActions->update(
@@ -163,18 +166,10 @@ class ProductActionsEditTest extends ActionsTestCase
         $productArr = $product->toArray();
 
         $productUnitsArr = $product->productUnits->toArray();
-        array_push(
-            $productUnitsArr,
-            ProductUnit::factory()
-                ->for($company->units()->where('category', '=', UnitCategory::PRODUCTS->value)->inRandomOrder()->first())
-                ->setConversionValue($productUnitsArr[count($productUnitsArr) - 1]['conversion_value'] * 2)
-                ->setIsBase(false)
-                ->setIsPrimaryUnit(false)
-                ->make(['id' => null])->toArray()
-        );
 
         $lastRow = count($productUnitsArr) - 1;
-        $productUnitsArr[$lastRow]['id'] = null;
+        $productUnitsArr[$lastRow]['id'] = 0;
+        $productUnitsArr[$lastRow]['ulid'] = '';
         $productUnitsArr[$lastRow]['code'] = $this->productActions->generateUniqueCodeForProductUnits();
         $productUnitsArr[$lastRow]['unit_id'] = $company->units()->where('category', '<>', ProductCategory::SERVICES->value)->inRandomOrder()->first()->id;
         $productUnitsArr[$lastRow]['conversion_value'] = $productUnitsArr[$lastRow]['conversion_value'] * 2;

@@ -45,7 +45,10 @@ class CustomerActionsEditTest extends ActionsTestCase
         $customerAddressArr = $customer->customerAddresses()->get()->toArray();
         array_push(
             $customerAddressArr,
-            CustomerAddress::factory()->make(['id' => ''])->toArray()
+            CustomerAddress::factory()->make([
+                'id' => '',
+                'ulid' => '',
+            ])->toArray()
         );
 
         $picArr = Profile::factory()->setStatusActive()->make()->toArray();
@@ -128,7 +131,8 @@ class CustomerActionsEditTest extends ActionsTestCase
 
         $lastRow = count($customerAddressArr) - 1;
         $customerAddressFactory = CustomerAddress::factory()->make();
-        $customerAddressArr[$lastRow]['id'] = null;
+        $customerAddressArr[$lastRow]['id'] = 0;
+        $customerAddressArr[$lastRow]['ulid'] = '';
         $customerAddressArr[$lastRow]['address'] = $customerAddressFactory->address;
         $customerAddressArr[$lastRow]['city'] = $customerAddressFactory->city;
         $customerAddressArr[$lastRow]['contact'] = $customerAddressFactory->contact;

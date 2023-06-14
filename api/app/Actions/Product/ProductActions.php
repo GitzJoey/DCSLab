@@ -17,7 +17,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class ProductActions
 {
@@ -216,7 +215,7 @@ class ProductActions
             foreach ($productUnitsArr as $product_unit) {
                 array_push($pu, [
                     'id' => $product_unit['id'],
-                    'ulid' => $product_unit['id'] == null ? Str::ulid()->generate() : ProductUnit::find($product_unit['id'])->ulid,
+                    'ulid' => $product_unit['ulid'],
                     'company_id' => $product->company_id,
                     'product_id' => $product->id,
                     'code' => $product_unit['code'],
