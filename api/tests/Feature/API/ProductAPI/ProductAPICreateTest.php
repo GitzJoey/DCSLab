@@ -55,6 +55,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -75,6 +76,7 @@ class ProductAPICreateTest extends APITestCase
                 ->make()->toArray();
 
             array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_ulid, '');
             array_push($arr_product_unit_code, $productUnit['code']);
             array_push($arr_product_unit_unit_id, Hashids::encode($units[$i]->id));
             array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -85,6 +87,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -153,6 +156,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -170,6 +174,7 @@ class ProductAPICreateTest extends APITestCase
             ->make()->toArray();
 
         array_push($arr_product_unit_id, '');
+        array_push($arr_product_unit_ulid, '');
         array_push($arr_product_unit_code, $productUnit['code']);
         array_push($arr_product_unit_unit_id, Hashids::encode($unit->id));
         array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -179,6 +184,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -245,6 +251,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -265,6 +272,7 @@ class ProductAPICreateTest extends APITestCase
                 ->make()->toArray();
 
             array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_ulid, '');
             array_push($arr_product_unit_code, $productUnit['code']);
             array_push($arr_product_unit_unit_id, Hashids::encode($units[$i]->id));
             array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -275,6 +283,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -320,6 +329,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -340,6 +350,7 @@ class ProductAPICreateTest extends APITestCase
                 ->make()->toArray();
 
             array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_ulid, '');
             array_push($arr_product_unit_code, $productUnit['code']);
             array_push($arr_product_unit_unit_id, Hashids::encode($units[$i]->id));
             array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -350,6 +361,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -397,6 +409,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -417,6 +430,7 @@ class ProductAPICreateTest extends APITestCase
                 ->make()->toArray();
 
             array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_ulid, '');
             array_push($arr_product_unit_code, $productUnit['code']);
             array_push($arr_product_unit_unit_id, Hashids::encode($i == $productUnitCount - 1 ? Unit::max('id') + 1 : $units[$i]->id));
             array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -427,6 +441,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -506,6 +521,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -526,6 +542,7 @@ class ProductAPICreateTest extends APITestCase
                 ->make()->toArray();
 
             array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_ulid, '');
             array_push($arr_product_unit_code, $productUnit['code']);
             array_push($arr_product_unit_unit_id, Hashids::encode($units[$i]->id));
             array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -536,6 +553,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -603,6 +621,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -620,6 +639,7 @@ class ProductAPICreateTest extends APITestCase
             ->make()->toArray();
 
         array_push($arr_product_unit_id, '');
+        array_push($arr_product_unit_ulid, '');
         array_push($arr_product_unit_code, $productUnit['code']);
         array_push($arr_product_unit_unit_id, Hashids::encode($unit->id));
         array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -629,6 +649,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -713,6 +734,7 @@ class ProductAPICreateTest extends APITestCase
             ])->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -733,6 +755,7 @@ class ProductAPICreateTest extends APITestCase
                 ->make()->toArray();
 
             array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_ulid, '');
             array_push($arr_product_unit_code, $productUnit['code']);
             array_push($arr_product_unit_unit_id, Hashids::encode($units[$i]->id));
             array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
@@ -743,6 +766,7 @@ class ProductAPICreateTest extends APITestCase
 
         $productArr = array_merge($productArr, [
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,

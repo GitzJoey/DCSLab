@@ -311,7 +311,9 @@ class ProductController extends BaseController
         $productUnitArr = [];
         $count_unit = count($request['arr_product_unit_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $arr_product_unit_id = $request['arr_product_unit_id'][$i] != null ? $request['arr_product_unit_id'][$i] : null;
+            $arr_product_unit_id = $request['arr_product_unit_id'][$i] != 0 ? $request['arr_product_unit_id'][$i] : 0;
+
+            $arr_product_unit_ulid = $request['arr_product_unit_ulid'][$i];
 
             $productUnitCode = array_key_exists('arr_product_unit_code', $request) ? $request['arr_product_unit_code'][$i] : '[AUTO]';
 
@@ -346,6 +348,7 @@ class ProductController extends BaseController
 
             array_push($productUnitArr, [
                 'id' => $arr_product_unit_id,
+                'ulid' => $arr_product_unit_ulid,
                 'company_id' => $company_id,
                 'product_id' => $product->id,
                 'code' => $productUnitCode,
