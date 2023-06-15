@@ -58,7 +58,7 @@ class ProductRequest extends FormRequest
             'brand_id' => ['nullable'],
             'remarks' => ['nullable', 'max:255'],
             'arr_product_unit_id.*' => ['nullable'],
-            'arr_product_unit_ulid.*' => ['nullable'],
+            'arr_product_unit_ulid.*' => ['nullable', 'ulid'],
             'arr_product_unit_remarks.*' => ['nullable', 'max:255'],
         ];
 
