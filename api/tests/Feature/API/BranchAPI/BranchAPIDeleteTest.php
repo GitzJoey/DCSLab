@@ -37,7 +37,7 @@ class BranchAPIDeleteTest extends APITestCase
     public function test_branch_api_call_delete_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-        ->has(Company::factory()->setStatusActive()->setIsDefault()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
                 ->has(Branch::factory()))
             ->create();
 

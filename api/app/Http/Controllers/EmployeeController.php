@@ -251,7 +251,7 @@ class EmployeeController extends BaseController
     }
 
     public function delete(Employee $employee, EmployeeRequest $employeeRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 

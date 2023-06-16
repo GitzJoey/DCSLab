@@ -182,7 +182,7 @@ class WarehouseController extends BaseController
     }
 
     public function delete(Warehouse $warehouse, WarehouseRequest $warehouseRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 

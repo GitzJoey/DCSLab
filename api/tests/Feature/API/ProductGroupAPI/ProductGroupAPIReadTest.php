@@ -69,6 +69,7 @@ class ProductGroupAPIReadTest extends APITestCase
 
         $api->assertStatus(403);
     }
+
     public function test_product_group_api_call_read_without_authorization_expect_unauthorized_message()
     {
         $user = User::factory()

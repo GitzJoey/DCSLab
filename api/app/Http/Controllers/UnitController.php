@@ -168,7 +168,7 @@ class UnitController extends BaseController
     }
 
     public function delete(Unit $unit, UnitRequest $unitRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 

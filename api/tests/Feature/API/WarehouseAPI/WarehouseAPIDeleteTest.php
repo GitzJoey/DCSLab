@@ -28,7 +28,6 @@ class WarehouseAPIDeleteTest extends APITestCase
                     ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
-
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
         $warehouse = Warehouse::factory()->for($company)->for($branch)->create();

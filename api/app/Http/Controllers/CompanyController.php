@@ -198,7 +198,7 @@ class CompanyController extends BaseController
     }
 
     public function delete(Company $company, CompanyRequest $companyRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 

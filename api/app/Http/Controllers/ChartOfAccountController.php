@@ -224,7 +224,7 @@ class ChartOfAccountController extends Controller
     }
 
     public function delete(ChartOfAccount $chartOfAccount, ChartOfAccountRequest $chartOfAccountRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 

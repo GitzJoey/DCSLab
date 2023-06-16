@@ -185,7 +185,7 @@ class CustomerGroupController extends BaseController
     }
 
     public function delete(CustomerGroup $customergroup, CustomerGroupRequest $customerGroupRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 

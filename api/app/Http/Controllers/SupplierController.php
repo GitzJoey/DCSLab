@@ -267,7 +267,7 @@ class SupplierController extends BaseController
     }
 
     public function delete(Supplier $supplier, SupplierRequest $supplierRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 

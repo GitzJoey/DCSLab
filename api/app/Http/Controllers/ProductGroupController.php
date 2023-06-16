@@ -165,7 +165,7 @@ class ProductGroupController extends BaseController
     }
 
     public function delete(ProductGroup $productgroup, ProductGroupRequest $productGroupRequest)
-    {        
+    {
         $result = false;
         $errorMsg = '';
 
