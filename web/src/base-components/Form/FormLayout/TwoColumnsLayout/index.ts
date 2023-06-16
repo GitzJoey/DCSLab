@@ -1,3 +1,3 @@
-import TwoLayoutColumns from './TwoColumnsLayout.vue'
+import TwoColumnsLayout from './TwoColumnsLayout.vue'
 
-export default TwoLayoutColumns
+export default TwoColumnsLayout

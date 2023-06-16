@@ -1,4 +1,4 @@
-import TwoLayoutColumns from "./TwoColumnsLayout";
+import TwoColumnsLayout from "./TwoColumnsLayout";
 import { TitleLayout } from "./TitleLayout";
 
-export { TwoLayoutColumns, TitleLayout}
+export { TwoColumnsLayout, TitleLayout}
