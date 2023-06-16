@@ -310,8 +310,6 @@ class PurchaseOrderController extends BaseController
 
     public function delete(PurchaseOrder $purchaseOrder, PurchaseOrderRequest $purchaseOrderRequest)
     {
-        $request = $purchaseOrderRequest->validated();
-
         $result = false;
         $errorMsg = '';
 

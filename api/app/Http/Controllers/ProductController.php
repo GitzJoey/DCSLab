@@ -378,8 +378,6 @@ class ProductController extends BaseController
 
     public function delete(Product $product, ProductRequest $productRequest)
     {
-        $request = $productRequest->validated();
-
         $result = false;
         $errorMsg = '';
 

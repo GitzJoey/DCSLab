@@ -215,9 +215,7 @@ class BranchController extends BaseController
     }
 
     public function delete(Branch $branch, BranchRequest $branchRequest)
-    {
-        $request = $branchRequest->validated();
-        
+    {        
         if ($branch->is_main) {
             return response()->error(trans('rules.branch.delete_main_branch'));
         }

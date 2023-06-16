@@ -298,9 +298,7 @@ class CustomerController extends BaseController
     }
 
     public function delete(Customer $customer, CustomerRequest $customerRequest)
-    {
-        $request = $customerRequest->validated();
-        
+    {        
         $result = false;
         $errorMsg = '';
 
