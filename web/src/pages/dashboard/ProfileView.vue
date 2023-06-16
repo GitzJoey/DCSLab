@@ -9,7 +9,7 @@ import {
   FormSelect,
 } from "../../base-components/Form";
 import { useUserContextStore } from "../../stores/user-context";
-import TwoLayoutColumns from "../../base-components/TwoLayoutColumns";
+import {TwoColumnsLayout} from "../../base-components/Form/FormLayout";
 //#endregion
 
 //#region Declarations
@@ -65,7 +65,7 @@ function handleExpandCard(index: number) {
   <div class="flex items-center mt-8 intro-y">
     <h2 class="mr-auto text-xl font-medium">{{ t("views.profile.title") }}</h2>
   </div>
-  <TwoLayoutColumns :cards="tabs" @handleExpandCard="handleExpandCard">
+  <TwoColumnsLayout :cards="tabs" @handleExpandCard="handleExpandCard">
     <template #side-menu-title >
       {{ userContext.name }}
     </template>
@@ -270,5 +270,5 @@ function handleExpandCard(index: number) {
           </div>
     </template>
 
-  </TwoLayoutColumns>
+  </TwoColumnsLayout>
 </template>
